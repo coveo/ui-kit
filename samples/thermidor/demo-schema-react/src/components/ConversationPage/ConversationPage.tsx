@@ -89,7 +89,6 @@ export function ConversationPage({
               surfacesByTurn={surfacesByTurn}
               followUps={followUps}
               pendingTurnId={pendingTurnId}
-              onAskFollowUp={promptDisabled || readOnly ? undefined : onSubmit}
               readOnly={readOnly}
             />
           </div>

@@ -181,46 +181,4 @@ describe('AgentResponseBlock', () => {
       expect(screen.getByText('Rate limits')).not.toBeNull();
     });
   });
-
-  describe('follow-up questions', () => {
-    const answeredWithFollowUps = makeResponse({
-      activities: [
-        {
-          id: '',
-          kind: 'FollowUpQuestions',
-          replace: false,
-          payload: {questions: [{text: 'What are the limits?'}, {text: 'How do I raise them?'}]},
-        },
-      ],
-    });
-
-    it('asks a question when it is clicked', () => {
-      const onAskFollowUp = vi.fn();
-      render(
-        <AgentResponseBlock
-          response={answeredWithFollowUps}
-          isStreaming={false}
-          onAskFollowUp={onAskFollowUp}
-        />
-      );
-
-      fireEvent.click(screen.getByRole('button', {name: 'How do I raise them?'}));
-
-      expect(onAskFollowUp).toHaveBeenCalledExactlyOnceWith('How do I raise them?');
-    });
-
-    it('shows no questions without a way to ask them', () => {
-      renderBlock(answeredWithFollowUps);
-
-      expect(screen.queryByRole('group', {name: 'Follow-up questions'})).toBeNull();
-    });
-
-    it('shows no questions while streaming', () => {
-      render(
-        <AgentResponseBlock response={answeredWithFollowUps} isStreaming onAskFollowUp={vi.fn()} />
-      );
-
-      expect(screen.queryByRole('group', {name: 'Follow-up questions'})).toBeNull();
-    });
-  });
 });

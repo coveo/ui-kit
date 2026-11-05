@@ -218,38 +218,4 @@ describe('ConversationThread', () => {
       expect(placeholderRegion('turn-1/second')).not.toBeNull();
     });
   });
-
-  describe('follow-up questions', () => {
-    const withFollowUps = (id: string, prompt: string, question: string) =>
-      makeTurn({
-        id,
-        prompt,
-        response: {
-          activities: [
-            {
-              id: '',
-              kind: 'FollowUpQuestions',
-              replace: false,
-              payload: {questions: [{text: question}]},
-            },
-          ],
-        },
-      });
-
-    it("offers only the latest turn's follow-up questions, and asks the one clicked", () => {
-      const onAskFollowUp = vi.fn();
-      renderThread(
-        [
-          withFollowUps('t1', 'First', 'Old question?'),
-          withFollowUps('t2', 'Second', 'New question?'),
-        ],
-        {onAskFollowUp}
-      );
-
-      expect(screen.queryByRole('button', {name: 'Old question?'})).toBeNull();
-      fireEvent.click(screen.getByRole('button', {name: 'New question?'}));
-
-      expect(onAskFollowUp).toHaveBeenCalledExactlyOnceWith('New question?');
-    });
-  });
 });
