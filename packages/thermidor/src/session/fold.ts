@@ -47,9 +47,6 @@ function cloneTurn(turn: Turn): Turn {
   if (turn.addedMessages) {
     next.addedMessages = turn.addedMessages.map((message) => ({...message}));
   }
-  if (turn.foundProducts) {
-    next.foundProducts = turn.foundProducts.map((product) => ({...product}));
-  }
   return next;
 }
 

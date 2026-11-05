@@ -49,7 +49,6 @@ export type {
   Turn,
   AddedMessage,
   AddedMessageStatus,
-  FoundProduct,
   TurnInput,
   TurnAction,
   TurnResponse,

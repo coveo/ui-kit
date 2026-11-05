@@ -305,20 +305,6 @@ export interface Turn {
    * Present only once one was added.
    */
   addedMessages?: AddedMessage[];
-  /**
-   * The products the agent found while answering, in the order it found them, each once. They
-   * arrive before the answer shows its own products, so the shopper can react to them early.
-   * Present only once one was found.
-   */
-  foundProducts?: FoundProduct[];
-}
-
-/** A product the agent found while answering, as {@link Turn.foundProducts} lists it. */
-export interface FoundProduct {
-  id: string;
-  name: string;
-  price?: number;
-  image?: string;
 }
 
 /**

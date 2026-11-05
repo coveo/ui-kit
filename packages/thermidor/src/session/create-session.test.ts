@@ -689,67 +689,6 @@ describe('createSession lifecycle', () => {
     });
   });
 
-  describe('products the agent finds while it answers', () => {
-    it('are listed on the turn as they arrive, each once', async () => {
-      const session = createSession(baseConfig);
-      const answer = queueStream();
-      const answerTurn = session.dispatchAction({
-        name: 'submitPrompt',
-        payload: {prompt: 'build me a kayak bundle'},
-      });
-      await answer.opened;
-      answer.emit({type: 'RUN_STARTED'});
-      // The agent sends this value as a JSON string.
-      answer.emit({
-        type: 'CUSTOM',
-        name: 'products_found',
-        value: JSON.stringify({
-          products: [
-            {id: 'k1', name: 'Pelican Sprint', price: 499, image: 'https://img.test/k1.jpg'},
-            {id: 'k2', name: 'Sun Dolphin'},
-          ],
-        }),
-      });
-      answer.emit({
-        type: 'CUSTOM',
-        name: 'products_found',
-        value: {
-          products: [
-            {id: 'k2', name: 'Sun Dolphin'},
-            {id: 'p1', name: 'Bending Branches paddle', price: 129.99},
-            {name: 'A product without an id'},
-          ],
-        },
-      });
-      await flush();
-
-      expect(session.turns[0].foundProducts).toEqual([
-        {id: 'k1', name: 'Pelican Sprint', price: 499, image: 'https://img.test/k1.jpg'},
-        {id: 'k2', name: 'Sun Dolphin'},
-        {id: 'p1', name: 'Bending Branches paddle', price: 129.99},
-      ]);
-      answer.emit({type: 'RUN_FINISHED'});
-      answer.close();
-      await answerTurn;
-    });
-
-    it('are absent from an answer that found none', async () => {
-      const session = createSession(baseConfig);
-      const answer = queueStream();
-      const answerTurn = session.dispatchAction({
-        name: 'submitPrompt',
-        payload: {prompt: 'what is a kayak?'},
-      });
-      await answer.opened;
-      answer.emit({type: 'RUN_STARTED'});
-      answer.emit({type: 'RUN_FINISHED'});
-      answer.close();
-      await answerTurn;
-
-      expect(session.turns[0]).not.toHaveProperty('foundProducts');
-    });
-  });
-
   describe('Gateway session continuity', () => {
     it('reuses RUN_STARTED session metadata for the next action request', async () => {
       const session = createSession(baseConfig);

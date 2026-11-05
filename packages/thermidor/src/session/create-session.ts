@@ -75,7 +75,6 @@ import type {
   ActionError,
   AddedMessageStatus,
   DiscoveredSurface,
-  FoundProduct,
   SessionInitialization,
   SessionRequest,
   Turn,
@@ -397,48 +396,6 @@ function customValue(value: unknown): Record<string, unknown> | undefined {
   return typeof parsed === 'object' && parsed !== null
     ? (parsed as Record<string, unknown>)
     : undefined;
-}
-
-/**
- * The CUSTOM event an answer's stream carries when the agent found products while answering:
- * `{products: [{id, name, price?, image?}]}`.
- */
-const PRODUCTS_FOUND_EVENT = 'products_found';
-
-/** The products a `products_found` value lists, skipping any without an id or a name. */
-function foundProducts(value: unknown): FoundProduct[] {
-  const products = customValue(value)?.['products'];
-  if (!Array.isArray(products)) {
-    return [];
-  }
-  return products.flatMap((entry: unknown) => {
-    const product = customValue(entry);
-    const id = product?.['id'];
-    const name = product?.['name'];
-    if (typeof id !== 'string' || !id || typeof name !== 'string' || !name) {
-      return [];
-    }
-    const price = product?.['price'];
-    const image = product?.['image'];
-    return [
-      {
-        id,
-        name,
-        ...(typeof price === 'number' ? {price} : {}),
-        ...(typeof image === 'string' && image ? {image} : {}),
-      },
-    ];
-  });
-}
-
-/** `found` appended to `known`, each product once. */
-function withFoundProducts(
-  known: readonly FoundProduct[] | undefined,
-  found: readonly FoundProduct[]
-): FoundProduct[] {
-  const ids = new Set((known ?? []).map((product) => product.id));
-  const added = found.filter((product) => !ids.has(product.id) && ids.add(product.id));
-  return [...(known ?? []), ...added];
 }
 
 /** An added message only moves forward: a late `message_queued` never undoes `applied`. */
@@ -916,14 +873,6 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
             const id = customValue(value)?.['id'];
             if (typeof id === 'string') {
               updateAddedMessage(target.turnId, id, 'applied');
-            }
-          } else if (name === PRODUCTS_FOUND_EVENT) {
-            const found = foundProducts(value);
-            if (found.length > 0) {
-              replaceTurn(target.turnId, (turn) => ({
-                ...turn,
-                foundProducts: withFoundProducts(turn.foundProducts, found),
-              }));
             }
           }
         }
