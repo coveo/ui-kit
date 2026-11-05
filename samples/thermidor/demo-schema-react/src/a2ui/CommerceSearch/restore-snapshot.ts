@@ -58,7 +58,8 @@ export function buildRestoreSnapshot(
 
   for (const {id, type} of nodes) {
     const state = stateOf(id);
-    if (state === undefined) {
+    // The server clears a facet left without values by setting its state to null.
+    if (state === undefined || state === null) {
       continue;
     }
     switch (type) {

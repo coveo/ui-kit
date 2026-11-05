@@ -117,6 +117,29 @@ describe('buildRestoreSnapshot', () => {
     expect(result).toEqual({query: '', page: 2, pageSize: 12});
   });
 
+  it('skips facets whose state the server cleared to null', () => {
+    const result = snapshot(
+      {
+        pagination: PAGINATION,
+        brand: {
+          field: 'ec_brand',
+          values: [{value: 'Aqua Marina', state: 'selected', numberOfResults: 21}],
+        },
+        gender: null,
+        price: null,
+        category: null,
+      },
+      [
+        {id: 'pagination', type: 'Pagination'},
+        {id: 'brand', type: 'RegularFacet'},
+        {id: 'gender', type: 'RegularFacet'},
+        {id: 'price', type: 'NumericFacet'},
+        {id: 'category', type: 'CategoryFacet'},
+      ]
+    );
+    expect(result?.facets).toEqual([{facetId: 'ec_brand', values: ['Aqua Marina']}]);
+  });
+
   it('has nothing to restore before the surface has a page', () => {
     expect(snapshot({}, [{id: 'pagination', type: 'Pagination'}])).toBeUndefined();
   });
