@@ -33,7 +33,12 @@ export const Breadbox = createReactComponent(
     );
 
     return (
-      <section ref={section} className={styles.container} aria-label="Active filters">
+      <section
+        ref={section}
+        className={styles.container}
+        aria-label="Active filters"
+        data-layout="full-row"
+      >
         <span className={styles.heading}>Filters:</span>
         <ul className={styles.list}>
           {breadcrumbs.map(({facet, value}, index) => {

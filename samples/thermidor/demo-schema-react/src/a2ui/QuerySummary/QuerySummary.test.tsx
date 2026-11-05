@@ -86,10 +86,10 @@ describe('QuerySummary', () => {
   it('shows no correction when the query was searched as typed', async () => {
     mountSummary({query: 'Water Sports', firstIndex: 1, lastIndex: 12, totalEntries: 43});
     await waitFor(() => expect(screen.getByText(/Products/)).toBeDefined());
-    expect(screen.queryByText(/Showing results for/)).toBeNull();
+    expect(screen.queryByText(/Showing products for|automatically corrected/)).toBeNull();
   });
 
-  it("links to the shopper's query when the backend can search it instead", async () => {
+  it("shows the trigger's query and links to the shopper's query", async () => {
     mountSummary({
       query: 'Water Sports',
       firstIndex: 1,
@@ -97,12 +97,16 @@ describe('QuerySummary', () => {
       totalEntries: 43,
       correction: {originalQuery: 'swim gear', cause: 'trigger', canOverride: true},
     });
-    await waitFor(() => expect(screen.getByText(/Showing results for/)).toBeDefined());
-    expect(screen.getByText(/Search instead for/)).toBeDefined();
+    await waitFor(() =>
+      expect(screen.getByText(/Showing products for/).textContent).toBe(
+        'Showing products for Water Sports'
+      )
+    );
+    expect(screen.getByText(/Search instead for/).textContent).toBe('Search instead for swim gear');
     expect(screen.getByRole('button', {name: 'swim gear'})).toBeDefined();
   });
 
-  it("shows the shopper's query without a link when the backend cannot search it instead", async () => {
+  it("names both queries of a correction without a link when the backend cannot search the shopper's query", async () => {
     mountSummary({
       query: 'Water Sports',
       firstIndex: 1,
@@ -111,15 +115,30 @@ describe('QuerySummary', () => {
       correction: {originalQuery: 'water sprots', cause: 'correction', canOverride: false},
     });
     await waitFor(() =>
-      expect(screen.getByText(/Showing results for/).textContent).toBe(
-        'Showing results for Water Sports instead of water sprots'
+      expect(screen.getByText(/We couldn't find anything for/).textContent).toBe(
+        "We couldn't find anything for water sprots"
       )
+    );
+    expect(screen.getByText(/Query was automatically corrected to/).textContent).toBe(
+      'Query was automatically corrected to Water Sports'
     );
     expect(screen.queryByText(/Search instead for/)).toBeNull();
     expect(screen.queryByRole('button')).toBeNull();
   });
 
-  it("links to the shopper's query in place of the no-results line when the replacement has no results", async () => {
+  it("links to the shopper's query of a correction when the backend can search it", async () => {
+    mountSummary({
+      query: 'Water Sports',
+      firstIndex: 1,
+      lastIndex: 12,
+      totalEntries: 43,
+      correction: {originalQuery: 'water sprots', cause: 'correction', canOverride: true},
+    });
+    await waitFor(() => expect(screen.getByRole('button', {name: 'water sprots'})).toBeDefined());
+    expect(screen.getByText(/Query was automatically corrected to/)).toBeDefined();
+  });
+
+  it('shows the notice after the no-results line when the replacement has no results', async () => {
     mountSummary({
       query: 'kayak',
       firstIndex: 0,
@@ -128,28 +147,10 @@ describe('QuerySummary', () => {
       correction: {originalQuery: 'take a kayak', cause: 'trigger', canOverride: true},
     });
     await waitFor(() =>
-      expect(screen.getByText(/No results for/).textContent).toBe(
-        'No results for kayak. Search instead for take a kayak'
-      )
+      expect(screen.getByText(/No results for/).textContent).toBe('No results for kayak')
     );
-    expect(screen.queryByText(/Showing results for/)).toBeNull();
+    expect(screen.getByText(/Showing products for/)).toBeDefined();
     expect(screen.getByRole('button', {name: 'take a kayak'})).toBeDefined();
-  });
-
-  it("names the shopper's query in the no-results line when the backend cannot search it instead", async () => {
-    mountSummary({
-      query: 'kayaks',
-      firstIndex: 0,
-      lastIndex: 0,
-      totalEntries: 0,
-      correction: {originalQuery: 'kayacks', cause: 'correction', canOverride: false},
-    });
-    await waitFor(() =>
-      expect(screen.getByText(/No results for/).textContent).toBe(
-        'No results for kayaks, searched instead of kayacks'
-      )
-    );
-    expect(screen.queryByRole('button')).toBeNull();
   });
 
   it('shows no correction while the query is empty', async () => {
@@ -161,7 +162,7 @@ describe('QuerySummary', () => {
       correction: {originalQuery: 'swim gear', cause: 'trigger', canOverride: true},
     });
     await waitFor(() => expect(screen.getByText(/Products/)).toBeDefined());
-    expect(screen.queryByText(/Showing results for/)).toBeNull();
+    expect(screen.queryByText(/Showing products for/)).toBeNull();
     expect(screen.queryByRole('button')).toBeNull();
   });
 

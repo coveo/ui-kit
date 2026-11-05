@@ -1,5 +1,5 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
-import type {QuerySummaryAction} from '@coveo/thermidor-schema';
+import type {QueryCorrection, QuerySummaryAction} from '@coveo/thermidor-schema';
 import {QuerySummaryPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {useGesture} from '../session-request.js';
 import styles from './QuerySummary.module.css';
@@ -18,14 +18,13 @@ import styles from './QuerySummary.module.css';
  * - Otherwise: "Products {firstIndex}-{lastIndex} of {totalEntries}", with the trailing
  *   " for {query}" only when a query is present.
  *
- * When the backend replaced the shopper's query, the notice names both queries. If it can search
- * the shopper's query instead (`canOverride`), the notice ends with "Search instead for
- * {originalQuery}", which dispatches `overrideCorrection`:
- * - with results, above the result window: "Showing results for {query}. Search instead for
- *   {originalQuery}", or "Showing results for {query} instead of {originalQuery}";
- * - without results, in place of "No results for {query}": "No results for {query}. Search
- *   instead for {originalQuery}", or "No results for {query}, searched instead of
- *   {originalQuery}".
+ * When the backend replaced the shopper's query, a notice follows, worded like the Atomic commerce
+ * did-you-mean:
+ * - a correction: "We couldn't find anything for {originalQuery}" and "Query was automatically
+ *   corrected to {query}";
+ * - a query trigger: "Showing products for {query}".
+ * If the backend can search the shopper's query instead (`canOverride`), the notice ends with
+ * "Search instead for {originalQuery}", which dispatches `overrideCorrection`.
  */
 export const QuerySummary = createReactComponent(
   {
@@ -53,51 +52,84 @@ export const QuerySummary = createReactComponent(
       );
     };
 
-    const replacedQuery = query && correction;
-    const originalQueryLink = replacedQuery && correction.canOverride && (
-      <>
-        . Search instead for{' '}
-        <button type="button" className={styles.originalQuery} onClick={searchOriginalQuery}>
-          {correction.originalQuery}
-        </button>
-      </>
+    const correctionNotice = query && correction && (
+      <CorrectionNotice
+        query={query}
+        correction={correction}
+        onSearchOriginalQuery={searchOriginalQuery}
+      />
     );
 
     if (totalEntries === 0) {
       return query ? (
-        <p className={styles.summary}>
-          No results for <strong>{query}</strong>
-          {replacedQuery &&
-            (originalQueryLink || <>, searched instead of {correction.originalQuery}</>)}
-        </p>
+        <div data-layout="fill">
+          <p className={styles.summary}>
+            <span>
+              No results for <strong>{query}</strong>
+            </span>
+          </p>
+          {correctionNotice}
+        </div>
       ) : null;
     }
-
-    const correctionNotice = replacedQuery && (
-      <p className={styles.correction}>
-        Showing results for <strong>{query}</strong>
-        {originalQueryLink || <> instead of {correction.originalQuery}</>}
-      </p>
-    );
 
     if (firstIndex === undefined || lastIndex === undefined) {
       return null;
     }
 
     return (
-      <div>
-        {correctionNotice}
+      <div data-layout="fill">
         <p className={styles.summary}>
-          Products <strong>{firstIndex}</strong>-<strong>{lastIndex}</strong> of{' '}
-          <strong>{totalEntries.toLocaleString()}</strong>
-          {query && (
-            <>
-              {' '}
-              for <strong>{query}</strong>
-            </>
-          )}
+          <span>
+            Products <strong>{firstIndex}</strong>-<strong>{lastIndex}</strong> of{' '}
+            <strong>{totalEntries.toLocaleString()}</strong>
+            {query && (
+              <>
+                {' '}
+                for <strong>{query}</strong>
+              </>
+            )}
+          </span>
         </p>
+        {correctionNotice}
       </div>
     );
   }
 );
+
+function CorrectionNotice({
+  query,
+  correction,
+  onSearchOriginalQuery,
+}: {
+  query: string;
+  correction: QueryCorrection;
+  onSearchOriginalQuery: () => void;
+}) {
+  return (
+    <div className={styles.correction}>
+      {correction.cause === 'trigger' ? (
+        <p className={styles.replacement}>
+          Showing products for <strong>{query}</strong>
+        </p>
+      ) : (
+        <>
+          <p>
+            We couldn't find anything for <strong>{correction.originalQuery}</strong>
+          </p>
+          <p>
+            Query was automatically corrected to <strong>{query}</strong>
+          </p>
+        </>
+      )}
+      {correction.canOverride && (
+        <p>
+          Search instead for{' '}
+          <button type="button" className={styles.originalQuery} onClick={onSearchOriginalQuery}>
+            {correction.originalQuery}
+          </button>
+        </p>
+      )}
+    </div>
+  );
+}
