@@ -724,7 +724,6 @@ interface PriceRange {
   end: number;
 }
 
-// The search ran another query than the shopper's: a correction or a query trigger replaced it.
 interface QueryCorrection {
   originalQuery: string;
   cause: 'correction' | 'trigger';
@@ -1364,10 +1363,8 @@ const surfaceActivitySnapshot: ConverseEvent = ActivitySnapshot({
 });
 
 // A new "water sports" search resets the surface, so the initial events are built on demand:
-// each call resets the in-memory view to defaults and recomputes the initial state snapshot. A
-// correction says the shopper typed another query, which a correction or query trigger replaced.
-// With the prompt's surface id minter, the minted surface's first action starts from this view,
-// correction included.
+// each call resets the in-memory view to defaults and recomputes the initial state snapshot.
+// Registering the view under the minted surface id keeps the correction on that surface's first action.
 function buildWaterSportsInitialEvents(
   correction: QueryCorrection | null = null,
   mintSurfaceId?: (surfaceId: string) => string
@@ -1643,7 +1640,6 @@ function deriveBreadboxViewState(action: {name: string; context: Record<string, 
   }
 }
 
-// Searches the shopper's query as typed when the correction allows it, as the gateway does.
 function deriveQuerySummaryViewState(action: {name: string}): void {
   const correction = currentView.correction;
   if (action.name === 'overrideCorrection' && correction?.canOverride) {

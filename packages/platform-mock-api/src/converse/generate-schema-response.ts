@@ -69,7 +69,6 @@ const SCHEMA_PROMPT_TEMPLATE_MAP: ReadonlyArray<SchemaPromptMapping> = [
     prompt: 'water sports',
     buildEvents: (mintSurfaceId) => buildWaterSportsInitialEvents(null, mintSurfaceId),
   },
-  // A misspelled query the search corrects, and a query a query trigger replaces.
   {
     prompt: 'water sprots',
     buildEvents: (mintSurfaceId) =>
