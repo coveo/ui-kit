@@ -6,6 +6,7 @@ import {
   useEffect,
   type KeyboardEvent,
   type ChangeEvent,
+  type FocusEvent,
   type ReactNode,
 } from 'react';
 import {
@@ -71,6 +72,7 @@ export function PromptInput({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const blurTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const suppressNextFocusRef = useRef(false);
+  const windowBlurredRef = useRef(false);
   const prevInitialValueRef = useRef(initialValue);
 
   useEffect(() => {
@@ -142,8 +144,12 @@ export function PromptInput({
       suppressNextFocusRef.current = false;
       return;
     }
+    // Coming back to the window, such as from a product opened in a new tab, is not the shopper
+    // entering the input again: the search box stays as they left it.
+    const windowRefocused = windowBlurredRef.current;
+    windowBlurredRef.current = false;
     // A suggestion the arrow keys left in the input becomes the query, as if typed.
-    if (value !== typedValueRef.current) {
+    if (!windowRefocused && value !== typedValueRef.current) {
       typedValueRef.current = value;
       onValueChange?.(value);
     }
@@ -153,11 +159,15 @@ export function PromptInput({
         blurTimeoutRef.current = null;
       }
       setShowDropdown(true);
-      resetHighlight();
+      if (!windowRefocused) {
+        resetHighlight();
+      }
     }
   }
 
-  function handleBlur() {
+  function handleBlur(e: FocusEvent<HTMLTextAreaElement>) {
+    // The input stays the page's active element when only the window loses the focus.
+    windowBlurredRef.current = document.activeElement === e.currentTarget;
     blurTimeoutRef.current = setTimeout(() => {
       setShowDropdown(false);
     }, 150);
