@@ -74,7 +74,6 @@ The conversation is a single feed: every turn keeps its blocks on the page, and 
 - **Results panel.** The newest search surface (root `CommerceSearch`) fills the shopper's panel, with the session's search box. It is never locked by an answer: with actions during an answer, filters, sort and paging go beside it. A search typed there waits for an answer in progress (`searchWhenFree`) instead of being added to it, and does not show in the chat.
 - **Assistant window.** Every other block, the agent's text and its follow-ups, show in a window that floats over the results (minimize, maximize) or docks beside them. Its prompt adds to an answer in progress, and its header holds Stop. A question the gateway answers with a search leaves a one-line trace.
 - **Activity rail.** Each answer lists the agent's tool calls in the shopper's words (`activity.ts`), routing hidden, with each added message placed after the step the agent had reached when it took it. A stopped answer says how far it got and offers Continue.
-- **Found so far.** While an answer works, or once it stopped, the products its agent found (`Turn.foundProducts`) show at the end of the turn, in every layout. **More like this** and **Leave out** add "Show me more like the …" or "Show me options without the …" to the answer; one sent after the answer ended is asked next, and "Show me" makes intent routing send it to the agent, not to a search.
 
 ## Loading placeholders (✅ data-model driven)
 

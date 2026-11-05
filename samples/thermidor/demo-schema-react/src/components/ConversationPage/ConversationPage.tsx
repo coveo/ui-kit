@@ -62,7 +62,6 @@ export function ConversationPage({
             turns={turns}
             turnRefs={turnRefs}
             onContinue={(question, added) => onSubmit(continuePrompt(question, added))}
-            onReact={onSubmit}
           />
         </div>
       </div>
