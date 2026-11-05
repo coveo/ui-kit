@@ -88,15 +88,20 @@ export const USE_CASES: readonly UseCase[] = [
     checks: [
       'Products the agent shows in the thread sit next to the kayaks results.',
       '"Which of these" after them means the products in the thread, not the kayaks.',
+      'A question about the kayak results on the left is answered from the search grid, not the thread.',
     ],
     status: {
       state: 'partly',
-      note: 'Products the agent shows sit in the panel’s thread next to the kayak results, and “which of these” means them: the cheapest life jacket, in 2 of 2 runs. The search layout itself (grid and facets) is never drawn inside the thread: a search opens next to it.',
+      note: 'Products the agent shows sit in the panel’s thread next to the kayak results, and “which of these” means them: the cheapest life jacket. A question about the kayak results on the left is then answered from the grid: the Orangetouring Kayak at $720. Both in 2 of 2 runs. The search layout itself (grid and facets) is never drawn inside the thread: a search opens next to it.',
     },
     steps: [
       {kind: 'omnibox', text: 'kayaks'},
       {kind: 'panel', text: 'Show me 3 life jackets with their prices'},
       {kind: 'panel', text: 'Which of these is the cheapest?'},
+      {
+        kind: 'panel',
+        text: 'And in the kayak results on the left, which kayak is the cheapest?',
+      },
     ],
   },
   {
