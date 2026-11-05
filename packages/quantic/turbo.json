@@ -51,6 +51,7 @@
         "$TURBO_ROOT$/.github/actions/post-scratch-org-links-on-pr/**",
         "$TURBO_ROOT$/.github/actions/setup/**",
         "$TURBO_ROOT$/.github/actions/setup-sfdx/**",
+        "$TURBO_ROOT$/.github/actions/upload-playwright-record/**",
         "$TURBO_ROOT$/.github/workflows/ci.yml",
         "$TURBO_ROOT$/.github/workflows/e2e-quantic.yml"
       ],

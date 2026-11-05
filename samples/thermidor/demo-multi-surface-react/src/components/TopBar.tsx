@@ -7,7 +7,7 @@ interface TopBarProps {
   currentListing: string | undefined;
   onHome(): void;
   onListing(slug: string): void;
-  onSearch(query: string, ai: boolean): void;
+  onSearch(query: string): void;
   searchDisabled: boolean;
 }
 

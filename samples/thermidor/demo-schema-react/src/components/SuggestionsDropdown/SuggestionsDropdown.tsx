@@ -1,9 +1,12 @@
-import type {ReactNode} from 'react';
+import {createContext, type ReactNode} from 'react';
 import type {SuggestionSection, SuggestionItem, SuggestionsPlacement} from './types.js';
 import {SuggestionSectionGroup} from './SuggestionSectionGroup.js';
 import styles from './SuggestionsDropdown.module.css';
 
 export const SUGGESTIONS_LISTBOX_ID = 'suggestions-listbox';
+/** The listbox drawn beside the suggestions, whose options the left and right arrows reach. */
+export const ASIDE_LISTBOX_ID = 'suggestions-aside-listbox';
+export const ActiveAsideOptionContext = createContext<string | undefined>(undefined);
 
 interface SuggestionsDropdownProps {
   sections: SuggestionSection[];

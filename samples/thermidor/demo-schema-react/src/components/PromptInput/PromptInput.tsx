@@ -10,12 +10,18 @@ import {
 } from 'react';
 import {
   SuggestionsDropdown,
+  ActiveAsideOptionContext,
   SUGGESTIONS_LISTBOX_ID,
+  ASIDE_LISTBOX_ID,
   type SuggestionSection,
   type SuggestionItem,
   type SuggestionsPlacement,
 } from '../SuggestionsDropdown/index.js';
 import styles from './PromptInput.module.css';
+
+function asideOptions(): HTMLElement[] {
+  return Array.from(document.querySelectorAll(`#${ASIDE_LISTBOX_ID} [role="option"]`));
+}
 
 interface PromptInputProps {
   /** Called with the trimmed prompt, when it is submitted or a suggestion is selected. */
@@ -58,6 +64,10 @@ export function PromptInput({
   const [value, setValue] = useState(initialValue);
   const [showDropdown, setShowDropdown] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
+  // Kept when the left arrow goes back to the suggestions, so the right arrow returns to it.
+  const [asideOptionId, setAsideOptionId] = useState<string>();
+  const [inAside, setInAside] = useState(false);
+  const typedValueRef = useRef(initialValue);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const blurTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const suppressNextFocusRef = useRef(false);
@@ -66,6 +76,7 @@ export function PromptInput({
   useEffect(() => {
     if (initialValue !== prevInitialValueRef.current) {
       prevInitialValueRef.current = initialValue;
+      typedValueRef.current = initialValue;
       setValue(initialValue);
     }
   }, [initialValue]);
@@ -74,12 +85,19 @@ export function PromptInput({
     () => (suggestions ? suggestions.flatMap((s) => s.items) : []),
     [suggestions]
   );
+  const expanded = showDropdown && totalItems.length > 0;
 
   // Reset while rendering, so an item of the new suggestions is never reported at the old index.
   const [highlightedSuggestions, setHighlightedSuggestions] = useState(suggestions);
   if (suggestions !== highlightedSuggestions) {
     setHighlightedSuggestions(suggestions);
+    resetHighlight();
+  }
+
+  function resetHighlight() {
     setActiveIndex(-1);
+    setAsideOptionId(undefined);
+    setInAside(false);
   }
 
   useEffect(() => {
@@ -104,6 +122,7 @@ export function PromptInput({
       if (!trimmed || busy || disabled) return;
       setShowDropdown(false);
       onSubmit(trimmed);
+      typedValueRef.current = clearOnSubmit ? '' : prompt;
       if (clearOnSubmit) {
         setValue('');
         if (textareaRef.current) {
@@ -123,13 +142,18 @@ export function PromptInput({
       suppressNextFocusRef.current = false;
       return;
     }
+    // A suggestion the arrow keys left in the input becomes the query, as if typed.
+    if (value !== typedValueRef.current) {
+      typedValueRef.current = value;
+      onValueChange?.(value);
+    }
     if (suggestions && suggestions.length > 0) {
       if (blurTimeoutRef.current) {
         clearTimeout(blurTimeoutRef.current);
         blurTimeoutRef.current = null;
       }
       setShowDropdown(true);
-      setActiveIndex(-1);
+      resetHighlight();
     }
   }
 
@@ -141,8 +165,21 @@ export function PromptInput({
 
   function selectItem(item: SuggestionItem) {
     setValue(item.label);
+    typedValueRef.current = item.label;
     setShowDropdown(false);
     submit(item.label);
+  }
+
+  function highlightSuggestion(index: number) {
+    setActiveIndex(index);
+    setInAside(false);
+    setValue(index >= 0 ? totalItems[index].label : typedValueRef.current);
+  }
+
+  function moveInAside(step: number) {
+    const options = asideOptions();
+    const index = options.findIndex(({id}) => id === asideOptionId);
+    setAsideOptionId(options[(index + step + options.length) % options.length]?.id);
   }
 
   function handleKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
@@ -157,23 +194,48 @@ export function PromptInput({
       return;
     }
 
-    if (e.key === 'ArrowDown' && showDropdown) {
+    if (e.key === 'ArrowDown' && expanded) {
       e.preventDefault();
-      setActiveIndex((prev) => (prev < totalItems.length - 1 ? prev + 1 : prev));
+      if (inAside) {
+        moveInAside(1);
+      } else {
+        highlightSuggestion((activeIndex + 1) % totalItems.length);
+      }
       return;
     }
 
-    if (e.key === 'ArrowUp' && showDropdown) {
+    if (e.key === 'ArrowUp' && expanded) {
       e.preventDefault();
-      setActiveIndex((prev) => (prev > 0 ? prev - 1 : prev));
+      if (inAside) {
+        moveInAside(-1);
+      } else {
+        highlightSuggestion(activeIndex === -1 ? totalItems.length - 1 : activeIndex - 1);
+      }
+      return;
+    }
+
+    if (e.key === 'ArrowRight' && expanded && !inAside && activeIndex >= 0) {
+      const options = asideOptions();
+      if (options.length > 0) {
+        e.preventDefault();
+        setAsideOptionId((options.find(({id}) => id === asideOptionId) ?? options[0]).id);
+        setInAside(true);
+      }
+      return;
+    }
+
+    if (e.key === 'ArrowLeft' && expanded && inAside) {
+      e.preventDefault();
+      highlightSuggestion(Math.max(activeIndex, 0));
       return;
     }
 
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      const activeItem = showDropdown ? totalItems[activeIndex] : undefined;
-      if (activeItem) {
-        selectItem(activeItem);
+      const option = expanded && inAside && asideOptionId && document.getElementById(asideOptionId);
+      if (option) {
+        setShowDropdown(false);
+        option.click();
       } else {
         submit(value);
       }
@@ -185,6 +247,8 @@ export function PromptInput({
 
   function handleInput(e: ChangeEvent<HTMLTextAreaElement>) {
     setValue(e.target.value);
+    typedValueRef.current = e.target.value;
+    setInAside(false);
     onValueChange?.(e.target.value);
     const el = e.target;
     const computed = getComputedStyle(el);
@@ -201,11 +265,18 @@ export function PromptInput({
     el.style.overflowY = el.scrollHeight > maxHeight ? 'auto' : 'hidden';
   }
 
-  const expanded = showDropdown && totalItems.length > 0;
   const activeItem = expanded && activeIndex >= 0 ? totalItems[activeIndex] : undefined;
-  const activeDescendant = activeItem ? `suggestion-item-${activeItem.id}` : undefined;
+  const activeAsideOptionId = expanded && inAside ? asideOptionId : undefined;
+  const activeDescendant =
+    activeAsideOptionId ?? (activeItem && `suggestion-item-${activeItem.id}`);
 
   useEffect(() => onActiveItemChange?.(activeItem), [activeItem, onActiveItemChange]);
+
+  useEffect(() => {
+    if (activeDescendant) {
+      document.getElementById(activeDescendant)?.scrollIntoView({block: 'nearest'});
+    }
+  }, [activeDescendant]);
 
   return (
     <div className={styles.wrapper}>
@@ -226,7 +297,7 @@ export function PromptInput({
           aria-label="Prompt"
           aria-expanded={expanded}
           aria-haspopup="listbox"
-          aria-controls={SUGGESTIONS_LISTBOX_ID}
+          aria-controls={activeAsideOptionId ? ASIDE_LISTBOX_ID : SUGGESTIONS_LISTBOX_ID}
           aria-activedescendant={activeDescendant}
         />
         <button
@@ -293,15 +364,20 @@ export function PromptInput({
         </button>
       </div>
       {suggestions && (
-        <SuggestionsDropdown
-          sections={suggestions}
-          onSelect={selectItem}
-          onHover={(item) => setActiveIndex(totalItems.indexOf(item))}
-          visible={showDropdown}
-          placement={suggestionsPlacement}
-          activeIndex={activeIndex}
-          aside={suggestionsAside}
-        />
+        <ActiveAsideOptionContext.Provider value={activeAsideOptionId}>
+          <SuggestionsDropdown
+            sections={suggestions}
+            onSelect={selectItem}
+            onHover={(item) => {
+              setActiveIndex(totalItems.indexOf(item));
+              setInAside(false);
+            }}
+            visible={showDropdown}
+            placement={suggestionsPlacement}
+            activeIndex={inAside ? -1 : activeIndex}
+            aside={suggestionsAside}
+          />
+        </ActiveAsideOptionContext.Provider>
       )}
     </div>
   );
