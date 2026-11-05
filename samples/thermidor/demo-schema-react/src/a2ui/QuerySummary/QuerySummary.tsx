@@ -18,13 +18,8 @@ import styles from './QuerySummary.module.css';
  * - Otherwise: "Products {firstIndex}-{lastIndex} of {totalEntries}", with the trailing
  *   " for {query}" only when a query is present.
  *
- * When the backend replaced the shopper's query, a notice follows, worded like the Atomic commerce
- * did-you-mean:
- * - a correction: "We couldn't find anything for {originalQuery}" and "Query was automatically
- *   corrected to {query}";
- * - a query trigger: "Showing products for {query}".
- * If the backend can search the shopper's query instead (`canOverride`), the notice ends with
- * "Search instead for {originalQuery}", which dispatches `overrideCorrection`.
+ * When the backend replaced the shopper's query, a notice worded like the Atomic commerce
+ * did-you-mean follows, ending with a "Search instead" link (`overrideCorrection`) if `canOverride`.
  */
 export const QuerySummary = createReactComponent(
   {
