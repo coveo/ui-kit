@@ -77,3 +77,5 @@ export type {
   SerializedTurnAgent,
   SerializedInitialization,
 } from '@/src/session/serialize.js';
+
+// KIT-6505 repro 2: DO NOT MERGE
