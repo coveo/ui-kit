@@ -1,0 +1,1462 @@
+{
+  "about": "Which lazily loaded modules share a CDN file, computed by web-bundle-partition from the page shapes of the repository. scripts/cdn-chunk-map prepares its inputs.",
+  "pages": [
+    "cdn-smoke/commerce",
+    "cdn-smoke/insight",
+    "cdn-smoke/ipx",
+    "cdn-smoke/search",
+    "sample/commerce-hybrid/cart",
+    "sample/commerce-hybrid/index",
+    "sample/commerce-hybrid/product",
+    "sample/commerce-hybrid/search",
+    "sample/commerce-react/pages/HomePage",
+    "sample/commerce-react/pages/ListingPage",
+    "sample/commerce-react/pages/ProductTemplate",
+    "sample/commerce-react/pages/SearchPage",
+    "sample/commerce-vite/cart",
+    "sample/commerce-vite/index",
+    "sample/commerce-vite/listing-pants",
+    "sample/commerce-vite/listing-surf-accessories",
+    "sample/commerce-vite/listing-towels",
+    "sample/commerce-vite/listing-toys",
+    "sample/commerce-vite/search",
+    "sample/search-commerce-angular/app/atomic-angular-rga-page/atomic-angular-rga-page",
+    "sample/search-commerce-angular/app/atomic-angular-search-page/atomic-angular-search-page",
+    "sample/search-commerce-angular/app/atomic-commerce-angular-page/atomic-commerce-angular-page",
+    "sample/search-commerce-react/pages/CommerceRecommendationPage",
+    "sample/search-commerce-react/pages/CommerceSearchPage",
+    "sample/search-commerce-react/pages/CommerceTableProductListPage",
+    "sample/search-commerce-react/pages/FoldedResultListPage",
+    "sample/search-commerce-react/pages/InstantResultsPage",
+    "sample/search-commerce-react/pages/RecsPage",
+    "sample/search-commerce-react/pages/ResultListPage",
+    "sample/search-commerce-react/pages/TableResultListPage",
+    "sample/search-nextjs",
+    "sample/search-react",
+    "sample/search-vite",
+    "sample/search-vuejs",
+    "search-box-only",
+    "storybook/commerce/product-listing",
+    "storybook/commerce/recommendation",
+    "storybook/commerce/search",
+    "storybook/insight/insight",
+    "storybook/ipx/ipx",
+    "storybook/recommendations/recommendations",
+    "storybook/search/search"
+  ],
+  "groups": [
+    {
+      "chunk": "atomic-c0",
+      "pages": [19],
+      "modules": [
+        "@popperjs/core/lib/modifiers/arrow.js",
+        "@popperjs/core/lib/modifiers/flip.js",
+        "@popperjs/core/lib/modifiers/hide.js",
+        "@popperjs/core/lib/modifiers/offset.js",
+        "@popperjs/core/lib/popper.js",
+        "@popperjs/core/lib/utils/computeAutoPlacement.js",
+        "@popperjs/core/lib/utils/getOppositePlacement.js",
+        "@popperjs/core/lib/utils/getOppositeVariationPlacement.js",
+        "marked/lib/marked.esm.js",
+        "src/components/common/atomic-agent-stream-of-thought/atomic-agent-stream-of-thought.ts",
+        "src/components/common/atomic-agent-stream-of-thought/atomic-agent-stream-of-thought.tw.css.ts",
+        "src/components/common/atomic-ask-follow-up-input/atomic-ask-follow-up-input.ts",
+        "src/components/common/atomic-ask-follow-up-input/atomic-ask-follow-up-input.tw.css.ts",
+        "src/components/common/atomic-citation/atomic-citation.ts",
+        "src/components/common/atomic-citation/atomic-citation.tw.css.ts",
+        "src/components/common/atomic-citation/citation-anchoring-utils.ts",
+        "src/components/common/atomic-generated-answer-content/answer-context.ts",
+        "src/components/common/atomic-generated-answer-content/atomic-generated-answer-content.ts",
+        "src/components/common/atomic-generated-answer-feedback-modal/atomic-generated-answer-feedback-modal.ts",
+        "src/components/common/atomic-generated-answer-inline-link/atomic-generated-answer-inline-link.ts",
+        "src/components/common/atomic-generated-answer-inline-link/atomic-generated-answer-inline-link.tw.css.ts",
+        "src/components/common/atomic-generated-answer-thread-item/atomic-generated-answer-thread-item.ts",
+        "src/components/common/atomic-generated-answer-thread/atomic-generated-answer-thread.ts",
+        "src/components/common/generated-answer/answer-announcement.ts",
+        "src/components/common/generated-answer/copy-button.ts",
+        "src/components/common/generated-answer/feedback-button.ts",
+        "src/components/common/generated-answer/generated-answer-controller.ts",
+        "src/components/common/generated-answer/generated-answer-utils.ts",
+        "src/components/common/generated-answer/generated-content-container.ts",
+        "src/components/common/generated-answer/generated-content/generated-markdown-content.ts",
+        "src/components/common/generated-answer/generated-content/generated-markdown-content.tw.css.ts",
+        "src/components/common/generated-answer/generated-content/generated-text-content.ts",
+        "src/components/common/generated-answer/generated-content/markdown-utils.ts",
+        "src/components/common/generated-answer/render-answer-content.ts",
+        "src/components/common/generated-answer/render-card-header.ts",
+        "src/components/common/generated-answer/render-citations.ts",
+        "src/components/common/generated-answer/render-conversation-debug-header.ts",
+        "src/components/common/generated-answer/render-custom-no-answer-message.ts",
+        "src/components/common/generated-answer/render-disclaimer.ts",
+        "src/components/common/generated-answer/render-feedback-and-copy-buttons.ts",
+        "src/components/common/generated-answer/render-generating-answer-label.ts",
+        "src/components/common/generated-answer/retry-prompt.ts",
+        "src/components/common/generated-answer/show-button.ts",
+        "src/components/common/generated-answer/source-citations.ts",
+        "src/components/common/generated-answer/styles/copy-button.tw.css.ts",
+        "src/components/common/generated-answer/styles/feedback-buttons.tw.css.ts",
+        "src/components/common/generated-answer/styles/generated-answer.tw.css.ts",
+        "src/components/common/generated-answer/styles/generated-text.tw.css.ts",
+        "src/components/common/switch.ts",
+        "src/components/search/atomic-generated-answer/atomic-generated-answer.ts",
+        "src/components/search/atomic-generated-answer/atomic-generated-answer.tw.css.ts",
+        "src/converters/legacy-array-string-converter.ts",
+        "src/images/copy.svg",
+        "src/images/success.svg",
+        "src/images/thumbs.svg"
+      ]
+    },
+    {
+      "chunk": "atomic-c1",
+      "pages": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41],
+      "modules": [
+        "@lit/context/index.js",
+        "@lit/context/lib/context-request-event.js",
+        "@lit/context/lib/context-root.js",
+        "@lit/context/lib/controllers/context-consumer.js",
+        "@lit/context/lib/controllers/context-provider.js",
+        "@lit/context/lib/create-context.js",
+        "@lit/context/lib/decorators/consume.js",
+        "@lit/context/lib/decorators/provide.js",
+        "@lit/context/lib/value-notifier.js",
+        "@lit/reactive-element/css-tag.js",
+        "@lit/reactive-element/decorators/base.js",
+        "@lit/reactive-element/decorators/custom-element.js",
+        "@lit/reactive-element/decorators/property.js",
+        "@lit/reactive-element/decorators/query.js",
+        "@lit/reactive-element/decorators/state.js",
+        "@lit/reactive-element/reactive-element.js",
+        "dompurify/dist/purify.es.mjs",
+        "lit-element/lit-element.js",
+        "lit-html/async-directive.js",
+        "lit-html/directive-helpers.js",
+        "lit-html/directive.js",
+        "lit-html/directives/guard.js",
+        "lit-html/directives/if-defined.js",
+        "lit-html/directives/ref.js",
+        "lit-html/directives/style-map.js",
+        "lit-html/directives/unsafe-html.js",
+        "lit-html/directives/unsafe-svg.js",
+        "lit-html/directives/when.js",
+        "lit-html/lit-html.js",
+        "lit/decorators.js",
+        "lit/directives/guard.js",
+        "lit/directives/if-defined.js",
+        "lit/directives/ref.js",
+        "lit/directives/style-map.js",
+        "lit/directives/unsafe-svg.js",
+        "lit/index.js",
+        "src/components/common/atomic-component-error/atomic-component-error.ts",
+        "src/components/common/atomic-icon/atomic-icon.ts",
+        "src/components/common/atomic-icon/fetch-icon.ts",
+        "src/components/common/button-style.ts",
+        "src/components/common/button.ts",
+        "src/components/common/context/bindings-context.ts",
+        "src/converters/boolean-converter.ts",
+        "src/decorators/bind-state.ts",
+        "src/decorators/binding-guard.ts",
+        "src/decorators/bindings.ts",
+        "src/decorators/error-guard.ts",
+        "src/decorators/watch.ts",
+        "src/decorators/with-tailwind-styles.ts",
+        "src/mixins/bindings-mixin.ts",
+        "src/mixins/light-dom.ts",
+        "src/utils/asset-path-utils.ts",
+        "src/utils/custom-element-tags.ts",
+        "src/utils/dom-utils.ts",
+        "src/utils/event-utils.ts",
+        "src/utils/init-queue.ts",
+        "src/utils/initialization-common-utils.ts",
+        "src/utils/memoize.ts",
+        "src/utils/promise-utils.ts",
+        "src/utils/resource-url-utils.ts",
+        "src/utils/ripple-utils.ts",
+        "src/utils/slot-utils.ts",
+        "src/utils/tailwind.global.tw.css",
+        "src/utils/utils.ts",
+        "tslib/tslib.es6.mjs"
+      ]
+    },
+    {
+      "chunk": "atomic-c2",
+      "pages": [0, 1, 2, 3, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 41],
+      "modules": [
+        "../atomic-legacy/dist/components/atomic-suggestion-renderer.js",
+        "@stencil/core/internal/app-data/index.js",
+        "@stencil/core/internal/client/index.js",
+        "src/components/common/search-box/search-box-wrapper.ts",
+        "src/components/common/search-box/search-text-area.ts",
+        "src/components/common/search-box/text-area-clear-button.ts",
+        "src/components/common/suggestions/query-suggestions.ts",
+        "src/components/common/suggestions/suggestion-manager.ts",
+        "src/images/clear-slim.svg",
+        "src/images/search-slim.svg",
+        "src/utils/device-utils.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c1",
+      "pages": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41],
+      "modules": [
+        "dayjs/dayjs.min.js",
+        "i18next-http-backend/esm/index.js",
+        "i18next/dist/esm/i18next.js",
+        "src/components/common/atomic-aria-live/atomic-aria-live.ts",
+        "src/components/common/interface/analytics-config.ts",
+        "src/components/common/interface/i18n.ts",
+        "src/components/common/interface/interface-controller.ts",
+        "src/components/common/interface/store.ts",
+        "src/converters/array-converter.ts",
+        "src/generated/availableLocales.json",
+        "src/generated/dayjs-locales-data.ts",
+        "src/global/environment.ts",
+        "src/mixins/children-update-complete-mixin.ts",
+        "src/utils/accessibility-utils.ts",
+        "src/utils/dayjs-locales.ts",
+        "src/utils/debounce-utils.ts",
+        "src/utils/replace-breakpoint-utils.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c3",
+      "pages": [1, 38],
+      "modules": [
+        "src/components/insight/atomic-insight-facet/atomic-insight-facet.ts",
+        "src/components/insight/atomic-insight-interface/analytics-config.ts",
+        "src/components/insight/atomic-insight-interface/atomic-insight-interface.ts",
+        "src/components/insight/atomic-insight-interface/store.ts",
+        "src/components/insight/atomic-insight-layout/atomic-insight-layout.ts",
+        "src/components/insight/atomic-insight-layout/insight-layout.ts",
+        "src/components/insight/atomic-insight-no-results/atomic-insight-no-results.ts",
+        "src/components/insight/atomic-insight-pager/atomic-insight-pager.ts",
+        "src/components/insight/atomic-insight-query-error/atomic-insight-query-error.ts",
+        "src/components/insight/atomic-insight-query-summary/atomic-insight-query-summary.ts",
+        "src/components/insight/atomic-insight-result-list/atomic-insight-result-list.ts",
+        "src/components/insight/atomic-insight-result-list/insight-list-display.tw.css.ts",
+        "src/components/insight/atomic-insight-result-template/atomic-insight-result-template.ts",
+        "src/components/insight/atomic-insight-result/atomic-insight-result.ts",
+        "src/components/insight/atomic-insight-search-box/atomic-insight-search-box.ts",
+        "src/components/insight/atomic-insight-search-box/atomic-insight-search-box.tw.css.ts",
+        "src/components/insight/atomic-insight-tab/atomic-insight-tab.ts",
+        "src/components/insight/atomic-insight-tabs/atomic-insight-tabs.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c4",
+      "pages": [38],
+      "modules": [
+        "src/components/common/refine-modal/cloned-facet-elements.ts",
+        "src/components/insight/atomic-insight-edit-toggle/atomic-insight-edit-toggle.ts",
+        "src/components/insight/atomic-insight-full-search-button/atomic-insight-full-search-button.ts",
+        "src/components/insight/atomic-insight-generate-answer-button/atomic-insight-generate-answer-button.ts",
+        "src/components/insight/atomic-insight-history-toggle/atomic-insight-history-toggle.ts",
+        "src/components/insight/atomic-insight-numeric-facet/atomic-insight-numeric-facet.ts",
+        "src/components/insight/atomic-insight-refine-modal/atomic-insight-refine-modal.ts",
+        "src/components/insight/atomic-insight-refine-toggle/atomic-insight-refine-toggle.ts",
+        "src/components/insight/atomic-insight-result-action-bar/atomic-insight-result-action-bar.ts",
+        "src/components/insight/atomic-insight-result-action/atomic-insight-result-action.ts",
+        "src/components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action.ts",
+        "src/components/insight/atomic-insight-result-attach-to-case-indicator/atomic-insight-result-attach-to-case-indicator.ts",
+        "src/components/insight/atomic-insight-result-quickview-action/atomic-insight-result-quickview-action.ts",
+        "src/components/insight/atomic-insight-smart-snippet-feedback-modal/atomic-insight-smart-snippet-feedback-modal.ts",
+        "src/components/insight/atomic-insight-smart-snippet-feedback-modal/atomic-insight-smart-snippet-feedback-modal.tw.css.ts",
+        "src/components/insight/atomic-insight-smart-snippet-suggestions/atomic-insight-smart-snippet-suggestions.ts",
+        "src/components/insight/atomic-insight-smart-snippet-suggestions/atomic-insight-smart-snippet-suggestions.tw.css.ts",
+        "src/components/insight/atomic-insight-smart-snippet/atomic-insight-smart-snippet.ts",
+        "src/components/insight/atomic-insight-smart-snippet/atomic-insight-smart-snippet.tw.css.ts",
+        "src/components/insight/atomic-insight-timeframe-facet/atomic-insight-timeframe-facet.ts",
+        "src/images/arrow-full.svg",
+        "src/images/attach.svg",
+        "src/images/copy-dark.svg",
+        "src/images/detach.svg",
+        "src/images/edit.svg",
+        "src/images/email.svg",
+        "src/images/preview.svg",
+        "src/images/share-post.svg"
+      ]
+    },
+    {
+      "chunk": "atomic-c5",
+      "pages": [19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 41],
+      "modules": [
+        "src/components/search/atomic-color-facet/atomic-color-facet.ts",
+        "src/components/search/atomic-numeric-facet/atomic-numeric-facet.ts",
+        "src/components/search/atomic-rating-facet/atomic-rating-facet.ts",
+        "src/components/search/atomic-rating-range-facet/atomic-rating-range-facet.ts",
+        "src/components/search/facets/color-facet-checkbox/color-facet-checkbox.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c6",
+      "pages": [0, 7, 9, 11, 14, 15, 16, 17, 18, 21, 23, 24, 35, 37],
+      "modules": [
+        "src/components/commerce/atomic-commerce-category-facet/atomic-commerce-category-facet.ts",
+        "src/components/commerce/atomic-commerce-facet-number-input/atomic-commerce-facet-number-input.ts",
+        "src/components/commerce/atomic-commerce-facet/atomic-commerce-facet.ts",
+        "src/components/commerce/atomic-commerce-facets/atomic-commerce-facets.ts",
+        "src/components/commerce/atomic-commerce-numeric-facet/atomic-commerce-numeric-facet.ts",
+        "src/components/commerce/atomic-commerce-product-list/atomic-commerce-product-list.ts",
+        "src/components/commerce/atomic-commerce-timeframe-facet/atomic-commerce-timeframe-facet.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c7",
+      "pages": [2, 3, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 39, 41],
+      "modules": [
+        "src/components/search/atomic-relevance-inspector/atomic-relevance-inspector.ts",
+        "src/components/search/atomic-search-box-query-suggestions/atomic-search-box-query-suggestions.ts",
+        "src/components/search/atomic-search-box-recent-queries/atomic-search-box-recent-queries.ts",
+        "src/components/search/atomic-search-box/atomic-search-box.ts",
+        "src/components/search/atomic-search-interface/analytics-config.ts",
+        "src/components/search/atomic-search-interface/atomic-search-interface.ts",
+        "src/components/search/atomic-search-interface/store.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c8",
+      "pages": [27, 40],
+      "modules": [
+        "src/components/common/result-templates/recs-result-template-controller.ts",
+        "src/components/recommendations/atomic-recs-interface/analytics-config.ts",
+        "src/components/recommendations/atomic-recs-interface/atomic-recs-interface.ts",
+        "src/components/recommendations/atomic-recs-interface/store.ts",
+        "src/components/recommendations/atomic-recs-list/atomic-recs-list.ts",
+        "src/components/recommendations/atomic-recs-result-template/atomic-recs-result-template.ts",
+        "src/components/recommendations/atomic-recs-result/atomic-recs-result.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c9",
+      "pages": [1, 2, 19, 20, 38, 39, 41],
+      "modules": [
+        "@popperjs/core/lib/createPopper.js",
+        "@popperjs/core/lib/dom-utils/contains.js",
+        "@popperjs/core/lib/dom-utils/getBoundingClientRect.js",
+        "@popperjs/core/lib/dom-utils/getClippingRect.js",
+        "@popperjs/core/lib/dom-utils/getCompositeRect.js",
+        "@popperjs/core/lib/dom-utils/getComputedStyle.js",
+        "@popperjs/core/lib/dom-utils/getDocumentElement.js",
+        "@popperjs/core/lib/dom-utils/getDocumentRect.js",
+        "@popperjs/core/lib/dom-utils/getHTMLElementScroll.js",
+        "@popperjs/core/lib/dom-utils/getLayoutRect.js",
+        "@popperjs/core/lib/dom-utils/getNodeName.js",
+        "@popperjs/core/lib/dom-utils/getNodeScroll.js",
+        "@popperjs/core/lib/dom-utils/getOffsetParent.js",
+        "@popperjs/core/lib/dom-utils/getParentNode.js",
+        "@popperjs/core/lib/dom-utils/getScrollParent.js",
+        "@popperjs/core/lib/dom-utils/getViewportRect.js",
+        "@popperjs/core/lib/dom-utils/getWindow.js",
+        "@popperjs/core/lib/dom-utils/getWindowScroll.js",
+        "@popperjs/core/lib/dom-utils/getWindowScrollBarX.js",
+        "@popperjs/core/lib/dom-utils/instanceOf.js",
+        "@popperjs/core/lib/dom-utils/isLayoutViewport.js",
+        "@popperjs/core/lib/dom-utils/isScrollParent.js",
+        "@popperjs/core/lib/dom-utils/isTableElement.js",
+        "@popperjs/core/lib/dom-utils/listScrollParents.js",
+        "@popperjs/core/lib/enums.js",
+        "@popperjs/core/lib/modifiers/applyStyles.js",
+        "@popperjs/core/lib/modifiers/computeStyles.js",
+        "@popperjs/core/lib/modifiers/eventListeners.js",
+        "@popperjs/core/lib/modifiers/popperOffsets.js",
+        "@popperjs/core/lib/modifiers/preventOverflow.js",
+        "@popperjs/core/lib/utils/computeOffsets.js",
+        "@popperjs/core/lib/utils/debounce.js",
+        "@popperjs/core/lib/utils/detectOverflow.js",
+        "@popperjs/core/lib/utils/expandToHashMap.js",
+        "@popperjs/core/lib/utils/getAltAxis.js",
+        "@popperjs/core/lib/utils/getBasePlacement.js",
+        "@popperjs/core/lib/utils/getFreshSideObject.js",
+        "@popperjs/core/lib/utils/getMainAxisFromPlacement.js",
+        "@popperjs/core/lib/utils/getVariation.js",
+        "@popperjs/core/lib/utils/math.js",
+        "@popperjs/core/lib/utils/mergeByName.js",
+        "@popperjs/core/lib/utils/mergePaddingObject.js",
+        "@popperjs/core/lib/utils/orderModifiers.js",
+        "@popperjs/core/lib/utils/rectToClientRect.js",
+        "@popperjs/core/lib/utils/userAgent.js",
+        "@popperjs/core/lib/utils/within.js"
+      ]
+    },
+    {
+      "chunk": "atomic-c10",
+      "pages": [0, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 21, 23, 24, 37],
+      "modules": [
+        "src/components/commerce/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products.ts",
+        "src/components/commerce/atomic-commerce-search-box-query-suggestions/atomic-commerce-search-box-query-suggestions.ts",
+        "src/components/commerce/atomic-commerce-search-box-recent-queries/atomic-commerce-search-box-recent-queries.ts",
+        "src/components/commerce/atomic-commerce-search-box/atomic-commerce-search-box.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c7",
+      "pages": [2, 3, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 39, 41],
+      "modules": [
+        "src/components/search/atomic-facet/atomic-facet.ts",
+        "src/components/search/atomic-query-summary/atomic-query-summary.ts",
+        "src/components/search/atomic-result/atomic-result.ts",
+        "src/utils/hidden-state-controller.ts",
+        "src/utils/tab-utils.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c11",
+      "pages": [2, 39],
+      "modules": [
+        "src/components/ipx/atomic-ipx-body/ipx-body-styles.ts",
+        "src/components/ipx/atomic-ipx-body/ipx-body.ts",
+        "src/components/ipx/atomic-ipx-button/atomic-ipx-button.ts",
+        "src/components/ipx/atomic-ipx-modal/atomic-ipx-modal.ts",
+        "src/components/ipx/atomic-ipx-refine-modal/atomic-ipx-refine-modal.ts",
+        "src/components/ipx/atomic-ipx-refine-toggle/atomic-ipx-refine-toggle.ts",
+        "src/components/ipx/atomic-ipx-result-link/atomic-ipx-result-link.ts",
+        "src/components/ipx/atomic-ipx-result-link/atomic-ipx-result-link.tw.css.ts",
+        "src/components/ipx/atomic-ipx-tab/atomic-ipx-tab.ts",
+        "src/components/ipx/atomic-ipx-tabs/atomic-ipx-tabs.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c12",
+      "pages": [0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22, 23, 24, 35, 36, 37],
+      "modules": [
+        "src/components/commerce/atomic-commerce-text/atomic-commerce-text.ts",
+        "src/components/commerce/atomic-product-image/atomic-product-image.ts",
+        "src/components/commerce/atomic-product-link/atomic-product-link.ts",
+        "src/components/commerce/atomic-product-link/atomic-product-link.tw.css.ts",
+        "src/components/commerce/atomic-product-section-name/atomic-product-section-name.ts",
+        "src/components/commerce/atomic-product-section-visual/atomic-product-section-visual.ts",
+        "src/components/commerce/atomic-product-text/atomic-product-text.ts",
+        "src/components/commerce/product-template-component-utils/context/interactive-product-context-controller.ts",
+        "src/components/commerce/product-template-component-utils/context/product-context-controller.ts",
+        "src/components/commerce/product-template-component-utils/product-utils.ts",
+        "src/components/common/image-carousel/image-carousel-indicators.ts",
+        "src/components/common/image-carousel/image-carousel.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c13",
+      "pages": [20, 41],
+      "modules": [
+        "src/components/search/atomic-popover/atomic-popover.ts",
+        "src/components/search/atomic-quickview/atomic-quickview.ts",
+        "src/components/search/atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.ts",
+        "src/components/search/atomic-segmented-facet/atomic-segmented-facet.ts",
+        "src/components/search/facets/facet-segmented-value/facet-segmented-value.ts",
+        "src/components/search/facets/facet-segmented-value/facet-segmented-value.tw.css.ts",
+        "src/images/quickview.svg"
+      ]
+    },
+    {
+      "chunk": "atomic-c1",
+      "pages": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 39, 40, 41],
+      "modules": [
+        "src/components/common/atomic-result-placeholder/atomic-result-placeholder.ts",
+        "src/components/common/atomic-result-placeholder/item-placeholders.ts",
+        "src/components/common/item-list/display-wrapper.ts",
+        "src/components/common/item-list/styles/placeholders.tw.css.ts",
+        "src/components/common/table-element-utils.ts",
+        "src/components/common/template-controller/base-template-controller.ts",
+        "src/components/common/template-controller/template-utils.ts",
+        "src/components/search/atomic-result-section-actions/atomic-result-section-actions.ts",
+        "src/components/search/atomic-result-section-badges/atomic-result-section-badges.ts",
+        "src/components/search/atomic-result-section-bottom-metadata/atomic-result-section-bottom-metadata.ts",
+        "src/components/search/atomic-result-section-excerpt/atomic-result-section-excerpt.ts",
+        "src/components/search/atomic-result-table-placeholder/atomic-result-table-placeholder.ts",
+        "src/utils/set.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c14",
+      "pages": [20, 38, 41],
+      "modules": [
+        "src/components/search/atomic-quickview-modal/atomic-quickview-modal.ts",
+        "src/components/search/result-template-components/atomic-quickview-sidebar/atomic-quickview-sidebar.ts",
+        "src/components/search/result-template-components/atomic-quickview-sidebar/highlight-keywords-checkbox.ts",
+        "src/components/search/result-template-components/atomic-quickview-sidebar/keywords.ts",
+        "src/components/search/result-template-components/atomic-quickview-sidebar/minimize-button.ts",
+        "src/components/search/result-template-components/quickview-iframe/quickview-iframe.ts",
+        "src/components/search/result-template-components/quickview-preview-bar/quickview-preview-bar.ts",
+        "src/components/search/result-template-components/quickview-word-highlight/color-parser.ts",
+        "src/components/search/result-template-components/quickview-word-highlight/iframe-parser.ts",
+        "src/components/search/result-template-components/quickview-word-highlight/quickview-word-highlight.ts",
+        "src/components/search/result-template-components/quickview-word-highlight/text-parser.ts",
+        "src/images/add.svg",
+        "src/images/menu.svg",
+        "src/images/remove.svg",
+        "src/utils/color-utils.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c15",
+      "pages": [20, 38, 39, 41],
+      "modules": [
+        "src/components/common/atomic-smart-snippet-answer/atomic-smart-snippet-answer.ts",
+        "src/components/common/atomic-smart-snippet-answer/atomic-smart-snippet-answer.tw.css.ts",
+        "src/components/common/atomic-smart-snippet-collapse-wrapper/atomic-smart-snippet-collapse-wrapper.ts",
+        "src/components/common/atomic-smart-snippet-expandable-answer/atomic-smart-snippet-expandable-answer.ts",
+        "src/components/common/atomic-smart-snippet-expandable-answer/atomic-smart-snippet-expandable-answer.tw.css.ts",
+        "src/components/common/atomic-smart-snippet-source/atomic-smart-snippet-source.ts",
+        "src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/feedback-options.ts",
+        "src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-body.ts",
+        "src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-details.ts",
+        "src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-footer.ts",
+        "src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-header.ts",
+        "src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-option.ts",
+        "src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-options.ts",
+        "src/components/common/smart-snippets/atomic-smart-snippet-suggestions/answer-and-source-wrapper.ts",
+        "src/components/common/smart-snippets/atomic-smart-snippet-suggestions/footer.ts",
+        "src/components/common/smart-snippets/atomic-smart-snippet-suggestions/get-question-part.ts",
+        "src/components/common/smart-snippets/atomic-smart-snippet-suggestions/question-wrapper.ts",
+        "src/components/common/smart-snippets/atomic-smart-snippet-suggestions/question.ts",
+        "src/components/common/smart-snippets/atomic-smart-snippet-suggestions/suggestions-wrapper.ts",
+        "src/components/common/smart-snippets/atomic-smart-snippet/snippet-footer.ts",
+        "src/components/common/smart-snippets/atomic-smart-snippet/snippet-question.ts",
+        "src/components/common/smart-snippets/atomic-smart-snippet/snippet-wrapper.ts",
+        "src/components/common/smart-snippets/smart-snippet-feedback-banner.ts",
+        "src/images/arrow-down.svg",
+        "src/images/checkmark.svg",
+        "src/images/cross.svg"
+      ]
+    },
+    {
+      "chunk": "atomic-c16",
+      "pages": [0, 1, 2, 3, 7, 9, 11, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 37, 38, 39, 41],
+      "modules": [
+        "escape-html/index.js",
+        "src/components/common/atomic-facet-placeholder/atomic-facet-placeholder.ts",
+        "src/components/common/checkbox.ts",
+        "src/components/common/facets/facet-common.ts",
+        "src/components/common/facets/facet-common.tw.css.ts",
+        "src/components/common/facets/facet-container/facet-container.ts",
+        "src/components/common/facets/facet-header/facet-header.ts",
+        "src/components/common/facets/facet-search/facet-search-aria-live.ts",
+        "src/components/common/facets/facet-search/facet-search-utils.ts",
+        "src/components/common/facets/facet-show-more-less/facet-show-more-less.ts",
+        "src/components/common/facets/facet-value-box/facet-value-box.ts",
+        "src/components/common/facets/facet-value-box/facet-value-box.tw.css.ts",
+        "src/components/common/facets/facet-value-checkbox/facet-value-checkbox.ts",
+        "src/components/common/facets/facet-value-checkbox/facet-value-checkbox.tw.css.ts",
+        "src/components/common/facets/facet-value-exclude/facet-value-exclude.ts",
+        "src/components/common/facets/facet-value-exclude/facet-value-exclude.tw.css.ts",
+        "src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight.ts",
+        "src/components/common/facets/facet-value-link/facet-value-link.ts",
+        "src/components/common/facets/facet-value/facet-value.ts",
+        "src/components/common/facets/facet-values-group/facet-values-group.ts",
+        "src/components/common/fieldset-group.ts",
+        "src/components/common/triStateCheckbox.ts",
+        "src/directives/localized-string.ts",
+        "src/images/arrow-bottom-rounded.svg",
+        "src/images/arrow-top-rounded.svg",
+        "src/images/checkbox.svg",
+        "src/images/clear.svg",
+        "src/images/close.svg",
+        "src/images/minus.svg",
+        "src/images/plus.svg"
+      ]
+    },
+    {
+      "chunk": "atomic-c17",
+      "pages": [20, 39, 41],
+      "modules": [
+        "src/components/common/smart-snippets/atomic-smart-snippet/snippet-truncated-answer.ts",
+        "src/components/search/atomic-notifications/atomic-notifications.ts",
+        "src/components/search/atomic-smart-snippet-feedback-modal/atomic-smart-snippet-feedback-modal.ts",
+        "src/components/search/atomic-smart-snippet-feedback-modal/atomic-smart-snippet-feedback-modal.tw.css.ts",
+        "src/components/search/atomic-smart-snippet-suggestions/atomic-smart-snippet-suggestions.ts",
+        "src/components/search/atomic-smart-snippet-suggestions/atomic-smart-snippet-suggestions.tw.css.ts",
+        "src/components/search/atomic-smart-snippet/atomic-smart-snippet.ts",
+        "src/components/search/atomic-smart-snippet/atomic-smart-snippet.tw.css.ts",
+        "src/images/info.svg"
+      ]
+    },
+    {
+      "chunk": "atomic-c18",
+      "pages": [4, 5, 6, 8, 12, 13, 22, 36],
+      "modules": [
+        "src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.ts",
+        "src/components/commerce/atomic-commerce-recommendation-interface/store.ts",
+        "src/components/commerce/atomic-commerce-recommendation-list/atomic-commerce-recommendation-list.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c19",
+      "pages": [20],
+      "modules": [
+        "@salesforce-ux/design-system/design-tokens/dist/bg-standard.common.js",
+        "src/components/search/atomic-result-icon/atomic-result-icon.ts",
+        "src/components/search/atomic-result-icon/file-type-icons.ts",
+        "src/components/search/atomic-result-icon/object-type-icons.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c20",
+      "pages": [25],
+      "modules": [
+        "src/components/common/item-list/unfolded-item.ts",
+        "src/components/search/atomic-folded-result-list/atomic-folded-result-list.ts",
+        "src/components/search/atomic-result-section-children/atomic-result-section-children.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c1",
+      "pages": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 39, 40, 41],
+      "modules": [
+        "lit-html/directives/keyed.js",
+        "lit-html/directives/map.js",
+        "lit-html/static.js",
+        "lit/directives/keyed.js",
+        "lit/static-html.js",
+        "src/components/common/heading.ts",
+        "src/components/common/item-list/item-list-common.ts",
+        "src/components/common/layout/custom-render-controller.ts",
+        "src/components/common/layout/item-layout-controller.ts",
+        "src/components/common/layout/item-layout-sections.ts",
+        "src/components/common/layout/item-layout-utils.ts",
+        "src/components/common/template-provider/template-provider.ts",
+        "src/components/search/atomic-result-section-title/atomic-result-section-title.ts",
+        "src/components/search/atomic-result-section-visual/atomic-result-section-visual.ts",
+        "src/utils/props-utils.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c5",
+      "pages": [3, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 41],
+      "modules": [
+        "src/components/search/atomic-automatic-facet-generator/atomic-automatic-facet-generator.ts",
+        "src/components/search/atomic-automatic-facet/atomic-automatic-facet.ts",
+        "src/components/search/atomic-refine-modal/atomic-refine-modal.ts",
+        "src/components/search/atomic-refine-toggle/atomic-refine-toggle.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c21",
+      "pages": [19, 20, 31, 32, 41],
+      "modules": [
+        "src/components/search/atomic-category-facet/atomic-category-facet.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c12",
+      "pages": [0, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22, 23, 24, 35, 36, 37],
+      "modules": [
+        "src/components/commerce/atomic-product-template/atomic-product-template.ts",
+        "src/components/commerce/atomic-product/atomic-product.ts",
+        "src/components/commerce/atomic-product/atomic-product.tw.css.ts",
+        "src/components/commerce/product-list/product-template-provider.ts",
+        "src/components/common/product-template/product-template-controller.ts",
+        "src/utils/locale-utils.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c7",
+      "pages": [3, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 41],
+      "modules": [
+        "src/components/search/atomic-breadbox/atomic-breadbox.ts",
+        "src/components/search/atomic-sort-dropdown/atomic-sort-dropdown.ts",
+        "src/components/search/atomic-sort-expression/atomic-sort-expression.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c22",
+      "pages": [0, 1, 2, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 35, 37, 38, 39, 40, 41],
+      "modules": [
+        "lit-html/directives/private-async-helpers.js",
+        "lit-html/directives/until.js",
+        "lit/directives/until.js",
+        "src/components/common/query-error/container.ts",
+        "src/components/common/query-error/description.ts",
+        "src/components/common/query-error/details.ts",
+        "src/components/common/query-error/icon.ts",
+        "src/components/common/query-error/link.ts",
+        "src/components/common/query-error/show-more.ts",
+        "src/components/common/query-error/title.ts",
+        "src/components/common/query-error/utils.ts",
+        "src/images/no-connection.svg"
+      ]
+    },
+    {
+      "chunk": "atomic-c23",
+      "pages": [0, 35, 36, 37],
+      "modules": [
+        "src/components/commerce/atomic-product-children/atomic-product-children.ts",
+        "src/components/commerce/atomic-product-section-children/atomic-product-section-children.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c23",
+      "pages": [0, 35, 37],
+      "modules": [
+        "src/components/commerce/atomic-commerce-refine-modal/atomic-commerce-refine-modal.ts",
+        "src/components/commerce/atomic-commerce-refine-toggle/atomic-commerce-refine-toggle.ts",
+        "src/components/commerce/atomic-product-excerpt/atomic-product-excerpt.ts",
+        "src/components/commerce/atomic-product-multi-value-text/atomic-product-multi-value-text.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c10",
+      "pages": [0, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 21, 23, 24, 35, 37],
+      "modules": [
+        "src/components/commerce/atomic-commerce-interface/analytics-config.ts",
+        "src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.ts",
+        "src/components/commerce/atomic-commerce-interface/store.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c24",
+      "pages": [2, 3, 19, 20, 28, 29, 30, 31, 32, 33, 39, 41],
+      "modules": [
+        "src/components/search/atomic-result-list/atomic-result-list.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c22",
+      "pages": [0, 2, 3, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 37, 38, 39, 41],
+      "modules": [
+        "src/components/common/atomic-focus-trap/atomic-focus-trap.ts",
+        "src/components/common/atomic-modal/atomic-modal.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c25",
+      "pages": [1, 2, 38, 39],
+      "modules": [
+        "src/components/common/atomic-tab-bar/atomic-tab-bar.ts",
+        "src/components/common/atomic-tab-popover/atomic-tab-popover.ts",
+        "src/components/common/tabs/tab-common.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c1",
+      "pages": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 39, 40, 41],
+      "modules": [
+        "lit/directives/unsafe-html.js",
+        "src/components/common/item-link/attributes-slot.ts",
+        "src/components/common/item-link/bind-analytics-to-link.ts",
+        "src/components/common/item-link/item-link.ts",
+        "src/components/common/item-list/context/interactive-item-context-controller.ts",
+        "src/components/common/item-list/context/item-context-controller.ts",
+        "src/components/common/item-text/field-warning.ts",
+        "src/components/common/item-text/item-text-fallback.ts",
+        "src/components/common/item-text/item-text-highlighted.ts",
+        "src/components/common/item-text/render-highlights.ts",
+        "src/mixins/item-section-mixin.ts",
+        "src/mixins/slots-for-no-shadow-dom-mixin.ts",
+        "src/utils/field-utils.ts",
+        "src/utils/item-section-utils.ts",
+        "src/utils/object-utils.ts",
+        "src/utils/xss-utils.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c6",
+      "pages": [0, 7, 9, 14, 15, 16, 17, 18, 21, 35, 37],
+      "modules": [
+        "src/components/commerce/atomic-commerce-breadbox/atomic-commerce-breadbox.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c7",
+      "pages": [19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 39, 41],
+      "modules": [
+        "src/components/search/atomic-timeframe-facet/atomic-timeframe-facet.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c26",
+      "pages": [19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 38, 39, 41],
+      "modules": [
+        "src/components/common/atomic-timeframe/atomic-timeframe.ts",
+        "src/components/common/facets/timeframe-facet-common.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c16",
+      "pages": [0, 7, 9, 11, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24, 31, 32, 35, 37, 41],
+      "modules": [
+        "src/components/common/facets/category-facet/active-value.ts",
+        "src/components/common/facets/category-facet/all-categories-button.ts",
+        "src/components/common/facets/category-facet/all-categories-localized-label.ts",
+        "src/components/common/facets/category-facet/children-as-tree-container.ts",
+        "src/components/common/facets/category-facet/parent-as-tree-container.ts",
+        "src/components/common/facets/category-facet/parent-button.ts",
+        "src/components/common/facets/category-facet/search-results-container.ts",
+        "src/components/common/facets/category-facet/search-value.ts",
+        "src/components/common/facets/category-facet/selected-value.ts",
+        "src/components/common/facets/category-facet/value-as-tree-container.ts",
+        "src/components/common/facets/category-facet/value-link.ts",
+        "src/directives/hierarchical-path.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c22",
+      "pages": [0, 1, 2, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 35, 37, 38, 39, 41],
+      "modules": [
+        "src/components/common/no-items/container.ts",
+        "src/components/common/no-items/guard.ts",
+        "src/components/common/no-items/magnifying-glass.ts",
+        "src/components/common/no-items/no-items.ts",
+        "src/components/common/no-items/tips.ts",
+        "src/components/common/no-items/utils.ts",
+        "src/images/magnifying-glass.svg"
+      ]
+    },
+    {
+      "chunk": "atomic-c26",
+      "pages": [2, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 39, 41],
+      "modules": [
+        "src/components/common/no-items/cancel.ts",
+        "src/components/search/atomic-no-results/atomic-no-results.ts",
+        "src/components/search/atomic-query-error/atomic-query-error.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c22",
+      "pages": [1, 2, 3, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 38, 39, 40, 41],
+      "modules": [
+        "src/components/search/atomic-result-text/atomic-result-text.ts",
+        "src/components/search/result-template-component-utils/context/result-context-controller.ts",
+        "src/utils/result-utils.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c16",
+      "pages": [0, 2, 3, 7, 9, 11, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24, 28, 29, 30, 31, 32, 33, 35, 37, 39, 41],
+      "modules": [
+        "src/components/common/item-list/styles/grid-display.tw.css.ts",
+        "src/components/common/item-list/styles/table-display.tw.css.ts",
+        "src/components/common/item-list/table-layout.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c27",
+      "pages": [19, 20, 25, 27, 28, 29, 31, 38, 39, 41],
+      "modules": [
+        "src/components/search/atomic-result-printable-uri/atomic-result-printable-uri.ts",
+        "src/components/search/atomic-result-printable-uri/atomic-result-printable-uri.tw.css.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c28",
+      "pages": [41],
+      "modules": [
+        "dayjs/plugin/duration.js",
+        "src/components/search/atomic-result-timespan/atomic-result-timespan.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c29",
+      "pages": [3, 20, 41],
+      "modules": [
+        "src/components/common/items-per-page/choices.ts",
+        "src/components/common/items-per-page/error.ts",
+        "src/components/common/items-per-page/label.ts",
+        "src/components/common/items-per-page/validate.ts",
+        "src/components/search/atomic-results-per-page/atomic-results-per-page.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c7",
+      "pages": [19, 22, 23, 24, 25, 26, 27, 28, 29, 31, 32],
+      "modules": [
+        "src/components/search/atomic-search-box-instant-results/atomic-search-box-instant-results.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c6",
+      "pages": [0, 7, 9, 11, 14, 15, 16, 17, 18, 23, 24, 35, 37],
+      "modules": [
+        "src/components/commerce/atomic-commerce-query-summary/atomic-commerce-query-summary.ts",
+        "src/components/commerce/atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.ts",
+        "src/components/commerce/sort/option.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c29",
+      "pages": [3, 20, 31, 32, 41],
+      "modules": [
+        "src/components/search/atomic-pager/atomic-pager.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c6",
+      "pages": [7, 9, 11, 14, 15, 16, 17, 18],
+      "modules": [
+        "src/components/commerce/atomic-commerce-pager/atomic-commerce-pager.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c16",
+      "pages": [0, 7, 9, 11, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 35, 37, 38, 39, 41],
+      "modules": [
+        "src/components/common/atomic-facet-date-input/atomic-facet-date-input.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c30",
+      "pages": [0, 21, 35, 37],
+      "modules": [
+        "src/components/commerce/atomic-commerce-no-products/atomic-commerce-no-products.ts",
+        "src/components/commerce/atomic-commerce-query-error/atomic-commerce-query-error.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c22",
+      "pages": [1, 2, 3, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 38, 39, 40, 41],
+      "modules": [
+        "src/components/common/item-list/result-template-provider.ts",
+        "src/components/search/atomic-result-link/atomic-result-link.ts",
+        "src/components/search/atomic-result-link/atomic-result-link.tw.css.ts",
+        "src/components/search/result-template-component-utils/context/interactive-result-context-controller.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c1",
+      "pages": [0, 2, 3, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 37, 39, 41],
+      "modules": [
+        "src/components/common/atomic-layout-section/layout.ts",
+        "src/components/common/layout/mobile-breakpoint-controller.ts",
+        "src/components/search/atomic-search-layout/search-layout.ts",
+        "src/images/search.svg",
+        "src/utils/local-storage-utils.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c7",
+      "pages": [2, 3, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 39, 41],
+      "modules": [
+        "src/components/search/atomic-did-you-mean/atomic-did-you-mean.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c26",
+      "pages": [19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 38, 41],
+      "modules": [
+        "src/components/common/atomic-facet-number-input/atomic-facet-number-input.ts",
+        "src/components/common/atomic-numeric-range/atomic-numeric-range.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c26",
+      "pages": [20, 25, 27, 28, 30, 33, 38, 41],
+      "modules": [
+        "src/components/search/atomic-result-multi-value-text/atomic-result-multi-value-text.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c27",
+      "pages": [20, 27, 28, 30, 31, 33, 38, 39, 40, 41],
+      "modules": [
+        "dayjs/plugin/calendar.js",
+        "dayjs/plugin/localizedFormat.js",
+        "src/components/search/atomic-result-date/atomic-result-date.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c16",
+      "pages": [0, 3, 7, 9, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 37, 41],
+      "modules": [
+        "src/components/common/breadbox/breadcrumb-button.ts",
+        "src/components/common/breadbox/breadcrumb-clear-all.ts",
+        "src/components/common/breadbox/breadcrumb-container.ts",
+        "src/components/common/breadbox/breadcrumb-content.ts",
+        "src/components/common/breadbox/breadcrumb-show-less.ts",
+        "src/components/common/breadbox/breadcrumb-show-more.ts",
+        "src/components/common/breadbox/breadcrumb-utils.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c30",
+      "pages": [0, 21, 22, 23, 35, 37],
+      "modules": [
+        "src/components/commerce/atomic-product-section-description/atomic-product-section-description.ts",
+        "src/components/common/expandable-text/expandable-text.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c12",
+      "pages": [0, 7, 10, 12, 14, 15, 16, 17, 18, 22, 23, 24, 35, 36, 37],
+      "modules": [
+        "src/components/commerce/atomic-product-rating/atomic-product-rating.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c26",
+      "pages": [19, 22, 23, 24, 25, 26, 27, 28, 29, 40, 41],
+      "modules": [
+        "src/components/search/atomic-result-image/atomic-result-image.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c26",
+      "pages": [19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 38, 39, 41],
+      "modules": [
+        "src/components/search/atomic-result-rating/atomic-result-rating.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c16",
+      "pages": [1, 3, 7, 9, 11, 14, 15, 16, 17, 18, 20, 31, 32, 38, 41],
+      "modules": [
+        "src/components/common/pager/pager-buttons.ts",
+        "src/components/common/pager/pager-fit-controller.ts",
+        "src/components/common/pager/pager-navigation.ts",
+        "src/components/common/pager/pager-utils.ts",
+        "src/images/arrow-right-rounded.svg"
+      ]
+    },
+    {
+      "chunk": "atomic-c1",
+      "pages": [0, 7, 9, 11, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 33, 35, 37, 38, 39, 40, 41],
+      "modules": [
+        "dayjs/plugin/customParseFormat.js",
+        "src/utils/date-utils.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c30",
+      "pages": [21, 22, 23],
+      "modules": [
+        "src/components/commerce/atomic-product-description/atomic-product-description.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c16",
+      "pages": [0, 2, 3, 7, 9, 11, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 37, 39, 41],
+      "modules": [
+        "src/components/common/facets/facet-search/facet-search-input-guard.ts",
+        "src/components/common/facets/facet-search/facet-search-input.ts",
+        "src/components/common/facets/facet-search/facet-search-matches.ts",
+        "src/components/common/facets/facet-search/facet-search.tw.css.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c7",
+      "pages": [3, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 41],
+      "modules": [
+        "src/components/search/atomic-search-layout/atomic-search-layout.ts",
+        "src/components/search/atomic-search-layout/atomic-search-layout.tw.css.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c26",
+      "pages": [2, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 39],
+      "modules": [
+        "src/components/search/atomic-load-more-results/atomic-load-more-results.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c12",
+      "pages": [0, 7, 8, 9, 11, 14, 15, 16, 17, 18, 21, 22, 23, 24, 35, 37],
+      "modules": [
+        "src/components/commerce/atomic-commerce-layout/atomic-commerce-layout.ts",
+        "src/components/commerce/atomic-commerce-layout/atomic-commerce-layout.tw.css.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c22",
+      "pages": [1, 2, 3, 19, 20, 25, 27, 28, 30, 33, 38, 39, 41],
+      "modules": [
+        "src/components/search/atomic-result-fields-list/atomic-result-fields-list.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c22",
+      "pages": [3, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 38, 41],
+      "modules": [
+        "src/components/search/atomic-facet-manager/atomic-facet-manager.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c12",
+      "pages": [0, 4, 5, 6, 7, 10, 12, 13, 14, 15, 16, 17, 18, 21, 22, 23, 24, 35, 36, 37],
+      "modules": [
+        "src/components/commerce/atomic-product-price/atomic-product-price.ts",
+        "src/components/commerce/atomic-product-section-emphasized/atomic-product-section-emphasized.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c8",
+      "pages": [40],
+      "modules": [
+        "src/components/recommendations/atomic-recs-error/atomic-recs-error.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c5",
+      "pages": [19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 41],
+      "modules": [
+        "src/components/search/atomic-result-number/atomic-result-number.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c30",
+      "pages": [0, 21, 23, 24, 35, 37],
+      "modules": [
+        "src/components/commerce/atomic-commerce-load-more-products/atomic-commerce-load-more-products.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c7",
+      "pages": [2, 3, 19, 20, 25, 28, 29, 30, 31, 32, 33, 39, 41],
+      "modules": [
+        "src/components/common/tabs/tab-wrapper.ts",
+        "src/components/search/atomic-result-template/atomic-result-template.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c30",
+      "pages": [0, 21, 37],
+      "modules": [
+        "src/components/commerce/atomic-commerce-did-you-mean/atomic-commerce-did-you-mean.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c31",
+      "pages": [4, 5, 6, 7],
+      "modules": [
+        "src/components/commerce/atomic-product-section-actions/atomic-product-section-actions.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c27",
+      "pages": [3, 19, 20, 25, 27, 28, 29, 38, 39, 41],
+      "modules": [
+        "src/components/search/atomic-result-badge/atomic-result-badge.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c1",
+      "pages": [0, 1, 2, 3, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 37, 38, 39, 40, 41],
+      "modules": [
+        "src/components/common/validate-props-controller/validate-props-controller.ts",
+        "src/utils/compare-utils.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c16",
+      "pages": [0, 7, 9, 11, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 35, 37, 38, 41],
+      "modules": [
+        "src/components/common/facets/numeric-facet-common.tw.css.ts",
+        "src/components/common/facets/numeric-facet/formatter.ts",
+        "src/components/common/facets/numeric-facet/value-link.ts",
+        "src/components/common/facets/numeric-facet/values-container.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c2",
+      "pages": [0, 2, 3, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 37, 39, 41],
+      "modules": [
+        "src/components/common/search-box/submit-button.ts",
+        "src/components/common/suggestions/recent-queries.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c27",
+      "pages": [3, 19, 20, 38, 39, 41],
+      "modules": [
+        "src/components/common/radio-button.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c1",
+      "pages": [0, 7, 10, 12, 14, 15, 16, 17, 18, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 35, 36, 37, 38, 39, 41],
+      "modules": [
+        "src/components/common/atomic-rating/atomic-rating.tw.css.ts",
+        "src/components/common/atomic-rating/rating.ts",
+        "src/images/star.svg"
+      ]
+    },
+    {
+      "chunk": "atomic-c22",
+      "pages": [1, 2, 3, 19, 20, 33, 38, 39, 40, 41],
+      "modules": [
+        "src/components/search/atomic-field-condition/atomic-field-condition.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c12",
+      "pages": [0, 4, 5, 6, 7, 12, 13, 14, 15, 16, 17, 18, 35, 36, 37],
+      "modules": [
+        "src/components/commerce/atomic-product-field-condition/atomic-product-field-condition.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c18",
+      "pages": [4, 5, 6, 8, 12, 13, 22, 27, 36, 40],
+      "modules": [
+        "src/components/common/carousel.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c16",
+      "pages": [0, 2, 3, 7, 9, 11, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 28, 29, 30, 31, 32, 33, 35, 37, 39, 41],
+      "modules": [
+        "src/components/common/item-list/styles/list-display.tw.css.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c16",
+      "pages": [0, 1, 2, 3, 7, 9, 11, 14, 15, 16, 17, 18, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 37, 38, 39, 41],
+      "modules": [
+        "src/components/common/query-summary/container.ts",
+        "src/components/common/query-summary/guard.ts",
+        "src/components/common/query-summary/utils.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c1",
+      "pages": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41],
+      "modules": [
+        "lit-html/directives/class-map.js",
+        "lit/directives/class-map.js",
+        "src/directives/multi-class-map.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c22",
+      "pages": [0, 2, 3, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 35, 37, 38, 39, 41],
+      "modules": [
+        "src/components/common/atomic-modal/export-parts.ts",
+        "src/components/common/refine-modal/modal.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c22",
+      "pages": [1, 2, 3, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 38, 39, 41],
+      "modules": [
+        "src/components/common/facets/depends-on.ts",
+        "src/components/common/facets/facet-visibility-controller.ts",
+        "src/components/common/facets/popover/popover-type.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c22",
+      "pages": [0, 2, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 35, 37, 39],
+      "modules": [
+        "src/components/common/load-more/button.ts",
+        "src/components/common/load-more/container.ts",
+        "src/components/common/load-more/progress-bar.ts",
+        "src/components/common/load-more/summary.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c22",
+      "pages": [0, 2, 3, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 37, 39, 41],
+      "modules": [
+        "src/components/common/query-correction/auto-correction.ts",
+        "src/components/common/query-correction/correction.ts",
+        "src/components/common/query-correction/trigger-correction.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c1",
+      "pages": [0, 1, 2, 3, 7, 9, 11, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 37, 38, 39, 40, 41],
+      "modules": [
+        "src/components/search/atomic-text/atomic-text.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c16",
+      "pages": [0, 3, 7, 9, 11, 14, 15, 16, 17, 18, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 37, 41],
+      "modules": [
+        "src/components/common/sort/label.ts",
+        "src/components/common/sort/option.ts",
+        "src/components/common/sort/select.ts",
+        "src/components/common/sort/sort-guard.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c22",
+      "pages": [0, 3, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 35, 37, 41],
+      "modules": [
+        "src/components/common/refine-modal/button.ts",
+        "src/components/common/refine-modal/sort.ts",
+        "src/images/sort.svg"
+      ]
+    },
+    {
+      "chunk": "atomic-c9",
+      "pages": [19, 20, 38, 41],
+      "modules": [
+        "lit-html/directives/repeat.js",
+        "lit/directives/repeat.js"
+      ]
+    },
+    {
+      "chunk": "atomic-c5",
+      "pages": [19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33],
+      "modules": [
+        "src/components/search/atomic-format-currency/atomic-format-currency.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c1",
+      "pages": [0, 1, 3, 7, 8, 9, 11, 14, 15, 16, 17, 18, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 37, 38, 41],
+      "modules": [
+        "src/components/common/layout/layout-styles-controller.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c22",
+      "pages": [0, 2, 3, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 35, 37, 39, 41],
+      "modules": [
+        "src/components/common/refine-modal/body.ts",
+        "src/components/common/refine-modal/filters.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c1",
+      "pages": [0, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 35, 36, 37, 38, 41],
+      "modules": [
+        "src/components/common/formats/format-common.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c1",
+      "pages": [0, 1, 2, 3, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 37, 38, 39, 41],
+      "modules": [
+        "src/components/common/atomic-layout-section/atomic-layout-section.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c2",
+      "pages": [0, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 29, 31, 32, 37],
+      "modules": [
+        "src/components/common/suggestions/instant-item.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c22",
+      "pages": [1, 2, 3, 19, 20, 25, 28, 29, 30, 31, 32, 33, 38, 39, 41],
+      "modules": [
+        "src/components/common/result-templates/result-template-controller.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c9",
+      "pages": [2, 19, 20, 38, 39, 41],
+      "modules": [
+        "src/components/common/icon-button.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c26",
+      "pages": [19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 38, 39, 40, 41],
+      "modules": [
+        "src/components/search/atomic-result-section-title-metadata/atomic-result-section-title-metadata.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c5",
+      "pages": [19, 27, 28, 29],
+      "modules": [
+        "src/components/search/atomic-result-section-emphasized/atomic-result-section-emphasized.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c12",
+      "pages": [0, 7, 10, 12, 14, 15, 16, 17, 18, 22, 23, 35, 36, 37],
+      "modules": [
+        "src/components/commerce/atomic-product-section-metadata/atomic-product-section-metadata.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c25",
+      "pages": [2, 38, 39],
+      "modules": [
+        "src/images/filter.svg"
+      ]
+    },
+    {
+      "chunk": "atomic-c12",
+      "pages": [0, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22, 23, 24, 35, 37],
+      "modules": [
+        "src/components/commerce/atomic-commerce-layout/commerce-layout.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c22",
+      "pages": [0, 3, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 35, 37, 38, 41],
+      "modules": [
+        "src/components/common/refine-modal/guard.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c22",
+      "pages": [3, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 38, 39, 41],
+      "modules": [
+        "src/components/common/facets/facet-placeholder/facet-placeholder.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c5",
+      "pages": [20, 24, 29],
+      "modules": [
+        "src/components/search/atomic-table-element/atomic-table-element.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c9",
+      "pages": [1, 2, 20, 38, 39, 41],
+      "modules": [
+        "@popperjs/core/lib/popper-lite.js"
+      ]
+    },
+    {
+      "chunk": "atomic-c1",
+      "pages": [0, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 27, 28, 29, 30, 31, 32, 33, 35, 36, 37, 39, 40, 41],
+      "modules": [
+        "src/components/common/item-list/grid-layout.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c1",
+      "pages": [0, 1, 2, 3, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 37, 38, 39, 41],
+      "modules": [
+        "src/components/common/atomic-layout-section/atomic-layout-section-utils.ts",
+        "src/utils/string-utils.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c1",
+      "pages": [0, 7, 10, 12, 14, 15, 16, 17, 18, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 41],
+      "modules": [
+        "src/components/common/atomic-rating/rating-utils.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c16",
+      "pages": [0, 1, 2, 3, 7, 9, 11, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 28, 29, 30, 31, 32, 33, 35, 37, 38, 39, 41],
+      "modules": [
+        "src/components/common/item-list/item-list.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c2",
+      "pages": [0, 2, 3, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 41],
+      "modules": [
+        "src/images/clock.svg"
+      ]
+    },
+    {
+      "chunk": "atomic-c1",
+      "pages": [0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 35, 36, 37, 38, 39, 41],
+      "modules": [
+        "src/components/commerce/product-template-component-utils/error.ts"
+      ]
+    },
+    {
+      "chunk": "atomic-c1",
+      "pages": [0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27, 28, 29, 31, 35, 36, 37, 38, 39, 40, 41],
+      "modules": [
+        "src/images/arrow-right.svg"
+      ]
+    },
+    {
+      "chunk": "atomic-c16",
+      "pages": [0, 1, 3, 7, 9, 11, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24, 31, 32, 35, 37, 38, 41],
+      "modules": [
+        "src/images/arrow-left-rounded.svg"
+      ]
+    }
+  ]
+}

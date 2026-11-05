@@ -40,6 +40,8 @@ module.exports = {
       if (file.includes('/packages/quantic/')) return false;
       if (file.includes('/.deployment.config/')) return false;
       if (file.endsWith('package-lock.json')) return false;
+      // The Atomic chunk map keeps its own layout (one module per line); .oxfmtrc.json ignores it
+      if (file.endsWith('/packages/atomic/cdn-chunk-map.json')) return false;
       if (file.includes('/.storybook/') && file.endsWith('.html')) return false;
       if (file.includes('/packages/documentation/') && file.includes('/assets/')) return false;
       return true;

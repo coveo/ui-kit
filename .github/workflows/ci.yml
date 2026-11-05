@@ -92,6 +92,13 @@ jobs:
           tasks: |
             build
             generate:all
+            prepare:cdn-chunk-map
+      - name: Regenerate the Atomic CDN chunk map when it is stale
+        if: contains(needs.affected.outputs.tasks, '"@coveo/atomic#prepare:cdn-chunk-map"')
+        uses: coveo-incubator/web-bundle-partition@7b3f7889037fc59cc323dc88793b63d7432636aa # ci-runtime
+        with:
+          command: generate
+          request: packages/atomic/.cdn-chunk-map/request.json
       - name: Check for uncommitted changes
         id: check-changes
         run: |
@@ -289,6 +296,28 @@ jobs:
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run validate:no-new-light-dom --filter=@coveo/atomic
+  validate-cdn-chunk-map:
+    name: 'Validate the Atomic CDN chunk map'
+    needs: affected
+    if: contains(needs.affected.outputs.tasks, '"@coveo/atomic#prepare:cdn-chunk-map"')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 1
+          filter: blob:none
+      - uses: ./.github/actions/setup
+      - run: pnpm exec turbo run prepare:cdn-chunk-map --filter=@coveo/atomic
+      # On a pull request, a stale map is regenerated and committed by the generated-files job above.
+      - uses: coveo-incubator/web-bundle-partition@7b3f7889037fc59cc323dc88793b63d7432636aa # ci-runtime
+        with:
+          command: check
+          request: packages/atomic/.cdn-chunk-map/request.json
   unit-test:
     name: 'Run unit tests'
     needs: [affected, build]
