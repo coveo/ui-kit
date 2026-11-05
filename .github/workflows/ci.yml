@@ -12,7 +12,6 @@ permissions:
 
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-  TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
   TURBO_SCM_HEAD: ${{ github.sha }}
 
 jobs:
@@ -30,17 +29,48 @@ jobs:
         with:
           egress-policy: audit
 
-      # Full history is required to calculate the base-to-head range and publish the minimum depth.
+      # Full history is required to resolve the comparison base, calculate the base-to-head range and publish the minimum depth.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
           fetch-tags: false
           filter: blob:none
 
+      # pull_request.base.sha can lag behind the main commit that GitHub's test merge commit is built on.
+      # Comparing against it would count main's newer commits as PR changes, so PRs use the merge commit's first parent.
+      - name: Resolve comparison base
+        id: base
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          MERGE_GROUP_BASE_SHA: ${{ github.event.merge_group.base_sha }}
+        run: |
+          set -euo pipefail
+
+          if [ "$EVENT_NAME" != 'pull_request' ]; then
+            echo "Using merge group base ${MERGE_GROUP_BASE_SHA}"
+            echo "sha=${MERGE_GROUP_BASE_SHA}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          head_sha="$(GIT_NO_LAZY_FETCH=1 git rev-parse --verify HEAD)"
+          parent_count="$(($(GIT_NO_LAZY_FETCH=1 git rev-list --parents -n 1 HEAD | wc -w) - 1))"
+
+          if [ "$head_sha" != "$TURBO_SCM_HEAD" ] || [ "$parent_count" -ne 2 ]; then
+            echo "::warning::Expected HEAD to be the test merge commit ${TURBO_SCM_HEAD} with two parents, got ${head_sha} with ${parent_count}. Falling back to pull_request.base.sha ${PR_BASE_SHA}."
+            echo "sha=${PR_BASE_SHA}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          base_sha="$(GIT_NO_LAZY_FETCH=1 git rev-parse --verify 'HEAD^1^{commit}')"
+          echo "Using the merge commit's first parent ${base_sha} (pull_request.base.sha is ${PR_BASE_SHA})"
+          echo "sha=${base_sha}" >> "$GITHUB_OUTPUT"
+
       - uses: ./.github/actions/calculate-affected
         id: publish
         with:
-          base-sha: ${{ env.TURBO_SCM_BASE }}
+          base-sha: ${{ steps.base.outputs.sha }}
           head-sha: ${{ env.TURBO_SCM_HEAD }}
 
   build-windows:
