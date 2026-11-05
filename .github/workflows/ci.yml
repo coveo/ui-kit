@@ -36,8 +36,8 @@ jobs:
           fetch-tags: false
           filter: blob:none
 
-      # pull_request.base.sha can lag behind the main commit that GitHub's test merge commit is built on.
-      # Comparing against it would count main's newer commits as PR changes, so PRs use the merge commit's first parent.
+      # pull_request.base.sha can lag behind the base branch commit that GitHub's test merge commit is built on.
+      # Comparing against it would count the base branch's newer commits as PR changes, so PRs use the merge commit's first parent.
       - name: Resolve comparison base
         id: base
         shell: bash
@@ -48,23 +48,32 @@ jobs:
         run: |
           set -euo pipefail
 
-          if [ "$EVENT_NAME" != 'pull_request' ]; then
-            echo "Using merge group base ${MERGE_GROUP_BASE_SHA}"
-            echo "sha=${MERGE_GROUP_BASE_SHA}" >> "$GITHUB_OUTPUT"
-            exit 0
+          case "$EVENT_NAME" in
+            pull_request)
+              read -r _ first_parent second_parent extra_parent < <(GIT_NO_LAZY_FETCH=1 git rev-list --parents -n 1 "$TURBO_SCM_HEAD")
+              if [ -n "${second_parent:-}" ] && [ -z "${extra_parent:-}" ]; then
+                base_sha="$first_parent"
+                echo "Using the merge commit's first parent ${base_sha} (pull_request.base.sha is ${PR_BASE_SHA})"
+              else
+                base_sha="$PR_BASE_SHA"
+                echo "::warning::Expected ${TURBO_SCM_HEAD} to be a two-parent test merge commit. Falling back to pull_request.base.sha ${base_sha}."
+              fi
+              ;;
+            merge_group)
+              base_sha="$MERGE_GROUP_BASE_SHA"
+              echo "Using merge group base ${base_sha}"
+              ;;
+            *)
+              echo "::error::Cannot resolve a comparison base for the ${EVENT_NAME} event."
+              exit 1
+              ;;
+          esac
+
+          if [ -z "$base_sha" ]; then
+            echo "::error::The comparison base for the ${EVENT_NAME} event is empty."
+            exit 1
           fi
 
-          head_sha="$(GIT_NO_LAZY_FETCH=1 git rev-parse --verify HEAD)"
-          parent_count="$(($(GIT_NO_LAZY_FETCH=1 git rev-list --parents -n 1 HEAD | wc -w) - 1))"
-
-          if [ "$head_sha" != "$TURBO_SCM_HEAD" ] || [ "$parent_count" -ne 2 ]; then
-            echo "::warning::Expected HEAD to be the test merge commit ${TURBO_SCM_HEAD} with two parents, got ${head_sha} with ${parent_count}. Falling back to pull_request.base.sha ${PR_BASE_SHA}."
-            echo "sha=${PR_BASE_SHA}" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          base_sha="$(GIT_NO_LAZY_FETCH=1 git rev-parse --verify 'HEAD^1^{commit}')"
-          echo "Using the merge commit's first parent ${base_sha} (pull_request.base.sha is ${PR_BASE_SHA})"
           echo "sha=${base_sha}" >> "$GITHUB_OUTPUT"
 
       - uses: ./.github/actions/calculate-affected

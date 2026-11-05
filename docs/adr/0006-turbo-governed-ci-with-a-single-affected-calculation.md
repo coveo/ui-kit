@@ -79,7 +79,7 @@ The design has four parts:
 - `samples` — affected sample E2E task identifiers, used as the dynamic E2E matrix source.
 - `fetch-depth` — the commit count of the compared range.
 
-For `merge_group` events the base is `merge_group.base_sha`. For `pull_request` events it is the first parent of GitHub's test merge commit, not `pull_request.base.sha`, which can lag behind the `main` commit the PR is merged into and would count `main`'s newer commits as PR changes.
+For `merge_group` events the base is `merge_group.base_sha`. For `pull_request` events it is the first parent of GitHub's test merge commit, not `pull_request.base.sha`, which can lag behind the base branch commit the PR is merged into and would count the base branch's newer commits as PR changes.
 
 The action verifies both commits before querying and writes a Markdown table of package, task, reason, and description to the job summary. The query requests [reason variants](https://turborepo.dev/docs/reference/query#understanding-affected-package-reasons) such as `TaskFileChanged` and `TaskDependencyTaskChanged`, so each run explains why tasks were selected.
 
