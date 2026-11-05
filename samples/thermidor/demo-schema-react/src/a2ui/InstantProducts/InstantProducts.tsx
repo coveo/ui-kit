@@ -22,6 +22,12 @@ export const PRODUCTS_PANEL_MEDIA_QUERY = '(min-width: 640px)';
  */
 export const INSTANT_PRODUCTS_TIMEOUT_MS = 5000;
 
+/**
+ * How long a highlight must hold before its products are fetched, so moving quickly through the
+ * suggestions sends one request, not one per suggestion.
+ */
+export const INSTANT_PRODUCTS_SETTLE_MS = 150;
+
 type InstantProduct = InstantProductsState['products'][number];
 
 function openProduct({clickUri}: InstantProduct) {
@@ -37,9 +43,9 @@ function useShowProductsPanel(): boolean {
 
 /**
  * A2-UI component for `InstantProducts`: the products of its `SearchBox`'s highlighted suggestion,
- * beside the suggestions. Each highlight is sent with `fetchInstantProducts`, unless it is empty,
- * the input was submitted, or the screen is too small for the panel. Whether an answer is reused,
- * and whether it waits for the session, is the session's.
+ * beside the suggestions. Each highlight that settles is sent with `fetchInstantProducts`, unless
+ * it is empty, the input was submitted, or the screen is too small for the panel. Whether an answer
+ * is reused, and whether it waits for the session, is the session's.
  *
  * The panel holds its place from the first highlight, so the dropdown does not shift when products
  * arrive: a skeleton until the first answer, then the previous products, dimmed and inert, until
@@ -64,7 +70,11 @@ export const InstantProducts = createReactComponent(
         return;
       }
       const payload: FetchInstantProductsPayload = {query: highlightedQuery};
-      context.dispatchAction({event: {name: 'fetchInstantProducts', context: payload}});
+      const settled = setTimeout(
+        () => context.dispatchAction({event: {name: 'fetchInstantProducts', context: payload}}),
+        INSTANT_PRODUCTS_SETTLE_MS
+      );
+      return () => clearTimeout(settled);
     }, [active, context, highlightedQuery]);
 
     useEffect(() => {
