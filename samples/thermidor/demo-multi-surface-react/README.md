@@ -32,24 +32,25 @@ organization set, the sample falls back to the public demo organization as a bun
 
 Try it:
 
-1. Type a search in the header and press Enter: with the **AI** toggle on (the default), the
-   assistant page opens as a chat with the answer, its reasoning steps and its surfaces; the header
-   stays. Try `boating safety`, `which kayak should I get?`, `what do I need to go snorkeling?` or
-   `gift ideas under $50`. Keep chatting from the input at the bottom of the page, or pick a
-   follow-up from the next actions: each answer joins the thread with its own surfaces.
+1. Ask a question in the header and press Enter. The prompt goes to the session shell, and the
+   gateway routes it by intent: a question runs the agent, so the assistant layout opens as a chat
+   with the answer, its reasoning steps and its surfaces; the header stays. Try
+   `which kayak should I get?`, `what do I need to go snorkeling?` or `any gift ideas under $50?`.
+   Keep chatting from the input at the bottom of the page, or pick a follow-up from the next
+   actions: both go to the agent, and each answer joins the thread with its own surfaces.
 2. On the kayak answer, pick **See all kayaks**: the server runs the search the agent saved behind
    that option and opens it as a search surface (facets, sort, pagination). The page switches to
    the search layout: the results on the left, and the conversation so far goes on in the chat
    panel on the right. Change the sort or a facet: the server answers from the search it keeps.
    **← Back** returns to the chat, where **See the results →** opens the search again.
 3. Click **Add to cart** on a product card: the header's cart counts it. Open the cart to change it.
-4. Turn **AI** off and search `kayak`: the search page shows the search surface the server opened
-   for it (facets, sort, pagination), answered from the search it keeps.
-5. On that search page, ask `which one is the cheapest?` in the chat panel on the right: the answer
+4. Search `kayak`: the server opens a search surface for it, so the search layout shows it
+   (facets, sort, pagination) with the chat panel beside it, answered from the search it keeps.
+5. On that search layout, ask `which one is the cheapest?` in the chat panel on the right: the answer
    names the cheapest kayak, and its reasoning says what the shopper is looking at. The results stay
    as they are and keep working: pick a brand and ask again. A follow-up chip of a panel answer is
-   sent in the panel too. A search from the header on the assistant page also keeps the
-   conversation in the panel of the search page it opens.
+   sent in the panel too. A search from the header on the assistant layout also keeps the
+   conversation in the panel of the search layout it opens.
 6. Open a **Listing pages** entry: it shows an _In progress_ placeholder and sends no request.
 7. Open **One session** at the bottom: every turn, the view that sent it, and the surfaces it
    created that are still alive.
@@ -75,18 +76,23 @@ The template set lives in
 Storefront Preview (admin-ui) uses one Thermidor session per view today. This sample keeps the
 views and puts them on one session:
 
-| View                                             | `context.custom.surfaceId`     | Components                                                                                 |
-| ------------------------------------------------ | ------------------------------ | ------------------------------------------------------------------------------------------ |
-| Home page: recommendations                       | `storefront-preview-home`      | ProductCarousel                                                                            |
-| Assistant page: the answer to a committed search | `storefront-preview-assistant` | ProductCarousel, NextActionsBar, ComparisonTable, BundleDisplay, ProductResearchCard       |
-| Search page: results for a search with AI off    | `storefront-preview-search`    | CommerceSearch, LayoutStack, QuerySummary, Sort, ProductList, Pagination, PageSize, facets |
-| Search page: the chat panel beside the results   | `storefront-preview-assistant` | The assistant page's components                                                            |
+| View                                                 | `context.custom.surfaceId`     | Components                                                                                 |
+| ---------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------ |
+| Home page: recommendations                           | `storefront-preview-home`      | ProductCarousel                                                                            |
+| Search box: a committed prompt, routed by the server | `storefront-preview`           | The assistant's components for a question, the search's otherwise                          |
+| Assistant layout: a follow-up from the next actions  | `storefront-preview-assistant` | ProductCarousel, NextActionsBar, ComparisonTable, BundleDisplay, ProductResearchCard       |
+| Search layout: results (opened by a search surface)  | `storefront-preview`           | CommerceSearch, LayoutStack, QuerySummary, Sort, ProductList, Pagination, PageSize, facets |
+| Search layout: the chat panel beside the results     | `storefront-preview-assistant` | The assistant's components                                                                 |
+
+The page follows the answer, not the view that sent the prompt: a turn whose surfaces include a
+`CommerceSearch` opens the search layout with the chat panel, any other answer opens the assistant
+layout (`src/pages/PromptPage.tsx`).
 
 The behaviour is kept:
 
 - typing in the search box sends nothing: a search is sent when it is committed;
-- the assistant and search pages send their prompt once per visit;
-- going Home ↔ Assistant gives the page fresh surfaces, while the header stays;
+- a prompt page sends its prompt once per visit;
+- going Home ↔ a prompt page gives the page fresh surfaces, while the header stays;
 - the cart is shared by the header and every page.
 
 ## The model
@@ -127,10 +133,10 @@ rather than tracking requests itself:
 - **Loading placeholders come from the data model.** A surface whose data model declares
   `isLoading: true` is drawn as its component's skeleton while its turn streams
   (`DiscoveredSurface.isLoading`). The session drops a placeholder its turn left behind.
-- **The assistant page is a chat,** as in `demo-schema-react`: every turn of the conversation,
+- **The assistant layout is a chat,** as in `demo-schema-react`: every turn of the conversation,
   each with its prompt, reasoning, answer and surfaces, over an input that sends the next prompt on
   the same visit. Only the latest turn's surfaces take actions (`src/pages/AssistantPage.tsx`).
-- **One conversation across pages.** The assistant page and the search pages opened from it share
+- **One conversation across pages.** The assistant layout and the search layouts opened from it share
   a conversation (`thread` in `src/navigation.ts`): the chat and the chat panel both show its
   assistant turns, whichever page asked them, and an action of one of them goes on the page that
   shows it. A turn of the conversation that draws a search opens the search layout with its
@@ -144,7 +150,7 @@ rather than tracking requests itself:
 - **The app records which view sent each turn.** Just before a send it sets the view that
   `context.custom.surfaceId` names, and after a prompt it records the turn the session opened with
   its view and page visit (`src/session/storefront-session.tsx`). The chat panel records its turns
-  under the search page's visit with the assistant view, so the page and its panel split by view.
+  under the page's visit with the assistant view, so the page and its panel split by view.
 
 ### What each view knows of the other
 
@@ -158,7 +164,7 @@ The views share the session's server state, as Agent Gateway does today:
   panel answer's **See all kayaks**, replaces the results in the middle. Any other answer leaves
   them as they are.
 - **A panel prompt does not leave the page.** It is sent on the assistant view and stays on the
-  search page's visit. The panel input, the search box and both views' surfaces are disabled
+  page's visit. The panel input, the search box and both views' surfaces are disabled
   while any request is in flight, so nothing gets the server's 409 or is dropped.
 - **An action that opens no turn streams into the session's latest turn,** which may be the
   panel's after a facet click in the middle. The surface it updates stays in the view that drew
@@ -168,8 +174,11 @@ The views share the session's server state, as Agent Gateway does today:
 
 - **Requests are serialized.** One request is in flight at a time, for every view. With one
   session per view, several stream at once. ADR-018 keeps this for the EAP.
-- **The search follows nothing the agent says.** The middle shows only the search page's own
-  turns; the agent cannot change or replace it.
+- **The search follows nothing the agent says.** The middle shows only the page's own turn; the
+  agent cannot change or replace it.
+- **The intent rule is the gateway's.** Agent Gateway routes the session shell's message with its
+  intent analyzer when intent routing is on (`cpd-intent-routing-enabled`): a search opens a
+  search surface, a question runs the agent. The sample only follows the answer.
 - **No query suggestions.** The search box sends nothing while typing; see below.
 - **Listing pages show a placeholder.** The published contract has no view id for them, so they show
   _In progress_ and send nothing.
@@ -185,7 +194,8 @@ The views share the session's server state, as Agent Gateway does today:
 - **The session shell and query suggestions** (coveo/ui-kit#8757, #8758): the producer answers `initialize` with a long-lived `SessionShell`
   holding a `SearchBox` and its `QuerySuggestions`, and a pause in typing dispatches
   `fetchSuggestions`. The header can then draw that surface as its search box, with suggestions.
-- **The server:** a view id for listing pages, and a spike on what a view id should map to (today `custom.surfaceId` names a view, which reads oddly
+- **The server:** a view id for listing pages, and a
+  spike on what a view id should map to (today `custom.surfaceId` names a view, which reads oddly
   next to A2-UI's `surfaceId`).
 
 ## Structure
@@ -204,7 +214,7 @@ src/
 │   ├── catalog.ts              The renderers for the Storefront components
 │   └── AddToCartButton/        The button added to every product card
 ├── components/                 Top bar, search box, listing menu, cart, chat panel, In progress, inspector
-└── pages/                      Home, assistant, search and listing pages
+└── pages/                      Home, prompt (assistant or search layout) and listing pages
 ```
 
 The renderers for ProductCarousel, NextActionsBar, ComparisonTable, BundleDisplay,

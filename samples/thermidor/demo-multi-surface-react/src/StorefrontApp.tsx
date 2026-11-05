@@ -12,16 +12,15 @@ import {SessionInspector} from './components/SessionInspector.js';
 import {TopBar} from './components/TopBar.js';
 import {
   threadOf,
-  visitAssistant,
   visitHome,
   visitListing,
-  visitSearch,
+  visitPrompt,
+  visitResults,
   type Visit,
 } from './navigation.js';
-import {AssistantPage} from './pages/AssistantPage.js';
 import {HomePage} from './pages/HomePage.js';
 import {ListingPage} from './pages/ListingPage.js';
-import {SearchPage} from './pages/SearchPage.js';
+import {PromptPage} from './pages/PromptPage.js';
 import {
   useCart,
   useSessionSnapshot,
@@ -34,23 +33,21 @@ import {ASSISTANT_VIEW, drawsSearch, shopperText} from './views/view-surfaces.js
 const catalog = createStorefrontCatalog();
 
 /** The view a page's actions are sent on behalf of. A listing page draws no surface. */
-const PAGE_VIEWS: Record<Visit['page'], StorefrontView> = {
-  home: 'storefront-preview-home',
-  assistant: 'storefront-preview-assistant',
-  search: 'storefront-preview-search',
-  listing: 'storefront-preview-home',
-};
+function pageView(visit: Visit): StorefrontView {
+  return visit.page === 'prompt' ? visit.view : 'storefront-preview-home';
+}
 
 /**
- * `NextActionsBar` follow-ups ask for a new answer: in the assistant's conversation, on the
- * assistant page or in a panel, they are sent there, on the page that stays; elsewhere they open
- * a new assistant visit.
+ * `NextActionsBar` follow-ups ask for a new answer, and go to the agent. In the assistant's
+ * conversation, on the assistant layout or in a panel, they are sent there, on the page that
+ * stays; on a search layout's results they open a new prompt visit on the assistant's view, in
+ * the same conversation.
  */
 const FOLLOW_UP_ACTION = 'selectAction';
 
 /**
  * The Storefront Preview layout on one session: a header (the search box and the cart) that stays,
- * over a page (home, assistant, search or a listing) that changes.
+ * over a page (home, a prompt's answer or a listing) that changes.
  */
 export function StorefrontApp() {
   const {sendPrompt, sendAction} = useStorefrontSend();
@@ -60,7 +57,7 @@ export function StorefrontApp() {
   // The pages the shopper went through, the current one last: Back returns to the one before.
   const [history, setHistory] = useState<readonly Visit[]>(() => [visitHome()]);
   const visit = history[history.length - 1];
-  // The conversation of every assistant and search visit, which outlives the history.
+  // The conversation of every prompt visit, which outlives the history.
   const visitThreads = useRef(new Map<number, number>());
 
   const navigate = useCallback((next: Visit, {replace = false} = {}) => {
@@ -82,52 +79,49 @@ export function StorefrontApp() {
     document.documentElement.scrollTop = 0;
   }, [visit.id]);
 
-  // The assistant and search pages send their prompt once per visit, and not again when Back
-  // returns to them. StrictMode runs this effect twice; the visit id keeps the second run from
-  // sending again. A search page that shows a conversation turn's search sends nothing, nor does
-  // the home page, which has no prompt, and listing pages have no view id in the published
-  // contract.
+  // A prompt page sends its prompt once per visit, and not again when Back returns to it.
+  // StrictMode runs this effect twice; the visit id keeps the second run from sending again. A
+  // page that shows a conversation turn's search sends nothing, nor does the home page, which has
+  // no prompt, and listing pages have no view id in the published contract.
   const sentVisits = useRef(new Set<number>());
   useEffect(() => {
     if (sentVisits.current.has(visit.id)) {
       return;
     }
     sentVisits.current.add(visit.id);
-    if (visit.page === 'assistant') {
-      sendPrompt(PAGE_VIEWS.assistant, visit.prompt, visit.id);
-    } else if (visit.page === 'search' && visit.openingTurnId === undefined) {
-      sendPrompt(PAGE_VIEWS.search, visit.query, visit.id);
+    if (visit.page === 'prompt' && visit.openingTurnId === undefined) {
+      sendPrompt(visit.view, visit.prompt, visit.id);
     }
   }, [visit, sendPrompt]);
 
-  // A conversation turn that draws a search, such as a search option's, opens the search layout:
-  // its results on the left, the conversation going on in the chat panel. A search answering the
-  // page's own prompt takes the place of the assistant page, and Back skips it. Each turn opens its
-  // search once: Back to the assistant page stays there.
+  // The answer to the page's prompt picks its layout (see `PromptPage`). On the assistant layout, a
+  // later turn of the conversation that draws a search, such as a search option's, opens the
+  // search layout: its results on the left, the conversation going on in the chat panel. Each turn
+  // opens its search once: Back to the assistant layout stays there.
   const openedSearches = useRef(new Set<string>());
   useEffect(() => {
-    if (visit.page !== 'assistant') {
+    if (visit.page !== 'prompt' || visit.openingTurnId !== undefined) {
       return;
     }
-    const turns = viewSurfaces.turnsOfView({visitId: visit.id, view: ASSISTANT_VIEW});
-    const turn = turns.findLast(drawsSearch);
-    if (!turn || openedSearches.current.has(turn.id)) {
+    const [answer, ...later] = viewSurfaces.turnsOfVisit(visit.id);
+    const turn = later.findLast(drawsSearch);
+    if (!answer || drawsSearch(answer) || !turn || openedSearches.current.has(turn.id)) {
       return;
     }
     openedSearches.current.add(turn.id);
-    navigate(visitSearch(shopperText(turn) ?? visit.prompt, visit.thread, turn.id), {
-      replace: turn === turns[0],
-    });
+    navigate(visitResults(shopperText(turn) ?? visit.prompt, visit.thread, turn.id));
   }, [visit, viewSurfaces, navigate]);
 
   const showResults = useCallback(
-    (thread: number, turnId: string, query: string) => navigate(visitSearch(query, thread, turnId)),
+    (thread: number, turnId: string, query: string) =>
+      navigate(visitResults(query, thread, turnId)),
     [navigate]
   );
 
-  // A follow-up continues the page's conversation on an assistant page.
+  // A follow-up comes from the agent, not the search box: it goes to the agent, whatever the
+  // server's intent rule would make of its text, and continues the page's conversation.
   const openAssistant = useCallback(
-    (prompt: string) => navigate(visitAssistant(prompt, threadOf(visitRef.current))),
+    (prompt: string) => navigate(visitPrompt(prompt, ASSISTANT_VIEW, threadOf(visitRef.current))),
     [navigate]
   );
 
@@ -142,17 +136,19 @@ export function StorefrontApp() {
       // panel, which share the visit. The conversation goes on where it is shown: an action of a
       // turn asked on an earlier page of the conversation goes on this page.
       const drawnBy = viewSurfacesRef.current.viewOfSurface(userAction.surfaceId);
-      const inConversation =
-        drawnBy?.view === PAGE_VIEWS.assistant &&
-        visitsOfThread(visitThreads.current, threadOf(page)).has(drawnBy.visitId);
+      const inConversation = viewSurfacesRef.current
+        .conversationOf(visitsOfThread(visitThreads.current, threadOf(page)))
+        .some(({response}) =>
+          response.surfaces.some(({surfaceId}) => surfaceId === userAction.surfaceId)
+        );
       const view =
         drawnBy && !inConversation
           ? drawnBy
-          : {visitId: page.id, view: drawnBy?.view ?? PAGE_VIEWS[page.page]};
+          : {visitId: page.id, view: drawnBy?.view ?? pageView(page)};
       const text = userAction.context?.['text'];
       if (userAction.name === FOLLOW_UP_ACTION && typeof text === 'string') {
         if (inConversation) {
-          sendPrompt(view.view, text, view.visitId);
+          sendPrompt(ASSISTANT_VIEW, text, page.id);
         } else {
           openAssistant(text);
         }
@@ -182,11 +178,8 @@ export function StorefrontApp() {
             currentListing={visit.page === 'listing' ? visit.slug : undefined}
             onHome={() => navigate(visitHome())}
             onListing={(slug) => navigate(visitListing(slug))}
-            onSearch={(query, ai) => {
-              // A search from the conversation's pages keeps the conversation in its panel.
-              const thread = threadOf(visit);
-              navigate(ai ? visitAssistant(query, thread) : visitSearch(query, thread));
-            }}
+            // A search from the conversation's pages keeps the conversation in its panel.
+            onSearch={(query) => navigate(visitPrompt(query, undefined, threadOf(visit)))}
             searchDisabled={request !== undefined}
           />
           <Page
@@ -216,7 +209,7 @@ function visitsOfThread(
 
 interface PageProps {
   visit: Visit;
-  /** The visits of the page's conversation, whose assistant turns its chat shows. */
+  /** The visits of the page's conversation, whose turns its chat shows. */
   conversationVisits: ReadonlySet<number>;
   busy: boolean;
   onSend(view: StorefrontView, prompt: string, visitId: number): void;
@@ -230,27 +223,19 @@ function Page({visit, conversationVisits, busy, onSend, onHome, onBack, onShowRe
   switch (visit.page) {
     case 'home':
       return <HomePage />;
-    case 'assistant':
+    case 'prompt':
       return (
-        <AssistantPage
+        <PromptPage
           key={visit.id}
           prompt={visit.prompt}
-          conversationVisits={conversationVisits}
-          busy={busy}
-          onSend={(prompt) => onSend(PAGE_VIEWS.assistant, prompt, visit.id)}
-          onBack={onHome}
-          onShowResults={(turnId, query) => onShowResults(visit.thread, turnId, query)}
-        />
-      );
-    case 'search':
-      return (
-        <SearchPage
-          key={visit.id}
-          query={visit.query}
           visitId={visit.id}
           openingTurnId={visit.openingTurnId}
           conversationVisits={conversationVisits}
+          busy={busy}
+          onSend={(prompt) => onSend(ASSISTANT_VIEW, prompt, visit.id)}
+          onHome={onHome}
           onBack={onBack}
+          onShowResults={(turnId, query) => onShowResults(visit.thread, turnId, query)}
         />
       );
     case 'listing':
