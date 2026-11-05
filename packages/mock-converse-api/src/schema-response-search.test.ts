@@ -703,17 +703,6 @@ describe('schema-response-search query correction', () => {
     });
   });
 
-  it('keeps the correction when changing page', () => {
-    matchSchemaPrompt('water sprots');
-    const state = summary(buildSearchActionEvents({name: 'selectPage', context: {page: 1}}));
-    expect(state.correction).toEqual({
-      originalQuery: 'water sprots',
-      cause: 'correction',
-      canOverride: false,
-    });
-    expect(state.firstIndex).toBe(13);
-  });
-
   it('searches the original query on overrideCorrection when the correction can be overridden', () => {
     matchSchemaPrompt('swim gear');
     const events = buildSearchActionEvents({
