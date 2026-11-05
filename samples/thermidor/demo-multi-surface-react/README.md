@@ -59,14 +59,18 @@ Try it:
 
 ### The use-case player
 
-The bar above the header replays the product's multi-surface use cases (UC-04 to UC-34 of the
-use-case sheet, in its words) through the page's own controls, on a fresh session: pick one and
-press **Play**, or **Step through** it. Each use case shows what the shopper should see, what its
-steps check, and its status on the real service (Agent Gateway and agent-smith at their main
-branches, through `pnpm dev:agent-gateway`): _Ready_, _Partly working_ or _Not ready_, with what is
-missing. Most of them also play on the public demo organization (`pnpm dev`), whose catalog differs:
-the scripted facet (UC-08) is not in it. **Edge checks** are the rules between surfaces that no use case names on its own.
-The scenarios are in `src/use-cases/use-cases.ts`.
+The bar above the header replays every use case of the use-case sheet (UC-01 to UC-34, in its
+words) through the page's own controls, on a fresh session: pick one and press **Play**, or
+**Step through** it. The list follows the sheet's tabs, **Multi-surface** then **Other use cases**,
+and ends with the **Edge checks**, the rules between surfaces that no use case names on its own.
+Each use case shows what the shopper should see, what its steps check, and its status on the real
+service: _Ready_, _Partly working_ or _Not ready_, with what is missing. The statuses were measured
+on the public demo organization (`pnpm dev`) on 2026-11-05, two plays each.
+
+Where the sheet's example is for another catalog (robotics parts), the steps ask the same of this
+water sports catalog and say so. A use case the sample cannot replay (a buyer login, conversation
+history, a product page, a phone) has no steps, and its status says why. The scenarios are in
+`src/use-cases/use-cases.ts`.
 
 ## Pull-request previews
 

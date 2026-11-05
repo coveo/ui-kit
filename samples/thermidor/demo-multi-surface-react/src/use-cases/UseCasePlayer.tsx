@@ -2,11 +2,13 @@ import {useEffect, useRef, useState} from 'react';
 import {useSessionSnapshot} from '../session/storefront-session.js';
 import {
   describeStep,
+  GROUP_LABELS,
   STATUS_LABELS,
   USE_CASE_SHEET_URL,
   USE_CASES,
   type Step,
   type UseCase,
+  type UseCaseGroup,
   type UseCaseStatus,
 } from './use-cases.js';
 import styles from './UseCasePlayer.module.css';
@@ -128,8 +130,17 @@ async function perform(step: Step) {
     }
     case 'chip':
       return click(
-        lastOf('[aria-label="Follow-up actions"] button', step.text),
-        `The follow-up “${step.text}” in the agent’s answer`
+        step.text === undefined
+          ? (lastOf('[aria-label="Follow-up actions"]')?.querySelector('button') ?? undefined)
+          : lastOf('[aria-label="Follow-up actions"] button', step.text),
+        step.text === undefined
+          ? 'A follow-up in the agent’s answer'
+          : `The follow-up “${step.text}” in the agent’s answer`
+      );
+    case 'cart':
+      return click(
+        document.querySelector<HTMLElement>('main button[aria-label^="Add to cart"]') ?? undefined,
+        'A product card’s Add to cart button'
       );
     case 'home':
       return click(lastOf('button', 'Storefront home'), 'The home button');
@@ -238,12 +249,14 @@ export function UseCasePlayer() {
     }
   };
 
+  const select = (id: string) => {
+    setSelected(id);
+    setStatus({state: 'idle'});
+  };
+
   const active = status.state === 'running' || status.state === 'waiting';
+  const playable = useCase.steps.length > 0;
   const currentStep = 'step' in status ? status.step : -1;
-  const groups = [
-    {label: 'Use cases', items: USE_CASES.filter(({group}) => group === 'pm')},
-    {label: 'Edge checks', items: USE_CASES.filter(({group}) => group === 'edge')},
-  ];
 
   return (
     <section className={styles.player} aria-label="Use case player">
@@ -254,18 +267,17 @@ export function UseCasePlayer() {
           value={selected}
           disabled={active}
           aria-label="Use case"
-          onChange={(event) => {
-            setSelected(event.target.value);
-            setStatus({state: 'idle'});
-          }}
+          onChange={(event) => select(event.target.value)}
         >
-          {groups.map(({label, items}) => (
-            <optgroup key={label} label={label}>
-              {items.map(({id, title, status: useCaseStatus}) => (
-                <option key={id} value={id}>
-                  {title} ({STATUS_LABELS[useCaseStatus.state]})
-                </option>
-              ))}
+          {(Object.keys(GROUP_LABELS) as UseCaseGroup[]).map((group) => (
+            <optgroup key={group} label={GROUP_LABELS[group]}>
+              {USE_CASES.filter((item) => item.group === group).map(
+                ({id, title, status: useCaseStatus}) => (
+                  <option key={id} value={id}>
+                    {title} ({STATUS_LABELS[useCaseStatus.state]})
+                  </option>
+                )
+              )}
             </optgroup>
           ))}
         </select>
@@ -273,7 +285,7 @@ export function UseCasePlayer() {
         <button
           type="button"
           className={styles.play}
-          disabled={active}
+          disabled={active || !playable}
           onClick={() => restart('play')}
         >
           ▶ Play
@@ -281,7 +293,7 @@ export function UseCasePlayer() {
         <button
           type="button"
           className={styles.button}
-          disabled={active}
+          disabled={active || !playable}
           onClick={() => restart('step')}
         >
           Step through
@@ -301,52 +313,76 @@ export function UseCasePlayer() {
           {status.state === 'waiting' && `Next: ${currentStep + 1}/${useCase.steps.length}`}
           {status.state === 'done' && 'Done ✓'}
           {status.state === 'error' && `Step ${currentStep + 1} failed: ${status.message}`}
-          {status.state === 'idle' && 'Plays on a fresh session'}
+          {status.state === 'idle' &&
+            (playable ? 'Plays on a fresh session' : 'Nothing to play in this sample')}
         </span>
       </div>
-      <ol className={styles.steps} aria-label="Steps">
-        {useCase.steps.map((step, index) => (
-          <li
-            key={index}
-            className={[
-              styles.step,
-              index < currentStep || status.state === 'done' ? styles.stepDone : '',
-              index === currentStep ? styles.stepCurrent : '',
-              index === currentStep && status.state === 'error' ? styles.stepError : '',
-            ].join(' ')}
-          >
-            {index + 1}. {describeStep(step)}
-          </li>
-        ))}
-      </ol>
+      {playable && (
+        <ol className={styles.steps} aria-label="Steps">
+          {useCase.steps.map((step, index) => (
+            <li
+              key={index}
+              className={[
+                styles.step,
+                index < currentStep || status.state === 'done' ? styles.stepDone : '',
+                index === currentStep ? styles.stepCurrent : '',
+                index === currentStep && status.state === 'error' ? styles.stepError : '',
+              ].join(' ')}
+            >
+              {index + 1}. {describeStep(step)}
+            </li>
+          ))}
+        </ol>
+      )}
       <dl className={styles.details}>
         <dt>Expected</dt>
         <dd>{useCase.expected}</dd>
-        <dt>Checks</dt>
-        <dd>
-          <ul className={styles.checks}>
-            {useCase.checks.map((check) => (
-              <li key={check}>{check}</li>
-            ))}
-          </ul>
-        </dd>
+        {useCase.checks.length > 0 && (
+          <>
+            <dt>Checks</dt>
+            <dd>
+              <ul className={styles.checks}>
+                {useCase.checks.map((check) => (
+                  <li key={check}>{check}</li>
+                ))}
+              </ul>
+            </dd>
+          </>
+        )}
+        {useCase.stepsNote && (
+          <>
+            <dt>Steps</dt>
+            <dd>{useCase.stepsNote}</dd>
+          </>
+        )}
         <dt>Status: {STATUS_LABELS[useCase.status.state]}</dt>
         <dd>{useCase.status.note ?? 'Plays as expected on the service.'}</dd>
         {useCase.related && (
           <>
             <dt>Related</dt>
             <dd>
-              {useCase.related.map(({id, title}, index) => (
+              {useCase.related.map((id, index) => (
                 <span key={id}>
                   {index > 0 && ', '}
-                  <a href={USE_CASE_SHEET_URL} target="_blank" rel="noreferrer">
-                    {id} · {title}
-                  </a>
+                  <button
+                    type="button"
+                    className={styles.link}
+                    disabled={active}
+                    onClick={() => select(id)}
+                  >
+                    {USE_CASES.find((item) => item.id === id)?.title ?? id}
+                  </button>
                 </span>
               ))}
             </dd>
           </>
         )}
+        <dt>Source</dt>
+        <dd>
+          <a href={USE_CASE_SHEET_URL} target="_blank" rel="noreferrer">
+            The use-case sheet
+          </a>
+        </dd>
       </dl>
     </section>
   );

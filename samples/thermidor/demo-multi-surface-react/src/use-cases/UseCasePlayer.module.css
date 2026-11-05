@@ -133,8 +133,18 @@
   padding-left: 1.2em;
 }
 
-.details a {
+.details a,
+.link {
   color: inherit;
+}
+
+.link {
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 /* The control a step is about to use. */
