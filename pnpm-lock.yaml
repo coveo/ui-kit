@@ -415,6 +415,9 @@ importers:
       '@custom-elements-manifest/analyzer':
         specifier: 0.11.0
         version: 0.11.0
+      '@flakiness/playwright':
+        specifier: 2.0.3
+        version: 2.0.3
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.62.1
@@ -4350,6 +4353,11 @@ packages:
     peerDependenciesMeta:
       '@noble/hashes':
         optional: true
+
+  '@flakiness/playwright@2.0.3':
+    resolution: {integrity: sha512-VNsnCnn967F6gTBAyJKwoykt4Uf1EgvWBNlvpyfs9vjvgAJkD3jSgu6V/dTEfnB4whn9fULST+6jLBtmbr33Ug==}
+    engines: {node: ^20.17.0 || >=22.9.0}
+    hasBin: true
 
   '@floating-ui/core@1.8.0':
     resolution: {integrity: sha512-0CIZ5itps/8x7BG8dEIhs53BvCUH2PCoogtakwRTut+Arm58sJooJ0AuZhLw2HJYIR5cMLNPBSS728sPho2khQ==}
@@ -19065,6 +19073,8 @@ snapshots:
   '@exodus/bytes@1.16.0(@noble/hashes@1.8.0)':
     optionalDependencies:
       '@noble/hashes': 1.8.0
+
+  '@flakiness/playwright@2.0.3': {}
 
   '@floating-ui/core@1.8.0':
     dependencies:

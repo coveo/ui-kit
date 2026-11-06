@@ -505,7 +505,8 @@ jobs:
       # The shard goes through TEST_SHARD, which only the test task hashes. Turbo hashes
       # `turbo run … -- --shard=N/M` into every task of the run, so each shard would rebuild
       # the upstream packages instead of replaying the Build job's cache.
-      # The shards get equal test time, not equal test counts: see utils/ci/playwright-balanced-shards.mjs.
+      # The shards get equal test time, not equal test counts: see the @flakiness/playwright reporter
+      # in packages/atomic/playwright.config.ts.
       - name: Run Playwright tests
         id: playwright
         run: pnpm exec turbo run '@coveo/atomic#e2e'
