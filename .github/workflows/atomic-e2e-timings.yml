@@ -61,9 +61,10 @@ jobs:
 
   # Only runs on main open the pull request: the refresh branch restarts from the checked-out
   # commit, so a run dispatched on another branch would carry that branch's commits. Like the
-  # changesets release PR in cd.yml, developer-experience-bot opens it: its App secrets live in
-  # the `Release` environment, and the checkout uses its token, so the App pushes the branch and
-  # its API commit is verified.
+  # changesets release PR in cd.yml, developer-experience-bot opens it, from the `Release`
+  # environment's App secrets. That App can administer the repository, so its token only gets
+  # what publish needs, and it is created after `pnpm install` and handed to git in the last step
+  # only, so no install script can read it.
   publish:
     name: 'Open the refresh pull request'
     needs: refresh
@@ -79,6 +80,14 @@ jobs:
         with:
           egress-policy: audit
 
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: e2e-timings-candidate
+          path: ${{ runner.temp }}/e2e-timings
       - name: Generate a token
         id: generate-token
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3
@@ -87,16 +96,13 @@ jobs:
           private-key: ${{ secrets.RELEASER_PRIVATE_KEY }}
           owner: coveo
           repositories: 'ui-kit'
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          token: ${{ steps.generate-token.outputs.token }}
-      - uses: ./.github/actions/setup
-      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
-        with:
-          name: e2e-timings-candidate
-          path: ${{ runner.temp }}/e2e-timings
+          permission-contents: write
+          permission-pull-requests: write
+      # The credential helper reads the token from the environment, so it never lands on disk.
       - name: Open the refresh pull request
-        run: pnpm --filter @coveo/ci run e2e-timings publish --candidate "$RUNNER_TEMP/e2e-timings/atomic.json"
+        run: |
+          git config --local credential.https://github.com.helper '!f() { echo username=x-access-token; echo "password=${GITHUB_INSTALLATION_TOKEN}"; }; f'
+          pnpm --filter @coveo/ci run e2e-timings publish --candidate "$RUNNER_TEMP/e2e-timings/atomic.json"
         env:
           GITHUB_INSTALLATION_TOKEN: ${{ steps.generate-token.outputs.token }}
           CHECK_SUMMARY: ${{ needs.refresh.outputs.summary }}
