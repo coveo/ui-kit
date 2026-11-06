@@ -132,7 +132,7 @@ showed the node's items and how many items of that turn precede them:
   that produced its products, with the page's offset, as the Commerce API's own search event does.
 - **A concurrent answer is attributed too.** This amends ADR-020, which reads no metadata of a
   concurrent answer: the session reads `analyticsAttribution`, and only it, for the nodes the answer
-  writes. Like those writes, the attribution is applied without being recorded: it lives in memory,
+  writes, and the currency of its `RUN_STARTED` (below). Like those writes, the attribution is applied without being recorded: it lives in memory,
   is never serialized, is cached with the answer so a revisited query keeps its own response, and a
   later recorded announcement for the node replaces it. For `InstantProducts`, `responseId` is the
   `productSuggest` response that returned the products, and `positionOffset` is `0`.
@@ -158,11 +158,13 @@ continuity keys it already carries:
   currency that response was in. An event from an attributed node, such as a click, is in the
   currency of the response that showed its products, so a product shown in dollars is logged in
   dollars even after a later response in euros.
-- **Kept like the continuity keys.** The session also keeps the currency of its latest recorded
-  response, for the events of a node without an attribution, such as a `Cart`'s purchase. Both are
-  serialized with `sessionToken`, so a restored session logs in the same currencies. A concurrent
-  answer's currency is kept for its own response, with its attribution, and does not change the
-  latest.
+- **Kept like the continuity keys.** The session also keeps the latest currency, for the events of a
+  node without an attribution, such as a `Cart`'s purchase. Both are serialized with
+  `sessionToken`, so a restored session logs in the same currencies.
+- **A concurrent answer updates the latest currency**, unlike its continuity keys. It is served in
+  the session's current scope, so its currency is the latest one, and its products, attributed in
+  memory only, are logged in it. After a session is restored under another locale, the first
+  instant products the shopper sees are logged in the new currency.
 - **Always known when an action can be dispatched.** An action is dispatched from a node, and a node
   exists only once a response has drawn it, so that response's `RUN_STARTED` has stated the
   currency. A response that states none keeps the currency stated before; a session that no response
@@ -193,6 +195,25 @@ API request, so prices and events cannot diverge. Once the Thermidor consumer se
 producer applies it and states it back unchanged, so the two still agree. The currency is a fact of
 the response, not of a node, so the producer states it once per response rather than in each node's
 attribution.
+
+**Why the session keeps a currency per response.** A session's requests carry one locale for its
+whole life, but its currency can still change: a page restores a conversation under another locale
+when the shopper changes market, and today an administrator can change the configuration's locale.
+The products of the earlier responses keep the prices they were shown with, so the session needs the
+currency of each response, not only the latest.
+
+- **Keyed by `responseId`.** Every response has its own, even when its snapshot merges onto an
+  earlier activity in place, as an answer to a facet or a page on a restored surface does. The
+  position of an activity cannot tell when its attribution was written; the `responseId` can.
+- **Read from `RUN_STARTED`.** A response's stream announces only its own `responseId`s, after its
+  `RUN_STARTED`, so the currency that `RUN_STARTED` states is theirs. A response keeps the currency
+  it was first announced in.
+- **Not stated in the attribution.** The producer could write the currency next to each `responseId`
+  and spare the session its table, but it would then state the currency twice, and pass it to every
+  path that builds an attribution. The producer keeps what it announces for as long as older
+  versions of the package are supported, longer than the package's own code, so its part of this
+  decision stays one field. The session's table costs about 50 bytes per attributed response and is
+  removed with the rest at the migration.
 
 The attribution and the currency are the only things this decision needs from the producer, and
 ADR-023 makes both unnecessary.
@@ -338,7 +359,8 @@ with the decision on who owns the cart: the app, under ADR-012, or the producer'
 - **Negative:** the migration waits for the decision on who owns the cart, so `productClick` cannot
   move to the producer before cart changes and purchases do.
 - **Negative:** ADR-020's concurrent answers are no longer metadata-free: the session reads their
-  analytics attribution, and keeps it with the cached answer.
+  analytics attribution, and keeps it with the cached answer, and the currency of their
+  `RUN_STARTED`.
 - **Neutral:** the producer's own handler stays unused for these actions until the migration.
 
 ## Implementation and Follow-up
@@ -387,8 +409,15 @@ with the decision on who owns the cart: the app, under ADR-012, or the producer'
 - **The currency the session sends in its requests.** It would be the right value once every request
   carries the locale, but the public `createSession` sends none today, and a request may send none
   once the configuration holds a default locale. Only the producer knows the currency in both cases.
-- **A currency in each node's attribution.** It works, but repeats a fact of the response in every
-  node, and a node without an attribution, such as a `Cart`, has to fall back to some other node's.
+- **The latest currency only.** No table, but after a session is restored under another locale,
+  the products of its earlier responses would be logged in the new currency.
+- **The latest currency, with the activity position at which it changed.** A table of changes rather
+  than of responses, but an answer to a facet or a page on a restored surface merges onto an earlier
+  activity in place, so its products would be logged in the earlier currency.
+- **A currency in each node's attribution, and on `RUN_STARTED` for a node without one.** The
+  session would read it without a table, but the producer would state it twice and pass it to every
+  path that builds an attribution, for longer than the package needs it. See "Why the session keeps
+  a currency per response".
 - **A currency announced once, with the session shell.** It is missing from a session that never
   sends `initialize`, such as a storefront that opens its session on the first search, which is the
   one that has a cart.

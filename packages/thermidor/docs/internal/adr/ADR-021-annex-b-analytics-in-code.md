@@ -113,7 +113,8 @@ announcements:
 
 Every `RUN_STARTED` states the currency the response's prices are in, the one the catalog was
 queried with, beside the continuity keys. The session keeps it as the latest currency, and as the
-currency of each response the response's snapshots attribute, and serializes both:
+currency of each response the response's snapshots attribute, and serializes both. A concurrent
+answer's `RUN_STARTED` updates the latest currency, which its products are logged in:
 
 ```json
 {"type": "RUN_STARTED", "conversationToken": "…", "conversationSessionId": "…", "currency": "USD"}
