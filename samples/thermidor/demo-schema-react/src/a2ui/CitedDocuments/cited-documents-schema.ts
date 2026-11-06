@@ -2,7 +2,7 @@ import {z} from 'zod';
 
 /**
  * The `CitedDocuments` props, as `@coveo/thermidor-schema/zod3` will generate them once a release
- * has the component: https://github.com/coveo-platform/thermidor-schema/pull/205. Until then, this
+ * has the component: https://github.com/coveo-platform/thermidor-schema/pull/206. Until then, this
  * copy stands in for `CitedDocumentsPropsSchema`; delete it once the demo depends on that release.
  *
  * It is built with the demo's own Zod 3, which the renderer's binder reads to resolve `{path}`
