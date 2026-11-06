@@ -17,6 +17,7 @@ The release that migrates ships only when the producer:
 - writes `analyticsRef` on every product it streams, and resolves it in its reference index;
 - answers `productClick` as a log action, outside the turn slot, on every route that serves
   Thermidor, including organizations without stateful commerce and the storefront preview routes;
+- logs cart changes and purchases, under the decision on who owns the cart (section 6);
 - emits `ec.productClick` through a real analytics client, with the shopper's client id, tracking id,
   IP and user agent;
 - logs the same `responseId`, position and currency as the session logs today, checked against the
@@ -29,16 +30,23 @@ The release that migrates ships only when the producer:
 | -------------------- | --------------------------------------------------- | ----------------------------------------------------- |
 | Renderer             | `productClick {productId, name?, price?, position}` | `productClick {analyticsRef}`                         |
 | Delivery             | Relay, from the browser                             | A log action, outside the turn slot, with `keepalive` |
-| Attribution          | `analyticsAttribution` announcement                 | Resolved by the producer                              |
+| Attribution          | `analyticsAttribution` announcement                 | Resolved by the producer; the announcement kept (\*)  |
 | `analytics.enabled`  | Turns the browser's events on or off                | Kept: `enabled: false` sends `capture: false`         |
-| Currency             | Stated by the producer on `RUN_STARTED`             | The producer's own, no longer stated                  |
+| Currency             | Stated by the producer on `RUN_STARTED`             | The producer's own; still stated (\*)                 |
 | `analytics.endpoint` | Events URL                                          | Deprecated, ignored                                   |
 | Dependencies         | `@coveo/relay`, `@coveo/relay-event-types`          | Removed                                               |
 | Page CSP             | `connect-src` to the analytics origin               | Not needed                                            |
 | Token                | Must be allowed to write analytics                  | No analytics privilege needed                         |
 
+(\*) The producer keeps announcing the attribution and stating the currency as long as a version of
+the package that reads them is supported: those versions log only from them, so removing them would
+silence every page that has not upgraded, and every rollback. The new version no longer reads them.
+
 The session keeps reading and writing the visitor's client id under the same cookie and storage key,
 so a consumer without a `navigatorContextProvider` keeps its visitors.
+
+A session serialized before the release restores, but its products carry no `analyticsRef`: a click
+on one of them fails the contract and is not logged, with a development warning.
 
 ## 3. Changelog for consumers
 
@@ -62,6 +70,8 @@ so a consumer without a `navigatorContextProvider` keeps its visitors.
 | Same attribution            | The session's event and the producer's event for the same click carry the same `responseId`, position and currency           |
 | Delivered across navigation | A click that opens a page in the same tab still reaches its endpoint                                                         |
 | Analytics off               | `enabled: false` sends no event and `capture: false`                                                                         |
+| Older versions keep logging | The previous version, against the migrated producer, still logs from its announcements                                       |
+| Restored older session      | A click on a product restored from a session serialized before the release is withheld, with a development warning           |
 
 ## 5. Data
 
@@ -79,11 +89,11 @@ ADR-023 keeps `updateCart` an ordinary action, because it writes the producer's 
 leaves `purchase` open. The session never sends either to the producer, so the producer's session cart
 stays empty, and the cart the app sends with every request (ADR-012) is the only one.
 
-Before these actions migrate, one decision is needed: who owns the cart.
+Before the release, one decision is needed: who owns the cart.
 
 - **The app (ADR-012):** the producer reads `context.cart`, and `updateCart` and `purchase` become log
   actions.
 - **The producer:** `updateCart` stays an ordinary action that writes the session cart, and the app
   stops sending its own.
 
-Until then, the session keeps logging them through Relay.
+Until then, the session keeps logging all three actions through Relay.

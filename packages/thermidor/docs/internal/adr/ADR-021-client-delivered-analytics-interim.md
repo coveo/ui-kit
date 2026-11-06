@@ -125,7 +125,8 @@ showed the node's items and how many items of that turn precede them:
 ```
 
 - **Read like ADR-019's and ADR-020's announcements**, but per node: the latest entry for a node
-  wins, and an entry that does not have this shape is ignored.
+  wins, and an entry that does not have this shape is ignored. A snapshot that replaces another
+  merges its entries onto the replaced one's per node, so it may name only the nodes it writes.
 - **`responseId`** is the `turnId` of the turn that wrote the node. An answer to an action that is not
   recorded as a turn, such as a facet or a page on a search surface, names the Commerce API response
   that produced its products, with the page's offset, as the Commerce API's own search event does.
@@ -153,18 +154,23 @@ continuity keys it already carries:
 {"type": "RUN_STARTED", "conversationToken": "…", "conversationSessionId": "…", "currency": "USD"}
 ```
 
-- **Kept like the continuity keys.** The session keeps the currency of its latest recorded response,
-  and serializes it with `sessionToken`, so a restored session logs in the same currency. Every
-  analytics event, from any node, is in it. A concurrent answer is in the same scope, so its
-  `RUN_STARTED` changes nothing.
+- **Kept with each response.** The session keeps, for each response an attribution names, the
+  currency that response was in. An event from an attributed node, such as a click, is in the
+  currency of the response that showed its products, so a product shown in dollars is logged in
+  dollars even after a later response in euros.
+- **Kept like the continuity keys.** The session also keeps the currency of its latest recorded
+  response, for the events of a node without an attribution, such as a `Cart`'s purchase. Both are
+  serialized with `sessionToken`, so a restored session logs in the same currencies. A concurrent
+  answer's currency is kept for its own response, with its attribution, and does not change the
+  latest.
 - **Always known when an action can be dispatched.** An action is dispatched from a node, and a node
   exists only once a response has drawn it, so that response's `RUN_STARTED` has stated the
   currency. A response that states none keeps the currency stated before; a session that no response
   has stated one to, such as with a producer that predates this decision, logs nothing, with a
   development warning.
-- **Internal.** The currency is not exposed on `Session` or its snapshot, so no consumer comes to rely
-  on it. It is an optional field of the serialized session, so a session serialized before the
-  migration to ADR-023 restores after it, and the reverse.
+- **Internal.** The currencies are not exposed on `Session` or its snapshot, so no consumer comes to
+  rely on them. They are optional fields of the serialized session, so a session serialized before
+  the migration to ADR-023 restores after it, and the reverse.
 
 **Why the producer states the currency.** Every event must be in the currency of the prices the
 shopper saw, and that is the currency the producer queried the catalog with. Who decides it is
@@ -250,7 +256,9 @@ before it ships. This ADR does not decide it. It provides the switch the consume
 
 ## Migration to ADR-023
 
-The migration is one release of `@coveo/thermidor`, once the producer resolves log actions.
+The migration is one release of `@coveo/thermidor`, once the producer logs all three actions: it
+resolves `productClick` as a log action, and it logs cart changes and purchases under the decision
+on who owns the cart (below). Relay then leaves with every action at once.
 
 **What the consumer changes:** each renderer dispatches `productClick {analyticsRef}` with the
 reference the item carries, instead of the product's ids, name, price and position. This is the
@@ -260,10 +268,15 @@ accepted breaking change, announced in the changelog with before-and-after code.
 and `analytics.enabled`. No Relay symbol was public, and the consumer never configured a currency
 for analytics.
 
-**What the release removes:** the Relay module and its dependency, the `analyticsAttribution`
-announcement, the currency on `RUN_STARTED`, and the need for an analytics token and an analytics
-origin in the page's CSP. `analytics.endpoint` is deprecated, and the optional `currency` of a
-serialized session is ignored.
+**What the release removes:** the Relay module and its dependency, the reading of the
+`analyticsAttribution` announcement and of the currency on `RUN_STARTED`, and the need for an
+analytics token and an analytics origin in the page's CSP. `analytics.endpoint` is deprecated, and
+the optional currencies of a serialized session are ignored.
+
+**What the producer keeps:** the `analyticsAttribution` announcement and the currency on
+`RUN_STARTED`, as long as a version of the package that reads them is supported. Those versions log
+only from them, so removing them with the release would silence every page that has not upgraded,
+and every rollback.
 
 **What the release keeps working:**
 
@@ -271,7 +284,13 @@ serialized session is ignored.
   from the same cookie and storage key, so no shopper becomes a new visitor.
 - **No double logging:** older versions log from the browser and never send analytics actions; newer
   ones only send log actions. Both can run against the same producer.
-- **Rollback:** reinstalling the previous version.
+- **Rollback:** reinstalling the previous version, which logs from the producer's announcements
+  again.
+
+**What the release does not keep:** a click on a product restored from a session serialized before
+the release. Its products carry no `analyticsRef`, so the click fails the contract and is not
+logged, with a development warning. Invalidating those sessions would lose the shopper's
+conversation to save the clicks on its older products.
 
 **What changes in the data:** events come from the producer (`source`), with the shopper's IP and
 user agent as the producer forwards them, and are no longer lost to content blockers. Reports show
@@ -279,7 +298,7 @@ the shift on the release date.
 
 `updateCart` stays an ordinary action in ADR-023, and `purchase` is left open there. They migrate
 with the decision on who owns the cart: the app, under ADR-012, or the producer's session cart, which
-`updateCart` writes today.
+`updateCart` writes today. The release waits for that decision.
 
 ## Impact on the Charter
 
@@ -311,11 +330,13 @@ with the decision on who owns the cart: the app, under ADR-012, or the producer'
 - **Negative:** the session names three actions and depends on Relay until the migration.
 - **Negative:** the migration breaks every renderer that dispatches `productClick`.
 - **Negative:** the producer must announce the attribution of each node and state the currency of
-  each response, until the migration.
+  each response, until no supported version of the package reads them.
 - **Negative:** Relay, the attribution and the currency add about 1.7 kB to the package's main
   entry.
-- **Negative:** the serialized session gains an optional `currency`, which the migration leaves
-  unread.
+- **Negative:** the serialized session gains optional currencies, the latest and one per attributed
+  response, which the migration leaves unread.
+- **Negative:** the migration waits for the decision on who owns the cart, so `productClick` cannot
+  move to the producer before cart changes and purchases do.
 - **Negative:** ADR-020's concurrent answers are no longer metadata-free: the session reads their
   analytics attribution, and keeps it with the cached answer.
 - **Neutral:** the producer's own handler stays unused for these actions until the migration.
@@ -330,7 +351,7 @@ with the decision on who owns the cart: the app, under ADR-012, or the producer'
   with the `turnId` the turn already allocates when it starts; and state, on every `RUN_STARTED`,
   the currency it applied to the response.
 - `@coveo/thermidor`: the `analytics` configuration, the internal module (mapping, one click per
-  item), the currency read from `RUN_STARTED` and serialized, the client id.
+  item), the currencies read from `RUN_STARTED`, kept per response and serialized, the client id.
 - demo-schema-react: dispatch `productClick` from every product link. demo-multi-surface-react:
   dispatch `updateCart` from the add-to-cart button of a product card. No producer draws a `Cart`
   node yet, so `purchase` is covered by the session's tests only. The mock announces attribution,

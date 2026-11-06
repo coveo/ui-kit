@@ -24,7 +24,8 @@ renderer ──dispatchAction──▶ payload of the action ──session──
 - **The session** imports no schema. It reads the validated payload through a structural view of
   the fields it maps, and builds events typed by `@coveo/relay-event-types`.
 - **What the payload does not carry:** `responseId` and the position in the turn come from the
-  producer's attribution; `currency` from the `RUN_STARTED` of the producer's latest response.
+  producer's attribution; `currency` from the `RUN_STARTED` of the response that showed the
+  products, or of the latest response for a node without an attribution.
 
 ## 2. The contract
 
@@ -111,7 +112,8 @@ announcements:
   `positionOffset` is `0`.
 
 Every `RUN_STARTED` states the currency the response's prices are in, the one the catalog was
-queried with, beside the continuity keys. The session keeps it with them, and serializes it:
+queried with, beside the continuity keys. The session keeps it as the latest currency, and as the
+currency of each response the response's snapshots attribute, and serializes both:
 
 ```json
 {"type": "RUN_STARTED", "conversationToken": "…", "conversationSessionId": "…", "currency": "USD"}
@@ -134,11 +136,13 @@ function issueAction(recovered: RecoveredAction): Promise<void> {
         recovered.sourceComponentId,
         unrecordedAttributions
       );
+      const {currency, responseCurrencies} = store.getState();
       analytics.log({
         name: recovered.name,
         payload: recovered.context,
         attribution,
-        currency: store.getState().currency, // from the latest RUN_STARTED
+        // the currency of the response that showed the products, else the latest
+        currency: (attribution && responseCurrencies?.[attribution.responseId]) ?? currency,
       });
     }
     return withhold();
@@ -147,7 +151,8 @@ function issueAction(recovered: RecoveredAction): Promise<void> {
 }
 ```
 
-The attribution is read per node, the latest entry winning:
+The attribution is read per node, the latest entry winning. A snapshot that replaces another
+merges its announcement onto the replaced one's per node, so the nodes it leaves out keep theirs:
 
 ```ts
 // session/analytics-attribution.ts
