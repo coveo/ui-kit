@@ -229,6 +229,26 @@ describe('QuerySummary focus', () => {
     );
   });
 
+  it('moves focus to the no-results line when the override finds nothing', async () => {
+    const request = answerable();
+    const {pushDataModel} = mountWithResults(request.gate);
+
+    await searchInsteadWithFocus();
+    pushDataModel([
+      {path: '/state/summary/query', value: 'swim gear'},
+      {path: '/state/summary/firstIndex', value: 0},
+      {path: '/state/summary/lastIndex', value: 0},
+      {path: '/state/summary/totalEntries', value: 0},
+      {path: '/state/summary/correction', value: undefined},
+      {path: '/state/list/products', value: []},
+    ]);
+    await request.answer();
+
+    await waitFor(() =>
+      expect(document.activeElement).toBe(screen.getByText(/No results for/).closest('p'))
+    );
+  });
+
   it('gives focus back to the link when the notice stays', async () => {
     const request = answerable();
     mountWithResults(request.gate);

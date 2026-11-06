@@ -2,6 +2,7 @@ import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import {useRef} from 'react';
 import type {QueryCorrection, QuerySummaryAction} from '@coveo/thermidor-schema';
 import {QuerySummaryPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {resultsFocusTarget} from '../results-focus.js';
 import {useGesture} from '../session-request.js';
 import {useRemovalFocus} from '../use-removal-focus.js';
 import styles from './QuerySummary.module.css';
@@ -64,7 +65,7 @@ export const QuerySummary = createReactComponent(
     if (totalEntries === 0) {
       return query ? (
         <div ref={summary} data-layout="fill">
-          <p className={styles.summary}>
+          <p className={styles.summary} {...resultsFocusTarget}>
             <span>
               No results for <strong>{query}</strong>
             </span>
