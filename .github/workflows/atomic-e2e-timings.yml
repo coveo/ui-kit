@@ -60,9 +60,10 @@ jobs:
           retention-days: 1
 
   # Only runs on main open the pull request: the refresh branch restarts from the checked-out
-  # commit, so a run dispatched on another branch would carry that branch's commits. The App's
-  # secrets only exist in the `PR Artifacts` environment; `contents: write` lets the checkout's
-  # token push the refresh branch, and the commit itself goes through the App so it is verified.
+  # commit, so a run dispatched on another branch would carry that branch's commits. Like the
+  # changesets release PR in cd.yml, developer-experience-bot opens it: its App secrets live in
+  # the `Release` environment, and the checkout uses its token, so the App pushes the branch and
+  # its API commit is verified.
   publish:
     name: 'Open the refresh pull request'
     needs: refresh
@@ -70,28 +71,30 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
-      contents: write
-    environment: PR Artifacts
+      contents: read
+    environment: Release
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
         with:
           egress-policy: audit
 
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3
+        with:
+          app-id: ${{ secrets.RELEASER_APP_ID }}
+          private-key: ${{ secrets.RELEASER_PRIVATE_KEY }}
+          owner: coveo
+          repositories: 'ui-kit'
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
       - uses: ./.github/actions/setup
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           name: e2e-timings-candidate
           path: ${{ runner.temp }}/e2e-timings
-      - name: Generate a token
-        id: generate-token
-        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: coveo
-          repositories: 'ui-kit'
       - name: Open the refresh pull request
         run: pnpm --filter @coveo/ci run e2e-timings publish --candidate "$RUNNER_TEMP/e2e-timings/atomic.json"
         env:
