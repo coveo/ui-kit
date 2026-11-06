@@ -152,6 +152,9 @@ export class AtomicRefineModal extends LitElement implements InitializableCompon
   @state()
   public querySummaryState!: QuerySummaryState;
 
+  /**
+   * @internal
+   */
   public searchStatus!: SearchStatus;
 
   public facetManager!: FacetManager;
