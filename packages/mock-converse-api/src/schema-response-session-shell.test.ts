@@ -403,9 +403,13 @@ describe('recent queries', () => {
 
     const recentQueries = async (query = '') => (await suggestions(query)).recentQueries;
 
-    // The answer streams for a second; the session records the search before it starts.
-    const restore = (surfaceId: string, query: string) =>
-      act('restoreState', {query, page: 0, pageSize: 12}, surfaceId, 'root');
+    // The session records each query as its search is sent, so the answers can stream side by side.
+    const restore = (surfaceId: string, ...queries: string[]) =>
+      Promise.all(
+        queries
+          .map((query) => act('restoreState', {query, page: 0, pageSize: 12}, surfaceId, 'root'))
+          .map(readEvents)
+      );
 
     return {keys, shellId, prompt, act, suggestions, recentQueries, restore};
   }
@@ -453,10 +457,33 @@ describe('recent queries', () => {
     const surfaceId = await searchSurface(session);
     await readEvents(session.act('clearRecentQueries', {}));
 
-    converseSchemaResponses.schemaBaseResponse({message: 'boating safety'}, session.keys);
-    converseSchemaResponses.schemaBaseResponse({message: 'hello'}, session.keys);
-    session.act('search', {query: 'aqua'}, surfaceId, 'facet-brand-2');
-    session.act('applyCustomRange', {start: 100000, end: 200000}, surfaceId, 'facet-price-2');
+    const [, , , emptyRange] = await Promise.all(
+      [
+        converseSchemaResponses.schemaBaseResponse({message: 'boating safety'}, session.keys),
+        converseSchemaResponses.schemaBaseResponse({message: 'hello'}, session.keys),
+        session.act('search', {query: 'aqua'}, surfaceId, 'facet-brand-2'),
+        session.act('applyCustomRange', {start: 100000, end: 200000}, surfaceId, 'facet-price-2'),
+      ].map(readEvents)
+    );
+
+    const querySummary = surfaceMessages(emptyRange)
+      .map(({updateDataModel}) => updateDataModel as {path: string; value: unknown})
+      .find(({path}) => path === '/state/query-summary-2');
+    expect(querySummary?.value).toMatchObject({totalEntries: 0});
+    expect(await session.recentQueries()).toEqual([]);
+  }, 15_000);
+
+  it('records no action that runs no search', async () => {
+    const session = await openSession();
+    const corrected = (await session.prompt('water sprots'))!;
+    await readEvents(session.act('clearRecentQueries', {}));
+
+    await Promise.all(
+      [
+        session.act('overrideCorrection', {}, corrected, 'query-summary-2'),
+        session.act('selectSearchOption', {text: 'kayaks'}, corrected, 'root'),
+      ].map(readEvents)
+    );
 
     expect(await session.recentQueries()).toEqual([]);
   });
@@ -466,9 +493,10 @@ describe('recent queries', () => {
     const other = await openSession();
     const surfaceId = await searchSurface(session);
 
-    for (let index = 1; index <= 12; index++) {
-      await session.restore(surfaceId, `query ${index}`);
-    }
+    await session.restore(
+      surfaceId,
+      ...Array.from({length: 12}, (_, index) => `query ${index + 1}`)
+    );
 
     const all = Array.from({length: 10}, (_, index) => `query ${12 - index}`);
     expect(await session.recentQueries()).toEqual(all.slice(0, 8));
@@ -480,9 +508,7 @@ describe('recent queries', () => {
   it('lists the matching recent queries, and the completions without them', async () => {
     const session = await openSession();
     const surfaceId = await searchSurface(session);
-    for (const query of ['surf wax', 'snorkel mask', 'surfboards']) {
-      await session.restore(surfaceId, query);
-    }
+    await session.restore(surfaceId, 'surf wax', 'snorkel mask', 'surfboards');
 
     expect(await session.suggestions('Surf')).toMatchObject({
       query: 'Surf',
@@ -498,13 +524,13 @@ describe('recent queries', () => {
   it('caps recent queries at three while typing, and all suggestions at eight', async () => {
     const session = await openSession();
     const surfaceId = await searchSurface(session);
-    for (const query of ['sailboats', 'sandals', 'sunglasses', 'swimsuits']) {
-      await session.restore(surfaceId, query);
-    }
+    await session.restore(surfaceId, 'sailboats', 'sandals', 'sunglasses', 'swimsuits');
 
     const typed = await session.suggestions('s');
 
     expect(typed.recentQueries).toEqual(['swimsuits', 'sunglasses', 'sandals']);
+    expect(await session.recentQueries('  ')).toHaveLength(5);
+    expect(await session.recentQueries(' SA ')).toEqual(['sandals', 'sailboats']);
     expect(typed.completions.map(({expression}) => expression)).toEqual([
       'surfboards',
       'surfboard leash',
@@ -563,12 +589,12 @@ describe('recent queries', () => {
   });
 
   describe('removeRecentQuery', () => {
-    it('removes the entry, compared case-insensitively, without a state write', async () => {
+    it('removes the entry, trimmed and compared case-insensitively, without a state write', async () => {
       const session = await openSession();
       const surfaceId = await searchSurface(session);
       await session.restore(surfaceId, 'kayaks');
 
-      const events = await readEvents(session.act('removeRecentQuery', {query: 'Water Sports'}));
+      const events = await readEvents(session.act('removeRecentQuery', {query: ' Water Sports '}));
 
       expect(events.map(({event}) => event)).toEqual([
         'turn_started',

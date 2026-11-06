@@ -212,8 +212,6 @@ const actionNotApplicableResponse = () =>
 
 const MAX_RECENT_QUERIES = 10;
 
-const MAX_TYPED_RECENT_QUERIES = 3;
-
 // The session's recent queries (Thermidor ADR-024), newest first, by session id.
 const recentQueriesBySession = new Map<string, string[]>();
 
@@ -228,21 +226,17 @@ function recordRecentQuery(sessionId: string, query: string | null) {
   recentQueriesBySession.set(sessionId, [normalized, ...others].slice(0, MAX_RECENT_QUERIES));
 }
 
-function matchingRecentQueries(sessionId: string, query: string): string[] {
-  const typed = query.toLowerCase();
-  const matches = (recentQueriesBySession.get(sessionId) ?? []).filter((entry) =>
-    entry.startsWith(typed)
-  );
-  return typed ? matches.slice(0, MAX_TYPED_RECENT_QUERIES) : matches;
-}
-
 function removeRecentQuery(sessionId: string, query: string) {
-  const removed = query.toLowerCase();
+  const removed = query.trim().toLowerCase();
   const entries = recentQueriesBySession.get(sessionId) ?? [];
   recentQueriesBySession.set(
     sessionId,
     entries.filter((entry) => entry !== removed)
   );
+}
+
+function queryOf(action: SchemaAction): string {
+  return typeof action.context.query === 'string' ? action.context.query : '';
 }
 
 function appliesToQuerySuggestions(action: SchemaAction, session: SessionKeys): boolean {
@@ -267,8 +261,7 @@ function buildRecentQueriesActionResponse(action: SchemaAction, session: Session
       sourceComponentId: QUERY_SUGGESTIONS_ID,
     });
   } else {
-    const query = typeof action.context.query === 'string' ? action.context.query : '';
-    removeRecentQuery(sessionId, query);
+    removeRecentQuery(sessionId, queryOf(action));
     events = buildRecentQueryRemovedEvents();
   }
   return buildStreamingResponse(withSessionKeys(events, session), {
@@ -287,7 +280,7 @@ function buildInstantProductsResponse(action: SchemaAction, session: SessionKeys
   }
   return buildStreamingResponse(
     withSessionKeys(
-      buildInstantProductsEvents({surfaceId: shellSurfaceId, context: action.context}),
+      buildInstantProductsEvents({surfaceId: shellSurfaceId, query: queryOf(action)}),
       session
     ),
     {delayBetweenMessages: INSTANT_PRODUCTS_DELAY_MS}
@@ -359,14 +352,13 @@ function buildSchemaActionResponse(action: SchemaAction, session: SessionKeys) {
     return buildRecentQueriesActionResponse(action, session);
   }
   if (action.name === 'fetchSuggestions' && action.surfaceId && action.sourceComponentId) {
-    const query = typeof action.context.query === 'string' ? action.context.query : '';
     return buildStreamingResponse(
       withSessionKeys(
         buildQuerySuggestionsEvents({
           surfaceId: action.surfaceId,
           sourceComponentId: action.sourceComponentId,
-          context: action.context,
-          recentQueries: matchingRecentQueries(session.conversationSessionId, query),
+          query: queryOf(action),
+          sessionRecentQueries: recentQueriesBySession.get(session.conversationSessionId) ?? [],
         }),
         session
       ),
@@ -376,14 +368,17 @@ function buildSchemaActionResponse(action: SchemaAction, session: SessionKeys) {
   // The search surface's answer targets the surface the action came from, under the id its prompt
   // minted for it.
   const sourceSurfaceId = action.surfaceId;
+  const searchSurfaceId = sourceSurfaceId?.startsWith(`${SEARCH_SURFACE_ID}-`)
+    ? sourceSurfaceId
+    : undefined;
+  const reruns =
+    searchSurfaceId !== undefined &&
+    rerunsSearch(action, action.sourceComponentId, searchSurfaceId);
   const events = withSurfaceIds(buildSearchActionEvents(action), (surfaceId) =>
     sourceSurfaceId?.startsWith(`${surfaceId}-`) ? sourceSurfaceId : surfaceId
   );
-  if (
-    sourceSurfaceId?.startsWith(`${SEARCH_SURFACE_ID}-`) &&
-    rerunsSearch(action, action.sourceComponentId)
-  ) {
-    recordRecentQuery(session.conversationSessionId, productSearchQuery(sourceSurfaceId));
+  if (reruns) {
+    recordRecentQuery(session.conversationSessionId, productSearchQuery(searchSurfaceId!));
   }
   return buildStreamingResponse(withSessionKeys(events, session), {
     delayBetweenMessages: ACTION_DELAY_MS,

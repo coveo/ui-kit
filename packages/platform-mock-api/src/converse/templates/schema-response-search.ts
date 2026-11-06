@@ -1806,12 +1806,44 @@ function buildWaterSportsActionEvents(
   });
 }
 
-const FACET_SEARCH_ACTIONS = new Set(['search', 'showMoreSearchResults', 'clearSearch']);
+const FACET_RERUN_ACTIONS = new Set([
+  'toggleSelect',
+  'toggleExclude',
+  'toggleSingleSelect',
+  'toggleSingleExclude',
+  'clearAllActiveValues',
+  'showMoreValues',
+  'showLessValues',
+  'applyCustomRange',
+  'selectPath',
+  'clearSelectedPath',
+]);
 
-// Every action on the search surface re-runs its search, except a search within a facet's values.
-function rerunsSearch(action: {name: string}, sourceComponentId?: string): boolean {
-  const isFacet = Object.values(FACET_COMPONENT_IDS).some((id) => id === sourceComponentId);
-  return !(isFacet && FACET_SEARCH_ACTIONS.has(action.name));
+const BREADBOX_RERUN_ACTIONS = new Set(['deselect', 'clearAll']);
+
+const SURFACE_RERUN_ACTIONS = new Set(['restoreState', 'selectPage', 'setPageSize', 'selectSort']);
+
+// Whether the action re-runs the surface's search, read before the action changes the view.
+function rerunsSearch(
+  action: {name: string},
+  sourceComponentId: string | undefined,
+  surfaceId: string
+): boolean {
+  switch (sourceComponentId) {
+    case FACET_COMPONENT_IDS.regular:
+    case FACET_COMPONENT_IDS.numeric:
+    case FACET_COMPONENT_IDS.category:
+      return FACET_RERUN_ACTIONS.has(action.name);
+    case BREADBOX_ID:
+      return BREADBOX_RERUN_ACTIONS.has(action.name);
+    case QUERY_SUMMARY_ID:
+      return (
+        action.name === 'overrideCorrection' &&
+        viewsBySurfaceId.get(surfaceId)?.correction?.canOverride === true
+      );
+    default:
+      return SURFACE_RERUN_ACTIONS.has(action.name);
+  }
 }
 
 // The query the surface's last search ran, after a correction or a rewrite, when it returned

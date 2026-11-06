@@ -1,8 +1,10 @@
 import {
   RENDERER_ROOT_ID,
+  bindStateFields,
   buildConversationResponse,
   buildValidatedSurface,
   statePath,
+  stateFieldPath,
   type A2uiComponentNode,
 } from './shared.js';
 import {ActivitySnapshot, UpdateDataModelActivity, type ConverseEvent} from '../events.js';
@@ -23,15 +25,12 @@ const SHELL_NODES: A2uiComponentNode[] = [
   {
     id: QUERY_SUGGESTIONS_ID,
     component: 'QuerySuggestions',
-    query: {path: `${statePath(QUERY_SUGGESTIONS_ID)}/query`},
-    recentQueries: {path: `${statePath(QUERY_SUGGESTIONS_ID)}/recentQueries`},
-    completions: {path: `${statePath(QUERY_SUGGESTIONS_ID)}/completions`},
+    ...bindStateFields(QUERY_SUGGESTIONS_ID, ['query', 'recentQueries', 'completions']),
   },
   {
     id: INSTANT_PRODUCTS_ID,
     component: 'InstantProducts',
-    query: {path: `${statePath(INSTANT_PRODUCTS_ID)}/query`},
-    products: {path: `${statePath(INSTANT_PRODUCTS_ID)}/products`},
+    ...bindStateFields(INSTANT_PRODUCTS_ID, ['query', 'products']),
   },
 ];
 
@@ -63,6 +62,8 @@ const EXPRESSIONS = [
 ];
 
 const MAX_COMPLETIONS = 6;
+
+const MAX_TYPED_RECENT_QUERIES = 3;
 
 const MAX_SUGGESTIONS = 8;
 
@@ -112,17 +113,25 @@ function completionsFor(query: string): {expression: string; score: number}[] {
     .map((expression, index) => ({expression, score: 100 - index * 5}));
 }
 
-function buildQuerySuggestionsEvents(action: {
-  surfaceId: string;
-  sourceComponentId: string;
-  context: Record<string, unknown>;
-  recentQueries: string[];
-}): ConverseEvent[] {
-  const query = typeof action.context.query === 'string' ? action.context.query : '';
-  const recentQueries = action.recentQueries.slice(0, MAX_SUGGESTIONS);
+// Thermidor ADR-024: the session's recent queries that start with the typed text come first, at
+// most 3 while typing, then the completions they do not repeat, at most 8 in all.
+function querySuggestionsFor(query: string, sessionRecentQueries: readonly string[]) {
+  const typed = query.trim().toLowerCase();
+  const recentQueries = sessionRecentQueries
+    .filter((entry) => entry.startsWith(typed))
+    .slice(0, typed ? MAX_TYPED_RECENT_QUERIES : MAX_SUGGESTIONS);
   const completions = completionsFor(query)
     .filter(({expression}) => !recentQueries.includes(expression.toLowerCase()))
     .slice(0, MAX_SUGGESTIONS - recentQueries.length);
+  return {query, recentQueries, completions};
+}
+
+function buildQuerySuggestionsEvents(action: {
+  surfaceId: string;
+  sourceComponentId: string;
+  query: string;
+  sessionRecentQueries: readonly string[];
+}): ConverseEvent[] {
   const runId = nextRunId('suggestions');
   return buildConversationResponse({
     runId,
@@ -133,7 +142,7 @@ function buildQuerySuggestionsEvents(action: {
           {
             surfaceId: action.surfaceId,
             path: statePath(action.sourceComponentId),
-            value: {query, recentQueries, completions},
+            value: querySuggestionsFor(action.query, action.sessionRecentQueries),
           },
         ],
       }),
@@ -156,7 +165,7 @@ function buildRecentQueriesClearedEvents(action: {
         ops: [
           {
             surfaceId: action.surfaceId,
-            path: `${statePath(action.sourceComponentId)}/recentQueries`,
+            path: stateFieldPath(action.sourceComponentId, 'recentQueries'),
             value: [],
           },
         ],
@@ -176,11 +185,8 @@ function buildRecentQueryRemovedEvents(): ConverseEvent[] {
   });
 }
 
-function buildInstantProductsEvents(action: {
-  surfaceId: string;
-  context: Record<string, unknown>;
-}): ConverseEvent[] {
-  const query = typeof action.context.query === 'string' ? action.context.query : '';
+function buildInstantProductsEvents(action: {surfaceId: string; query: string}): ConverseEvent[] {
+  const {query} = action;
   const runId = nextRunId('instant-products');
   return buildConversationResponse({
     runId,
