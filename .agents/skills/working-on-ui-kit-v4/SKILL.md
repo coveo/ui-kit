@@ -11,19 +11,6 @@ metadata:
 
 One rule holds the whole process together: **a change that breaks a customer ships with the text that migrates that customer, in the same pull request.** Everything below exists to make that automatic.
 
-## Current state
-
-Update this table when a decision lands; the rest of the skill reads from it.
-
-| Fact                       | Value                                                                                                                                                                                                            |
-| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| v3 line                    | `main`, released by `.github/workflows/cd.yml` through Changesets                                                                                                                                                |
-| v4 integration branch      | Not created yet. KIT-4387 (v4 preparation) names it. Until then, see "Before the v4 branch exists".                                                                                                              |
-| Maintenance branches       | `release/v2`, `release/v3`. CDN hotfixes branch from a release tag as `hotfix/**` (`.github/workflows/hotfix.yml`).                                                                                              |
-| Upgrade guide (engineering) | `packages/headless/source_docs/upgrade-from-v3-to-v4.md`, `packages/headless-react/source_docs/upgrade-from-v3-to-v4.md`, `packages/atomic/docs/upgrade-from-v3-to-v4.md`. Not listed in any `typedoc.json` until GA. |
-| Published guides           | Headless and Headless React through Typedoc (`projectDocuments`), Atomic on docs.coveo.com by the technical writers (KIT-6388).                                                                                 |
-| Story list                 | Jira JQL: `parent in (KIT-3377, KIT-4621, KIT-4387) OR "Epic Link" in (KIT-3377, KIT-4621, KIT-4387)`                                                                                                           |
-
 ## Step 1: Pick the track
 
 Decide the track from what the change does to a customer on the latest v3 release. Take the first case that applies:
@@ -38,7 +25,7 @@ Newer story titles start with `[Package] v3:` or `[Package] v4:`. Treat that pre
 | Track            | Example story                                                                        | Base branch                                   | Changeset bump                                     | Upgrade guide entry               |
 | ---------------- | ------------------------------------------------------------------------------------ | --------------------------------------------- | -------------------------------------------------- | --------------------------------- |
 | **v3**           | KIT-6346 `[Headless] v3: deprecate the legacy commerce facet contract`               | `main`                                        | `minor` for a new API or notice, `patch` for a fix | Optional "planned removal" row    |
-| **v4**           | KIT-6347 `[Headless] v4: sunset the legacy commerce facet contract`                  | the v4 integration branch (see Current state) | `major` on every public package whose API breaks   | Required                          |
+| **v4**           | KIT-6347 `[Headless] v4: sunset the legacy commerce facet contract`                  | see "Where v4 PRs go"                         | `major` on every public package whose API breaks   | Required                          |
 | **experimental** | A change to the SSR `-next` entry points                                             | `main`                                        | `minor` or `patch`, never `major`                  | Kept in sync, see below           |
 | **no-release**   | KIT-4388 `Should we use Zod over Bueno and deprecate Bueno?`                         | `main`, when any file changes                 | None                                               | None, except in the guide's story |
 
@@ -71,7 +58,7 @@ Skip this step on the no-release track. Otherwise, run `pnpm changeset` for ever
 
 Required for every `major` bump; recommended for a v3 deprecation, as a "planned removal" row.
 
-Use [references/upgrade-guide-entry.md](references/upgrade-guide-entry.md) for the entry shape. In short: one sentence on what changed, a version 3 block taken from a v3 sample, a version 4 block taken from a v4 sample, one sentence on what to do instead, under 15 lines of prose. Add each removed member to the removals table of its theme. Put the entry in the file of the package that changed; Atomic entries go to `packages/atomic/docs/upgrade-from-v3-to-v4.md`, which the technical writers turn into the docs.coveo.com page.
+Use [references/upgrade-guide-entry.md](references/upgrade-guide-entry.md) for the entry shape. In short: one sentence on what changed, a version 3 block taken from a v3 sample, a version 4 block taken from a v4 sample, one sentence on what to do instead, under 15 lines of prose. Add each removed member to the removals table of its theme. Put the entry in the file of the package that changed: `packages/headless/source_docs/upgrade-from-v3-to-v4.md` or `packages/headless-react/source_docs/upgrade-from-v3-to-v4.md`, which stay out of every `typedoc.json` until GA. Atomic entries go to `packages/atomic/docs/upgrade-from-v3-to-v4.md`, which the technical writers turn into the docs.coveo.com page.
 
 ## Step 5: Check, commit, open the pull request
 
@@ -89,9 +76,9 @@ A no-release story that changes no file, such as most spikes, goes straight to S
 - Set "Requires Public Documentation" to Yes when a docs.coveo.com page other than the guide must change, and open a DOC request for the technical writers.
 - Leave the story in progress until the PR is merged into the base branch of its track.
 
-## Before the v4 branch exists
+## Where v4 PRs go
 
-A v4 removal cannot merge into `main` while `main` ships v3. Until KIT-4387 names the integration branch: build the removal on a branch stacked on its v3 deprecation branch, push it to `origin`, run the story check with `--track v4`, link the branch from the Jira issue, and do not open a PR against `main`. When the branch exists, rebase and open the PR there.
+A v4 removal cannot merge into `main` while `main` ships v3. KIT-4387 decides how v4 lands. Until it does: build the removal on a branch stacked on its v3 deprecation branch, push it to `origin`, run the story check with `--track v4`, link the branch from the Jira issue, and do not open a PR against `main`. When KIT-4387 decides, follow its decision and update this section.
 
 ## Scripts
 
