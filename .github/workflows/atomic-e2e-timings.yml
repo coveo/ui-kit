@@ -1,0 +1,100 @@
+name: Atomic e2e shard timings
+
+# Rebuilds utils/ci/e2e-timings/atomic.json, the measured test durations that the
+# @flakiness/playwright reporter balances the Atomic e2e shards with, from the blob reports of the
+# newest merge-queue runs, and opens a pull request when the committed file is stale.
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/atomic-e2e-timings.yml'
+      - 'utils/ci/e2e-timings/**'
+      - '!utils/ci/e2e-timings/atomic.json'
+      - 'utils/ci/package.json'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    name: 'Refresh the shard timings'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      actions: read
+      contents: read
+    outputs:
+      refresh: ${{ steps.check.outputs.refresh }}
+      summary: ${{ steps.check.outputs.summary }}
+      runs: ${{ steps.build.outputs.runs }}
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: ./.github/actions/setup
+      - name: Build the timings from the newest runs
+        id: build
+        run: pnpm --filter @coveo/ci run e2e-timings build --latest --runs 3 -o "$RUNNER_TEMP/e2e-timings/atomic.json"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Compare with the committed timings
+        id: check
+        if: steps.build.outputs.built == 'true'
+        run: pnpm --filter @coveo/ci run e2e-timings check --candidate "$RUNNER_TEMP/e2e-timings/atomic.json" --shards "$SHARDS"
+        env:
+          SHARDS: ${{ steps.build.outputs.shards }}
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        if: github.ref == 'refs/heads/main' && steps.check.outputs.refresh == 'true'
+        with:
+          name: e2e-timings-candidate
+          path: ${{ runner.temp }}/e2e-timings/atomic.json
+          retention-days: 1
+
+  # Only runs on main open the pull request: the refresh branch restarts from the checked-out
+  # commit, so a run dispatched on another branch would carry that branch's commits. The App's
+  # secrets only exist in the `PR Artifacts` environment; `contents: write` lets the checkout's
+  # token push the refresh branch, and the commit itself goes through the App so it is verified.
+  publish:
+    name: 'Open the refresh pull request'
+    needs: refresh
+    if: github.ref == 'refs/heads/main' && needs.refresh.outputs.refresh == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    environment: PR Artifacts
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: e2e-timings-candidate
+          path: ${{ runner.temp }}/e2e-timings
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: coveo
+          repositories: 'ui-kit'
+      - name: Open the refresh pull request
+        run: pnpm --filter @coveo/ci run e2e-timings publish --candidate "$RUNNER_TEMP/e2e-timings/atomic.json"
+        env:
+          GITHUB_INSTALLATION_TOKEN: ${{ steps.generate-token.outputs.token }}
+          CHECK_SUMMARY: ${{ needs.refresh.outputs.summary }}
+          SOURCE_RUNS: ${{ needs.refresh.outputs.runs }}
