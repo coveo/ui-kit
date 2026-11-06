@@ -10,7 +10,8 @@
     "if-cdn": "node ./if-cdn.mjs",
     "if-ci": "node ./if-ci.mjs",
     "test": "node --test",
-    "flaky-report": "node ./flaky-report/index.mjs"
+    "flaky-report": "node ./flaky-report/index.mjs",
+    "e2e-timings": "node ./e2e-timings/index.mjs"
   },
   "dependencies": {
     "@coveo/semantic-monorepo-tools": "2.7.1",
