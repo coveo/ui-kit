@@ -59,10 +59,16 @@ src/
 ├── index.ts                       # Public surface (ADR-010 / ADR-014 / ADR-016)
 ├── private.ts                     # @coveo/thermidor/private, for internal Coveo use only
 ├── session/
-│   ├── create-session.ts          # createSession factory + shared runtime (dispatch/cancel/retry)
+│   ├── create-session.ts          # createSession factory + shared runtime: wires the modules below
+│   ├── session-dispatch.ts        # initialize, prompts, component actions and retry: what each sends, and where its answer is recorded
+│   ├── session-streaming.ts       # The single request: sendRequest, the stream it folds into its run, cancel
+│   ├── session-requests.ts        # Builds requests from the context providers and session keys
+│   ├── run-recording.ts           # Writes a stream's events and outcome into its run: a turn, or the initialization
+│   ├── session-views.ts           # Memoized surfaces, live state and snapshot over the store
+│   ├── stream-events.ts           # Reads a stream's events, for the single request and the concurrent lane
 │   ├── create-private-session.ts  # createPrivateSession: optional ids, optional locale
 │   ├── conflict-retry.ts          # Bounded retry of 409 AGENT:ACTION_IN_FLIGHT rejections
-│   ├── types.ts                   # Turn / TurnInput / TurnResponse domain model (ADR-010 model annex)
+│   ├── types.ts                   # Session handle + config, and the Turn / TurnInput / TurnResponse domain model (ADR-010 model annex)
 │   ├── store.ts                   # Plain observable store + subscribe/notify
 │   ├── fold.ts                    # Pure fold + surface derivation (ADR-015 interim)
 │   ├── a2ui-v09-projection.ts     # A2-UI v1.0 → v0.9 renderer projection (ADR-015 addendum)
@@ -99,7 +105,7 @@ The runtime owns the initialize / dispatch / cancel / retry orchestration and th
 - **`cancel()`** — stops consuming the in-flight stream. A streaming initialization, or a streaming turn, opened by a prompt or by an action, keeps the partial `response` already folded and is marked `error` with the message `'Cancelled'`; an action that streams into a complete turn leaves it as it was. `request` stays set until the stopped request has unwound, so a dispatch made right after `cancel()` is withheld. A no-op when nothing is in flight.
 - **`retry(turnId)`** — re-submits the original input of the last turn, only when it is `error`: its prompt, or the action that opened it, re-sent from the surface it was dispatched from without resolving it against the active turn. Withheld like any dispatch while a request is in flight; any other `turnId` (unknown, non-error, or an earlier turn, whose answer would land before later turns' surfaces) is a no-op.
 
-Prompts and actions reach the endpoint one at a time, through `sendRequest` in `create-session.ts`, except the concurrent actions below: the Gateway processes a single request per session, and each response is a whole-node snapshot, so overlapping streams would let the last to arrive win over a newer action. A dispatch made while a request is in flight is withheld rather than queued or preempted: the integrator holds it back until the session is free, reading `request`.
+Prompts and actions reach the endpoint one at a time, through `sendRequest` in `session-streaming.ts`, except the concurrent actions below: the Gateway processes a single request per session, and each response is a whole-node snapshot, so overlapping streams would let the last to arrive win over a newer action. A dispatch made while a request is in flight is withheld rather than queued or preempted: the integrator holds it back until the session is free, reading `request`.
 
 The session publishes its request state in its store: `request` is the request being sent (`{kind: 'initialize'}`, `{kind: 'prompt', turnId}` or `{kind: 'action', component, name, surfaceId, sourceComponentId, turnId?}`, with no `turnId` when it streams into the initialization), or `undefined` when idle. `sendRequest` publishes it before its first `await`, so it is set as soon as the dispatch returns. Each `dispatchAction` promise resolves once its own request ends, whatever its outcome, and at once when the dispatch is withheld, which is what an optimistic update needs to end.
 

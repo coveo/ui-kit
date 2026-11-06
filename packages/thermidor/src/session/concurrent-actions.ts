@@ -4,9 +4,6 @@
  * lane is applied, and its answer is applied without being recorded in a run.
  */
 
-import {readEventStream} from '@/src/internal/api/protocol/stream.js';
-import {parseSSEEvent} from '@/src/internal/api/protocol/sse-parser.js';
-import type {NormalizedStreamEvent, RawSSEEvent} from '@/src/internal/api/protocol/stream-types.js';
 import type {UnifiedEndpointClient} from '@/src/internal/api/unified/unified-endpoint-client.js';
 import type {
   A2uiAction,
@@ -21,7 +18,7 @@ import {
 import {actionCacheKey, createActionCache, type ActionOrigin} from './action-cache.js';
 import type {CachePolicy} from './announced-actions.js';
 import type {ContractsSchema} from './contracts.js';
-import {SURFACE_ACTIVITY_KIND} from './fold.js';
+import {toA2uiAction} from './session-requests.js';
 import {sessionActivities} from './session-surfaces.js';
 import {
   EMPTY_UNRECORDED_STATE,
@@ -29,6 +26,7 @@ import {
   applyUnrecordedWrites,
 } from './session-state.js';
 import type {SessionStore} from './store.js';
+import {actionStreamEvent, readStreamEvents, surfaceSnapshot} from './stream-events.js';
 import type {Turn} from './types.js';
 
 export interface ConcurrentActionsOptions {
@@ -107,14 +105,6 @@ function createLanes(): Lanes {
       return miss.done;
     },
   };
-}
-
-function surfaceSnapshotMessages(event: NormalizedStreamEvent): readonly unknown[] | undefined {
-  const snapshot = event as unknown as {activityType?: string; content?: unknown};
-  const messages = (snapshot.content as Record<string, unknown> | undefined)?.['messages'];
-  return snapshot.activityType === SURFACE_ACTIVITY_KIND && Array.isArray(messages)
-    ? messages
-    : undefined;
 }
 
 async function quietly(
@@ -197,22 +187,21 @@ export function createConcurrentActions({
     let passedOver = false;
     let finished = false;
     let runError: string | undefined;
-    await readEventStream({
+    await readStreamEvents({
       stream: result.data.stream,
       signal,
-      onEvent: (rawEvent: RawSSEEvent) => {
+      onEvent: (event) => {
         // A read that resolved before the abort can still deliver the rest of its chunk.
         if (signal?.aborted) {
           return;
         }
-        const event = parseSSEEvent(rawEvent);
-        if (event.type === 'RUN_ERROR') {
-          runError =
-            (event as {message?: string}).message || 'An error occurred during the action.';
-        } else if (event.type === 'RUN_FINISHED' || event.type === 'turn_complete') {
+        const actionEvent = actionStreamEvent(event);
+        if (actionEvent.kind === 'runError') {
+          runError = actionEvent.message;
+        } else if (actionEvent.kind === 'terminal') {
           finished = true;
-        } else if (event.type === 'ACTIVITY_SNAPSHOT') {
-          const messages = surfaceSnapshotMessages(event);
+        } else if (actionEvent.kind === 'snapshot') {
+          const messages = surfaceSnapshot(event)?.messages;
           if (messages) {
             answer.push(...messages);
             if (lanes.isLatest(origin, key)) {
@@ -246,13 +235,7 @@ export function createConcurrentActions({
         return Promise.resolve();
       }
 
-      const action: A2uiAction = {
-        surfaceId: origin.surfaceId,
-        name: origin.name,
-        sourceComponentId: origin.sourceComponentId,
-        timestamp: new Date().toISOString(),
-        context: origin.context,
-      };
+      const action = toA2uiAction(origin);
       if (!policy) {
         return lanes.sendUncached(origin, (signal) =>
           quietly(origin, stream(action, origin, key, {signal}), signal)
