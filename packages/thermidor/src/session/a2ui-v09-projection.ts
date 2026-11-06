@@ -34,7 +34,7 @@
  *
  * ## What is load-bearing, and what is not
  *
- * Exactly one transformation makes rendering work: **splitting v1.0's single
+ * One transformation makes rendering work: **splitting v1.0's single
  * `createSurface` into `createSurface` + `updateComponents`**.
  *
  * This is not an arbitrary reshuffle — it is the exact reversal of the change
@@ -57,6 +57,14 @@
  * inspect `version` to "route payloads to version-specific controllers" — this
  * processor simply does not, because its subpath fixed the version at import
  * time.
+ *
+ * A second transformation keeps the data model right: **a v1.0 deletion becomes
+ * a v0.9 deletion**. v1.0 deletes the key at `path` with an explicit
+ * `value: null` (Agent Gateway sends one for each slice a re-projected surface
+ * dropped, such as a facet the new results no longer have). v0.9 deletes it when
+ * `value` is omitted, and its `DataModel.set` stores a `null` as a value. So an
+ * `updateDataModel` with `value: null` is forwarded without `value`, and an inline
+ * `createSurface.dataModel` key set to `null` seeds nothing.
  *
  * Everything else is pass-through. Under the flat A2-UI v1.0 node model a node
  * carries a single `id`/`component` identity plus its presentation values, A2-UI
@@ -163,7 +171,7 @@ function convertMessage(message: Record<string, unknown>): A2uiV09Message[] {
     if (isRecord(dataModel)) {
       for (const [key, value] of Object.entries(dataModel)) {
         const path = toDataModelPath(key);
-        if (path !== null) {
+        if (path !== null && value !== null) {
           converted.push({
             version: RENDERER_PROTOCOL_VERSION,
             updateDataModel: {surfaceId, path, value},
@@ -173,6 +181,13 @@ function convertMessage(message: Record<string, unknown>): A2uiV09Message[] {
     }
 
     return converted;
+  }
+
+  const update = message['updateDataModel'];
+  // A2-UI v1.0 deletes a key with `value: null`; v0.9 deletes it when `value` is omitted.
+  if (isRecord(update) && update['value'] === null) {
+    const {value: _deleted, ...deletion} = update;
+    return [{version: RENDERER_PROTOCOL_VERSION, updateDataModel: deletion}];
   }
 
   for (const operation of ['updateDataModel', 'updateComponents', 'deleteSurface'] as const) {
