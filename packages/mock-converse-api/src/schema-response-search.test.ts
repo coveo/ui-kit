@@ -70,6 +70,30 @@ function collectComponentState(events: ConverseEvent[]): Record<string, unknown>
   return components;
 }
 
+// The sorts Agent Gateway sends: relevance without fields, and each field sort with the Commerce
+// API's displayName on its field.
+const RELEVANCE_SORT = {sortCriteria: 'relevance', fields: []};
+const PRICE_ASC_SORT = {
+  sortCriteria: 'fields',
+  fields: [{field: 'ec_price', direction: 'asc', displayName: 'Price (Low to High)'}],
+};
+const PRICE_DESC_SORT = {
+  sortCriteria: 'fields',
+  fields: [{field: 'ec_price', direction: 'desc', displayName: 'Price (High to Low)'}],
+};
+
+function appliedSort(components: Record<string, unknown>): unknown {
+  return (components['sort-2'] as Record<string, unknown>).appliedSort;
+}
+
+function productPrices(components: Record<string, unknown>): number[] {
+  return (
+    (components['product-list-2'] as Record<string, unknown>).products as Array<
+      Record<string, unknown>
+    >
+  ).map((product) => product.ec_price as number);
+}
+
 describe('schema-response-search decomposed surface structure', () => {
   const events: ConverseEvent[] = resetSurface();
   const createSurface = findCreateSurface(events);
@@ -227,11 +251,11 @@ describe('schema-response-search decomposed surface structure', () => {
       expect(typeof paginationState.totalPages).toBe('number');
     });
 
-    it('delivers state for sort-2 with appliedSort and availableSorts', () => {
-      const sortState = components['sort-2'] as Record<string, unknown>;
-      expect(sortState).toBeDefined();
-      expect(sortState.appliedSort).toBeDefined();
-      expect(Array.isArray(sortState.availableSorts)).toBe(true);
+    it('delivers the gateway sorts for sort-2, with relevance applied', () => {
+      expect(components['sort-2']).toEqual({
+        appliedSort: RELEVANCE_SORT,
+        availableSorts: [RELEVANCE_SORT, PRICE_ASC_SORT, PRICE_DESC_SORT],
+      });
     });
 
     it('delivers brand facet values and writes no state for the facet manager', () => {
@@ -287,22 +311,49 @@ describe('schema-response-search action-driven recomputation', () => {
     expect((productList.products as unknown[]).length).toBe(7);
   });
 
-  it('selectSort with price_asc sorts by ascending price on page 0', () => {
-    const events = buildSearchActionEvents({
-      name: 'selectSort',
-      context: {sortCriteria: 'price_asc'},
-    });
+  it('selectSort with the ascending price sort sorts by ascending price on page 0', () => {
+    buildSearchActionEvents({name: 'selectPage', context: {page: 1}});
+    const events = buildSearchActionEvents({name: 'selectSort', context: PRICE_ASC_SORT});
     const components = collectComponentState(events);
     const pagination = components['pagination-2'] as Record<string, unknown>;
-    const sort = components['sort-2'] as Record<string, unknown>;
-    const productList = components['product-list-2'] as Record<string, unknown>;
-    const prices = (productList.products as Array<Record<string, unknown>>).map(
-      (p) => p.ec_price as number
-    );
+    const prices = productPrices(components);
     expect(pagination.page).toBe(0);
-    expect((sort.appliedSort as Record<string, unknown>).sortCriteria).toBe('price_asc');
-    const sortedAscending = [...prices].sort((a, b) => a - b);
-    expect(prices).toEqual(sortedAscending);
+    expect(appliedSort(components)).toEqual(PRICE_ASC_SORT);
+    expect(prices).toEqual([...prices].sort((a, b) => a - b));
+  });
+
+  it('selectSort identifies a field sort by its field and direction, not its displayName', () => {
+    const events = buildSearchActionEvents({
+      name: 'selectSort',
+      context: {
+        sortCriteria: 'fields',
+        fields: [{field: 'ec_price', direction: 'desc', displayName: 'Most expensive first'}],
+      },
+    });
+    const components = collectComponentState(events);
+    const prices = productPrices(components);
+    expect(appliedSort(components)).toEqual(PRICE_DESC_SORT);
+    expect(prices).toEqual([...prices].sort((a, b) => b - a));
+  });
+
+  it('selectSort with relevance restores the catalog order', () => {
+    const relevancePrices = productPrices(collectComponentState(resetSurface()));
+    buildSearchActionEvents({name: 'selectSort', context: PRICE_DESC_SORT});
+    const components = collectComponentState(
+      buildSearchActionEvents({name: 'selectSort', context: RELEVANCE_SORT})
+    );
+    expect(appliedSort(components)).toEqual(RELEVANCE_SORT);
+    expect(productPrices(components)).toEqual(relevancePrices);
+  });
+
+  it('selectSort with fields the mock cannot sort on applies relevance', () => {
+    const components = collectComponentState(
+      buildSearchActionEvents({
+        name: 'selectSort',
+        context: {sortCriteria: 'fields', fields: [{field: 'ec_rating', direction: 'asc'}]},
+      })
+    );
+    expect(appliedSort(components)).toEqual(RELEVANCE_SORT);
   });
 
   it('setPageSize recomputes pageSize and totalPages', () => {
@@ -352,12 +403,11 @@ describe('schema-response-search stateful surface across actions', () => {
   });
 
   it('preserves the sort criteria when changing page after sorting', () => {
-    buildSearchActionEvents({name: 'selectSort', context: {sortCriteria: 'price_asc'}});
+    buildSearchActionEvents({name: 'selectSort', context: PRICE_ASC_SORT});
     const events = buildSearchActionEvents({name: 'selectPage', context: {page: 1}});
     const components = collectComponentState(events);
-    const sort = components['sort-2'] as Record<string, unknown>;
     const pagination = components['pagination-2'] as Record<string, unknown>;
-    expect((sort.appliedSort as Record<string, unknown>).sortCriteria).toBe('price_asc');
+    expect(appliedSort(components)).toEqual(PRICE_ASC_SORT);
     expect(pagination.page).toBe(1);
   });
 
@@ -376,10 +426,7 @@ describe('schema-response-search stateful surface across actions', () => {
       context: {value: 'Billabong'},
       sourceComponentId: 'facet-brand-2',
     });
-    const events = buildSearchActionEvents({
-      name: 'selectSort',
-      context: {sortCriteria: 'price_desc'},
-    });
+    const events = buildSearchActionEvents({name: 'selectSort', context: PRICE_DESC_SORT});
     const components = collectComponentState(events);
     const productList = components['product-list-2'] as Record<string, unknown>;
     for (const product of productList.products as Array<Record<string, unknown>>) {
@@ -388,7 +435,7 @@ describe('schema-response-search stateful surface across actions', () => {
   });
 
   it('resets the view to defaults when the initial water sports response is rebuilt', () => {
-    buildSearchActionEvents({name: 'selectSort', context: {sortCriteria: 'price_desc'}});
+    buildSearchActionEvents({name: 'selectSort', context: PRICE_DESC_SORT});
     buildSearchActionEvents({name: 'setPageSize', context: {pageSize: 6}});
     buildSearchActionEvents({name: 'selectPage', context: {page: 2}});
     buildSearchActionEvents({
@@ -399,11 +446,10 @@ describe('schema-response-search stateful surface across actions', () => {
     const events = matchSchemaPrompt('water sports');
     const components = collectComponentState(events);
     const pagination = components['pagination-2'] as Record<string, unknown>;
-    const sort = components['sort-2'] as Record<string, unknown>;
     expect(pagination.page).toBe(0);
     expect(pagination.pageSize).toBe(12);
     expect(pagination.totalEntries).toBe(43);
-    expect((sort.appliedSort as Record<string, unknown>).sortCriteria).toBe('relevance');
+    expect(appliedSort(components)).toEqual(RELEVANCE_SORT);
   });
 });
 
@@ -628,16 +674,15 @@ describe('schema-response-search breadbox', () => {
   });
 
   it('returns to the first page on clearAll, preserving the sort and page size', () => {
-    act('selectSort', {sortCriteria: 'price_asc'});
+    act('selectSort', PRICE_ASC_SORT);
     act('toggleSelect', {value: 'Billabong'}, 'facet-brand-2');
     act('setPageSize', {pageSize: 1});
     expect(page(act('selectPage', {page: 1}))).toBe(1);
     const components = act('clearAll', {}, BREADBOX_ID);
     const pagination = components['pagination-2'] as Record<string, unknown>;
-    const sort = components['sort-2'] as Record<string, unknown>;
     expect(pagination.page).toBe(0);
     expect(pagination.pageSize).toBe(1);
-    expect((sort.appliedSort as Record<string, unknown>).sortCriteria).toBe('price_asc');
+    expect(appliedSort(components)).toEqual(PRICE_ASC_SORT);
   });
 });
 
@@ -745,12 +790,17 @@ describe('schema-response-search restoreState', () => {
   }
 
   it('restores the query, page, page size and sort', () => {
-    const components = restore({page: 2, pageSize: 6, sortCriteria: 'price_asc'});
+    act('selectSort', PRICE_DESC_SORT);
+    const components = restore({page: 2, pageSize: 6, sortCriteria: 'relevance'});
     expect((components['query-summary-2'] as Record<string, unknown>).query).toBe('surf');
     expect(components['pagination-2']).toMatchObject({page: 2, pageSize: 6});
-    expect((components['sort-2'] as Record<string, unknown>).appliedSort).toMatchObject({
-      sortCriteria: 'price_asc',
-    });
+    expect(appliedSort(components)).toEqual(RELEVANCE_SORT);
+  });
+
+  it('restores a field sort, which the payload names without its fields, as relevance', () => {
+    act('selectSort', PRICE_DESC_SORT);
+    const components = restore({sortCriteria: 'fields'});
+    expect(appliedSort(components)).toEqual(RELEVANCE_SORT);
   });
 
   it('restores the selected values of a regular facet', () => {
@@ -790,11 +840,9 @@ describe('schema-response-search restoreState', () => {
     act('toggleSelect', {value: 'Hurley'}, 'facet-brand-2');
     act('toggleSelect', {value: 'Xcel'}, 'facet-brand-2');
     act('toggleSelect', {start: 0, end: 100}, 'facet-price-2');
-    act('selectSort', {sortCriteria: 'price_desc'});
+    act('selectSort', PRICE_DESC_SORT);
     const components = restore({});
     expect(breadboxFacets(components)).toEqual([]);
-    expect((components['sort-2'] as Record<string, unknown>).appliedSort).toMatchObject({
-      sortCriteria: 'relevance',
-    });
+    expect(appliedSort(components)).toEqual(RELEVANCE_SORT);
   });
 });

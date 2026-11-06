@@ -1,15 +1,32 @@
 import {useId, useOptimistic} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
-import type {SortAction} from '@coveo/thermidor-schema';
+import type {SortAction, SortCriterion} from '@coveo/thermidor-schema';
 import {SortPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {useGesture} from '../session-request.js';
 import styles from './Sort.module.css';
 
-const SORT_LABELS: Record<string, string> = {
-  relevance: 'Relevance',
-  price_asc: 'Price (Low to High)',
-  price_desc: 'Price (High to Low)',
-};
+// A field sort is named by the Commerce API's displayName on its fields; the gateway leaves it out
+// when the Commerce API has none, so the field and direction name the option instead.
+function sortLabel({sortCriteria, fields}: SortCriterion): string {
+  if (fields.length === 0) {
+    return sortCriteria === 'relevance' ? 'Relevance' : sortCriteria;
+  }
+  return fields
+    .map(({field, direction, displayName}) => displayName ?? `${field} (${direction})`)
+    .join(', ');
+}
+
+// The gateway identifies a sort by its fields, so a displayName difference is not a different sort.
+function isSameSort(a: SortCriterion, b: SortCriterion): boolean {
+  return (
+    a.sortCriteria === b.sortCriteria &&
+    a.fields.length === b.fields.length &&
+    a.fields.every(
+      (field, index) =>
+        field.field === b.fields[index].field && field.direction === b.fields[index].direction
+    )
+  );
+}
 
 /** A2-UI component for the `sort` selector. */
 export const Sort = createReactComponent(
@@ -39,11 +56,7 @@ export const Sort = createReactComponent(
     };
 
     const selectedIndex = appliedSort
-      ? availableSorts.findIndex(
-          (sort) =>
-            sort.sortCriteria === appliedSort.sortCriteria &&
-            JSON.stringify(sort.fields) === JSON.stringify(appliedSort.fields)
-        )
+      ? availableSorts.findIndex((sort) => isSameSort(sort, appliedSort))
       : -1;
 
     return (
@@ -59,7 +72,7 @@ export const Sort = createReactComponent(
         >
           {availableSorts.map((sort, index) => (
             <option key={index} value={index}>
-              {SORT_LABELS[sort.sortCriteria] ?? sort.sortCriteria}
+              {sortLabel(sort)}
             </option>
           ))}
         </select>

@@ -705,19 +705,56 @@ function instantProductsFor(query: string): WaterSportsProduct[] {
     .slice(0, MAX_INSTANT_PRODUCTS);
 }
 
-const sortOptions = {
-  relevance: {sortCriteria: 'relevance', fields: [] as {field: string; direction: string}[]},
-  price_asc: {
-    sortCriteria: 'price_asc',
-    fields: [{field: 'ec_price', direction: 'ascending'}],
-  },
-  price_desc: {
-    sortCriteria: 'price_desc',
-    fields: [{field: 'ec_price', direction: 'descending'}],
-  },
-} as const;
+interface SortField {
+  field: 'ec_price';
+  direction: 'asc' | 'desc';
+  displayName: string;
+}
 
-const availableSorts = [sortOptions.relevance, sortOptions.price_asc, sortOptions.price_desc];
+interface SortCriterion {
+  sortCriteria: 'relevance' | 'fields';
+  fields: SortField[];
+}
+
+// The sorts Agent Gateway sends, as the Commerce API returns them: relevance carries no fields, and
+// each field sort is named by the Commerce API's displayName on its field.
+const RELEVANCE_SORT: SortCriterion = {sortCriteria: 'relevance', fields: []};
+
+const availableSorts: SortCriterion[] = [
+  RELEVANCE_SORT,
+  {
+    sortCriteria: 'fields',
+    fields: [{field: 'ec_price', direction: 'asc', displayName: 'Price (Low to High)'}],
+  },
+  {
+    sortCriteria: 'fields',
+    fields: [{field: 'ec_price', direction: 'desc', displayName: 'Price (High to Low)'}],
+  },
+];
+
+function sameSortFields(sort: SortCriterion, fields: unknown): boolean {
+  if (!Array.isArray(fields) || fields.length !== sort.fields.length) {
+    return false;
+  }
+  return sort.fields.every((sortField, index) => {
+    const candidate = fields[index] as Record<string, unknown> | null;
+    return candidate?.field === sortField.field && candidate?.direction === sortField.direction;
+  });
+}
+
+// Like the gateway, a `fields` sort is identified by its fields (field and direction), never by a
+// name, and a `fields` sort without fields is relevance. The gateway forwards any other fields to the
+// Commerce API; the mock only sorts on its available sorts and applies relevance for the rest.
+function resolveSort(context: Record<string, unknown>): SortCriterion {
+  if (context.sortCriteria !== 'fields') {
+    return RELEVANCE_SORT;
+  }
+  return (
+    availableSorts.find(
+      (sort) => sort.sortCriteria === 'fields' && sameSortFields(sort, context.fields)
+    ) ?? RELEVANCE_SORT
+  );
+}
 
 interface PriceRange {
   start: number;
@@ -735,7 +772,7 @@ interface SearchViewState {
   correction: QueryCorrection | null;
   page: number;
   pageSize: number;
-  sortCriteria: string;
+  sort: SortCriterion;
   selectedBrands: string[];
   // A single active range covers both a listed range selection and a custom range;
   // the two are mutually exclusive.
@@ -757,7 +794,7 @@ const DEFAULT_VIEW: SearchViewState = {
   correction: null,
   page: 0,
   pageSize: DEFAULT_PAGE_SIZE,
-  sortCriteria: 'relevance',
+  sort: RELEVANCE_SORT,
   selectedBrands: [],
   selectedPriceRange: null,
   selectedCategoryPath: [],
@@ -791,15 +828,17 @@ const BREADBOX_ID = 'breadbox-2';
 
 const QUERY_SUMMARY_ID = 'query-summary-2';
 
-function sortProducts(input: WaterSportsProduct[], sortCriteria: string): WaterSportsProduct[] {
-  if (sortCriteria === 'price_asc') {
-    return [...input].sort((a, b) => a.ec_price - b.ec_price);
-  }
-  if (sortCriteria === 'price_desc') {
-    return [...input].sort((a, b) => b.ec_price - a.ec_price);
-  }
-  // 'relevance' (and any unknown criteria) preserves the original catalog order.
-  return [...input];
+// Relevance preserves the original catalog order; a field sort orders by each field in turn.
+function sortProducts(input: WaterSportsProduct[], sort: SortCriterion): WaterSportsProduct[] {
+  return [...input].sort((a, b) => {
+    for (const {field, direction} of sort.fields) {
+      const difference = a[field] - b[field];
+      if (difference !== 0) {
+        return direction === 'asc' ? difference : -difference;
+      }
+    }
+    return 0;
+  });
 }
 
 function filterProducts(view: SearchViewState): WaterSportsProduct[] {
@@ -1109,16 +1148,14 @@ function deriveBreadboxState(view: SearchViewState) {
 }
 
 function computeComponentsState(view: SearchViewState): Record<string, unknown> {
-  const {pageSize, sortCriteria} = view;
+  const {pageSize, sort: appliedSort} = view;
   const filteredProducts = filterProducts(view);
-  const sortedProducts = sortProducts(filteredProducts, sortCriteria);
+  const sortedProducts = sortProducts(filteredProducts, appliedSort);
   const totalEntries = sortedProducts.length;
   const totalPages = Math.max(1, Math.ceil(totalEntries / pageSize));
   const page = Math.min(Math.max(view.page, 0), totalPages - 1);
   const start = page * pageSize;
   const pageProducts = sortedProducts.slice(start, start + pageSize);
-  const appliedSort =
-    sortOptions[sortCriteria as keyof typeof sortOptions] ?? sortOptions.relevance;
 
   // The query-summary owns its own backend-computed aggregate (query + result window) so it does
   // not read the search-box, pagination, and product-list state. Indices are 1-based; on an empty
@@ -1665,7 +1702,9 @@ function restoreView(context: Record<string, unknown>): SearchViewState {
     query: String(context.query ?? DEFAULT_VIEW.query),
     page: Number(context.page) || 0,
     pageSize: Number(context.pageSize) || DEFAULT_VIEW.pageSize,
-    sortCriteria: String(context.sortCriteria ?? DEFAULT_VIEW.sortCriteria),
+    // The restore payload names the sort by `sortCriteria` only, so a restored field sort becomes
+    // relevance, as on the gateway.
+    sort: resolveSort(context),
     selectedBrands: (restored(FACET_FIELDS.regular.field)?.values ?? []).map(String),
     selectedPriceRange: range ? {start: Number(range.start), end: Number(range.end)} : null,
     selectedCategoryPath: (restored(FACET_FIELDS.category.field)?.path ?? []).map(String),
@@ -1691,7 +1730,7 @@ function deriveNonFacetState(action: {name: string; context: Record<string, unkn
       // changing sort resets to the first page
       currentView = {
         ...currentView,
-        sortCriteria: String(action.context.sortCriteria ?? currentView.sortCriteria),
+        sort: resolveSort(action.context),
         page: 0,
       };
       break;
