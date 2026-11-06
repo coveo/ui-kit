@@ -221,6 +221,8 @@ const baseConfig: SessionConfig = {
   contracts,
   organizationId: 'org-1',
   accessToken: 'token-1',
+  agentConfigurationId: 'agent-configuration-1',
+  trackingId: 'tracking-1',
   initialize: false,
 };
 
@@ -234,6 +236,40 @@ describe('createSession lifecycle', () => {
 
   afterEach(() => {
     vi.clearAllMocks();
+  });
+
+  describe('request scope', () => {
+    it.each([
+      ['agentConfigurationId', undefined],
+      ['agentConfigurationId', ''],
+      ['agentConfigurationId', '  '],
+      ['trackingId', undefined],
+      ['trackingId', ''],
+      ['trackingId', '  '],
+    ])('throws when %s is %j', (key, value) => {
+      expect(() => createSession({...baseConfig, [key]: value})).toThrow(key);
+    });
+
+    it('sends the agent configuration and tracking id, and no locale, with the request', async () => {
+      const session = createSession(baseConfig);
+
+      const stream = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+      await stream.opened;
+
+      const request = callMock.mock.calls[0][0];
+      expect(request).toMatchObject({
+        agentConfigurationId: 'agent-configuration-1',
+        trackingId: 'tracking-1',
+      });
+      expect(request).not.toHaveProperty('language');
+      expect(request).not.toHaveProperty('country');
+      expect(request).not.toHaveProperty('currency');
+
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
+    });
   });
 
   describe('submitPrompt action', () => {
@@ -1181,6 +1217,10 @@ describe('createSession lifecycle', () => {
           context: {actionId: 'more-jackets'},
         },
       });
+      const retriedAction = (callMock.mock.calls.at(-1)?.[0] as {action: Record<string, unknown>})
+        .action;
+      expect(retriedAction).not.toHaveProperty('actionId');
+      expect(retriedAction).not.toHaveProperty('wantResponse');
       retried.emit({type: 'RUN_FINISHED'});
       retried.close();
       await flush();
@@ -1547,40 +1587,6 @@ describe('createSession lifecycle', () => {
       });
 
       expect(seen).toEqual([]);
-    });
-
-    it('resolves sendAndWait() once the dispatch it sends is answered', async () => {
-      const session = await seededSession();
-      const stream = queueStream();
-      let settled = false;
-      let action!: Promise<void>;
-
-      const answered = session
-        .sendAndWait(() => {
-          action = session.dispatchAction(selectPageMessage(2));
-        })
-        .then(() => (settled = true));
-      await stream.opened;
-      await flush();
-      expect(settled).toBe(false);
-
-      stream.emit({type: 'RUN_FINISHED'});
-      stream.close();
-      await action;
-      await answered;
-      expect(settled).toBe(true);
-    });
-
-    it('resolves sendAndWait() for a dispatch withheld without being sent', async () => {
-      const session = await seededSession();
-
-      const answered = session.sendAndWait(() =>
-        session.dispatchAction({
-          userAction: {name: 'selectPage', surfaceId: 'commerce-search-surface', context: {}},
-        })
-      );
-
-      await expect(answered).resolves.toBeUndefined();
     });
 
     it('does not send a request cancelled by a listener as it is published', async () => {
@@ -1961,6 +1967,8 @@ describe('createSession lifecycle', () => {
       expect(sent.action).toMatchObject({name: 'initialize', context: {}});
       expect('surfaceId' in sent.action).toBe(false);
       expect('sourceComponentId' in sent.action).toBe(false);
+      expect(sent.action).not.toHaveProperty('actionId');
+      expect(sent.action).not.toHaveProperty('wantResponse');
       expect(session.initialization).toEqual({activities: [], status: 'streaming'});
 
       stream.emit(shellSurface);

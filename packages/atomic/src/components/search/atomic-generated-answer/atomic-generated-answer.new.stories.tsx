@@ -215,7 +215,7 @@ export const A11yStatusMessage: Story = {
       },
       expectedSequence: [
         'Generating answer',
-        /Generated answer: Resolving Netflix Connection Issues with TiVo[\s\S]*Test Internet Connection/,
+        /AI-generated answer: Resolving Netflix Connection Issues with TiVo[\s\S]*Test Internet Connection/,
       ],
       timeout: 12000,
     });

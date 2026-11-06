@@ -43,12 +43,12 @@
     "@tsconfig/node22": "22.0.6",
     "@types/jest": "catalog:",
     "@types/node": "catalog:",
-    "concurrently": "9.2.5",
-    "cspell": "9.8.0",
+    "concurrently": "10.0.6",
+    "cspell": "10.1.1",
     "esbuild": "catalog:",
     "husky": "9.1.7",
     "knip": "6.42.1",
-    "lint-staged": "16.4.0",
+    "lint-staged": "17.4.1",
     "oxfmt": "0.74.0",
     "oxlint": "1.89.0",
     "playwright": "catalog:",
@@ -62,5 +62,5 @@
     "node": "^22.14.0 || ^24.11.0",
     "pnpm": ">=11.17.0"
   },
-  "packageManager": "pnpm@11.24.0"
+  "packageManager": "pnpm@11.28.9"
 }

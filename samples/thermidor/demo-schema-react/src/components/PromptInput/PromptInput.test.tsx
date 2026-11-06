@@ -1,7 +1,12 @@
+import {useContext} from 'react';
 import {render, screen, fireEvent, act} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import {PromptInput} from './PromptInput.js';
-import type {SuggestionSection} from '../SuggestionsDropdown/index.js';
+import {
+  ActiveAsideOptionContext,
+  ASIDE_LISTBOX_ID,
+  type SuggestionSection,
+} from '../SuggestionsDropdown/index.js';
 
 describe('PromptInput', () => {
   it('renders a textarea with the provided placeholder', () => {
@@ -302,7 +307,7 @@ describe('suggestions integration', () => {
 
     fireEvent.focus(screen.getByLabelText('Prompt'));
 
-    expect(screen.getByRole('listbox').className).toMatch(/above/);
+    expect(screen.getByRole('listbox').parentElement?.className).toMatch(/above/);
   });
 
   it('sets aria-activedescendant when item is highlighted', () => {
@@ -349,6 +354,44 @@ describe('suggestions integration', () => {
     expect(textarea.getAttribute('aria-activedescendant')).toBeNull();
 
     vi.useRealTimers();
+  });
+
+  it('never reports an item of new suggestions at the old highlight', () => {
+    const onActiveItemChange = vi.fn();
+    const nextSuggestions: SuggestionSection[] = [
+      {
+        id: 'search',
+        title: 'Search',
+        icon: 'search',
+        items: [
+          {id: 'n1', label: 'Surf wax'},
+          {id: 'n2', label: 'Surf leash'},
+        ],
+      },
+    ];
+    const {rerender} = render(
+      <PromptInput
+        onSubmit={vi.fn()}
+        suggestions={testSuggestions}
+        onActiveItemChange={onActiveItemChange}
+      />
+    );
+    const textarea = screen.getByLabelText('Prompt');
+    fireEvent.focus(textarea);
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    onActiveItemChange.mockClear();
+
+    rerender(
+      <PromptInput
+        onSubmit={vi.fn()}
+        suggestions={nextSuggestions}
+        onActiveItemChange={onActiveItemChange}
+      />
+    );
+
+    expect(onActiveItemChange.mock.calls).toEqual([[undefined]]);
+    expect(textarea.getAttribute('aria-activedescendant')).toBeNull();
   });
 });
 
@@ -440,5 +483,279 @@ describe('busy + focus interaction', () => {
 
     rerender(<PromptInput onSubmit={vi.fn()} initialValue="surfboards" />);
     expect(textarea.value).toBe('wetsuits');
+  });
+});
+
+describe('highlighted suggestion', () => {
+  function renderWithHighlight(suggestions = testSuggestions) {
+    const onActiveItemChange = vi.fn();
+    const view = render(
+      <PromptInput
+        onSubmit={vi.fn()}
+        suggestions={suggestions}
+        onActiveItemChange={onActiveItemChange}
+        suggestionsAside={<aside aria-label="Beside the suggestions" />}
+      />
+    );
+    const textarea = screen.getByLabelText('Prompt');
+    fireEvent.focus(textarea);
+    const highlighted = () => onActiveItemChange.mock.lastCall?.[0]?.label;
+    return {...view, textarea, highlighted, onActiveItemChange};
+  }
+
+  it('reports the item the arrow keys move to', () => {
+    const {textarea, highlighted} = renderWithHighlight();
+
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    expect(highlighted()).toBe('Surfboards');
+
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    expect(highlighted()).toBe('Wetsuits');
+
+    fireEvent.keyDown(textarea, {key: 'ArrowUp'});
+    expect(highlighted()).toBe('Surfboards');
+  });
+
+  it('reports and highlights the item under the pointer, and keeps it once the pointer leaves', () => {
+    const {textarea, highlighted} = renderWithHighlight();
+
+    const wetsuits = screen.getByRole('option', {name: 'Wetsuits'});
+    fireEvent.mouseEnter(wetsuits);
+    fireEvent.mouseLeave(wetsuits);
+
+    expect(highlighted()).toBe('Wetsuits');
+    expect(textarea.getAttribute('aria-activedescendant')).toBe('suggestion-item-s2');
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    expect(highlighted()).toBe('Build a beginner surfing kit');
+  });
+
+  it('reports no item once the suggestions change', () => {
+    const {textarea, highlighted, rerender, onActiveItemChange} = renderWithHighlight();
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    expect(highlighted()).toBe('Surfboards');
+
+    rerender(
+      <PromptInput
+        onSubmit={vi.fn()}
+        suggestions={[...testSuggestions]}
+        onActiveItemChange={onActiveItemChange}
+      />
+    );
+    expect(highlighted()).toBeUndefined();
+  });
+
+  it('reports no item once the dropdown closes', () => {
+    const {textarea, highlighted} = renderWithHighlight();
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+
+    fireEvent.keyDown(textarea, {key: 'Escape'});
+
+    expect(highlighted()).toBeUndefined();
+  });
+
+  it('draws what goes beside the suggestions outside their listbox, while they are open', () => {
+    const {textarea} = renderWithHighlight();
+
+    const aside = screen.getByRole('complementary', {name: 'Beside the suggestions'});
+    expect(screen.getByRole('listbox').contains(aside)).toBe(false);
+
+    fireEvent.keyDown(textarea, {key: 'Escape'});
+    expect(screen.queryByRole('complementary')).toBeNull();
+  });
+});
+
+function TestAside({onSelect}: {onSelect: (id: string) => void}) {
+  const activeOptionId = useContext(ActiveAsideOptionContext);
+  return (
+    <div id={ASIDE_LISTBOX_ID} role="listbox" aria-label="Products">
+      {['p1', 'p2'].map((id) => (
+        <div
+          key={id}
+          id={id}
+          role="option"
+          aria-selected={id === activeOptionId}
+          onClick={() => onSelect(id)}
+        >
+          {id}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+describe('keyboard navigation, as in Atomic commerce', () => {
+  function renderNavigable() {
+    const onSubmit = vi.fn();
+    const onValueChange = vi.fn();
+    const onActiveItemChange = vi.fn();
+    const onSelectProduct = vi.fn();
+    render(
+      <PromptInput
+        onSubmit={onSubmit}
+        suggestions={testSuggestions}
+        onValueChange={onValueChange}
+        onActiveItemChange={onActiveItemChange}
+        suggestionsAside={<TestAside onSelect={onSelectProduct} />}
+      />
+    );
+    const textarea = screen.getByLabelText('Prompt') as HTMLTextAreaElement;
+    fireEvent.change(textarea, {target: {value: 'surf'}});
+    onValueChange.mockClear();
+    fireEvent.focus(textarea);
+    const press = (key: string) => fireEvent.keyDown(textarea, {key});
+    const highlighted = () => onActiveItemChange.mock.lastCall?.[0]?.label;
+    const active = () => textarea.getAttribute('aria-activedescendant');
+    return {textarea, press, highlighted, active, onSubmit, onValueChange, onSelectProduct};
+  }
+
+  it('shows and submits the suggestion the arrow keys highlight, without reporting it as typed', () => {
+    const {textarea, press, onSubmit, onValueChange} = renderNavigable();
+
+    press('ArrowDown');
+    expect(textarea.value).toBe('Surfboards');
+    press('ArrowDown');
+    expect(textarea.value).toBe('Wetsuits');
+    press('Enter');
+
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalledWith('Wetsuits');
+  });
+
+  it('wraps around the suggestions, and puts the typed text back above the first one', () => {
+    const {textarea, press, active} = renderNavigable();
+
+    press('ArrowDown');
+    press('ArrowUp');
+    expect(textarea.value).toBe('surf');
+    expect(active()).toBeNull();
+
+    press('ArrowUp');
+    expect(textarea.value).toBe('Build a beginner surfing kit');
+    press('ArrowDown');
+    expect(textarea.value).toBe('Surfboards');
+  });
+
+  it('leaves the input as typed on hover, and Enter then submits what was typed', () => {
+    const {textarea, press, highlighted, onSubmit} = renderNavigable();
+
+    fireEvent.mouseEnter(screen.getByRole('option', {name: 'Wetsuits'}));
+    expect(highlighted()).toBe('Wetsuits');
+    expect(textarea.value).toBe('surf');
+
+    press('Enter');
+    expect(onSubmit).toHaveBeenCalledWith('surf');
+  });
+
+  it('keeps the shown suggestion on Escape, and makes it the query once the input is focused again', () => {
+    const {textarea, press, onValueChange} = renderNavigable();
+    press('ArrowDown');
+
+    press('Escape');
+    expect(screen.queryByRole('listbox')).toBeNull();
+    expect(textarea.value).toBe('Surfboards');
+    expect(onValueChange).not.toHaveBeenCalled();
+
+    fireEvent.focus(textarea);
+    expect(onValueChange).toHaveBeenCalledWith('Surfboards');
+  });
+
+  it('keeps the search box as it was when the window gets the focus back', () => {
+    const {textarea, press, active, onValueChange} = renderNavigable();
+    textarea.focus();
+    press('ArrowDown');
+    press('ArrowRight');
+    press('Enter');
+
+    fireEvent.blur(textarea);
+    fireEvent.focus(textarea);
+
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(textarea.value).toBe('Surfboards');
+    expect(active()).toBe('p1');
+  });
+
+  it('makes the shown suggestion the query once the shopper focuses the input again', () => {
+    const {textarea, press, onValueChange} = renderNavigable();
+    textarea.focus();
+    press('ArrowDown');
+
+    textarea.blur();
+    fireEvent.focus(textarea);
+
+    expect(onValueChange).toHaveBeenCalledWith('Surfboards');
+  });
+
+  it('scrolls the option the arrow keys highlight into view', () => {
+    const scrollIntoView = vi.spyOn(Element.prototype, 'scrollIntoView');
+    const {press} = renderNavigable();
+
+    press('ArrowUp');
+    press('ArrowRight');
+
+    expect(scrollIntoView.mock.contexts.map((option) => (option as Element).id)).toEqual([
+      'suggestion-item-c1',
+      'p1',
+    ]);
+    expect(scrollIntoView).toHaveBeenCalledWith({block: 'nearest'});
+    scrollIntoView.mockRestore();
+  });
+
+  it('leaves the left and right arrows to the caret without a highlight', () => {
+    const {press} = renderNavigable();
+
+    expect(press('ArrowRight')).toBe(true);
+    expect(press('ArrowLeft')).toBe(true);
+  });
+
+  it('moves through the products and back, keeping the suggestion they are for', () => {
+    const {textarea, press, highlighted, active} = renderNavigable();
+    press('ArrowDown');
+    press('ArrowDown');
+
+    expect(press('ArrowRight')).toBe(false);
+    expect(active()).toBe('p1');
+    expect(screen.getByRole('option', {name: 'p1'}).getAttribute('aria-selected')).toBe('true');
+    expect(highlighted()).toBe('Wetsuits');
+    expect(textarea.value).toBe('Wetsuits');
+    expect(textarea.getAttribute('aria-controls')).toBe(ASIDE_LISTBOX_ID);
+
+    press('ArrowDown');
+    expect(active()).toBe('p2');
+    press('ArrowDown');
+    expect(active()).toBe('p1');
+    press('ArrowUp');
+    expect(active()).toBe('p2');
+
+    expect(press('ArrowLeft')).toBe(false);
+    expect(active()).toBe('suggestion-item-s2');
+    expect(highlighted()).toBe('Wetsuits');
+
+    press('ArrowRight');
+    expect(active()).toBe('p2');
+  });
+
+  it('leaves the products once the shopper types, so Enter submits the typed text', () => {
+    const {textarea, press, active, onSubmit, onSelectProduct} = renderNavigable();
+    press('ArrowDown');
+    press('ArrowRight');
+
+    fireEvent.change(textarea, {target: {value: 'Surfboards x'}});
+    expect(active()).toBe('suggestion-item-s1');
+    press('Enter');
+
+    expect(onSelectProduct).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalledWith('Surfboards x');
+  });
+
+  it('opens the highlighted product on Enter, and closes the dropdown', () => {
+    const {press, onSubmit, onSelectProduct} = renderNavigable();
+    press('ArrowDown');
+    press('ArrowRight');
+
+    press('Enter');
+
+    expect(onSelectProduct).toHaveBeenCalledWith('p1');
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(screen.queryByRole('listbox')).toBeNull();
   });
 });

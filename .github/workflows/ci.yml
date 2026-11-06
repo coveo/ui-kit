@@ -12,7 +12,6 @@ permissions:
 
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-  TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
   TURBO_SCM_HEAD: ${{ github.sha }}
 
 jobs:
@@ -30,17 +29,57 @@ jobs:
         with:
           egress-policy: audit
 
-      # Full history is required to calculate the base-to-head range and publish the minimum depth.
+      # Full history is required to resolve the comparison base, calculate the base-to-head range and publish the minimum depth.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
           fetch-tags: false
           filter: blob:none
 
+      # pull_request.base.sha can lag behind the base branch commit that GitHub's test merge commit is built on.
+      # Comparing against it would count the base branch's newer commits as PR changes, so PRs use the merge commit's first parent.
+      - name: Resolve comparison base
+        id: base
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          MERGE_GROUP_BASE_SHA: ${{ github.event.merge_group.base_sha }}
+        run: |
+          set -euo pipefail
+
+          case "$EVENT_NAME" in
+            pull_request)
+              read -r _ first_parent second_parent extra_parent < <(GIT_NO_LAZY_FETCH=1 git rev-list --parents -n 1 "$TURBO_SCM_HEAD")
+              if [ -n "${second_parent:-}" ] && [ -z "${extra_parent:-}" ]; then
+                base_sha="$first_parent"
+                echo "Using the merge commit's first parent ${base_sha} (pull_request.base.sha is ${PR_BASE_SHA})"
+              else
+                base_sha="$PR_BASE_SHA"
+                echo "::warning::Expected ${TURBO_SCM_HEAD} to be a two-parent test merge commit. Falling back to pull_request.base.sha ${base_sha}."
+              fi
+              ;;
+            merge_group)
+              base_sha="$MERGE_GROUP_BASE_SHA"
+              echo "Using merge group base ${base_sha}"
+              ;;
+            *)
+              echo "::error::Cannot resolve a comparison base for the ${EVENT_NAME} event."
+              exit 1
+              ;;
+          esac
+
+          if [ -z "$base_sha" ]; then
+            echo "::error::The comparison base for the ${EVENT_NAME} event is empty."
+            exit 1
+          fi
+
+          echo "sha=${base_sha}" >> "$GITHUB_OUTPUT"
+
       - uses: ./.github/actions/calculate-affected
         id: publish
         with:
-          base-sha: ${{ env.TURBO_SCM_BASE }}
+          base-sha: ${{ steps.base.outputs.sha }}
           head-sha: ${{ env.TURBO_SCM_HEAD }}
 
   build-windows:
@@ -227,9 +266,13 @@ jobs:
           atomic-icon.e2e.ts
           atomic-commerce-text.e2e.ts
           atomic-commerce-query-summary.e2e.ts
+      - uses: ./.github/actions/upload-playwright-record
+        if: ${{ !cancelled() }}
       - name: 'Run Atomic Hosted Page CDN checks'
         if: contains(fromJSON(needs.affected.outputs.tasks), '@coveo/atomic-hosted-page#e2e')
         run: pnpm exec turbo run @coveo/atomic-hosted-page#e2e
+      - uses: ./.github/actions/upload-playwright-record
+        if: ${{ !cancelled() }}
   lint-check:
     name: 'Check with linter'
     # Best effort at short-circuiting
@@ -519,6 +562,8 @@ jobs:
           name: atomic-blob-report-${{ matrix.shardIndex }}
           path: packages/atomic/blob-report
           retention-days: 5
+      - uses: ./.github/actions/upload-playwright-record
+        if: ${{ !cancelled() }}
       - run: |
           if [[ ${STEPS_PLAYWRIGHT_OUTCOME} == 'failure' ]];
             then exit 1;
@@ -573,6 +618,8 @@ jobs:
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run '@coveo/atomic-theming-e2e#e2e'
+      - uses: ./.github/actions/upload-playwright-record
+        if: ${{ !cancelled() }}
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         if: ${{ !cancelled() }}
         with:
@@ -683,6 +730,8 @@ jobs:
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run "${{ matrix.sample }}" # Already filtered by affected
+      - uses: ./.github/actions/upload-playwright-record
+        if: ${{ !cancelled() }}
       - name: Upload Playwright report
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
@@ -712,6 +761,8 @@ jobs:
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run '@coveo/pkg-new-template#e2e'
+      - uses: ./.github/actions/upload-playwright-record
+        if: ${{ !cancelled() }}
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         if: failure()
         with:
@@ -738,6 +789,8 @@ jobs:
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run '@coveo/atomic-hosted-page#e2e'
+      - uses: ./.github/actions/upload-playwright-record
+        if: ${{ !cancelled() }}
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         if: ${{ !cancelled() }}
         with:

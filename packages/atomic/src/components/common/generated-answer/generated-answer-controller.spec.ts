@@ -161,7 +161,9 @@ describe('GeneratedAnswerController', () => {
         }),
       });
 
-      expect(controller.getGeneratedAnswerStatus()).toBe('Generated answer: Test answer');
+      expect(controller.getGeneratedAnswerStatus()).toBe(
+        'AI-generated answer: Test answer AI-generated content may contain errors. Verify important information.'
+      );
     });
 
     it('should strip markdown syntax from answer before announcing it', () => {
@@ -174,7 +176,7 @@ describe('GeneratedAnswerController', () => {
       });
 
       expect(controller.getGeneratedAnswerStatus()).toBe(
-        'Generated answer: Bold and italic with code'
+        'AI-generated answer: Bold and italic with code AI-generated content may contain errors. Verify important information.'
       );
     });
 
@@ -188,7 +190,9 @@ describe('GeneratedAnswerController', () => {
         }),
       });
 
-      expect(controller.getGeneratedAnswerStatus()).toBe('Generated answer: Test answer');
+      expect(controller.getGeneratedAnswerStatus()).toBe(
+        'AI-generated answer: Test answer AI-generated content may contain errors. Verify important information.'
+      );
     });
 
     it('should return empty string when the answer only contains whitespace', () => {

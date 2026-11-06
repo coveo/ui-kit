@@ -1,3 +1,23 @@
+## 3.65.0
+
+### Minor Changes
+
+- [#8570](https://github.com/coveo/ui-kit/pull/8570) [`82fb20a`](https://github.com/coveo/ui-kit/commit/82fb20a7d4791eee9ff6ad777ef983944f60e977) - Add the `clear-recent-button-position` property to `atomic-search-box` and `atomic-commerce-search-box`. It defaults to `top`, which keeps the current behavior, but `bottom` will become the default in the next major version of Atomic (v4). When it is set to `bottom`, the "Recent searches" title above the recent queries is no longer a suggestion, and a "Clear recent searches" button is rendered at the bottom of the suggestions, next to "See all results" when instant results are displayed. The Down arrow key goes straight to the first suggestion, the button is reached with the Tab key, and pressing Escape on it closes the suggestions. The button can be styled with the new `recent-query-clear-button` part.
+
+### Patch Changes
+
+- [#8600](https://github.com/coveo/ui-kit/pull/8600) [`3a8212f`](https://github.com/coveo/ui-kit/commit/3a8212f171173452b75851690ee0d75e0e86b241) - Make each Atomic element import the elements it renders, so that importing a single element (rather than the whole `@coveo/atomic` barrel or the lazy loader) no longer leaves `atomic-icon`, `atomic-focus-trap`, `atomic-result-link`, `atomic-result`, `atomic-product-section-name`, `atomic-product-section-visual` or `atomic-generated-answer-inline-link` unregistered.
+
+  When a modal is closed and no `source` element was provided, focus now returns to the element that had focus when the modal opened (e.g., in `atomic-generated-answer-feedback-modal`).
+
+- [#8792](https://github.com/coveo/ui-kit/pull/8792) [`c9e0875`](https://github.com/coveo/ui-kit/commit/c9e0875715d98a283b19d43f702d3cb7f2dffb6b) - In `atomic-search-box` and `atomic-commerce-search-box`, pressing Enter now runs a search after a suggestion was highlighted with the arrow keys and the suggestions were closed, for example with Escape. Before, Enter did nothing until the text in the search box was changed.
+
+- [#8793](https://github.com/coveo/ui-kit/pull/8793) [`d044d55`](https://github.com/coveo/ui-kit/commit/d044d557a63a5083502e77f1394c1d0b0cc9a4d1) - In `atomic-search-box` and `atomic-commerce-search-box`, pressing Enter after moving to the other suggestion panel with ArrowLeft or ArrowRight now selects the highlighted suggestion instead of running a search. Pressing Enter after pasting text with the mouse while a suggestion was highlighted now runs a search instead of doing nothing.
+
+- Updated dependencies [[`8a12041`](https://github.com/coveo/ui-kit/commit/8a12041619d0ebbabfc9f017a7e959291d5911a1)]:
+  - @coveo/headless@3.58.1
+  - @coveo/atomic-legacy@0.1.10
+
 ## 3.64.1
 
 ### Patch Changes

@@ -56,7 +56,14 @@ export default defineConfig({
   snapshotPathTemplate: '{testDir}/{testFileDir}/__snapshots__/{arg}{ext}',
   workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI
-    ? [['html'], ['list'], ['github'], ['blob'], ...balancedShards]
+    ? [
+        ['html'],
+        ['list'],
+        ['github'],
+        ['blob'],
+        ['../../utils/ci/playwright-record-reporter.mjs'],
+        ...balancedShards,
+      ]
     : [['html'], ['list'], ...balancedShards],
   use: {
     trace: 'retain-on-failure',

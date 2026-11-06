@@ -8,6 +8,7 @@ import showMore from '@salesforce/label/c.quantic_GeneratedAnswerShowMore';
 import generatingAnswer from '@salesforce/label/c.quantic_GeneratingAnswer';
 import loading from '@salesforce/label/c.quantic_Loading';
 import rgaDisclaimer from '@salesforce/label/c.quantic_RGADisclaimer';
+import rgaDisclaimerAnnouncement from '@salesforce/label/c.quantic_RGADisclaimerAnnouncement';
 import tryAgain from '@salesforce/label/c.quantic_TryAgain';
 import noGeneratedAnswer from '@salesforce/label/c.quantic_NoGeneratedAnswer';
 import FeedbackModalQna from 'c/quanticFeedbackModalQna';
@@ -135,6 +136,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     generatedAnswerIsHidden,
     answerGenerated,
     rgaDisclaimer,
+    rgaDisclaimerAnnouncement,
     showMore,
     showLess,
     loading,
@@ -275,7 +277,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
     const hasAnswer = !!this.state.answer;
     return hasAnswer
-      ? I18nUtils.format(this.labels.answerGenerated, this.answer)
+      ? `${I18nUtils.format(this.labels.answerGenerated, this.answer)} ${this.labels.rgaDisclaimerAnnouncement}`
       : '';
   }
 
@@ -520,10 +522,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       ...userCitationFields,
     ];
     return [...new Set(combinedCitationFields)];
-  }
-
-  get shouldShowDisclaimer() {
-    return this.isVisible && !this.isStreaming;
   }
 
   get toggleCollapseAnswerIcon() {
