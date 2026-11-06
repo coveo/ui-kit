@@ -26,7 +26,17 @@ describe('public sample configuration is a bundle', () => {
       PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_AGENT_CONFIGURATION_ID
     );
     expect(c.trackingId).toBe('sports-ui-samples');
+    expect(c).toMatchObject({language: 'en', country: 'US', currency: 'USD'});
     expect(c.endpoint).toContain('https://searchuisamples.org.coveo.com');
+  });
+
+  it('IGNORES a stray locale', async () => {
+    const c = await load({
+      VITE_COVEO_LANGUAGE: 'fr',
+      VITE_COVEO_COUNTRY: 'CA',
+      VITE_COVEO_CURRENCY: 'CAD',
+    });
+    expect(c).toMatchObject({language: 'en', country: 'US', currency: 'USD'});
   });
 
   it('IGNORES a stray platform environment (the reported bug)', async () => {
@@ -64,28 +74,38 @@ describe('public sample configuration is a bundle', () => {
       VITE_COVEO_ORGANIZATION_ID: 'myorg',
       VITE_COVEO_AGENT_CONFIGURATION_ID: 'my-agent',
       VITE_COVEO_TRACKING_ID: 'mine',
+      VITE_COVEO_LANGUAGE: 'fr',
+      VITE_COVEO_COUNTRY: 'CA',
+      VITE_COVEO_CURRENCY: 'CAD',
       VITE_COVEO_PLATFORM_ENVIRONMENT: 'dev',
     });
     expect(c.organizationId).toBe('myorg');
     expect(c.agentConfigurationId).toBe('my-agent');
     expect(c.trackingId).toBe('mine');
+    expect(c).toMatchObject({language: 'fr', country: 'CA', currency: 'CAD'});
     expect(c.accessToken).toBe('');
     expect(c.endpoint).toContain('https://myorg.orgdev.coveo.com');
   });
 });
 
 describe('an organization of your own', () => {
-  it.each(['VITE_COVEO_AGENT_CONFIGURATION_ID', 'VITE_COVEO_TRACKING_ID'])(
-    'requires %s',
-    async (key) => {
-      await expect(
-        load({
-          VITE_COVEO_ORGANIZATION_ID: 'myorg',
-          VITE_COVEO_AGENT_CONFIGURATION_ID: 'my-agent',
-          VITE_COVEO_TRACKING_ID: 'mine',
-          [key]: '',
-        })
-      ).rejects.toThrow(key);
-    }
-  );
+  it.each([
+    'VITE_COVEO_AGENT_CONFIGURATION_ID',
+    'VITE_COVEO_TRACKING_ID',
+    'VITE_COVEO_LANGUAGE',
+    'VITE_COVEO_COUNTRY',
+    'VITE_COVEO_CURRENCY',
+  ])('requires %s', async (key) => {
+    await expect(
+      load({
+        VITE_COVEO_ORGANIZATION_ID: 'myorg',
+        VITE_COVEO_AGENT_CONFIGURATION_ID: 'my-agent',
+        VITE_COVEO_TRACKING_ID: 'mine',
+        VITE_COVEO_LANGUAGE: 'en',
+        VITE_COVEO_COUNTRY: 'US',
+        VITE_COVEO_CURRENCY: 'USD',
+        [key]: '',
+      })
+    ).rejects.toThrow(key);
+  });
 });

@@ -72,13 +72,14 @@ function createStorefront(): StorefrontValue {
   const turnViews = new Map<string, StorefrontView>();
   const turnVisits = new Map<string, number>();
 
+  const {language, country, currency, ...sampleConfiguration} = getSampleConfiguration();
   const session = createSession({
     contracts: ComponentContractsSchema,
     // The organization, its agent configuration and the endpoint (see src/env.ts and the README).
-    ...getSampleConfiguration(),
+    ...sampleConfiguration,
     // The session opens on the first search: the home page sends nothing (see the README).
     initialize: false,
-    navigatorContextProvider: getNavigatorContext,
+    navigatorContextProvider: () => ({...getNavigatorContext(), language, country, currency}),
     // The cart is app state: every request carries it, whichever view sends it.
     commerceContextProvider: () => ({
       cart: cart.getItems().map((item) => ({...item})),
@@ -168,7 +169,7 @@ function getClientId() {
   return id;
 }
 
-function getNavigatorContext(): NavigatorContext {
+function getNavigatorContext(): Omit<NavigatorContext, 'language' | 'country' | 'currency'> {
   return {
     clientId: getClientId(),
     location: window.location.href,
