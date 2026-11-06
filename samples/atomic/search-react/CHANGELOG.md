@@ -1,5 +1,12 @@
 # @coveo/ui-kit-sample-atomic-search-react
 
+## 3.11.51
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @coveo/atomic-react@3.11.51
+
 ## 3.11.50
 
 ### Patch Changes
