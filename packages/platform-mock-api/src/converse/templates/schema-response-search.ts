@@ -1806,4 +1806,26 @@ function buildWaterSportsActionEvents(
   });
 }
 
-export {buildWaterSportsInitialEvents, buildWaterSportsActionEvents, instantProductsFor};
+const FACET_SEARCH_ACTIONS = new Set(['search', 'showMoreSearchResults', 'clearSearch']);
+
+// Every action on the search surface re-runs its search, except a search within a facet's values.
+function rerunsSearch(action: {name: string}, sourceComponentId?: string): boolean {
+  const isFacet = Object.values(FACET_COMPONENT_IDS).some((id) => id === sourceComponentId);
+  return !(isFacet && FACET_SEARCH_ACTIONS.has(action.name));
+}
+
+// The query the surface's last search ran, after a correction or a rewrite, when it returned
+// products.
+function productSearchQuery(surfaceId: string): string | null {
+  const view = viewsBySurfaceId.get(surfaceId);
+  return view && filterProducts(view).length > 0 ? view.query : null;
+}
+
+export {
+  SEARCH_SURFACE_ID,
+  buildWaterSportsInitialEvents,
+  buildWaterSportsActionEvents,
+  instantProductsFor,
+  productSearchQuery,
+  rerunsSearch,
+};

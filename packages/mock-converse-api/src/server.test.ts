@@ -418,8 +418,44 @@ describe('createMockConverseServer', () => {
       });
       expect(statesByNode(empty)[`${shellId} /state/query-suggestions`]).toEqual({
         query: '',
+        recentQueries: [],
         completions: [],
       });
+    });
+
+    it("answers the session's recent queries, and clears or removes them in the turn slot", async () => {
+      await startServer();
+      const opened = await initialize();
+      const keys = sessionKeys(opened);
+      const [shellId] = createdSurfaceIds(opened);
+      const act = (name: string, context: Record<string, unknown>) =>
+        postSchema({
+          message: null,
+          ...keys,
+          action: {name, surfaceId: shellId, sourceComponentId: 'query-suggestions', context},
+        });
+      const recentQueries = async () =>
+        (
+          statesByNode(parseEvents((await act('fetchSuggestions', {query: ''})).body))[
+            `${shellId} /state/query-suggestions`
+          ] as {recentQueries: string[]}
+        ).recentQueries;
+
+      await postSchema({message: 'water sports', ...keys});
+      expect(await recentQueries()).toEqual(['water sports']);
+
+      const prompt = postSchema({message: 'hello', ...keys});
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      const [clearConflict, removeConflict] = await Promise.all([
+        act('clearRecentQueries', {}),
+        act('removeRecentQuery', {query: 'water sports'}),
+      ]);
+      expect(clearConflict.statusCode).toBe(409);
+      expect(removeConflict.statusCode).toBe(409);
+      await prompt;
+
+      expect((await act('removeRecentQuery', {query: 'Water Sports'})).statusCode).toBe(200);
+      expect(await recentQueries()).toEqual([]);
     });
 
     const fetchInstantProducts = (

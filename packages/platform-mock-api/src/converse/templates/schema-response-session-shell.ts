@@ -24,6 +24,7 @@ const SHELL_NODES: A2uiComponentNode[] = [
     id: QUERY_SUGGESTIONS_ID,
     component: 'QuerySuggestions',
     query: {path: `${statePath(QUERY_SUGGESTIONS_ID)}/query`},
+    recentQueries: {path: `${statePath(QUERY_SUGGESTIONS_ID)}/recentQueries`},
     completions: {path: `${statePath(QUERY_SUGGESTIONS_ID)}/completions`},
   },
   {
@@ -63,6 +64,8 @@ const EXPRESSIONS = [
 
 const MAX_COMPLETIONS = 6;
 
+const MAX_SUGGESTIONS = 8;
+
 let runSequence = 0;
 
 function nextRunId(kind: string): string {
@@ -75,7 +78,7 @@ function buildSessionShellEvents(surfaceId: string): ConverseEvent[] {
     ...buildValidatedSurface({templateName: 'Mock_Session_Shell', surfaceId, nodes: SHELL_NODES}),
     dataModel: {
       state: {
-        [QUERY_SUGGESTIONS_ID]: {query: '', completions: []},
+        [QUERY_SUGGESTIONS_ID]: {query: '', recentQueries: [], completions: []},
         [INSTANT_PRODUCTS_ID]: {query: '', products: []},
       },
     },
@@ -113,8 +116,13 @@ function buildQuerySuggestionsEvents(action: {
   surfaceId: string;
   sourceComponentId: string;
   context: Record<string, unknown>;
+  recentQueries: string[];
 }): ConverseEvent[] {
   const query = typeof action.context.query === 'string' ? action.context.query : '';
+  const recentQueries = action.recentQueries.slice(0, MAX_SUGGESTIONS);
+  const completions = completionsFor(query)
+    .filter(({expression}) => !recentQueries.includes(expression.toLowerCase()))
+    .slice(0, MAX_SUGGESTIONS - recentQueries.length);
   const runId = nextRunId('suggestions');
   return buildConversationResponse({
     runId,
@@ -125,11 +133,44 @@ function buildQuerySuggestionsEvents(action: {
           {
             surfaceId: action.surfaceId,
             path: statePath(action.sourceComponentId),
-            value: {query, completions: completionsFor(query)},
+            value: {query, recentQueries, completions},
           },
         ],
       }),
     ],
+    includeInitialStateSnapshot: false,
+    includeFinalStateSnapshot: false,
+  });
+}
+
+function buildRecentQueriesClearedEvents(action: {
+  surfaceId: string;
+  sourceComponentId: string;
+}): ConverseEvent[] {
+  const runId = nextRunId('clear-recent-queries');
+  return buildConversationResponse({
+    runId,
+    middleEvents: [
+      UpdateDataModelActivity({
+        messageId: `activity-${runId}`,
+        ops: [
+          {
+            surfaceId: action.surfaceId,
+            path: `${statePath(action.sourceComponentId)}/recentQueries`,
+            value: [],
+          },
+        ],
+      }),
+    ],
+    includeInitialStateSnapshot: false,
+    includeFinalStateSnapshot: false,
+  });
+}
+
+function buildRecentQueryRemovedEvents(): ConverseEvent[] {
+  return buildConversationResponse({
+    runId: nextRunId('remove-recent-query'),
+    middleEvents: [],
     includeInitialStateSnapshot: false,
     includeFinalStateSnapshot: false,
   });
@@ -163,7 +204,10 @@ function buildInstantProductsEvents(action: {
 
 export {
   INSTANT_PRODUCTS_ID,
+  QUERY_SUGGESTIONS_ID,
   buildInstantProductsEvents,
+  buildRecentQueriesClearedEvents,
+  buildRecentQueryRemovedEvents,
   buildSessionShellEvents,
   buildQuerySuggestionsEvents,
 };

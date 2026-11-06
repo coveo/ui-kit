@@ -52,7 +52,11 @@ async function completions(query: string) {
   return message.updateDataModel as {
     surfaceId: string;
     path: string;
-    value: {query: string; completions: Array<{expression: string; score: number}>};
+    value: {
+      query: string;
+      recentQueries: string[];
+      completions: Array<{expression: string; score: number}>;
+    };
   };
 }
 
@@ -112,6 +116,7 @@ describe('initialize', () => {
             id: 'query-suggestions',
             component: 'QuerySuggestions',
             query: {path: '/state/query-suggestions/query'},
+            recentQueries: {path: '/state/query-suggestions/recentQueries'},
             completions: {path: '/state/query-suggestions/completions'},
           },
           {
@@ -123,7 +128,7 @@ describe('initialize', () => {
         ],
         dataModel: {
           state: {
-            'query-suggestions': {query: '', completions: []},
+            'query-suggestions': {query: '', recentQueries: [], completions: []},
             'instant-products': {query: '', products: []},
           },
         },
@@ -155,6 +160,7 @@ describe('fetchSuggestions', () => {
       path: '/state/query-suggestions',
       value: {
         query: 'surf',
+        recentQueries: [],
         completions: [
           {expression: 'surfboards', score: 100},
           {expression: 'surfboard leash', score: 95},
@@ -178,7 +184,9 @@ describe('fetchSuggestions', () => {
   });
 
   it('returns no completions for an empty query or no match', async () => {
-    expect(await completions('')).toMatchObject({value: {query: '', completions: []}});
+    expect(await completions('')).toMatchObject({
+      value: {query: '', recentQueries: [], completions: []},
+    });
     expect(await expressions('   ')).toEqual([]);
     expect(await expressions('snowboard')).toEqual([]);
   });
@@ -349,5 +357,248 @@ describe('fetchInstantProducts', () => {
         })
       )
     ).toEqual(notApplicable);
+  });
+});
+
+describe('recent queries', () => {
+  let sessionCount = 0;
+
+  async function openSession() {
+    sessionCount += 1;
+    const keys = {
+      conversationSessionId: `recent-queries-session-${sessionCount}`,
+      conversationToken: `recent-queries-token-${sessionCount}`,
+    };
+    const events = await readEvents(
+      converseSchemaResponses.buildSchemaActionResponse({name: 'initialize', context: {}}, keys)
+    );
+    const shellId = (surfaceMessages(events)[0].createSurface as {surfaceId: string}).surfaceId;
+
+    const prompt = async (message: string) => {
+      const answer = await readEvents(converseSchemaResponses.schemaBaseResponse({message}, keys));
+      return surfaceMessages(answer)
+        .map((message) => (message.createSurface as {surfaceId: string} | undefined)?.surfaceId)
+        .find((surfaceId) => surfaceId?.startsWith('ui-commerce-water-sports-'));
+    };
+
+    const act = (
+      name: string,
+      context: Record<string, unknown>,
+      surfaceId: string | undefined = shellId,
+      sourceComponentId = 'query-suggestions'
+    ) =>
+      converseSchemaResponses.buildSchemaActionResponse(
+        {name, surfaceId, sourceComponentId, context},
+        keys
+      );
+
+    const suggestions = async (query: string) => {
+      const [message] = surfaceMessages(await readEvents(act('fetchSuggestions', {query})));
+      return (message.updateDataModel as {value: Record<string, unknown>}).value as {
+        query: string;
+        recentQueries: string[];
+        completions: Array<{expression: string}>;
+      };
+    };
+
+    const recentQueries = async (query = '') => (await suggestions(query)).recentQueries;
+
+    // The answer streams for a second; the session records the search before it starts.
+    const restore = (surfaceId: string, query: string) =>
+      act('restoreState', {query, page: 0, pageSize: 12}, surfaceId, 'root');
+
+    return {keys, shellId, prompt, act, suggestions, recentQueries, restore};
+  }
+
+  async function searchSurface(session: Awaited<ReturnType<typeof openSession>>) {
+    const surfaceId = await session.prompt('water sports');
+    expect(surfaceId).toBeDefined();
+    return surfaceId!;
+  }
+
+  it('records the query each search ran, normalized and newest first', async () => {
+    const session = await openSession();
+
+    const swimGear = await session.prompt('swim gear');
+    expect(await session.recentQueries()).toEqual(['water sports']);
+
+    await readEvents(session.act('overrideCorrection', {}, swimGear, 'query-summary-2'));
+    expect(await session.recentQueries()).toEqual(['swim gear', 'water sports']);
+
+    await session.prompt('  WATER Sprots ');
+    expect(await session.recentQueries()).toEqual(['water sports', 'swim gear']);
+  });
+
+  it('records a restored search under its query', async () => {
+    const session = await openSession();
+    const surfaceId = await searchSurface(session);
+
+    await session.restore(surfaceId, '  Surf Wax ');
+
+    expect(await session.recentQueries()).toEqual(['surf wax', 'water sports']);
+  });
+
+  it("moves a re-run search's query back to the top", async () => {
+    const session = await openSession();
+    const surfaceId = await searchSurface(session);
+    await session.restore(surfaceId, 'kayaks');
+
+    await readEvents(session.act('selectSort', {sortCriteria: 'relevance'}, surfaceId, 'sort-2'));
+
+    expect(await session.recentQueries()).toEqual(['kayaks', 'water sports']);
+  });
+
+  it('records no agent answer, no search without products and no facet value search', async () => {
+    const session = await openSession();
+    const surfaceId = await searchSurface(session);
+    await readEvents(session.act('clearRecentQueries', {}));
+
+    converseSchemaResponses.schemaBaseResponse({message: 'boating safety'}, session.keys);
+    converseSchemaResponses.schemaBaseResponse({message: 'hello'}, session.keys);
+    session.act('search', {query: 'aqua'}, surfaceId, 'facet-brand-2');
+    session.act('applyCustomRange', {start: 100000, end: 200000}, surfaceId, 'facet-price-2');
+
+    expect(await session.recentQueries()).toEqual([]);
+  });
+
+  it('keeps the ten newest queries of each session', async () => {
+    const session = await openSession();
+    const other = await openSession();
+    const surfaceId = await searchSurface(session);
+
+    for (let index = 1; index <= 12; index++) {
+      await session.restore(surfaceId, `query ${index}`);
+    }
+
+    const all = Array.from({length: 10}, (_, index) => `query ${12 - index}`);
+    expect(await session.recentQueries()).toEqual(all.slice(0, 8));
+    expect(await session.recentQueries('QUERY 1')).toEqual(['query 12', 'query 11', 'query 10']);
+    expect(await session.recentQueries('query 3')).toEqual(['query 3']);
+    expect(await other.recentQueries()).toEqual([]);
+  });
+
+  it('lists the matching recent queries, and the completions without them', async () => {
+    const session = await openSession();
+    const surfaceId = await searchSurface(session);
+    for (const query of ['surf wax', 'snorkel mask', 'surfboards']) {
+      await session.restore(surfaceId, query);
+    }
+
+    expect(await session.suggestions('Surf')).toMatchObject({
+      query: 'Surf',
+      recentQueries: ['surfboards', 'surf wax'],
+      completions: [
+        {expression: 'surfboard leash'},
+        {expression: 'surfboard bag'},
+        {expression: 'surf shorts'},
+      ],
+    });
+  });
+
+  it('caps recent queries at three while typing, and all suggestions at eight', async () => {
+    const session = await openSession();
+    const surfaceId = await searchSurface(session);
+    for (const query of ['sailboats', 'sandals', 'sunglasses', 'swimsuits']) {
+      await session.restore(surfaceId, query);
+    }
+
+    const typed = await session.suggestions('s');
+
+    expect(typed.recentQueries).toEqual(['swimsuits', 'sunglasses', 'sandals']);
+    expect(typed.completions.map(({expression}) => expression)).toEqual([
+      'surfboards',
+      'surfboard leash',
+      'surfboard bag',
+      'surf wax',
+      'surf shorts',
+    ]);
+  });
+
+  describe('clearRecentQueries', () => {
+    it("empties the session's list and writes only the recentQueries field", async () => {
+      const session = await openSession();
+      await searchSurface(session);
+
+      const events = await readEvents(session.act('clearRecentQueries', {}));
+
+      expect(events.map(({event}) => event)).toEqual([
+        'turn_started',
+        'RUN_STARTED',
+        'ACTIVITY_SNAPSHOT',
+        'RUN_FINISHED',
+        'turn_complete',
+      ]);
+      expect(events[0].data).toEqual(session.keys);
+      expect(surfaceMessages(events)).toEqual([
+        {
+          version: 'v1.0',
+          updateDataModel: {
+            surfaceId: session.shellId,
+            path: '/state/query-suggestions/recentQueries',
+            value: [],
+          },
+        },
+      ]);
+      expect(await session.recentQueries()).toEqual([]);
+    });
+
+    it('refuses a surface or component other than the shell query suggestions', async () => {
+      const session = await openSession();
+      const surfaceId = await searchSurface(session);
+
+      const refusals = [
+        session.act('clearRecentQueries', {}, surfaceId),
+        session.act('clearRecentQueries', {}, session.shellId, 'instant-products'),
+      ];
+
+      for (const refusal of refusals) {
+        expect(refusal.status).toBe(400);
+        expect(await refusal.json()).toEqual({
+          errorCode: 'AGENT:ACTION_NOT_APPLICABLE',
+          message: expect.any(String),
+        });
+      }
+      expect(await session.recentQueries()).toEqual(['water sports']);
+    });
+  });
+
+  describe('removeRecentQuery', () => {
+    it('removes the entry, compared case-insensitively, without a state write', async () => {
+      const session = await openSession();
+      const surfaceId = await searchSurface(session);
+      await session.restore(surfaceId, 'kayaks');
+
+      const events = await readEvents(session.act('removeRecentQuery', {query: 'Water Sports'}));
+
+      expect(events.map(({event}) => event)).toEqual([
+        'turn_started',
+        'RUN_STARTED',
+        'RUN_FINISHED',
+        'turn_complete',
+      ]);
+      expect(events[0].data).toEqual(session.keys);
+      expect(await session.recentQueries()).toEqual(['kayaks']);
+    });
+
+    it('succeeds without a change when the list does not hold the entry', async () => {
+      const session = await openSession();
+      await searchSurface(session);
+
+      const response = session.act('removeRecentQuery', {query: 'surfboards'});
+
+      expect(response.status).toBe(200);
+      await readEvents(response);
+      expect(await session.recentQueries()).toEqual(['water sports']);
+    });
+
+    it('lets a later search record the entry again', async () => {
+      const session = await openSession();
+      await searchSurface(session);
+      await readEvents(session.act('removeRecentQuery', {query: 'water sports'}));
+
+      await searchSurface(session);
+
+      expect(await session.recentQueries()).toEqual(['water sports']);
+    });
   });
 });
