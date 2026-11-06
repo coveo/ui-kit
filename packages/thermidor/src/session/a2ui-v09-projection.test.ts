@@ -361,6 +361,23 @@ describe('flat v1.0 nodes are forwarded byte-for-byte', () => {
       {numRuns: 150}
     );
   });
+
+  it('turns a v1.0 deletion (value: null) into a v0.9 deletion, which omits value', () => {
+    const converted = project([
+      {
+        version: 'v1.0',
+        updateDataModel: {surfaceId: 'search', path: '/state/search-facet-cat-gender', value: null},
+      },
+    ]);
+
+    expect(converted).toEqual([
+      {
+        version: 'v0.9',
+        updateDataModel: {surfaceId: 'search', path: '/state/search-facet-cat-gender'},
+      },
+    ]);
+    expect(converted[0].updateDataModel).not.toHaveProperty('value');
+  });
 });
 
 // An unconvertible v1.0 message (one carrying no recognized operation) must contribute nothing
@@ -450,6 +467,19 @@ describe('convertA2uiMessages loading placeholders', () => {
     ]);
 
     expect(result.some((message) => 'updateDataModel' in message)).toBe(false);
+  });
+
+  it('seeds no data-model write for an inline key set to null', () => {
+    const result = project([
+      {
+        version: 'v1.0',
+        createSurface: {surfaceId: 's', catalogId: 'commerce', dataModel: {gone: null, kept: 1}},
+      },
+    ]);
+
+    expect(result.filter((message) => 'updateDataModel' in message)).toEqual([
+      {version: 'v0.9', updateDataModel: {surfaceId: 's', path: '/kept', value: 1}},
+    ]);
   });
 });
 
