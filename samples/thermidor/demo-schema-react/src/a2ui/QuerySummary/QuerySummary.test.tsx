@@ -1,5 +1,5 @@
 import {describe, it, expect, afterEach} from 'vitest';
-import {screen, cleanup, waitFor, fireEvent} from '@testing-library/react';
+import {act, screen, cleanup, waitFor, fireEvent} from '@testing-library/react';
 import {mountSurface} from '../mount-surface.harness.js';
 
 /**
@@ -157,5 +157,87 @@ describe('QuerySummary', () => {
     await waitFor(() => expect(screen.getByText(/Products/)).toBeDefined());
     expect(screen.queryByText(/Showing products for/)).toBeNull();
     expect(screen.queryByRole('button')).toBeNull();
+  });
+});
+
+describe('QuerySummary focus', () => {
+  const CORRECTION = {originalQuery: 'swim gear', cause: 'trigger', canOverride: true};
+
+  /** Holds the override in flight until `answer`: the surface stays locked meanwhile. */
+  function answerable() {
+    let answer: () => void = () => undefined;
+    return {
+      gate: () =>
+        new Promise<void>((resolve) => {
+          answer = resolve;
+        }),
+      answer: () =>
+        act(async () => {
+          answer();
+          await Promise.resolve();
+        }),
+    };
+  }
+
+  function mountWithResults(dispatchGate: () => Promise<void>) {
+    return mountSurface({
+      component: {component: 'LayoutStack', direction: 'column', children: ['summary', 'list']},
+      children: [
+        {
+          id: 'summary',
+          component: 'QuerySummary',
+          ...Object.fromEntries(
+            Object.keys(BINDINGS).map((key) => [key, {path: `/state/summary/${key}`}])
+          ),
+        },
+        {id: 'list', component: 'ProductList', products: {path: '/state/list/products'}},
+      ],
+      dataModel: [
+        {path: '/state/summary/query', value: 'Water Sports'},
+        {path: '/state/summary/firstIndex', value: 1},
+        {path: '/state/summary/lastIndex', value: 1},
+        {path: '/state/summary/totalEntries', value: 1},
+        {path: '/state/summary/correction', value: CORRECTION},
+        {
+          path: '/state/list/products',
+          value: [{permanentid: 'p1', ec_name: 'Trail Shoes', additionalFields: {}}],
+        },
+      ],
+      dispatchGate,
+    });
+  }
+
+  async function searchInsteadWithFocus() {
+    const link = await screen.findByRole('button', {name: 'swim gear'});
+    link.focus();
+    fireEvent.click(link);
+  }
+
+  it('moves focus from the link to the results once the override is answered', async () => {
+    const request = answerable();
+    const {pushDataModel} = mountWithResults(request.gate);
+
+    await searchInsteadWithFocus();
+    pushDataModel([
+      {path: '/state/summary/query', value: 'swim gear'},
+      {path: '/state/summary/correction', value: undefined},
+    ]);
+    await request.answer();
+
+    await waitFor(() =>
+      expect(document.activeElement).toBe(screen.getByRole('list', {name: 'Product list'}))
+    );
+  });
+
+  it('gives focus back to the link when the notice stays', async () => {
+    const request = answerable();
+    mountWithResults(request.gate);
+
+    await searchInsteadWithFocus();
+    await request.answer();
+
+    await waitFor(() =>
+      expect(document.activeElement).toBe(screen.getByRole('button', {name: 'swim gear'}))
+    );
   });
 });

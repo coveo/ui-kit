@@ -1,6 +1,6 @@
 import {type RefObject, useLayoutEffect, useRef} from 'react';
-import {focusNearestResults} from '../results-focus.js';
-import {useSurfaceLocked} from '../session-request.js';
+import {focusNearestResults} from './results-focus.js';
+import {useSurfaceLocked} from './session-request.js';
 
 interface PendingRemoval {
   index: number;
@@ -8,9 +8,10 @@ interface PendingRemoval {
 }
 
 /**
- * Keeps keyboard focus when a removal unmounts the focused button, as the Atomic breadbox does:
- * focus moves to the button now at the removed one's position (the next value, or the clear-all
- * button), or to the results once the breadbox is empty. Focus elsewhere on the page is left alone,
+ * Keeps keyboard focus when an action unmounts the focused button in `section`, as the Atomic
+ * breadbox does: focus moves to the button now at the removed one's position (in the breadbox, the
+ * next value or the clear-all button), or to the results once `section` has no buttons left, or is
+ * gone. A button that is still rendered gets focus back. Focus elsewhere on the page is left alone,
  * including focus the shopper moves while the removal is answered. It waits for the surface to
  * unlock: a locked surface's buttons are disabled and can't take focus.
  */

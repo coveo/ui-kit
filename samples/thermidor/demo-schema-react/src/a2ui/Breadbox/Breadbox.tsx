@@ -4,7 +4,7 @@ import {type BreadboxAction, BreadboxPropsSchema} from '@coveo/thermidor-schema/
 import {CloseIcon} from '../icons/index.js';
 import {breadboxValues} from './breadbox-values.js';
 import {useOptimisticBreadbox} from './use-optimistic-breadbox.js';
-import {useRemovalFocus} from './use-removal-focus.js';
+import {useRemovalFocus} from '../use-removal-focus.js';
 import styles from './Breadbox.module.css';
 
 /**

@@ -1,7 +1,9 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {useRef} from 'react';
 import type {QueryCorrection, QuerySummaryAction} from '@coveo/thermidor-schema';
 import {QuerySummaryPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {useGesture} from '../session-request.js';
+import {useRemovalFocus} from '../use-removal-focus.js';
 import styles from './QuerySummary.module.css';
 
 /**
@@ -20,6 +22,7 @@ import styles from './QuerySummary.module.css';
  *
  * When the backend replaced the shopper's query, a notice worded like the Atomic commerce
  * did-you-mean follows, ending with a "Search instead" link (`overrideCorrection`) if `canOverride`.
+ * Once the search runs, keyboard focus moves from the link to the results.
  */
 export const QuerySummary = createReactComponent(
   {
@@ -29,6 +32,8 @@ export const QuerySummary = createReactComponent(
   ({props, context}) => {
     const {query, firstIndex, lastIndex, totalEntries, correction} = props;
     const startGesture = useGesture();
+    const summary = useRef<HTMLDivElement>(null);
+    const keepFocusAfterOverriding = useRemovalFocus(summary, correction);
 
     // Bindings resolve progressively: any field may still be undefined on an
     // early render. Treat a partially-resolved summary as not-yet-loaded (render
@@ -38,6 +43,7 @@ export const QuerySummary = createReactComponent(
     }
 
     const searchOriginalQuery = () => {
+      keepFocusAfterOverriding(0);
       const overrideCorrectionAction: QuerySummaryAction = {
         event: {name: 'overrideCorrection', context: {}},
       };
@@ -57,7 +63,7 @@ export const QuerySummary = createReactComponent(
 
     if (totalEntries === 0) {
       return query ? (
-        <div data-layout="fill">
+        <div ref={summary} data-layout="fill">
           <p className={styles.summary}>
             <span>
               No results for <strong>{query}</strong>
@@ -73,7 +79,7 @@ export const QuerySummary = createReactComponent(
     }
 
     return (
-      <div data-layout="fill">
+      <div ref={summary} data-layout="fill">
         <p className={styles.summary}>
           <span>
             Products <strong>{firstIndex}</strong>-<strong>{lastIndex}</strong> of{' '}
