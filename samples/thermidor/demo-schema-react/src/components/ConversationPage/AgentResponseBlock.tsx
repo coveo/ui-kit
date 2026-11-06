@@ -1,9 +1,7 @@
 import type {ReactNode} from 'react';
 import type {TurnResponse} from '@coveo/thermidor';
 import {turnRefIn} from '../../turn-ref/turn-ref.js';
-import {citationsIn, citedDocuments, withInlineCitations} from '../../citations/citations.js';
 import {getAnnotationModuleUrl} from '../../env.js';
-import {CitedDocuments} from './CitedDocuments.js';
 import {AnnotationControl} from '../../annotation/annotation-controls.js';
 import {ThinkingBlock} from './ThinkingBlock.js';
 import {StreamingMessage} from './StreamingMessage.js';
@@ -18,8 +16,7 @@ export interface AgentResponseBlockProps {
 
 export function AgentResponseBlock({response, isStreaming, children}: AgentResponseBlockProps) {
   const {agent} = response;
-  const citations = citationsIn(response.activities);
-  const messages = withInlineCitations(agent?.messages ?? [], citations);
+  const messages = agent?.messages ?? [];
   const reasoningSteps = agent?.reasoningSteps ?? [];
   const turnRef = turnRefIn(response.activities);
   const annotationModuleUrl = getAnnotationModuleUrl();
@@ -33,7 +30,6 @@ export function AgentResponseBlock({response, isStreaming, children}: AgentRespo
         <ThinkingBlock reasoningSteps={reasoningSteps} isStreaming={isStreaming} />
       )}
       {showStreamingMessage && <StreamingMessage messages={messages} />}
-      <CitedDocuments documents={citedDocuments(citations)} />
       {children}
       {annotationModuleUrl && turnRef && !isStreaming && (
         <AnnotationControl moduleUrl={annotationModuleUrl} turnRef={turnRef} />
