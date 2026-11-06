@@ -659,6 +659,32 @@ describe('keyboard navigation, as in Atomic commerce', () => {
     expect(onValueChange).toHaveBeenCalledWith('Surfboards');
   });
 
+  it('keeps the search box as it was when the window gets the focus back', () => {
+    const {textarea, press, active, onValueChange} = renderNavigable();
+    textarea.focus();
+    press('ArrowDown');
+    press('ArrowRight');
+    press('Enter');
+
+    fireEvent.blur(textarea);
+    fireEvent.focus(textarea);
+
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(textarea.value).toBe('Surfboards');
+    expect(active()).toBe('p1');
+  });
+
+  it('makes the shown suggestion the query once the shopper focuses the input again', () => {
+    const {textarea, press, onValueChange} = renderNavigable();
+    textarea.focus();
+    press('ArrowDown');
+
+    textarea.blur();
+    fireEvent.focus(textarea);
+
+    expect(onValueChange).toHaveBeenCalledWith('Surfboards');
+  });
+
   it('scrolls the option the arrow keys highlight into view', () => {
     const scrollIntoView = vi.spyOn(Element.prototype, 'scrollIntoView');
     const {press} = renderNavigable();

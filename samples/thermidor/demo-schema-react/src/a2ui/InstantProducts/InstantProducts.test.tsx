@@ -316,6 +316,26 @@ describe('InstantProducts keyboard navigation', () => {
     expect(open).toHaveBeenCalledTimes(2);
   });
 
+  it('sends nothing more once the shopper comes back from an opened product', async () => {
+    vi.stubGlobal('open', vi.fn());
+    const {type, textarea, actions, queriesSent} = await renderSearchBox();
+    type('surf');
+    await waitFor(() => expect(productsShown()).toBe('Products for surf boards'));
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    await waitFor(() => expect(queriesSent()).toEqual(['surf boards', 'surf wax']));
+    fireEvent.keyDown(textarea, {key: 'ArrowRight'});
+    fireEvent.keyDown(textarea, {key: 'Enter'});
+
+    fireEvent.blur(textarea);
+    fireEvent.focus(textarea);
+    await pause();
+
+    expect(actions('fetchSuggestions').map(({context}) => context['query'])).toEqual(['surf']);
+    expect(queriesSent()).toEqual(['surf boards', 'surf wax']);
+    expect(productsShown()).toBe('Products for surf wax');
+  });
+
   it('leaves the right arrow to the caret on small screens', async () => {
     const {type, textarea} = await renderSearchBox({wide: false});
     type('surf');
