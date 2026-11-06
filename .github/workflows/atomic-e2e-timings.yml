@@ -38,8 +38,11 @@ jobs:
         uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
         with:
           egress-policy: audit
+          disable-sudo-and-containers: true
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/setup
       - name: Build the timings from the newest runs
         id: build
@@ -63,8 +66,8 @@ jobs:
   # commit, so a run dispatched on another branch would carry that branch's commits. Like the
   # changesets release PR in cd.yml, developer-experience-bot opens it, from the `Release`
   # environment's App secrets. That App can administer the repository, so its token only gets
-  # what publish needs, and it is created after `pnpm install` and handed to git in the last step
-  # only, so no install script can read it.
+  # what publish needs, it is created after `pnpm install` and handed to git in the last step only,
+  # and sudo is off, so no step can read the App key from the runner's memory.
   publish:
     name: 'Open the refresh pull request'
     needs: refresh
@@ -79,6 +82,7 @@ jobs:
         uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
         with:
           egress-policy: audit
+          disable-sudo-and-containers: true
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -98,10 +102,12 @@ jobs:
           repositories: 'ui-kit'
           permission-contents: write
           permission-pull-requests: write
-      # The credential helper reads the token from the environment, so it never lands on disk.
+      # The empty helper drops any helper the runner configures, which git would hand the token to
+      # for storing; the second reads it from the environment, so it never lands on disk.
       - name: Open the refresh pull request
         run: |
-          git config --local credential.https://github.com.helper '!f() { echo username=x-access-token; echo "password=${GITHUB_INSTALLATION_TOKEN}"; }; f'
+          git config --local credential.https://github.com.helper ''
+          git config --local --add credential.https://github.com.helper '!f() { echo username=x-access-token; echo "password=${GITHUB_INSTALLATION_TOKEN}"; }; f'
           pnpm --filter @coveo/ci run e2e-timings publish --candidate "$RUNNER_TEMP/e2e-timings/atomic.json"
         env:
           GITHUB_INSTALLATION_TOKEN: ${{ steps.generate-token.outputs.token }}
