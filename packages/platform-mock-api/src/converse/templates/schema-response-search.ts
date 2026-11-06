@@ -1806,4 +1806,58 @@ function buildWaterSportsActionEvents(
   });
 }
 
-export {buildWaterSportsInitialEvents, buildWaterSportsActionEvents, instantProductsFor};
+const FACET_RERUN_ACTIONS = new Set([
+  'toggleSelect',
+  'toggleExclude',
+  'toggleSingleSelect',
+  'toggleSingleExclude',
+  'clearAllActiveValues',
+  'showMoreValues',
+  'showLessValues',
+  'applyCustomRange',
+  'selectPath',
+  'clearSelectedPath',
+]);
+
+const BREADBOX_RERUN_ACTIONS = new Set(['deselect', 'clearAll']);
+
+const SURFACE_RERUN_ACTIONS = new Set(['restoreState', 'selectPage', 'setPageSize', 'selectSort']);
+
+// Whether the action re-runs the surface's search, read before the action changes the view.
+function rerunsSearch(
+  action: {name: string},
+  sourceComponentId: string | undefined,
+  surfaceId: string
+): boolean {
+  switch (sourceComponentId) {
+    case FACET_COMPONENT_IDS.regular:
+    case FACET_COMPONENT_IDS.numeric:
+    case FACET_COMPONENT_IDS.category:
+      return FACET_RERUN_ACTIONS.has(action.name);
+    case BREADBOX_ID:
+      return BREADBOX_RERUN_ACTIONS.has(action.name);
+    case QUERY_SUMMARY_ID:
+      return (
+        action.name === 'overrideCorrection' &&
+        viewsBySurfaceId.get(surfaceId)?.correction?.canOverride === true
+      );
+    default:
+      return SURFACE_RERUN_ACTIONS.has(action.name);
+  }
+}
+
+// The query the surface's last search ran, after a correction or a rewrite, when it returned
+// products.
+function productSearchQuery(surfaceId: string): string | null {
+  const view = viewsBySurfaceId.get(surfaceId);
+  return view && filterProducts(view).length > 0 ? view.query : null;
+}
+
+export {
+  SEARCH_SURFACE_ID,
+  buildWaterSportsInitialEvents,
+  buildWaterSportsActionEvents,
+  instantProductsFor,
+  productSearchQuery,
+  rerunsSearch,
+};
