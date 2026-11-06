@@ -210,6 +210,15 @@ export function createTestSession(handler: ConverseHandler = answerShell) {
     endpoint: 'https://converse.test',
     agentConfigurationId: 'test-agent-configuration',
     trackingId: 'test-tracking',
+    navigatorContextProvider: () => ({
+      clientId: 'test-client',
+      location: null,
+      referrer: null,
+      userAgent: null,
+      language: 'en',
+      country: 'US',
+      currency: 'USD',
+    }),
   });
   const actions = (name: string) =>
     requests.filter((request) => request.action?.name === name).map(({action}) => action!);

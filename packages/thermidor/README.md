@@ -24,7 +24,7 @@ const session = createSession({
   agentConfigurationId: '00000000-0000-0000-0000-000000000000', // the configured agent that answers the session
   trackingId: 'my-tracking-id',
   contracts: ComponentContractsSchema, // injected Zod discriminated union (Zod 3 or 4)
-  navigatorContextProvider: () => getNavigatorContext(),
+  navigatorContextProvider: () => getNavigatorContext(), // required; includes language, country, currency
   commerceContextProvider: () => ({cart: getCart()}),
 });
 
@@ -180,7 +180,7 @@ Each `DiscoveredSurface` carries `surfaceId`, `rootComponentType`, and `isLoadin
 
 - **Contracts schema** — a consumer-injected Zod discriminated union (`contracts`) is the sole source for component-state and action-payload validation. Thermidor accepts it through a structural typing seam (`ContractsSchema` / `ComponentContractSchema` / `ParsableSchema`) that reads only public Zod API, so it declares no dependency on any specific schema package. It declares `zod` as a peer dependency spanning both majors (`3.25.76 || ^4`), so validation runs through the single shared `zod` instance resolved by the injected schema. A consumer whose renderer is built on Zod 3 injects a Zod 3 schema, such as `@coveo/thermidor-schema/zod3`.
 - **Endpoint** — when `endpoint` is provided, the client POSTs to it verbatim. When absent, it resolves `https://{orgId}.org.coveo.com` and appends the fixed converse path `/api/preview/organizations/{orgId}/agents/commerce/agui/converse`.
-- **Context providers** — `navigatorContextProvider` and `commerceContextProvider` are synchronous functions read fresh per request. Context is never stored on the session and never serialized.
+- **Context providers** — `navigatorContextProvider` (required) and `commerceContextProvider` are synchronous functions read fresh per request. The navigator context carries the request's `language`, `country` and `currency`. Context is never stored on the session and never serialized.
 
 ## Serialization
 

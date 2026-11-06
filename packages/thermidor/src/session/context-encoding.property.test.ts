@@ -103,6 +103,15 @@ const baseConfig: SessionConfig = {
   accessToken: 'token-1',
   agentConfigurationId: 'agent-configuration-1',
   trackingId: 'tracking-1',
+  navigatorContextProvider: () => ({
+    clientId: 'client-1',
+    location: null,
+    referrer: null,
+    userAgent: null,
+    language: 'en',
+    country: 'US',
+    currency: 'USD',
+  }),
   initialize: false,
 };
 

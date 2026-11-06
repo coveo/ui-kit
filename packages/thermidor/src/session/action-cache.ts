@@ -4,6 +4,8 @@
  * announces. Never serialized, and dropped with the session.
  */
 
+import type {NavigatorContext} from '@/src/internal/context/index.js';
+
 const MAX_ENTRIES = 100;
 
 export interface ActionOrigin {
@@ -11,6 +13,9 @@ export interface ActionOrigin {
   sourceComponentId: string;
   name: string;
 }
+
+/** The locale an answer was given in: an answer in another locale is not reused. */
+export type ActionLocale = Pick<NavigatorContext, 'language' | 'country' | 'currency'>;
 
 export interface ActionCache {
   /** The answer's messages, or `undefined` when there is none or it is `ttlMs` old. */
@@ -29,11 +34,18 @@ function stableStringify(value: unknown): string {
   );
 }
 
-export function actionCacheKey(origin: ActionOrigin, payload: unknown): string {
+export function actionCacheKey(
+  origin: ActionOrigin,
+  payload: unknown,
+  {language, country, currency}: ActionLocale
+): string {
   return JSON.stringify([
     origin.surfaceId,
     origin.sourceComponentId,
     origin.name,
+    language,
+    country,
+    currency,
     stableStringify(payload),
   ]);
 }

@@ -175,13 +175,13 @@ export function createConcurrentActions({
    * stream ends, if the dispatch is still the latest. Its session keys and metadata are not read.
    */
   async function stream(
-    action: A2uiAction,
+    request: ConverseRequestModel,
     origin: ActionOrigin,
     key: string,
     {signal, joined = () => false}: {signal?: AbortSignal; joined?: () => boolean} = {}
   ): Promise<readonly unknown[]> {
     const result = await client.call(
-      buildActionRequest(action),
+      request,
       {
         organizationId: config.organizationId,
         accessToken: config.accessToken,
@@ -238,14 +238,6 @@ export function createConcurrentActions({
 
   return {
     issue(origin, policy) {
-      const key = actionCacheKey(origin, origin.context);
-      lanes.claim(origin, key);
-      const cached = policy && cache.get(key, policy.ttlMs);
-      if (cached) {
-        apply(cached);
-        return Promise.resolve();
-      }
-
       const action: A2uiAction = {
         surfaceId: origin.surfaceId,
         name: origin.name,
@@ -253,15 +245,30 @@ export function createConcurrentActions({
         timestamp: new Date().toISOString(),
         context: origin.context,
       };
+      let request: ConverseRequestModel;
+      try {
+        request = buildActionRequest(action);
+      } catch (error) {
+        return quietly(origin, Promise.reject(error));
+      }
+
+      const key = actionCacheKey(origin, origin.context, request);
+      lanes.claim(origin, key);
+      const cached = policy && cache.get(key, policy.ttlMs);
+      if (cached) {
+        apply(cached);
+        return Promise.resolve();
+      }
+
       if (!policy) {
         return lanes.sendUncached(origin, (signal) =>
-          quietly(origin, stream(action, origin, key, {signal}), signal)
+          quietly(origin, stream(request, origin, key, {signal}), signal)
         );
       }
       return lanes.sendCachedMiss(key, (joined) =>
         quietly(
           origin,
-          stream(action, origin, key, {joined}).then((messages) =>
+          stream(request, origin, key, {joined}).then((messages) =>
             cache.set(key, accept(messages).messages)
           )
         )
