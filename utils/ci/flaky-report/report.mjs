@@ -5,8 +5,13 @@ const JIRA_URL = 'https://coveord.atlassian.net';
 const GROUPS = {atomic: 'Atomic', quantic: 'Quantic', other: 'Samples and smoke tests'};
 const LISTED_TESTS = 20;
 const LISTED_JOBS = 5;
-const MERGE_QUEUE_FAILURE_WEIGHT = 3;
+const FAILURE_WEIGHT = 3;
 const TITLE_LENGTH = 100;
+const PULL_REQUEST_CAUSES = {
+  flaky: 'Flaky test: it passed on a retry at least once',
+  mergeQueue: 'Something else: the merge queue failed it too',
+  pullRequest: 'The pull request',
+};
 
 function suiteGroup(suite) {
   return suite === 'atomic' || suite === 'quantic' ? suite : 'other';
@@ -28,6 +33,31 @@ function getOrCreate(map, key, create) {
     map.set(key, create());
   }
   return map.get(key);
+}
+
+function newEntry({project, run, record, test}) {
+  return {
+    suite: record.suite,
+    project,
+    file: test.file,
+    line: test.line,
+    title: test.title,
+    flakyRuns: new Set(),
+    failedMergeQueueRuns: new Set(),
+    failedPullRequests: new Set(),
+    lastSeen: run,
+    // Records saved before they held the checked-out commit fall back to the run's head.
+    sha: record.sha ?? run.headSha,
+  };
+}
+
+// The link points at the commit the last run tested, so it takes that run's line too.
+function markSeen(entry, {run, record, test}) {
+  if (run.createdAt > entry.lastSeen.createdAt) {
+    entry.lastSeen = run;
+    entry.line = test.line;
+    entry.sha = record.sha ?? run.headSha;
+  }
 }
 
 // Quantic's setup job runs under "Run Quantic E2E tests" too, but it only creates scratch orgs.
@@ -71,10 +101,16 @@ function runKind(jobCauses) {
  * - `runCounts`: all runs in the window, and the merge-queue runs among them.
  * - `suites`: for Atomic, Quantic and the other suites, the runs that executed them, and how many
  *   of those had a test that passed only on retry.
- * - `tests`: one row per flaky test and Playwright project, with its flaky runs, the merge-queue runs
- *   where it failed every retry, the IDs of both, and the last run that saw it. A failure on every
- *   retry counts only in the merge queue. Rows rank by flaky runs plus three per merge-queue
- *   failure.
+ * - `tests`: one row per flaky test and Playwright project: a test that passed on a retry, failed
+ *   every retry in the merge queue, or failed every retry in a pull request while it passed on a
+ *   retry in another project or suite. Each row has its flaky runs, the merge-queue runs and, for a
+ *   test that passed on a retry, the pull requests where it failed every retry, the IDs of its flaky
+ *   and merge-queue runs, and the last run that saw it. Rows rank by flaky runs plus three per
+ *   merge-queue run or pull request where the test failed every retry.
+ * - `pullRequestCauses`: the pull requests where a test failed every retry, by likely cause: `flaky`
+ *   when that test passed on a retry in the window, `mergeQueue` when it failed every retry in the
+ *   merge queue too, and `pullRequest` otherwise, each with its latest run. Causes with no pull
+ *   request are left out.
  * - `mergeQueueCauses`: failed merge-queue runs grouped by cause: the test files that failed every
  *   retry when there are some, otherwise the step that failed in each job. Their kind is `test` when
  *   a test failed, `infrastructure` when only a setup failed or no step did, and `unknown` otherwise.
@@ -88,6 +124,7 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
   );
   const tests = new Map();
   const failedFilesByMergeQueueRun = new Map();
+  const pullRequestFailures = [];
 
   for (const record of records) {
     const run = runsById.get(record.runId);
@@ -97,38 +134,66 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
       group.flakyRuns.add(run.id);
     }
     for (const test of record.tests ?? []) {
-      // A pull request that fails a test on every retry usually broke it: not a flake.
+      // Records saved before they held the project fall back to an unnamed one.
+      const project = test.project ?? '';
+      const key = testKey(record.suite, project, test);
+      // Its cause depends on what the other runs saw of that test, so it is decided once all are read.
       if (test.outcome === 'failed' && run.event !== 'merge_group') {
+        pullRequestFailures.push({key, project, run, record, test});
         continue;
       }
       if (test.outcome === 'failed') {
         getOrCreate(failedFilesByMergeQueueRun, run.id, () => new Set()).add(fileStem(test.file));
       }
-      // Records saved before they held the project fall back to an unnamed one.
-      const project = test.project ?? '';
-      const entry = getOrCreate(tests, testKey(record.suite, project, test), () => ({
-        suite: record.suite,
-        project,
-        file: test.file,
-        line: test.line,
-        title: test.title,
-        flakyRuns: new Set(),
-        failedRuns: new Set(),
-        lastSeen: run,
-        // Records saved before they held the checked-out commit fall back to the run's head.
-        sha: record.sha ?? run.headSha,
-      }));
-      (test.outcome === 'flaky' ? entry.flakyRuns : entry.failedRuns).add(run.id);
-      // The link points at the commit the last run tested, so it takes that run's line too.
-      if (run.createdAt > entry.lastSeen.createdAt) {
-        entry.lastSeen = run;
-        entry.line = test.line;
-        entry.sha = record.sha ?? run.headSha;
-      }
+      const entry = getOrCreate(tests, key, () => newEntry({project, run, record, test}));
+      (test.outcome === 'flaky' ? entry.flakyRuns : entry.failedMergeQueueRuns).add(run.id);
+      markSeen(entry, {run, record, test});
     }
   }
 
-  const score = (row) => row.flakyRuns + MERGE_QUEUE_FAILURE_WEIGHT * row.failedInMergeQueue;
+  // A test that passed on a retry in one Playwright project or suite is flaky in all of them, so a
+  // cause holds for its file and title. A pull request counts once, however often it was pushed.
+  const fileAndTitle = ({file, title}) => JSON.stringify([file, title]);
+  const entries = [...tests.values()];
+  const flakyTests = new Set(entries.filter((entry) => entry.flakyRuns.size > 0).map(fileAndTitle));
+  const failedInMergeQueue = new Set(
+    entries.filter((entry) => entry.failedMergeQueueRuns.size > 0).map(fileAndTitle)
+  );
+  const pullRequestsByCause = new Map(
+    Object.keys(PULL_REQUEST_CAUSES).map((cause) => [
+      cause,
+      {pullRequests: new Set(), latest: null},
+    ])
+  );
+  for (const failure of pullRequestFailures) {
+    const {run} = failure;
+    const id = fileAndTitle(failure.test);
+    const cause = flakyTests.has(id)
+      ? 'flaky'
+      : failedInMergeQueue.has(id)
+        ? 'mergeQueue'
+        : 'pullRequest';
+    const seen = pullRequestsByCause.get(cause);
+    seen.pullRequests.add(run.pullRequest);
+    if (!seen.latest || run.createdAt > seen.latest.createdAt) {
+      seen.latest = run;
+    }
+    if (cause === 'flaky') {
+      const entry = getOrCreate(tests, failure.key, () => newEntry(failure));
+      entry.failedPullRequests.add(run.pullRequest);
+      markSeen(entry, failure);
+    }
+  }
+  const pullRequestCauses = [...pullRequestsByCause]
+    .filter(([, {pullRequests}]) => pullRequests.size > 0)
+    .map(([cause, {pullRequests, latest}]) => ({
+      cause,
+      pullRequests: pullRequests.size,
+      latest: {runId: latest.id, createdAt: latest.createdAt},
+    }));
+
+  const score = (row) =>
+    row.flakyRuns + FAILURE_WEIGHT * (row.failedInPullRequests + row.failedInMergeQueue);
   const testRows = [...tests.values()]
     .map((entry) => ({
       suite: entry.suite,
@@ -137,8 +202,9 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
       line: entry.line,
       title: entry.title,
       flakyRuns: entry.flakyRuns.size,
-      failedInMergeQueue: entry.failedRuns.size,
-      runIds: [...entry.flakyRuns.union(entry.failedRuns)].sort((a, b) => a - b),
+      failedInPullRequests: entry.failedPullRequests.size,
+      failedInMergeQueue: entry.failedMergeQueueRuns.size,
+      runIds: [...entry.flakyRuns.union(entry.failedMergeQueueRuns)].sort((a, b) => a - b),
       lastSeen: {runId: entry.lastSeen.id, createdAt: entry.lastSeen.createdAt},
       sha: entry.sha,
     }))
@@ -189,6 +255,7 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
       flakyRuns: groups.get(id).flakyRuns.size,
     })),
     tests: testRows,
+    pullRequestCauses,
     mergeQueueCauses,
     recoveries: recoveryRows,
     skips: [...skips].sort((a, b) => b.ageDays - a.ageDays || a.file.localeCompare(b.file)),
@@ -211,8 +278,10 @@ export function buildSnapshot(model, {sha, generatedAt} = {}) {
     week: {start: model.window.start, end: model.window.end},
     runCounts: {total: model.runCounts.total, mergeQueue: model.runCounts.mergeQueue},
     suites: model.suites.map(({id, runs, flakyRuns}) => ({id, runs, flakyRuns})),
-    tests: model.tests.map(
-      ({suite, project, file, title, flakyRuns, failedInMergeQueue, runIds}) => ({
+    // Schema 1 has no pull-request count, so a row known only from pull requests stays out.
+    tests: model.tests
+      .filter(({runIds}) => runIds.length > 0)
+      .map(({suite, project, file, title, flakyRuns, failedInMergeQueue, runIds}) => ({
         suite,
         group: suiteGroup(suite),
         project,
@@ -221,8 +290,7 @@ export function buildSnapshot(model, {sha, generatedAt} = {}) {
         flakyRuns,
         failedInMergeQueue,
         runIds,
-      })
-    ),
+      })),
     mergeQueueCauses: model.mergeQueueCauses.map(({cause, kind, runs}) => ({
       cause,
       kind,
@@ -303,7 +371,7 @@ export function renderReport(model, {ref}) {
     lines.push('No test needed a retry.');
   } else {
     lines.push(
-      '| Test | Suite | Flaky runs | Failed in merge queue | Last seen |',
+      '| Test | Suite | Flaky runs | Failed every retry | Last seen |',
       '|---|---|---:|---:|---|',
       ...model.tests
         .slice(0, LISTED_TESTS)
@@ -312,7 +380,7 @@ export function renderReport(model, {ref}) {
             `${sourceLink(row.sha, row.file, row.line, `\`${fileStem(row.file)}\``)} ${escapeCell(shorten(row.title.split(' › ').pop(), TITLE_LENGTH))}`,
             [suiteLabel(row.suite), row.project].filter(Boolean).join(', '),
             row.flakyRuns,
-            row.failedInMergeQueue || '',
+            row.failedInPullRequests + row.failedInMergeQueue || '',
             runLink(row.lastSeen),
           ])
         )
@@ -320,6 +388,21 @@ export function renderReport(model, {ref}) {
     if (model.tests.length > LISTED_TESTS) {
       lines.push('', `${plural(model.tests.length - LISTED_TESTS, 'more flaky test')} not shown.`);
     }
+  }
+
+  lines.push('', '## Pull-request failures', '');
+  if (model.pullRequestCauses.length === 0) {
+    lines.push('No test failed every retry in a pull request.');
+  } else {
+    lines.push(
+      'Pull requests where a test failed every retry:',
+      '',
+      '| Likely cause | Pull requests | Latest |',
+      '|---|---:|---|',
+      ...model.pullRequestCauses.map((row) =>
+        tableRow([PULL_REQUEST_CAUSES[row.cause], row.pullRequests, runLink(row.latest)])
+      )
+    );
   }
 
   lines.push('', '## Merge-queue failures', '', mergeQueue);
