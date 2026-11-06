@@ -30,21 +30,40 @@ function getOrCreate(map, key, create) {
   return map.get(key);
 }
 
-// Names the step that failed in a merge-queue job in words a reader understands at a glance.
+// Quantic's setup job runs under "Run Quantic E2E tests" too, but it only creates scratch orgs.
+function isTestJob(jobName) {
+  return /^E2E: |^CDN Checks$|\btests\b/.test(jobName) && !/Setup e2e tests/.test(jobName);
+}
+
+// Names the step that failed in a merge-queue job in words a reader understands at a glance, and
+// its kind: `test` in a test job, `infrastructure` in a setup step or when no step failed, and
+// `unknown` anywhere else, such as a build or a lint check.
 function stepCause(jobName, step) {
   if (/e2e-quantic-setup/.test(step)) {
-    return 'Quantic scratch-org setup';
+    return {cause: 'Quantic scratch-org setup', kind: 'infrastructure'};
   }
   if (step.endsWith('actions/setup')) {
-    return 'Dependency setup';
+    return {cause: 'Dependency setup', kind: 'infrastructure'};
   }
   if (/playwright-quantic/.test(step)) {
-    return 'Quantic e2e tests failed';
+    return {cause: 'Quantic e2e tests failed', kind: 'test'};
   }
   if (/STEPS_PLAYWRIGHT_OUTCOME/.test(step)) {
-    return 'Atomic e2e tests failed';
+    return {cause: 'Atomic e2e tests failed', kind: 'test'};
   }
-  return step ? `${jobName}: ${step}` : `${jobName}: no failed step reported`;
+  if (!step) {
+    return {cause: `${jobName}: no failed step reported`, kind: 'infrastructure'};
+  }
+  return {cause: `${jobName}: ${step}`, kind: isTestJob(jobName) ? 'test' : 'unknown'};
+}
+
+// A failed test explains a run even next to a failed setup, so it decides the run's kind first.
+function runKind(jobCauses) {
+  const kinds = new Set(jobCauses.map(({kind}) => kind));
+  if (kinds.has('test')) {
+    return 'test';
+  }
+  return kinds.has('unknown') ? 'unknown' : 'infrastructure';
 }
 
 /**
@@ -53,10 +72,12 @@ function stepCause(jobName, step) {
  * - `suites`: for Atomic, Quantic and the other suites, the runs that executed them, and how many
  *   of those had a test that passed only on retry.
  * - `tests`: one row per flaky test and Playwright project, with its flaky runs, the merge-queue runs
- *   where it failed every retry, and the last run that saw it. A failure on every retry counts only
- *   in the merge queue. Rows rank by flaky runs plus three per merge-queue failure.
+ *   where it failed every retry, the IDs of both, and the last run that saw it. A failure on every
+ *   retry counts only in the merge queue. Rows rank by flaky runs plus three per merge-queue
+ *   failure.
  * - `mergeQueueCauses`: failed merge-queue runs grouped by cause: the test files that failed every
- *   retry when there are some, otherwise the step that failed.
+ *   retry when there are some, otherwise the step that failed in each job. Their kind is `test` when
+ *   a test failed, `infrastructure` when only a setup failed or no step did, and `unknown` otherwise.
  * - `recoveries`: per job, the runs that only passed after a re-run.
  * - `skips`: the skipped tests, oldest first.
  */
@@ -117,6 +138,7 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
       title: entry.title,
       flakyRuns: entry.flakyRuns.size,
       failedInMergeQueue: entry.failedRuns.size,
+      runIds: [...entry.flakyRuns.union(entry.failedRuns)].sort((a, b) => a - b),
       lastSeen: {runId: entry.lastSeen.id, createdAt: entry.lastSeen.createdAt},
       sha: entry.sha,
     }))
@@ -126,18 +148,22 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
   for (const failure of mergeQueueFailures) {
     const run = runsById.get(failure.runId);
     const files = failedFilesByMergeQueueRun.get(run.id);
+    const jobCauses = failure.jobs.map((job) => stepCause(job.name, job.failedStep));
     const cause = files
       ? `Test failed every retry: ${[...files]
           .sort()
           .map((file) => `\`${file}\``)
           .join(', ')}`
-      : [...new Set(failure.jobs.map((job) => stepCause(job.name, job.failedStep)))].join(', ') ||
-        'No failed job reported';
-    getOrCreate(causes, cause, () => []).push({runId: run.id, createdAt: run.createdAt});
+      : [...new Set(jobCauses.map((job) => job.cause))].join(', ') || 'No failed job reported';
+    getOrCreate(causes, cause, () => ({
+      kind: files ? 'test' : runKind(jobCauses),
+      runs: [],
+    })).runs.push({runId: run.id, createdAt: run.createdAt});
   }
   const mergeQueueCauses = [...causes]
-    .map(([cause, causeRuns]) => ({
+    .map(([cause, {kind, runs: causeRuns}]) => ({
       cause,
+      kind,
       runs: causeRuns.toSorted((a, b) => a.createdAt.localeCompare(b.createdAt)),
     }))
     .sort((a, b) => b.runs.length - a.runs.length || a.cause.localeCompare(b.cause));
@@ -157,6 +183,7 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
       mergeQueue: runs.filter((run) => run.event === 'merge_group').length,
     },
     suites: Object.entries(GROUPS).map(([id, label]) => ({
+      id,
       label,
       runs: groups.get(id).runs.size,
       flakyRuns: groups.get(id).flakyRuns.size,
@@ -165,6 +192,47 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
     mergeQueueCauses,
     recoveries: recoveryRows,
     skips: [...skips].sort((a, b) => b.ageDays - a.ageDays || a.file.localeCompare(b.file)),
+  };
+}
+
+/**
+ * Reduces a one-week model to the snapshot that coveo-incubator/ui-kit-dashboard imports for that
+ * week and never rewrites. The fields are schema 1 of the contract with that dashboard: renaming a
+ * `GROUPS` key or a CI job splits a series there, and changing a field needs a new schema number.
+ * `sha` and `generatedAt` name the commit and the time that built it, so a late or manual run
+ * stands apart from the scheduled one.
+ */
+export function buildSnapshot(model, {sha, generatedAt} = {}) {
+  return {
+    schema: 1,
+    source: 'report',
+    sha,
+    generatedAt,
+    week: {start: model.window.start, end: model.window.end},
+    runCounts: {total: model.runCounts.total, mergeQueue: model.runCounts.mergeQueue},
+    suites: model.suites.map(({id, runs, flakyRuns}) => ({id, runs, flakyRuns})),
+    tests: model.tests.map(
+      ({suite, project, file, title, flakyRuns, failedInMergeQueue, runIds}) => ({
+        suite,
+        group: suiteGroup(suite),
+        project,
+        file,
+        title,
+        flakyRuns,
+        failedInMergeQueue,
+        runIds,
+      })
+    ),
+    mergeQueueCauses: model.mergeQueueCauses.map(({cause, kind, runs}) => ({
+      cause,
+      kind,
+      runs: runs.length,
+    })),
+    recoveries: model.recoveries.map(({job, count}) => ({job, count})),
+    skips: {
+      total: model.skips.length,
+      withoutTicket: model.skips.filter((skip) => !skip.ticket).length,
+    },
   };
 }
 
