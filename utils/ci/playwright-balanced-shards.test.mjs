@@ -243,6 +243,29 @@ describe('BalancedShardsReporter', () => {
     assert.match(warnings[0], /not a version 1 timings file/);
   });
 
+  for (const [label, durations] of [
+    ['a string duration', {'a.e2e.ts': {one: '1200'}}],
+    ['a negative duration', {'a.e2e.ts': {one: -1000}}],
+    ['a file that is not a map of titles', {'a.e2e.ts': [1000]}],
+  ]) {
+    it(`leaves sharding to Playwright when the file holds ${label}`, async () => {
+      const reporter = new BalancedShardsReporter({timingsFile: './e2e-timings.json'});
+      const {config, suite, testRun, excluded} = fakeRun({timings: durations});
+      await reporter.preprocess({config, suite, testRun});
+      assert.equal(excluded.length, 0);
+      assert.equal(testRun.skipSharding.mock.callCount(), 0);
+      assert.match(warnings[0], /using Playwright's sharding/);
+    });
+  }
+
+  it('leaves sharding to Playwright without a timingsFile option', async () => {
+    const reporter = new BalancedShardsReporter();
+    const {config, suite, testRun} = fakeRun();
+    await reporter.preprocess({config, suite, testRun});
+    assert.equal(testRun.skipSharding.mock.callCount(), 0);
+    assert.match(warnings[0], /no timingsFile option/);
+  });
+
   it('leaves sharding to Playwright when a project has dependencies', async () => {
     const reporter = new BalancedShardsReporter({timingsFile: './e2e-timings.json'});
     const {config, suite, testRun} = fakeRun({dependencies: ['setup']});

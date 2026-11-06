@@ -29,12 +29,26 @@ export function testKey(test) {
 
 /**
  * Reads a timings file into a Map of file -> Map of title -> milliseconds. Throws when the file is
- * missing or not a timings file.
+ * missing, not a timings file, or holds a duration that is not a finite, nonnegative number: the
+ * partition sums durations, so a string or a negative value would silently skew every shard.
  */
 export function readTimings(path) {
   const timings = JSON.parse(readFileSync(path, 'utf8'));
-  if (timings.version !== TIMINGS_VERSION || typeof timings.durations !== 'object') {
+  const isObject = (value) => typeof value === 'object' && value !== null && !Array.isArray(value);
+  if (timings.version !== TIMINGS_VERSION || !isObject(timings.durations)) {
     throw new Error(`${path} is not a version ${TIMINGS_VERSION} timings file`);
+  }
+  for (const [file, titles] of Object.entries(timings.durations)) {
+    if (!isObject(titles)) {
+      throw new Error(`${path}: "${file}" must map test titles to durations`);
+    }
+    for (const [title, ms] of Object.entries(titles)) {
+      if (!Number.isFinite(ms) || ms < 0) {
+        throw new Error(
+          `${path}: "${file} › ${title}" has an invalid duration ${JSON.stringify(ms)}`
+        );
+      }
+    }
   }
   return new Map(
     Object.entries(timings.durations).map(([file, titles]) => [
@@ -139,7 +153,7 @@ export default class BalancedShardsReporter {
   #actual = 0;
   #ran = 0;
 
-  constructor({timingsFile = 'e2e-timings.json'} = {}) {
+  constructor({timingsFile} = {}) {
     this.#timingsFile = timingsFile;
   }
 
@@ -157,6 +171,10 @@ export default class BalancedShardsReporter {
       console.warn(
         `${TAG} projects with dependencies are not balanced; using Playwright's sharding`
       );
+      return;
+    }
+    if (!this.#timingsFile) {
+      console.warn(`${TAG} no timingsFile option; using Playwright's sharding`);
       return;
     }
     const directory = config.configFile ? dirname(config.configFile) : process.cwd();
