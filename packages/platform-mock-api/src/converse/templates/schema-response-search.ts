@@ -724,8 +724,15 @@ interface PriceRange {
   end: number;
 }
 
+interface QueryCorrection {
+  originalQuery: string;
+  cause: 'correction' | 'trigger';
+  canOverride: boolean;
+}
+
 interface SearchViewState {
   query: string;
+  correction: QueryCorrection | null;
   page: number;
   pageSize: number;
   sortCriteria: string;
@@ -747,6 +754,7 @@ interface SearchViewState {
 
 const DEFAULT_VIEW: SearchViewState = {
   query: 'Water Sports',
+  correction: null,
   page: 0,
   pageSize: DEFAULT_PAGE_SIZE,
   sortCriteria: 'relevance',
@@ -780,6 +788,8 @@ const FACET_FIELDS = {
 } as const;
 
 const BREADBOX_ID = 'breadbox-2';
+
+const QUERY_SUMMARY_ID = 'query-summary-2';
 
 function sortProducts(input: WaterSportsProduct[], sortCriteria: string): WaterSportsProduct[] {
   if (sortCriteria === 'price_asc') {
@@ -1118,11 +1128,12 @@ function computeComponentsState(view: SearchViewState): Record<string, unknown> 
   const lastIndex = totalEntries === 0 ? 0 : start + pageProducts.length;
 
   return {
-    'query-summary-2': {
+    [QUERY_SUMMARY_ID]: {
       query,
       firstIndex,
       lastIndex,
       totalEntries,
+      ...(view.correction ? {correction: view.correction} : {}),
     },
     'product-list-2': {
       products: pageProducts,
@@ -1155,7 +1166,7 @@ function computeComponentsState(view: SearchViewState): Record<string, unknown> 
 // each entry `computeComponentsState` produces, so a node's `{ path }` bindings resolve to the
 // fields of the whole-component value written at `statePath(id)`.
 const STATE_FIELDS_BY_NODE: Record<string, readonly string[]> = {
-  'query-summary-2': ['query', 'firstIndex', 'lastIndex', 'totalEntries'],
+  [QUERY_SUMMARY_ID]: ['query', 'firstIndex', 'lastIndex', 'totalEntries', 'correction'],
   'product-list-2': ['products'],
   'pagination-2': ['page', 'pageSize', 'totalEntries', 'totalPages'],
   'page-size-2': ['pageSize'],
@@ -1221,7 +1232,7 @@ const ROOT_CHILD_IDS = ['search-sidebar', 'search-main'];
 const MAIN_CHILD_IDS = [BREADBOX_ID, 'search-top', 'product-list-2', 'search-bottom'];
 
 // The top row places the query summary on the left and the sort selector on the right.
-const TOP_ROW_CHILD_IDS = ['query-summary-2', 'sort-2'];
+const TOP_ROW_CHILD_IDS = [QUERY_SUMMARY_ID, 'sort-2'];
 
 // The bottom row places pagination on the left and the page-size selector on the right.
 const BOTTOM_ROW_CHILD_IDS = ['pagination-2', 'page-size-2'];
@@ -1300,9 +1311,9 @@ const SEARCH_SURFACE_NODES: A2uiComponentNode[] = [
     ...bindStateFields(BREADBOX_ID, STATE_FIELDS_BY_NODE[BREADBOX_ID]),
   },
   {
-    id: 'query-summary-2',
+    id: QUERY_SUMMARY_ID,
     component: 'QuerySummary',
-    ...bindStateFields('query-summary-2', STATE_FIELDS_BY_NODE['query-summary-2']),
+    ...bindStateFields(QUERY_SUMMARY_ID, STATE_FIELDS_BY_NODE[QUERY_SUMMARY_ID]),
   },
   {
     id: 'sort-2',
@@ -1353,8 +1364,15 @@ const surfaceActivitySnapshot: ConverseEvent = ActivitySnapshot({
 
 // A new "water sports" search resets the surface, so the initial events are built on demand:
 // each call resets the in-memory view to defaults and recomputes the initial state snapshot.
-function buildWaterSportsInitialEvents(): ConverseEvent[] {
-  currentView = {...DEFAULT_VIEW};
+// Registering the view under the minted surface id keeps the correction on that surface's first action.
+function buildWaterSportsInitialEvents(
+  correction: QueryCorrection | null = null,
+  mintSurfaceId?: (surfaceId: string) => string
+): ConverseEvent[] {
+  currentView = {...DEFAULT_VIEW, correction};
+  if (mintSurfaceId) {
+    viewsBySurfaceId.set(mintSurfaceId(SEARCH_SURFACE_ID), currentView);
+  }
   // Component_State is transported inline as `/state/<id>` updateDataModel ops on an
   // `a2ui-surface` activity, replacing the removed component STATE_SNAPSHOT.
   const initialStateActivity: ConverseEvent = UpdateDataModelActivity({
@@ -1622,6 +1640,13 @@ function deriveBreadboxViewState(action: {name: string; context: Record<string, 
   }
 }
 
+function deriveQuerySummaryViewState(action: {name: string}): void {
+  const correction = currentView.correction;
+  if (action.name === 'overrideCorrection' && correction?.canOverride) {
+    currentView = {...DEFAULT_VIEW, query: correction.originalQuery};
+  }
+}
+
 interface FacetRestore {
   facetId: string;
   values?: string[];
@@ -1699,6 +1724,9 @@ function deriveViewState(
       break;
     case BREADBOX_ID:
       deriveBreadboxViewState(action);
+      break;
+    case QUERY_SUMMARY_ID:
+      deriveQuerySummaryViewState(action);
       break;
     default:
       deriveNonFacetState(action);
