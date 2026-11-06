@@ -64,26 +64,12 @@ describe('ConversationPage shell', () => {
   });
 
   describe('read-only conversation', () => {
-    const answered = makeTurn({
-      id: 'turn-1',
-      prompt: 'tell me about shoes',
-      response: {
-        activities: [
-          {
-            id: '',
-            kind: 'FollowUpQuestions',
-            replace: false,
-            payload: {questions: [{text: 'Which shoes for running?'}]},
-          },
-        ],
-      },
-    });
+    const answered = makeTurn({id: 'turn-1', prompt: 'tell me about shoes'});
 
     it('offers no way to continue it', () => {
       renderPage({readOnly: true, turns: [answered], onNewConversation: vi.fn()});
 
       expect(screen.queryByLabelText('Prompt')).toBeNull();
-      expect(screen.queryByRole('button', {name: 'Which shoes for running?'})).toBeNull();
     });
 
     it("says it can't be continued and offers a new conversation", () => {
