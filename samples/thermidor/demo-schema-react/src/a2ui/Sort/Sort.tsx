@@ -15,18 +15,6 @@ function sortLabel({sortCriteria, fields}: SortCriterion): string {
   return fields.flatMap(({displayName}) => displayName ?? []).join(', ');
 }
 
-// The gateway identifies a sort by its fields, so a displayName difference is not a different sort.
-function isSameSort(a: SortCriterion, b: SortCriterion): boolean {
-  return (
-    a.sortCriteria === b.sortCriteria &&
-    a.fields.length === b.fields.length &&
-    a.fields.every(
-      (field, index) =>
-        field.field === b.fields[index].field && field.direction === b.fields[index].direction
-    )
-  );
-}
-
 /** A2-UI component for the `sort` selector. */
 export const Sort = createReactComponent(
   {name: 'Sort', schema: SortPropsSchema},
@@ -55,7 +43,11 @@ export const Sort = createReactComponent(
     };
 
     const selectedIndex = appliedSort
-      ? availableSorts.findIndex((sort) => isSameSort(sort, appliedSort))
+      ? availableSorts.findIndex(
+          (sort) =>
+            sort.sortCriteria === appliedSort.sortCriteria &&
+            JSON.stringify(sort.fields) === JSON.stringify(appliedSort.fields)
+        )
       : -1;
 
     return (

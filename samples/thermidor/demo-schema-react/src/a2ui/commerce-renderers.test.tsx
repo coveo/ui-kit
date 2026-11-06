@@ -201,9 +201,9 @@ describe('Sort', () => {
     expect(optionLabels()).toEqual(['Relevance', '', '']);
   });
 
-  it('selects the applied sort by its fields and directions', async () => {
+  it('selects the available sort that the applied sort matches', async () => {
     mountSort({
-      appliedSort: {sortCriteria: 'fields', fields: [{field: 'ec_price', direction: 'desc'}]},
+      appliedSort: priceDescending,
       availableSorts: [relevance, priceAscending, priceDescending],
     });
 
