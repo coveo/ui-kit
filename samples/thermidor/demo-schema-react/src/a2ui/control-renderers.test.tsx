@@ -121,7 +121,10 @@ describe('Sort', () => {
     appliedSort: {sortCriteria: 'relevance', fields: []},
     availableSorts: [
       {sortCriteria: 'relevance', fields: []},
-      {sortCriteria: 'price_asc', fields: []},
+      {
+        sortCriteria: 'fields',
+        fields: [{field: 'ec_price', direction: 'asc', displayName: 'Price (Low to High)'}],
+      },
     ],
   };
 
@@ -136,7 +139,7 @@ describe('Sort', () => {
     await waitFor(() =>
       expect(lastAction()).toMatchObject({
         name: 'selectSort',
-        context: {sortCriteria: 'price_asc'},
+        context: {sortCriteria: 'fields', fields: [{field: 'ec_price', direction: 'asc'}]},
       })
     );
     expect((screen.getByLabelText(/Sort by/) as HTMLSelectElement).value).toBe('1');

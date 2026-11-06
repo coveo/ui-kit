@@ -132,6 +132,18 @@ describe('Sort', () => {
     availableSorts: {path: '/state/root/availableSorts'},
   };
 
+  // The sorts Agent Gateway sends: relevance without fields, and each field sort with the Commerce
+  // API's displayName on its field.
+  const relevance = {sortCriteria: 'relevance', fields: []};
+  const priceAscending = {
+    sortCriteria: 'fields',
+    fields: [{field: 'ec_price', direction: 'asc', displayName: 'Price (Low to High)'}],
+  };
+  const priceDescending = {
+    sortCriteria: 'fields',
+    fields: [{field: 'ec_price', direction: 'desc', displayName: 'Price (High to Low)'}],
+  };
+
   function mountSort(state: {appliedSort: unknown; availableSorts: unknown[]}) {
     return mountSurface({
       component: {component: 'Sort', ...bindings},
@@ -142,53 +154,74 @@ describe('Sort', () => {
     });
   }
 
-  it('renders a select with available sort options', async () => {
+  function optionLabels(): string[] {
+    const select = screen.getByLabelText('Sort by:') as HTMLSelectElement;
+    return Array.from(select.options).map((option) => option.textContent ?? '');
+  }
+
+  it('labels each option with the displayName of its fields', async () => {
     mountSort({
-      appliedSort: {sortCriteria: 'relevance', fields: []},
+      appliedSort: relevance,
+      availableSorts: [relevance, priceAscending, priceDescending],
+    });
+
+    await waitFor(() => expect(screen.getByLabelText('Sort by:')).toBeDefined());
+    expect(optionLabels()).toEqual(['Relevance', 'Price (Low to High)', 'Price (High to Low)']);
+  });
+
+  it('joins the displayNames of a sort on several fields', async () => {
+    mountSort({
+      appliedSort: relevance,
       availableSorts: [
-        {sortCriteria: 'relevance', fields: []},
-        {sortCriteria: 'price_asc', fields: [{field: 'ec_price', direction: 'asc'}]},
-        {sortCriteria: 'price_desc', fields: [{field: 'ec_price', direction: 'desc'}]},
+        {
+          sortCriteria: 'fields',
+          fields: [
+            {field: 'ec_brand', direction: 'asc', displayName: 'Brand (A to Z)'},
+            {field: 'ec_price', direction: 'asc', displayName: 'Price (Low to High)'},
+          ],
+        },
       ],
     });
 
     await waitFor(() => expect(screen.getByLabelText('Sort by:')).toBeDefined());
-    expect(screen.getByText('Relevance')).toBeDefined();
-    expect(screen.getByText('Price (Low to High)')).toBeDefined();
-    expect(screen.getByText('Price (High to Low)')).toBeDefined();
+    expect(optionLabels()).toEqual(['Brand (A to Z), Price (Low to High)']);
   });
 
-  it('selects the applied sort option', async () => {
+  it('leaves a field sort without displayName unlabelled', async () => {
     mountSort({
-      appliedSort: {sortCriteria: 'price_asc', fields: [{field: 'ec_price', direction: 'asc'}]},
+      appliedSort: relevance,
       availableSorts: [
-        {sortCriteria: 'relevance', fields: []},
-        {sortCriteria: 'price_asc', fields: [{field: 'ec_price', direction: 'asc'}]},
+        relevance,
+        {sortCriteria: 'fields', fields: [{field: 'ec_price', direction: 'asc'}]},
+        {sortCriteria: 'fields', fields: [{field: 'ec_price', direction: 'desc'}]},
       ],
     });
 
     await waitFor(() => expect(screen.getByLabelText('Sort by:')).toBeDefined());
-    expect((screen.getByLabelText('Sort by:') as HTMLSelectElement).value).toBe('1');
+    expect(optionLabels()).toEqual(['Relevance', '', '']);
   });
 
-  it('dispatches a selectSort action when a different sort is selected', async () => {
+  it('selects the available sort that the applied sort matches', async () => {
+    mountSort({
+      appliedSort: priceDescending,
+      availableSorts: [relevance, priceAscending, priceDescending],
+    });
+
+    await waitFor(() => expect(screen.getByLabelText('Sort by:')).toBeDefined());
+    expect((screen.getByLabelText('Sort by:') as HTMLSelectElement).value).toBe('2');
+  });
+
+  it('dispatches a selectSort action with the typed fields of the selected sort', async () => {
     const {lastAction} = mountSort({
-      appliedSort: {sortCriteria: 'relevance', fields: []},
-      availableSorts: [
-        {sortCriteria: 'relevance', fields: []},
-        {sortCriteria: 'price_asc', fields: [{field: 'ec_price', direction: 'asc'}]},
-      ],
+      appliedSort: relevance,
+      availableSorts: [relevance, priceAscending, priceDescending],
     });
 
     await waitFor(() => expect(screen.getByLabelText('Sort by:')).toBeDefined());
     fireEvent.change(screen.getByLabelText('Sort by:'), {target: {value: '1'}});
 
-    await waitFor(() =>
-      expect(lastAction()).toMatchObject({
-        name: 'selectSort',
-        context: {sortCriteria: 'price_asc', fields: [{field: 'ec_price', direction: 'asc'}]},
-      })
-    );
+    await waitFor(() => expect(lastAction()?.name).toBe('selectSort'));
+    expect(lastAction()?.context).toEqual(priceAscending);
   });
 });
 

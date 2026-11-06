@@ -1,15 +1,19 @@
 import {useId, useOptimistic} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
-import type {SortAction} from '@coveo/thermidor-schema';
+import type {SortAction, SortCriterion} from '@coveo/thermidor-schema';
 import {SortPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {useGesture} from '../session-request.js';
 import styles from './Sort.module.css';
 
-const SORT_LABELS: Record<string, string> = {
-  relevance: 'Relevance',
-  price_asc: 'Price (Low to High)',
-  price_desc: 'Price (High to Low)',
-};
+// Relevance is built into the Commerce API and carries no label, not even in the merchant's
+// configuration: the UI names it, as Atomic does. A field sort is named by its fields'
+// displayName, localized by the Commerce API.
+function sortLabel({sortCriteria, fields}: SortCriterion): string {
+  if (sortCriteria === 'relevance') {
+    return 'Relevance';
+  }
+  return fields.flatMap(({displayName}) => displayName ?? []).join(', ');
+}
 
 /** A2-UI component for the `sort` selector. */
 export const Sort = createReactComponent(
@@ -59,7 +63,7 @@ export const Sort = createReactComponent(
         >
           {availableSorts.map((sort, index) => (
             <option key={index} value={index}>
-              {SORT_LABELS[sort.sortCriteria] ?? sort.sortCriteria}
+              {sortLabel(sort)}
             </option>
           ))}
         </select>
