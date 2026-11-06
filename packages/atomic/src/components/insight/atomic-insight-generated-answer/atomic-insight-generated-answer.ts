@@ -16,7 +16,10 @@ import {renderAnswerContent} from '@/src/components/common/generated-answer/rend
 import {renderCardHeader} from '@/src/components/common/generated-answer/render-card-header';
 import {renderCitations} from '@/src/components/common/generated-answer/render-citations';
 import {renderCustomNoAnswerMessage} from '@/src/components/common/generated-answer/render-custom-no-answer-message';
-import {renderDisclaimer} from '@/src/components/common/generated-answer/render-disclaimer';
+import {
+  DISCLAIMER_ID,
+  renderDisclaimer,
+} from '@/src/components/common/generated-answer/render-disclaimer';
 import {renderFeedbackAndCopyButtons} from '@/src/components/common/generated-answer/render-feedback-and-copy-buttons';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
@@ -284,6 +287,7 @@ export class AtomicInsightGeneratedAnswer
           class=${contentClasses}
           part="container"
           aria-label=${this.bindings.i18n.t('generated-answer-title')}
+          aria-describedby=${this.isAnswerVisible ? DISCLAIMER_ID : nothing}
         >
           <div part="generated-content">
             ${this.renderCardHeaderWrapper()}

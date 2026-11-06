@@ -109,7 +109,7 @@ export default class QuanticResultsPerPage extends LightningElement {
       this.headless = getHeadlessBundle(this.engineId);
       this.resultsPerPage = this.headless.buildResultsPerPage(engine, {
         initialState: {
-          numberOfResults: Number(this.initialChoice) ?? this.choices[0],
+          numberOfResults: Number(this.initialChoice) || this.choices[0],
         },
       });
       this.searchStatus = this.headless.buildSearchStatus(engine);

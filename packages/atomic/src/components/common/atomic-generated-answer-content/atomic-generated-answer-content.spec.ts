@@ -437,7 +437,8 @@ describe('atomic-generated-answer-content', () => {
         {region: 'generated-answer', message: 'Generating answer', assertive: false},
         {
           region: 'generated-answer',
-          message: 'Generated answer: The final answer.',
+          message:
+            'AI-generated answer: The final answer. AI-generated content may contain errors. Verify important information.',
           assertive: false,
         },
       ]);

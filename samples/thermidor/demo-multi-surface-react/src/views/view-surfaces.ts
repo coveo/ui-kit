@@ -1,8 +1,11 @@
 import type {DiscoveredSurface, Turn} from '@coveo/thermidor';
 import type {StorefrontView, TurnViews} from '../session/storefront-session.js';
 
-/** The view of the assistant's conversation: the assistant page and the chat panel send on it. */
+/** The view of the assistant's conversation: the assistant layout and the chat panel send on it. */
 export const ASSISTANT_VIEW: StorefrontView = 'storefront-preview-assistant';
+
+/** The session shell, where the search box sends: the server routes a prompt by its intent. */
+const SHELL_VIEW: StorefrontView = 'storefront-preview';
 
 /** The root component of a search surface, drawn as a page's results. */
 const SEARCH_ROOT = 'CommerceSearch';
@@ -42,8 +45,9 @@ export interface ViewSurfaces {
   /** The turns of one page visit, whichever of its views sent them, oldest first. */
   turnsOfVisit(visitId: number): readonly Turn[];
   /**
-   * The shopper's conversation with the assistant across page visits, such as the assistant page
-   * and the search pages it opened: the assistant view's turns of these visits, oldest first.
+   * The shopper's conversation with the assistant across page visits, such as the assistant layout
+   * and the search layouts it opened, oldest first: the assistant view's turns of these visits,
+   * and the turns on the session shell, but for a search the search box opened its page with.
    */
   conversationOf(visitIds: ReadonlySet<number>): readonly Turn[];
   /**
@@ -67,11 +71,24 @@ export function buildViewSurfaces(
     surfacesOfView: (view) => turnsOfView(view).flatMap((turn) => turn.response.surfaces),
     turnsOfView,
     turnsOfVisit: (visitId) => turns.filter((turn) => turnVisits.get(turn.id) === visitId),
-    conversationOf: (visitIds) =>
-      turns.filter(
-        (turn) =>
-          visitIds.has(turnVisits.get(turn.id) ?? -1) && turnViews.get(turn.id) === ASSISTANT_VIEW
-      ),
+    conversationOf(visitIds) {
+      const opening = new Set<string>();
+      const opened = new Set<number | undefined>();
+      for (const turn of turns) {
+        if (!opened.has(turnVisits.get(turn.id))) {
+          opened.add(turnVisits.get(turn.id));
+          opening.add(turn.id);
+        }
+      }
+      return turns.filter((turn) => {
+        const view = turnViews.get(turn.id);
+        const pageSearch = opening.has(turn.id) && drawsSearch(turn);
+        return (
+          visitIds.has(turnVisits.get(turn.id) ?? -1) &&
+          (view === ASSISTANT_VIEW || (view === SHELL_VIEW && !pageSearch))
+        );
+      });
+    },
     resultsOf(visitId, openingTurnId) {
       const start = openingTurnId
         ? turns.findIndex((turn) => turn.id === openingTurnId)
