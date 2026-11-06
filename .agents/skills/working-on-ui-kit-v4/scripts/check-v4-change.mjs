@@ -21,11 +21,18 @@ import {existsSync, readFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {parseArgs} from 'node:util';
 
-const GUIDE_FILES = [
-  'packages/headless/source_docs/upgrade-from-v3-to-v4.md',
-  'packages/headless-react/source_docs/upgrade-from-v3-to-v4.md',
-  'packages/atomic/docs/upgrade-from-v3-to-v4.md',
-];
+const HEADLESS_GUIDE = 'packages/headless/source_docs/upgrade-from-v3-to-v4.md';
+const HEADLESS_REACT_GUIDE = 'packages/headless-react/source_docs/upgrade-from-v3-to-v4.md';
+const ATOMIC_GUIDE = 'packages/atomic/upgrade-from-v3-to-v4.md';
+const GUIDE_FILES = [HEADLESS_GUIDE, HEADLESS_REACT_GUIDE, ATOMIC_GUIDE];
+const GUIDE_BY_PACKAGE = {
+  '@coveo/headless': HEADLESS_GUIDE,
+  '@coveo/headless-react': HEADLESS_REACT_GUIDE,
+  '@coveo/atomic': ATOMIC_GUIDE,
+  '@coveo/atomic-react': ATOMIC_GUIDE,
+  '@coveo/atomic-angular': ATOMIC_GUIDE,
+};
+const PUBLISHED_SOURCE_ROOTS = ['src/', 'force-app/main/default/'];
 const EXPERIMENTAL_ENTRY_POINTS = /ssr-next|ssr-commerce-next/;
 const TRACKS = ['v3', 'v4', 'experimental', 'no-release'];
 
@@ -57,13 +64,13 @@ const changesets = [...changed.keys()].filter(
 const bumps = changesets.flatMap((file) => parseBumps(file));
 
 const publicPackagesChanged = new Set();
+const publishedSourceFiles = [];
 for (const file of changed.keys()) {
-  const match = /^packages\/([^/]+)\/src\//.exec(file);
-  if (!match || isTestOrDoc(file)) continue;
-  const manifest = join(root, 'packages', match[1], 'package.json');
-  if (!existsSync(manifest)) continue;
-  const pkg = JSON.parse(readFileSync(manifest, 'utf8'));
-  if (!pkg.private) publicPackagesChanged.add(pkg.name);
+  if (isTestOrDoc(file)) continue;
+  const name = publishedPackageOf(file);
+  if (!name) continue;
+  publicPackagesChanged.add(name);
+  publishedSourceFiles.push(file);
 }
 
 const hasMajor = bumps.some((bump) => bump.level === 'major');
@@ -93,9 +100,17 @@ if (track === 'no-release') {
   }
 }
 
-const guideTouched = GUIDE_FILES.filter((file) => changed.has(file));
-if (hasMajor && guideTouched.length === 0) {
-  failures.push(`a major bump needs an upgrade guide entry in one of: ${GUIDE_FILES.join(', ')}`);
+const guideTouched = GUIDE_FILES.filter((file) => changed.has(file) && changed.get(file) !== 'D');
+for (const file of GUIDE_FILES.filter((guide) => changed.get(guide) === 'D')) {
+  failures.push(`${file} is deleted; the upgrade guide must stay until GA`);
+}
+for (const {name} of bumps.filter((bump) => bump.level === 'major')) {
+  const guide = GUIDE_BY_PACKAGE[name];
+  if (!guide) {
+    failures.push(`${name} bumps major but has no v3 to v4 upgrade guide; add one and list it in GUIDE_BY_PACKAGE`);
+  } else if (!guideTouched.includes(guide)) {
+    failures.push(`${name} bumps major without an entry in ${guide}`);
+  }
 }
 
 for (const file of guideTouched) {
@@ -113,8 +128,7 @@ for (const file of changesets) {
   }
 }
 
-for (const file of changed.keys()) {
-  if (!/^packages\/[^/]+\/src\//.test(file) || isTestOrDoc(file)) continue;
+for (const file of publishedSourceFiles) {
   for (const line of addedLines(file)) {
     if (line.includes('@deprecated') && !/instead|use `/i.test(line)) {
       warnings.push(`${file}: a deprecation notice should name the replacement ("Use \`x\` instead"): ${line.trim()}`);
@@ -158,8 +172,23 @@ function sharesFixedGroup(bumped, changedName) {
   return (config.fixed ?? []).some((group) => group.includes(bumped) && group.includes(changedName));
 }
 
+function publishedPackageOf(file) {
+  const parts = file.split('/');
+  if (parts[0] !== 'packages') return undefined;
+  for (let depth = parts.length - 1; depth >= 2; depth--) {
+    const dir = parts.slice(0, depth).join('/');
+    const manifest = join(root, dir, 'package.json');
+    if (!existsSync(manifest)) continue;
+    const pkg = JSON.parse(readFileSync(manifest, 'utf8'));
+    const relative = parts.slice(depth).join('/');
+    if (pkg.private || !PUBLISHED_SOURCE_ROOTS.some((prefix) => relative.startsWith(prefix))) return undefined;
+    return pkg.name;
+  }
+  return undefined;
+}
+
 function isTestOrDoc(file) {
-  return /\.(test|spec|test-d)\.[cm]?[jt]sx?$|\.stories\.|__tests__\/|\/test\/|\.md$/.test(file);
+  return /\.(test|spec|test-d|e2e)\.[cm]?[jt]sx?$|\.stories\.|__tests__\/|\/e2e\/|\/test\/|\.md$/.test(file);
 }
 
 function addedLines(file) {

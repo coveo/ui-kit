@@ -8,7 +8,7 @@ The v3 to v4 guides follow the v2 to v3 guide (`packages/headless/source_docs/up
 | --------------------------------------------------------------- | -------------------------------------------------------------- |
 | `@coveo/headless`                                               | `packages/headless/source_docs/upgrade-from-v3-to-v4.md`       |
 | `@coveo/headless-react`                                         | `packages/headless-react/source_docs/upgrade-from-v3-to-v4.md` |
-| `@coveo/atomic`, `@coveo/atomic-react`, `@coveo/atomic-angular` | `packages/atomic/docs/upgrade-from-v3-to-v4.md`                |
+| `@coveo/atomic`, `@coveo/atomic-react`, `@coveo/atomic-angular` | `packages/atomic/upgrade-from-v3-to-v4.md`                     |
 
 Each file has three sections: `## Requirements`, `## Modified behaviors` and `## Removals`. Inside a section, changes sit under a theme heading such as `### Server-side rendering`; add the theme when it is missing. A changed behaviour or a replaced API gets an entry under `## Modified behaviors`. A removed member gets a row in the removals table of its theme, plus an entry when the replacement needs code to explain.
 

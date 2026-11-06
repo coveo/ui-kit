@@ -1,6 +1,6 @@
 ---
 name: working-on-ui-kit-v4
-description: Guides the delivery of a UI-Kit v4 story end to end, including its track (v3, v4, experimental or no-release), which branch to target, the changeset bump, the v3 to v4 upgrade guide entry, sample and test updates, and the pull request. Use when a Jira issue belongs to the UI-KIT v4 epics (KIT-3377, KIT-4387, KIT-4621, KIT-5934) or its summary starts with a "v3:" or "v4:" prefix, when removing or renaming a public API, when adding a deprecation, or when the user mentions v4, a breaking change, a major bump or the upgrade guide.
+description: Guides the delivery of a UI-Kit v4 story end to end, including its track (v3, v4, experimental or no-release), which branch to target, the changeset bump, the v3 to v4 upgrade guide entry, sample and test updates, and the pull request. Use when a Jira issue belongs to the UI-KIT v4 epics (KIT-3377, KIT-4387, KIT-4621, KIT-5934) or its summary starts with a "v3:" or "v4:" prefix, when removing or renaming a public API of Headless, Headless React, Atomic, Atomic React or Atomic Angular, when adding a deprecation to one of them, or when the user mentions v4, the v3 to v4 upgrade guide or a breaking change in one of them. Does not apply to Thermidor, which is outside v4 and keeps its own breaking changes.
 license: Apache-2.0
 metadata:
   author: coveo
@@ -8,6 +8,8 @@ metadata:
 ---
 
 # Working on UI-Kit v4
+
+Thermidor is out of scope: its breaking changes follow its own process, not this skill.
 
 One rule holds the whole process together: **a change that breaks a customer ships with the text that migrates that customer, in the same pull request.** Everything below exists to make that automatic.
 
@@ -58,14 +60,14 @@ Skip this step on the no-release track. Otherwise, run `pnpm changeset` for ever
 
 Required for every `major` bump; recommended for a v3 deprecation, as a "planned removal" row.
 
-Use [references/upgrade-guide-entry.md](references/upgrade-guide-entry.md) for the entry shape. In short: one sentence on what changed, a version 3 block taken from a v3 sample, a version 4 block taken from a v4 sample, one sentence on what to do instead, under 15 lines of prose. Add each removed member to the removals table of its theme. Put the entry in the file of the package that changed: `packages/headless/source_docs/upgrade-from-v3-to-v4.md` or `packages/headless-react/source_docs/upgrade-from-v3-to-v4.md`, which stay out of every `typedoc.json` until GA. Atomic entries go to `packages/atomic/docs/upgrade-from-v3-to-v4.md`, which the technical writers turn into the docs.coveo.com page.
+Use [references/upgrade-guide-entry.md](references/upgrade-guide-entry.md) for the entry shape. In short: one sentence on what changed, a version 3 block taken from a v3 sample, a version 4 block taken from a v4 sample, one sentence on what to do instead, under 15 lines of prose. Add each removed member to the removals table of its theme. Put the entry in the file of the package that changed: `packages/headless/source_docs/upgrade-from-v3-to-v4.md` or `packages/headless-react/source_docs/upgrade-from-v3-to-v4.md`, which stay out of every `typedoc.json` until GA. Atomic entries go to `packages/atomic/upgrade-from-v3-to-v4.md`, which the technical writers turn into the docs.coveo.com page.
 
 ## Step 5: Check, commit, open the pull request
 
 A no-release story that changes no file, such as most spikes, goes straight to Step 6.
 
 1. Run the checks of the packages you changed, then `pnpm -w run lint:fix`.
-2. Run the story check: `node .agents/skills/working-on-ui-kit-v4/scripts/check-v4-change.mjs --track <v3|v4|experimental|no-release>`. It fails when a public package changed without a changeset, when a bump does not match the track, when a `major` bump has no guide entry, when a guide entry names an experimental entry point, or when a no-release branch adds a changeset or changes published source. Fix what it reports.
+2. Run the story check: `node .agents/skills/working-on-ui-kit-v4/scripts/check-v4-change.mjs --track <v3|v4|experimental|no-release>`. It fails when a public package changed without a changeset, when a bump does not match the track, when a `major` bump has no entry in the guide of its package (Atomic React and Atomic Angular use the Atomic guide), when a guide entry names an experimental entry point, or when a no-release branch adds a changeset or changes published source. Fix what it reports.
 3. Commit with a Conventional Commits title; a breaking change on the v4 track takes the `!` marker: `feat(headless)!: remove the legacy SSR API`. Sign every commit (`git commit -S`); unsigned commits block the merge.
 4. Push the branch, then open the PR only when the piece is ready for review, with the template of its type from `.github/PULL_REQUEST_TEMPLATE/` (see the `commit-changes` skill), the Jira link filled in, against the base branch of the track. When early CI feedback is wanted before the review, open it as a draft and say so.
 5. In the PR description, state the track, the bump and the guide entry title, so the reviewer checks all three.
