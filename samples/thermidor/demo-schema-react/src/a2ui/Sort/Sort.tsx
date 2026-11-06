@@ -5,15 +5,13 @@ import {SortPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {useGesture} from '../session-request.js';
 import styles from './Sort.module.css';
 
-// A field sort is named by the Commerce API's displayName on its fields; the gateway leaves it out
-// when the Commerce API has none, so the field and direction name the option instead.
+// The contract gives relevance no label. A field sort is named only by the Commerce API's
+// displayName on its fields, so it has no label when the gateway sends none.
 function sortLabel({sortCriteria, fields}: SortCriterion): string {
-  if (fields.length === 0) {
-    return sortCriteria === 'relevance' ? 'Relevance' : sortCriteria;
+  if (sortCriteria === 'relevance') {
+    return 'Relevance';
   }
-  return fields
-    .map(({field, direction, displayName}) => displayName ?? `${field} (${direction})`)
-    .join(', ');
+  return fields.flatMap(({displayName}) => displayName ?? []).join(', ');
 }
 
 // The gateway identifies a sort by its fields, so a displayName difference is not a different sort.

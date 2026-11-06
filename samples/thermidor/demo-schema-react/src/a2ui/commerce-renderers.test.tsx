@@ -187,7 +187,7 @@ describe('Sort', () => {
     expect(optionLabels()).toEqual(['Brand (A to Z), Price (Low to High)']);
   });
 
-  it('names a field without displayName by its field and direction', async () => {
+  it('leaves a field sort without displayName unlabelled', async () => {
     mountSort({
       appliedSort: relevance,
       availableSorts: [
@@ -198,7 +198,7 @@ describe('Sort', () => {
     });
 
     await waitFor(() => expect(screen.getByLabelText('Sort by:')).toBeDefined());
-    expect(optionLabels()).toEqual(['Relevance', 'ec_price (asc)', 'ec_price (desc)']);
+    expect(optionLabels()).toEqual(['Relevance', '', '']);
   });
 
   it('selects the applied sort by its fields and directions', async () => {
