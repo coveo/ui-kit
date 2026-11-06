@@ -71,4 +71,17 @@ describe('SuggestionsDropdown', () => {
     fireEvent.mouseDown(surfboardsOption);
     expect(onSelect).toHaveBeenCalledWith({id: 's1', label: 'Surfboards'}, 'search');
   });
+
+  it('keeps the focus in the input when the aside is pressed', () => {
+    render(
+      <SuggestionsDropdown
+        sections={testSections}
+        onSelect={vi.fn()}
+        visible={true}
+        aside={<a href="https://example.com/product">Product</a>}
+      />
+    );
+
+    expect(fireEvent.mouseDown(screen.getByText('Product'))).toBe(false);
+  });
 });

@@ -7,6 +7,7 @@ interface SuggestionItemRowProps {
   icon: SuggestionIconType;
   isActive: boolean;
   onSelect: () => void;
+  onHover?: () => void;
   id: string;
 }
 
@@ -66,7 +67,14 @@ const ICON_MAP = {
   settings: SettingsIcon,
 };
 
-export function SuggestionItemRow({item, icon, isActive, onSelect, id}: SuggestionItemRowProps) {
+export function SuggestionItemRow({
+  item,
+  icon,
+  isActive,
+  onSelect,
+  onHover,
+  id,
+}: SuggestionItemRowProps) {
   const IconComponent = ICON_MAP[icon];
 
   return (
@@ -76,6 +84,7 @@ export function SuggestionItemRow({item, icon, isActive, onSelect, id}: Suggesti
       aria-selected={isActive}
       className={`${styles.row} ${isActive ? styles.active : ''}`}
       onMouseDown={onSelect}
+      onMouseEnter={onHover}
     >
       <IconComponent />
       <div className={styles.content}>

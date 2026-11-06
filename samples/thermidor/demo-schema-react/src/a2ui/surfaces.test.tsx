@@ -49,7 +49,6 @@ function lockedSource(locked: boolean) {
   return {
     getSnapshot: () => (locked ? LOCKED : UNLOCKED),
     subscribe: () => () => {},
-    sendAndWait: () => Promise.resolve(),
   };
 }
 

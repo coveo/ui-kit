@@ -48,10 +48,12 @@ export const getAnswerAnnouncement = (
   }
 
   if (answer.answer?.trim()) {
+    const answerGenerated = i18n.t('answer-generated', {
+      answer: markdownToPlainText(answer.answer),
+    });
+
     return {
-      message: i18n.t('answer-generated', {
-        answer: markdownToPlainText(answer.answer),
-      }),
+      message: `${answerGenerated} ${i18n.t('generated-answer-disclaimer-announcement')}`,
       assertive: false,
     };
   }

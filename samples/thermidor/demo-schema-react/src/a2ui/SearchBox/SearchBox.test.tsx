@@ -9,6 +9,7 @@ import {
   run,
   sseResponse,
 } from '../../test/session.js';
+import {SUGGESTIONS_DEBOUNCE_MS} from '../QuerySuggestions/QuerySuggestions.js';
 import type {SearchBoxOptions} from './search-box-context.js';
 
 afterEach(() => {
@@ -83,6 +84,26 @@ describe('SearchBox', () => {
     textarea.focus();
     fireEvent.change(textarea, {target: {value: 'surf'}});
 
-    await waitFor(() => expect(screen.getByRole('listbox').className).toMatch(/above/));
+    await waitFor(() =>
+      expect(screen.getByRole('listbox').parentElement?.className).toMatch(/above/)
+    );
+  });
+
+  it('sends no suggestions for the completion the arrow keys show in the input', async () => {
+    const {textarea, actions} = await renderSearchBox();
+    textarea.focus();
+    fireEvent.change(textarea, {target: {value: 'surf'}});
+    await waitFor(() => expect(screen.getAllByRole('option')).toHaveLength(2));
+
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    await new Promise((resolve) => setTimeout(resolve, SUGGESTIONS_DEBOUNCE_MS + 50));
+
+    expect(textarea.value).toBe('surf wax');
+    expect(actions('fetchSuggestions').map(({context}) => context['query'])).toEqual(['surf']);
+    expect(screen.getAllByRole('option').map((option) => option.textContent)).toEqual([
+      'surf boards',
+      'surf wax',
+    ]);
   });
 });

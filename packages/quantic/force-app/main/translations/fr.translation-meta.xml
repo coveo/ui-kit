@@ -689,7 +689,7 @@
     <name>quantic_Slide</name>
   </customLabels>
   <customLabels>
-    <label>Réponse générée</label>
+    <label>Réponse générée par l'IA</label>
     <name>quantic_GeneratedAnswerForYou</name>
   </customLabels>
   <customLabels>
@@ -757,7 +757,7 @@
     <name>quantic_GeneratedAnswerIsHidden</name>
   </customLabels>
   <customLabels>
-    <label>Réponse générée: {{0}}</label>
+    <label>Réponse générée par l'IA : {{0}}</label>
     <name>quantic_AnswerGenerated</name>
   </customLabels>
   <customLabels>
@@ -773,8 +773,12 @@
     <name>quantic_GeneratedAnswerOff</name>
   </customLabels>
   <customLabels>
-    <label>Le contenu généré peut contenir des erreurs. Vérifiez les informations importantes.</label>
+    <label>Le contenu généré par l'IA peut contenir des erreurs. Vérifiez les informations importantes.</label>
     <name>quantic_RGADisclaimer</name>
+  </customLabels>
+  <customLabels>
+    <label>Le contenu généré par l'IA peut contenir des erreurs. Vérifiez les informations importantes.</label>
+    <name>quantic_RGADisclaimerAnnouncement</name>
   </customLabels>
   <customLabels>
     <label>Voir plus</label>

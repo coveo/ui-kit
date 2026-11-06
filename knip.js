@@ -62,9 +62,9 @@ export default {
   workspaces: {
     '.': {
       entry: ['scripts/**/*.{js,mjs}'],
-      // scripts/size-limit.mjs runs from each package's `size` script, which provides the binary.
-      ignoreBinaries: ['ts-node', 'size-limit'],
-      ignoreDependencies: ['@playwright/mcp'],
+      ignoreBinaries: ['ts-node'],
+      // scripts/size-limit.mjs runs from each package's `size` script, which provides size-limit.
+      ignoreDependencies: ['@playwright/mcp', 'size-limit'],
     },
     'packages/headless': {
       entry: ['src/*index.ts', 'ponyfills/*.js'],
@@ -130,6 +130,10 @@ export default {
         'src/plugins/svc.ts': ['duplicates'],
       },
     },
+    'packages/create-ui': {
+      // scripts/test-packed-bin.mjs runs the bin of the packed tarball it installs.
+      ignoreBinaries: ['create-ui'],
+    },
     'packages/documentation': {
       entry: [
         '**/assets/**/*.js',
@@ -160,16 +164,17 @@ export default {
       // build artifacts (dist/lang, dist/assets) are missing. Disable the Vite
       // plugin config loader.
       vite: {config: []},
-      entry: ['src/*-page.js'],
+      entry: ['vite.config.js', 'src/*-page.js'],
     },
     'samples/atomic/commerce-hybrid': {
       // Same as commerce-vite: vite.config.js throws without build artifacts.
       vite: {config: []},
-      entry: ['src/*-page.ts'],
+      entry: ['vite.config.js', 'src/*-page.ts'],
     },
     'samples/atomic/search-vite': {
       // Same as commerce-vite: vite.config.js throws without build artifacts.
       vite: {config: []},
+      entry: ['vite.config.js'],
     },
     'utils/ci': {},
     'utils/cdn': {},

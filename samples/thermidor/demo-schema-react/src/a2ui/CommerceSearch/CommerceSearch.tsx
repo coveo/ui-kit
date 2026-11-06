@@ -2,20 +2,23 @@ import {createReactComponent} from '@copilotkit/a2ui-renderer';
 
 import {CommerceSearchPropsSchema} from '@coveo/thermidor-schema/zod3';
 import styles from './CommerceSearch.module.css';
+import {useSearchHistory} from './use-search-history.js';
 
 /**
  * A2-UI component for the `commerce-search` surface root.
  *
  * A two-column grid whose named `sidebarChild` / `mainChild` slots (resolved by the generic binder
  * from `CommerceSearchPropsSchema`) are mounted via `buildChild(...)` — addressed by name, not
- * position. An absent slot renders an empty cell.
+ * position. An absent slot renders an empty cell. Browser back and forward restore the searches
+ * the surface went through.
  */
 export const CommerceSearch = createReactComponent(
   {
     name: 'CommerceSearch',
     schema: CommerceSearchPropsSchema,
   },
-  ({props, buildChild}) => {
+  ({props, buildChild, context}) => {
+    useSearchHistory(context);
     const {sidebarChild, mainChild} = props;
 
     return (

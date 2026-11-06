@@ -1,4 +1,4 @@
-import type {CommerceRequestModel} from './unified-endpoint-types.js';
+import type {ConverseRequestModel} from './unified-endpoint-types.js';
 import {
   isSuccessResponse,
   readActionInFlightConflict,
@@ -12,7 +12,7 @@ const ACTION_IN_FLIGHT_ERROR =
 
 const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
   return async (
-    agentInput: CommerceRequestModel,
+    agentInput: ConverseRequestModel,
     configuration: UnifiedEndpointClientConfiguration,
     options?: UnifiedEndpointCallOptions
   ): Promise<UnifiedEndpointClientResult> => {
@@ -124,7 +124,7 @@ type UnifiedEndpointClientResult =
 
 export interface UnifiedEndpointClient {
   call: (
-    agentInput: CommerceRequestModel,
+    agentInput: ConverseRequestModel,
     configuration: UnifiedEndpointClientConfiguration,
     options?: UnifiedEndpointCallOptions
   ) => Promise<UnifiedEndpointClientResult>;
