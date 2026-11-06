@@ -79,6 +79,8 @@ The design has four parts:
 - `samples` — affected sample E2E task identifiers, used as the dynamic E2E matrix source.
 - `fetch-depth` — the commit count of the compared range.
 
+For `merge_group` events the base is `merge_group.base_sha`. For `pull_request` events it is the first parent of GitHub's test merge commit, not `pull_request.base.sha`, which can lag behind the base branch commit the PR is merged into and would count the base branch's newer commits as PR changes.
+
 The action verifies both commits before querying and writes a Markdown table of package, task, reason, and description to the job summary. The query requests [reason variants](https://turborepo.dev/docs/reference/query#understanding-affected-package-reasons) such as `TaskFileChanged` and `TaskDependencyTaskChanged`, so each run explains why tasks were selected.
 
 **2. Setup no longer executes work.** The `setup` action installs mise-managed tooling, restores the pnpm store and mise caches, and runs the frozen pnpm install. Only `cache-warmup.yml` saves those caches, on `main`. Its old `skip-build` and `build-command` inputs are gone. Build and test work is invoked by Turbo tasks or by an explicit specialized action after setup.
