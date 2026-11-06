@@ -5,8 +5,9 @@ import {SortPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {useGesture} from '../session-request.js';
 import styles from './Sort.module.css';
 
-// The contract gives relevance no label. A field sort is named only by the Commerce API's
-// displayName on its fields, so it has no label when the gateway sends none.
+// Relevance is built into the Commerce API and carries no label, not even in the merchant's
+// configuration: the UI names it, as Atomic does. A field sort is named by its fields'
+// displayName, localized by the Commerce API.
 function sortLabel({sortCriteria, fields}: SortCriterion): string {
   if (sortCriteria === 'relevance') {
     return 'Relevance';
