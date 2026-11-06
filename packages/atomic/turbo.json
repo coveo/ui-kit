@@ -130,7 +130,7 @@
     },
     "e2e": {
       "dependsOn": ["build", "build:storybook:e2e"],
-      "inputs": ["$TURBO_DEFAULT$"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/utils/ci/e2e-timings/atomic.json"],
       "outputs": ["playwright-report/**", "blob-report/**", "test-results/**"],
       "env": ["TEST_SHARD"]
     },
