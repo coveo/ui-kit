@@ -115,13 +115,14 @@ ConversationPage
 │                   ├── ComparisonTable (dumb: reads resolved products, attributes + related documents from props)
 │                   ├── ProductResearchCard (dumb: reads resolved product, summary, bullets + related documents from props)
 │                   ├── NextActionsBar (dumb: reads resolved action items; sends a follow-up action)
+│                   ├── CitedDocuments (dumb: reads the resolved documents an answer cites, by label)
 │                   └── CommerceSearch (a gateway search block, see below)
 └── PromptInput (pinned below the feed)
 ```
 
 **ConversationThread** iterates over turns and delegates rendering to the appropriate block based on turn status. The key path is through **AgentResponseBlock**, which orchestrates the streaming experience: first showing a thinking indicator, then streaming text, then the turn's blocks: a skeleton in place of each surface whose data model declares `isLoading` while the exchange streams, and finally the resolved A2-UI catalog components once component state arrives via `/state/<id>` `updateDataModel` operations resolved into the renderer's data model.
 
-The catalog renderers (ProductCarousel, BundleDisplay, ComparisonTable, ProductResearchCard, NextActionsBar) are **dumb**: each reads its resolved values directly from `props` (the renderer resolves each `{ "path": ... }` binding against its A2-UI data model), with no identity join and no controller hydration. A renderer sends an action with `context.dispatchAction`; it reaches `AppShell`'s `onAction` handler, which forwards it to the session.
+The catalog renderers (ProductCarousel, BundleDisplay, ComparisonTable, ProductResearchCard, NextActionsBar, CitedDocuments) are **dumb**: each reads its resolved values directly from `props` (the renderer resolves each `{ "path": ... }` binding against its A2-UI data model), with no identity join and no controller hydration. A renderer sends an action with `context.dispatchAction`; it reaches `AppShell`'s `onAction` handler, which forwards it to the session.
 
 A `NextActionsBar` item starts a follow-up: its answer streams into the same turn, and the page draws it as a new exchange below the one it follows, with the chip text as the shopper's message.
 
@@ -209,3 +210,7 @@ See [IMPLEMENTATION.md](./IMPLEMENTATION.md#state-and-validation-model) for the 
 ## Further reading
 
 - [IMPLEMENTATION.md](./IMPLEMENTATION.md) — State and validation model, rendering, action dispatch, workarounds, and known limitations
+
+### Cited documents (question-answering)
+
+A question-answering agent writes each citation into its answer as a markdown label, `[\[1\]](link)`, and sends the documents it cites as a `CitedDocuments` surface after the answer. `thermidor-schema` hasn't released `CitedDocuments` yet, so `src/a2ui/CitedDocuments/cited-documents-schema.ts` holds a copy of its proposed props schema until the demo depends on a release that has it.

@@ -149,36 +149,4 @@ describe('AgentResponseBlock', () => {
       ).toBeTruthy();
     });
   });
-
-  describe('citations', () => {
-    it("puts the answer's citations into its text and lists the cited documents", () => {
-      const response = makeResponse({
-        agent: {
-          messages: [{id: 'answer', content: 'Fifty per second.', role: 'assistant'}],
-          reasoningSteps: [],
-        },
-        activities: [
-          {
-            id: 'citations-answer',
-            kind: 'citations',
-            replace: false,
-            payload: {
-              answerMessageId: 'answer',
-              citations: [{offset: 16, passage: 0}],
-              passages: [{document: 1, text: 'Fifty requests per second.'}],
-              documents: [{label: 1, title: 'Rate limits', link: null, details: null}],
-            },
-          },
-        ],
-      });
-
-      renderBlock(response);
-
-      expect(screen.getByTestId('streaming-message').getAttribute('data-content')).toBe(
-        'Fifty per second\\[1\\].'
-      );
-      expect(screen.getByRole('heading', {name: 'Sources'})).not.toBeNull();
-      expect(screen.getByText('Rate limits')).not.toBeNull();
-    });
-  });
 });
