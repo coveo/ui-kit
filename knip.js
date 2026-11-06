@@ -216,6 +216,9 @@ export default {
         // Static file loaded via HTML <script> tag in manager-head.html
         '.storybook/public/cookieManager.js',
       ],
+      // A Playwright reporter in playwright.config.ts that only joins the list when TEST_SHARD is
+      // set, so Knip, which loads the config without it, never sees it.
+      ignoreDependencies: ['@flakiness/playwright'],
     },
     'packages/atomic-legacy': {},
     'packages/create-atomic': {
