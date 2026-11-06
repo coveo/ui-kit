@@ -12,3 +12,21 @@
   gap: var(--space-4);
   flex-wrap: wrap;
 }
+
+/* A child that renders nothing takes no slot, so space-between keeps the first visible child left. */
+.row > :empty {
+  display: none;
+}
+
+.row > :has(> [data-layout='full-row']) {
+  flex-basis: 100%;
+}
+
+.row:has(> * > [data-layout='fill']) {
+  align-items: flex-start;
+}
+
+.row > :has(> [data-layout='fill']) {
+  flex: 1 1 0;
+  min-width: 16rem;
+}

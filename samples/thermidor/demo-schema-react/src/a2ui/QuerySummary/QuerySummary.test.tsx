@@ -1,12 +1,12 @@
 import {describe, it, expect, afterEach} from 'vitest';
-import {screen, cleanup, waitFor} from '@testing-library/react';
+import {act, screen, cleanup, waitFor, fireEvent} from '@testing-library/react';
 import {mountSurface} from '../mount-surface.harness.js';
 
 /**
  * QuerySummary is a `createReactComponent` implementation driven by the generic binder, mounted
  * end-to-end through the real thermidor catalog: `query` / `firstIndex` / `lastIndex` /
- * `totalEntries` are `{path}` bindings resolved from the surface data model. Presentational — no
- * actions.
+ * `totalEntries` / `correction` are `{path}` bindings resolved from the surface data model. Its one
+ * action, `overrideCorrection`, searches the shopper's query instead of the one that replaced it.
  *
  * Progressive-resolution cases (a field not yet arrived) are expressed by OMITTING that field's
  * data-model write, so the binding resolves `undefined` naturally.
@@ -19,6 +19,7 @@ const BINDINGS = {
   firstIndex: {path: '/state/root/firstIndex'},
   lastIndex: {path: '/state/root/lastIndex'},
   totalEntries: {path: '/state/root/totalEntries'},
+  correction: {path: '/state/root/correction'},
 };
 
 // Only writes the provided fields; an omitted field's binding resolves undefined (progressive).
@@ -80,5 +81,183 @@ describe('QuerySummary', () => {
     const {container} = mountSummary({query: 'Water Sports', firstIndex: 1, lastIndex: 12});
     await new Promise((r) => setTimeout(r, 50));
     expect(container.querySelector('p')).toBeNull();
+  });
+
+  it('shows no correction when the query was searched as typed', async () => {
+    mountSummary({query: 'Water Sports', firstIndex: 1, lastIndex: 12, totalEntries: 43});
+    await waitFor(() => expect(screen.getByText(/Products/)).toBeDefined());
+    expect(screen.queryByText(/Showing products for|automatically corrected/)).toBeNull();
+  });
+
+  it("shows the trigger's query and searches the shopper's query from the link", async () => {
+    const {lastAction} = mountSummary({
+      query: 'Water Sports',
+      firstIndex: 1,
+      lastIndex: 12,
+      totalEntries: 43,
+      correction: {originalQuery: 'swim gear', cause: 'trigger', canOverride: true},
+    });
+    await waitFor(() =>
+      expect(screen.getByText(/Showing products for/).textContent).toBe(
+        'Showing products for Water Sports'
+      )
+    );
+    expect(screen.getByText(/Search instead for/).textContent).toBe('Search instead for swim gear');
+    fireEvent.click(screen.getByRole('button', {name: 'swim gear'}));
+    await waitFor(() =>
+      expect(lastAction()).toMatchObject({name: 'overrideCorrection', context: {}})
+    );
+  });
+
+  it.each([false, true])(
+    'names both queries of a correction, with a link only if canOverride is %s',
+    async (canOverride) => {
+      mountSummary({
+        query: 'Water Sports',
+        firstIndex: 1,
+        lastIndex: 12,
+        totalEntries: 43,
+        correction: {originalQuery: 'water sprots', cause: 'correction', canOverride},
+      });
+      await waitFor(() =>
+        expect(screen.getByText(/We couldn't find anything for/).textContent).toBe(
+          "We couldn't find anything for water sprots"
+        )
+      );
+      expect(screen.getByText(/Query was automatically corrected to/).textContent).toBe(
+        'Query was automatically corrected to Water Sports'
+      );
+      expect(screen.queryByRole('button', {name: 'water sprots'}) !== null).toBe(canOverride);
+    }
+  );
+
+  it('shows the notice after the no-results line when the replacement has no results', async () => {
+    mountSummary({
+      query: 'kayak',
+      firstIndex: 0,
+      lastIndex: 0,
+      totalEntries: 0,
+      correction: {originalQuery: 'take a kayak', cause: 'trigger', canOverride: true},
+    });
+    await waitFor(() =>
+      expect(screen.getByText(/No results for/).textContent).toBe('No results for kayak')
+    );
+    expect(screen.getByText(/Showing products for/)).toBeDefined();
+    expect(screen.getByRole('button', {name: 'take a kayak'})).toBeDefined();
+  });
+
+  it('shows no correction while the query is empty', async () => {
+    mountSummary({
+      query: '',
+      firstIndex: 1,
+      lastIndex: 12,
+      totalEntries: 43,
+      correction: {originalQuery: 'swim gear', cause: 'trigger', canOverride: true},
+    });
+    await waitFor(() => expect(screen.getByText(/Products/)).toBeDefined());
+    expect(screen.queryByText(/Showing products for/)).toBeNull();
+    expect(screen.queryByRole('button')).toBeNull();
+  });
+});
+
+describe('QuerySummary focus', () => {
+  const CORRECTION = {originalQuery: 'swim gear', cause: 'trigger', canOverride: true};
+
+  /** Holds the override in flight until `answer`: the surface stays locked meanwhile. */
+  function answerable() {
+    let answer: () => void = () => undefined;
+    return {
+      gate: () =>
+        new Promise<void>((resolve) => {
+          answer = resolve;
+        }),
+      answer: () =>
+        act(async () => {
+          answer();
+          await Promise.resolve();
+        }),
+    };
+  }
+
+  function mountWithResults(dispatchGate: () => Promise<void>) {
+    return mountSurface({
+      component: {component: 'LayoutStack', direction: 'column', children: ['summary', 'list']},
+      children: [
+        {
+          id: 'summary',
+          component: 'QuerySummary',
+          ...Object.fromEntries(
+            Object.keys(BINDINGS).map((key) => [key, {path: `/state/summary/${key}`}])
+          ),
+        },
+        {id: 'list', component: 'ProductList', products: {path: '/state/list/products'}},
+      ],
+      dataModel: [
+        {path: '/state/summary/query', value: 'Water Sports'},
+        {path: '/state/summary/firstIndex', value: 1},
+        {path: '/state/summary/lastIndex', value: 1},
+        {path: '/state/summary/totalEntries', value: 1},
+        {path: '/state/summary/correction', value: CORRECTION},
+        {
+          path: '/state/list/products',
+          value: [{permanentid: 'p1', ec_name: 'Trail Shoes', additionalFields: {}}],
+        },
+      ],
+      dispatchGate,
+    });
+  }
+
+  async function searchInsteadWithFocus() {
+    const link = await screen.findByRole('button', {name: 'swim gear'});
+    link.focus();
+    fireEvent.click(link);
+  }
+
+  it('moves focus from the link to the results once the override is answered', async () => {
+    const request = answerable();
+    const {pushDataModel} = mountWithResults(request.gate);
+
+    await searchInsteadWithFocus();
+    pushDataModel([
+      {path: '/state/summary/query', value: 'swim gear'},
+      {path: '/state/summary/correction', value: undefined},
+    ]);
+    await request.answer();
+
+    await waitFor(() =>
+      expect(document.activeElement).toBe(screen.getByRole('list', {name: 'Product list'}))
+    );
+  });
+
+  it('moves focus to the no-results line when the override finds nothing', async () => {
+    const request = answerable();
+    const {pushDataModel} = mountWithResults(request.gate);
+
+    await searchInsteadWithFocus();
+    pushDataModel([
+      {path: '/state/summary/query', value: 'swim gear'},
+      {path: '/state/summary/firstIndex', value: 0},
+      {path: '/state/summary/lastIndex', value: 0},
+      {path: '/state/summary/totalEntries', value: 0},
+      {path: '/state/summary/correction', value: undefined},
+      {path: '/state/list/products', value: []},
+    ]);
+    await request.answer();
+
+    await waitFor(() =>
+      expect(document.activeElement).toBe(screen.getByText(/No results for/).closest('p'))
+    );
+  });
+
+  it('gives focus back to the link when the notice stays', async () => {
+    const request = answerable();
+    mountWithResults(request.gate);
+
+    await searchInsteadWithFocus();
+    await request.answer();
+
+    await waitFor(() =>
+      expect(document.activeElement).toBe(screen.getByRole('button', {name: 'swim gear'}))
+    );
   });
 });

@@ -4,7 +4,7 @@ import {type BreadboxAction, BreadboxPropsSchema} from '@coveo/thermidor-schema/
 import {CloseIcon} from '../icons/index.js';
 import {breadboxValues} from './breadbox-values.js';
 import {useOptimisticBreadbox} from './use-optimistic-breadbox.js';
-import {useRemovalFocus} from './use-removal-focus.js';
+import {useRemovalFocus} from '../use-removal-focus.js';
 import styles from './Breadbox.module.css';
 
 /**
@@ -33,7 +33,12 @@ export const Breadbox = createReactComponent(
     );
 
     return (
-      <section ref={section} className={styles.container} aria-label="Active filters">
+      <section
+        ref={section}
+        className={styles.container}
+        aria-label="Active filters"
+        data-layout="full-row"
+      >
         <span className={styles.heading}>Filters:</span>
         <ul className={styles.list}>
           {breadcrumbs.map(({facet, value}, index) => {
