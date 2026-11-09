@@ -36,13 +36,15 @@ useCaseTestCases.forEach((useCase) => {
           sortLabelWithValue[1]; // Assuming 0 is the first sort option, 1 should be the 2nd one after that.
 
         const searchResponsePromise = search.waitForSearchResponse();
+        const sortAnalyticsPromise =
+          sort.waitForSortUaAnalytics(expectedSortValue);
         await sort.clickSortDropDown();
         await sort.clickSortButton(expectedSortName);
 
         const searchResponse = await searchResponsePromise;
         const {sortCriteria} = searchResponse.request().postDataJSON();
         expect(sortCriteria).toBe(expectedSortValue);
-        await sort.waitForSortUaAnalytics(expectedSortValue);
+        await sortAnalyticsPromise;
       });
     });
 
