@@ -3,7 +3,10 @@ import {PUBLIC_SAMPLE_CONFIGURATION} from './public-sample-configuration.js';
 type RequiredEnvKey =
   | 'VITE_COVEO_ORGANIZATION_ID'
   | 'VITE_COVEO_AGENT_CONFIGURATION_ID'
-  | 'VITE_COVEO_TRACKING_ID';
+  | 'VITE_COVEO_TRACKING_ID'
+  | 'VITE_COVEO_LANGUAGE'
+  | 'VITE_COVEO_COUNTRY'
+  | 'VITE_COVEO_CURRENCY';
 type PlatformEnvironment = 'prod' | 'dev' | 'stg' | 'hipaa';
 
 function parseBoolean(value: string | undefined): boolean | undefined {
@@ -53,7 +56,7 @@ function resolvePlatformEnvironment(): PlatformEnvironment {
 
 /**
  * The organization and everything bound to it: credentials, agent configuration id,
- * tracking id and platform environment.
+ * tracking id, locale and platform environment.
  *
  * With no `VITE_COVEO_ORGANIZATION_ID`, {@link PUBLIC_SAMPLE_CONFIGURATION} is applied
  * as a bundle and partial overrides of these keys are ignored. They are not
@@ -74,6 +77,9 @@ function resolveOrganizationConfiguration() {
       accessToken: PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_ACCESS_TOKEN,
       agentConfigurationId: PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_AGENT_CONFIGURATION_ID,
       trackingId: PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_TRACKING_ID,
+      language: PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_LANGUAGE,
+      country: PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_COUNTRY,
+      currency: PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_CURRENCY,
       environment: PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_PLATFORM_ENVIRONMENT,
     };
   }
@@ -84,6 +90,9 @@ function resolveOrganizationConfiguration() {
     accessToken: getOptionalEnvValue('VITE_COVEO_ACCESS_TOKEN') ?? '',
     agentConfigurationId: getRequiredEnvValue('VITE_COVEO_AGENT_CONFIGURATION_ID'),
     trackingId: getRequiredEnvValue('VITE_COVEO_TRACKING_ID'),
+    language: getRequiredEnvValue('VITE_COVEO_LANGUAGE'),
+    country: getRequiredEnvValue('VITE_COVEO_COUNTRY'),
+    currency: getRequiredEnvValue('VITE_COVEO_CURRENCY'),
     environment: resolvePlatformEnvironment(),
   };
 }

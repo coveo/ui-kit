@@ -33,8 +33,16 @@ export function useSession(): DemoSession {
 }
 
 function createThermidorSession(): DemoSession {
-  const {organizationId, accessToken, endpoint, agentConfigurationId, trackingId} =
-    getSampleConfiguration();
+  const {
+    organizationId,
+    accessToken,
+    endpoint,
+    agentConfigurationId,
+    trackingId,
+    language,
+    country,
+    currency,
+  } = getSampleConfiguration();
 
   return createSession({
     contracts: ComponentContractsSchema,
@@ -43,7 +51,7 @@ function createThermidorSession(): DemoSession {
     endpoint,
     agentConfigurationId,
     trackingId,
-    navigatorContextProvider: getNavigatorContext,
+    navigatorContextProvider: () => ({...getNavigatorContext(), language, country, currency}),
   });
 }
 
@@ -57,7 +65,7 @@ function getClientId() {
   return id;
 }
 
-function getNavigatorContext(): NavigatorContext {
+function getNavigatorContext(): Omit<NavigatorContext, 'language' | 'country' | 'currency'> {
   return {
     clientId: getClientId(),
     location: window.location.href,
