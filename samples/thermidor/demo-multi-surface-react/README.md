@@ -25,7 +25,8 @@ Agent Gateway.
 | `pnpm dev:agent-gateway` | A local Agent Gateway on port 8990, such as thermidor-stack's (needs `.env.local`) |
 
 For `dev:local` and `dev:agent-gateway`, copy `.env.example` to `.env.local` and set
-`VITE_COVEO_ORGANIZATION_ID` with its token, agent configuration ID and tracking ID. With no
+`VITE_COVEO_ORGANIZATION_ID` with its token, agent configuration ID, tracking ID and locale
+(`VITE_COVEO_LANGUAGE`, `VITE_COVEO_COUNTRY`, `VITE_COVEO_CURRENCY`). With no
 organization set, the sample falls back to the public demo organization as a bundle
 ([`src/public-sample-configuration.ts`](src/public-sample-configuration.ts), as in
 `demo-schema-react`).
