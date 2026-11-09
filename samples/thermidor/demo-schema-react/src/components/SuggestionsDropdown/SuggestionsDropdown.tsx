@@ -13,6 +13,8 @@ interface SuggestionsDropdownProps {
   onSelect: (item: SuggestionItem, sectionId: string) => void;
   /** Called with the item the pointer moves onto. */
   onHover?: (item: SuggestionItem) => void;
+  /** Called with the item whose remove button is pressed, instead of its section's `removal`. */
+  onRemove?: (item: SuggestionItem) => void;
   visible: boolean;
   activeIndex?: number;
   /** Where the dropdown opens, relative to its input. Defaults to below. */
@@ -25,6 +27,7 @@ export function SuggestionsDropdown({
   sections,
   onSelect,
   onHover,
+  onRemove,
   visible,
   activeIndex,
   placement = 'below',
@@ -55,15 +58,13 @@ export function SuggestionsDropdown({
         aria-label="Query suggestions"
         className={styles.listbox}
       >
-        <div className={styles.dropdownHeader}>
-          <span className={styles.dropdownHeaderTitle}>Query suggestions</span>
-        </div>
         {sections.map((section) => (
           <SuggestionSectionGroup
             key={section.id}
             section={section}
             onSelect={(item) => onSelect(item, section.id)}
             onHover={onHover}
+            onRemove={onRemove}
             activeItemId={activeItemId}
           />
         ))}

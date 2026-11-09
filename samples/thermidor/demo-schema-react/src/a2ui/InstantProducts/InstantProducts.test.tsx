@@ -331,7 +331,7 @@ describe('InstantProducts keyboard navigation', () => {
     fireEvent.focus(textarea);
     await pause();
 
-    expect(actions('fetchSuggestions').map(({context}) => context['query'])).toEqual(['surf']);
+    expect(actions('fetchSuggestions').map(({context}) => context['query'])).toEqual(['', 'surf']);
     expect(queriesSent()).toEqual(['surf boards', 'surf wax']);
     expect(productsShown()).toBe('Products for surf wax');
   });

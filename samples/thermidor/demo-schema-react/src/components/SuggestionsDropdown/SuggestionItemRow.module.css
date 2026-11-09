@@ -44,3 +44,39 @@
   color: var(--color-text-muted);
   line-height: 1.6;
 }
+
+.removable {
+  position: relative;
+}
+
+.removable .row {
+  padding-right: calc(var(--space-3) + 24px);
+}
+
+.removeButton {
+  position: absolute;
+  top: 50%;
+  right: var(--space-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 4px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.removeButton:hover {
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+.removeButton svg {
+  width: 100%;
+  height: 100%;
+}

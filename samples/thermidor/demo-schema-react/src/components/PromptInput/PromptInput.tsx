@@ -44,6 +44,8 @@ interface PromptInputProps {
    * `undefined` once none is, such as when the suggestions change or close.
    */
   onActiveItemChange?: (item: SuggestionItem | undefined) => void;
+  /** Called when the input gains or loses the focus, not when only the window does. */
+  onFocusChange?: (focused: boolean) => void;
   /** Drawn beside the suggestions while they are open. */
   suggestionsAside?: ReactNode;
 }
@@ -60,6 +62,7 @@ export function PromptInput({
   suggestionsPlacement,
   onValueChange,
   onActiveItemChange,
+  onFocusChange,
   suggestionsAside,
 }: PromptInputProps) {
   const [value, setValue] = useState(initialValue);
@@ -68,6 +71,8 @@ export function PromptInput({
   // Kept when the left arrow goes back to the suggestions, so the right arrow returns to it.
   const [asideOptionId, setAsideOptionId] = useState<string>();
   const [inAside, setInAside] = useState(false);
+  // The index to highlight in the suggestions that follow a removal, instead of none.
+  const [highlightAfterRemoval, setHighlightAfterRemoval] = useState<number>();
   const typedValueRef = useRef(initialValue);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const blurTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -93,7 +98,12 @@ export function PromptInput({
   const [highlightedSuggestions, setHighlightedSuggestions] = useState(suggestions);
   if (suggestions !== highlightedSuggestions) {
     setHighlightedSuggestions(suggestions);
-    resetHighlight();
+    if (highlightAfterRemoval === undefined) {
+      resetHighlight();
+    } else {
+      setHighlightAfterRemoval(undefined);
+      setActiveIndex(Math.min(highlightAfterRemoval, totalItems.length - 1));
+    }
   }
 
   function resetHighlight() {
@@ -140,6 +150,7 @@ export function PromptInput({
     if (disabled) {
       return;
     }
+    onFocusChange?.(true);
     if (suppressNextFocusRef.current) {
       suppressNextFocusRef.current = false;
       return;
@@ -153,11 +164,12 @@ export function PromptInput({
       typedValueRef.current = value;
       onValueChange?.(value);
     }
+    // Suggestions may arrive after the focus, such as those fetched for the empty input.
+    if (blurTimeoutRef.current) {
+      clearTimeout(blurTimeoutRef.current);
+      blurTimeoutRef.current = null;
+    }
     if (suggestions && suggestions.length > 0) {
-      if (blurTimeoutRef.current) {
-        clearTimeout(blurTimeoutRef.current);
-        blurTimeoutRef.current = null;
-      }
       setShowDropdown(true);
       if (!windowRefocused) {
         resetHighlight();
@@ -168,6 +180,9 @@ export function PromptInput({
   function handleBlur(e: FocusEvent<HTMLTextAreaElement>) {
     // The input stays the page's active element when only the window loses the focus.
     windowBlurredRef.current = document.activeElement === e.currentTarget;
+    if (!windowBlurredRef.current) {
+      onFocusChange?.(false);
+    }
     blurTimeoutRef.current = setTimeout(() => {
       setShowDropdown(false);
     }, 150);
@@ -184,6 +199,31 @@ export function PromptInput({
     setActiveIndex(index);
     setInAside(false);
     setValue(index >= 0 ? totalItems[index].label : typedValueRef.current);
+  }
+
+  /**
+   * Removes `item`, keeping the highlight on the same suggestion, or on the next one when `item` is
+   * the highlighted one. The input then shows the new highlight if it showed the old one.
+   */
+  function removeItem(item: SuggestionItem) {
+    const removal = suggestions?.find(({items}) => items.includes(item))?.removal;
+    if (!removal) {
+      return false;
+    }
+    const index = totalItems.indexOf(item);
+    const remaining = totalItems.filter((other) => other !== item);
+    if (activeIndex >= 0) {
+      const next =
+        activeIndex === index
+          ? Math.min(activeIndex, remaining.length - 1)
+          : activeIndex - (activeIndex > index ? 1 : 0);
+      setHighlightAfterRemoval(next);
+      if (value !== typedValueRef.current && value === totalItems[activeIndex].label) {
+        setValue(next >= 0 ? remaining[next].label : typedValueRef.current);
+      }
+    }
+    removal.onRemove(item);
+    return true;
   }
 
   function moveInAside(step: number) {
@@ -220,6 +260,13 @@ export function PromptInput({
         moveInAside(-1);
       } else {
         highlightSuggestion(activeIndex === -1 ? totalItems.length - 1 : activeIndex - 1);
+      }
+      return;
+    }
+
+    if (e.key === 'Delete' && e.shiftKey && expanded && !inAside && activeIndex >= 0) {
+      if (removeItem(totalItems[activeIndex])) {
+        e.preventDefault();
       }
       return;
     }
@@ -378,6 +425,7 @@ export function PromptInput({
           <SuggestionsDropdown
             sections={suggestions}
             onSelect={selectItem}
+            onRemove={removeItem}
             onHover={(item) => {
               setActiveIndex(totalItems.indexOf(item));
               setInAside(false);

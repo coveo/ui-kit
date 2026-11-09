@@ -48,6 +48,11 @@ describe('isBlocking', () => {
     expect(isBlocking({...SUGGESTION, component: 'NextActionsBar'})).toBe(true);
     expect(isBlocking({kind: 'initialize'})).toBe(true);
   });
+
+  it('keeps the surfaces usable while recent queries are removed or cleared', () => {
+    expect(isBlocking({...SUGGESTION, name: 'removeRecentQuery'})).toBe(false);
+    expect(isBlocking({...SUGGESTION, name: 'clearRecentQueries'})).toBe(false);
+  });
 });
 
 describe('useActionError', () => {
@@ -73,6 +78,18 @@ describe('useActionError', () => {
   it('reports the failure of an action from the block', () => {
     expect(actionErrorOn('results', failedPageChange)).toBe('Bad gateway');
     expect(actionErrorOn('another-block', failedPageChange)).toBeUndefined();
+  });
+
+  it('does not report a failed removal of a recent query', () => {
+    expect(
+      actionErrorOn('shell', {
+        message: 'Bad gateway',
+        component: 'QuerySuggestions',
+        name: 'removeRecentQuery',
+        surfaceId: 'shell',
+        sourceComponentId: 'query-suggestions',
+      })
+    ).toBeUndefined();
   });
 
   it('does not report a failed suggestion', () => {

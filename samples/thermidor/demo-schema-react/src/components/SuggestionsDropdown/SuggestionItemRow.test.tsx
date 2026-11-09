@@ -57,6 +57,48 @@ describe('SuggestionItemRow', () => {
     expect(onSelect).toHaveBeenCalledOnce();
   });
 
+  it('bolds what follows the text it completes', () => {
+    render(
+      <SuggestionItemRow {...baseProps} item={{id: 'r1', label: 'hiking boots', completes: 'Hi'}} />
+    );
+    const option = screen.getByRole('option');
+    expect(option.textContent).toBe('hiking boots');
+    expect(option.querySelector('strong')?.textContent).toBe('king boots');
+  });
+
+  it('bolds nothing when the text it completes is empty or not its start', () => {
+    const {rerender} = render(
+      <SuggestionItemRow {...baseProps} item={{id: 'r1', label: 'hiking boots', completes: ''}} />
+    );
+    expect(screen.getByRole('option').querySelector('strong')).toBeNull();
+
+    rerender(
+      <SuggestionItemRow {...baseProps} item={{id: 'r1', label: 'hiking boots', completes: 'bo'}} />
+    );
+    expect(screen.getByRole('option').querySelector('strong')).toBeNull();
+  });
+
+  it('draws a named remove button outside the option and the tab order', () => {
+    const onRemove = vi.fn();
+    const onSelect = vi.fn();
+    render(
+      <SuggestionItemRow
+        {...baseProps}
+        onSelect={onSelect}
+        onRemove={onRemove}
+        removeLabel="Remove Surfboards from recent searches"
+      />
+    );
+    const button = screen.getByRole('button', {name: 'Remove Surfboards from recent searches'});
+
+    expect(screen.getByRole('option').contains(button)).toBe(false);
+    expect(button.tabIndex).toBe(-1);
+    fireEvent.mouseDown(button);
+    fireEvent.click(button);
+    expect(onRemove).toHaveBeenCalledOnce();
+    expect(onSelect).not.toHaveBeenCalled();
+  });
+
   it('has role="option"', () => {
     render(<SuggestionItemRow {...baseProps} />);
     expect(screen.getByRole('option')).toBeDefined();
