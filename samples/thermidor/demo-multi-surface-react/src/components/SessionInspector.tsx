@@ -2,7 +2,7 @@ import {useSessionSnapshot, useTurnViews} from '../session/storefront-session.js
 import styles from './SessionInspector.module.css';
 
 /**
- * Shows the one session at work: each turn, the view that sent it (`context.custom.surfaceId`),
+ * Shows the one session at work: each turn, the view that sent it (`context.custom.viewId`),
  * and the surfaces it created that are still alive.
  */
 export function SessionInspector() {
@@ -18,7 +18,7 @@ export function SessionInspector() {
         <thead>
           <tr>
             <th>#</th>
-            <th>View (custom.surfaceId)</th>
+            <th>View (custom.viewId)</th>
             <th>Prompt</th>
             <th>Status</th>
             <th>Live surfaces</th>
