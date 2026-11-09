@@ -2,31 +2,39 @@ import {describe, expect, it} from 'vitest';
 import {actionCacheKey, createActionCache} from './action-cache.js';
 
 const origin = {surfaceId: 'shell', sourceComponentId: 'instant-products', name: 'fetch'};
+const locale = {language: 'en', country: 'US', currency: 'USD'};
+const keyOf = (o: typeof origin, payload: unknown) => actionCacheKey(o, payload, locale);
 
 describe('actionCacheKey', () => {
   it('does not depend on the order of the payload keys', () => {
-    expect(actionCacheKey(origin, {query: 'boots', page: {size: 4, index: 0}})).toBe(
-      actionCacheKey(origin, {page: {index: 0, size: 4}, query: 'boots'})
+    expect(keyOf(origin, {query: 'boots', page: {size: 4, index: 0}})).toBe(
+      keyOf(origin, {page: {index: 0, size: 4}, query: 'boots'})
     );
   });
 
   it('tells apart payloads whose request JSON differs', () => {
-    expect(actionCacheKey(origin, {since: new Date(0)})).not.toBe(
-      actionCacheKey(origin, {since: new Date(1)})
-    );
+    expect(keyOf(origin, {since: new Date(0)})).not.toBe(keyOf(origin, {since: new Date(1)}));
     // oxlint-disable-next-line no-sparse-arrays
-    expect(actionCacheKey(origin, {ids: [, 'a']})).not.toBe(actionCacheKey(origin, {ids: ['a']}));
+    expect(keyOf(origin, {ids: [, 'a']})).not.toBe(keyOf(origin, {ids: ['a']}));
     // oxlint-disable-next-line no-sparse-arrays
-    expect(actionCacheKey(origin, {ids: [,]})).toBe(actionCacheKey(origin, {ids: [null]}));
+    expect(keyOf(origin, {ids: [,]})).toBe(keyOf(origin, {ids: [null]}));
   });
 
   it('tells apart the origin, the action and the payload', () => {
-    const key = actionCacheKey(origin, {query: 'boots'});
+    const key = keyOf(origin, {query: 'boots'});
 
-    expect(actionCacheKey(origin, {query: 'poles'})).not.toBe(key);
-    expect(actionCacheKey({...origin, surfaceId: 'other'}, {query: 'boots'})).not.toBe(key);
-    expect(actionCacheKey({...origin, sourceComponentId: 'other'}, {query: 'boots'})).not.toBe(key);
-    expect(actionCacheKey({...origin, name: 'other'}, {query: 'boots'})).not.toBe(key);
+    expect(keyOf(origin, {query: 'poles'})).not.toBe(key);
+    expect(keyOf({...origin, surfaceId: 'other'}, {query: 'boots'})).not.toBe(key);
+    expect(keyOf({...origin, sourceComponentId: 'other'}, {query: 'boots'})).not.toBe(key);
+    expect(keyOf({...origin, name: 'other'}, {query: 'boots'})).not.toBe(key);
+  });
+
+  it('tells apart each part of the locale', () => {
+    const key = keyOf(origin, {query: 'boots'});
+
+    for (const part of [{language: 'fr'}, {country: 'CA'}, {currency: 'CAD'}]) {
+      expect(actionCacheKey(origin, {query: 'boots'}, {...locale, ...part})).not.toBe(key);
+    }
   });
 });
 

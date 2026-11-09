@@ -3,8 +3,8 @@
  * customers; may change without notice, in any release.
  *
  * Exposes {@link createPrivateSession}, which opens a session whose `agentConfigurationId`
- * and `trackingId` are optional and which can send `language`, `country` and `currency`, so
- * a Coveo internal application can call a private converse endpoint. Customers use
+ * and `trackingId` are optional, so a Coveo internal application can call a private converse
+ * endpoint. Customers use
  * `createSession` from `@coveo/thermidor`.
  *
  * It also re-exports everything the root entry exports, so an internal application

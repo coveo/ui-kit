@@ -41,12 +41,14 @@ interface SessionConfig<TContracts> {
   accessToken: string;
   endpoint?: string; // full override; see ADR-014
   contracts: TContracts; // injected component contracts; see ADR-014
-  navigatorContextProvider?: () => NavigatorContext; // ambient: view.url, referrer, userAgent, clientId
+  navigatorContextProvider: () => NavigatorContext; // ambient: view.url, referrer, userAgent, clientId, language, country, currency
   commerceContextProvider?: () => CommerceContext; // app-owned: cart, pinnedProducts, source, custom
 }
 ```
 
-The builder calls both providers per request and composes the payload. Because
+The builder calls both providers per request and composes the payload. The
+navigator context is required: it carries the request's `language`, `country` and
+`currency`, which can change during a session. Because
 context is read fresh on every `submit`/`dispatchAction`, "update context while
 interacting with the session" is satisfied structurally — the provider returns
 whatever the app's store currently holds; there are no setters and no

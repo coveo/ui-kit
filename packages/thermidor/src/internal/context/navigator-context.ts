@@ -24,6 +24,21 @@ export interface NavigatorContext {
    * The user agent string of the browser.
    */
   userAgent: string | null;
+
+  /**
+   * The language of the experience, such as `'en'`.
+   */
+  language: string;
+
+  /**
+   * The country of the experience, such as `'US'`.
+   */
+  country: string;
+
+  /**
+   * The currency of the experience, such as `'USD'`.
+   */
+  currency: string;
 }
 
 /**

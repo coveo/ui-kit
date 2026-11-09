@@ -44,6 +44,7 @@ vi.mock('@/src/internal/api/unified/unified-endpoint-client.js', () => ({
 
 import {z} from 'zod/v4';
 import type {ContractsSchema} from './contracts.js';
+import type {NavigatorContext} from '@/src/internal/context/index.js';
 import {createSession, type SessionConfig} from './create-session.js';
 
 /**
@@ -217,12 +218,23 @@ function selectPageMessage(page: number) {
   };
 }
 
+const navigatorContext: NavigatorContext = {
+  clientId: 'client-1',
+  location: null,
+  referrer: null,
+  userAgent: null,
+  language: 'en',
+  country: 'US',
+  currency: 'USD',
+};
+
 const baseConfig: SessionConfig = {
   contracts,
   organizationId: 'org-1',
   accessToken: 'token-1',
   agentConfigurationId: 'agent-configuration-1',
   trackingId: 'tracking-1',
+  navigatorContextProvider: () => navigatorContext,
   initialize: false,
 };
 
@@ -250,26 +262,118 @@ describe('createSession lifecycle', () => {
       expect(() => createSession({...baseConfig, [key]: value})).toThrow(key);
     });
 
-    it('sends the agent configuration and tracking id, and no locale, with the request', async () => {
+    it('throws when the navigatorContextProvider is missing', () => {
+      expect(() =>
+        createSession({...baseConfig, navigatorContextProvider: undefined as never})
+      ).toThrow('navigatorContextProvider');
+    });
+
+    it('sends the agent configuration and tracking id, and the navigator locale, with the request', async () => {
       const session = createSession(baseConfig);
 
       const stream = queueStream();
       const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
       await stream.opened;
 
-      const request = callMock.mock.calls[0][0];
-      expect(request).toMatchObject({
+      expect(Object.keys(callMock.mock.calls[0][0] as object).slice(0, 5)).toEqual([
+        'agentConfigurationId',
+        'trackingId',
+        'language',
+        'country',
+        'currency',
+      ]);
+      expect(callMock.mock.calls[0][0]).toMatchObject({
         agentConfigurationId: 'agent-configuration-1',
         trackingId: 'tracking-1',
+        language: 'en',
+        country: 'US',
+        currency: 'USD',
       });
-      expect(request).not.toHaveProperty('language');
-      expect(request).not.toHaveProperty('country');
-      expect(request).not.toHaveProperty('currency');
 
       stream.emit({type: 'RUN_FINISHED'});
       stream.close();
       await turn;
     });
+
+    it('reads the locale from the navigator context on every request', async () => {
+      let locale = {language: 'en', country: 'US', currency: 'USD'};
+      const session = createSession({
+        ...baseConfig,
+        navigatorContextProvider: () => ({...navigatorContext, ...locale}),
+      });
+
+      for (const prompt of ['find shoes', 'find boots']) {
+        const stream = queueStream();
+        const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt}});
+        await stream.opened;
+        stream.emit({type: 'RUN_FINISHED'});
+        stream.close();
+        await turn;
+        locale = {language: 'fr', country: 'CA', currency: 'CAD'};
+      }
+
+      expect(callMock.mock.calls[0][0]).toMatchObject({
+        language: 'en',
+        country: 'US',
+        currency: 'USD',
+      });
+      expect(callMock.mock.calls[1][0]).toMatchObject({
+        language: 'fr',
+        country: 'CA',
+        currency: 'CAD',
+      });
+    });
+
+    it.each([
+      ['language', undefined],
+      ['language', '  '],
+      ['country', ''],
+      ['country', 840],
+      ['currency', undefined],
+    ])('fails the run, without a request, when the navigator %s is %j', async (key, value) => {
+      const session = createSession({
+        ...baseConfig,
+        navigatorContextProvider: () => ({...navigatorContext, [key]: value}),
+      });
+
+      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+
+      expect(callMock).not.toHaveBeenCalled();
+      expect(session.turns.at(-1)?.error).toContain(key);
+    });
+  });
+
+  it('sends the navigator locale trimmed', async () => {
+    const session = createSession({
+      ...baseConfig,
+      navigatorContextProvider: () => ({
+        ...navigatorContext,
+        language: ' en ',
+        country: 'US\n',
+        currency: '\tUSD',
+      }),
+    });
+
+    await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+
+    expect(callMock.mock.calls[0][0]).toMatchObject({
+      language: 'en',
+      country: 'US',
+      currency: 'USD',
+    });
+  });
+
+  it('fails the initialization, without a request, when the navigator locale is blank', async () => {
+    const session = createSession({
+      ...baseConfig,
+      initialize: true,
+      navigatorContextProvider: () => ({...navigatorContext, currency: ' '}),
+    });
+    await flush();
+
+    expect(callMock).not.toHaveBeenCalled();
+    expect(session.initialization).toMatchObject({status: 'error'});
+    expect(session.initialization?.error).toContain('currency');
   });
 
   describe('submitPrompt action', () => {

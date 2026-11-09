@@ -107,6 +107,15 @@ const baseConfig: SessionConfig = {
   accessToken: 'token-1',
   agentConfigurationId: 'agent-configuration-1',
   trackingId: 'tracking-1',
+  navigatorContextProvider: () => ({
+    clientId: 'client-1',
+    location: null,
+    referrer: null,
+    userAgent: null,
+    language: 'en',
+    country: 'US',
+    currency: 'USD',
+  }),
   initialize: false,
 };
 
@@ -248,6 +257,40 @@ describe('concurrent and cached actions (ADR-020)', () => {
 
     expect(sentQueries()).toEqual(['boots', 'poles']);
     expect(shownQuery(session)).toBe('boots');
+  });
+
+  it('sends a cached action again once the navigator locale changed', async () => {
+    let currency = 'USD';
+    const session = createSession({
+      ...baseConfig,
+      navigatorContextProvider: () => ({...baseConfig.navigatorContextProvider(), currency}),
+      sessionToRestore: restoredShell(),
+    });
+    const usd = dispatch(session, 'boots');
+    answer(calls[0], 'boots');
+    await usd;
+
+    currency = 'CAD';
+    const cad = dispatch(session, 'boots');
+    answer(calls[1], 'boots');
+    await cad;
+
+    expect(sentQueries()).toEqual(['boots', 'boots']);
+    expect(calls[1].request).toMatchObject({currency: 'CAD'});
+  });
+
+  it('sends nothing, and warns, when the navigator locale is blank', async () => {
+    const session = createSession({
+      ...baseConfig,
+      navigatorContextProvider: () => ({...baseConfig.navigatorContextProvider(), language: ''}),
+      sessionToRestore: restoredShell(),
+    });
+
+    await dispatch(session, 'boots');
+
+    expect(calls).toHaveLength(0);
+    expect(warned('language')).toBe(true);
+    expect(session.actionError).toBeUndefined();
   });
 
   it('sends a cached action again once its answer expired', async () => {
