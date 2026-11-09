@@ -1,4 +1,5 @@
-import {REPO_NAME, REPO_OWNER} from '../common/constants.mjs';
+import {DAY_IN_MS, REPO_NAME, REPO_OWNER} from '../common/constants.mjs';
+import {matchesEntry} from '../quarantine.mjs';
 
 const REPOSITORY_URL = `https://github.com/${REPO_OWNER}/${REPO_NAME}`;
 const JIRA_URL = 'https://coveord.atlassian.net';
@@ -12,6 +13,12 @@ const PULL_REQUEST_CAUSES = {
   mergeQueue: 'Something else: the merge queue failed it too',
   pullRequest: 'The pull request',
 };
+// A quarantined test is broken once it fails every retry in this many runs in a row, and ready to
+// release after this many clean runs in a row spread over at least a week.
+const BROKEN_RUNS = 5;
+const HEALTHY_RUNS = 40;
+const HEALTHY_DAYS = 7;
+const QUARANTINE_ORDER = ['broken', 'expired', 'healthy', 'quarantined', 'not run'];
 
 function suiteGroup(suite) {
   return suite === 'atomic' || suite === 'quantic' ? suite : 'other';
@@ -87,6 +94,41 @@ function stepCause(jobName, step) {
   return {cause: `${jobName}: ${step}`, kind: isTestJob(jobName) ? 'test' : 'unknown'};
 }
 
+function inARow(runs, outcome) {
+  return runs.length - 1 - runs.findLastIndex((run) => run.outcome !== outcome);
+}
+
+function quarantineRow(entry, runs, today) {
+  const latest = runs.at(-1);
+  const cleanInARow = inARow(runs, 'passed');
+  const cleanDays = cleanInARow
+    ? (Date.parse(latest.createdAt) - Date.parse(runs.at(-cleanInARow).createdAt)) / DAY_IN_MS
+    : 0;
+  const daysLeft = Math.round((Date.parse(entry.expires) - Date.parse(today)) / DAY_IN_MS);
+  let status = 'quarantined';
+  if (daysLeft <= 0) {
+    status = 'expired';
+  } else if (inARow(runs, 'failed') >= BROKEN_RUNS) {
+    status = 'broken';
+  } else if (cleanInARow >= HEALTHY_RUNS && cleanDays >= HEALTHY_DAYS) {
+    status = 'healthy';
+  } else if (runs.length === 0) {
+    status = 'not run';
+  }
+  return {
+    file: entry.file,
+    title: entry.title,
+    project: entry.project ?? '',
+    bug: entry.bug,
+    line: latest?.line,
+    sha: latest?.sha,
+    daysLeft: Math.max(daysLeft, 0),
+    runs: runs.length,
+    cleanInARow,
+    status,
+  };
+}
+
 // A failed test explains a run even next to a failed setup, so it decides the run's kind first.
 function runKind(jobCauses) {
   const kinds = new Set(jobCauses.map(({kind}) => kind));
@@ -116,8 +158,21 @@ function runKind(jobCauses) {
  *   a test failed, `infrastructure` when only a setup failed or no step did, and `unknown` otherwise.
  * - `recoveries`: per job, the runs that only passed after a re-run.
  * - `skips`: the skipped tests, oldest first.
+ * - `quarantine`: one row per entry of quarantine.json, with its runs in the window, each Playwright
+ *   project counting as a run, and its status: `broken` after failing every retry in its last 5
+ *   runs, `expired`, `healthy` after 40 clean runs in a row over at least 7 days, `not run`, or
+ *   `quarantined`. A quarantined test can't fail its run, so it counts in no other figure, except
+ *   that passing on a retry makes it a flaky test for the pull-request causes.
  */
-export function buildModel({window, runs, records, recoveries, mergeQueueFailures, skips}) {
+export function buildModel({
+  window,
+  runs,
+  records,
+  recoveries,
+  mergeQueueFailures,
+  skips,
+  quarantine = [],
+}) {
   const runsById = new Map(runs.map((run) => [run.id, run]));
   const groups = new Map(
     Object.keys(GROUPS).map((id) => [id, {runs: new Set(), flakyRuns: new Set()}])
@@ -125,6 +180,7 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
   const tests = new Map();
   const failedFilesByMergeQueueRun = new Map();
   const pullRequestFailures = [];
+  const quarantinedRuns = [];
 
   for (const record of records) {
     const run = runsById.get(record.runId);
@@ -134,6 +190,10 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
       group.flakyRuns.add(run.id);
     }
     for (const test of record.tests ?? []) {
+      if (test.quarantined) {
+        quarantinedRuns.push({...test, createdAt: run.createdAt, sha: record.sha ?? run.headSha});
+        continue;
+      }
       // Records saved before they held the project fall back to an unnamed one.
       const project = test.project ?? '';
       const key = testKey(record.suite, project, test);
@@ -156,6 +216,9 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
   const fileAndTitle = ({file, title}) => JSON.stringify([file, title]);
   const entries = [...tests.values()];
   const flakyTests = new Set(entries.filter((entry) => entry.flakyRuns.size > 0).map(fileAndTitle));
+  for (const run of quarantinedRuns.filter(({outcome}) => outcome === 'flaky')) {
+    flakyTests.add(fileAndTitle(run));
+  }
   const failedInMergeQueue = new Set(
     entries.filter((entry) => entry.failedMergeQueueRuns.size > 0).map(fileAndTitle)
   );
@@ -259,6 +322,21 @@ export function buildModel({window, runs, records, recoveries, mergeQueueFailure
     mergeQueueCauses,
     recoveries: recoveryRows,
     skips: [...skips].sort((a, b) => b.ageDays - a.ageDays || a.file.localeCompare(b.file)),
+    quarantine: quarantine
+      .map((entry) =>
+        quarantineRow(
+          entry,
+          quarantinedRuns
+            .filter((run) => matchesEntry(entry, run))
+            .sort((a, b) => a.createdAt.localeCompare(b.createdAt)),
+          window.end.slice(0, 10)
+        )
+      )
+      .sort(
+        (a, b) =>
+          QUARANTINE_ORDER.indexOf(a.status) - QUARANTINE_ORDER.indexOf(b.status) ||
+          a.daysLeft - b.daysLeft
+      ),
   };
 }
 
@@ -345,8 +423,16 @@ function runLink({runId, createdAt}) {
 }
 
 function sourceLink(ref, file, line, text) {
-  return `[${text}](${REPOSITORY_URL}/blob/${ref}/${file}#L${line})`;
+  return `[${text}](${REPOSITORY_URL}/blob/${ref}/${file}${line ? `#L${line}` : ''})`;
 }
+
+const QUARANTINE_STATUS = {
+  broken: () => `Broken: failed every retry in its last ${BROKEN_RUNS} runs`,
+  expired: () => 'Expired: it can fail its run again',
+  healthy: (row) => `Ready to release: ${row.cleanInARow} clean runs in a row`,
+  quarantined: (row) => `${plural(row.cleanInARow, 'clean run')} in a row`,
+  'not run': () => 'Not run',
+};
 
 /**
  * Renders the model as the issue description, in Markdown, and the one-line weekly comment. Lists
@@ -364,9 +450,27 @@ export function renderReport(model, {ref}) {
   const lines = [
     `**${period}**, ${plural(model.runCounts.total, 'CI run')}. Runs with a flaky test, out of the runs that ran each suite: ${suites}.`,
     '',
-    '## Flaky tests',
-    '',
   ];
+  if (model.quarantine.length > 0) {
+    lines.push(
+      '## Quarantined tests',
+      '',
+      '| Test | Bug | Days left | Runs | Status |',
+      '|---|---|---:|---:|---|',
+      ...model.quarantine.map((row) =>
+        tableRow([
+          // The whole title: a test written in a loop repeats its last part in each case.
+          `${sourceLink(row.sha ?? ref, row.file, row.line, `\`${fileStem(row.file)}\``)} ${escapeCell(row.title)}${row.project ? ` (${escapeCell(row.project)})` : ''}`,
+          ticketLink(row.bug),
+          row.daysLeft,
+          row.runs,
+          QUARANTINE_STATUS[row.status](row),
+        ])
+      ),
+      ''
+    );
+  }
+  lines.push('## Flaky tests', '');
   if (model.tests.length === 0) {
     lines.push('No test needed a retry.');
   } else {
@@ -466,13 +570,22 @@ export function renderReport(model, {ref}) {
   }
 
   const [top] = model.tests;
+  const quarantineNotes = ['broken', 'expired', 'healthy']
+    .map((status) => [status, model.quarantine.filter((row) => row.status === status).length])
+    .filter(([, count]) => count > 0)
+    .map(([status, count]) => `${count} ${status === 'healthy' ? 'ready to release' : status}`);
   const comment = [
     `**${period}:**`,
     top
       ? `${plural(model.tests.length, 'flaky test')}, led by \`${fileStem(top.file)}\`.`
       : 'no flaky test.',
+    model.quarantine.length > 0
+      ? `${plural(model.quarantine.length, 'quarantined test')}${quarantineNotes.length > 0 ? `: ${quarantineNotes.join(', ')}` : ''}.`
+      : '',
     mergeQueue,
-  ].join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return {body: `${lines.join('\n')}\n`, comment};
 }

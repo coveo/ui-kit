@@ -91,8 +91,8 @@ function readRecordArchive(archive) {
 /**
  * Reads the record each Playwright job uploaded, for every run. A record holds one job's counts of
  * passed, flaky and failed tests (see `playwright-record-reporter.mjs`). The counts come from the
- * artifact name alone; only records with a retry or a failure are downloaded, to get each of those
- * tests' file, line and title.
+ * artifact name alone; only records with a retry, a failure or a quarantined test are downloaded,
+ * to get each of those tests' file, line and title.
  */
 export async function collectRecords({octokit, owner, repo}, runs) {
   const records = [];
@@ -114,7 +114,7 @@ export async function collectRecords({octokit, owner, repo}, runs) {
         flaky: parsed.flaky,
         failed: parsed.failed,
       };
-      if (parsed.flaky > 0 || parsed.failed > 0) {
+      if (parsed.flaky > 0 || parsed.failed > 0 || parsed.quarantined > 0) {
         const {data} = await octokit.rest.actions.downloadArtifact({
           owner,
           repo,
