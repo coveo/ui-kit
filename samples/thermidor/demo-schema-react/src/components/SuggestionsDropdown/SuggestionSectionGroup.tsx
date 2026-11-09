@@ -1,5 +1,6 @@
 import type {SuggestionSection, SuggestionItem} from './types.js';
 import {SuggestionItemRow} from './SuggestionItemRow.js';
+import {actionOptionId, itemOptionId} from './options.js';
 import styles from './SuggestionSectionGroup.module.css';
 
 interface SuggestionSectionGroupProps {
@@ -8,7 +9,8 @@ interface SuggestionSectionGroupProps {
   onHover?: (item: SuggestionItem) => void;
   /** Called with the item whose remove button is pressed, in a section with a `removal`. */
   onRemove?: (item: SuggestionItem) => void;
-  activeItemId?: string;
+  /** The element id of the highlighted option. */
+  activeOptionId?: string;
 }
 
 export function SuggestionSectionGroup({
@@ -16,11 +18,12 @@ export function SuggestionSectionGroup({
   onSelect,
   onHover,
   onRemove,
-  activeItemId,
+  activeOptionId,
 }: SuggestionSectionGroupProps) {
   const headerId = `section-${section.id}-header`;
   const removalHintId = `section-${section.id}-removal-hint`;
   const {action, removal} = section;
+  const actionId = actionOptionId(section);
 
   return (
     <div role="group" aria-labelledby={headerId} className={styles.group}>
@@ -29,14 +32,16 @@ export function SuggestionSectionGroup({
           {section.title}
         </span>
         {action && (
-          <button
-            type="button"
-            className={styles.headerAction}
+          <div
+            id={actionId}
+            role="option"
+            aria-selected={actionId === activeOptionId}
             aria-label={action.ariaLabel}
+            className={styles.headerAction}
             onClick={action.onClick}
           >
             {action.label}
-          </button>
+          </div>
         )}
         {removal && (
           <span id={removalHintId} hidden>
@@ -49,10 +54,10 @@ export function SuggestionSectionGroup({
           key={item.id}
           item={item}
           icon={section.icon}
-          isActive={item.id === activeItemId}
+          isActive={itemOptionId(item) === activeOptionId}
           onSelect={() => onSelect(item)}
           onHover={() => onHover?.(item)}
-          id={`suggestion-item-${item.id}`}
+          id={itemOptionId(item)}
           onRemove={removal && onRemove && (() => onRemove(item))}
           removeLabel={removal?.ariaLabel(item)}
           describedBy={removal && removalHintId}

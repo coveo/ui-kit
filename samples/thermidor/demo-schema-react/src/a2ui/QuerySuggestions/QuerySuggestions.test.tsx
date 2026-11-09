@@ -42,7 +42,11 @@ async function renderSearchBox(
   return {...test, onSubmit, textarea, type, queriesSent};
 }
 
-const options = () => screen.queryAllByRole('option').map((option) => option.textContent);
+const options = () =>
+  screen
+    .queryAllByRole('option')
+    .filter(({id}) => id.startsWith('suggestion-item-'))
+    .map((option) => option.textContent);
 
 describe('QuerySuggestions', () => {
   it("sends the query once typing pauses, from the shell's QuerySuggestions node", async () => {
@@ -403,7 +407,7 @@ describe('QuerySuggestions recent queries', () => {
     type('hi');
 
     await waitFor(() => expect(options()).toEqual(['hiking boots', 'hi poles']));
-    expect(screen.getAllByRole('option')[0].querySelector('strong')?.textContent).toBe(
+    expect(screen.getAllByRole('option')[1].querySelector('strong')?.textContent).toBe(
       'king boots'
     );
   });
@@ -447,7 +451,7 @@ describe('QuerySuggestions recent queries', () => {
     type('t');
     await waitFor(() => expect(options()).toEqual(['tents', 'trail shoes', 't poles']));
 
-    fireEvent.click(screen.getByRole('button', {name: 'Clear recent searches'}));
+    fireEvent.click(screen.getByRole('option', {name: 'Clear recent searches'}));
 
     expect(options()).toEqual(['t poles']);
     expect(textarea.value).toBe('t');
@@ -460,10 +464,33 @@ describe('QuerySuggestions recent queries', () => {
     recent.push('tents');
     type('te');
     await waitFor(() => expect(options()).toEqual(['tents', 'te poles']));
-    fireEvent.click(screen.getByRole('button', {name: 'Clear recent searches'}));
+    fireEvent.click(screen.getByRole('option', {name: 'Clear recent searches'}));
 
     expect(announced()).not.toBe(first);
     expect(announced()?.trim()).toBe('Recent searches cleared.');
+  });
+
+  it('clears them with Enter on the Clear option, reached with the arrow keys', async () => {
+    const {type, textarea, onSubmit, actions, queriesSent} = await renderSearchBox(
+      recentQueriesProducer(['tents', 'trail shoes'])
+    );
+    type('t');
+    await waitFor(() => expect(options()).toEqual(['tents', 'trail shoes', 't poles']));
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    fireEvent.keyDown(textarea, {key: 'ArrowUp'});
+    expect(textarea.getAttribute('aria-activedescendant')).toBe('section-recent-action');
+    expect(textarea.value).toBe('t');
+
+    fireEvent.keyDown(textarea, {key: 'Enter', code: 'Enter'});
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(options()).toEqual(['t poles']);
+    expect(textarea.value).toBe('t');
+    expect(textarea.getAttribute('aria-activedescendant')).toBeNull();
+    expect(announced()).toBe('Recent searches cleared.');
+    await waitFor(() => expect(queriesSent()).toEqual(['', 't', 't']));
+    expect(actions('clearRecentQueries')).toHaveLength(1);
   });
 
   it('removes a recent query only once the session is free', async () => {

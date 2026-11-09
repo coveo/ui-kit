@@ -10,8 +10,8 @@ export interface SuggestionItem {
 
 export type SuggestionIconType = 'search' | 'sparkle' | 'settings' | 'history';
 
-/** A control drawn in a section's header, such as one clearing its items. */
-interface SuggestionSectionAction {
+/** An option drawn in a section's header, such as one clearing its items. */
+export interface SuggestionSectionAction {
   label: string;
   ariaLabel: string;
   onClick: () => void;

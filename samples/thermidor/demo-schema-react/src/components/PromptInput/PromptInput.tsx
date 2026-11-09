@@ -14,6 +14,7 @@ import {
   ActiveAsideOptionContext,
   SUGGESTIONS_LISTBOX_ID,
   ASIDE_LISTBOX_ID,
+  suggestionOptions,
   type SuggestionSection,
   type SuggestionItem,
   type SuggestionsPlacement,
@@ -88,11 +89,11 @@ export function PromptInput({
     }
   }, [initialValue]);
 
-  const totalItems = useMemo(
-    () => (suggestions ? suggestions.flatMap((s) => s.items) : []),
-    [suggestions]
-  );
-  const expanded = showDropdown && totalItems.length > 0;
+  const options = useMemo(() => suggestionOptions(suggestions ?? []), [suggestions]);
+  const expanded = showDropdown && options.length > 0;
+  const activeOption = expanded && activeIndex >= 0 ? options[activeIndex] : undefined;
+  // A section action, such as clearing recent searches, is no item to show products for.
+  const activeItem = activeOption?.item;
 
   // Reset while rendering, so an item of the new suggestions is never reported at the old index.
   const [highlightedSuggestions, setHighlightedSuggestions] = useState(suggestions);
@@ -102,7 +103,7 @@ export function PromptInput({
       resetHighlight();
     } else {
       setHighlightAfterRemoval(undefined);
-      setActiveIndex(Math.min(highlightAfterRemoval, totalItems.length - 1));
+      setActiveIndex(Math.min(highlightAfterRemoval, options.length - 1));
     }
   }
 
@@ -200,7 +201,7 @@ export function PromptInput({
   function highlightSuggestion(index: number) {
     setActiveIndex(index);
     setInAside(false);
-    setValue(index >= 0 ? totalItems[index].label : typedValueRef.current);
+    setValue(options[index]?.item?.label ?? typedValueRef.current);
   }
 
   /**
@@ -209,19 +210,23 @@ export function PromptInput({
    */
   function removeItem(item: SuggestionItem) {
     const removal = suggestions?.find(({items}) => items.includes(item))?.removal;
-    if (!removal) {
+    if (!removal || !suggestions) {
       return false;
     }
-    const index = totalItems.indexOf(item);
-    const remaining = totalItems.filter((other) => other !== item);
+    const index = options.findIndex((option) => option.item === item);
+    const remaining = suggestionOptions(
+      suggestions
+        .map((section) => ({...section, items: section.items.filter((other) => other !== item)}))
+        .filter(({items}, index) => items.length > 0 || suggestions[index].items.length === 0)
+    );
     if (activeIndex >= 0) {
-      const next =
-        activeIndex === index
-          ? Math.min(activeIndex, remaining.length - 1)
-          : activeIndex - (activeIndex > index ? 1 : 0);
+      const next = Math.min(
+        activeIndex === index ? activeIndex : activeIndex - (activeIndex > index ? 1 : 0),
+        remaining.length - 1
+      );
       setHighlightAfterRemoval(next);
-      if (value !== typedValueRef.current && value === totalItems[activeIndex].label) {
-        setValue(next >= 0 ? remaining[next].label : typedValueRef.current);
+      if (value !== typedValueRef.current && value === options[activeIndex].item?.label) {
+        setValue(remaining[next]?.item?.label ?? typedValueRef.current);
       }
     }
     removal.onRemove(item);
@@ -251,7 +256,7 @@ export function PromptInput({
       if (inAside) {
         moveInAside(1);
       } else {
-        highlightSuggestion((activeIndex + 1) % totalItems.length);
+        highlightSuggestion((activeIndex + 1) % options.length);
       }
       return;
     }
@@ -261,21 +266,21 @@ export function PromptInput({
       if (inAside) {
         moveInAside(-1);
       } else {
-        highlightSuggestion(activeIndex === -1 ? totalItems.length - 1 : activeIndex - 1);
+        highlightSuggestion(activeIndex === -1 ? options.length - 1 : activeIndex - 1);
       }
       return;
     }
 
     // Mac keyboards report their Delete key as Backspace.
     const deleteKey = e.key === 'Delete' || e.key === 'Backspace';
-    if (deleteKey && e.shiftKey && expanded && !inAside && activeIndex >= 0) {
-      if (removeItem(totalItems[activeIndex])) {
+    if (deleteKey && e.shiftKey && !inAside && activeItem) {
+      if (removeItem(activeItem)) {
         e.preventDefault();
       }
       return;
     }
 
-    if (e.key === 'ArrowRight' && expanded && !inAside && activeIndex >= 0) {
+    if (e.key === 'ArrowRight' && !inAside && activeItem) {
       const options = asideOptions();
       if (options.length > 0) {
         e.preventDefault();
@@ -297,6 +302,8 @@ export function PromptInput({
       if (option) {
         setShowDropdown(false);
         option.click();
+      } else if (activeOption?.action) {
+        activeOption.action.onClick();
       } else {
         submit(value);
       }
@@ -326,10 +333,8 @@ export function PromptInput({
     el.style.overflowY = el.scrollHeight > maxHeight ? 'auto' : 'hidden';
   }
 
-  const activeItem = expanded && activeIndex >= 0 ? totalItems[activeIndex] : undefined;
   const activeAsideOptionId = expanded && inAside ? asideOptionId : undefined;
-  const activeDescendant =
-    activeAsideOptionId ?? (activeItem && `suggestion-item-${activeItem.id}`);
+  const activeDescendant = activeAsideOptionId ?? activeOption?.id;
 
   useEffect(() => onActiveItemChange?.(activeItem), [activeItem, onActiveItemChange]);
 
@@ -431,7 +436,7 @@ export function PromptInput({
             onSelect={selectItem}
             onRemove={removeItem}
             onHover={(item) => {
-              setActiveIndex(totalItems.indexOf(item));
+              setActiveIndex(options.findIndex((option) => option.item === item));
               setInAside(false);
             }}
             visible={showDropdown}

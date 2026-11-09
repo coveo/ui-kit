@@ -32,7 +32,7 @@ describe('SuggestionSectionGroup', () => {
   });
 
   it('passes active state to the correct item', () => {
-    render(<SuggestionSectionGroup {...baseProps} activeItemId="s2" />);
+    render(<SuggestionSectionGroup {...baseProps} activeOptionId="suggestion-item-s2" />);
     const activeItem = document.getElementById('suggestion-item-s2');
     expect(activeItem?.getAttribute('aria-selected')).toBe('true');
   });
@@ -52,13 +52,13 @@ describe('SuggestionSectionGroup', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', {name: 'Clear recent searches'}));
+    fireEvent.click(screen.getByRole('option', {name: 'Clear recent searches'}));
     fireEvent.click(screen.getByRole('button', {name: 'Remove Wetsuits'}));
 
     expect(onClick).toHaveBeenCalledOnce();
     expect(onRemove).toHaveBeenCalledWith({id: 's2', label: 'Wetsuits'});
     expect(screen.getByRole('group', {name: 'Search'})).toBeDefined();
-    expect(screen.getAllByRole('option')[0].getAttribute('aria-describedby')).toBe(
+    expect(screen.getAllByRole('option')[1].getAttribute('aria-describedby')).toBe(
       'section-search-removal-hint'
     );
     expect(document.getElementById('section-search-removal-hint')?.textContent).toMatch(
