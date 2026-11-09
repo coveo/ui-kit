@@ -13,6 +13,7 @@ import type {
   ConverseRequestModel,
   RequestLocale,
 } from '@/src/internal/api/unified/unified-endpoint-types.js';
+import type {NavigatorContext} from '@/src/internal/context/index.js';
 import {devWarn} from '@/src/internal/utils/dev-warn.js';
 import {
   EMPTY_RENDERER_STREAM,
@@ -41,9 +42,12 @@ export interface ConcurrentActionsOptions {
     accessToken: string;
     endpoint?: string;
   };
-  /** The navigator locale, validated; throws when it is missing or blank. */
-  readLocale: () => RequestLocale;
-  buildActionRequest: (action: A2uiAction, locale: RequestLocale) => ConverseRequestModel;
+  /** The navigator context and its locale; throws when the locale is missing or blank. */
+  readNavigatorContext: () => {navigatorContext: NavigatorContext; locale: RequestLocale};
+  buildActionRequest: (
+    action: A2uiAction,
+    navigatorContext: NavigatorContext
+  ) => ConverseRequestModel;
 }
 
 export interface ConcurrentActions {
@@ -142,7 +146,7 @@ export function createConcurrentActions({
   store,
   client,
   config,
-  readLocale,
+  readNavigatorContext,
   buildActionRequest,
 }: ConcurrentActionsOptions): ConcurrentActions {
   const cache = createActionCache();
@@ -183,13 +187,13 @@ export function createConcurrentActions({
    */
   async function stream(
     action: A2uiAction,
-    locale: RequestLocale,
+    navigatorContext: NavigatorContext,
     origin: ActionOrigin,
     key: string,
     {signal, joined = () => false}: {signal?: AbortSignal; joined?: () => boolean} = {}
   ): Promise<readonly unknown[]> {
     const result = await client.call(
-      buildActionRequest(action, locale),
+      buildActionRequest(action, navigatorContext),
       {
         organizationId: config.organizationId,
         accessToken: config.accessToken,
@@ -246,15 +250,15 @@ export function createConcurrentActions({
 
   return {
     issue(origin, policy) {
-      let locale: RequestLocale;
+      let navigatorRead: ReturnType<typeof readNavigatorContext>;
       try {
-        locale = readLocale();
+        navigatorRead = readNavigatorContext();
       } catch (error) {
         lanes.claim(origin);
         return quietly(origin, Promise.reject(error));
       }
 
-      const key = actionCacheKey(origin, origin.context, locale);
+      const key = actionCacheKey(origin, origin.context, navigatorRead.locale);
       lanes.claim(origin, key);
       const cached = policy && cache.get(key, policy.ttlMs);
       if (cached) {
@@ -271,13 +275,17 @@ export function createConcurrentActions({
       };
       if (!policy) {
         return lanes.sendUncached(origin, (signal) =>
-          quietly(origin, stream(action, locale, origin, key, {signal}), signal)
+          quietly(
+            origin,
+            stream(action, navigatorRead.navigatorContext, origin, key, {signal}),
+            signal
+          )
         );
       }
       return lanes.sendCachedMiss(key, (joined) =>
         quietly(
           origin,
-          stream(action, locale, origin, key, {joined}).then((messages) =>
+          stream(action, navigatorRead.navigatorContext, origin, key, {joined}).then((messages) =>
             cache.set(key, accept(messages).messages)
           )
         )

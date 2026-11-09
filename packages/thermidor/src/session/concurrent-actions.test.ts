@@ -315,6 +315,25 @@ describe('concurrent and cached actions (ADR-020)', () => {
     expect(shownQuery(session)).toBeUndefined();
   });
 
+  it('reads the navigator context once per sent action, and sends that read', async () => {
+    let reads = 0;
+    const session = createSession({
+      ...baseConfig,
+      navigatorContextProvider: () => ({
+        ...baseConfig.navigatorContextProvider(),
+        clientId: `client-${++reads}`,
+      }),
+      sessionToRestore: restoredShell(),
+    });
+
+    const boots = dispatch(session, 'boots');
+    answer(calls[0], 'boots');
+    await boots;
+
+    expect(reads).toBe(1);
+    expect(calls[0].request).toMatchObject({clientId: 'client-1'});
+  });
+
   it('answers a cached action from the cache without reading the commerce context', async () => {
     const commerceContextProvider = vi.fn(() => ({cart: []}));
     const session = createSession({

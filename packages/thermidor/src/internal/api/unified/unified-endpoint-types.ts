@@ -21,13 +21,13 @@ export type ClientOwnedRequestFields = {
   pinnedProducts?: string[];
 };
 
+/** The locale every request carries, read from the navigator context. */
+export type RequestLocale = Pick<ClientOwnedRequestFields, 'language' | 'country' | 'currency'>;
+
 /**
  * The fields that scope every request of a session. The public `createSession` sends
  * both ids; the private `createPrivateSession` sends whichever ids are set.
  */
-/** The locale every request carries, read from the navigator context. */
-export type RequestLocale = Pick<ClientOwnedRequestFields, 'language' | 'country' | 'currency'>;
-
 export type RequestScopeFields = {
   agentConfigurationId?: string;
   trackingId?: string;

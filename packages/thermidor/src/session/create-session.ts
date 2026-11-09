@@ -706,10 +706,9 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
    *     `custom` carried from what the provider returns.
    */
   function buildBaseRequest(
-    knownLocale?: RequestLocale
+    navigatorContext = config.navigatorContextProvider()
   ): Omit<ClientOwnedRequestFields, 'message' | 'action'> {
-    const navigatorContext = config.navigatorContextProvider();
-    const locale = knownLocale ?? readLocale(navigatorContext);
+    const locale = readLocale(navigatorContext);
     const commerceContext = config.commerceContextProvider?.();
     const {sessionId, sessionToken} = store.getState();
 
@@ -752,16 +751,19 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
 
   function buildActionRequest(
     action: A2uiAction | InitializeAction,
-    locale?: RequestLocale
+    navigatorContext?: NavigatorContext
   ): ConverseRequestModel {
-    return {...requestScope, ...buildBaseRequest(locale), message: null, action};
+    return {...requestScope, ...buildBaseRequest(navigatorContext), message: null, action};
   }
 
   const concurrentActions = createConcurrentActions({
     store,
     client,
     config,
-    readLocale: () => readLocale(config.navigatorContextProvider()),
+    readNavigatorContext: () => {
+      const navigatorContext = config.navigatorContextProvider();
+      return {navigatorContext, locale: readLocale(navigatorContext)};
+    },
     buildActionRequest,
   });
 
