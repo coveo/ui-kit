@@ -29,8 +29,8 @@ renderer ──dispatchAction──▶ payload of the action ──session──
 
 ## 2. The contract
 
-The payloads are shared definitions; each component declares its own actions over them, as the
-schema does for every action several components share:
+Each action is one shared definition, titled after the action, that every component showing
+products references, as ADR-023 shapes its log actions. Its payload is a shared definition too:
 
 ```json
 // definitions/product-click-payload.schema.json
@@ -49,25 +49,33 @@ schema does for every action several components share:
 ```
 
 ```json
-// components/product-carousel.schema.json
-"actions": {
-  "type": "object",
+// definitions/product-click-action.schema.json
+{
+  "$id": "https://schema.thermidor.coveo.com/definitions/product-click-action.schema.json",
+  "title": "productClick",
+  "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"}],
   "properties": {
-    "productClick": {"$ref": "#/$defs/ProductCarouselProductClickAction"},
-    "updateCart": {"$ref": "#/$defs/ProductCarouselUpdateCartAction"}
-  },
-  "additionalProperties": false
-},
-"$defs": {
-  "ProductCarouselProductClickAction": {
-    "title": "productCarouselProductClick",
-    "allOf": [{"$ref": "https://schema.thermidor.coveo.com/base/action.schema.json"}],
-    "properties": {
-      "payload": {"$ref": "https://schema.thermidor.coveo.com/definitions/product-click-payload.schema.json"}
+    "payload": {
+      "$ref": "https://schema.thermidor.coveo.com/definitions/product-click-payload.schema.json"
     }
   }
 }
 ```
+
+```json
+// components/product-carousel.schema.json
+"actions": {
+  "type": "object",
+  "properties": {
+    "productClick": {"$ref": "https://schema.thermidor.coveo.com/definitions/product-click-action.schema.json"},
+    "updateCart": {"$ref": "https://schema.thermidor.coveo.com/definitions/update-cart-action.schema.json"}
+  },
+  "additionalProperties": false
+}
+```
+
+At the migration, `product-click-action.schema.json` composes ADR-023's `base/log-action.schema.json`
+instead, and its payload becomes `{analyticsRef}`: one file, for every component.
 
 | Component             | `productClick` | `updateCart` | `purchase` |
 | --------------------- | -------------- | ------------ | ---------- |

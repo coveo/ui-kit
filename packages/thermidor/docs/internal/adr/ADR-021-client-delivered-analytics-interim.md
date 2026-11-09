@@ -39,7 +39,8 @@ conversational reports. None is logged from a Thermidor surface today:
 
 ADR-023 decides the long-term answer: log actions with an opaque `analyticsRef`, resolved and
 logged by the producer, sent outside the turn slot with `keepalive`. It needs a reference index in
-the producer and a consent decision first. Nothing of it is built yet.
+the producer, and its log actions do not ship before a dedicated privacy and consent ADR. Nothing of
+it is built yet.
 
 Data Platform joins a click to what the shopper was shown: its `responseId` is the `turnId` of the
 turn that showed the item, and its `position` counts from 1 across every item of that turn, in
@@ -258,8 +259,8 @@ interface AnalyticsConfig {
 
 ### Consent
 
-Whether a visitor consented is the same question as for ADR-023, which waits for a consent decision
-before it ships. This ADR does not decide it. It provides the switch the consumer needs meanwhile:
+Whether a visitor consented is the question ADR-023 leaves to a dedicated privacy and consent ADR,
+before which its log actions do not ship. This ADR does not decide it. It provides the switch the consumer needs meanwhile:
 `analytics` absent or `enabled: false` sends no event and writes no cookie.
 
 ### Contracts
@@ -268,12 +269,12 @@ before it ships. This ADR does not decide it. It provides the switch the consume
   `purchase` on `Cart`, which Agent Gateway's handler already routes and ADR-023 keeps. No name is
   added. Two follow the commerce events they map to (`ec.productClick`, `ec.purchase`); `updateCart`
   names what the shopper does, and maps to `ec.cartAction`.
-- **Action payloads** stay in thermidor-schema, the only contract a consumer sees. The payloads
-  `ProductClickPayload` and `UpdateCartPayload` become shared definitions. Each component that shows
-  products declares its own `productClick` and `updateCart` actions over them, titled after the
-  component (`productCarouselProductClick`), as the schema names every action shared by several
-  components. They are optional, so a producer's nodes stay valid without them. `position` counts
-  from 1.
+- **Action payloads** stay in thermidor-schema, the only contract a consumer sees. `productClick`
+  and `updateCart` each become one shared action definition, titled after the action, that every
+  component showing products references, the shape ADR-023 gives its log actions. The action is the
+  same on every component, so the projections carry one type per action, and the migration rewrites
+  one definition: `productClick` composes ADR-023's log-action base instead of the action base. The
+  actions are optional, so a producer's nodes stay valid without them. `position` counts from 1.
 - **Event payloads** belong to Coveo's analytics schema, typed for the session by
   `@coveo/relay-event-types`. thermidor-schema does not repeat them.
 - **The mapping** lives in the session's internal module, typed by a structural view of the payload
@@ -370,10 +371,10 @@ with the decision on who owns the cart: the app, under ADR-012, or the producer'
 
 ## Implementation and Follow-up
 
-- thermidor-schema: shared `ProductClickPayload` and `UpdateCartPayload` definitions, an optional
-  `productClick` and `updateCart` on every component that shows products, and `clickUri` on
-  `ComparisonProduct`. The generators project a payload that `$ref`s a shared definition under the
-  definition's title. Coordinated with ADR-023's pull request, which edits the same files.
+- thermidor-schema: shared `productClick` and `updateCart` action definitions, over shared
+  `ProductClickPayload` and `UpdateCartPayload` definitions, referenced as optional actions by every
+  component that shows products, and `clickUri` on `ComparisonProduct`. The generators project a
+  shared definition under its title. Coordinated with ADR-023's pull request, which edits the same files.
 - Agent Gateway: announce `analyticsAttribution` on every snapshot that writes a node with products,
   with the `turnId` the turn already allocates when it starts; and state, on every `RUN_STARTED`,
   the currency it applied to the response.
@@ -386,7 +387,7 @@ with the decision on who owns the cart: the app, under ADR-012, or the producer'
 - `InstantProducts`, in its own sub-task: the session reads the attribution of concurrent answers
   and caches it; Agent Gateway announces the `productSuggest` response on `fetchInstantProducts`
   answers; the demo's instant products dispatch `productClick`, and the mock announces them.
-- Follow-ups outside this ADR: document and citation clicks (annex A), the consent decision, the
+- Follow-ups outside this ADR: document and citation clicks (annex A), the privacy and consent ADR, the
   cart's owner, and the producer's log actions (ADR-023).
 
 ## Considered Options
@@ -432,7 +433,7 @@ with the decision on who owns the cart: the app, under ADR-012, or the producer'
 - **Summary:** log nothing until the producer resolves log actions.
 - **Pros:** nothing to build and remove.
 - **Cons:** nothing is logged until the reference index, the producer's log-action path and the
-  consent decision ship, and none of them is planned.
+  privacy and consent ADR ship, and none of them is planned.
 
 ### Option C: Relay in the session, with ADR-023's payload
 

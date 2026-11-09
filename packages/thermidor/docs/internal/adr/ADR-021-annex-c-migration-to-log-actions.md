@@ -22,7 +22,7 @@ The release that migrates ships only when the producer:
   IP and user agent;
 - logs the same `responseId`, position and currency as the session logs today, checked against the
   cases of annex B;
-- has the consent decision ADR-023 waits for.
+- applies the privacy and consent ADR that ADR-023's log actions wait for.
 
 ## 2. The release
 
