@@ -1,1 +1,9 @@
-[]
+[
+  {
+    "file": "samples/headless/search-vite/e2e/quarantine-probe.spec.ts",
+    "title": "quarantine probe fails on purpose",
+    "bug": "KIT-6559",
+    "added": "2026-11-09",
+    "expires": "2026-12-09"
+  }
+]
