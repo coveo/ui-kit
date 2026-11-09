@@ -11,14 +11,14 @@ export interface SuggestionItem {
 export type SuggestionIconType = 'search' | 'sparkle' | 'settings' | 'history';
 
 /** A control drawn in a section's header, such as one clearing its items. */
-export interface SuggestionSectionAction {
+interface SuggestionSectionAction {
   label: string;
   ariaLabel: string;
   onClick: () => void;
 }
 
 /** Removes one item, with its remove button or with Shift+Delete while it is highlighted. */
-export interface SuggestionRemoval {
+interface SuggestionRemoval {
   /** The accessible name of the item's remove button. */
   ariaLabel: (item: SuggestionItem) => string;
   onRemove: (item: SuggestionItem) => void;
