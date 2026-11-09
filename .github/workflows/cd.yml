@@ -30,6 +30,9 @@ jobs:
       contents: write
       pull-requests: write
       id-token: write
+    env:
+      # Build what gets published from this commit's source, never from remote cache entries.
+      TURBO_CACHE: local:rw
     outputs:
       published: ${{ steps.changesets.outputs.published }}
       publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
@@ -38,6 +41,7 @@ jobs:
         uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
         with:
           egress-policy: audit
+          disable-sudo-and-containers: true
 
       - name: Generate a token
         id: generate-token
@@ -47,6 +51,8 @@ jobs:
           private-key: ${{ secrets.RELEASER_PRIVATE_KEY }}
           owner: coveo
           repositories: 'ui-kit'
+          permission-contents: write
+          permission-pull-requests: write
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
@@ -69,6 +75,7 @@ jobs:
         run: |
           echo "The publish command failed before any package was published." >&2
           exit 1
+      # Post-release jobs check out github.sha rather than this tag, which a later run can move.
       - name: Update release/v3 bookmark
         if: ${{ steps.changesets.outputs.published == 'true' }}
         run: |
@@ -87,7 +94,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          ref: 'refs/tags/release/v3'
+          ref: ${{ github.sha }}
       - uses: ./.github/actions/setup
       - name: Build create-ui
         run: pnpm exec turbo run build --filter=@coveo/create-ui
@@ -125,7 +132,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          ref: 'refs/tags/release/v3'
+          ref: ${{ github.sha }}
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-sfdx
       - name: Promote SFDX package to production
@@ -154,7 +161,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          ref: 'refs/tags/release/v3'
+          ref: ${{ github.sha }}
 
       - name: Set up and build the project
         uses: ./.github/actions/setup
@@ -194,7 +201,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          ref: 'refs/tags/release/v3'
+          ref: ${{ github.sha }}
 
       - name: Set up and build the project
         uses: ./.github/actions/setup
@@ -234,7 +241,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          ref: 'refs/tags/release/v3'
+          ref: ${{ github.sha }}
       - uses: ./.github/actions/setup
       - name: Create GitHub App token for docs dispatch
         id: app-token

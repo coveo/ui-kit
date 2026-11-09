@@ -59,17 +59,18 @@ Publishing uses [**OIDC trusted publishing**](https://docs.npmjs.com/trusted-pub
 
 ## The `release/v3` bookmark
 
-After a successful publish, the CD workflow force-pushes the current `main` HEAD to the `release/v3` branch:
+After a successful publish, the CD workflow force-pushes the `release/v3` tag to the published commit:
 
 ```yaml
-git push origin HEAD:refs/heads/release/v3 --force
+git tag -f release/v3
+git push origin refs/tags/release/v3 --force
 ```
 
-This branch acts as a bookmark pointing to the latest released commit. Downstream jobs (Quantic production promotion, typedoc generation, docs notification) check out `release/v3` so they operate on the exact code that was just published.
+The tag marks the latest released commit. Downstream jobs (Quantic production promotion, typedoc generation, docs notification) don't check it out: they check out the commit their own run published (`github.sha`), because a later release can move the tag before they start.
 
 ## Post-publish jobs
 
-All post-publish jobs are gated on `published == 'true'` from the changesets step and check out `release/v3`:
+All post-publish jobs are gated on `published == 'true'` from the changesets step and check out the published commit:
 
 | Job                      | Purpose                                                                                                  |
 | ------------------------ | -------------------------------------------------------------------------------------------------------- |
