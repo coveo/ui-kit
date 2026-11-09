@@ -323,33 +323,22 @@ const announced = () => screen.getByRole('status').textContent;
 
 describe('QuerySuggestions recent queries', () => {
   it('shows them under "Recent searches", above the completions, once the empty input has the focus', async () => {
-    const {queriesSent} = await renderSearchBox(recentQueriesProducer(['tents', 'hiking boots']));
+    const {textarea, queriesSent} = await renderSearchBox(
+      recentQueriesProducer(['tents', 'hiking boots']),
+      {focus: false}
+    );
+    await pause();
+    expect(queriesSent()).toEqual([]);
+
+    act(() => textarea.focus());
 
     await waitFor(() => expect(options()).toEqual(['tents', 'hiking boots', 'backpack']));
     expect(queriesSent()).toEqual(['']);
-    expect(screen.getByRole('group', {name: 'Recent searches'})).toBeDefined();
     expect(screen.getByRole('group', {name: 'Query suggestions'})).toBeDefined();
     expect(groups()[0]).toMatch(/^Recent searchesClear/);
   });
 
-  it('shows them when the input, emptied by a submit, gets the focus back', async () => {
-    const {type, textarea, queriesSent} = await renderSearchBox(recentQueriesProducer(['tents']), {
-      clearOnSubmit: true,
-    });
-    type('tents');
-    await pause();
-    fireEvent.keyDown(textarea, {key: 'Enter', code: 'Enter'});
-    await pause();
-    expect(queriesSent()).toEqual(['', 'tents']);
-
-    act(() => textarea.blur());
-    act(() => textarea.focus());
-
-    await waitFor(() => expect(options()).toEqual(['tents', 'backpack']));
-    expect(queriesSent()).toEqual(['', 'tents', '']);
-  });
-
-  it('sends nothing when only the window gets the focus back after a submit', async () => {
+  it('shows them when the input, emptied by a submit, gets the focus back, but not the window', async () => {
     const {type, textarea, queriesSent} = await renderSearchBox(recentQueriesProducer(['tents']), {
       clearOnSubmit: true,
     });
@@ -361,12 +350,17 @@ describe('QuerySuggestions recent queries', () => {
     fireEvent.blur(textarea);
     fireEvent.focus(textarea);
     await pause();
-
     expect(queriesSent()).toEqual(['', 'tents']);
     expect(options()).toEqual([]);
+
+    act(() => textarea.blur());
+    act(() => textarea.focus());
+
+    await waitFor(() => expect(options()).toEqual(['tents', 'backpack']));
+    expect(queriesSent()).toEqual(['', 'tents', '']);
   });
 
-  it('waits for a fresh answer before showing them again in the empty input', async () => {
+  it('waits for a fresh answer before showing them again in the refocused empty input', async () => {
     const recent = ['tents'];
     const producer = recentQueriesProducer(recent);
     let hold = false;
@@ -382,6 +376,7 @@ describe('QuerySuggestions recent queries', () => {
     await waitFor(() => expect(options()).toEqual(['tents', 'backpack']));
 
     act(() => textarea.blur());
+    expect(options()).toEqual([]);
     recent.unshift('kayaks');
     hold = true;
     act(() => textarea.focus());
@@ -400,43 +395,6 @@ describe('QuerySuggestions recent queries', () => {
 
     expect(options()).toEqual([]);
     await waitFor(() => expect(options()).toEqual(['water sports', 'w poles']));
-  });
-
-  it('announces a repeated clear again', async () => {
-    const recent = ['tents'];
-    const {textarea, queriesSent} = await renderSearchBox(recentQueriesProducer(recent));
-    await waitFor(() => expect(options()).toEqual(['tents', 'backpack']));
-    fireEvent.click(screen.getByRole('button', {name: 'Clear recent searches'}));
-    const first = announced();
-    await waitFor(() => expect(queriesSent()).toEqual(['', '']));
-
-    recent.push('tents');
-    act(() => textarea.blur());
-    act(() => textarea.focus());
-    await waitFor(() => expect(options()).toEqual(['tents', 'backpack']));
-    fireEvent.click(screen.getByRole('button', {name: 'Clear recent searches'}));
-
-    expect(announced()).not.toBe(first);
-    expect(announced()?.trim()).toBe('Recent searches cleared.');
-  });
-
-  it('sends no empty query while the input does not have the focus', async () => {
-    const {queriesSent} = await renderSearchBox(recentQueriesProducer(['tents']), {focus: false});
-
-    await pause();
-
-    expect(queriesSent()).toEqual([]);
-  });
-
-  it('sends the empty query again when the empty input gets the focus back', async () => {
-    const {textarea, queriesSent} = await renderSearchBox(recentQueriesProducer(['tents']));
-    await waitFor(() => expect(options()).toEqual(['tents', 'backpack']));
-
-    act(() => textarea.blur());
-    expect(options()).toEqual([]);
-    act(() => textarea.focus());
-
-    await waitFor(() => expect(queriesSent()).toEqual(['', '']));
   });
 
   it('bolds what follows the query in each recent query', async () => {
@@ -459,10 +417,9 @@ describe('QuerySuggestions recent queries', () => {
     expect(onSubmit).toHaveBeenCalledWith('tents');
   });
 
-  it('hides a removed recent query at once, and fetches the suggestions again once the removal is answered', async () => {
-    const {actions, queriesSent} = await renderSearchBox(
-      recentQueriesProducer(['tents', 'hiking boots'])
-    );
+  it('hides a removed recent query until the producer lists it again', async () => {
+    const recent = ['tents', 'hiking boots'];
+    const {textarea, actions, queriesSent} = await renderSearchBox(recentQueriesProducer(recent));
     await waitFor(() => expect(options()).toEqual(['tents', 'hiking boots', 'backpack']));
 
     fireEvent.click(screen.getByRole('button', {name: 'Remove tents from recent searches'}));
@@ -474,31 +431,6 @@ describe('QuerySuggestions recent queries', () => {
       expect.objectContaining({sourceComponentId: 'query-suggestions', context: {query: 'tents'}}),
     ]);
     expect(options()).toEqual(['hiking boots', 'backpack']);
-  });
-
-  it('removes the highlighted recent query on Shift+Delete, and highlights the next one', async () => {
-    const {textarea, actions} = await renderSearchBox(
-      recentQueriesProducer(['tents', 'hiking boots'])
-    );
-    await waitFor(() => expect(options()).toEqual(['tents', 'hiking boots', 'backpack']));
-    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
-
-    fireEvent.keyDown(textarea, {key: 'Delete', shiftKey: true});
-
-    expect(options()).toEqual(['hiking boots', 'backpack']);
-    expect(textarea.value).toBe('hiking boots');
-    expect(textarea.getAttribute('aria-activedescendant')).toBe('suggestion-item-recent-0');
-    await waitFor(() =>
-      expect(actions('removeRecentQuery').map(({context}) => context)).toEqual([{query: 'tents'}])
-    );
-  });
-
-  it('shows a removed query again once the producer lists it again', async () => {
-    const recent = ['tents', 'hiking boots'];
-    const {textarea, queriesSent} = await renderSearchBox(recentQueriesProducer(recent));
-    await waitFor(() => expect(options()).toHaveLength(3));
-    fireEvent.click(screen.getByRole('button', {name: 'Remove tents from recent searches'}));
-    await waitFor(() => expect(queriesSent()).toEqual(['', '']));
 
     recent.unshift('tents');
     act(() => textarea.blur());
@@ -508,8 +440,9 @@ describe('QuerySuggestions recent queries', () => {
   });
 
   it('clears the recent queries at once, keeps the text, and fetches its suggestions once answered', async () => {
+    const recent = ['tents', 'trail shoes'];
     const {type, textarea, actions, queriesSent} = await renderSearchBox(
-      recentQueriesProducer(['tents', 'trail shoes'])
+      recentQueriesProducer(recent)
     );
     type('t');
     await waitFor(() => expect(options()).toEqual(['tents', 'trail shoes', 't poles']));
@@ -518,10 +451,19 @@ describe('QuerySuggestions recent queries', () => {
 
     expect(options()).toEqual(['t poles']);
     expect(textarea.value).toBe('t');
-    expect(announced()).toBe('Recent searches cleared.');
+    const first = announced();
+    expect(first).toBe('Recent searches cleared.');
     await waitFor(() => expect(queriesSent()).toEqual(['', 't', 't']));
     expect(actions('clearRecentQueries').map(({context}) => context)).toEqual([{}]);
     expect(options()).toEqual(['t poles']);
+
+    recent.push('tents');
+    type('te');
+    await waitFor(() => expect(options()).toEqual(['tents', 'te poles']));
+    fireEvent.click(screen.getByRole('button', {name: 'Clear recent searches'}));
+
+    expect(announced()).not.toBe(first);
+    expect(announced()?.trim()).toBe('Recent searches cleared.');
   });
 
   it('removes a recent query only once the session is free', async () => {

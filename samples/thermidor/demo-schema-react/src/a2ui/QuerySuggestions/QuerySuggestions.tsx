@@ -13,18 +13,9 @@ import styles from './QuerySuggestions.module.css';
 export const SUGGESTIONS_DEBOUNCE_MS = 150;
 
 /**
- * A2-UI component for `QuerySuggestions`: the session's recent queries matching its `SearchBox`'s
- * query, under "Recent searches", above the query's completions, in the search box's dropdown.
- * Once typing pauses, the query is sent with `fetchSuggestions` as soon as the session is free; an
- * empty query is sent when the input has the focus. The last suggestions for typed text stay shown
- * while newer ones are on their way, and hide if those fail. Those for the empty input show only
- * while it stays empty and, once the shopper has left it, only after a fresh answer. Suggestions
- * are hidden after a submit until the next keystroke, while the empty input does not have the
- * focus, and while a request locks the page, such as an answer streaming. Suggestions hidden by a
- * submit, or by emptying the input, never show again.
- *
- * Removing a recent query, or clearing them, hides them at once, and sends `fetchSuggestions` for
- * the query again once the session has answered.
+ * A2-UI component for `QuerySuggestions`: the session's recent queries, under "Recent searches",
+ * above the completions of its `SearchBox`'s query. The query is sent with `fetchSuggestions` once
+ * typing pauses and the session is free, and an empty one while the input has the focus.
  */
 export const QuerySuggestions = createReactComponent(
   {name: 'QuerySuggestions', schema: QuerySuggestionsPropsSchema},

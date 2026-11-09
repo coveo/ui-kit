@@ -57,25 +57,19 @@ describe('SuggestionItemRow', () => {
     expect(onSelect).toHaveBeenCalledOnce();
   });
 
-  it('bolds what follows the text it completes', () => {
-    render(
-      <SuggestionItemRow {...baseProps} item={{id: 'r1', label: 'hiking boots', completes: 'Hi'}} />
+  it('bolds what follows the text it completes, when it starts the label', () => {
+    const row = (completes: string) => (
+      <SuggestionItemRow {...baseProps} item={{id: 'r1', label: 'hiking boots', completes}} />
     );
-    const option = screen.getByRole('option');
-    expect(option.textContent).toBe('hiking boots');
-    expect(option.querySelector('strong')?.textContent).toBe('king boots');
-  });
+    const bold = () => screen.getByRole('option').querySelector('strong')?.textContent;
+    const {rerender} = render(row('Hi'));
+    expect(screen.getByRole('option').textContent).toBe('hiking boots');
+    expect(bold()).toBe('king boots');
 
-  it('bolds nothing when the text it completes is empty or not its start', () => {
-    const {rerender} = render(
-      <SuggestionItemRow {...baseProps} item={{id: 'r1', label: 'hiking boots', completes: ''}} />
-    );
-    expect(screen.getByRole('option').querySelector('strong')).toBeNull();
-
-    rerender(
-      <SuggestionItemRow {...baseProps} item={{id: 'r1', label: 'hiking boots', completes: 'bo'}} />
-    );
-    expect(screen.getByRole('option').querySelector('strong')).toBeNull();
+    rerender(row(''));
+    expect(bold()).toBeUndefined();
+    rerender(row('bo'));
+    expect(bold()).toBeUndefined();
   });
 
   it('draws a named remove button outside the option and the tab order', () => {

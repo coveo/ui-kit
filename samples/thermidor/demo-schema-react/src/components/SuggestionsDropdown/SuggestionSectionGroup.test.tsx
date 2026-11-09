@@ -37,39 +37,27 @@ describe('SuggestionSectionGroup', () => {
     expect(activeItem?.getAttribute('aria-selected')).toBe('true');
   });
 
-  it('draws the action of the section in its header', () => {
+  it('draws its header action, and remove buttons described for the keyboard', () => {
     const onClick = vi.fn();
+    const onRemove = vi.fn();
     render(
       <SuggestionSectionGroup
         {...baseProps}
+        onRemove={onRemove}
         section={{
           ...testSection,
           action: {label: 'Clear', ariaLabel: 'Clear recent searches', onClick},
+          removal: {ariaLabel: ({label}) => `Remove ${label}`, onRemove: vi.fn()},
         }}
       />
     );
 
     fireEvent.click(screen.getByRole('button', {name: 'Clear recent searches'}));
-
-    expect(onClick).toHaveBeenCalledOnce();
-    expect(screen.getByRole('group', {name: 'Search'})).toBeDefined();
-  });
-
-  it('gives each item a remove button, and describes how to remove it from the keyboard', () => {
-    const onRemove = vi.fn();
-    render(
-      <SuggestionSectionGroup
-        {...baseProps}
-        section={{
-          ...testSection,
-          removal: {ariaLabel: ({label}) => `Remove ${label}`, onRemove},
-        }}
-      />
-    );
-
     fireEvent.click(screen.getByRole('button', {name: 'Remove Wetsuits'}));
 
+    expect(onClick).toHaveBeenCalledOnce();
     expect(onRemove).toHaveBeenCalledWith({id: 's2', label: 'Wetsuits'});
+    expect(screen.getByRole('group', {name: 'Search'})).toBeDefined();
     expect(screen.getAllByRole('option')[0].getAttribute('aria-describedby')).toBe(
       'section-search-removal-hint'
     );

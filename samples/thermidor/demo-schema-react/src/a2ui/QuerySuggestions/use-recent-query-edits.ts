@@ -2,7 +2,7 @@ import {useCallback, useRef, useState} from 'react';
 import type {ClearRecentQueriesPayload, RemoveRecentQueryPayload} from '@coveo/thermidor-schema';
 import {useLatestWhenFree} from '../session-request.js';
 
-export type RecentQueryEdit =
+type RecentQueryEdit =
   | {name: 'clearRecentQueries'; payload: ClearRecentQueriesPayload}
   | {name: 'removeRecentQuery'; payload: RemoveRecentQueryPayload};
 

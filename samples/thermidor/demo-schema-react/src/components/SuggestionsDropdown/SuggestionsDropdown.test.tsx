@@ -54,9 +54,6 @@ describe('SuggestionsDropdown', () => {
   it('heads each section with its own title', () => {
     render(<SuggestionsDropdown sections={testSections} onSelect={vi.fn()} visible={true} />);
 
-    expect(
-      screen.getAllByRole('group').map((group) => group.getAttribute('aria-labelledby'))
-    ).toEqual(['section-search-header', 'section-conversational-header']);
     expect(screen.getByRole('group', {name: 'Search'})).toBeDefined();
     expect(screen.getByRole('group', {name: 'Conversational'})).toBeDefined();
     expect(screen.queryByText('Query suggestions')).toBeNull();

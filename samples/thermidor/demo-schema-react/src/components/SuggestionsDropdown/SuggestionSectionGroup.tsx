@@ -6,7 +6,7 @@ interface SuggestionSectionGroupProps {
   section: SuggestionSection;
   onSelect: (item: SuggestionItem) => void;
   onHover?: (item: SuggestionItem) => void;
-  /** Called with the item whose remove button is pressed, instead of the section's `removal`. */
+  /** Called with the item whose remove button is pressed, in a section with a `removal`. */
   onRemove?: (item: SuggestionItem) => void;
   activeItemId?: string;
 }
@@ -53,7 +53,7 @@ export function SuggestionSectionGroup({
           onSelect={() => onSelect(item)}
           onHover={() => onHover?.(item)}
           id={`suggestion-item-${item.id}`}
-          onRemove={removal && (() => (onRemove ?? removal.onRemove)(item))}
+          onRemove={removal && onRemove && (() => onRemove(item))}
           removeLabel={removal?.ariaLabel(item)}
           describedBy={removal && removalHintId}
         />

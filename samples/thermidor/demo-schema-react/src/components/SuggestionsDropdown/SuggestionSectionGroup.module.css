@@ -19,7 +19,6 @@
 .headerAction {
   padding: 0 var(--space-1);
   border: none;
-  border-radius: var(--radius-sm);
   background: transparent;
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
