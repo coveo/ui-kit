@@ -16,10 +16,12 @@ export const SUGGESTIONS_DEBOUNCE_MS = 150;
  * A2-UI component for `QuerySuggestions`: the session's recent queries matching its `SearchBox`'s
  * query, under "Recent searches", above the query's completions, in the search box's dropdown.
  * Once typing pauses, the query is sent with `fetchSuggestions` as soon as the session is free; an
- * empty query is sent when the input has the focus. The last suggestions stay shown while newer ones
- * are on their way, and hide if those fail. They are hidden after a submit until the next keystroke,
- * while the empty input does not have the focus, and while a request locks the page, such as an
- * answer streaming. Suggestions hidden by a submit, or by emptying the input, never show again.
+ * empty query is sent when the input has the focus. The last suggestions for typed text stay shown
+ * while newer ones are on their way, and hide if those fail. Those for the empty input show only
+ * while it stays empty and, once the shopper has left it, only after a fresh answer. Suggestions
+ * are hidden after a submit until the next keystroke, while the empty input does not have the
+ * focus, and while a request locks the page, such as an answer streaming. Suggestions hidden by a
+ * submit, or by emptying the input, never show again.
  *
  * Removing a recent query, or clearing them, hides them at once, and sends `fetchSuggestions` for
  * the query again once the session has answered.
@@ -37,17 +39,36 @@ export const QuerySuggestions = createReactComponent(
       ({name, payload}) => context.dispatchAction({event: {name, context: payload}})
     );
 
+    // The answer for the empty input goes stale once the shopper leaves it, as a search may follow:
+    // it shows again only once an answer fetched since then settles.
+    const emptyShown = focused && !submitted;
+    const [wasEmptyShown, setWasEmptyShown] = useState(emptyShown);
+    const [emptyEpoch, setEmptyEpoch] = useState(0);
+    const [freshEmptyEpoch, setFreshEmptyEpoch] = useState<number>();
+    if (emptyShown !== wasEmptyShown) {
+      setWasEmptyShown(emptyShown);
+      if (!emptyShown) {
+        setEmptyEpoch(emptyEpoch + 1);
+      }
+    }
+
     // Sent once typing pauses, so the text typed before a submit is not sent after it.
     const wanted = !submitted && debouncedQuery === typed && (typed !== '' || focused);
+    const epoch = debouncedQuery === '' ? emptyEpoch : undefined;
     const request = useMemo(
-      () => (wanted ? {query: debouncedQuery, answered} : undefined),
-      [wanted, debouncedQuery, answered]
+      () => (wanted ? {query: debouncedQuery, answered, epoch} : undefined),
+      [wanted, debouncedQuery, answered, epoch]
     );
     useLatestWhenFree(request, (latest) => {
       const payload: FetchSuggestionsPayload = {query: latest.query};
       void Promise.resolve(
         context.dispatchAction({event: {name: 'fetchSuggestions', context: payload}})
-      ).then(() => refreshed(latest.answered));
+      ).then(() => {
+        refreshed(latest.answered);
+        if (latest.epoch !== undefined) {
+          setFreshEmptyEpoch(latest.epoch);
+        }
+      });
     });
 
     const discarding = submitted || (typed === '' && props.query !== '');
@@ -57,7 +78,12 @@ export const QuerySuggestions = createReactComponent(
     }
 
     const awaitingNewer = busy || debouncedQuery !== typed;
-    const current = props.query === typed || (awaitingNewer && props.query !== discardedQuery);
+    // The answer for the empty input never stands in for typed text, which it does not filter.
+    const current =
+      typed === ''
+        ? props.query === '' && freshEmptyEpoch === emptyEpoch
+        : props.query !== '' &&
+          (props.query === typed || (awaitingNewer && props.query !== discardedQuery));
     const visible = !submitted && (typed !== '' || focused) && !locked && current;
     // Every replay of the stream rebuilds the lists, so the dropdown follows their entries.
     const recentQueries = visible ? hide(props.recentQueries) : [];

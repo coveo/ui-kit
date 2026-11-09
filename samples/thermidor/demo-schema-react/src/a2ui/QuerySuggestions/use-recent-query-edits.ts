@@ -34,7 +34,7 @@ export function useRecentQueryEdits(
 ): RecentQueryEdits {
   const [edits, setEdits] = useState<PendingEdit[]>([]);
   const [answered, setAnswered] = useState(0);
-  const [announcement, setAnnouncement] = useState('');
+  const [announcements, setAnnouncements] = useState({text: '', count: 0});
   const answeredRef = useRef(0);
 
   useLatestWhenFree(
@@ -62,21 +62,34 @@ export function useRecentQueryEdits(
     return queries.filter((query) => !removed.has(query.toLowerCase()));
   };
 
-  const remove = useCallback((query: string) => {
-    setEdits((current) => [...current, {edit: {name: 'removeRecentQuery', payload: {query}}}]);
-    setAnnouncement(`${query} removed from recent searches.`);
+  const announce = useCallback((text: string) => {
+    setAnnouncements(({count}) => ({text, count: count + 1}));
   }, []);
+
+  const remove = useCallback(
+    (query: string) => {
+      setEdits((current) => [...current, {edit: {name: 'removeRecentQuery', payload: {query}}}]);
+      announce(`${query} removed from recent searches.`);
+    },
+    [announce]
+  );
 
   const clear = useCallback(() => {
     setEdits((current) => [...current, {edit: {name: 'clearRecentQueries', payload: {}}}]);
-    setAnnouncement('Recent searches cleared.');
-  }, []);
+    announce('Recent searches cleared.');
+  }, [announce]);
 
   const refreshed = useCallback((fetchedAfter: number) => {
     setEdits((current) =>
       current.filter(({answeredAs}) => answeredAs === undefined || answeredAs > fetchedAfter)
     );
   }, []);
+
+  // A trailing no-break space on every other announcement makes a repeated one change the region.
+  const announcement =
+    announcements.count > 0 && announcements.count % 2 === 0
+      ? `${announcements.text}\u00A0`
+      : announcements.text;
 
   return {answered, hide, remove, clear, refreshed, announcement};
 }

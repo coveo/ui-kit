@@ -806,6 +806,16 @@ describe('removing a suggestion', () => {
     expect(textarea.value).toBe('kayaks');
   });
 
+  it('removes the highlighted suggestion on Shift+Backspace, as Mac keyboards send it', () => {
+    const {press, active, onRemove} = renderRemovable();
+    press('ArrowDown');
+
+    press('Backspace', true);
+
+    expect(onRemove).toHaveBeenCalledWith('tents');
+    expect(active()).toBe('hiking boots');
+  });
+
   it('highlights the one before a removed last suggestion of its section', () => {
     const {textarea, press, active} = renderRemovable();
     press('ArrowDown');

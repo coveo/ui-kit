@@ -150,7 +150,9 @@ export function PromptInput({
     if (disabled) {
       return;
     }
-    onFocusChange?.(true);
+    if (!windowBlurredRef.current) {
+      onFocusChange?.(true);
+    }
     if (suppressNextFocusRef.current) {
       suppressNextFocusRef.current = false;
       return;
@@ -264,7 +266,9 @@ export function PromptInput({
       return;
     }
 
-    if (e.key === 'Delete' && e.shiftKey && expanded && !inAside && activeIndex >= 0) {
+    // Mac keyboards report their Delete key as Backspace.
+    const deleteKey = e.key === 'Delete' || e.key === 'Backspace';
+    if (deleteKey && e.shiftKey && expanded && !inAside && activeIndex >= 0) {
       if (removeItem(totalItems[activeIndex])) {
         e.preventDefault();
       }
