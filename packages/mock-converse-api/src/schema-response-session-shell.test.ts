@@ -423,14 +423,14 @@ describe('recent queries', () => {
   it('records the query each search ran, normalized and newest first', async () => {
     const session = await openSession();
 
-    const swimGear = await session.prompt('swim gear');
+    await session.prompt('swim gear');
     expect(await session.recentQueries()).toEqual(['water sports']);
 
-    await readEvents(session.act('overrideCorrection', {}, swimGear, 'query-summary-2'));
-    expect(await session.recentQueries()).toEqual(['swim gear', 'water sports']);
+    await session.prompt('  Life JACKETS ');
+    expect(await session.recentQueries()).toEqual(['life jackets', 'water sports']);
 
     await session.prompt('  WATER Sprots ');
-    expect(await session.recentQueries()).toEqual(['water sports', 'swim gear']);
+    expect(await session.recentQueries()).toEqual(['water sports', 'life jackets']);
   });
 
   it('records a restored search under its query', async () => {
@@ -493,15 +493,27 @@ describe('recent queries', () => {
     const other = await openSession();
     const surfaceId = await searchSurface(session);
 
-    await session.restore(
-      surfaceId,
-      ...Array.from({length: 12}, (_, index) => `query ${index + 1}`)
-    );
+    const queries = [
+      'wetsuits',
+      'drysuits',
+      'surfboards',
+      'bodyboards',
+      'skimboards',
+      'paddleboards',
+      'kayaks',
+      'canoes',
+      'paddles',
+      'life jackets',
+      'snorkels',
+      'dry bags',
+    ];
+    await session.restore(surfaceId, ...queries);
 
-    const all = Array.from({length: 10}, (_, index) => `query ${12 - index}`);
-    expect(await session.recentQueries()).toEqual(all.slice(0, 8));
-    expect(await session.recentQueries('QUERY 1')).toEqual(['query 12', 'query 11', 'query 10']);
-    expect(await session.recentQueries('query 3')).toEqual(['query 3']);
+    const tenNewest = queries.slice(2).reverse();
+    expect(await session.recentQueries()).toEqual(tenNewest.slice(0, 8));
+    expect(await session.recentQueries('PADDLE')).toEqual(['paddles', 'paddleboards']);
+    expect(await session.recentQueries('dr')).toEqual(['dry bags']);
+    expect(await session.recentQueries('wet')).toEqual([]);
     expect(await other.recentQueries()).toEqual([]);
   });
 
@@ -524,13 +536,13 @@ describe('recent queries', () => {
   it('caps recent queries at three while typing, and all suggestions at eight', async () => {
     const session = await openSession();
     const surfaceId = await searchSurface(session);
-    await session.restore(surfaceId, 'sailboats', 'sandals', 'sunglasses', 'swimsuits');
+    await session.restore(surfaceId, 'sandskater', 'safefloat', 'snorkels', 'skimboards');
 
     const typed = await session.suggestions('s');
 
-    expect(typed.recentQueries).toEqual(['swimsuits', 'sunglasses', 'sandals']);
+    expect(typed.recentQueries).toEqual(['skimboards', 'snorkels', 'safefloat']);
     expect(await session.recentQueries('  ')).toHaveLength(5);
-    expect(await session.recentQueries(' SA ')).toEqual(['sandals', 'sailboats']);
+    expect(await session.recentQueries(' SA ')).toEqual(['safefloat', 'sandskater']);
     expect(typed.completions.map(({expression}) => expression)).toEqual([
       'surfboards',
       'surfboard leash',

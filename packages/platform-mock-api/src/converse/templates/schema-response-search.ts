@@ -688,6 +688,13 @@ function queryTerms(query: string): string[] {
     .map((term) => (term.length > 3 && term.endsWith('s') ? term.slice(0, -1) : term));
 }
 
+const ROOT_PREFIX = `${ROOT_CHAIN.join('|')}|`;
+
+function matchesTerms(text: string, terms: string[]): boolean {
+  const lowered = text.toLowerCase();
+  return terms.every((term) => lowered.includes(term));
+}
+
 // Products whose name, brand or category below the shared root holds every term of the query, in
 // catalog order.
 function instantProductsFor(query: string): WaterSportsProduct[] {
@@ -695,14 +702,24 @@ function instantProductsFor(query: string): WaterSportsProduct[] {
   if (terms.length === 0) {
     return [];
   }
-  const rootPrefix = `${ROOT_CHAIN.join('|')}|`;
   return products
     .filter((product) => {
-      const leafPath = (product.ec_category.at(-1) ?? '').replace(rootPrefix, '');
-      const text = `${product.ec_name} ${product.ec_brand} ${leafPath}`.toLowerCase();
-      return terms.every((term) => text.includes(term));
+      const leafPath = (product.ec_category.at(-1) ?? '').replace(ROOT_PREFIX, '');
+      return matchesTerms(`${product.ec_name} ${product.ec_brand} ${leafPath}`, terms);
     })
     .slice(0, MAX_INSTANT_PRODUCTS);
+}
+
+// Unlike instant products, a search also matches the shared root categories, so "water sports"
+// finds the whole catalog.
+function searchProductsFor(query: string): WaterSportsProduct[] {
+  const terms = queryTerms(query);
+  return products.filter((product) =>
+    matchesTerms(
+      `${product.ec_name} ${product.ec_brand} ${product.ec_category.at(-1) ?? ''}`,
+      terms
+    )
+  );
 }
 
 interface SortField {
@@ -842,7 +859,7 @@ function sortProducts(input: WaterSportsProduct[], sort: SortCriterion): WaterSp
 }
 
 function filterProducts(view: SearchViewState): WaterSportsProduct[] {
-  return products.filter((p) => {
+  return searchProductsFor(view.query).filter((p) => {
     if (view.selectedBrands.length > 0 && !view.selectedBrands.includes(p.ec_brand)) {
       return false;
     }
@@ -1399,14 +1416,15 @@ const surfaceActivitySnapshot: ConverseEvent = ActivitySnapshot({
   },
 });
 
-// A new "water sports" search resets the surface, so the initial events are built on demand:
+// A new search resets the surface, so the initial events are built on demand:
 // each call resets the in-memory view to defaults and recomputes the initial state snapshot.
 // Registering the view under the minted surface id keeps the correction on that surface's first action.
 function buildWaterSportsInitialEvents(
   correction: QueryCorrection | null = null,
-  mintSurfaceId?: (surfaceId: string) => string
+  mintSurfaceId?: (surfaceId: string) => string,
+  query = DEFAULT_VIEW.query
 ): ConverseEvent[] {
-  currentView = {...DEFAULT_VIEW, correction};
+  currentView = {...DEFAULT_VIEW, query, correction};
   if (mintSurfaceId) {
     viewsBySurfaceId.set(mintSurfaceId(SEARCH_SURFACE_ID), currentView);
   }
@@ -1859,5 +1877,6 @@ export {
   buildWaterSportsActionEvents,
   instantProductsFor,
   productSearchQuery,
+  searchProductsFor,
   rerunsSearch,
 };

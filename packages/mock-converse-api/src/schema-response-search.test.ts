@@ -755,12 +755,7 @@ describe('schema-response-search query correction', () => {
       context: {},
       sourceComponentId: 'query-summary-2',
     });
-    expect(summary(events)).toEqual({
-      query: 'swim gear',
-      firstIndex: 1,
-      lastIndex: 12,
-      totalEntries: 43,
-    });
+    expect(summary(events)).toMatchObject({query: 'swim gear', totalEntries: 0});
   });
 
   it('keeps the corrected results on overrideCorrection when the correction cannot be overridden', () => {
@@ -777,6 +772,34 @@ describe('schema-response-search query correction', () => {
       totalEntries: 43,
       correction: {originalQuery: 'water sprots', cause: 'correction', canOverride: false},
     });
+  });
+});
+
+describe('schema-response-search query', () => {
+  const state = (events: ConverseEvent[]) => collectComponentState(events);
+
+  it('searches any other prompt that finds products, for its query', () => {
+    const components = state(matchSchemaPrompt('  Kayaks '));
+
+    expect(components['query-summary-2']).toMatchObject({query: 'Kayaks', totalEntries: 4});
+    const products = (components['product-list-2'] as {products: {ec_name: string}[]}).products;
+    expect(products.map(({ec_name}) => ec_name)).toEqual([
+      'RiverRun Sit-On Kayak',
+      'LakeGlide Touring Kayak',
+      'RapidFin Whitewater Kayak',
+      'CarbonStroke Kayak Paddle',
+    ]);
+  });
+
+  it('answers a prompt that finds no products without a search', () => {
+    expect(state(matchSchemaPrompt('sailboats'))['query-summary-2']).toBeUndefined();
+  });
+
+  it('counts the facet values within the query results', () => {
+    const brand = state(matchSchemaPrompt('life jackets'))['facet-brand-2'] as {
+      values: {value: string; numberOfResults: number}[];
+    };
+    expect(brand.values.reduce((total, {numberOfResults}) => total + numberOfResults, 0)).toBe(2);
   });
 });
 

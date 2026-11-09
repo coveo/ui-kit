@@ -20,6 +20,7 @@ import {
   buildWaterSportsActionEvents,
   productSearchQuery,
   rerunsSearch,
+  searchProductsFor,
 } from './templates/schema-response-search.js';
 import type {ConverseEvent} from './events.js';
 
@@ -293,7 +294,13 @@ function matchSchemaPrompt(
 ): ConverseEvent[] {
   const normalized = message.trim().toLowerCase();
   const match = SCHEMA_PROMPT_TEMPLATE_MAP.find((entry) => entry.prompt === normalized);
-  return match ? match.buildEvents(mintSurfaceId) : schemaFallbackEvents;
+  if (match) {
+    return match.buildEvents(mintSurfaceId);
+  }
+  // Any other prompt that finds products searches for it.
+  return searchProductsFor(normalized).length > 0
+    ? buildWaterSportsInitialEvents(null, mintSurfaceId, message.trim())
+    : schemaFallbackEvents;
 }
 
 const schemaBaseResponse = (body: unknown, session: SessionKeys) => {
@@ -320,8 +327,8 @@ const schemaBaseResponse = (body: unknown, session: SessionKeys) => {
   });
 };
 
-// The "water sports" decomposed search surface is the only prompt surface that supports
-// component actions and keeps in-memory state, so every other action recomputes that surface.
+// The decomposed search surface is the only prompt surface that supports component actions and
+// keeps in-memory state, so every other action recomputes that surface.
 // Raw action-events builder for the decomposed search surface. buildSchemaActionResponse wraps
 // this in a streaming HTTP response; tests use the raw events to assert on component state.
 function buildSearchActionEvents(action: SchemaAction): ConverseEvent[] {
