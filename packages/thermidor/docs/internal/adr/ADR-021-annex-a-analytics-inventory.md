@@ -74,7 +74,8 @@ of the agent's turn.
 - `emit(type, payload)` posts `[{...payload, meta}]` with `fetch` and `keepalive: true`; it rejects on
   an HTTP error or an event the Event API does not accept. It validates nothing itself.
 - The client id is a UUID read from the `coveo_visitorId` cookie, then the `visitorId` local storage
-  key, and written to both.
+  key, and written to both, unless the environment supplies `getClientId`, as the session does from
+  the navigator context.
 - `mode: 'disabled'` sends nothing. Outside a browser, Relay sends nothing unless the environment
   supplies `send`.
 
@@ -89,8 +90,8 @@ of the agent's turn.
 - `purchase` does not clear that cart.
 - Analytics actions take the turn slot (`409` during an answer), and are refused (`400`) on an
   organization without stateful commerce.
-- The catalog is queried in the currency of the agent configuration's locale; a currency the request
-  carries is ignored. The browser does not know which currency applied.
+- The catalog is queried in the currency of the agent configuration's locale; the locale every
+  request carries (coveo/ui-kit#8849) is ignored when the request names an agent configuration.
 - `api.conversational.message` is published once per turn that has a user message, with
   `turnId`, `parentTurnId`, the content blocks and their products. Its `turnId` is allocated when
   the turn starts, and does not reach the browser.

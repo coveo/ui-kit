@@ -10,6 +10,7 @@ related:
   - ./ADR-021-annex-a-analytics-inventory.md
   - ./ADR-021-annex-b-analytics-in-code.md
   - ./ADR-021-annex-c-migration-to-log-actions.md
+  - coveo/ui-kit#8849 (the navigator locale on every request)
   - thermidor-schema ADR-011 (schema-owned commerce actions)
   - thermidor-schema ADR-023 (log actions, coveo-platform/thermidor-schema#203)
   - agent-gateway ADR-005 (conversational message analytics)
@@ -44,14 +45,14 @@ it is built yet.
 
 Data Platform joins a click to what the shopper was shown: its `responseId` is the `turnId` of the
 turn that showed the item, and its `position` counts from 1 across every item of that turn, in
-content order. Every commerce event also names the currency of its prices, which the producer
-chooses when it queries the catalog. The browser knows none of the three today.
+content order. The browser knows neither the turn nor the position. Every commerce event also names
+the currency of its prices, the one the catalog was queried in.
 
 ## Decision Drivers
 
 - **Clicks, cart changes and purchases are logged now**, from every surface that shows them.
 - **A logged click can be joined** to the turn that showed the item and to its position in that turn.
-- **Every event is in the currency of the prices the shopper saw.**
+- **Every event is in the currency the catalog is queried in.**
 - **Logging never delays, blocks or fails** a prompt, an answer, another action or a navigation, and
   is not lost while an answer streams.
 - **One API for the consumer.** Renderers dispatch typed actions of the contract, as for any other
@@ -65,13 +66,13 @@ chooses when it queries the catalog. The browser knows none of the three today.
 Renderers dispatch `productClick`, `updateCart` and `purchase`, the contract's actions, with
 `dispatchAction`. The session logs them through Relay, outside the turn slot, and never sends them to
 the producer. The producer announces, for each node, the turn that showed it and how many items of
-that turn precede it, and states, with each response, the currency it applied. Option A below. The
-breaking change at the migration to ADR-023 is accepted.
+that turn precede it. Every event is in the currency of the navigator context, the one every request
+carries, provided Agent Gateway applies the request's locale. Option A below. The breaking change at
+the migration to ADR-023 is accepted.
 
 It logs every interaction now, joinable to its turn, without delaying or losing anything while an
 answer streams, and renderers keep the one API they use for every interaction. The producer's part is
-an announcement and a field, not ADR-023's reference index, and the migration changes only the
-click's payload.
+an announcement, not ADR-023's reference index, and the migration changes only the click's payload.
 Option B logs nothing until ADR-023's prerequisites ship, and none is planned. Option C spares
 renderers the migration, but costs the producer most of ADR-023's work, only to expose to the browser
 what ADR-023 keeps out of it. Option D is `dispatchAction` under another name, with hand-written
@@ -90,7 +91,7 @@ Relay instead of sending them:
 | `purchase`     | `ec.purchase`     | `products[{product, quantity}]`, `transaction {id, revenue}`      | `currency`                                         |
 
 `responseId` and the position in the turn come from the producer's attribution, and `currency` from
-the currency it states with each response (below).
+the navigator context (below).
 
 - **Never sent to the producer**, whether analytics are enabled or not. A version of the package
   therefore has exactly one path for an analytics action, and a producer that logs them later
@@ -133,7 +134,7 @@ showed the node's items and how many items of that turn precede them:
   that produced its products, with the page's offset, as the Commerce API's own search event does.
 - **A concurrent answer is attributed too.** This amends ADR-020, which reads no metadata of a
   concurrent answer: the session reads `analyticsAttribution`, and only it, for the nodes the answer
-  writes, and the currency of its `RUN_STARTED` (below). Like those writes, the attribution is applied without being recorded: it lives in memory,
+  writes. Like those writes, the attribution is applied without being recorded: it lives in memory,
   is never serialized, is cached with the answer so a revisited query keeps its own response, and a
   later recorded announcement for the node replaces it. For `InstantProducts`, `responseId` is the
   `productSuggest` response that returned the products, and `positionOffset` is `0`.
@@ -146,90 +147,38 @@ showed the node's items and how many items of that turn precede them:
 Agent Gateway already allocates the `turnId` when the turn starts, so it can announce it with the
 turn's first snapshot.
 
-### Currency, stated by the producer with each response
+### Currency, from the navigator context
 
-Every response's `RUN_STARTED` carries the currency the producer applied to it, next to the
-continuity keys it already carries:
+Every event is in the `currency` of the navigator context when it is logged: the currency every
+request carries (coveo/ui-kit#8849), which the producer queries the catalog in.
 
-```json
-{"type": "RUN_STARTED", "conversationToken": "…", "conversationSessionId": "…", "currency": "USD"}
-```
+- **Read per event, kept nowhere.** The session reads it from `navigatorContextProvider` when it
+  logs, as a request reads it when it is sent. It stores, serializes and exposes no currency.
+- **The same value as the prices.** The consumer chooses the locale and sends it with every request,
+  so events and prices agree, as in Headless, where one commerce context sets both the Commerce API
+  request and the events.
+- **A locale switch applies from then on.** Once the page switches locale, events are in the new
+  currency, including a click on a product an earlier response showed in the previous one.
+  ADR-023's producer does the same: it logs a log action in its request's currency.
+- **No currency, no event.** While the navigator context states none, nothing is logged, with a
+  development warning.
 
-- **Kept with each response.** The session keeps, for each response an attribution names, the
-  currency that response was in. An event from an attributed node, such as a click, is in the
-  currency of the response that showed its products, so a product shown in dollars is logged in
-  dollars even after a later response in euros.
-- **Kept like the continuity keys.** The session also keeps the latest currency, for the events of a
-  node without an attribution, such as a `Cart`'s purchase. Both are serialized with
-  `sessionToken`, so a restored session logs in the same currencies.
-- **A concurrent answer updates the latest currency**, unlike its continuity keys. It is served in
-  the session's current scope, so its currency is the latest one, and its products, attributed in
-  memory only, are logged in it. After a session is restored under another locale, the first
-  instant products the shopper sees are logged in the new currency.
-- **Always known when an action can be dispatched.** An action is dispatched from a node, and a node
-  exists only once a response has drawn it, so that response's `RUN_STARTED` has stated the
-  currency. A response that states none keeps the currency stated before; a session that no response
-  has stated one to, such as with a producer that predates this decision, logs nothing, with a
-  development warning. One case escapes it: right after a session is restored under another locale,
-  and before any response, a `Cart`'s purchase is logged in the currency the restored session kept,
-  since no response has stated the new one yet. The session cannot take the new currency from its
-  configuration, which the producer may not apply. No producer draws a `Cart` yet; when one does, a
-  private session can keep the locale of its requests, and on restore under another one, drop its
-  latest currency so the purchase is withheld until a response states the new currency.
-- **Internal.** The currencies are not exposed on `Session` or its snapshot, so no consumer comes to
-  rely on them. They are optional fields of the serialized session, so a session serialized before
-  the migration to ADR-023 restores after it, and the reverse.
+**Precondition: Agent Gateway applies the request's locale.** Today, a request that names an
+`agentConfigurationId` is answered in the locale of the agent configuration, whatever the request
+carries. Until the gateway gives the request's locale priority, events are in the page's currency and
+prices in the agent's, and the two disagree when the page and the agent differ. The platform decided
+that the request carries the locale
+([Decision: How a Converse request reaches its configuration](https://coveord.atlassian.net/wiki/spaces/PRODUCT/pages/7119568906/Decision+How+a+Converse+request+reaches+its+configuration));
+the gateway change is a prerequisite of this decision for the EAP.
 
-**Why the producer states the currency.** Every event must be in the currency of the prices the
-shopper saw, and that is the currency the producer queried the catalog with. Who decides it is
-moving:
-
-- today, Agent Gateway applies the locale of the agent configuration (`language-COUNTRY-CURRENCY`)
-  and ignores any the request carries;
-- the platform has decided that the request will carry the locale, chosen by the page, since the
-  page knows the shopper's market and one configuration serves several
-  ([Decision: How a Converse request reaches its configuration](https://coveord.atlassian.net/wiki/spaces/PRODUCT/pages/7119568906/Decision+How+a+Converse+request+reaches+its+configuration));
-- the same decision lets the request locale become optional once the configuration holds a default
-  locale, which then applies to a request that sends none.
-
-At every stage the producer knows the currency it applied, and it is the only one that does: the
-consumer does not know the configuration's locale today, nor its default later. A currency the
-consumer configured for analytics would be a second source of truth, and when the two disagree every
-event carries the wrong currency, nothing detects it, and attributed revenue is wrong. Headless takes
-the currency from the consumer because there the same value also sets the currency of the Commerce
-API request, so prices and events cannot diverge. Once the Thermidor consumer sends the locale, the
-producer applies it and states it back unchanged, so the two still agree. The currency is a fact of
-the response, not of a node, so the producer states it once per response rather than in each node's
-attribution.
-
-**Why the session keeps a currency per response.** A session's requests carry one locale for its
-whole life, but its currency can still change: a page restores a conversation under another locale
-when the shopper changes market, and today an administrator can change the configuration's locale.
-The products of the earlier responses keep the prices they were shown with, so the session needs the
-currency of each response, not only the latest.
-
-- **Keyed by `responseId`.** Every response has its own, even when its snapshot merges onto an
-  earlier activity in place, as an answer to a facet or a page on a restored surface does. The
-  position of an activity cannot tell when its attribution was written; the `responseId` can.
-- **Read from `RUN_STARTED`.** A response's stream announces only its own `responseId`s, after its
-  `RUN_STARTED`, so the currency that `RUN_STARTED` states is theirs. A response keeps the currency
-  it was first announced in.
-- **Not stated in the attribution.** The producer could write the currency next to each `responseId`
-  and spare the session its table, but it would then state the currency twice, and pass it to every
-  path that builds an attribution. The producer keeps what it announces for as long as older
-  versions of the package are supported, longer than the package's own code, so its part of this
-  decision stays one field. The session's table costs about 50 bytes per attributed response and is
-  removed with the rest at the migration.
-
-The attribution and the currency are the only things this decision needs from the producer, and
-ADR-023 makes both unnecessary.
+Beside applying the request's locale, the attribution is the only thing this decision adds to the
+producer, and ADR-023 makes it unnecessary.
 
 ### Identity
 
-- With a `navigatorContextProvider`, Relay's environment reads the client id, location, referrer and
-  user agent from it, so events and converse requests name the same visitor.
-- Without one, Relay keeps its own client id (the `coveo_visitorId` cookie and `visitorId` local
-  storage key), and converse requests send it as their `clientId`.
+- Relay's environment reads the client id, location, referrer and user agent from the
+  `navigatorContextProvider` every session has, so events and converse requests name the same
+  visitor.
 - Events carry the session's `trackingId` and `source: ["@coveo/thermidor"]`; Relay appends its own
   version.
 
@@ -254,14 +203,14 @@ interface AnalyticsConfig {
 - `endpoint` mirrors `SessionConfig.endpoint`: the full events URL, for a proxy or a local mock,
   where Headless names it `analytics.proxyBaseUrl`. It is meaningless once the producer logs, and is
   deprecated then.
-- **No currency.** The producer states it with each response, for the reasons above.
+- **No currency.** Events take the navigator context's, the one the requests carry.
 - No Relay type appears in the public API.
 
 ### Consent
 
 Whether a visitor consented is the question ADR-023 leaves to a dedicated privacy and consent ADR,
-before which its log actions do not ship. This ADR does not decide it. It provides the switch the consumer needs meanwhile:
-`analytics` absent or `enabled: false` sends no event and writes no cookie.
+before which its log actions do not ship. This ADR does not decide it. It provides the switch the
+consumer needs meanwhile: `analytics` absent or `enabled: false` sends no event and writes no cookie.
 
 ### Contracts
 
@@ -292,23 +241,19 @@ reference the item carries, instead of the product's ids, name, price and positi
 accepted breaking change, announced in the changelog with before-and-after code.
 
 **What the consumer keeps:** the action names, the components that dispatch them, `dispatchAction`
-and `analytics.enabled`. No Relay symbol was public, and the consumer never configured a currency
-for analytics.
+and `analytics.enabled`. No Relay symbol was public.
 
 **What the release removes:** the Relay module and its dependency, the reading of the
-`analyticsAttribution` announcement and of the currency on `RUN_STARTED`, and the need for an
-analytics token and an analytics origin in the page's CSP. `analytics.endpoint` is deprecated, and
-the optional currencies of a serialized session are ignored.
+`analyticsAttribution` announcement, and the need for an analytics token and an analytics origin in
+the page's CSP. `analytics.endpoint` is deprecated.
 
-**What the producer keeps:** the `analyticsAttribution` announcement and the currency on
-`RUN_STARTED`, as long as a version of the package that reads them is supported. Those versions log
-only from them, so removing them with the release would silence every page that has not upgraded,
-and every rollback.
+**What the producer keeps:** the `analyticsAttribution` announcement, as long as a version of the
+package that reads it is supported. Those versions log only from it, so removing it with the release
+would silence every page that has not upgraded, and every rollback.
 
 **What the release keeps working:**
 
-- **The visitor:** a consumer without a `navigatorContextProvider` keeps the same client id, read
-  from the same cookie and storage key, so no shopper becomes a new visitor.
+- **The visitor and the currency:** both come from the navigator context, before and after.
 - **No double logging:** older versions log from the browser and never send analytics actions; newer
   ones only send log actions. Both can run against the same producer.
 - **Rollback:** reinstalling the previous version, which logs from the producer's announcements
@@ -321,7 +266,9 @@ conversation to save the clicks on its older products.
 
 **What changes in the data:** events come from the producer (`source`), with the shopper's IP and
 user agent as the producer forwards them, and are no longer lost to content blockers. Reports show
-the shift on the release date.
+the shift on the release date. Two more depend on ADR-023's follow-ups, raised on its pull request:
+its events carry no product name or price yet, and its producer logs every dispatch, where the
+session logs a product's click once per item.
 
 `updateCart` stays an ordinary action in ADR-023, and `purchase` is left open there. They migrate
 with the decision on who owns the cart: the app, under ADR-012, or the producer's session cart, which
@@ -332,8 +279,8 @@ with the decision on who owns the cart: the app, under ADR-012, or the producer'
 - **Faithful transmission and rendering (MUST):** an exception, for three actions and until the
   migration to ADR-023. The session does not transmit `productClick`, `updateCart` and `purchase` to
   the endpoint: it logs them itself, and so names actions, which the package otherwise never does
-  (ADR-019, ADR-020). It does not reinterpret them: the payload is validated against the contract and mapped
-  field for field, in parity with the producer's handler. The exception is confined to one internal
+  (ADR-019, ADR-020). It does not reinterpret them: the payload is validated against the contract and
+  mapped field for field, in parity with the producer's handler. The exception is confined to one internal
   module, which the migration to ADR-023 deletes, after which the session transmits them again.
 - **Public API independence (MUST):** unchanged. No Relay type or event payload is public;
   `SessionConfig.analytics` names what the consumer decides (on or off, an endpoint), not how events
@@ -342,11 +289,9 @@ with the decision on who owns the cart: the app, under ADR-012, or the producer'
   with autocomplete and checked payloads, as for any interaction, and keep doing so after the
   migration.
 - **Consumer-owned inputs (MUST):** unchanged. The consumer supplies the events endpoint when needed,
-  and the visitor comes from its `navigatorContextProvider` when it has one. The consumer configures
-  no currency for analytics: the session logs in the one the producer applied, which is the
-  consumer's own locale once its requests carry one.
+  and the visitor and the currency come from its `navigatorContextProvider`, as for its requests.
 - **Simplicity and legibility (SHOULD):** slightly reduced. The session gains a module, a
-  dependency, a metadata key and a `RUN_STARTED` field to read, all removed by the migration.
+  dependency and a metadata key to read, all removed by the migration.
 
 ## Consequences
 
@@ -356,17 +301,18 @@ with the decision on who owns the cart: the app, under ADR-012, or the producer'
   migration; only the click's payload changes.
 - **Negative:** the session names three actions and depends on Relay until the migration.
 - **Negative:** the migration breaks every renderer that dispatches `productClick`.
-- **Negative:** the producer must announce the attribution of each node and state the currency of
-  each response, until no supported version of the package reads them.
-- **Negative:** Relay, the attribution and the currency add about 1.7 kB to the package's main
-  entry.
-- **Negative:** the serialized session gains optional currencies, the latest and one per attributed
-  response, which the migration leaves unread.
+- **Negative:** the producer must announce the attribution of each node, until no supported version
+  of the package reads it.
+- **Negative:** Relay and the analytics module add about 3 kB to the package's main entry (from
+  12.38 kB to 15.36 kB as `size-limit` measures it).
+- **Negative:** until Agent Gateway applies the request's locale, an event can be in another
+  currency than the prices the shopper saw.
+- **Negative:** after a locale switch, a click on a product shown before it is logged in the new
+  currency, as ADR-023's producer will log it.
 - **Negative:** the migration waits for the decision on who owns the cart, so `productClick` cannot
   move to the producer before cart changes and purchases do.
 - **Negative:** ADR-020's concurrent answers are no longer metadata-free: the session reads their
-  analytics attribution, and keeps it with the cached answer, and the currency of their
-  `RUN_STARTED`.
+  analytics attribution, and keeps it with the cached answer.
 - **Neutral:** the producer's own handler stays unused for these actions until the migration.
 
 ## Implementation and Follow-up
@@ -374,21 +320,23 @@ with the decision on who owns the cart: the app, under ADR-012, or the producer'
 - thermidor-schema: shared `productClick` and `updateCart` action definitions, over shared
   `ProductClickPayload` and `UpdateCartPayload` definitions, referenced as optional actions by every
   component that shows products, and `clickUri` on `ComparisonProduct`. The generators project a
-  shared definition under its title. Coordinated with ADR-023's pull request, which edits the same files.
+  shared definition under its title. Coordinated with ADR-023's pull request, which edits the same
+  files.
 - Agent Gateway: announce `analyticsAttribution` on every snapshot that writes a node with products,
-  with the `turnId` the turn already allocates when it starts; and state, on every `RUN_STARTED`,
-  the currency it applied to the response.
+  with the `turnId` the turn already allocates when it starts.
+- Prerequisite, outside this ADR: Agent Gateway applies the request's locale rather than the agent
+  configuration's (above).
 - `@coveo/thermidor`: the `analytics` configuration, the internal module (mapping, one click per
-  item), the currencies read from `RUN_STARTED`, kept per response and serialized, the client id.
+  item), the currency and the visitor read from the navigator context.
 - demo-schema-react: dispatch `productClick` from every product link. demo-multi-surface-react:
   dispatch `updateCart` from the add-to-cart button of a product card. No producer draws a `Cart`
-  node yet, so `purchase` is covered by the session's tests only. The mock announces attribution,
-  states its currency on `RUN_STARTED`, and records events locally.
+  node yet, so `purchase` is covered by the session's tests only. The mock announces attribution
+  and records events locally.
 - `InstantProducts`, in its own sub-task: the session reads the attribution of concurrent answers
   and caches it; Agent Gateway announces the `productSuggest` response on `fetchInstantProducts`
   answers; the demo's instant products dispatch `productClick`, and the mock announces them.
-- Follow-ups outside this ADR: document and citation clicks (annex A), the privacy and consent ADR, the
-  cart's owner, and the producer's log actions (ADR-023).
+- Follow-ups outside this ADR: document and citation clicks (annex A), the privacy and consent ADR,
+  the cart's owner, and the producer's log actions (ADR-023).
 
 ## Considered Options
 
@@ -397,36 +345,25 @@ with the decision on who owns the cart: the app, under ADR-012, or the producer'
 - **Summary:** renderers dispatch `productClick {productId, name?, price?, position}`, `updateCart`
   and `purchase`. The session maps them to `ec.*` events and emits them through Relay, outside the
   turn slot, and never sends them to the producer. The producer only announces, for each node, the
-  turn that showed it and how many items precede it in that turn, and states the currency of each
-  response.
-- **Pros:** meets every driver. The producer's part is small: an announcement and a field, no
-  index. The payloads already exist on `ProductList` and `Cart`.
+  turn that showed it and how many items precede it in that turn. Events take the navigator
+  context's currency.
+- **Pros:** meets every driver. The producer's part is small: an announcement, no index. The
+  payloads already exist on `ProductList` and `Cart`.
 - **Cons:** the payloads differ from ADR-023's `{analyticsRef}`, so the migration is a breaking change
   for renderers. The session names actions, an exception to the charter. The browser holds the
-  analytics token, the visitor cookie and the event vocabulary until the migration.
+  analytics token and the event vocabulary until the migration.
 
 #### Set aside within Option A
 
-- **A currency in `SessionConfig.analytics`.** The consumer would state the currency of the prices,
-  as Headless takes it from its commerce context. It needs no producer change, but the producer
-  decides that currency, from the configuration today and from the request or the configuration's
-  default later, so a consumer value would be a second source of truth and a mismatch would log wrong
-  revenue without any error. See "Why the producer states the currency".
-- **The currency the session sends in its requests.** It would be the right value once every request
-  carries the locale, but the public `createSession` sends none today, and a request may send none
-  once the configuration holds a default locale. Only the producer knows the currency in both cases.
-- **The latest currency only.** No table, but after a session is restored under another locale,
-  the products of its earlier responses would be logged in the new currency.
-- **The latest currency, with the activity position at which it changed.** A table of changes rather
-  than of responses, but an answer to a facet or a page on a restored surface merges onto an earlier
-  activity in place, so its products would be logged in the earlier currency.
-- **A currency in each node's attribution, and on `RUN_STARTED` for a node without one.** The
-  session would read it without a table, but the producer would state it twice and pass it to every
-  path that builds an attribution, for longer than the package needs it. See "Why the session keeps
-  a currency per response".
-- **A currency announced once, with the session shell.** It is missing from a session that never
-  sends `initialize`, such as a storefront that opens its session on the first search, which is the
-  one that has a cart.
+- **A currency in `SessionConfig.analytics`.** A second value beside the one the requests carry, which
+  the consumer would have to keep equal to it.
+- **A currency stated by the producer on `RUN_STARTED`, kept per response by the session.** Exact for
+  the products a response showed before a locale switch, but it costs a field on every response, a
+  change to Agent Gateway's core stream writer, and a serialized table in the session, for a
+  precision ADR-023's producer does not keep.
+- **A currency in each node's attribution.** The same precision, with the producer stating the
+  currency in every attribution it builds, for as long as older versions of the package are
+  supported.
 
 ### Option B: wait for ADR-023
 

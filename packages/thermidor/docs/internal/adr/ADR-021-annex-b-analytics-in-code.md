@@ -24,8 +24,7 @@ renderer ──dispatchAction──▶ payload of the action ──session──
 - **The session** imports no schema. It reads the validated payload through a structural view of
   the fields it maps, and builds events typed by `@coveo/relay-event-types`.
 - **What the payload does not carry:** `responseId` and the position in the turn come from the
-  producer's attribution; `currency` from the `RUN_STARTED` of the response that showed the
-  products, or of the latest response for a node without an attribution.
+  producer's attribution; `currency` from the navigator context, the one the requests carry.
 
 ## 2. The contract
 
@@ -119,15 +118,6 @@ announcements:
 - On a concurrent `fetchInstantProducts` answer, `responseId` is the `productSuggest` response and
   `positionOffset` is `0`.
 
-Every `RUN_STARTED` states the currency the response's prices are in, the one the catalog was
-queried with, beside the continuity keys. The session keeps it as the latest currency, and as the
-currency of each response the response's snapshots attribute, and serializes both. A concurrent
-answer's `RUN_STARTED` updates the latest currency, which its products are logged in:
-
-```json
-{"type": "RUN_STARTED", "conversationToken": "…", "conversationSessionId": "…", "currency": "USD"}
-```
-
 ## 4. The session
 
 `issueAction` hands analytics actions to the analytics module before anything else, so they never
@@ -145,14 +135,7 @@ function issueAction(recovered: RecoveredAction): Promise<void> {
         recovered.sourceComponentId,
         unrecordedAttributions
       );
-      const {currency, responseCurrencies} = store.getState();
-      analytics.log({
-        name: recovered.name,
-        payload: recovered.context,
-        attribution,
-        // the currency of the response that showed the products, else the latest
-        currency: (attribution && responseCurrencies?.[attribution.responseId]) ?? currency,
-      });
+      analytics.log({name: recovered.name, payload: recovered.context, attribution});
     }
     return withhold();
   }
@@ -217,7 +200,8 @@ case 'productClick':
 | `updateCart`   | `ec.cartAction`   | `add` and `remove` as they are; `setQuantity` as the change from the provider's cart |
 | `purchase`     | `ec.purchase`     | Every product with its quantity, and the transaction                                 |
 
-Every event is skipped, with a development warning, while the producer has stated no currency.
+Every event is in the navigator context's currency when it is logged, and is skipped, with a
+development warning, while the navigator context states none.
 
 Relay is created once per session, only when analytics are enabled:
 
@@ -228,20 +212,17 @@ const relay = createRelay({
   token: accessToken,
   trackingId: trackingId ?? null,
   source: ['@coveo/thermidor'],
-  ...(navigatorContext && {
-    environment: {
-      ...buildBrowserEnvironment(),
-      getClientId: () => navigatorContext().clientId,
-      getLocation: () => navigatorContext().location,
-      getReferrer: () => navigatorContext().referrer,
-      getUserAgent: () => navigatorContext().userAgent,
-    },
-  }),
+  environment: {
+    ...buildBrowserEnvironment(),
+    getClientId: () => navigatorContext().clientId,
+    getLocation: () => navigatorContext().location,
+    getReferrer: () => navigatorContext().referrer,
+    getUserAgent: () => navigatorContext().userAgent,
+  },
 });
 ```
 
-`buildBaseRequest` sends `navigatorContext?.clientId ?? analytics.clientId()`, so a session without
-a navigator context names Relay's visitor in its converse requests.
+Events and converse requests read the same navigator context, so they name the same visitor.
 
 ## 5. A renderer
 
@@ -296,6 +277,7 @@ const add = () => {
 ```ts
 createSession({
   // …
+  navigatorContextProvider, // the visitor and the locale, for requests and events alike
   analytics: {
     endpoint: 'http://localhost:3000/rest/organizations/my-org/events/v1', // optional
   },
