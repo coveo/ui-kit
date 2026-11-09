@@ -1,0 +1,115 @@
+name: Atomic e2e shard timings
+
+# Rebuilds utils/ci/e2e-timings/atomic.json, the measured test durations that the
+# @flakiness/playwright reporter balances the Atomic e2e shards with, from the blob reports of the
+# newest merge-queue runs, and opens a pull request when the committed file is stale.
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/atomic-e2e-timings.yml'
+      - 'utils/ci/e2e-timings/**'
+      - '!utils/ci/e2e-timings/atomic.json'
+      - 'utils/ci/package.json'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    name: 'Refresh the shard timings'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      actions: read
+      contents: read
+    outputs:
+      refresh: ${{ steps.check.outputs.refresh }}
+      summary: ${{ steps.check.outputs.summary }}
+      runs: ${{ steps.build.outputs.runs }}
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
+        with:
+          egress-policy: audit
+          disable-sudo-and-containers: true
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - name: Build the timings from the newest runs
+        id: build
+        run: pnpm --filter @coveo/ci run e2e-timings build --latest --runs 3 -o "$RUNNER_TEMP/e2e-timings/atomic.json"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Compare with the committed timings
+        id: check
+        if: steps.build.outputs.built == 'true'
+        run: pnpm --filter @coveo/ci run e2e-timings check --candidate "$RUNNER_TEMP/e2e-timings/atomic.json" --shards "$SHARDS"
+        env:
+          SHARDS: ${{ steps.build.outputs.shards }}
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        if: github.ref == 'refs/heads/main' && steps.check.outputs.refresh == 'true'
+        with:
+          name: e2e-timings-candidate
+          path: ${{ runner.temp }}/e2e-timings/atomic.json
+          retention-days: 1
+
+  # Only runs on main open the pull request: the refresh branch restarts from the checked-out
+  # commit, so a run dispatched on another branch would carry that branch's commits. Like the
+  # changesets release PR in cd.yml, developer-experience-bot opens it, from the `Release`
+  # environment's App secrets. That App can administer the repository, so its token only gets
+  # what publish needs, it is created after `pnpm install` and handed to git in the last step only,
+  # and sudo is off, so no step can read the App key from the runner's memory.
+  publish:
+    name: 'Open the refresh pull request'
+    needs: refresh
+    if: github.ref == 'refs/heads/main' && needs.refresh.outputs.refresh == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    environment: Release
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
+        with:
+          egress-policy: audit
+          disable-sudo-and-containers: true
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: e2e-timings-candidate
+          path: ${{ runner.temp }}/e2e-timings
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3
+        with:
+          app-id: ${{ secrets.RELEASER_APP_ID }}
+          private-key: ${{ secrets.RELEASER_PRIVATE_KEY }}
+          owner: coveo
+          repositories: 'ui-kit'
+          permission-contents: write
+          permission-pull-requests: write
+      # The empty helper drops any helper the runner configures, which git would hand the token to
+      # for storing; the second reads it from the environment, so it never lands on disk.
+      - name: Open the refresh pull request
+        run: |
+          git config --local credential.https://github.com.helper ''
+          git config --local --add credential.https://github.com.helper '!f() { echo username=x-access-token; echo "password=${GITHUB_INSTALLATION_TOKEN}"; }; f'
+          pnpm --filter @coveo/ci run e2e-timings publish --candidate "$RUNNER_TEMP/e2e-timings/atomic.json"
+        env:
+          GITHUB_INSTALLATION_TOKEN: ${{ steps.generate-token.outputs.token }}
+          CHECK_SUMMARY: ${{ needs.refresh.outputs.summary }}
+          SOURCE_RUNS: ${{ needs.refresh.outputs.runs }}
