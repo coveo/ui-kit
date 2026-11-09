@@ -61,19 +61,20 @@ Publishing uses [**OIDC trusted publishing**](https://docs.npmjs.com/trusted-pub
 
 After a successful publish, the CD workflow force-pushes the `release/v3` tag to the published commit:
 
-```yaml
+```bash
 git tag -f release/v3
 git push origin refs/tags/release/v3 --force
 ```
 
-The tag marks the latest released commit. Downstream jobs (Quantic production promotion, typedoc generation, docs notification) don't check it out: they check out the commit their own run published (`github.sha`), because a later release can move the tag before they start.
+The tag marks the latest released commit. Post-publish jobs don't check it out: they check out the commit their own run published (`github.sha`), because a later release can move the tag before they start.
 
 ## Post-publish jobs
 
-All post-publish jobs are gated on `published == 'true'` from the changesets step and check out the published commit:
+All post-publish jobs check out the published commit. They run when the changesets step reports `published == 'true'`, except `sentry-create-ui`, which runs when `@coveo/create-ui` is among the published packages:
 
 | Job                      | Purpose                                                                                                  |
 | ------------------------ | -------------------------------------------------------------------------------------------------------- |
+| `sentry-create-ui`       | Uploads the create-ui source maps to Sentry                                                              |
 | `quantic-prod`           | Promotes the Quantic SFDX package to production (requires the "Quantic Production" environment approval) |
 | `typedoc-headless`       | Builds and uploads Headless API reference docs                                                           |
 | `typedoc-headless-react` | Builds and uploads Headless React API reference docs                                                     |
