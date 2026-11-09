@@ -11,6 +11,7 @@ import type {UnifiedEndpointClient} from '@/src/internal/api/unified/unified-end
 import type {
   A2uiAction,
   ConverseRequestModel,
+  RequestLocale,
 } from '@/src/internal/api/unified/unified-endpoint-types.js';
 import {devWarn} from '@/src/internal/utils/dev-warn.js';
 import {
@@ -40,7 +41,9 @@ export interface ConcurrentActionsOptions {
     accessToken: string;
     endpoint?: string;
   };
-  buildActionRequest: (action: A2uiAction) => ConverseRequestModel;
+  /** The navigator locale, validated; throws when it is missing or blank. */
+  readLocale: () => RequestLocale;
+  buildActionRequest: (action: A2uiAction, locale: RequestLocale) => ConverseRequestModel;
 }
 
 export interface ConcurrentActions {
@@ -52,8 +55,11 @@ export interface ConcurrentActions {
 }
 
 interface Lanes {
-  /** Makes `key` the latest dispatch of its lane, and aborts the lane's uncached request. */
-  claim(origin: ActionOrigin, key: string): void;
+  /**
+   * Makes `key` the latest dispatch of its lane, and aborts the lane's uncached request. Without
+   * a key, no dispatch of the lane is the latest.
+   */
+  claim(origin: ActionOrigin, key?: string): void;
   isLatest(origin: ActionOrigin, key: string): boolean;
   /** Sends a request the lane's next claim aborts. */
   sendUncached(origin: ActionOrigin, run: (signal: AbortSignal) => Promise<void>): Promise<void>;
@@ -69,7 +75,7 @@ function laneKey(origin: ActionOrigin): string {
 }
 
 function createLanes(): Lanes {
-  const latest = new Map<string, string>();
+  const latest = new Map<string, string | undefined>();
   const uncached = new Map<string, AbortController>();
   const misses = new Map<string, {done: Promise<void>; joined: boolean}>();
 
@@ -136,6 +142,7 @@ export function createConcurrentActions({
   store,
   client,
   config,
+  readLocale,
   buildActionRequest,
 }: ConcurrentActionsOptions): ConcurrentActions {
   const cache = createActionCache();
@@ -175,13 +182,14 @@ export function createConcurrentActions({
    * stream ends, if the dispatch is still the latest. Its session keys and metadata are not read.
    */
   async function stream(
-    request: ConverseRequestModel,
+    action: A2uiAction,
+    locale: RequestLocale,
     origin: ActionOrigin,
     key: string,
     {signal, joined = () => false}: {signal?: AbortSignal; joined?: () => boolean} = {}
   ): Promise<readonly unknown[]> {
     const result = await client.call(
-      request,
+      buildActionRequest(action, locale),
       {
         organizationId: config.organizationId,
         accessToken: config.accessToken,
@@ -238,21 +246,15 @@ export function createConcurrentActions({
 
   return {
     issue(origin, policy) {
-      const action: A2uiAction = {
-        surfaceId: origin.surfaceId,
-        name: origin.name,
-        sourceComponentId: origin.sourceComponentId,
-        timestamp: new Date().toISOString(),
-        context: origin.context,
-      };
-      let request: ConverseRequestModel;
+      let locale: RequestLocale;
       try {
-        request = buildActionRequest(action);
+        locale = readLocale();
       } catch (error) {
+        lanes.claim(origin);
         return quietly(origin, Promise.reject(error));
       }
 
-      const key = actionCacheKey(origin, origin.context, request);
+      const key = actionCacheKey(origin, origin.context, locale);
       lanes.claim(origin, key);
       const cached = policy && cache.get(key, policy.ttlMs);
       if (cached) {
@@ -260,15 +262,22 @@ export function createConcurrentActions({
         return Promise.resolve();
       }
 
+      const action: A2uiAction = {
+        surfaceId: origin.surfaceId,
+        name: origin.name,
+        sourceComponentId: origin.sourceComponentId,
+        timestamp: new Date().toISOString(),
+        context: origin.context,
+      };
       if (!policy) {
         return lanes.sendUncached(origin, (signal) =>
-          quietly(origin, stream(request, origin, key, {signal}), signal)
+          quietly(origin, stream(action, locale, origin, key, {signal}), signal)
         );
       }
       return lanes.sendCachedMiss(key, (joined) =>
         quietly(
           origin,
-          stream(request, origin, key, {joined}).then((messages) =>
+          stream(action, locale, origin, key, {joined}).then((messages) =>
             cache.set(key, accept(messages).messages)
           )
         )

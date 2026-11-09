@@ -293,6 +293,45 @@ describe('concurrent and cached actions (ADR-020)', () => {
     expect(session.actionError).toBeUndefined();
   });
 
+  it('passes over the dispatch in flight when the next one fails on a blank locale', async () => {
+    let language = 'en';
+    const session = createSession({
+      ...baseConfig,
+      navigatorContextProvider: () => ({...baseConfig.navigatorContextProvider(), language}),
+      sessionToRestore: restoredShell(),
+    });
+    const cachedBoots = dispatch(session, 'boots');
+    const uncachedBoots = dispatch(session, 'boots', UNCACHED);
+
+    language = '';
+    await dispatch(session, 'poles');
+    await dispatch(session, 'poles', UNCACHED);
+    answer(calls[0], 'boots');
+    await cachedBoots;
+    await uncachedBoots;
+
+    expect(calls).toHaveLength(2);
+    expect(calls[1].signal?.aborted).toBe(true);
+    expect(shownQuery(session)).toBeUndefined();
+  });
+
+  it('answers a cached action from the cache without reading the commerce context', async () => {
+    const commerceContextProvider = vi.fn(() => ({cart: []}));
+    const session = createSession({
+      ...baseConfig,
+      commerceContextProvider,
+      sessionToRestore: restoredShell(),
+    });
+    const boots = dispatch(session, 'boots');
+    answer(calls[0], 'boots');
+    await boots;
+
+    await dispatch(session, 'boots');
+
+    expect(calls).toHaveLength(1);
+    expect(commerceContextProvider).toHaveBeenCalledTimes(1);
+  });
+
   it('sends a cached action again once its answer expired', async () => {
     vi.useFakeTimers({toFake: ['Date']});
     try {

@@ -29,6 +29,7 @@ import type {
   ClientOwnedRequestFields,
   ConverseRequestModel,
   InitializeAction,
+  RequestLocale,
   RequestScopeFields,
 } from '@/src/internal/api/unified/unified-endpoint-types.js';
 import type {
@@ -38,7 +39,7 @@ import type {
 } from '@/src/internal/context/index.js';
 import {devWarn} from '@/src/internal/utils/dev-warn.js';
 import {generateId} from '@/src/internal/utils/id-generator.js';
-import type {ActionLocale, ActionOrigin} from './action-cache.js';
+import type {ActionOrigin} from './action-cache.js';
 import {validateActionPayload} from './action-payload-validation.js';
 import {concurrentAction, type CachePolicy} from './announced-actions.js';
 import type {ContractsSchema} from './contracts.js';
@@ -453,7 +454,7 @@ function requireNonBlank<T extends object>(
   }
 }
 
-function readLocale(navigatorContext: NavigatorContext): ActionLocale {
+function readLocale(navigatorContext: NavigatorContext): RequestLocale {
   requireNonBlank(navigatorContext, LOCALE_KEYS, 'The navigator context');
   return {
     language: navigatorContext.language.trim(),
@@ -704,9 +705,11 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
    *     (meaningful even when empty) plus `pinnedProducts`, `source`, and
    *     `custom` carried from what the provider returns.
    */
-  function buildBaseRequest(): Omit<ClientOwnedRequestFields, 'message' | 'action'> {
+  function buildBaseRequest(
+    knownLocale?: RequestLocale
+  ): Omit<ClientOwnedRequestFields, 'message' | 'action'> {
     const navigatorContext = config.navigatorContextProvider();
-    const locale = readLocale(navigatorContext);
+    const locale = knownLocale ?? readLocale(navigatorContext);
     const commerceContext = config.commerceContextProvider?.();
     const {sessionId, sessionToken} = store.getState();
 
@@ -747,11 +750,20 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     return {...requestScope, ...buildBaseRequest(), message: prompt, action: null};
   }
 
-  function buildActionRequest(action: A2uiAction | InitializeAction): ConverseRequestModel {
-    return {...requestScope, ...buildBaseRequest(), message: null, action};
+  function buildActionRequest(
+    action: A2uiAction | InitializeAction,
+    locale?: RequestLocale
+  ): ConverseRequestModel {
+    return {...requestScope, ...buildBaseRequest(locale), message: null, action};
   }
 
-  const concurrentActions = createConcurrentActions({store, client, config, buildActionRequest});
+  const concurrentActions = createConcurrentActions({
+    store,
+    client,
+    config,
+    readLocale: () => readLocale(config.navigatorContextProvider()),
+    buildActionRequest,
+  });
 
   /**
    * An `action`'s stream folds only its surface snapshots into `target`, and its failure sets
