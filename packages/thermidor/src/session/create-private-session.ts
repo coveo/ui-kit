@@ -6,9 +6,10 @@ import {createSessionRuntime, type Session, type SessionConfig} from './create-s
  * **For internal Coveo use only.** Not supported for customers; may change without notice.
  *
  * The configuration accepted by {@link createPrivateSession}: the public `SessionConfig`,
- * with `agentConfigurationId` and `trackingId` optional, plus optional locale fields. Each
- * of these fields that is set is sent with every converse request; an unset one is left
- * out. The session doesn't validate them; the endpoint does.
+ * with `agentConfigurationId` and `trackingId` optional. Each id that is set is sent with
+ * every converse request; an unset one is left out. The session doesn't validate the ids;
+ * the endpoint does. As with `createSession`, the required `navigatorContextProvider`
+ * supplies the `language`, `country` and `currency` sent with every request.
  */
 export interface PrivateSessionConfig<
   TContracts extends ContractsSchema = ContractsSchema,
@@ -17,20 +18,11 @@ export interface PrivateSessionConfig<
   agentConfigurationId?: string;
   /** The tracking identifier of the experience, when the endpoint needs one. */
   trackingId?: string;
-  /** The language of the experience, such as `'en'`. */
-  language?: string;
-  /** The country of the experience, such as `'US'`. */
-  country?: string;
-  /** The currency of the experience, such as `'USD'`. */
-  currency?: string;
 }
 
 const REQUEST_SCOPE_KEYS = [
   'agentConfigurationId',
   'trackingId',
-  'language',
-  'country',
-  'currency',
 ] as const satisfies readonly (keyof RequestScopeFields & keyof PrivateSessionConfig)[];
 
 /**
@@ -38,8 +30,8 @@ const REQUEST_SCOPE_KEYS = [
  *
  * Creates a session, like the public `createSession`, for a Coveo internal application
  * that calls a private converse endpoint. `agentConfigurationId` and `trackingId` are
- * optional, and `language`, `country` and `currency` can be set; every one of them that is
- * set is sent with every converse request (`initialize`, prompts and actions).
+ * optional; each one that is set is sent with every converse request (`initialize`,
+ * prompts and actions), with the navigator context's locale.
  *
  * @example
  * ```ts
@@ -51,9 +43,7 @@ const REQUEST_SCOPE_KEYS = [
  *   accessToken,
  *   endpoint: privateConverseUrl,
  *   trackingId,
- *   language: 'en',
- *   country: 'US',
- *   currency: 'USD',
+ *   navigatorContextProvider: () => ({...getNavigatorContext(), language: 'en', country: 'US', currency: 'USD'}),
  * });
  * ```
  */

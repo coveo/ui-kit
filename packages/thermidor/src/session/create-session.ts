@@ -12,7 +12,8 @@
  * The runtime ({@link createSessionRuntime}) receives the fields that scope every
  * request as an input: `createSession` passes its required `agentConfigurationId` and
  * `trackingId`, and the private entry point's `createPrivateSession` passes whichever of
- * its optional ids and locale fields are set.
+ * its optional ids are set. Both require a navigator context provider, whose locale every
+ * request carries.
  *
  * There are no singletons and no module-level mutable state: every call to
  * `createSession` builds a fresh store, so two sessions created from identical
@@ -28,10 +29,12 @@ import type {
   ClientOwnedRequestFields,
   ConverseRequestModel,
   InitializeAction,
+  RequestLocale,
   RequestScopeFields,
 } from '@/src/internal/api/unified/unified-endpoint-types.js';
 import type {
   CommerceContextProvider,
+  NavigatorContext,
   NavigatorContextProvider,
 } from '@/src/internal/context/index.js';
 import {devWarn} from '@/src/internal/utils/dev-warn.js';
@@ -154,8 +157,11 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
    * `organizationId`.
    */
   endpoint?: string;
-  /** Ambient navigator context, read fresh per request. */
-  navigatorContextProvider?: NavigatorContextProvider;
+  /**
+   * Ambient navigator context, read fresh per request. Its `language`, `country` and
+   * `currency` are sent with every request and must not be blank.
+   */
+  navigatorContextProvider: NavigatorContextProvider;
   /**
    * App-owned commerce context (cart / pinnedProducts / source / custom), read
    * fresh per request. When absent, the request carries the structural-empty
@@ -422,19 +428,39 @@ export type SessionRuntimeConfig<TContracts extends ContractsSchema = ContractsS
   'agentConfigurationId' | 'trackingId'
 >;
 
+const LOCALE_KEYS = ['language', 'country', 'currency'] as const;
+
 /**
  * Creates a {@link Session} over a fresh observable store + fold.
  */
 export function createSession<TContracts extends ContractsSchema>(
   config: SessionConfig<TContracts>
 ): Session<TContracts> {
-  for (const key of ['agentConfigurationId', 'trackingId'] as const) {
-    if (!config[key]?.trim()) {
-      throw new Error(`createSession requires a non-blank ${key}.`);
-    }
-  }
+  requireNonBlank(config, ['agentConfigurationId', 'trackingId'], 'createSession');
   const {agentConfigurationId, trackingId} = config;
   return createSessionRuntime(config, {agentConfigurationId, trackingId});
+}
+
+function requireNonBlank<T extends object>(
+  record: T,
+  keys: readonly (keyof T & string)[],
+  owner: string
+): void {
+  for (const key of keys) {
+    const value: unknown = record[key];
+    if (typeof value !== 'string' || !value.trim()) {
+      throw new Error(`${owner} requires a non-blank ${key}.`);
+    }
+  }
+}
+
+function readLocale(navigatorContext: NavigatorContext): RequestLocale {
+  requireNonBlank(navigatorContext, LOCALE_KEYS, 'The navigator context');
+  return {
+    language: navigatorContext.language.trim(),
+    country: navigatorContext.country.trim(),
+    currency: navigatorContext.currency.trim(),
+  };
 }
 
 /**
@@ -445,6 +471,9 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   config: SessionRuntimeConfig<TContracts>,
   requestScope: Readonly<RequestScopeFields>
 ): Session<TContracts> {
+  if (typeof config.navigatorContextProvider !== 'function') {
+    throw new Error('A session requires a navigatorContextProvider.');
+  }
   const initialState: SessionStoreState<Turn> = config.sessionToRestore
     ? restoreSession(config.sessionToRestore)
     : {
@@ -676,19 +705,22 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
    *     (meaningful even when empty) plus `pinnedProducts`, `source`, and
    *     `custom` carried from what the provider returns.
    */
-  function buildBaseRequest(): Omit<ClientOwnedRequestFields, 'message' | 'action'> {
-    const navigatorContext = config.navigatorContextProvider?.();
+  function buildBaseRequest(
+    navigatorContext = config.navigatorContextProvider()
+  ): Omit<ClientOwnedRequestFields, 'message' | 'action'> {
+    const locale = readLocale(navigatorContext);
     const commerceContext = config.commerceContextProvider?.();
     const {sessionId, sessionToken} = store.getState();
 
     const view = {
-      url: navigatorContext?.location ?? null,
-      referrer: navigatorContext?.referrer ?? null,
+      url: navigatorContext.location ?? null,
+      referrer: navigatorContext.referrer ?? null,
     };
-    const user: Record<string, unknown> = {userAgent: navigatorContext?.userAgent ?? null};
+    const user: Record<string, unknown> = {userAgent: navigatorContext.userAgent ?? null};
 
     const base: Omit<ClientOwnedRequestFields, 'message' | 'action'> = {
-      clientId: navigatorContext?.clientId ?? undefined,
+      ...locale,
+      clientId: navigatorContext.clientId,
       conversationSessionId: sessionId,
       conversationToken: sessionToken,
       context:
@@ -717,11 +749,23 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     return {...requestScope, ...buildBaseRequest(), message: prompt, action: null};
   }
 
-  function buildActionRequest(action: A2uiAction | InitializeAction): ConverseRequestModel {
-    return {...requestScope, ...buildBaseRequest(), message: null, action};
+  function buildActionRequest(
+    action: A2uiAction | InitializeAction,
+    navigatorContext?: NavigatorContext
+  ): ConverseRequestModel {
+    return {...requestScope, ...buildBaseRequest(navigatorContext), message: null, action};
   }
 
-  const concurrentActions = createConcurrentActions({store, client, config, buildActionRequest});
+  const concurrentActions = createConcurrentActions({
+    store,
+    client,
+    config,
+    readNavigatorContext: () => {
+      const navigatorContext = config.navigatorContextProvider();
+      return {navigatorContext, locale: readLocale(navigatorContext)};
+    },
+    buildActionRequest,
+  });
 
   /**
    * An `action`'s stream folds only its surface snapshots into `target`, and its failure sets

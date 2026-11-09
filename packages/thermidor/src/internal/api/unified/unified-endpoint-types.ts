@@ -4,6 +4,9 @@ import type {CommerceCartItem} from '@/src/internal/context/commerce-context.js'
 
 /** The request keys the session builds itself on every request. */
 export type ClientOwnedRequestFields = {
+  language: string;
+  country: string;
+  currency: string;
   clientId?: string;
   message: string | null;
   action: A2uiAction | InitializeAction | null;
@@ -18,16 +21,16 @@ export type ClientOwnedRequestFields = {
   pinnedProducts?: string[];
 };
 
+/** The locale every request carries, read from the navigator context. */
+export type RequestLocale = Pick<ClientOwnedRequestFields, 'language' | 'country' | 'currency'>;
+
 /**
  * The fields that scope every request of a session. The public `createSession` sends
- * both ids; the private `createPrivateSession` sends whichever fields are set.
+ * both ids; the private `createPrivateSession` sends whichever ids are set.
  */
 export type RequestScopeFields = {
   agentConfigurationId?: string;
   trackingId?: string;
-  language?: string;
-  country?: string;
-  currency?: string;
 };
 
 /** The request of the public `createSession`. */

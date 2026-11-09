@@ -11,7 +11,9 @@ import type {UnifiedEndpointClient} from '@/src/internal/api/unified/unified-end
 import type {
   A2uiAction,
   ConverseRequestModel,
+  RequestLocale,
 } from '@/src/internal/api/unified/unified-endpoint-types.js';
+import type {NavigatorContext} from '@/src/internal/context/index.js';
 import {devWarn} from '@/src/internal/utils/dev-warn.js';
 import {
   EMPTY_RENDERER_STREAM,
@@ -40,7 +42,12 @@ export interface ConcurrentActionsOptions {
     accessToken: string;
     endpoint?: string;
   };
-  buildActionRequest: (action: A2uiAction) => ConverseRequestModel;
+  /** The navigator context and its locale; throws when the locale is missing or blank. */
+  readNavigatorContext: () => {navigatorContext: NavigatorContext; locale: RequestLocale};
+  buildActionRequest: (
+    action: A2uiAction,
+    navigatorContext: NavigatorContext
+  ) => ConverseRequestModel;
 }
 
 export interface ConcurrentActions {
@@ -52,8 +59,11 @@ export interface ConcurrentActions {
 }
 
 interface Lanes {
-  /** Makes `key` the latest dispatch of its lane, and aborts the lane's uncached request. */
-  claim(origin: ActionOrigin, key: string): void;
+  /**
+   * Makes `key` the latest dispatch of its lane, and aborts the lane's uncached request. Without
+   * a key, no dispatch of the lane is the latest.
+   */
+  claim(origin: ActionOrigin, key?: string): void;
   isLatest(origin: ActionOrigin, key: string): boolean;
   /** Sends a request the lane's next claim aborts. */
   sendUncached(origin: ActionOrigin, run: (signal: AbortSignal) => Promise<void>): Promise<void>;
@@ -69,7 +79,7 @@ function laneKey(origin: ActionOrigin): string {
 }
 
 function createLanes(): Lanes {
-  const latest = new Map<string, string>();
+  const latest = new Map<string, string | undefined>();
   const uncached = new Map<string, AbortController>();
   const misses = new Map<string, {done: Promise<void>; joined: boolean}>();
 
@@ -136,6 +146,7 @@ export function createConcurrentActions({
   store,
   client,
   config,
+  readNavigatorContext,
   buildActionRequest,
 }: ConcurrentActionsOptions): ConcurrentActions {
   const cache = createActionCache();
@@ -176,12 +187,13 @@ export function createConcurrentActions({
    */
   async function stream(
     action: A2uiAction,
+    navigatorContext: NavigatorContext,
     origin: ActionOrigin,
     key: string,
     {signal, joined = () => false}: {signal?: AbortSignal; joined?: () => boolean} = {}
   ): Promise<readonly unknown[]> {
     const result = await client.call(
-      buildActionRequest(action),
+      buildActionRequest(action, navigatorContext),
       {
         organizationId: config.organizationId,
         accessToken: config.accessToken,
@@ -238,7 +250,15 @@ export function createConcurrentActions({
 
   return {
     issue(origin, policy) {
-      const key = actionCacheKey(origin, origin.context);
+      let navigatorRead: ReturnType<typeof readNavigatorContext>;
+      try {
+        navigatorRead = readNavigatorContext();
+      } catch (error) {
+        lanes.claim(origin);
+        return quietly(origin, Promise.reject(error));
+      }
+
+      const key = actionCacheKey(origin, origin.context, navigatorRead.locale);
       lanes.claim(origin, key);
       const cached = policy && cache.get(key, policy.ttlMs);
       if (cached) {
@@ -255,13 +275,17 @@ export function createConcurrentActions({
       };
       if (!policy) {
         return lanes.sendUncached(origin, (signal) =>
-          quietly(origin, stream(action, origin, key, {signal}), signal)
+          quietly(
+            origin,
+            stream(action, navigatorRead.navigatorContext, origin, key, {signal}),
+            signal
+          )
         );
       }
       return lanes.sendCachedMiss(key, (joined) =>
         quietly(
           origin,
-          stream(action, origin, key, {joined}).then((messages) =>
+          stream(action, navigatorRead.navigatorContext, origin, key, {joined}).then((messages) =>
             cache.set(key, accept(messages).messages)
           )
         )

@@ -4,6 +4,8 @@
  * announces. Never serialized, and dropped with the session.
  */
 
+import type {RequestLocale} from '@/src/internal/api/unified/unified-endpoint-types.js';
+
 const MAX_ENTRIES = 100;
 
 export interface ActionOrigin {
@@ -29,11 +31,18 @@ function stableStringify(value: unknown): string {
   );
 }
 
-export function actionCacheKey(origin: ActionOrigin, payload: unknown): string {
+export function actionCacheKey(
+  origin: ActionOrigin,
+  payload: unknown,
+  {language, country, currency}: RequestLocale
+): string {
   return JSON.stringify([
     origin.surfaceId,
     origin.sourceComponentId,
     origin.name,
+    language,
+    country,
+    currency,
     stableStringify(payload),
   ]);
 }

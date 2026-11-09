@@ -14,7 +14,7 @@ Everything the previous revision described (an `Engine` class, a library-agnosti
 
 The package entry (`src/index.ts`) exports the session-client surface — `createSession`, the `Session` handle, the `Turn` / `TurnResponse` domain model (including `A2uiV09Message` and `DiscoveredSurface`), `SessionConfig`, the injected-contract types (`ContractsSchema`, `ComponentContractSchema`, `ParsableSchema`), the client-owned context types, and the versioned `SerializedSession` shape. It also exports the request types (`SessionRequest`, `InitializeRequest`, `PromptRequest`, `ActionRequest`) and the initialization (`SessionInitialization`, `SerializedInitialization`). It is intentionally free of state-library concepts (no store, slice, selector, thunk, or reducer types) and free of raw transport DTO shapes; `src/index.test-d.ts` fails the typecheck if one leaks into the entry.
 
-A second entry point, `@coveo/thermidor/private` (`src/private.ts`), is **for internal Coveo use only**: not supported for customers, and it may change without notice. It exports `createPrivateSession` and `PrivateSessionConfig`, and re-exports the root entry. The root entry never exports them, and `SessionConfig` keeps its required ids and takes no locale; `src/index.test-d.ts` checks both.
+A second entry point, `@coveo/thermidor/private` (`src/private.ts`), is **for internal Coveo use only**: not supported for customers, and it may change without notice. It exports `createPrivateSession` and `PrivateSessionConfig`, and re-exports the root entry. The root entry never exports them, and `SessionConfig` keeps its required ids; `src/index.test-d.ts` checks both.
 
 ```mermaid
 graph TB
@@ -60,7 +60,7 @@ src/
 ├── private.ts                     # @coveo/thermidor/private, for internal Coveo use only
 ├── session/
 │   ├── create-session.ts          # createSession factory + shared runtime (dispatch/cancel/retry)
-│   ├── create-private-session.ts  # createPrivateSession: optional ids, optional locale
+│   ├── create-private-session.ts  # createPrivateSession: optional ids
 │   ├── conflict-retry.ts          # Bounded retry of 409 AGENT:ACTION_IN_FLIGHT rejections
 │   ├── types.ts                   # Turn / TurnInput / TurnResponse domain model (ADR-010 model annex)
 │   ├── store.ts                   # Plain observable store + subscribe/notify
@@ -87,7 +87,7 @@ src/
 
 `createSession(config)` (`src/session/create-session.ts`) builds a fresh observable store and returns a `Session`. There are no singletons and no module-level mutable state: two sessions created from identical configuration share nothing mutable ([ADR-009](./internal/adr/ADR-009-architecture-decision-charter-v2.md), charter conformance).
 
-Both entry points share one runtime, `createSessionRuntime(config, requestScope)`. `requestScope` holds the fields that scope every request, sent ahead of the keys the session builds itself (`clientId`, `message`, `action`, `conversationSessionId`, `conversationToken`, `context`, `pinnedProducts`) with `initialize`, prompts, and actions, concurrent and cached ones included. `createSession` checks `agentConfigurationId` and `trackingId` and passes them. `createPrivateSession` passes whichever of its optional `agentConfigurationId`, `trackingId`, `language`, `country` and `currency` are set, without validating them: the endpoint does.
+Both entry points share one runtime, `createSessionRuntime(config, requestScope)`. `requestScope` holds the fields that scope every request, sent ahead of the keys the session builds itself (`language`, `country`, `currency`, `clientId`, `message`, `action`, `conversationSessionId`, `conversationToken`, `context`, `pinnedProducts`) with `initialize`, prompts, and actions, concurrent and cached ones included. `createSession` checks `agentConfigurationId` and `trackingId` and passes them. `createPrivateSession` passes whichever of its optional `agentConfigurationId` and `trackingId` are set, without validating them: the endpoint does. Both require a `navigatorContextProvider`, and the runtime fails a request whose navigator context has a blank `language`, `country` or `currency`.
 
 The runtime owns the initialize / dispatch / cancel / retry orchestration and the SSE-consumption loop that folds each event into the run a request streams into, its run target: a turn, or the initialization:
 
@@ -177,7 +177,7 @@ The injected contracts schema is validated against at two boundaries, both insid
 
 - **Contracts schema** ([ADR-014](./internal/adr/ADR-014-consumer-supplied-endpoint-and-schema.md)) — `config.contracts` is the sole source for component-state and action-payload validation. The package declares no dependency on any specific schema package; it accepts any Zod discriminated union on `component` through a structural type (`src/session/contracts.ts`) that reads only public Zod API. `zod` is a peer dependency spanning both majors (`3.25.76 || ^4`), so validation runs through the single `zod` instance resolved by the injected schema. A consumer whose renderer is built on Zod 3 injects a Zod 3 schema.
 - **Endpoint** — when `endpoint` is provided the client POSTs to it verbatim (nothing appended); when absent it resolves `https://{orgId}.org.coveo.com` and appends the fixed converse path `/api/preview/organizations/{orgId}/agents/commerce/agui/converse`. A missing/empty org fails before any network call.
-- **Context providers** ([ADR-012](./internal/adr/ADR-012-client-owned-context.md)) — `navigatorContextProvider` and `commerceContextProvider` are synchronous and read fresh per request in the request builder. An absent commerce provider sends the structural-empty "absent" encoding (`cart: []`, no `pinnedProducts`/`source`/`custom`); a present-but-empty provider sends `cart: []` distinguishably. Context is never serialized, so a restored session reads today's context from the providers.
+- **Context providers** ([ADR-012](./internal/adr/ADR-012-client-owned-context.md)) — `navigatorContextProvider` (required, and the source of the request's `language`, `country` and `currency`) and `commerceContextProvider` are synchronous and read fresh per request in the request builder. An absent commerce provider sends the structural-empty "absent" encoding (`cart: []`, no `pinnedProducts`/`source`/`custom`); a present-but-empty provider sends `cart: []` distinguishably. Context is never serialized, so a restored session reads today's context from the providers.
 
 ## Serialization and restoration
 

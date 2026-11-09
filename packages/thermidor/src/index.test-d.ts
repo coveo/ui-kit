@@ -23,6 +23,8 @@ import type {
   ComponentActionNames,
   ContractsSchema,
   InitializeRequest,
+  NavigatorContext,
+  NavigatorContextProvider,
   SessionInitialization,
   SessionRequest,
   SerializedInitialization,
@@ -67,10 +69,16 @@ test('exposes session-scoped surfaces, renderer stream and state on Session', ()
   expectTypeOf<TurnResponse>().not.toHaveProperty('state');
 });
 
-// ── POSITIVE: a session names its configured agent and tracking id ──
-test('requires the agent configuration and tracking id, and takes no locale', () => {
+// ── POSITIVE: a session names its configured agent and tracking id, and its navigator context the locale ──
+test('requires the agent configuration and tracking id, and a navigator context with a locale', () => {
   expectTypeOf<SessionConfig['agentConfigurationId']>().toEqualTypeOf<string>();
   expectTypeOf<SessionConfig['trackingId']>().toEqualTypeOf<string>();
+  expectTypeOf<
+    SessionConfig['navigatorContextProvider']
+  >().toEqualTypeOf<NavigatorContextProvider>();
+  expectTypeOf<NavigatorContext['language']>().toEqualTypeOf<string>();
+  expectTypeOf<NavigatorContext['country']>().toEqualTypeOf<string>();
+  expectTypeOf<NavigatorContext['currency']>().toEqualTypeOf<string>();
   expectTypeOf<SessionConfig>().not.toHaveProperty('language');
   expectTypeOf<SessionConfig>().not.toHaveProperty('country');
   expectTypeOf<SessionConfig>().not.toHaveProperty('currency');

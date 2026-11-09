@@ -81,6 +81,14 @@ const flush = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 const LOCALE = {language: 'fr', country: 'CA', currency: 'CAD'};
 
+const navigatorContextProvider = () => ({
+  clientId: 'client-1',
+  location: null,
+  referrer: null,
+  userAgent: null,
+  ...LOCALE,
+});
+
 function requests(): Record<string, unknown>[] {
   return callMock.mock.calls.map(([request]) => request);
 }
@@ -90,6 +98,7 @@ function config(overrides: Partial<PrivateSessionConfig> = {}): PrivateSessionCo
     contracts,
     organizationId: 'org-1',
     accessToken: 'token-1',
+    navigatorContextProvider,
     initialize: false,
     ...overrides,
   };
@@ -116,8 +125,8 @@ describe('createPrivateSession', () => {
     answerWith({type: 'RUN_STARTED'}, PAGINATION_SURFACE, {type: 'RUN_FINISHED'});
   });
 
-  it('sends its locale, and no agent configuration or tracking id, on initialize, prompt and action', async () => {
-    const {session, sent} = await sendEachRequestKind(LOCALE);
+  it('sends the navigator locale, and no agent configuration or tracking id, on initialize, prompt and action', async () => {
+    const {session, sent} = await sendEachRequestKind({});
 
     for (const request of sent) {
       expect(request).toMatchObject(LOCALE);
@@ -130,7 +139,6 @@ describe('createPrivateSession', () => {
 
   it('sends the ids when they are set, alongside the locale', async () => {
     const {sent} = await sendEachRequestKind({
-      ...LOCALE,
       agentConfigurationId: 'agent-configuration-1',
       trackingId: 'tracking-1',
     });
@@ -144,16 +152,34 @@ describe('createPrivateSession', () => {
     }
   });
 
-  it('leaves out every field that is not set', async () => {
-    const {sent} = await sendEachRequestKind({trackingId: 'tracking-1', language: 'en'});
+  it('leaves out an id that is not set', async () => {
+    const {sent} = await sendEachRequestKind({trackingId: 'tracking-1'});
 
     for (const request of sent) {
-      expect(request).toMatchObject({trackingId: 'tracking-1', language: 'en'});
-      for (const key of ['agentConfigurationId', 'country', 'currency']) {
-        expect(request).not.toHaveProperty(key);
-      }
+      expect(request).toMatchObject({...LOCALE, trackingId: 'tracking-1'});
+      expect(request).not.toHaveProperty('agentConfigurationId');
     }
   });
+
+  it('throws when the navigatorContextProvider is missing', () => {
+    expect(() =>
+      createPrivateSession(config({navigatorContextProvider: undefined as never}))
+    ).toThrow('navigatorContextProvider');
+  });
+
+  it.each(['language', 'country', 'currency'])(
+    'fails the run, without a request, when the navigator %s is blank',
+    async (key) => {
+      const session = createPrivateSession(
+        config({navigatorContextProvider: () => ({...navigatorContextProvider(), [key]: ' '})})
+      );
+
+      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+
+      expect(callMock).not.toHaveBeenCalled();
+      expect(session.turns.at(-1)?.error).toContain(key);
+    }
+  );
 
   it('does not throw when the ids are blank, and sends them as they are', async () => {
     const session = createPrivateSession(config({agentConfigurationId: '', trackingId: '  '}));
@@ -172,7 +198,7 @@ describe('createPrivateSession', () => {
       },
       {type: 'RUN_FINISHED'}
     );
-    const session = createPrivateSession(config(LOCALE));
+    const session = createPrivateSession(config());
     await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
 
     await session.dispatchAction(SELECT_PAGE);
@@ -182,13 +208,14 @@ describe('createPrivateSession', () => {
     expect(requests()[1]).not.toHaveProperty('agentConfigurationId');
   });
 
-  it('leaves the public createSession on its required ids, with no locale', async () => {
+  it('leaves the public createSession on its required ids and navigator locale', async () => {
     const session = createSession({
       contracts,
       organizationId: 'org-1',
       accessToken: 'token-1',
       agentConfigurationId: 'agent-configuration-1',
       trackingId: 'tracking-1',
+      navigatorContextProvider,
       initialize: false,
     });
 
@@ -202,12 +229,19 @@ describe('createPrivateSession', () => {
         'conversationSessionId',
         'conversationToken',
         'clientId',
+        'country',
+        'currency',
+        'language',
         'message',
         'trackingId',
       ].sort()
     );
-    expect(() => createSession({...config(), agentConfigurationId: '', trackingId: 't'})).toThrow(
-      'agentConfigurationId'
-    );
+    expect(() =>
+      createSession({
+        ...config(),
+        agentConfigurationId: '',
+        trackingId: 't',
+      })
+    ).toThrow('agentConfigurationId');
   });
 });

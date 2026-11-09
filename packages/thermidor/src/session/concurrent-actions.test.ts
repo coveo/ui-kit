@@ -107,6 +107,15 @@ const baseConfig: SessionConfig = {
   accessToken: 'token-1',
   agentConfigurationId: 'agent-configuration-1',
   trackingId: 'tracking-1',
+  navigatorContextProvider: () => ({
+    clientId: 'client-1',
+    location: null,
+    referrer: null,
+    userAgent: null,
+    language: 'en',
+    country: 'US',
+    currency: 'USD',
+  }),
   initialize: false,
 };
 
@@ -248,6 +257,98 @@ describe('concurrent and cached actions (ADR-020)', () => {
 
     expect(sentQueries()).toEqual(['boots', 'poles']);
     expect(shownQuery(session)).toBe('boots');
+  });
+
+  it('sends a cached action again once the navigator locale changed', async () => {
+    let currency = 'USD';
+    const session = createSession({
+      ...baseConfig,
+      navigatorContextProvider: () => ({...baseConfig.navigatorContextProvider(), currency}),
+      sessionToRestore: restoredShell(),
+    });
+    const usd = dispatch(session, 'boots');
+    answer(calls[0], 'boots');
+    await usd;
+
+    currency = 'CAD';
+    const cad = dispatch(session, 'boots');
+    answer(calls[1], 'boots');
+    await cad;
+
+    expect(sentQueries()).toEqual(['boots', 'boots']);
+    expect(calls[1].request).toMatchObject({currency: 'CAD'});
+  });
+
+  it('sends nothing, and warns, when the navigator locale is blank', async () => {
+    const session = createSession({
+      ...baseConfig,
+      navigatorContextProvider: () => ({...baseConfig.navigatorContextProvider(), language: ''}),
+      sessionToRestore: restoredShell(),
+    });
+
+    await dispatch(session, 'boots');
+
+    expect(calls).toHaveLength(0);
+    expect(warned('language')).toBe(true);
+    expect(session.actionError).toBeUndefined();
+  });
+
+  it('passes over the dispatch in flight when the next one fails on a blank locale', async () => {
+    let language = 'en';
+    const session = createSession({
+      ...baseConfig,
+      navigatorContextProvider: () => ({...baseConfig.navigatorContextProvider(), language}),
+      sessionToRestore: restoredShell(),
+    });
+    const cachedBoots = dispatch(session, 'boots');
+    const uncachedBoots = dispatch(session, 'boots', UNCACHED);
+
+    language = '';
+    await dispatch(session, 'poles');
+    await dispatch(session, 'poles', UNCACHED);
+    answer(calls[0], 'boots');
+    await cachedBoots;
+    await uncachedBoots;
+
+    expect(calls).toHaveLength(2);
+    expect(calls[1].signal?.aborted).toBe(true);
+    expect(shownQuery(session)).toBeUndefined();
+  });
+
+  it('reads the navigator context once per sent action, and sends that read', async () => {
+    let reads = 0;
+    const session = createSession({
+      ...baseConfig,
+      navigatorContextProvider: () => ({
+        ...baseConfig.navigatorContextProvider(),
+        clientId: `client-${++reads}`,
+      }),
+      sessionToRestore: restoredShell(),
+    });
+
+    const boots = dispatch(session, 'boots');
+    answer(calls[0], 'boots');
+    await boots;
+
+    expect(reads).toBe(1);
+    expect(calls[0].request).toMatchObject({clientId: 'client-1'});
+  });
+
+  it('answers a cached action from the cache without reading the commerce context', async () => {
+    const commerceContextProvider = vi.fn(() => ({cart: []}));
+    const session = createSession({
+      ...baseConfig,
+      commerceContextProvider,
+      sessionToRestore: restoredShell(),
+    });
+    const boots = dispatch(session, 'boots');
+    answer(calls[0], 'boots');
+    await boots;
+
+    await dispatch(session, 'boots');
+
+    expect(calls).toHaveLength(1);
+    expect(commerceContextProvider).toHaveBeenCalledTimes(1);
   });
 
   it('sends a cached action again once its answer expired', async () => {
