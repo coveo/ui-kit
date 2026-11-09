@@ -19,7 +19,8 @@ renderer ──dispatchAction──▶ payload of the action ──session──
 ```
 
 - **The consumer** types its payloads with the projections of thermidor-schema it injects as
-  `contracts` (ADR-014): `ProductClickPayload`, `UpdateCartPayload`, `PurchasePayload`. The session
+  `contracts` (ADR-014): `ProductClickPayload`, `UpdateCartPayload`, and `purchase`'s
+  `PurchaseProduct` and `Transaction`. The session
   validates each dispatch against the dispatching component's contract before anything else.
 - **The session** imports no schema. It reads the validated payload through a structural view of
   the fields it maps, and builds events typed by `@coveo/relay-event-types`.
@@ -147,14 +148,23 @@ The attribution is read per node, the latest entry winning. A snapshot that repl
 merges its announcement onto the replaced one's per node, so the nodes it leaves out keep theirs:
 
 ```ts
-// session/analytics-attribution.ts
-export function analyticsAttribution(activities, surfaceId, nodeId) {
+// session/analytics-attribution.ts: the latest recorded entry, unless a concurrent answer
+// announced one after it
+export function analyticsAttribution(activities, surfaceId, nodeId, unrecorded) {
   let attribution;
-  for (const activity of activities) {
-    const entry = activity.metadata?.analyticsAttribution?.[surfaceId]?.[nodeId];
-    if (isAttribution(entry)) attribution = entry;
-  }
-  return attribution;
+  let recordedAt = -1;
+  activities.forEach((activity, index) => {
+    for (const entry of readAnnouncedAttributions(activity.metadata)) {
+      if (entry.surfaceId === surfaceId && entry.nodeId === nodeId) {
+        attribution = entry.attribution;
+        recordedAt = index;
+      }
+    }
+  });
+  const concurrent = unrecorded?.get(surfaceId, nodeId);
+  return concurrent && concurrent.recordedActivities > recordedAt
+    ? concurrent.attribution
+    : attribution;
 }
 ```
 
@@ -165,16 +175,11 @@ with it, so a revisited query is attributed to the response that answered it:
 // session/concurrent-actions.ts
 const announced = readAnnouncedAttributions(event.metadata);
 apply({messages, attributions: announced}); // keeps the entries of the nodes the writes update
+// … once the answer ends
 cache.set(key, {
   messages: accepted.messages,
-  attributions: writtenAttributions(accepted.writes, announced),
+  attributions: writtenAttributions(accepted.writes, answer.attributions),
 });
-
-// session/analytics-attribution.ts: the latest recorded entry, unless a concurrent answer
-// announced one after it
-return concurrent && concurrent.recordedActivities > recordedAt
-  ? concurrent.attribution
-  : attribution;
 ```
 
 The mapping, in parity with Agent Gateway's `AnalyticsActionHandler`:
@@ -231,22 +236,24 @@ logs its click as it opens the product, without preventing the navigation:
 
 ```tsx
 // demo-schema-react: ProductCarousel
-({props, context}) => (
-  <ProductActionsContext.Provider value={(action) => context.dispatchAction(action)}>
-    {products.map((product, index) => (
-      <A2UIProductCard key={product.permanentid} {...cardProps(product)} position={index + 1} />
-    ))}
-  </ProductActionsContext.Provider>
-);
+<ProductActionsContext.Provider value={(action) => context.dispatchAction(action)}>
+  {products.map((product, index) => (
+    <A2UIProductCard
+      key={product.permanentid}
+      ec_product_id={product.permanentid}
+      // … ec_name, ec_price, clickUri
+      position={index + 1}
+    />
+  ))}
+</ProductActionsContext.Provider>;
 
 // A2UIProductCard
-<a
-  href={clickUri}
-  target="_blank"
-  rel="noopener noreferrer"
-  onClick={() => dispatch(productClick({productId, name, price}, position))}
->
-  {name}
+const dispatch = useProductActions();
+const logClick = () =>
+  dispatch(productClick({productId: ec_product_id, name: ec_name, price: ec_price}, position));
+
+<a href={clickUri} target="_blank" rel="noopener noreferrer" onClick={logClick}>
+  {ec_name}
 </a>;
 ```
 
@@ -268,7 +275,7 @@ const add = () => {
       context: {productId, name, price: price ?? null, quantity: 1, operation: 'add'},
     },
   });
-  cart.apply(/* the same update */);
+  onAdd(product); // the app's cart changes after
 };
 ```
 
