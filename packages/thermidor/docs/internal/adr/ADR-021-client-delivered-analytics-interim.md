@@ -198,8 +198,10 @@ interface AnalyticsConfig {
 }
 ```
 
-- **Opt-in.** Without `analytics`, or with `enabled: false`, nothing is logged, Relay is not created,
-  and no cookie is written. Analytics actions are still not sent to the producer.
+- **Opt-in.** Without `analytics`, or with `enabled: false`, nothing is logged and Relay is not
+  created. Analytics actions are still not sent to the producer.
+- **No visitor cookie.** The client id always comes from the navigator context, so Relay never
+  writes its own, whether analytics are on or off.
 - `endpoint` mirrors `SessionConfig.endpoint`: the full events URL, for a proxy or a local mock,
   where Headless names it `analytics.proxyBaseUrl`. It is meaningless once the producer logs, and is
   deprecated then.
@@ -210,7 +212,7 @@ interface AnalyticsConfig {
 
 Whether a visitor consented is the question ADR-023 leaves to a dedicated privacy and consent ADR,
 before which its log actions do not ship. This ADR does not decide it. It provides the switch the
-consumer needs meanwhile: `analytics` absent or `enabled: false` sends no event and writes no cookie.
+consumer needs meanwhile: `analytics` absent or `enabled: false` sends no event.
 
 ### Contracts
 
@@ -219,16 +221,20 @@ consumer needs meanwhile: `analytics` absent or `enabled: false` sends no event 
   added. Two follow the commerce events they map to (`ec.productClick`, `ec.purchase`); `updateCart`
   names what the shopper does, and maps to `ec.cartAction`.
 - **Action payloads** stay in thermidor-schema, the only contract a consumer sees. `productClick`
-  and `updateCart` each become one shared action definition, titled after the action, that every
-  component showing products references, the shape ADR-023 gives its log actions. The action is the
-  same on every component, so the projections carry one type per action, and the migration rewrites
-  one definition: `productClick` composes ADR-023's log-action base instead of the action base. The
-  actions are optional, so a producer's nodes stay valid without them. `position` counts from 1.
+  and `updateCart` each become one shared action definition, titled after the action, the shape
+  ADR-023 gives its log actions. Every component that shows products references `productClick`, and
+  every one that offers to add to cart references `updateCart`: all but `InstantProducts`. The
+  action is the same on every component, so the projections carry one type per action, and the
+  migration rewrites one definition: `productClick` composes ADR-023's log-action base instead of
+  the action base. The components that gain them declare them as optional, so a producer's nodes
+  stay valid without them; `ProductList` and `Cart` keep the ones they already require. `position`
+  counts from 1.
 - **Event payloads** belong to Coveo's analytics schema, typed for the session by
   `@coveo/relay-event-types`. thermidor-schema does not repeat them.
 - **The mapping** lives in the session's internal module, typed by a structural view of the payload
   on one side and `@coveo/relay-event-types` on the other, and tested against the same cases as the
-  producer's handler.
+  producer's handler, except `setQuantity`, which the handler sends as is and the session logs as
+  the change (above).
 
 ## Migration to ADR-023
 
@@ -255,13 +261,14 @@ would silence every page that has not upgraded, and every rollback.
 
 - **The visitor and the currency:** both come from the navigator context, before and after.
 - **No double logging:** older versions log from the browser and never send analytics actions; newer
-  ones only send log actions. Both can run against the same producer.
+  ones send log actions, and `updateCart` as the cart decision rules. Both can run against the same
+  producer.
 - **Rollback:** reinstalling the previous version, which logs from the producer's announcements
   again.
 
 **What the release does not keep:** a click on a product restored from a session serialized before
-the release. Its products carry no `analyticsRef`, so the click fails the contract and is not
-logged, with a development warning. Invalidating those sessions would lose the shopper's
+the release. Its products carry no `analyticsRef`, so the renderer sends no click for it, as ADR-023
+asks; a click dispatched anyway fails the contract and is not logged, with a development warning. Invalidating those sessions would lose the shopper's
 conversation to save the clicks on its older products.
 
 **What changes in the data:** events come from the producer (`source`), with the shopper's IP and
@@ -280,8 +287,8 @@ with the decision on who owns the cart: the app, under ADR-012, or the producer'
   migration to ADR-023. The session does not transmit `productClick`, `updateCart` and `purchase` to
   the endpoint: it logs them itself, and so names actions, which the package otherwise never does
   (ADR-019, ADR-020). It does not reinterpret them: the payload is validated against the contract and
-  mapped field for field, in parity with the producer's handler. The exception is confined to one internal
-  module, which the migration to ADR-023 deletes, after which the session transmits them again.
+  mapped field for field, in parity with the producer's handler but for `setQuantity`, logged as the
+  change. The exception is confined to one internal module, which the migration to ADR-023 deletes, after which the session transmits them again.
 - **Public API independence (MUST):** unchanged. No Relay type or event payload is public;
   `SessionConfig.analytics` names what the consumer decides (on or off, an endpoint), not how events
   are delivered.
@@ -318,8 +325,8 @@ with the decision on who owns the cart: the app, under ADR-012, or the producer'
 ## Implementation and Follow-up
 
 - thermidor-schema: shared `productClick` and `updateCart` action definitions, over shared
-  `ProductClickPayload` and `UpdateCartPayload` definitions, referenced as optional actions by every
-  component that shows products, and `clickUri` on `ComparisonProduct`. The generators project a
+  `ProductClickPayload` and `UpdateCartPayload` definitions, referenced by every component that shows
+  products (`updateCart` by all but `InstantProducts`), and `clickUri` on `ComparisonProduct`. The generators project a
   shared definition under its title. Coordinated with ADR-023's pull request, which edits the same
   files.
 - Agent Gateway: announce `analyticsAttribution` on every snapshot that writes a node with products,

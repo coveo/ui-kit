@@ -6,7 +6,7 @@ related:
 # ADR-021 annex A: what a Thermidor experience must log
 
 This annex lists every shopper interaction of the Thermidor contract, the analytics event each one
-needs, and who logs it today. It is the scope [ADR-021](./ADR-021-client-delivered-analytics-interim.md)
+needs, and who logged it before ADR-021. It is the scope [ADR-021](./ADR-021-client-delivered-analytics-interim.md)
 draws from. Where the annex and the ADR disagree, the ADR decides.
 
 Sources: the 24 components of thermidor-schema `beta`, the demo-schema-react and
@@ -24,14 +24,16 @@ and [CPD reporting: Note to implementers](https://coveord.atlassian.net/wiki/spa
 - **An interaction that changes nothing is not a turn.** A product click, a cart change, a purchase:
   it is logged with the standard commerce event, joined to what the shopper was shown by:
   - `responseId`: the `turnId` of the turn that showed the item, not the Commerce API response
-    behind it, and not necessarily the latest turn;
+    behind it, and not necessarily the latest turn. An answer that is not recorded as a turn, such
+    as a facet or a page on a search surface, or instant products, names the Commerce API response
+    instead, which its own search event logs;
   - `position`: from 1, across every item of that turn, in content order.
 
 A click without both cannot be joined to its impression, and its revenue is not attributed.
 
 ## 2. Interactions
 
-| Interaction                                                                | Components                                                                                                      | Event                                                    | Who logs it                                                                                                | ADR-021                                  |
+| Interaction                                                                | Components                                                                                                      | Event                                                    | Who logged it before ADR-021                                                                               | ADR-021                                  |
 | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
 | Product click                                                              | `ProductList`, `ProductCarousel`, `ProductSummary`, `ProductResearchCard`, `ComparisonTable`, `InstantProducts` | `ec.productClick`                                        | Nobody: only `ProductList` declares it, and no renderer dispatches it                                      | In scope                                 |
 | Add to cart, remove, change quantity                                       | `Cart`; product cards that offer it                                                                             | `ec.cartAction`                                          | Nobody: `Cart` has no renderer, and the multi-surface demo keeps its cart without dispatching `updateCart` | In scope                                 |
@@ -79,7 +81,7 @@ of the agent's turn.
 - `mode: 'disabled'` sends nothing. Outside a browser, Relay sends nothing unless the environment
   supplies `send`.
 
-## 5. The producer today
+## 5. The producer before ADR-021
 
 - `productClick`, `updateCart` and `purchase` reach `AnalyticsActionHandler`, which builds the same
   `ec.*` payloads as Headless and emits them through `NoOpAnalyticsEventClient`: nothing is sent.
@@ -94,7 +96,7 @@ of the agent's turn.
   request carries (coveo/ui-kit#8849) is ignored when the request names an agent configuration.
 - `api.conversational.message` is published once per turn that has a user message, with
   `turnId`, `parentTurnId`, the content blocks and their products. Its `turnId` is allocated when
-  the turn starts, and does not reach the browser.
+  the turn starts, and did not reach the browser.
 - `capture` is forced to `true` on the producer's Commerce API calls; respecting the client's value
   is in review ([agent-gateway#574](https://github.com/coveo-platform/agent-gateway/pull/574)).
 

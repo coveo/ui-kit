@@ -31,7 +31,7 @@ The release that migrates ships only when the producer:
 | Renderer             | `productClick {productId, name?, price?, position}` | `productClick {analyticsRef}`                         |
 | Delivery             | Relay, from the browser                             | A log action, outside the turn slot, with `keepalive` |
 | Attribution          | `analyticsAttribution` announcement                 | Resolved by the producer; the announcement kept (\*)  |
-| `analytics.enabled`  | Turns the browser's events on or off                | Kept: `enabled: false` sends `capture: false`         |
+| `analytics.enabled`  | Turns the browser's events on or off                | Kept; what it sends waits for the privacy ADR         |
 | Currency             | The navigator context's                             | The log action request's                              |
 | `analytics.endpoint` | Events URL                                          | Deprecated, ignored                                   |
 | Dependencies         | `@coveo/relay`, `@coveo/relay-event-types`          | Removed                                               |
@@ -45,8 +45,9 @@ upgraded, and every rollback. The new version no longer reads it.
 The visitor comes from the navigator context before and after the release, so no shopper becomes a
 new visitor.
 
-A session serialized before the release restores, but its products carry no `analyticsRef`: a click
-on one of them fails the contract and is not logged, with a development warning.
+A session serialized before the release restores, but its products carry no `analyticsRef`: the
+renderer sends no click for them, as ADR-023 asks, and a click dispatched anyway fails the contract
+and is not logged, with a development warning.
 
 ## 3. Changelog for consumers
 
@@ -54,8 +55,8 @@ on one of them fails the contract and is not logged, with a development warning.
 > and position. The producer logs the click.
 >
 > ```diff
-> - dispatch('productClick', {productId: product.ec_product_id, name: product.ec_name, price, position});
-> + dispatch('productClick', {analyticsRef: product.analyticsRef});
+> - dispatchAction({event: {name: 'productClick', context: {productId: product.permanentid, name, price, position}}});
+> + dispatchAction({event: {name: 'productClick', context: {analyticsRef: product.analyticsRef}}});
 > ```
 >
 > You may remove the `connect-src` entry for `*.analytics.org.coveo.com` from your CSP, and the
@@ -69,9 +70,9 @@ on one of them fails the contract and is not logged, with a development warning.
 | Same visitor                | The current and the migrated session send the navigator context's client id in events and requests                           |
 | Same attribution            | The session's event and the producer's event for the same click carry the same `responseId`, position and currency           |
 | Delivered across navigation | A click that opens a page in the same tab still reaches its endpoint                                                         |
-| Analytics off               | `enabled: false` sends no event and `capture: false`                                                                         |
+| Analytics off               | `enabled: false` sends no event, and what the privacy and consent ADR decides                                                |
 | Older versions keep logging | The previous version, against the migrated producer, still logs from its announcements                                       |
-| Restored older session      | A click on a product restored from a session serialized before the release is withheld, with a development warning           |
+| Restored older session      | A product restored from a session serialized before the release, without `analyticsRef`, logs no click                       |
 
 ## 5. Data
 

@@ -29,8 +29,9 @@ renderer ──dispatchAction──▶ payload of the action ──session──
 
 ## 2. The contract
 
-Each action is one shared definition, titled after the action, that every component showing
-products references, as ADR-023 shapes its log actions. Its payload is a shared definition too:
+Each action is one shared definition, titled after the action, as ADR-023 shapes its log actions,
+and every component that offers it references it (the table below). Its payload is a shared
+definition too:
 
 ```json
 // definitions/product-click-payload.schema.json
@@ -182,7 +183,8 @@ cache.set(key, {
 });
 ```
 
-The mapping, in parity with Agent Gateway's `AnalyticsActionHandler`:
+The mapping, in parity with Agent Gateway's `AnalyticsActionHandler` but for `setQuantity`, which the
+handler sends as is:
 
 ```ts
 // internal/analytics/action-events.ts
