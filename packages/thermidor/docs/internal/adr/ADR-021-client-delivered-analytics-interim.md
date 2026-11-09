@@ -169,7 +169,12 @@ continuity keys it already carries:
   exists only once a response has drawn it, so that response's `RUN_STARTED` has stated the
   currency. A response that states none keeps the currency stated before; a session that no response
   has stated one to, such as with a producer that predates this decision, logs nothing, with a
-  development warning.
+  development warning. One case escapes it: right after a session is restored under another locale,
+  and before any response, a `Cart`'s purchase is logged in the currency the restored session kept,
+  since no response has stated the new one yet. The session cannot take the new currency from its
+  configuration, which the producer may not apply. No producer draws a `Cart` yet; when one does, a
+  private session can keep the locale of its requests, and on restore under another one, drop its
+  latest currency so the purchase is withheld until a response states the new currency.
 - **Internal.** The currencies are not exposed on `Session` or its snapshot, so no consumer comes to
   rely on them. They are optional fields of the serialized session, so a session serialized before
   the migration to ADR-023 restores after it, and the reverse.
