@@ -118,9 +118,9 @@ describe('PageSize', () => {
 
 describe('Sort', () => {
   const state: SortProps = {
-    appliedSort: {sortCriteria: 'relevance', fields: []},
+    appliedSort: {sortCriteria: 'relevance'},
     availableSorts: [
-      {sortCriteria: 'relevance', fields: []},
+      {sortCriteria: 'relevance'},
       {
         sortCriteria: 'fields',
         fields: [{field: 'ec_price', direction: 'asc', displayName: 'Price (Low to High)'}],
@@ -139,7 +139,7 @@ describe('Sort', () => {
     await waitFor(() =>
       expect(lastAction()).toMatchObject({
         name: 'selectSort',
-        context: {sortCriteria: 'fields', fields: [{field: 'ec_price', direction: 'asc'}]},
+        context: {sort: {sortCriteria: 'fields', fields: [{field: 'ec_price', direction: 'asc'}]}},
       })
     );
     expect((screen.getByLabelText(/Sort by/) as HTMLSelectElement).value).toBe('1');

@@ -49,8 +49,8 @@ catalogs:
       specifier: 20.7.1
       version: 20.7.1
     '@coveo/thermidor-schema':
-      specifier: 1.0.0-beta.44
-      version: 1.0.0-beta.44
+      specifier: 1.0.0-beta.45
+      version: 1.0.0-beta.45
     '@msw/playwright':
       specifier: 0.6.7
       version: 0.6.7
@@ -2352,7 +2352,7 @@ importers:
         version: link:../../../packages/thermidor
       '@coveo/thermidor-schema':
         specifier: 'catalog:'
-        version: 1.0.0-beta.44(zod@4.6.7)
+        version: 1.0.0-beta.45(zod@4.6.7)
       react:
         specifier: 19.3.1
         version: 19.3.1
@@ -2395,7 +2395,7 @@ importers:
         version: link:../../../packages/thermidor
       '@coveo/thermidor-schema':
         specifier: 'catalog:'
-        version: 1.0.0-beta.44(zod@3.25.76)
+        version: 1.0.0-beta.45(zod@3.25.76)
       dompurify:
         specifier: 'catalog:'
         version: 3.4.17
@@ -3728,8 +3728,8 @@ packages:
   '@coveo/semantic-monorepo-tools@2.7.1':
     resolution: {integrity: sha512-yPUdpPgoZWxX/lyhQWaskwGXS4ZFLsOK4QVUyD+1BtOk/827vqw93Q7UD4aumuYMVKTDnGjjHOEmHl07nzUvYw==}
 
-  '@coveo/thermidor-schema@1.0.0-beta.44':
-    resolution: {integrity: sha512-62SRlrUuwHCpamNh4HXjHGl5tz2YimVQ9SOV7M9lr3mk6PSwIr5EJOSMN3W9Fh2aSbVu/MGF4isLD12WkMebxA==}
+  '@coveo/thermidor-schema@1.0.0-beta.45':
+    resolution: {integrity: sha512-bk1hxmoq7X5rXfFb+qFDE8jkK4GlIZUaphdEleFoocC1bC5ujyp8dlGPHekYapN9f5kxJZedZxGidjEdrxbZxg==}
     engines: {node: '>=22.14.0'}
     peerDependencies:
       zod: ^3.25 || ^4.4.3
@@ -18749,11 +18749,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@coveo/thermidor-schema@1.0.0-beta.44(zod@3.25.76)':
+  '@coveo/thermidor-schema@1.0.0-beta.45(zod@3.25.76)':
     dependencies:
       zod: 3.25.76
 
-  '@coveo/thermidor-schema@1.0.0-beta.44(zod@4.6.7)':
+  '@coveo/thermidor-schema@1.0.0-beta.45(zod@4.6.7)':
     dependencies:
       zod: 4.6.7
 
