@@ -34,8 +34,3 @@
   min-width: 0;
   padding: var(--space-1) 0;
 }
-
-/* Against the input, so the suggestions do not move when the dropdown above it grows. */
-.above .listbox {
-  margin-top: auto;
-}
