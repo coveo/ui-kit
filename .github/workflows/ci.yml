@@ -247,7 +247,7 @@ jobs:
       DEPLOYMENT_ENVIRONMENT: CDN
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:6e3fb709361521eb27161606e6da6d2674e5e89fa16516cb37d6fdd91372273d
       options: --user 1001
     steps:
       - name: Harden Runner
@@ -335,7 +335,7 @@ jobs:
     if: contains(needs.affected.outputs.tasks, '#test"')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:6e3fb709361521eb27161606e6da6d2674e5e89fa16516cb37d6fdd91372273d
       options: --user 1001
     timeout-minutes: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'long-test') && 120 || 15 }}
     steps:
@@ -360,7 +360,7 @@ jobs:
     if: contains(needs.affected.outputs.tasks, '"@coveo/relay#functional-test"')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:6e3fb709361521eb27161606e6da6d2674e5e89fa16516cb37d6fdd91372273d
       options: --user 1001
     steps:
       - name: Harden Runner
@@ -526,7 +526,7 @@ jobs:
     if: contains(fromJSON(needs.affected.outputs.tasks), '@coveo/atomic#e2e')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:6e3fb709361521eb27161606e6da6d2674e5e89fa16516cb37d6fdd91372273d
       options: --user 1001
     strategy:
       fail-fast: ${{ github.event_name == 'merge_group' }}
@@ -603,7 +603,7 @@ jobs:
     if: contains(fromJSON(needs.affected.outputs.tasks), '@coveo/atomic-theming-e2e#e2e')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:6e3fb709361521eb27161606e6da6d2674e5e89fa16516cb37d6fdd91372273d
       options: --user 1001
     steps:
       - name: Harden Runner
@@ -632,7 +632,7 @@ jobs:
     if: contains(needs.affected.outputs.tasks, '"@coveo/atomic#test:storybook"')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:6e3fb709361521eb27161606e6da6d2674e5e89fa16516cb37d6fdd91372273d
       options: --user 1001
     strategy:
       fail-fast: ${{ github.event_name == 'merge_group' }}
@@ -711,7 +711,7 @@ jobs:
     if: ${{ needs.affected.outputs.samples != '[]' }}
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:6e3fb709361521eb27161606e6da6d2674e5e89fa16516cb37d6fdd91372273d
       options: --user 1001
     strategy:
       fail-fast: false
@@ -746,7 +746,7 @@ jobs:
     if: contains(fromJSON(needs.affected.outputs.tasks), '@coveo/pkg-new-template#e2e')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:6e3fb709361521eb27161606e6da6d2674e5e89fa16516cb37d6fdd91372273d
       options: --user 1001
     steps:
       - name: Harden Runner
@@ -774,7 +774,7 @@ jobs:
     if: contains(fromJSON(needs.affected.outputs.tasks), '@coveo/atomic-hosted-page#e2e')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:6e3fb709361521eb27161606e6da6d2674e5e89fa16516cb37d6fdd91372273d
       options: --user 1001
     steps:
       - name: Harden Runner

@@ -63,7 +63,7 @@ catalog:
   '@coveo/relay-event-types': 20.7.1
   '@coveo/thermidor-schema': 1.0.0-beta.41
   '@playwright/mcp': 0.0.83
-  '@playwright/test': 1.62.1
+  '@playwright/test': 1.64.1
   '@react-router/dev': 8.5.0
   '@react-router/fs-routes': 8.5.0
   '@react-router/node': 8.5.0
@@ -111,7 +111,7 @@ catalog:
   prettier: 3.9.10
   publint: 0.3.25
   puppeteer: 25.16.0
-  playwright: 1.62.1
+  playwright: 1.64.1
   rxjs: 7.8.2
   react: 19.3.1
   react-dom: 19.3.1
