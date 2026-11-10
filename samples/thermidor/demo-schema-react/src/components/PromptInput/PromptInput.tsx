@@ -14,6 +14,7 @@ import {
   ActiveAsideOptionContext,
   SUGGESTIONS_LISTBOX_ID,
   ASIDE_LISTBOX_ID,
+  suggestionOptions,
   type SuggestionSection,
   type SuggestionItem,
   type SuggestionsPlacement,
@@ -44,6 +45,8 @@ interface PromptInputProps {
    * `undefined` once none is, such as when the suggestions change or close.
    */
   onActiveItemChange?: (item: SuggestionItem | undefined) => void;
+  /** Called when the input gains or loses the focus, not when only the window does. */
+  onFocusChange?: (focused: boolean) => void;
   /** Drawn beside the suggestions while they are open. */
   suggestionsAside?: ReactNode;
 }
@@ -60,6 +63,7 @@ export function PromptInput({
   suggestionsPlacement,
   onValueChange,
   onActiveItemChange,
+  onFocusChange,
   suggestionsAside,
 }: PromptInputProps) {
   const [value, setValue] = useState(initialValue);
@@ -68,6 +72,8 @@ export function PromptInput({
   // Kept when the left arrow goes back to the suggestions, so the right arrow returns to it.
   const [asideOptionId, setAsideOptionId] = useState<string>();
   const [inAside, setInAside] = useState(false);
+  // The index to highlight in the suggestions that follow a removal, instead of none.
+  const [highlightAfterRemoval, setHighlightAfterRemoval] = useState<number>();
   const typedValueRef = useRef(initialValue);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const blurTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -83,17 +89,22 @@ export function PromptInput({
     }
   }, [initialValue]);
 
-  const totalItems = useMemo(
-    () => (suggestions ? suggestions.flatMap((s) => s.items) : []),
-    [suggestions]
-  );
-  const expanded = showDropdown && totalItems.length > 0;
+  const options = useMemo(() => suggestionOptions(suggestions ?? []), [suggestions]);
+  const expanded = showDropdown && options.length > 0;
+  const activeOption = expanded && activeIndex >= 0 ? options[activeIndex] : undefined;
+  // A section action, such as clearing recent searches, is no item to show products for.
+  const activeItem = activeOption?.item;
 
   // Reset while rendering, so an item of the new suggestions is never reported at the old index.
   const [highlightedSuggestions, setHighlightedSuggestions] = useState(suggestions);
   if (suggestions !== highlightedSuggestions) {
     setHighlightedSuggestions(suggestions);
-    resetHighlight();
+    if (highlightAfterRemoval === undefined) {
+      resetHighlight();
+    } else {
+      setHighlightAfterRemoval(undefined);
+      setActiveIndex(Math.min(highlightAfterRemoval, options.length - 1));
+    }
   }
 
   function resetHighlight() {
@@ -140,6 +151,9 @@ export function PromptInput({
     if (disabled) {
       return;
     }
+    if (!windowBlurredRef.current) {
+      onFocusChange?.(true);
+    }
     if (suppressNextFocusRef.current) {
       suppressNextFocusRef.current = false;
       return;
@@ -153,11 +167,12 @@ export function PromptInput({
       typedValueRef.current = value;
       onValueChange?.(value);
     }
+    // Suggestions may arrive after the focus, such as those fetched for the empty input.
+    if (blurTimeoutRef.current) {
+      clearTimeout(blurTimeoutRef.current);
+      blurTimeoutRef.current = null;
+    }
     if (suggestions && suggestions.length > 0) {
-      if (blurTimeoutRef.current) {
-        clearTimeout(blurTimeoutRef.current);
-        blurTimeoutRef.current = null;
-      }
       setShowDropdown(true);
       if (!windowRefocused) {
         resetHighlight();
@@ -168,6 +183,9 @@ export function PromptInput({
   function handleBlur(e: FocusEvent<HTMLTextAreaElement>) {
     // The input stays the page's active element when only the window loses the focus.
     windowBlurredRef.current = document.activeElement === e.currentTarget;
+    if (!windowBlurredRef.current) {
+      onFocusChange?.(false);
+    }
     blurTimeoutRef.current = setTimeout(() => {
       setShowDropdown(false);
     }, 150);
@@ -183,7 +201,36 @@ export function PromptInput({
   function highlightSuggestion(index: number) {
     setActiveIndex(index);
     setInAside(false);
-    setValue(index >= 0 ? totalItems[index].label : typedValueRef.current);
+    setValue(options[index]?.item?.label ?? typedValueRef.current);
+  }
+
+  /**
+   * Removes `item`, keeping the highlight on the same suggestion, or on the next one when `item` is
+   * the highlighted one. The input then shows the new highlight if it showed the old one.
+   */
+  function removeItem(item: SuggestionItem) {
+    const removal = suggestions?.find(({items}) => items.includes(item))?.removal;
+    if (!removal || !suggestions) {
+      return false;
+    }
+    const remaining = suggestionOptions(
+      suggestions
+        .map((section) => ({...section, items: section.items.filter((other) => other !== item)}))
+        .filter(({items}, index) => items.length > 0 || suggestions[index].items.length === 0)
+    );
+    if (activeIndex >= 0) {
+      // By id, since a section the removal empties loses its action too.
+      const kept = new Set(remaining.map(({id}) => id));
+      const target =
+        options.slice(activeIndex).find(({id}) => kept.has(id)) ?? remaining[remaining.length - 1];
+      const next = remaining.findIndex(({id}) => id === target?.id);
+      setHighlightAfterRemoval(next);
+      if (value !== typedValueRef.current && value === options[activeIndex].item?.label) {
+        setValue(remaining[next]?.item?.label ?? typedValueRef.current);
+      }
+    }
+    removal.onRemove(item);
+    return true;
   }
 
   function moveInAside(step: number) {
@@ -209,7 +256,7 @@ export function PromptInput({
       if (inAside) {
         moveInAside(1);
       } else {
-        highlightSuggestion((activeIndex + 1) % totalItems.length);
+        highlightSuggestion((activeIndex + 1) % options.length);
       }
       return;
     }
@@ -219,12 +266,21 @@ export function PromptInput({
       if (inAside) {
         moveInAside(-1);
       } else {
-        highlightSuggestion(activeIndex === -1 ? totalItems.length - 1 : activeIndex - 1);
+        highlightSuggestion(activeIndex === -1 ? options.length - 1 : activeIndex - 1);
       }
       return;
     }
 
-    if (e.key === 'ArrowRight' && expanded && !inAside && activeIndex >= 0) {
+    // Mac keyboards report their Delete key as Backspace.
+    const deleteKey = e.key === 'Delete' || e.key === 'Backspace';
+    if (deleteKey && e.shiftKey && !inAside && activeItem) {
+      if (removeItem(activeItem)) {
+        e.preventDefault();
+      }
+      return;
+    }
+
+    if (e.key === 'ArrowRight' && !inAside && activeItem) {
       const options = asideOptions();
       if (options.length > 0) {
         e.preventDefault();
@@ -246,6 +302,8 @@ export function PromptInput({
       if (option) {
         setShowDropdown(false);
         option.click();
+      } else if (activeOption?.action) {
+        activeOption.action.onClick();
       } else {
         submit(value);
       }
@@ -259,6 +317,10 @@ export function PromptInput({
     setValue(e.target.value);
     typedValueRef.current = e.target.value;
     setInAside(false);
+    // Enter then submits the new text instead of running the action.
+    if (activeOption?.action) {
+      setActiveIndex(-1);
+    }
     onValueChange?.(e.target.value);
     const el = e.target;
     const computed = getComputedStyle(el);
@@ -275,10 +337,8 @@ export function PromptInput({
     el.style.overflowY = el.scrollHeight > maxHeight ? 'auto' : 'hidden';
   }
 
-  const activeItem = expanded && activeIndex >= 0 ? totalItems[activeIndex] : undefined;
   const activeAsideOptionId = expanded && inAside ? asideOptionId : undefined;
-  const activeDescendant =
-    activeAsideOptionId ?? (activeItem && `suggestion-item-${activeItem.id}`);
+  const activeDescendant = activeAsideOptionId ?? activeOption?.id;
 
   useEffect(() => onActiveItemChange?.(activeItem), [activeItem, onActiveItemChange]);
 
@@ -315,6 +375,7 @@ export function PromptInput({
           className={`${styles.iconButton} ${styles.clearButton}`}
           onClick={() => {
             setValue('');
+            typedValueRef.current = '';
             onValueChange?.('');
             setShowDropdown(false);
             suppressNextFocusRef.current = true;
@@ -378,8 +439,9 @@ export function PromptInput({
           <SuggestionsDropdown
             sections={suggestions}
             onSelect={selectItem}
+            onRemove={removeItem}
             onHover={(item) => {
-              setActiveIndex(totalItems.indexOf(item));
+              setActiveIndex(options.findIndex((option) => option.item === item));
               setInAside(false);
             }}
             visible={showDropdown}

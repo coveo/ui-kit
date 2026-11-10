@@ -48,6 +48,11 @@ describe('isBlocking', () => {
     expect(isBlocking({...SUGGESTION, component: 'NextActionsBar'})).toBe(true);
     expect(isBlocking({kind: 'initialize'})).toBe(true);
   });
+
+  it('keeps the surfaces usable while recent queries are removed or cleared', () => {
+    expect(isBlocking({...SUGGESTION, name: 'removeRecentQuery'})).toBe(false);
+    expect(isBlocking({...SUGGESTION, name: 'clearRecentQueries'})).toBe(false);
+  });
 });
 
 describe('useActionError', () => {

@@ -1,6 +1,7 @@
 import {
   createContext,
   startTransition,
+  useCallback,
   useContext,
   useEffect,
   useRef,
@@ -40,16 +41,16 @@ const SessionRequestContext = createContext<SessionRequestSource>(IDLE);
 /** Shares the session's request state with the surfaces; `AppShell` passes the session itself. */
 export const SessionRequestProvider = SessionRequestContext.Provider;
 
-/** Typing in a facet search or in the search box keeps the surface usable. */
+/** Facet searches, typing in the search box and recent-query edits keep the surface usable. */
 const NON_BLOCKING_ACTIONS: ComponentActionNames<typeof ComponentContractsSchema> = {
   CategoryFacet: ['clearSearch', 'search', 'showMoreSearchResults'],
-  QuerySuggestions: ['fetchSuggestions'],
+  QuerySuggestions: ['fetchSuggestions', 'clearRecentQueries', 'removeRecentQuery'],
   RegularFacet: ['clearSearch', 'search', 'showMoreSearchResults'],
 };
 
-/** A failed suggestion only leaves the search box without completions. */
+/** A failed suggestion or recent-query edit only leaves the search box as it was. */
 const SILENT_FAILURES: ComponentActionNames<typeof ComponentContractsSchema> = {
-  QuerySuggestions: ['fetchSuggestions'],
+  QuerySuggestions: ['fetchSuggestions', 'clearRecentQueries', 'removeRecentQuery'],
 };
 
 function lists(
@@ -60,7 +61,7 @@ function lists(
   return byComponent[component]?.includes(name) ?? false;
 }
 
-/** Whether a request locks the active surface: every one but a facet search or a suggestion. */
+/** Whether a request locks the active surface: every one but those in `NON_BLOCKING_ACTIONS`. */
 export function isBlocking(request: SessionRequest | undefined): boolean {
   return (
     request !== undefined && !(request.kind === 'action' && lists(NON_BLOCKING_ACTIONS, request))
@@ -82,6 +83,21 @@ export function useActionError(surfaceId: string): string | undefined {
         : undefined;
     },
     () => undefined
+  );
+}
+
+/**
+ * Whether the last action of `component` named `name` failed, to read once its dispatch resolves,
+ * which it does either way.
+ */
+export function useActionFailed(): (component: string, name: string) => boolean {
+  const source = useContext(SessionRequestContext);
+  return useCallback(
+    (component, name) => {
+      const {actionError} = source.getSnapshot();
+      return actionError?.component === component && actionError.name === name;
+    },
+    [source]
   );
 }
 

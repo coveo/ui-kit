@@ -27,6 +27,7 @@ export const SearchBox = createReactComponent(
       useSearchBoxOptions();
     const [query, setQuery] = useState('');
     const [submitted, setSubmitted] = useState(false);
+    const [focused, setFocused] = useState(false);
     const [suggestions, setSuggestions] = useState(NO_SUGGESTIONS);
     const [activeItem, setActiveItem] = useState<SuggestionItem>();
 
@@ -35,12 +36,25 @@ export const SearchBox = createReactComponent(
       setSubmitted(false);
     }, []);
 
+    const handleFocusChange = useCallback(
+      (value: boolean) => {
+        setFocused(value);
+        if (value && !query.trim()) {
+          setSubmitted(false);
+        }
+      },
+      [query]
+    );
+
     const submit = useCallback(
       (prompt: string) => {
         setSubmitted(true);
+        if (clearOnSubmit) {
+          setQuery('');
+        }
         onSubmit(prompt);
       },
-      [onSubmit]
+      [onSubmit, clearOnSubmit]
     );
 
     const items = suggestions.flatMap((section) => section.items);
@@ -48,8 +62,8 @@ export const SearchBox = createReactComponent(
     const highlightedQuery = highlighted?.label ?? '';
 
     const searchBoxQuery = useMemo<SearchBoxQuery>(
-      () => ({query, submitted, highlightedQuery, showSuggestions: setSuggestions}),
-      [query, submitted, highlightedQuery]
+      () => ({query, submitted, focused, highlightedQuery, showSuggestions: setSuggestions}),
+      [query, submitted, focused, highlightedQuery]
     );
 
     return (
@@ -63,6 +77,7 @@ export const SearchBox = createReactComponent(
           suggestionsPlacement={suggestionsPlacement}
           onValueChange={handleValueChange}
           onActiveItemChange={setActiveItem}
+          onFocusChange={handleFocusChange}
           suggestionsAside={
             props.instantProductsChild !== undefined && buildChild(props.instantProductsChild)
           }

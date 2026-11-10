@@ -77,10 +77,11 @@ export function shellRun(surfaceId = SHELL_SURFACE_ID): object[] {
             id: 'query-suggestions',
             component: 'QuerySuggestions',
             query: {path: '/state/query-suggestions/query'},
+            recentQueries: {path: '/state/query-suggestions/recentQueries'},
             completions: {path: '/state/query-suggestions/completions'},
           },
         ],
-        dataModel: {state: {'query-suggestions': {query: '', completions: []}}},
+        dataModel: {state: {'query-suggestions': {query: '', recentQueries: [], completions: []}}},
       },
     },
   ]);
@@ -112,6 +113,7 @@ function instantProductsShellRun(surfaceId = SHELL_SURFACE_ID): object[] {
               id: 'query-suggestions',
               component: 'QuerySuggestions',
               query: {path: '/state/query-suggestions/query'},
+              recentQueries: {path: '/state/query-suggestions/recentQueries'},
               completions: {path: '/state/query-suggestions/completions'},
             },
             {
@@ -123,7 +125,7 @@ function instantProductsShellRun(surfaceId = SHELL_SURFACE_ID): object[] {
           ],
           dataModel: {
             state: {
-              'query-suggestions': {query: '', completions: []},
+              'query-suggestions': {query: '', recentQueries: [], completions: []},
               [INSTANT_PRODUCTS_ID]: {query: '', products: []},
             },
           },
@@ -158,15 +160,23 @@ export function instantProductsRun(surfaceId: string, query: string, names: stri
   ]);
 }
 
-/** The run a producer answers `fetchSuggestions` with: the completions of `query`. */
-export function suggestionsRun(surfaceId: string, query: string, expressions: string[]): object[] {
+/**
+ * The run a producer answers `fetchSuggestions` with: the recent queries and the completions of
+ * `query`.
+ */
+export function suggestionsRun(
+  surfaceId: string,
+  query: string,
+  expressions: string[],
+  recentQueries: string[] = []
+): object[] {
   return run([
     {
       version: 'v1.0',
       updateDataModel: {
         surfaceId,
         path: '/state/query-suggestions',
-        value: {query, completions: expressions.map((expression) => ({expression}))},
+        value: {query, recentQueries, completions: expressions.map((expression) => ({expression}))},
       },
     },
   ]);
@@ -174,7 +184,8 @@ export function suggestionsRun(surfaceId: string, query: string, expressions: st
 
 /**
  * Answers `initialize` with the shell, and `fetchSuggestions` with two completions that extend its
- * query: `<query> boards`, `<query> wax`. Anything else gets an empty run.
+ * query, `<query> boards` and `<query> wax`, or none for an empty query. Anything else gets an empty
+ * run.
  */
 export const answerShell: ConverseHandler = (request) => {
   if (request.action?.name === 'initialize') {
@@ -183,7 +194,11 @@ export const answerShell: ConverseHandler = (request) => {
   if (request.action?.name === 'fetchSuggestions') {
     const query = String(request.action.context['query']);
     return sseResponse(
-      suggestionsRun(request.action.surfaceId!, query, [`${query} boards`, `${query} wax`])
+      suggestionsRun(
+        request.action.surfaceId!,
+        query,
+        query ? [`${query} boards`, `${query} wax`] : []
+      )
     );
   }
   return sseResponse(run([]));

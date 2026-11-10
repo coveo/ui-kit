@@ -1,4 +1,4 @@
-import {useContext} from 'react';
+import {useContext, useState} from 'react';
 import {render, screen, fireEvent, act} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import {PromptInput} from './PromptInput.js';
@@ -757,5 +757,241 @@ describe('keyboard navigation, as in Atomic commerce', () => {
     expect(onSelectProduct).toHaveBeenCalledWith('p1');
     expect(onSubmit).not.toHaveBeenCalled();
     expect(screen.queryByRole('listbox')).toBeNull();
+  });
+});
+
+describe('removing a suggestion', () => {
+  function RemovableSuggestions({onRemove}: {onRemove: (label: string) => void}) {
+    const [labels, setLabels] = useState(['tents', 'hiking boots', 'kayaks']);
+    const sections: SuggestionSection[] = [
+      {
+        id: 'recent',
+        title: 'Recent searches',
+        icon: 'history',
+        items: labels.map((label, index) => ({id: `recent-${index}`, label})),
+        removal: {
+          ariaLabel: ({label}) => `Remove ${label}`,
+          onRemove: ({label}) => {
+            onRemove(label);
+            setLabels((current) => current.filter((other) => other !== label));
+          },
+        },
+      },
+      {id: 'search', title: 'Search', icon: 'search', items: [{id: 's1', label: 'surfboards'}]},
+    ];
+    return <PromptInput onSubmit={vi.fn()} suggestions={sections} />;
+  }
+
+  function renderRemovable() {
+    const onRemove = vi.fn();
+    render(<RemovableSuggestions onRemove={onRemove} />);
+    const textarea = screen.getByLabelText('Prompt') as HTMLTextAreaElement;
+    fireEvent.change(textarea, {target: {value: 't'}});
+    fireEvent.focus(textarea);
+    const press = (key: string, shiftKey = false) => fireEvent.keyDown(textarea, {key, shiftKey});
+    const active = () =>
+      document.getElementById(textarea.getAttribute('aria-activedescendant') ?? '')?.textContent;
+    return {textarea, press, active, onRemove};
+  }
+
+  it.each(['Delete', 'Backspace'])(
+    'removes the highlighted suggestion on Shift+%s, and highlights the one after it',
+    (key) => {
+      const {textarea, press, active, onRemove} = renderRemovable();
+      press('ArrowDown');
+      press('ArrowDown');
+
+      press(key, true);
+
+      expect(onRemove).toHaveBeenCalledWith('hiking boots');
+      expect(active()).toBe('kayaks');
+      expect(textarea.value).toBe('kayaks');
+
+      press('Delete', true);
+      expect(active()).toBe('surfboards');
+      expect(textarea.value).toBe('surfboards');
+    }
+  );
+
+  it('keeps the highlight on a removal with a button, and the input on the highlighted one', () => {
+    const {textarea, press, active, onRemove} = renderRemovable();
+    fireEvent.mouseEnter(screen.getByRole('option', {name: /kayaks/}));
+    fireEvent.click(screen.getByRole('button', {name: 'Remove kayaks'}));
+    expect(onRemove).toHaveBeenCalledWith('kayaks');
+    expect(active()).toBe('surfboards');
+    expect(textarea.value).toBe('t');
+
+    press('ArrowUp');
+    press('ArrowUp');
+    fireEvent.click(screen.getByRole('button', {name: 'Remove tents'}));
+    expect(active()).toBe('hiking boots');
+    expect(textarea.value).toBe('hiking boots');
+
+    fireEvent.click(screen.getByRole('button', {name: 'Remove hiking boots'}));
+    expect(active()).toBe('surfboards');
+    expect(textarea.value).toBe('surfboards');
+  });
+
+  it('leaves Delete without Shift, and suggestions that cannot be removed, to the textarea', () => {
+    const {press, active, onRemove} = renderRemovable();
+    press('ArrowDown');
+
+    expect(press('Delete')).toBe(true);
+    press('ArrowUp');
+    press('ArrowUp');
+    expect(active()).toBe('surfboards');
+    expect(press('Delete', true)).toBe(true);
+    expect(onRemove).not.toHaveBeenCalled();
+  });
+});
+
+describe('focus', () => {
+  it('reports when the input gains or loses the focus, but not when only the window does', () => {
+    const onFocusChange = vi.fn();
+    render(<PromptInput onSubmit={vi.fn()} onFocusChange={onFocusChange} />);
+    const textarea = screen.getByLabelText('Prompt');
+
+    act(() => textarea.focus());
+    expect(onFocusChange).toHaveBeenLastCalledWith(true);
+    fireEvent.blur(textarea);
+    expect(onFocusChange).toHaveBeenLastCalledWith(true);
+    act(() => textarea.blur());
+    expect(onFocusChange).toHaveBeenLastCalledWith(false);
+  });
+
+  it('opens on suggestions arriving after the input got the focus back right after losing it', () => {
+    vi.useFakeTimers();
+    try {
+      const section: SuggestionSection = {
+        id: 'recent',
+        title: 'Recent searches',
+        icon: 'history',
+        items: [{id: 'r1', label: 'tents'}],
+      };
+      const {rerender} = render(<PromptInput onSubmit={vi.fn()} suggestions={[]} />);
+      const textarea = screen.getByLabelText('Prompt');
+      act(() => textarea.focus());
+      act(() => textarea.blur());
+      act(() => textarea.focus());
+
+      rerender(<PromptInput onSubmit={vi.fn()} suggestions={[section]} />);
+      act(() => vi.advanceTimersByTime(200));
+
+      expect(screen.queryAllByRole('option')).toHaveLength(1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+});
+
+describe('a section action', () => {
+  function renderWithAction() {
+    const onClick = vi.fn();
+    const onSubmit = vi.fn();
+    const onActiveItemChange = vi.fn();
+    const onRemove = vi.fn();
+    const sections: SuggestionSection[] = [
+      {
+        id: 'recent',
+        title: 'Recent searches',
+        icon: 'history',
+        items: [{id: 'r1', label: 'tents'}],
+        action: {label: 'Clear', ariaLabel: 'Clear recent searches', onClick},
+        removal: {ariaLabel: ({label}) => `Remove ${label}`, onRemove},
+      },
+      {
+        id: 'search',
+        title: 'Search',
+        icon: 'search',
+        items: [
+          {id: 's1', label: 'surfboards'},
+          {id: 's2', label: 'surf wax'},
+        ],
+      },
+    ];
+    const {rerender} = render(
+      <PromptInput
+        onSubmit={onSubmit}
+        suggestions={sections}
+        onActiveItemChange={onActiveItemChange}
+      />
+    );
+    const textarea = screen.getByLabelText('Prompt') as HTMLTextAreaElement;
+    fireEvent.change(textarea, {target: {value: 't'}});
+    fireEvent.focus(textarea);
+    const press = (key: string, shiftKey = false) => fireEvent.keyDown(textarea, {key, shiftKey});
+    const active = () => textarea.getAttribute('aria-activedescendant');
+    const show = (shown: SuggestionSection[]) =>
+      rerender(
+        <PromptInput
+          onSubmit={onSubmit}
+          suggestions={shown}
+          onActiveItemChange={onActiveItemChange}
+        />
+      );
+    return {
+      sections,
+      textarea,
+      press,
+      active,
+      onClick,
+      onSubmit,
+      onActiveItemChange,
+      onRemove,
+      show,
+    };
+  }
+
+  it('is reached with the arrow keys, is no item, and runs on Enter', () => {
+    const {textarea, press, active, onClick, onSubmit, onActiveItemChange} = renderWithAction();
+    press('ArrowDown');
+
+    expect(active()).toBe('section-recent-action');
+    expect(
+      screen.getByRole('option', {name: 'Clear recent searches'}).getAttribute('aria-selected')
+    ).toBe('true');
+    expect(textarea.value).toBe('t');
+    expect(onActiveItemChange).toHaveBeenLastCalledWith(undefined);
+
+    press('Delete', true);
+    press('Enter');
+
+    expect(onClick).toHaveBeenCalledOnce();
+    expect(onSubmit).not.toHaveBeenCalled();
+  });
+
+  it('leaves Enter to the text typed while it is highlighted', () => {
+    const {textarea, press, active, onClick, onSubmit} = renderWithAction();
+    press('ArrowDown');
+
+    fireEvent.change(textarea, {target: {value: 'te'}});
+    expect(active()).toBeNull();
+    press('Enter');
+
+    expect(onClick).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalledWith('te');
+  });
+
+  it('keeps the input empty once the clear button empties it', () => {
+    const {textarea, press, active, show, sections} = renderWithAction();
+
+    fireEvent.click(screen.getByRole('button', {name: 'Clear'}));
+    show([...sections]);
+    press('ArrowDown');
+
+    expect(active()).toBe('section-recent-action');
+    expect(textarea.value).toBe('');
+  });
+
+  it('highlights the next entry when a removal empties its section, with its action', () => {
+    const {press, active, onRemove, show, sections} = renderWithAction();
+    press('ArrowDown');
+    press('ArrowDown');
+
+    press('Delete', true);
+    show(sections.slice(1));
+
+    expect(onRemove).toHaveBeenCalledWith({id: 'r1', label: 'tents'});
+    expect(active()).toBe('suggestion-item-s1');
   });
 });

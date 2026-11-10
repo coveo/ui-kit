@@ -26,8 +26,10 @@ export function useSearchBoxOptions(): SearchBoxOptions {
 export interface SearchBoxQuery {
   /** What the shopper typed, not a suggestion the arrow keys show in the input. */
   query: string;
-  /** Whether the input was submitted since the last keystroke. */
+  /** Whether the input was submitted since the last keystroke, or since it last got the focus empty. */
   submitted: boolean;
+  /** Whether the input has the focus. */
+  focused: boolean;
   /** The suggestion the shopper highlights, else the first one; empty while none is shown. */
   highlightedQuery: string;
   /** Shows these suggestions in the search box's dropdown. */
