@@ -885,10 +885,11 @@ describe('focus', () => {
 });
 
 describe('a section action', () => {
-  it('is reached with the arrow keys, is no item, and runs on Enter', () => {
+  function renderWithAction() {
     const onClick = vi.fn();
     const onSubmit = vi.fn();
     const onActiveItemChange = vi.fn();
+    const onRemove = vi.fn();
     const sections: SuggestionSection[] = [
       {
         id: 'recent',
@@ -896,9 +897,19 @@ describe('a section action', () => {
         icon: 'history',
         items: [{id: 'r1', label: 'tents'}],
         action: {label: 'Clear', ariaLabel: 'Clear recent searches', onClick},
+        removal: {ariaLabel: ({label}) => `Remove ${label}`, onRemove},
+      },
+      {
+        id: 'search',
+        title: 'Search',
+        icon: 'search',
+        items: [
+          {id: 's1', label: 'surfboards'},
+          {id: 's2', label: 'surf wax'},
+        ],
       },
     ];
-    render(
+    const {rerender} = render(
       <PromptInput
         onSubmit={onSubmit}
         suggestions={sections}
@@ -908,21 +919,79 @@ describe('a section action', () => {
     const textarea = screen.getByLabelText('Prompt') as HTMLTextAreaElement;
     fireEvent.change(textarea, {target: {value: 't'}});
     fireEvent.focus(textarea);
-    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
-    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
-    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    const press = (key: string, shiftKey = false) => fireEvent.keyDown(textarea, {key, shiftKey});
+    const active = () => textarea.getAttribute('aria-activedescendant');
+    const show = (shown: SuggestionSection[]) =>
+      rerender(
+        <PromptInput
+          onSubmit={onSubmit}
+          suggestions={shown}
+          onActiveItemChange={onActiveItemChange}
+        />
+      );
+    return {
+      sections,
+      textarea,
+      press,
+      active,
+      onClick,
+      onSubmit,
+      onActiveItemChange,
+      onRemove,
+      show,
+    };
+  }
 
-    expect(textarea.getAttribute('aria-activedescendant')).toBe('section-recent-action');
+  it('is reached with the arrow keys, is no item, and runs on Enter', () => {
+    const {textarea, press, active, onClick, onSubmit, onActiveItemChange} = renderWithAction();
+    press('ArrowDown');
+
+    expect(active()).toBe('section-recent-action');
     expect(
       screen.getByRole('option', {name: 'Clear recent searches'}).getAttribute('aria-selected')
     ).toBe('true');
     expect(textarea.value).toBe('t');
     expect(onActiveItemChange).toHaveBeenLastCalledWith(undefined);
 
-    fireEvent.keyDown(textarea, {key: 'Delete', shiftKey: true});
-    fireEvent.keyDown(textarea, {key: 'Enter'});
+    press('Delete', true);
+    press('Enter');
 
     expect(onClick).toHaveBeenCalledOnce();
     expect(onSubmit).not.toHaveBeenCalled();
+  });
+
+  it('leaves Enter to the text typed while it is highlighted', () => {
+    const {textarea, press, active, onClick, onSubmit} = renderWithAction();
+    press('ArrowDown');
+
+    fireEvent.change(textarea, {target: {value: 'te'}});
+    expect(active()).toBeNull();
+    press('Enter');
+
+    expect(onClick).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalledWith('te');
+  });
+
+  it('keeps the input empty once the clear button empties it', () => {
+    const {textarea, press, active, show, sections} = renderWithAction();
+
+    fireEvent.click(screen.getByRole('button', {name: 'Clear'}));
+    show([...sections]);
+    press('ArrowDown');
+
+    expect(active()).toBe('section-recent-action');
+    expect(textarea.value).toBe('');
+  });
+
+  it('highlights the next entry when a removal empties its section, with its action', () => {
+    const {press, active, onRemove, show, sections} = renderWithAction();
+    press('ArrowDown');
+    press('ArrowDown');
+
+    press('Delete', true);
+    show(sections.slice(1));
+
+    expect(onRemove).toHaveBeenCalledWith({id: 'r1', label: 'tents'});
+    expect(active()).toBe('suggestion-item-s1');
   });
 });

@@ -5,7 +5,12 @@ import {QuerySuggestionsPropsSchema} from '@coveo/thermidor-schema/zod3';
 import type {SuggestionSection} from '../../components/SuggestionsDropdown/index.js';
 import {useDebouncedValue} from '../../hooks/use-debounced-value.js';
 import {useSearchBoxQuery} from '../SearchBox/search-box-context.js';
-import {useLatestWhenFree, useSessionBusy, useSurfaceLocked} from '../session-request.js';
+import {
+  useActionFailed,
+  useLatestWhenFree,
+  useSessionBusy,
+  useSurfaceLocked,
+} from '../session-request.js';
 import {useRecentQueryEdits} from './use-recent-query-edits.js';
 import styles from './QuerySuggestions.module.css';
 
@@ -23,6 +28,7 @@ export const QuerySuggestions = createReactComponent(
     const {query, submitted, focused, showSuggestions} = useSearchBoxQuery();
     const locked = useSurfaceLocked();
     const busy = useSessionBusy();
+    const actionFailed = useActionFailed();
     const typed = query.trim() ? query : '';
     const debouncedQuery = useDebouncedValue(typed, SUGGESTIONS_DEBOUNCE_MS);
 
@@ -55,6 +61,9 @@ export const QuerySuggestions = createReactComponent(
       void Promise.resolve(
         context.dispatchAction({event: {name: 'fetchSuggestions', context: payload}})
       ).then(() => {
+        if (actionFailed('QuerySuggestions', 'fetchSuggestions')) {
+          return;
+        }
         refreshed(latest.answered);
         if (latest.epoch !== undefined) {
           setFreshEmptyEpoch(latest.epoch);

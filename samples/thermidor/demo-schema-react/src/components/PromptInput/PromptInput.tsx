@@ -213,17 +213,17 @@ export function PromptInput({
     if (!removal || !suggestions) {
       return false;
     }
-    const index = options.findIndex((option) => option.item === item);
     const remaining = suggestionOptions(
       suggestions
         .map((section) => ({...section, items: section.items.filter((other) => other !== item)}))
         .filter(({items}, index) => items.length > 0 || suggestions[index].items.length === 0)
     );
     if (activeIndex >= 0) {
-      const next = Math.min(
-        activeIndex === index ? activeIndex : activeIndex - (activeIndex > index ? 1 : 0),
-        remaining.length - 1
-      );
+      // By id, since a section the removal empties loses its action too.
+      const kept = new Set(remaining.map(({id}) => id));
+      const target =
+        options.slice(activeIndex).find(({id}) => kept.has(id)) ?? remaining[remaining.length - 1];
+      const next = remaining.findIndex(({id}) => id === target?.id);
       setHighlightAfterRemoval(next);
       if (value !== typedValueRef.current && value === options[activeIndex].item?.label) {
         setValue(remaining[next]?.item?.label ?? typedValueRef.current);
@@ -317,6 +317,10 @@ export function PromptInput({
     setValue(e.target.value);
     typedValueRef.current = e.target.value;
     setInAside(false);
+    // Enter then submits the new text instead of running the action.
+    if (activeOption?.action) {
+      setActiveIndex(-1);
+    }
     onValueChange?.(e.target.value);
     const el = e.target;
     const computed = getComputedStyle(el);
@@ -371,6 +375,7 @@ export function PromptInput({
           className={`${styles.iconButton} ${styles.clearButton}`}
           onClick={() => {
             setValue('');
+            typedValueRef.current = '';
             onValueChange?.('');
             setShowDropdown(false);
             suppressNextFocusRef.current = true;

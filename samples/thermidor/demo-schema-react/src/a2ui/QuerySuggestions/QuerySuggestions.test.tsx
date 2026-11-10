@@ -423,6 +423,24 @@ describe('QuerySuggestions recent queries', () => {
     await waitFor(() => expect(options()).toEqual(['tents', 'hiking boots', 'backpack']));
   });
 
+  it('keeps a removed recent query hidden when the suggestions fetched after it fail', async () => {
+    const producer = recentQueriesProducer(['tents', 'hiking boots']);
+    let failSuggestions = false;
+    const {queriesSent} = await renderSearchBox((request, signal) =>
+      failSuggestions && request.action?.name === 'fetchSuggestions'
+        ? new Response('', {status: 500})
+        : producer(request, signal)
+    );
+    await waitFor(() => expect(options()).toEqual(['tents', 'hiking boots', 'backpack']));
+    failSuggestions = true;
+
+    fireEvent.click(screen.getByRole('button', {name: 'Remove tents from recent searches'}));
+
+    await waitFor(() => expect(queriesSent()).toEqual(['', '']));
+    await pause();
+    expect(options()).toEqual(['hiking boots', 'backpack']);
+  });
+
   it('clears the recent queries at once, keeps the text, and fetches its suggestions once answered', async () => {
     const recent = ['tents', 'trail shoes'];
     const {type, textarea, actions, queriesSent} = await renderSearchBox(

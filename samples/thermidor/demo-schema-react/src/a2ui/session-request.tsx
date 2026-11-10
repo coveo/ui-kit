@@ -1,6 +1,7 @@
 import {
   createContext,
   startTransition,
+  useCallback,
   useContext,
   useEffect,
   useRef,
@@ -82,6 +83,21 @@ export function useActionError(surfaceId: string): string | undefined {
         : undefined;
     },
     () => undefined
+  );
+}
+
+/**
+ * Whether the last action of `component` named `name` failed, to read once its dispatch resolves,
+ * which it does either way.
+ */
+export function useActionFailed(): (component: string, name: string) => boolean {
+  const source = useContext(SessionRequestContext);
+  return useCallback(
+    (component, name) => {
+      const {actionError} = source.getSnapshot();
+      return actionError?.component === component && actionError.name === name;
+    },
+    [source]
   );
 }
 
