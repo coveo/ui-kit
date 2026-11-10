@@ -1,8 +1,10 @@
 import {
   RENDERER_ROOT_ID,
+  bindStateFields,
   buildConversationResponse,
   buildValidatedSurface,
   statePath,
+  stateFieldPath,
   type A2uiComponentNode,
 } from './shared.js';
 import {ActivitySnapshot, UpdateDataModelActivity, type ConverseEvent} from '../events.js';
@@ -23,14 +25,12 @@ const SHELL_NODES: A2uiComponentNode[] = [
   {
     id: QUERY_SUGGESTIONS_ID,
     component: 'QuerySuggestions',
-    query: {path: `${statePath(QUERY_SUGGESTIONS_ID)}/query`},
-    completions: {path: `${statePath(QUERY_SUGGESTIONS_ID)}/completions`},
+    ...bindStateFields(QUERY_SUGGESTIONS_ID, ['query', 'recentQueries', 'completions']),
   },
   {
     id: INSTANT_PRODUCTS_ID,
     component: 'InstantProducts',
-    query: {path: `${statePath(INSTANT_PRODUCTS_ID)}/query`},
-    products: {path: `${statePath(INSTANT_PRODUCTS_ID)}/products`},
+    ...bindStateFields(INSTANT_PRODUCTS_ID, ['query', 'products']),
   },
 ];
 
@@ -63,6 +63,10 @@ const EXPRESSIONS = [
 
 const MAX_COMPLETIONS = 6;
 
+const MAX_TYPED_RECENT_QUERIES = 3;
+
+const MAX_SUGGESTIONS = 8;
+
 let runSequence = 0;
 
 function nextRunId(kind: string): string {
@@ -75,7 +79,7 @@ function buildSessionShellEvents(surfaceId: string): ConverseEvent[] {
     ...buildValidatedSurface({templateName: 'Mock_Session_Shell', surfaceId, nodes: SHELL_NODES}),
     dataModel: {
       state: {
-        [QUERY_SUGGESTIONS_ID]: {query: '', completions: []},
+        [QUERY_SUGGESTIONS_ID]: {query: '', recentQueries: [], completions: []},
         [INSTANT_PRODUCTS_ID]: {query: '', products: []},
       },
     },
@@ -109,12 +113,25 @@ function completionsFor(query: string): {expression: string; score: number}[] {
     .map((expression, index) => ({expression, score: 100 - index * 5}));
 }
 
+// Thermidor ADR-024: the session's recent queries that start with the typed text come first, at
+// most 3 while typing, then the completions they do not repeat, at most 8 in all.
+function querySuggestionsFor(query: string, sessionRecentQueries: readonly string[]) {
+  const typed = query.trim().toLowerCase();
+  const recentQueries = sessionRecentQueries
+    .filter((entry) => entry.startsWith(typed))
+    .slice(0, typed ? MAX_TYPED_RECENT_QUERIES : MAX_SUGGESTIONS);
+  const completions = completionsFor(query)
+    .filter(({expression}) => !recentQueries.includes(expression.toLowerCase()))
+    .slice(0, MAX_SUGGESTIONS - recentQueries.length);
+  return {query, recentQueries, completions};
+}
+
 function buildQuerySuggestionsEvents(action: {
   surfaceId: string;
   sourceComponentId: string;
-  context: Record<string, unknown>;
+  query: string;
+  sessionRecentQueries: readonly string[];
 }): ConverseEvent[] {
-  const query = typeof action.context.query === 'string' ? action.context.query : '';
   const runId = nextRunId('suggestions');
   return buildConversationResponse({
     runId,
@@ -125,7 +142,7 @@ function buildQuerySuggestionsEvents(action: {
           {
             surfaceId: action.surfaceId,
             path: statePath(action.sourceComponentId),
-            value: {query, completions: completionsFor(query)},
+            value: querySuggestionsFor(action.query, action.sessionRecentQueries),
           },
         ],
       }),
@@ -135,11 +152,41 @@ function buildQuerySuggestionsEvents(action: {
   });
 }
 
-function buildInstantProductsEvents(action: {
+function buildRecentQueriesClearedEvents(action: {
   surfaceId: string;
-  context: Record<string, unknown>;
+  sourceComponentId: string;
 }): ConverseEvent[] {
-  const query = typeof action.context.query === 'string' ? action.context.query : '';
+  const runId = nextRunId('clear-recent-queries');
+  return buildConversationResponse({
+    runId,
+    middleEvents: [
+      UpdateDataModelActivity({
+        messageId: `activity-${runId}`,
+        ops: [
+          {
+            surfaceId: action.surfaceId,
+            path: stateFieldPath(action.sourceComponentId, 'recentQueries'),
+            value: [],
+          },
+        ],
+      }),
+    ],
+    includeInitialStateSnapshot: false,
+    includeFinalStateSnapshot: false,
+  });
+}
+
+function buildRecentQueryRemovedEvents(): ConverseEvent[] {
+  return buildConversationResponse({
+    runId: nextRunId('remove-recent-query'),
+    middleEvents: [],
+    includeInitialStateSnapshot: false,
+    includeFinalStateSnapshot: false,
+  });
+}
+
+function buildInstantProductsEvents(action: {surfaceId: string; query: string}): ConverseEvent[] {
+  const {query} = action;
   const runId = nextRunId('instant-products');
   return buildConversationResponse({
     runId,
@@ -163,7 +210,10 @@ function buildInstantProductsEvents(action: {
 
 export {
   INSTANT_PRODUCTS_ID,
+  QUERY_SUGGESTIONS_ID,
   buildInstantProductsEvents,
+  buildRecentQueriesClearedEvents,
+  buildRecentQueryRemovedEvents,
   buildSessionShellEvents,
   buildQuerySuggestionsEvents,
 };

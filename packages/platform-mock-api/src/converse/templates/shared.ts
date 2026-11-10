@@ -197,6 +197,7 @@ export {
   deleteSurfaceMessage,
   loadingSurfaceMessage,
   statePath,
+  stateFieldPath,
   bindStateFields,
   buildConversationResponse,
   buildRoutedResponse,

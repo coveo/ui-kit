@@ -7,13 +7,20 @@ import {schemaComparisonEvents} from './templates/schema-response-comparison.js'
 import {schemaProductResearchEvents} from './templates/schema-response-product-research.js';
 import {
   INSTANT_PRODUCTS_ID,
+  QUERY_SUGGESTIONS_ID,
   buildInstantProductsEvents,
   buildQuerySuggestionsEvents,
+  buildRecentQueriesClearedEvents,
+  buildRecentQueryRemovedEvents,
   buildSessionShellEvents,
 } from './templates/schema-response-session-shell.js';
 import {
+  SEARCH_SURFACE_ID,
   buildWaterSportsInitialEvents,
   buildWaterSportsActionEvents,
+  productSearchQuery,
+  rerunsSearch,
+  searchProductsFor,
 } from './templates/schema-response-search.js';
 import type {ConverseEvent} from './events.js';
 
@@ -204,6 +211,65 @@ const actionNotApplicableResponse = () =>
     {status: 400}
   );
 
+const MAX_RECENT_QUERIES = 10;
+
+// The session's recent queries (Thermidor ADR-024), newest first, by session id.
+const recentQueriesBySession = new Map<string, string[]>();
+
+function recordRecentQuery(sessionId: string, query: string | null) {
+  const normalized = query?.trim().toLowerCase();
+  if (!normalized) {
+    return;
+  }
+  const others = (recentQueriesBySession.get(sessionId) ?? []).filter(
+    (entry) => entry !== normalized
+  );
+  recentQueriesBySession.set(sessionId, [normalized, ...others].slice(0, MAX_RECENT_QUERIES));
+}
+
+function removeRecentQuery(sessionId: string, query: string) {
+  const removed = query.trim().toLowerCase();
+  const entries = recentQueriesBySession.get(sessionId) ?? [];
+  recentQueriesBySession.set(
+    sessionId,
+    entries.filter((entry) => entry !== removed)
+  );
+}
+
+function queryOf(action: SchemaAction): string {
+  return typeof action.context.query === 'string' ? action.context.query : '';
+}
+
+function appliesToQuerySuggestions(action: SchemaAction, session: SessionKeys): boolean {
+  const shellSurfaceId = shellSurfaceIdsBySession.get(session.conversationSessionId);
+  return (
+    shellSurfaceId !== undefined &&
+    action.surfaceId === shellSurfaceId &&
+    action.sourceComponentId === QUERY_SUGGESTIONS_ID
+  );
+}
+
+function buildRecentQueriesActionResponse(action: SchemaAction, session: SessionKeys) {
+  if (!appliesToQuerySuggestions(action, session)) {
+    return actionNotApplicableResponse();
+  }
+  const sessionId = session.conversationSessionId;
+  let events: ConverseEvent[];
+  if (action.name === 'clearRecentQueries') {
+    recentQueriesBySession.delete(sessionId);
+    events = buildRecentQueriesClearedEvents({
+      surfaceId: action.surfaceId!,
+      sourceComponentId: QUERY_SUGGESTIONS_ID,
+    });
+  } else {
+    removeRecentQuery(sessionId, queryOf(action));
+    events = buildRecentQueryRemovedEvents();
+  }
+  return buildStreamingResponse(withSessionKeys(events, session), {
+    delayBetweenMessages: ACTION_DELAY_MS,
+  });
+}
+
 function buildInstantProductsResponse(action: SchemaAction, session: SessionKeys) {
   const shellSurfaceId = shellSurfaceIdsBySession.get(session.conversationSessionId);
   if (
@@ -215,7 +281,7 @@ function buildInstantProductsResponse(action: SchemaAction, session: SessionKeys
   }
   return buildStreamingResponse(
     withSessionKeys(
-      buildInstantProductsEvents({surfaceId: shellSurfaceId, context: action.context}),
+      buildInstantProductsEvents({surfaceId: shellSurfaceId, query: queryOf(action)}),
       session
     ),
     {delayBetweenMessages: INSTANT_PRODUCTS_DELAY_MS}
@@ -228,7 +294,13 @@ function matchSchemaPrompt(
 ): ConverseEvent[] {
   const normalized = message.trim().toLowerCase();
   const match = SCHEMA_PROMPT_TEMPLATE_MAP.find((entry) => entry.prompt === normalized);
-  return match ? match.buildEvents(mintSurfaceId) : schemaFallbackEvents;
+  if (match) {
+    return match.buildEvents(mintSurfaceId);
+  }
+  // Any other prompt that finds products searches for it.
+  return searchProductsFor(normalized).length > 0
+    ? buildWaterSportsInitialEvents(null, mintSurfaceId, message.trim())
+    : schemaFallbackEvents;
 }
 
 const schemaBaseResponse = (body: unknown, session: SessionKeys) => {
@@ -246,13 +318,17 @@ const schemaBaseResponse = (body: unknown, session: SessionKeys) => {
   }
   events = withSurfaceIds(events, mintSurfaceId);
   events = withTurnOpeningAnnouncements(events);
+  recordRecentQuery(
+    session.conversationSessionId,
+    productSearchQuery(mintSurfaceId(SEARCH_SURFACE_ID))
+  );
   return buildStreamingResponse(withSessionKeys(events, session), {
     delayBetweenMessages: DEFAULT_DELAY_MS,
   });
 };
 
-// The "water sports" decomposed search surface is the only prompt surface that supports
-// component actions and keeps in-memory state, so every other action recomputes that surface.
+// The decomposed search surface is the only prompt surface that supports component actions and
+// keeps in-memory state, so every other action recomputes that surface.
 // Raw action-events builder for the decomposed search surface. buildSchemaActionResponse wraps
 // this in a streaming HTTP response; tests use the raw events to assert on component state.
 function buildSearchActionEvents(action: SchemaAction): ConverseEvent[] {
@@ -279,13 +355,17 @@ function buildSchemaActionResponse(action: SchemaAction, session: SessionKeys) {
   if (action.name === 'fetchInstantProducts') {
     return buildInstantProductsResponse(action, session);
   }
+  if (action.name === 'clearRecentQueries' || action.name === 'removeRecentQuery') {
+    return buildRecentQueriesActionResponse(action, session);
+  }
   if (action.name === 'fetchSuggestions' && action.surfaceId && action.sourceComponentId) {
     return buildStreamingResponse(
       withSessionKeys(
         buildQuerySuggestionsEvents({
           surfaceId: action.surfaceId,
           sourceComponentId: action.sourceComponentId,
-          context: action.context,
+          query: queryOf(action),
+          sessionRecentQueries: recentQueriesBySession.get(session.conversationSessionId) ?? [],
         }),
         session
       ),
@@ -295,9 +375,18 @@ function buildSchemaActionResponse(action: SchemaAction, session: SessionKeys) {
   // The search surface's answer targets the surface the action came from, under the id its prompt
   // minted for it.
   const sourceSurfaceId = action.surfaceId;
+  const searchSurfaceId = sourceSurfaceId?.startsWith(`${SEARCH_SURFACE_ID}-`)
+    ? sourceSurfaceId
+    : undefined;
+  const reruns =
+    searchSurfaceId !== undefined &&
+    rerunsSearch(action, action.sourceComponentId, searchSurfaceId);
   const events = withSurfaceIds(buildSearchActionEvents(action), (surfaceId) =>
     sourceSurfaceId?.startsWith(`${surfaceId}-`) ? sourceSurfaceId : surfaceId
   );
+  if (reruns) {
+    recordRecentQuery(session.conversationSessionId, productSearchQuery(searchSurfaceId!));
+  }
   return buildStreamingResponse(withSessionKeys(events, session), {
     delayBetweenMessages: ACTION_DELAY_MS,
   });
