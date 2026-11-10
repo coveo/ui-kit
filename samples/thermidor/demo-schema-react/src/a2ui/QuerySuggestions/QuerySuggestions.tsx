@@ -82,9 +82,8 @@ export const QuerySuggestions = createReactComponent(
     const entriesKey = JSON.stringify([recentQueries, expressions]);
     const sections = useMemo<SuggestionSection[]>(() => {
       const [recent, completions] = JSON.parse(entriesKey) as [string[], string[]];
-      const result: SuggestionSection[] = [];
-      if (recent.length > 0) {
-        result.push({
+      const all: SuggestionSection[] = [
+        {
           id: 'recent',
           title: 'Recent searches',
           icon: 'history',
@@ -98,10 +97,8 @@ export const QuerySuggestions = createReactComponent(
             ariaLabel: ({label}) => `Remove ${label} from recent searches`,
             onRemove: ({label}) => remove(label),
           },
-        });
-      }
-      if (completions.length > 0) {
-        result.push({
+        },
+        {
           id: 'search',
           title: 'Query suggestions',
           icon: 'search',
@@ -110,9 +107,9 @@ export const QuerySuggestions = createReactComponent(
             label: expression,
             highlight: props.query,
           })),
-        });
-      }
-      return result;
+        },
+      ];
+      return all.filter(({items}) => items.length > 0);
     }, [entriesKey, props.query, clear, remove]);
 
     useEffect(() => showSuggestions(sections), [showSuggestions, sections]);

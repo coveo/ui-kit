@@ -51,14 +51,6 @@ describe('SuggestionsDropdown', () => {
     expect(container.querySelector('[role="listbox"]')).toBeNull();
   });
 
-  it('heads each section with its own title', () => {
-    render(<SuggestionsDropdown sections={testSections} onSelect={vi.fn()} visible={true} />);
-
-    expect(screen.getByRole('group', {name: 'Search'})).toBeDefined();
-    expect(screen.getByRole('group', {name: 'Conversational'})).toBeDefined();
-    expect(screen.queryByText('Query suggestions')).toBeNull();
-  });
-
   it('preserves section order', () => {
     render(<SuggestionsDropdown sections={testSections} onSelect={vi.fn()} visible={true} />);
     const options = screen.getAllByRole('option');

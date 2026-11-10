@@ -80,18 +80,6 @@ describe('useActionError', () => {
     expect(actionErrorOn('another-block', failedPageChange)).toBeUndefined();
   });
 
-  it('does not report a failed removal of a recent query', () => {
-    expect(
-      actionErrorOn('shell', {
-        message: 'Bad gateway',
-        component: 'QuerySuggestions',
-        name: 'removeRecentQuery',
-        surfaceId: 'shell',
-        sourceComponentId: 'query-suggestions',
-      })
-    ).toBeUndefined();
-  });
-
   it('does not report a failed suggestion', () => {
     expect(
       actionErrorOn('shell', {

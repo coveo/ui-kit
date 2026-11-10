@@ -40,20 +40,14 @@ const SessionRequestContext = createContext<SessionRequestSource>(IDLE);
 /** Shares the session's request state with the surfaces; `AppShell` passes the session itself. */
 export const SessionRequestProvider = SessionRequestContext.Provider;
 
-/**
- * Typing in a facet search or in the search box, or editing its recent queries, keeps the surface
- * usable.
- */
+/** Facet searches, typing in the search box and recent-query edits keep the surface usable. */
 const NON_BLOCKING_ACTIONS: ComponentActionNames<typeof ComponentContractsSchema> = {
   CategoryFacet: ['clearSearch', 'search', 'showMoreSearchResults'],
   QuerySuggestions: ['fetchSuggestions', 'clearRecentQueries', 'removeRecentQuery'],
   RegularFacet: ['clearSearch', 'search', 'showMoreSearchResults'],
 };
 
-/**
- * A failed suggestion only leaves the search box without completions, and a failed edit of its
- * recent queries leaves them as they were.
- */
+/** A failed suggestion or recent-query edit only leaves the search box as it was. */
 const SILENT_FAILURES: ComponentActionNames<typeof ComponentContractsSchema> = {
   QuerySuggestions: ['fetchSuggestions', 'clearRecentQueries', 'removeRecentQuery'],
 };
@@ -66,10 +60,7 @@ function lists(
   return byComponent[component]?.includes(name) ?? false;
 }
 
-/**
- * Whether a request locks the active surface: every one but a facet search, a suggestion or an edit
- * of the recent queries.
- */
+/** Whether a request locks the active surface: every one but those in `NON_BLOCKING_ACTIONS`. */
 export function isBlocking(request: SessionRequest | undefined): boolean {
   return (
     request !== undefined && !(request.kind === 'action' && lists(NON_BLOCKING_ACTIONS, request))
