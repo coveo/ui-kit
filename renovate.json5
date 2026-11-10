@@ -79,8 +79,9 @@
     {
       groupName: 'Playwright',
       groupSlug: 'playwright',
-      description: 'Keep the Playwright CI container image (mcr.microsoft.com/playwright) in lockstep with the playwright/@playwright/test packages so browser binaries always match the installed version',
+      description: 'Keep the Playwright CI container image (mcr.microsoft.com/playwright) in lockstep with the playwright/@playwright/test packages so browser binaries always match the installed version. The image repeats the npm minimumReleaseAge so it does not run ahead of the packages',
       matchPackageNames: ['mcr.microsoft.com/playwright', 'playwright', '@playwright/test'],
+      minimumReleaseAge: '7 days',
     },
     {
       groupName: 'pnpm',
