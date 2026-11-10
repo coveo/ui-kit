@@ -1,7 +1,7 @@
 min_version = "2026.7.0"
 
 [tools]
-awscli = "2.38.6"
+awscli = "2.39.3"
 node = "24.21.0"
 pnpm = "11.28.9"
 
