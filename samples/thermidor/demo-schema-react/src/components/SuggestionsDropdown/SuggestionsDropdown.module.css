@@ -21,6 +21,11 @@
   margin-bottom: var(--space-1);
 }
 
+/* Fixed while an aside is shown, so the height does not follow its content as the highlight moves. */
+.dropdown:has(> .listbox + *) {
+  height: 400px;
+}
+
 .listbox {
   display: flex;
   flex: 1 1 0;
@@ -28,4 +33,9 @@
   gap: var(--space-1);
   min-width: 0;
   padding: var(--space-1) 0;
+}
+
+/* Against the input, so the suggestions do not move when the dropdown above it grows. */
+.above .listbox {
+  margin-top: auto;
 }
