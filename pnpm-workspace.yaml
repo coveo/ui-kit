@@ -179,6 +179,8 @@ overrides:
   '@angular/core': 'catalog:'
   '@angular/common': 'catalog:'
   undici@^7: ^8.0.0
+  # Hold axe-core below 4.14.0 (label-content-name-mismatch on facet headers, KIT-282); remove with the renovate.json5 axe-core rule.
+  axe-core: 4.13.0
 
 patchedDependencies:
   '@stencil/core@4.20.0': patches/@stencil+core+4.20.0.patch
