@@ -10,7 +10,7 @@ permissions:
 jobs:
   mirror-playwright-image:
     runs-on: ubuntu-latest
-    container: gcr.io/go-containerregistry/crane@sha256:5ccb3ca884e3890d820fbf5ce4071fa3bb89469a72cc3f0ac7404a99c2a68788
+    container: gcr.io/go-containerregistry/crane@sha256:61bc716946c2779e1dc0fb8068d116edf8de10e5402262c17e8e4904ddcc14ac
 
     permissions:
       contents: read
@@ -21,7 +21,7 @@ jobs:
       PLAYWRIGHT_VERSION: v1.57.0-noble
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
