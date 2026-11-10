@@ -3,7 +3,7 @@ min_version = "2026.7.0"
 [tools]
 awscli = "2.38.6"
 node = "24.21.0"
-pnpm = "11.28.9"
+pnpm = "11.28.10"
 
 [tasks.install]
 run = "pnpm install"
