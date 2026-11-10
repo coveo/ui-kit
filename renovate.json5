@@ -26,7 +26,7 @@
       matchDepTypes: ['devDependencies', 'peerDependencies', 'optionalDependencies'],
     },
     {
-      // Hold until the facet-header clear button passes label-content-name-mismatch (KIT-282).
+      // Hold until KIT-6566 fixes label-content-name-mismatch on the facet-header clear button.
       description: 'Hold axe-core below 4.14.0, which flags label-content-name-mismatch (WCAG 2.5.3) on the facet-header clear button',
       matchPackageNames: ['axe-core'],
       allowedVersions: '<4.14.0',
