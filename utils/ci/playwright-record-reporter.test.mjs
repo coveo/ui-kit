@@ -51,7 +51,7 @@ describe('buildRecord', () => {
       suite: 'atomic',
       shard: '5-12',
       sha: 'abc123',
-      counts: {passed: 2, flaky: 1, failed: 1},
+      counts: {passed: 2, flaky: 1, failed: 1, quarantined: 0},
       tests: [
         {
           outcome: 'flaky',
@@ -92,6 +92,31 @@ describe('buildRecord', () => {
     );
   });
 
+  it('keeps every run of a quarantined test outside the counts', () => {
+    const otherTest = ['', 'chromium', 'src/a.e2e.ts', 'atomic-b', 'should render'];
+    const record = buildRecord({
+      tests: [
+        fakeTest({outcome: 'expected'}),
+        fakeTest({outcome: 'unexpected'}),
+        fakeTest({outcome: 'flaky', titlePath: otherTest}),
+      ],
+      suite: 'atomic',
+      shard: null,
+      repositoryRoot: '/repo',
+      quarantine: [{file: 'packages/atomic/src/a.e2e.ts', title: 'atomic-a › should render'}],
+    });
+
+    assert.deepEqual(record.counts, {passed: 0, flaky: 1, failed: 0, quarantined: 2});
+    assert.deepEqual(
+      record.tests.map(({outcome, title, quarantined}) => [outcome, title, quarantined]),
+      [
+        ['passed', 'atomic-a › should render', true],
+        ['failed', 'atomic-a › should render', true],
+        ['flaky', 'atomic-b › should render', undefined],
+      ]
+    );
+  });
+
   it('treats a run without shards as shard 1 of 1', () => {
     const record = buildRecord({
       tests: [],
@@ -111,6 +136,17 @@ describe('recordName', () => {
       'playwright-record_quantic_3-6_97passed_1flaky_0failed'
     );
   });
+
+  it('adds the quarantined tests when there are some', () => {
+    assert.equal(
+      recordName({
+        suite: 'quantic',
+        shard: '3-6',
+        counts: {passed: 97, flaky: 0, failed: 0, quarantined: 2},
+      }),
+      'playwright-record_quantic_3-6_97passed_0flaky_0failed_2quarantined'
+    );
+  });
 });
 
 describe('parseRecordName', () => {
@@ -119,7 +155,12 @@ describe('parseRecordName', () => {
       parseRecordName(
         recordName({suite: 'atomic-cdn', shard: '1-1', counts: {passed: 9, flaky: 0, failed: 2}})
       ),
-      {suite: 'atomic-cdn', shard: '1-1', passed: 9, flaky: 0, failed: 2}
+      {suite: 'atomic-cdn', shard: '1-1', passed: 9, flaky: 0, failed: 2, quarantined: 0}
+    );
+    assert.equal(
+      parseRecordName('playwright-record_quantic_3-6_97passed_0flaky_0failed_2quarantined')
+        .quarantined,
+      2
     );
   });
 
@@ -200,5 +241,73 @@ describe('PlaywrightRecordReporter', () => {
 
   it('prints nothing, so Playwright keeps its usual terminal reporter', () => {
     assert.equal(new PlaywrightRecordReporter().printsToStdio(), false);
+  });
+
+  describe('with a quarantined test', () => {
+    const file = () => join(repository, 'samples', 'search-vite', 'tests', 'search.spec.ts');
+    const quarantinedTest = (outcome) =>
+      fakeTest({outcome, file: file(), titlePath: ['', 'chromium', 'search.spec.ts', 'searches']});
+    const otherTest = (outcome) =>
+      fakeTest({outcome, file: file(), titlePath: ['', 'chromium', 'search.spec.ts', 'sorts']});
+    const date = (days) =>
+      new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
+    function finish({tests, expires = date(29), error = false}) {
+      process.env.CI = 'true';
+      writeFileSync(
+        join(repository, 'quarantine.json'),
+        JSON.stringify([
+          {
+            file: 'samples/search-vite/tests/search.spec.ts',
+            title: 'searches',
+            bug: 'KIT-1234',
+            added: date(-1),
+            expires,
+          },
+        ])
+      );
+      const reporter = new PlaywrightRecordReporter();
+      reporter.onBegin(
+        {
+          configFile: join(repository, 'samples', 'search-vite', 'playwright.config.ts'),
+          shard: null,
+        },
+        {allTests: () => tests}
+      );
+      if (error) {
+        reporter.onError({message: 'webServer exited early'});
+      }
+      return reporter.onEnd({status: 'failed'});
+    }
+
+    it('lets the run pass when the quarantined test is the only failure, and says so', (t) => {
+      const log = t.mock.method(console, 'log', () => {});
+
+      const status = finish({tests: [quarantinedTest('unexpected'), otherTest('expected')]});
+
+      assert.deepEqual(status, {status: 'passed'});
+      assert.match(
+        log.mock.calls.map((call) => call.arguments.join(' ')).join('\n'),
+        /search\.spec\.ts › searches \[chromium\]: KIT-1234/
+      );
+    });
+
+    it('keeps the run failed when another test failed too', () => {
+      const status = finish({tests: [quarantinedTest('unexpected'), otherTest('unexpected')]});
+
+      assert.equal(status, undefined);
+    });
+
+    it('keeps the run failed after an error outside the tests', () => {
+      const status = finish({tests: [quarantinedTest('unexpected')], error: true});
+
+      assert.equal(status, undefined);
+    });
+
+    it('stops quarantining the test on its expiry date', () => {
+      const status = finish({tests: [quarantinedTest('unexpected')], expires: date(0)});
+
+      assert.equal(status, undefined);
+    });
   });
 });
