@@ -23,6 +23,7 @@ jobs:
       tasks: ${{ steps.publish.outputs.tasks }}
       projects: ${{ steps.publish.outputs.projects }}
       samples: ${{ steps.publish.outputs.samples }}
+      base-sha: ${{ steps.base.outputs.sha }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
@@ -915,6 +916,7 @@ jobs:
       - 'samples-e2e'
       - 'playwright-pkg-new-template-test'
       - 'publish-preview'
+      - 'changeset-major-guard'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -949,6 +951,7 @@ jobs:
       - 'samples-e2e'
       - 'playwright-pkg-new-template-test'
       - 'changeset-merge-guard'
+      - 'changeset-major-guard'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -1008,3 +1011,35 @@ jobs:
         with:
           base-sha: ${{ github.event.merge_group.base_sha }}
           head-sha: ${{ github.sha }}
+
+  changeset-major-guard:
+    name: 'Changeset major guard'
+    needs: affected
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: ${{ needs.affected.outputs.fetch-depth }}
+          fetch-tags: false
+
+      - name: Install Node
+        uses: step-security/mise-action@6e96d2ffbc65c037f23c78818f2a339d6cf830f7 # v4
+        # Same mise version as the setup action, so the key matches the cache cache-warmup.yml saves.
+        with:
+          version: 2026.9.2
+          install: true
+          cache: true
+          cache_save: false
+
+      - name: Refuse UI-Kit majors that main cannot ship
+        env:
+          BASE_SHA: ${{ needs.affected.outputs.base-sha }}
+          BASE_REF: ${{ github.event.merge_group.base_ref || github.base_ref }}
+          # open from the freeze of main for v4 until the v4 GA (KIT-4387)
+          UI_KIT_MAJOR_WINDOW: closed
+        run: node utils/ci/changeset-major-guard.mjs --base "$BASE_SHA"
