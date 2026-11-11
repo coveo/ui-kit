@@ -3,6 +3,7 @@ import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import type {EngineDefinition, EngineStaticState} from '../../common/types/engine.js';
+import {defineDidYouMean} from '../controllers/did-you-mean/headless-did-you-mean.ssr.js';
 import {defineProductEnrichment} from '../controllers/product-enrichment/headless-product-enrichment.ssr.js';
 import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
@@ -14,7 +15,7 @@ import type {ControllerDefinitionsMap} from '../types/controller-definitions.js'
 import type {InferHydratedState, InferStaticState} from '../types/controller-inference.js';
 import type {CommerceStaticState} from '../types/fetch-static-state.js';
 import type {CommerceHydratedState} from '../types/hydrate-static-state.js';
-import type {CommerceEngineDefinition} from '../types/engine.js';
+import type {CommerceEngineDefinition, CommerceEngineDefinitionOptions} from '../types/engine.js';
 import {defineCommerceEngine} from './commerce-engine.ssr.js';
 
 const controllers = {
@@ -107,6 +108,17 @@ describe('defineCommerceEngine', () => {
     expectTypeOf<ListingStaticState['controllers']['productList']>().not.toHaveProperty(
       'initialState'
     );
+  });
+
+  it('should take the results flag once, on the definition, and on no definer', () => {
+    expectTypeOf<CommerceEngineDefinitionOptions['enableResults']>().toEqualTypeOf<
+      boolean | {search?: boolean; listing?: boolean} | undefined
+    >();
+    expectTypeOf<Parameters<typeof defineProductList>>().toEqualTypeOf<[]>();
+    expectTypeOf<Parameters<typeof defineDidYouMean>>().toEqualTypeOf<[]>();
+    expectTypeOf<
+      NonNullable<NonNullable<Parameters<typeof defineSearchBox>[0]>['options']>
+    >().not.toHaveProperty('enableResults');
   });
 
   it('should accept the product ID on every engine definition', () => {

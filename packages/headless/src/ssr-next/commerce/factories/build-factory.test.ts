@@ -200,6 +200,35 @@ describe('buildFactory', () => {
     });
   });
 
+  describe('results flag of the definition', () => {
+    it('should hand every controller definition the flag resolved per kind of request', async () => {
+      const definition = {controller1: defineMockCommerceController()};
+      const factory = buildFactory(definition, {
+        ...mockEngineOptions,
+        enableResults: {search: true},
+      });
+
+      await factory(SolutionType.search)(mockBuildOptions as SearchBuildConfig);
+
+      expect(definition.controller1.build).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({enableResults: {listing: false, search: true}})
+      );
+    });
+
+    it('should disable results for both kinds of request when the definition sets no flag', async () => {
+      const definition = {controller1: defineMockCommerceController()};
+      const factory = buildFactory(definition, mockEngineOptions);
+
+      await factory(SolutionType.listing)(mockBuildOptions as ListingBuildConfig);
+
+      expect(definition.controller1.build).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({enableResults: {listing: false, search: false}})
+      );
+    });
+  });
+
   describe('per-request access token', () => {
     it('should build the engine with the per-request access token when provided', async () => {
       const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);

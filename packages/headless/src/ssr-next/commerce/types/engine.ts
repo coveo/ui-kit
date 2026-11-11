@@ -1,6 +1,6 @@
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {EngineDefinition} from '../../common/types/engine.js';
-import type {BuildConfig, SSRCommerceEngineOptions} from './build.js';
+import type {BuildConfig, EnableResultsOption, SSRCommerceEngineOptions} from './build.js';
 import type {SolutionType} from './controller-constants.js';
 import type {ControllerDefinitionsMap} from './controller-definitions.js';
 import type {CommerceStaticState} from './fetch-static-state.js';
@@ -27,6 +27,14 @@ export type CommerceEngineDefinitionOptions<
    * The controllers to initialize with the commerce engine.
    */
   controllers?: ValidateControllerNames<TControllers>;
+  /**
+   * Whether the listing and search requests fill `results` (products and spotlight content) rather
+   * than `products`: `true` for both kinds of request, or one flag per kind. The flag applies to every
+   * request of the matching kind, whichever controller triggers it, on the server and in the browser.
+   *
+   * @default false
+   */
+  enableResults?: EnableResultsOption;
   /**
    * Not supported: the navigator context is per-request data. Pass `navigatorContext` to
    * `fetchStaticState()` instead.
