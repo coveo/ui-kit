@@ -168,6 +168,16 @@ describe('CartPanel', () => {
     expect(document.activeElement).toBe(screen.getByRole('heading', {name: 'Your cart'}));
   });
 
+  it('moves the focus when − removes the last unit of the focused line', () => {
+    const {set} = renderCart();
+    openCart();
+    fireEvent.click(screen.getByRole('button', {name: 'Remove one Paddle'}));
+    screen.getByRole('button', {name: 'Remove one Paddle'}).focus();
+
+    act(() => set({cart: {...CART, items: [CART.items[0]]}}));
+    expect(document.activeElement).toBe(screen.getByRole('link', {name: 'Kayak'}));
+  });
+
   it('shows an empty state, no badge and no purchase when the cart is empty', () => {
     renderCart({cart: EMPTY_CART});
     expect(screen.queryByTestId('cart-badge')).toBeNull();
