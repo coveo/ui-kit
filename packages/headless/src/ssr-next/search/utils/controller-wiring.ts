@@ -75,7 +75,7 @@ export function wireControllerParams<
 ): InferControllerPropsMapFromDefinitions<TControllerDefinitions> {
   validateBuildConfig(buildConfig);
 
-  const controllerProps: ControllersPropsMap = buildConfig.controllers ?? {};
+  const controllerProps: ControllersPropsMap = {...buildConfig.controllers};
 
   new ControllerWirer(buildConfig, controllerDefinitions, controllerProps).wire();
 

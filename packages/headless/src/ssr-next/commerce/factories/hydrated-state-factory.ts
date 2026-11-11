@@ -29,7 +29,7 @@ export function hydratedStaticStateFactory<
       const solutionTypeBuild = await buildFactory(controllerDefinitions, options)(solutionType);
       const {engine, controllers} = await solutionTypeBuild(paramsWithControllerProps);
 
-      await engine.waitForRequestCompletedAction();
+      await Promise.all(engine.waitForRequestCompletedAction());
 
       return {engine, controllers};
     };
