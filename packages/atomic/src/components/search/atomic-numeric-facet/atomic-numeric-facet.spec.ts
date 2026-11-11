@@ -125,7 +125,7 @@ describe('atomic-numeric-facet', () => {
         return page.getByRole('checkbox').nth(valuePosition);
       },
       get clearButton() {
-        return page.getByLabelText(/Clear \d+ filter/);
+        return page.getByLabelText(/Clear (\d+ )?filters? for the/);
       },
       get facet() {
         return qs('facet');

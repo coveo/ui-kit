@@ -64,7 +64,7 @@ describe('#renderCategoryFacetSelectedValue', () => {
 
     expect(clearButton).toHaveAttribute(
       'aria-label',
-      'Clear 1 filter for the Geographical Hierarchy facet'
+      'Clear filter for the Geographical Hierarchy facet'
     );
   });
 
