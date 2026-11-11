@@ -26,12 +26,6 @@
       matchDepTypes: ['devDependencies', 'peerDependencies', 'optionalDependencies'],
     },
     {
-      // Hold until KIT-6566 fixes label-content-name-mismatch on the facet-header clear button.
-      description: 'Hold axe-core below 4.14.0, which flags label-content-name-mismatch (WCAG 2.5.3) on the facet-header clear button',
-      matchPackageNames: ['axe-core'],
-      allowedVersions: '<4.14.0',
-    },
-    {
       groupName: 'Changesets',
       groupSlug: 'changesets',
       description: 'Isolate @changesets/* since we rely on experimental options that may change in a patch update. step-security/changeset-action is included so the CLI and the action that runs it move in a single PR: @changesets/cli v3 needs the action v2, whose inputs are renamed, so they cannot be bumped separately',
