@@ -3,6 +3,7 @@ import {buildProductListing} from '../../../controllers/commerce/product-listing
 import {buildSearch} from '../../../controllers/commerce/search/headless-search.js';
 import {toSerializableNavigatorContext} from '../../common/serializable-navigator-context.js';
 import {createStaticState} from '../controller-utils.js';
+import {resolveEnableResults} from '../utils/enable-results.js';
 import {filterRecommendationControllers} from '../utils/recommendation-filter.js';
 import {withDefaultViewUrl} from '../utils/view-url.js';
 import {SolutionType} from '../types/controller-constants.js';
@@ -26,21 +27,23 @@ function findAndExecuteMethod(controllers: Record<string, unknown>, methodName: 
 
 function executeFirstRequestForListing(
   controllers: Record<string, unknown>,
-  engine: SSRCommerceEngine
+  engine: SSRCommerceEngine,
+  enableResults: boolean
 ) {
   const controllerExecuted = findAndExecuteMethod(controllers, 'executeFirstRequest');
   if (!controllerExecuted) {
-    buildProductListing(engine).executeFirstRequest();
+    buildProductListing(engine, {enableResults}).executeFirstRequest();
   }
 }
 
 function executeFirstRequestForSearch(
   controllers: Record<string, unknown>,
-  engine: SSRCommerceEngine
+  engine: SSRCommerceEngine,
+  enableResults: boolean
 ) {
   const controllerExecuted = findAndExecuteMethod(controllers, 'executeFirstSearch');
   if (!controllerExecuted) {
-    buildSearch(engine).executeFirstSearch();
+    buildSearch(engine, {enableResults}).executeFirstSearch();
   }
 }
 
@@ -50,6 +53,8 @@ export function fetchStaticStateFactory<
   controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ) {
+  const enableResults = resolveEnableResults(options.enableResults);
+
   return <TSolutionType extends SolutionType>(solutionType: TSolutionType) =>
     async (rawParams: FetchStaticStateParameters<TControllerDefinitions, TSolutionType>) => {
       const params = withDefaultViewUrl(rawParams);
@@ -58,10 +63,10 @@ export function fetchStaticStateFactory<
 
       switch (solutionType) {
         case SolutionType.listing:
-          executeFirstRequestForListing(controllers, engine);
+          executeFirstRequestForListing(controllers, engine, enableResults.listing);
           break;
         case SolutionType.search:
-          executeFirstRequestForSearch(controllers, engine);
+          executeFirstRequestForSearch(controllers, engine, enableResults.search);
           break;
       }
 

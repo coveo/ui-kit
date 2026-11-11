@@ -24,9 +24,9 @@ export function defineSort(props?: SortProps): SortDefinition {
     listing: true,
     search: true,
     ...props,
-    build: (engine, {solutionType}) =>
+    build: (engine, {solutionType, enableResults}) =>
       solutionType === SolutionType.listing
-        ? buildProductListing(engine).sort(props)
-        : buildSearch(engine).sort(props),
+        ? buildProductListing(engine, {enableResults: enableResults.listing}).sort(props)
+        : buildSearch(engine, {enableResults: enableResults.search}).sort(props),
   };
 }

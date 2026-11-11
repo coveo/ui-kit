@@ -20,6 +20,7 @@ import type {
   HydrateStaticStateParameters,
 } from '../types/engine.js';
 import {validateBuildConfig} from '../utils/controller-wiring.js';
+import {resolveEnableResults} from '../utils/enable-results.js';
 import {augmentCommerceEngineOptions} from '../utils/engine-wiring.js';
 import {withDefaultViewUrl} from '../utils/view-url.js';
 
@@ -113,6 +114,7 @@ export const buildFactory =
     const buildOptions = withDefaultViewUrl(rawBuildOptions);
     validateBuildConfig(solutionType, controllerDefinitions, buildOptions);
 
+    const enableResults = resolveEnableResults(options.enableResults);
     const enabledRecommendationControllers = buildOptions.recommendations?.length ?? 0;
 
     const engineOptions: CommerceEngineOptions = augmentCommerceEngineOptions(
@@ -131,6 +133,7 @@ export const buildFactory =
       engine,
       solutionType,
       buildConfig: buildOptions,
+      enableResults,
     });
 
     if (buildOptions && 'searchActions' in buildOptions) {

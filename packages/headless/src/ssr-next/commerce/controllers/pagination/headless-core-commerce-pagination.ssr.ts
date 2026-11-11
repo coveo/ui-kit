@@ -32,9 +32,9 @@ export function definePagination(props?: PaginationProps): PaginationDefinition 
     listing: true,
     search: true,
     ...props,
-    build: (engine, {solutionType}) =>
+    build: (engine, {solutionType, enableResults}) =>
       solutionType === SolutionType.listing
-        ? buildProductListing(engine).pagination(props)
-        : buildSearch(engine).pagination(props),
+        ? buildProductListing(engine, {enableResults: enableResults.listing}).pagination(props)
+        : buildSearch(engine, {enableResults: enableResults.search}).pagination(props),
   };
 }

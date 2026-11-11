@@ -1,12 +1,11 @@
 import type {
   DidYouMean,
-  DidYouMeanOptions,
   DidYouMeanState,
 } from '../../../../controllers/commerce/search/did-you-mean/headless-did-you-mean.js';
 import {buildSearch} from '../../../../controllers/commerce/search/headless-search.js';
 import type {SearchOnlyControllerDefinition} from '../../types/controller-definitions.js';
 
-export type {DidYouMean, DidYouMeanOptions, DidYouMeanState};
+export type {DidYouMean, DidYouMeanState};
 
 export type DidYouMeanDefinition = SearchOnlyControllerDefinition<DidYouMean>;
 
@@ -14,12 +13,13 @@ export type DidYouMeanDefinition = SearchOnlyControllerDefinition<DidYouMean>;
  * Defines a `DidYouMean` controller instance.
  * @group Definers
  *
- * @param options - The configurable `DidYouMean` options.
- * @returns The `DidYouMean` controller definition.
+ * @returns The `DidYouMean` controller definition. The search it triggers fills `results` rather than
+ *  `products` when the `enableResults` option of the engine definition says so.
  */
-export function defineDidYouMean(options?: DidYouMeanOptions): DidYouMeanDefinition {
+export function defineDidYouMean(): DidYouMeanDefinition {
   return {
     search: true,
-    build: (engine) => buildSearch(engine, {enableResults: options?.enableResults}).didYouMean(),
+    build: (engine, {enableResults}) =>
+      buildSearch(engine, {enableResults: enableResults.search}).didYouMean(),
   };
 }

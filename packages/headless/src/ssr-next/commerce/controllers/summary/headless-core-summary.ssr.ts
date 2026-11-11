@@ -32,9 +32,9 @@ export function defineSummary(): SummaryDefinition {
   return {
     listing: true,
     search: true,
-    build: (engine, {solutionType}) =>
+    build: (engine, {solutionType, enableResults}) =>
       solutionType === SolutionType.listing
-        ? buildProductListing(engine).summary()
-        : buildSearch(engine).summary(),
+        ? buildProductListing(engine, {enableResults: enableResults.listing}).summary()
+        : buildSearch(engine, {enableResults: enableResults.search}).summary(),
   };
 }

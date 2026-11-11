@@ -38,7 +38,7 @@ You pass the facts of the page (navigator context, context, cart, search paramet
 | Hydration          | `hydrateStaticState({searchAction, controllers})`                                    | `hydrateStaticState(staticState)`                                                                                                                                                                               |
 | Recommendations    | `recommendationEngineDefinition` with an `enabled` prop per slot                     | `recommendations` and `productId` options on any definition                                                                                                                                                     |
 | Controller props   | Per request, through `controllers`                                                   | Static options in the definers; page facts in `fetchStaticState()` <!-- decided 2026-10-21, not yet built -->                                                                                                   |
-| `enableResults`    | On each definer                                                                      | Once, on the engine definition <!-- decided 2026-10-21, not yet built -->                                                                                                                                       |
+| `enableResults`    | On each definer                                                                      | Once, on the engine definition                                                                                                                                                                                  |
 
 #### Sub-package paths
 
@@ -378,8 +378,6 @@ Remove `context: defineContext()` and `searchParameterManager: defineSearchParam
 
 #### `enableResults`
 
-<!-- decided 2026-10-21, not yet built -->
-
 `enableResults` is set once on the commerce engine definition, as a boolean or per solution type, instead of on each definer.
 
 **Headless Version 3**
@@ -432,4 +430,4 @@ Removals outside server-side rendering will be listed here.
 | `defineCart()`, `defineContext()` and `defineParameterManager()` (commerce)                                                                                                                                                                                                                  | None: the `cart`, `context` and `parameterManager` controllers are included in every commerce definition and fed by the `cart`, `context` and `searchParams` options                    |
 | `defineContext()`, `defineSearchParameterManager()` and `defineUrlManager()` (search)                                                                                                                                                                                                        | None: the `context` and `parameterManager` controllers are included in every search definition and fed by the `context` and `searchParams` options                                      |
 | The `controllers` option of `fetchStaticState()`, `buildWithProps()` and the `...WithProps` definition types, `InferControllerPropsMapFromDefinitions`, `ControllersPropsMap`, `EngineDefinitionControllersPropsOption`, `MissingControllerProps`, and `controllerProps` in the static state | Static options in the definers; page facts (`navigatorContext`, `accessToken`, `context`, `cart`, `searchParams`, `productId`, `recommendations`) in `fetchStaticState()`               |
-| `enableResults` on `defineProductList()`, `defineSearchBox()`, `defineDidYouMean()` and `defineRecentQueriesList()`                                                                                                                                                                          | `enableResults` on the engine definition <!-- decided 2026-10-21, not yet built -->                                                                                                     |
+| `enableResults` on `defineProductList()`, `defineSearchBox()`, `defineDidYouMean()`, `defineRecentQueriesList()` and `defineQueryTrigger()`, and the `ProductListOptions`, `DidYouMeanOptions` and `QueryTriggerOptions` types                                                               | `enableResults` on the engine definition, applied to every listing or search request                                                                                                    |

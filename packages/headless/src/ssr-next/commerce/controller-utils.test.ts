@@ -12,10 +12,11 @@ import {
 } from '../../test/mock-ssr-controller-definitions.js';
 import {buildControllerDefinitions, createStaticState} from './controller-utils.js';
 import type {SSRCommerceEngine} from './factories/build-factory.js';
-import type {CommonBuildConfig} from './types/build.js';
+import type {CommonBuildConfig, ResolvedEnableResults} from './types/build.js';
 import {SolutionType} from './types/controller-constants.js';
 
 describe('commerce controller-utils', () => {
+  const enableResults: ResolvedEnableResults = {listing: true, search: false};
   let mockEngine: SSRCommerceEngine;
   let buildConfig: CommonBuildConfig;
 
@@ -35,7 +36,7 @@ describe('commerce controller-utils', () => {
   });
 
   describe('#buildControllerDefinitions', () => {
-    it('should build every available definition once with the engine, the solution type and the page facts', () => {
+    it('should build every available definition once with the engine, the solution type, the page facts and the results flag', () => {
       const definitionsMap = {
         controller1: defineMockCommerceController(),
         controller2: defineMockCommerceController(),
@@ -46,16 +47,19 @@ describe('commerce controller-utils', () => {
         engine: mockEngine,
         solutionType: SolutionType.search,
         buildConfig,
+        enableResults,
       });
 
       expect(Object.keys(controllers)).toEqual(['controller1', 'controller2']);
       expect(definitionsMap.controller1.build).toHaveBeenCalledExactlyOnceWith(mockEngine, {
         solutionType: SolutionType.search,
         buildConfig,
+        enableResults,
       });
       expect(definitionsMap.controller2.build).toHaveBeenCalledExactlyOnceWith(mockEngine, {
         solutionType: SolutionType.search,
         buildConfig,
+        enableResults,
       });
     });
 
@@ -67,6 +71,7 @@ describe('commerce controller-utils', () => {
         engine: mockEngine,
         solutionType: SolutionType.listing,
         buildConfig,
+        enableResults,
       });
 
       expect(reader.state).toEqual(buildConfig);
@@ -84,6 +89,7 @@ describe('commerce controller-utils', () => {
           engine: mockEngine,
           solutionType: SolutionType.search,
           buildConfig,
+          enableResults,
         });
 
         expect(Object.keys(controllers)).toEqual(['available']);
@@ -100,6 +106,7 @@ describe('commerce controller-utils', () => {
           engine: mockEngine,
           solutionType: SolutionType.listing,
           buildConfig,
+          enableResults,
         });
 
         expect(controllers).toEqual({});
@@ -117,6 +124,7 @@ describe('commerce controller-utils', () => {
           engine: mockEngine,
           solutionType: SolutionType.search,
           buildConfig,
+          enableResults,
         });
 
         expect(controllers).toEqual({});
