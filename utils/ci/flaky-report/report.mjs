@@ -161,8 +161,12 @@ function runKind(jobCauses) {
  * - `quarantine`: one row per entry of quarantine.json, with its runs in the window, each Playwright
  *   project counting as a run, and its status: `broken` after failing every retry in its last 5
  *   runs, `expired`, `healthy` after 40 clean runs in a row over at least 7 days, `not run`, or
- *   `quarantined`. A quarantined test can't fail its run, so it counts in no other figure, except
- *   that passing on a retry makes it a flaky test for the pull-request causes.
+ *   `quarantined`. A quarantined test can't fail its run, so it stays out of `tests` and of both
+ *   causes. Passing on a retry still counts in its suite's runs with a flaky test, and makes it a
+ *   flaky test for the pull-request causes.
+ * - `quarantinedTests`: one row per quarantined test and Playwright project that ran in the window,
+ *   with its runs split into clean, flaky and failed, and the Bug and dates of its entry while
+ *   quarantine.json still lists it.
  */
 export function buildModel({
   window,
@@ -191,7 +195,16 @@ export function buildModel({
     }
     for (const test of record.tests ?? []) {
       if (test.quarantined) {
-        quarantinedRuns.push({...test, createdAt: run.createdAt, sha: record.sha ?? run.headSha});
+        // A quarantine changes what blocks a merge, not how flaky the suite is.
+        if (test.outcome === 'flaky') {
+          group.flakyRuns.add(run.id);
+        }
+        quarantinedRuns.push({
+          ...test,
+          suite: record.suite,
+          createdAt: run.createdAt,
+          sha: record.sha ?? run.headSha,
+        });
         continue;
       }
       // Records saved before they held the project fall back to an unnamed one.
@@ -337,7 +350,37 @@ export function buildModel({
           QUARANTINE_ORDER.indexOf(a.status) - QUARANTINE_ORDER.indexOf(b.status) ||
           a.daysLeft - b.daysLeft
       ),
+    quarantinedTests: quarantinedTestRows(quarantinedRuns, quarantine),
   };
+}
+
+function quarantinedTestRows(quarantinedRuns, quarantine) {
+  const rows = new Map();
+  for (const run of quarantinedRuns) {
+    const project = run.project ?? '';
+    const row = getOrCreate(rows, testKey(run.suite, project, run), () => {
+      const entry = quarantine.find((candidate) => matchesEntry(candidate, run));
+      return {
+        suite: run.suite,
+        project,
+        file: run.file,
+        title: run.title,
+        // The run was quarantined when it ran, even if the entry has left the list since.
+        bug: entry?.bug ?? null,
+        added: entry?.added ?? null,
+        expires: entry?.expires ?? null,
+        runs: 0,
+        clean: 0,
+        flaky: 0,
+        failed: 0,
+      };
+    });
+    row.runs += 1;
+    row[run.outcome === 'passed' ? 'clean' : run.outcome] += 1;
+  }
+  return [...rows.values()].sort(
+    (a, b) => a.file.localeCompare(b.file) || a.title.localeCompare(b.title)
+  );
 }
 
 /**
@@ -345,7 +388,8 @@ export function buildModel({
  * week and never rewrites. The fields are schema 1 of the contract with that dashboard: renaming a
  * `GROUPS` key or a CI job splits a series there, and changing a field needs a new schema number.
  * `sha` and `generatedAt` name the commit and the time that built it, so a late or manual run
- * stands apart from the scheduled one.
+ * stands apart from the scheduled one. `quarantine` came later: snapshots saved before it have
+ * none, and a week where no quarantined test ran has an empty list.
  */
 export function buildSnapshot(model, {sha, generatedAt} = {}) {
   return {
@@ -379,6 +423,11 @@ export function buildSnapshot(model, {sha, generatedAt} = {}) {
       total: model.skips.length,
       withoutTicket: model.skips.filter((skip) => !skip.ticket).length,
     },
+    quarantine: model.quarantinedTests.map(({suite, ...row}) => ({
+      suite,
+      group: suiteGroup(suite),
+      ...row,
+    })),
   };
 }
 
