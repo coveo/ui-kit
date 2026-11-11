@@ -67,7 +67,7 @@ See [`src/public-sample-configuration.ts`](src/public-sample-configuration.ts).
 
 ## Cart
 
-The `cartApi()` Vite plugin ([`vite-plugins/cart-api/`](vite-plugins/cart-api/)) serves a fake in-memory merchant cart API at `/api/cart` (one cart per `demo-cart-id` cookie).
+The `cartApi()` Vite plugin ([`vite-plugins/cart-api/`](vite-plugins/cart-api/)) serves a fake in-memory merchant cart API at `/api/cart` (one cart per `demo-cart-id` cookie). `useCart()` exposes it to components, and the session sends its items in `context.cart`. `index.html` loads `/api/cart/bootstrap.js` before the app so that `initialize` carries the shopper's cart.
 
 ## Pull-request previews
 

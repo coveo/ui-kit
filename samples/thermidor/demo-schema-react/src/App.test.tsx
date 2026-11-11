@@ -7,6 +7,11 @@ vi.mock('./context/session.js', () => ({
   useSession: () => ({}),
 }));
 
+vi.mock('./cart/cart-api.js', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('./cart/cart-api.js')>()),
+  getCart: vi.fn(() => new Promise(() => {})),
+}));
+
 vi.mock('./components/AppShell.js', () => ({
   AppShell: () => <div data-testid="app-shell">AppShell</div>,
 }));
