@@ -7,6 +7,10 @@ import {
 
 const maxConfigurationAttempts = 3;
 
+export interface CaseAssistConfigurations {
+  configurations: {id: string; name: string}[];
+}
+
 /**
  * The longest the Case Assist configurations lookup can take, retries
  * included. Each attempt gets the time left, so only quick failures are
@@ -74,8 +78,13 @@ export class CaseAssistObject {
    * The example pages look up their Case Assist ID with a live call to the
    * Coveo platform before showing the component, and show nothing when that
    * call fails. Serve that lookup from a cache, with retries on the first call.
+   * When the lookup fails, serve the fallback configurations if given, so a
+   * suite that doesn't need the real Case Assist ID still gets one. Otherwise,
+   * let the live request through.
    */
-  async mockCaseAssistConfigurations(): Promise<void> {
+  async mockCaseAssistConfigurations(
+    fallbackConfigurations?: CaseAssistConfigurations
+  ): Promise<void> {
     await this.page.route(
       caseAssistConfigurationsRequestRegex,
       async (route) => {
@@ -85,8 +94,11 @@ export class CaseAssistObject {
           configurations = await caseAssistConfigurations;
         } catch {
           caseAssistConfigurations = undefined;
-          await route.continue();
-          return;
+          if (!fallbackConfigurations) {
+            await route.continue();
+            return;
+          }
+          configurations = fallbackConfigurations;
         }
         await route.fulfill({json: configurations});
       }

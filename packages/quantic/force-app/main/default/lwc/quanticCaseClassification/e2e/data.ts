@@ -21,3 +21,7 @@ export const caseClassificationSuggestions = [
 
 export const sfDefaultField = 'Priority';
 export const coveoDefaultField = 'sfpriority';
+
+export const fallbackCaseAssistConfigurations = {
+  configurations: [{id: 'quantic-e2e-case-classification', name: 'Demo'}],
+};

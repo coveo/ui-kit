@@ -8,6 +8,7 @@ import {
   allOptions,
   caseClassificationSuggestions,
   coveoDefaultField,
+  fallbackCaseAssistConfigurations,
   sfDefaultField,
 } from './data';
 
@@ -36,7 +37,9 @@ export const test = quanticBase.extend<QuanticCaseClassificationE2EFixtures>({
   ) => {
     const caseClassificationObject = new CaseClassificationObject(page);
     await page.goto(pageUrl);
-    await caseAssist.mockCaseAssistConfigurations();
+    await caseAssist.mockCaseAssistConfigurations(
+      fallbackCaseAssistConfigurations
+    );
     await caseClassificationObject.mockSfPicklistValues(
       sfDefaultField,
       allOptions
