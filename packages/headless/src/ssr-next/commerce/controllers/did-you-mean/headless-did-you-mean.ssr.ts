@@ -4,11 +4,11 @@ import type {
   DidYouMeanState,
 } from '../../../../controllers/commerce/search/did-you-mean/headless-did-you-mean.js';
 import {buildSearch} from '../../../../controllers/commerce/search/headless-search.js';
-import type {SearchOnlyControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
+import type {SearchOnlyControllerDefinition} from '../../types/controller-definitions.js';
 
 export type {DidYouMean, DidYouMeanOptions, DidYouMeanState};
 
-export type DidYouMeanDefinition = SearchOnlyControllerDefinitionWithoutProps<DidYouMean>;
+export type DidYouMeanDefinition = SearchOnlyControllerDefinition<DidYouMean>;
 
 /**
  * Defines a `DidYouMean` controller instance.

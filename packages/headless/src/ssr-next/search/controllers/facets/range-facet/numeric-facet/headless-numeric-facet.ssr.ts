@@ -4,14 +4,11 @@ import {
   type NumericFacet,
   type NumericFacetProps,
 } from '../../../../../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet.js';
-import type {ControllerDefinitionWithoutProps} from '../../../../types/controller-definition.js';
+import type {ControllerDefinition} from '../../../../types/controller-definition.js';
 
 export * from '../../../../../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet.js';
 
-export interface NumericFacetDefinition extends ControllerDefinitionWithoutProps<
-  SearchEngine,
-  NumericFacet
-> {}
+export interface NumericFacetDefinition extends ControllerDefinition<SearchEngine, NumericFacet> {}
 
 /**
  * Defines a `NumericFacet` controller instance.

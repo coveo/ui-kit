@@ -3,11 +3,11 @@ import {
   buildDictionaryFieldContext,
   type DictionaryFieldContext,
 } from '../../../../controllers/dictionary-field-context/headless-dictionary-field-context.js';
-import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
+import type {ControllerDefinition} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/dictionary-field-context/headless-dictionary-field-context.js';
 
-export interface DictionaryFieldContextDefinition extends ControllerDefinitionWithoutProps<
+export interface DictionaryFieldContextDefinition extends ControllerDefinition<
   CoreEngine,
   DictionaryFieldContext
 > {}

@@ -18,17 +18,7 @@ export function hydratedStaticStateFactory<
   options: SearchEngineDefinitionOptions<TControllerDefinitions>
 ): HydrateStaticStateFunction<TControllerDefinitions> {
   return async (params: HydrateStaticStateParameters<TControllerDefinitions>) => {
-    const {controllerProps, ...restParams} = params;
-
-    const paramsWithControllerProps = {
-      ...restParams,
-      ...(controllerProps && {controllers: controllerProps}),
-    } as HydrateStaticStateParameters<TControllerDefinitions>;
-
-    const {engine, controllers} = await buildFactory(
-      controllerDefinitions,
-      options
-    )(paramsWithControllerProps);
+    const {engine, controllers} = await buildFactory(controllerDefinitions, options)(params);
 
     if (params.searchActions.length > 0) {
       await engine.waitForSearchCompletedAction();

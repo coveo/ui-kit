@@ -1,216 +1,70 @@
-import {beforeEach, describe, expect, it} from 'vitest';
+import {describe, expect, it} from 'vitest';
 import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
-import {
-  defineMockSearchControllerWithProps,
-  defineMockSearchParameterManager,
-} from '../../../test/mock-ssr-controller-definitions.js';
-import type {SearchControllerDefinitionsMap} from '../types/engine.js';
-import {searchDefinitionSchema, wireControllerParams} from './controller-wiring.js';
+import {searchDefinitionSchema, validateBuildConfig} from './controller-wiring.js';
+
+type PageFacts = Parameters<typeof validateBuildConfig>[0];
 
 describe('controller-wiring', () => {
-  let mockControllerDefinitions: SearchControllerDefinitionsMap;
+  describe('#searchDefinitionSchema', () => {
+    it('should not throw for an empty config', () => {
+      expect(() => searchDefinitionSchema.validate({})).not.toThrow();
+    });
 
-  beforeEach(() => {
-    mockControllerDefinitions = {
-      parameterManager: defineMockSearchParameterManager(),
-      customController: defineMockSearchControllerWithProps(),
-    } as SearchControllerDefinitionsMap;
-  });
+    it('should not throw for empty search params', () => {
+      expect(() => searchDefinitionSchema.validate({searchParams: {}})).not.toThrow();
+    });
 
-  describe('schema validation', () => {
-    describe('when validating a searchDefinitionSchema', () => {
-      it('should not throw for empty config', () => {
-        const validate = () => {
-          searchDefinitionSchema.validate({});
-        };
-        expect(validate).not.toThrow();
-      });
-
-      it('should not throw for missing search params', () => {
-        expect(() => {
-          searchDefinitionSchema.validate({});
-        }).not.toThrow();
-
-        expect(() => {
-          searchDefinitionSchema.validate({
-            searchParams: {},
-          });
-        }).not.toThrow();
-      });
-
-      it('should not throw for valid search params with query', () => {
-        const searchConfig = {
-          searchParams: {q: 'test query'},
-        };
-        expect(() => {
-          searchDefinitionSchema.validate(searchConfig);
-        }).not.toThrow();
-      });
-
-      it('should validate search params with other parameters', () => {
-        const searchConfig = {
+    it('should not throw for search params with a query and other parameters', () => {
+      expect(() =>
+        searchDefinitionSchema.validate({
           searchParams: {
-            q: 'test query',
-            page: 2,
-            perPage: 20,
-          },
-        };
-        expect(() => {
-          searchDefinitionSchema.validate(searchConfig);
-        }).not.toThrow();
-      });
-    });
-  });
-
-  describe('#wireControllerParams', () => {
-    it('should wire parameter manager for search with query', () => {
-      const params = {
-        navigatorContext: buildMockNavigatorContext(),
-        searchParams: {
-          q: 'test query',
-        },
-      };
-
-      const {parameterManager} = wireControllerParams(mockControllerDefinitions, params);
-
-      expect(parameterManager).toEqual({
-        initialState: {
-          parameters: {
-            q: 'test query',
-          },
-        },
-      });
-    });
-
-    it('should contain props from custom controllers if provided', () => {
-      const params = {
-        navigatorContext: buildMockNavigatorContext(),
-        searchParams: {
-          q: 'test query',
-        },
-        controllers: {
-          customController: {
-            initialState: {foo: 'bar'},
-          },
-        },
-      };
-
-      const props = wireControllerParams(mockControllerDefinitions, params);
-
-      expect(props.customController).toEqual({
-        initialState: {
-          foo: 'bar',
-        },
-      });
-    });
-
-    it('should handle search params for parameter manager', () => {
-      const params = {
-        navigatorContext: buildMockNavigatorContext(),
-        searchParams: {numberOfResults: 12, firstResult: 30},
-      };
-
-      const {parameterManager} = wireControllerParams(mockControllerDefinitions, params);
-
-      expect(parameterManager).toEqual({
-        initialState: {
-          parameters: {
-            numberOfResults: 12,
-            firstResult: 30,
-          },
-        },
-      });
-    });
-
-    it('should handle empty search params for parameter manager', () => {
-      const params = {
-        navigatorContext: buildMockNavigatorContext(),
-        searchParams: {},
-      };
-
-      const {parameterManager} = wireControllerParams(mockControllerDefinitions, params);
-
-      expect(parameterManager).toEqual({
-        initialState: {
-          parameters: {},
-        },
-      });
-    });
-
-    it('should handle missing search params for parameter manager', () => {
-      const params = {
-        navigatorContext: buildMockNavigatorContext(),
-      };
-
-      const {parameterManager} = wireControllerParams(mockControllerDefinitions, params);
-
-      expect(parameterManager).toEqual({
-        initialState: {
-          parameters: {},
-        },
-      });
-    });
-
-    it('should not wire parameter manager when not in definition', () => {
-      const definitionsWithoutParameterManager = {
-        customController: defineMockSearchControllerWithProps(),
-      } as SearchControllerDefinitionsMap;
-
-      const params = {
-        navigatorContext: buildMockNavigatorContext(),
-        searchParams: {q: 'test'},
-        controllers: {
-          customController: {
-            initialState: {foo: 'bar'},
-          },
-        },
-      };
-
-      const props = wireControllerParams(definitionsWithoutParameterManager, params);
-
-      expect(props.parameterManager).toBeUndefined();
-      expect(props.customController).toEqual({
-        initialState: {foo: 'bar'},
-      });
-    });
-
-    it('should not mutate the controllers object received in the build config', () => {
-      const controllers = {customController: {initialState: {foo: 'bar'}}};
-      const params = {
-        navigatorContext: buildMockNavigatorContext(),
-        searchParams: {q: 'test'},
-        controllers,
-      };
-
-      const props = wireControllerParams(mockControllerDefinitions, params);
-
-      expect(props).not.toBe(controllers);
-      expect(controllers).toEqual({customController: {initialState: {foo: 'bar'}}});
-    });
-
-    it('should wire multiple search parameters', () => {
-      const params = {
-        navigatorContext: buildMockNavigatorContext(),
-        searchParams: {
-          q: 'test query',
-          firstResult: 0,
-          numberOfResults: 10,
-          sortCriteria: 'relevancy',
-        },
-      };
-
-      const {parameterManager} = wireControllerParams(mockControllerDefinitions, params);
-
-      expect(parameterManager).toEqual({
-        initialState: {
-          parameters: {
             q: 'test query',
             firstResult: 0,
             numberOfResults: 10,
             sortCriteria: 'relevancy',
           },
-        },
-      });
+        })
+      ).not.toThrow();
+    });
+
+    it('should accept the custom context values', () => {
+      expect(() =>
+        searchDefinitionSchema.validate({context: {ageGroup: '30-45', interests: ['sports']}})
+      ).not.toThrow();
+    });
+
+    it('should reject search params that are not a record', () => {
+      expect(() =>
+        searchDefinitionSchema.validate({searchParams: 'q=test'} as unknown as PageFacts)
+      ).toThrow();
+    });
+  });
+
+  describe('#validateBuildConfig', () => {
+    it('should accept the page facts of a search request', () => {
+      expect(() =>
+        validateBuildConfig({
+          navigatorContext: buildMockNavigatorContext(),
+          searchParams: {q: 'test'},
+          context: {ageGroup: '30-45'},
+          accessToken: 'token',
+        })
+      ).not.toThrow();
+    });
+
+    it('should accept a request without search params or context', () => {
+      expect(() =>
+        validateBuildConfig({navigatorContext: buildMockNavigatorContext()})
+      ).not.toThrow();
+    });
+
+    it('should name the search engine definition when the page facts are invalid', () => {
+      expect(() =>
+        validateBuildConfig({
+          navigatorContext: buildMockNavigatorContext(),
+          searchParams: 'q=test',
+        } as unknown as PageFacts)
+      ).toThrow(/fetchStaticState\(\) of the search engine definition/);
     });
   });
 });

@@ -1,17 +1,15 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../controllers/controller/headless-controller.js';
 import {clone, filterObject, mapObject} from '../../utils/utils.js';
-import {ControllerBuilder} from '../common/builders/controller-builder.js';
-import {createStaticControllerBuilder} from '../common/builders/static-controller-builder.js';
 import type {InferControllerStaticStateMapFromControllers} from '../common/types/controller-inference.js';
 import type {SSRCommerceEngine} from './factories/build-factory.js';
+import type {CommonBuildConfig} from './types/build.js';
 import type {SolutionType} from './types/controller-constants.js';
 import type {
   ControllerDefinitionsMap,
   FilteredBakedInControllers,
 } from './types/controller-definitions.js';
 import type {
-  InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllersMapFromDefinition,
 } from './types/controller-inference.js';
@@ -28,9 +26,9 @@ export function createStaticState<
   controllers: Record<string, Controller>;
 }) {
   return {
-    controllers: mapObject(controllers, (controller) =>
-      createStaticControllerBuilder(controller).build()
-    ) as InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+    controllers: mapObject(controllers, (controller) => ({
+      state: clone(controller.state),
+    })) as InferControllerStaticStateMapFromDefinitionsWithSolutionType<
       TControllerDefinitions,
       TSolutionType
     > &
@@ -39,6 +37,10 @@ export function createStaticState<
   };
 }
 
+/**
+ * Builds the controllers of the definition that are available for the kind of page, each with the
+ * page facts of the request.
+ */
 export function buildControllerDefinitions<
   TControllerDefinitionsMap extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
@@ -46,27 +48,23 @@ export function buildControllerDefinitions<
   definitionsMap,
   engine,
   solutionType,
-  propsMap,
+  buildConfig,
 }: {
   definitionsMap: TControllerDefinitionsMap;
   engine: SSRCommerceEngine;
   solutionType: TSolutionType;
-  propsMap?: InferControllerPropsMapFromDefinitions<TControllerDefinitionsMap>;
+  buildConfig: CommonBuildConfig;
 }): InferControllersMapFromDefinition<TControllerDefinitionsMap, TSolutionType> {
-  const controllerMap = mapObject(definitionsMap, (definition, key) => {
-    const unavailableInSolutionType = () =>
+  const controllerMap = mapObject(definitionsMap, (definition) => {
+    const unavailableInSolutionType =
       !(solutionType in definition) ||
-      (solutionType in definition && definition[solutionType as keyof typeof definition] === false);
+      definition[solutionType as keyof typeof definition] === false;
 
-    const props = propsMap?.[key as keyof typeof propsMap];
-
-    if (unavailableInSolutionType()) {
+    if (unavailableInSolutionType) {
       return null;
     }
 
-    return new ControllerBuilder(definition, engine, props)
-      .withAdditionalArgs([solutionType])
-      .build();
+    return definition.build(engine, {solutionType, buildConfig});
   });
 
   return filterObject(

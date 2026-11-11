@@ -19,7 +19,7 @@ import type {
   FetchStaticStateParameters,
   HydrateStaticStateParameters,
 } from '../types/engine.js';
-import {wireControllerParams} from '../utils/controller-wiring.js';
+import {validateBuildConfig} from '../utils/controller-wiring.js';
 import {augmentCommerceEngineOptions} from '../utils/engine-wiring.js';
 import {withDefaultViewUrl} from '../utils/view-url.js';
 
@@ -111,7 +111,7 @@ export const buildFactory =
       | HydrateStaticStateParameters<TControllerDefinitions, TSolutionType>
   ) => {
     const buildOptions = withDefaultViewUrl(rawBuildOptions);
-    const controllerProps = wireControllerParams(solutionType, controllerDefinitions, buildOptions);
+    validateBuildConfig(solutionType, controllerDefinitions, buildOptions);
 
     const enabledRecommendationControllers = buildOptions.recommendations?.length ?? 0;
 
@@ -130,7 +130,7 @@ export const buildFactory =
       definitionsMap: controllerDefinitions ?? {},
       engine,
       solutionType,
-      propsMap: controllerProps,
+      buildConfig: buildOptions,
     });
 
     if (buildOptions && 'searchActions' in buildOptions) {

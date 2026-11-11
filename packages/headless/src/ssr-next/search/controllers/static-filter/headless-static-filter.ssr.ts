@@ -4,14 +4,11 @@ import {
   type StaticFilter,
   type StaticFilterProps,
 } from '../../../../controllers/static-filter/headless-static-filter.js';
-import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
+import type {ControllerDefinition} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/static-filter/headless-static-filter.js';
 
-export interface StaticFilterDefinition extends ControllerDefinitionWithoutProps<
-  SearchEngine,
-  StaticFilter
-> {}
+export interface StaticFilterDefinition extends ControllerDefinition<SearchEngine, StaticFilter> {}
 
 /**
  * Defines a `StaticFilter` controller instance.

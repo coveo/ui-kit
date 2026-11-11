@@ -1,10 +1,10 @@
 import type {SearchEngine} from '../../../../app/search-engine/search-engine.js';
 import {buildTab, type Tab, type TabProps} from '../../../../controllers/tab/headless-tab.js';
-import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
+import type {ControllerDefinition} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/tab/headless-tab.js';
 
-export interface TabDefinition extends ControllerDefinitionWithoutProps<SearchEngine, Tab> {}
+export interface TabDefinition extends ControllerDefinition<SearchEngine, Tab> {}
 
 /**
  * Defines a `Tab` controller instance.

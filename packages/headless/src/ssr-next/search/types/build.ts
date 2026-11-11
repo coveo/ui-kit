@@ -1,6 +1,7 @@
 import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import type {LegacySearchAction} from '../../../features/analytics/analytics-utils.js';
+import type {ContextPayload} from '../../../features/context/context-state.js';
 import type {SearchParameterManagerInitialState} from '../controllers/search-parameter-manager/headless-search-parameter-manager.ssr.js';
 
 /**
@@ -17,9 +18,22 @@ export interface SSRSearchEngine extends SearchEngine {
 
 export type SearchCompletedAction = ReturnType<LegacySearchAction['fulfilled' | 'rejected']>;
 
+/**
+ * What a controller definition receives to build its controller for a request: the page facts passed
+ * to `fetchStaticState()`.
+ */
+export interface ControllerBuildContext {
+  buildConfig: BuildConfig;
+}
+
 export type BuildConfig = {
   navigatorContext: NavigatorContext;
   searchParams?: SearchParameterManagerInitialState['parameters'];
+  /**
+   * The custom context values of the request, such as the visitor's segment, fed to the `context`
+   * controller that every search engine definition includes.
+   */
+  context?: ContextPayload;
   /**
    * A per-request access token (for example, a per-user Coveo search token) to use for this
    * `fetchStaticState()` or `hydrateStaticState()` call only.

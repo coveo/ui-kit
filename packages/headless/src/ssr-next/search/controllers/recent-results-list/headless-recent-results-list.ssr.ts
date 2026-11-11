@@ -4,11 +4,11 @@ import {
   type RecentResultsList,
   type RecentResultsListProps,
 } from '../../../../controllers/recent-results-list/headless-recent-results-list.js';
-import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
+import type {ControllerDefinition} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/recent-results-list/headless-recent-results-list.js';
 
-export interface RecentResultsListDefinition extends ControllerDefinitionWithoutProps<
+export interface RecentResultsListDefinition extends ControllerDefinition<
   SearchEngine,
   RecentResultsList
 > {}

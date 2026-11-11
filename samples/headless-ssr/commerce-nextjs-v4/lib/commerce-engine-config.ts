@@ -61,6 +61,8 @@ export default {
     didYouMean: defineDidYouMean({enableResults: true}),
     facetGenerator: defineFacetGenerator(),
     breadcrumbManager: defineBreadcrumbManager(),
-    productEnrichment: defineProductEnrichment(),
+    productEnrichment: defineProductEnrichment({
+      options: {placementIds: ['70b493b2-a1f1-4049-ad70-16695cef39cd']},
+    }),
   },
 } satisfies CommerceEngineDefinitionOptions;

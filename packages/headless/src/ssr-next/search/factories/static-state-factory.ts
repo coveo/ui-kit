@@ -27,15 +27,10 @@ export function fetchStaticStateFactory<
       controllers,
     });
 
-    const {controllers: controllerProps, ...restParams} = params as {
-      controllers?: Record<string, unknown>;
-    } & typeof params;
-
     return {
-      ...restParams,
+      ...params,
       ...staticState,
       navigatorContext: toSerializableNavigatorContext(params.navigatorContext),
-      ...(controllerProps && {controllerProps}),
     };
   };
 }

@@ -3,14 +3,11 @@ import {
   buildQueryError,
   type QueryError,
 } from '../../../../controllers/query-error/headless-query-error.js';
-import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
+import type {ControllerDefinition} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/query-error/headless-query-error.js';
 
-export interface QueryErrorDefinition extends ControllerDefinitionWithoutProps<
-  SearchEngine,
-  QueryError
-> {}
+export interface QueryErrorDefinition extends ControllerDefinition<SearchEngine, QueryError> {}
 
 /**
  * Defines a `QueryError` controller instance.

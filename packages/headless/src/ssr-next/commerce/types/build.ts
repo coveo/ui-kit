@@ -29,6 +29,15 @@ export type RecommendationNames<TControllers extends ControllerDefinitionsMap<Co
         }[keyof TControllers]
       >;
 
+/**
+ * What a controller definition receives to build its controller for a request: the kind of page it is
+ * built for, and the page facts passed to `fetchStaticState()`.
+ */
+export interface ControllerBuildContext {
+  solutionType: SolutionType;
+  buildConfig: CommonBuildConfig;
+}
+
 export interface SearchBuildConfig<
   TControllers extends ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
 > extends CommonBuildConfig<TControllers> {

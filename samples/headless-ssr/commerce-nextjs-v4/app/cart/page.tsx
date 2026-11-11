@@ -32,13 +32,6 @@ export default async function Search() {
     context,
     navigatorContext,
     recommendations: ['popularBought'],
-    controllers: {
-      productEnrichment: {
-        options: {
-          placementIds: ['70b493b2-a1f1-4049-ad70-16695cef39cd'],
-        },
-      },
-    },
   });
   return (
     <StandaloneProvider staticState={staticState}>

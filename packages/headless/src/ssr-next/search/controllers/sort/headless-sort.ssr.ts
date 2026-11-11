@@ -1,10 +1,10 @@
 import type {SearchEngine} from '../../../../app/search-engine/search-engine.js';
 import {buildSort, type Sort, type SortProps} from '../../../../controllers/sort/headless-sort.js';
-import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
+import type {ControllerDefinition} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/sort/headless-sort.js';
 
-export interface SortDefinition extends ControllerDefinitionWithoutProps<SearchEngine, Sort> {}
+export interface SortDefinition extends ControllerDefinition<SearchEngine, Sort> {}
 
 /**
  * Defines a `Sort` controller instance.

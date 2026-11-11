@@ -1,6 +1,7 @@
 import {describe, expectTypeOf, it} from 'vitest';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
 import {defineDidYouMean} from '../controllers/did-you-mean/headless-did-you-mean.ssr.js';
+import {defineProductEnrichment} from '../controllers/product-enrichment/headless-product-enrichment.ssr.js';
 import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
@@ -20,6 +21,7 @@ const {listingEngineDefinition, searchEngineDefinition, standaloneEngineDefiniti
       didYouMean: defineDidYouMean(),
       popularViewed: defineRecommendations({options: {slotId: 'slot-viewed'}}),
       popularBought: defineRecommendations({options: {slotId: 'slot-bought'}}),
+      productEnrichment: defineProductEnrichment({options: {placementIds: ['placement-a']}}),
     },
   });
 
@@ -70,6 +72,15 @@ describe('defineCommerceEngine', () => {
     expectTypeOf<ListingFetchOptions['recommendations']>().toEqualTypeOf<SlotNames>();
     expectTypeOf<SearchFetchOptions['recommendations']>().toEqualTypeOf<SlotNames>();
     expectTypeOf<StandaloneFetchOptions['recommendations']>().toEqualTypeOf<SlotNames>();
+  });
+
+  it('should take page facts only, with no per-request controller props', () => {
+    expectTypeOf<ListingFetchOptions>().not.toHaveProperty('controllers');
+    expectTypeOf<StandaloneFetchOptions>().not.toHaveProperty('controllers');
+    expectTypeOf<ListingStaticState>().not.toHaveProperty('controllerProps');
+    expectTypeOf<ListingStaticState['controllers']['productList']>().not.toHaveProperty(
+      'initialState'
+    );
   });
 
   it('should accept the product ID on every engine definition', () => {

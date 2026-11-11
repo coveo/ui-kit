@@ -6,15 +6,11 @@ import {
   type CartProps,
   type CartState,
 } from '../../../../controllers/commerce/context/cart/headless-cart.js';
-import type {UniversalControllerDefinitionWithProps} from '../../types/controller-definitions.js';
+import type {UniversalControllerDefinition} from '../../types/controller-definitions.js';
 
 export type {Cart, CartInitialState, CartItem, CartProps, CartState};
 
-export interface CartBuildProps {
-  initialState: CartInitialState;
-}
-
-export type CartDefinition = UniversalControllerDefinitionWithProps<Cart, CartBuildProps>;
+export type CartDefinition = UniversalControllerDefinition<Cart>;
 
 /**
  * Defines a `Cart` controller instance.
@@ -22,17 +18,16 @@ export type CartDefinition = UniversalControllerDefinitionWithProps<Cart, CartBu
  *
  * @returns The `Cart` controller definition.
  *
- * Note: This controller is automatically included in all engine definitions. You do not need to add it manually to your engine definition configuration.
+ * Note: This controller is included in every engine definition and fed by the `cart` option of `fetchStaticState()`.
  */
 export function defineCart(): CartDefinition {
   return {
     listing: true,
     search: true,
     standalone: true,
-    buildWithProps: (engine, props) => {
-      return buildCart(engine, {
-        initialState: props ? props.initialState : {},
-      });
-    },
+    build: (engine, {buildConfig}) =>
+      buildCart(engine, {
+        initialState: buildConfig.cart ?? {},
+      }),
   };
 }

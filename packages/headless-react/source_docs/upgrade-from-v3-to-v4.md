@@ -261,11 +261,11 @@ Removals outside server-side rendering will be listed here.
 
 ### Server-side rendering
 
-| Removed                                                                                       | Replacement                                                                                                                                    |
-| --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `StaticStateProvider` and `HydratedStateProvider` on the search and commerce definitions      | The provider built with `buildProviderWithDefinition(definition)`                                                                              |
-| `setNavigatorContextProvider()`                                                               | `navigatorContext` option of `fetchStaticState()`                                                                                              |
-| `navigatorContext` and `accessToken` props of the commerce provider                           | None: the static state carries both to `hydrateStaticState()`                                                                                  |
-| `recommendationEngineDefinition` and its provider                                             | `recommendations` option of the page's `fetchStaticState()`; the page's provider                                                               |
-| `useContext`                                                                                  | `useCommerceContext` <!-- decided 2026-10-21, not yet built -->                                                                                |
-| The `use<Name>` hook of a `searchParameterManager: defineSearchParameterManager()` controller | `useParameterManager`, from the `parameterManager` controller that every search definition includes <!-- decided 2026-10-21, not yet built --> |
+| Removed                                                                                       | Replacement                                                                                         |
+| --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `StaticStateProvider` and `HydratedStateProvider` on the search and commerce definitions      | The provider built with `buildProviderWithDefinition(definition)`                                   |
+| `setNavigatorContextProvider()`                                                               | `navigatorContext` option of `fetchStaticState()`                                                   |
+| `navigatorContext` and `accessToken` props of the commerce provider                           | None: the static state carries both to `hydrateStaticState()`                                       |
+| `recommendationEngineDefinition` and its provider                                             | `recommendations` option of the page's `fetchStaticState()`; the page's provider                    |
+| `useContext`                                                                                  | `useCommerceContext` <!-- decided 2026-10-21, not yet built -->                                     |
+| The `use<Name>` hook of a `searchParameterManager: defineSearchParameterManager()` controller | `useParameterManager`, from the `parameterManager` controller that every search definition includes |
