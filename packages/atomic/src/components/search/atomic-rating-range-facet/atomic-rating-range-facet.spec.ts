@@ -98,7 +98,7 @@ describe('atomic-rating-range-facet', () => {
         return page.getByRole('listitem').nth(valuePosition);
       },
       get clearButton() {
-        return page.getByLabelText(/Clear \d+ filter for the Rating facet/);
+        return page.getByLabelText(/Clear (\d+ )?filters? for the Rating facet/);
       },
       get facetValues() {
         return page.getByRole('listitem');
