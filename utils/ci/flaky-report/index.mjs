@@ -14,6 +14,7 @@ import {join} from 'node:path';
 import {parseArgs} from 'node:util';
 import {Octokit} from 'octokit';
 import {DAY_IN_MS, REPO_NAME, REPO_OWNER} from '../common/constants.mjs';
+import {readQuarantine} from '../quarantine.mjs';
 import {
   collectMergeQueueFailures,
   collectRecords,
@@ -68,8 +69,14 @@ function within({start, end}, collected) {
     recoveries: collected.recoveries.filter(inRuns),
     mergeQueueFailures: collected.mergeQueueFailures.filter(inRuns),
     skips: collected.skips,
+    quarantine: collected.quarantine,
   };
 }
+
+// Read first, so a pull request that breaks the list fails before the long collection.
+const quarantine = readQuarantine(
+  execFileSync('git', ['rev-parse', '--show-toplevel'], {encoding: 'utf8'}).trim()
+);
 
 const github = {
   // GitHub answers 502 in bursts of a minute or two; the default three retries wait 14 seconds in all.
@@ -107,9 +114,9 @@ const [records, recoveries, mergeQueueFailures] = await Promise.all([
 ]);
 const skips = collectSkips();
 console.log(
-  `${runs.length} runs, ${records.length} records, ${recoveries.length} re-run recoveries, ${mergeQueueFailures.length} merge-queue failures, ${skips.length} skipped tests.`
+  `${runs.length} runs, ${records.length} records, ${recoveries.length} re-run recoveries, ${mergeQueueFailures.length} merge-queue failures, ${skips.length} skipped tests, ${quarantine.length} quarantined tests.`
 );
-const collected = {runs, records, recoveries, mergeQueueFailures, skips};
+const collected = {runs, records, recoveries, mergeQueueFailures, skips, quarantine};
 
 const report = renderReport(buildModel(within(window, collected)), {
   ref: process.env.GITHUB_SHA ?? 'main',
