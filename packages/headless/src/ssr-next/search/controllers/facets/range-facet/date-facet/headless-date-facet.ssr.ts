@@ -4,14 +4,11 @@ import {
   type DateFacet,
   type DateFacetProps,
 } from '../../../../../../controllers/facets/range-facet/date-facet/headless-date-facet.js';
-import type {ControllerDefinitionWithoutProps} from '../../../../types/controller-definition.js';
+import type {ControllerDefinition} from '../../../../types/controller-definition.js';
 
 export * from '../../../../../../controllers/facets/range-facet/date-facet/headless-date-facet.js';
 
-export interface DateFacetDefinition extends ControllerDefinitionWithoutProps<
-  SearchEngine,
-  DateFacet
-> {}
+export interface DateFacetDefinition extends ControllerDefinition<SearchEngine, DateFacet> {}
 
 /**
  * Defines a `DateFacet` controller instance.

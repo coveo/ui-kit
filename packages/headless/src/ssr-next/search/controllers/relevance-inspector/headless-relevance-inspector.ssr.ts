@@ -4,11 +4,11 @@ import {
   type RelevanceInspector,
   type RelevanceInspectorProps,
 } from '../../../../controllers/relevance-inspector/headless-relevance-inspector.js';
-import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
+import type {ControllerDefinition} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/relevance-inspector/headless-relevance-inspector.js';
 
-export interface RelevanceInspectorDefinition extends ControllerDefinitionWithoutProps<
+export interface RelevanceInspectorDefinition extends ControllerDefinition<
   SearchEngine,
   RelevanceInspector
 > {}

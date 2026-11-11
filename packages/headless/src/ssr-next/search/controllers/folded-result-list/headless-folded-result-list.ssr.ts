@@ -4,11 +4,11 @@ import {
   type FoldedResultList,
   type FoldedResultListProps,
 } from '../../../../controllers/folded-result-list/headless-folded-result-list.js';
-import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
+import type {ControllerDefinition} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/folded-result-list/headless-folded-result-list.js';
 
-export interface FoldedResultListDefinition extends ControllerDefinitionWithoutProps<
+export interface FoldedResultListDefinition extends ControllerDefinition<
   SearchEngine,
   FoldedResultList
 > {}

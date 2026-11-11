@@ -4,14 +4,11 @@ import {
   type SearchBox,
   type SearchBoxProps,
 } from '../../../../controllers/search-box/headless-search-box.js';
-import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
+import type {ControllerDefinition} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/search-box/headless-search-box.js';
 
-export interface SearchBoxDefinition extends ControllerDefinitionWithoutProps<
-  SearchEngine,
-  SearchBox
-> {}
+export interface SearchBoxDefinition extends ControllerDefinition<SearchEngine, SearchBox> {}
 
 /**
  * Defines a `SearchBox` controller instance.

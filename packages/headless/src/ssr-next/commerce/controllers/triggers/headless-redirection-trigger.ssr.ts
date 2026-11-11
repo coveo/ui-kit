@@ -3,12 +3,11 @@ import type {
   RedirectionTrigger,
   RedirectionTriggerState,
 } from '../../../../controllers/core/triggers/headless-core-redirection-trigger.js';
-import type {SearchOnlyControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
+import type {SearchOnlyControllerDefinition} from '../../types/controller-definitions.js';
 
 export type {RedirectionTrigger, RedirectionTriggerState};
 
-export type RedirectionTriggerDefinition =
-  SearchOnlyControllerDefinitionWithoutProps<RedirectionTrigger>;
+export type RedirectionTriggerDefinition = SearchOnlyControllerDefinition<RedirectionTrigger>;
 
 /**
  * Defines the `RedirectionTrigger` controller for the purpose of server-side rendering.

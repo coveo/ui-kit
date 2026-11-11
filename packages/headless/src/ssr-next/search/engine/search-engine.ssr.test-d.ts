@@ -1,5 +1,6 @@
 import {describe, expectTypeOf, it} from 'vitest';
 import {getSampleSearchEngineConfiguration} from '../../../app/search-engine/search-engine-configuration.js';
+import type {ContextPayload} from '../../../features/context/context-state.js';
 import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import type {EngineDefinition} from '../../common/types/engine.js';
 import {defineResultList} from '../controllers/result-list/headless-result-list.ssr.js';
@@ -56,6 +57,14 @@ describe('defineSearchEngine', () => {
     defineSearchEngine({...options, controllers: {searchBox: defineSearchBox()}});
   });
 
+  it('should take page facts only, with the custom context as one of them', () => {
+    type SearchFetchOptions = Parameters<typeof searchEngineDefinition.fetchStaticState>[0];
+    expectTypeOf<SearchFetchOptions['context']>().toEqualTypeOf<ContextPayload | undefined>();
+    expectTypeOf<SearchFetchOptions>().not.toHaveProperty('controllers');
+    expectTypeOf<SearchStaticState>().not.toHaveProperty('controllerProps');
+    expectTypeOf<SearchStaticState['controllers']>().toHaveProperty('context');
+  });
+
   it('should list the defined controllers and the parameter manager in the static state', () => {
     expectTypeOf<SearchStaticState['controllers']>().toHaveProperty('searchBox');
     expectTypeOf<SearchStaticState['controllers']>().toHaveProperty('resultList');
@@ -92,8 +101,8 @@ describe('the static and hydrated states of a search engine definition', () => {
     expectTypeOf(readParameterManager).toBeFunction();
   });
 
-  it('should name exactly the defined controllers and the baked-in parameter manager', () => {
-    type ControllerNames = 'searchBox' | 'resultList' | 'parameterManager';
+  it('should name exactly the defined controllers and the baked-in parameter manager and context', () => {
+    type ControllerNames = 'searchBox' | 'resultList' | 'parameterManager' | 'context';
     expectTypeOf<keyof SearchHydratedState['controllers']>().toEqualTypeOf<ControllerNames>();
     expectTypeOf<keyof SearchStaticState['controllers']>().toEqualTypeOf<ControllerNames>();
   });
@@ -108,7 +117,7 @@ describe('SearchEngineDefinitionOptions', () => {
     const {searchEngineDefinition: definition} = defineSearchEngine(config);
 
     expectTypeOf<keyof InferHydratedState<typeof definition>['controllers']>().toEqualTypeOf<
-      'searchBox' | 'parameterManager'
+      'searchBox' | 'parameterManager' | 'context'
     >();
     expectTypeOf<{searchBox: number}>().not.toExtend<
       NonNullable<SearchEngineDefinitionOptions['controllers']>

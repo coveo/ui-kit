@@ -7,7 +7,7 @@ import {
   type SearchBoxState,
   type Suggestion,
 } from '../../../../controllers/commerce/search-box/headless-search-box.js';
-import type {SearchOnlyControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
+import type {SearchOnlyControllerDefinition} from '../../types/controller-definitions.js';
 
 export type {
   CoreSearchBox,
@@ -18,7 +18,7 @@ export type {
   Suggestion,
 };
 
-export type SearchBoxDefinition = SearchOnlyControllerDefinitionWithoutProps<SearchBox>;
+export type SearchBoxDefinition = SearchOnlyControllerDefinition<SearchBox>;
 
 /**
  * Defines a `SearchBox` controller instance.
