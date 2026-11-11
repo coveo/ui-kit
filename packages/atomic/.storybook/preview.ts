@@ -35,6 +35,9 @@ setCustomElementsManifest(customElements);
 setStorybookHelpersConfig({
   categoryOrder: ['attributes', 'cssParts', 'cssProps', 'cssStates', 'events', 'methods', 'slots'],
   hideArgRef: true,
+  // The observer pushes attribute changes such as is-collapsed into args, and the re-render it
+  // triggers can land after a later interaction and revert it, which makes e2e tests flaky.
+  disableArgObserver: isPlaywrightBuild,
 });
 
 const preview: Preview = {
