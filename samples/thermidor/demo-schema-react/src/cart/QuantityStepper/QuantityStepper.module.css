@@ -1,5 +1,4 @@
 .stepper {
-  --control-height: 2rem;
   position: relative;
   display: flex;
   align-items: center;
@@ -9,8 +8,8 @@
 
 .stepper button {
   box-sizing: border-box;
-  width: var(--control-height);
-  height: var(--control-height);
+  width: var(--control-height, 2rem);
+  height: var(--control-height, 2rem);
   padding: 0;
   border: 1px solid var(--color-primary);
   border-radius: var(--radius-md);
@@ -48,11 +47,12 @@
 }
 
 .compact {
-  --control-height: 1.5rem;
   gap: var(--space-1);
 }
 
 .compact button {
+  width: var(--control-height, 1.5rem);
+  height: var(--control-height, 1.5rem);
   font-size: var(--font-size-sm);
 }
 
