@@ -65,11 +65,21 @@ function buildControllerHook(
 export function buildControllerHooks(
   singletonContext: EngineContext,
   controllersMap: Record<string, object> = {},
-  getSupportedSolutionTypes: (definition: object) => string[] = () => []
+  {
+    getSupportedSolutionTypes = () => [],
+    hookNames = {},
+  }: {
+    getSupportedSolutionTypes?: (definition: object) => string[];
+    /**
+     * The hooks not named `use<Name>` after their controller, such as the built-in `context`
+     * controller, whose hook must not shadow React's `useContext`.
+     */
+    hookNames?: Record<string, string>;
+  } = {}
 ) {
   return Object.fromEntries(
     Object.entries(controllersMap).map(([key, definition]) => [
-      `use${capitalize(key)}`,
+      hookNames[key] ?? `use${capitalize(key)}`,
       buildControllerHook(singletonContext, key, getSupportedSolutionTypes(definition)),
     ])
   );

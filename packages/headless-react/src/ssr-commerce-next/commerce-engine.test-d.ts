@@ -27,7 +27,8 @@ describe('defineCommerceEngine', () => {
     expectTypeOf(controllers).toHaveProperty('useProductList');
     expectTypeOf(controllers).toHaveProperty('usePopularViewed');
     expectTypeOf(controllers).toHaveProperty('useCart');
-    expectTypeOf(controllers).toHaveProperty('useContext');
+    expectTypeOf(controllers).toHaveProperty('useCommerceContext');
+    expectTypeOf(controllers).not.toHaveProperty('useContext');
     expectTypeOf(controllers).toHaveProperty('useParameterManager');
     expectTypeOf(controllers.useProductList).returns.toHaveProperty('state');
     expectTypeOf(controllers.useProductList).returns.toHaveProperty('methods');

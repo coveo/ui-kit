@@ -32,14 +32,23 @@ export type ControllerHook<TController extends Controller> = () => {
 };
 
 /**
- * The hooks of an engine definition: one `use<Name>` hook per controller.
+ * The name of a controller's hook: `use<Name>`, except for the built-in `context` controller, whose
+ * hook is `useSearchContext` so that it does not shadow React's own `useContext`.
+ */
+type ControllerHookName<K> = K extends 'context'
+  ? 'useSearchContext'
+  : `use${Capitalize<K extends string ? K : never>}`;
+
+/**
+ * The hooks of an engine definition: one `use<Name>` hook per controller, with `useSearchContext`
+ * for the built-in `context` controller.
  *
  * @group Hooks
  */
 export type InferControllerHooksMapFromDefinition<
   TControllers extends SearchControllerDefinitionsMap,
 > = {
-  [K in keyof TControllers as `use${Capitalize<K extends string ? K : never>}`]: ControllerHook<
+  [K in keyof TControllers as ControllerHookName<K>]: ControllerHook<
     InferControllerFromDefinition<TControllers[K]>
   >;
 };

@@ -31,11 +31,10 @@ export function buildControllerHooks<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 >(singletonContext: CommerceContext<TControllers, TSolutionType>, controllersMap?: TControllers) {
-  return buildSharedControllerHooks(
-    singletonContext as unknown as EngineContext,
-    controllersMap,
-    supportedSolutionTypes
-  ) as InferControllerHooksMapFromDefinition<TControllers>;
+  return buildSharedControllerHooks(singletonContext as unknown as EngineContext, controllersMap, {
+    getSupportedSolutionTypes: supportedSolutionTypes,
+    hookNames: {context: 'useCommerceContext'},
+  }) as InferControllerHooksMapFromDefinition<TControllers>;
 }
 
 export function buildEngineHook<
