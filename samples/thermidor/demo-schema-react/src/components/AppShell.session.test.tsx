@@ -11,6 +11,8 @@ import {
   type ConverseHandler,
 } from '../test/session.js';
 
+vi.mock('./TopBar/TopBar.js', () => ({TopBar: () => null}));
+
 afterEach(() => {
   vi.unstubAllGlobals();
 });

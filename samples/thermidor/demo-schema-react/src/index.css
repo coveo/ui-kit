@@ -63,7 +63,7 @@
   --radius-lg: 12px;
 
   /* Layout */
-  --header-height: 84px;
+  --header-height: 64px;
 
   /* Breakpoints (aligned with @coveo/atomic) */
   --breakpoint-sm: 640px;
@@ -95,12 +95,16 @@ body {
 }
 
 .view-shell {
+  display: flex;
+  flex-direction: column;
   height: 100%;
 }
 
 .view-panel {
   display: none;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .view-panel--active {
