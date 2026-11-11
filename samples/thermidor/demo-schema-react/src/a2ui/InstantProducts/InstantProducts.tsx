@@ -6,6 +6,8 @@ import {
   ActiveAsideOptionContext,
   ASIDE_LISTBOX_ID,
 } from '../../components/SuggestionsDropdown/index.js';
+import {AddToCartControl} from '../../cart/AddToCartControl/AddToCartControl.js';
+import {CartStoreContext} from '../../cart/CartProvider.js';
 import {useMediaQuery} from '../../hooks/use-media-query.js';
 import {formatPrice} from '../../utils.js';
 import {useSearchBoxQuery} from '../SearchBox/search-box-context.js';
@@ -141,6 +143,7 @@ function PanelHeader({title}: {title: string}) {
 
 function ProductList({products, id}: {products: InstantProduct[]; id?: string}) {
   const activeOptionId = useContext(ActiveAsideOptionContext);
+  const hasCart = useContext(CartStoreContext) !== null;
   return (
     <div id={id} className={styles.list} role="listbox" aria-label="Instant products">
       {products.map((product) => {
@@ -151,22 +154,43 @@ function ProductList({products, id}: {products: InstantProduct[]; id?: string}) 
         return (
           <div
             key={product.permanentid}
-            id={optionId}
             className={`${styles.row} ${active ? styles.active : ''}`}
-            role="option"
-            aria-selected={active}
-            onClick={() => openProduct(product)}
+            role="presentation"
           >
-            {image ? (
-              <img className={styles.image} src={image} alt="" loading="lazy" />
-            ) : (
-              <div className={styles.image} />
-            )}
-            <div className={styles.content}>
-              <span className={styles.name}>{product.ec_name}</span>
-              {product.ec_brand && <span className={styles.brand}>{product.ec_brand}</span>}
+            <div
+              id={optionId}
+              className={styles.option}
+              role="option"
+              aria-selected={active}
+              onClick={() => openProduct(product)}
+            >
+              {image ? (
+                <img className={styles.image} src={image} alt="" loading="lazy" />
+              ) : (
+                <div className={styles.image} />
+              )}
+              <div className={styles.content}>
+                <span className={styles.name}>{product.ec_name}</span>
+                <span className={styles.details}>
+                  {price !== undefined && (
+                    <span className={styles.price}>{formatPrice(price)}</span>
+                  )}
+                  {product.ec_brand && <span className={styles.brand}>{product.ec_brand}</span>}
+                </span>
+              </div>
             </div>
-            {price !== undefined && <span className={styles.price}>{formatPrice(price)}</span>}
+            {hasCart && (
+              <AddToCartControl
+                size="compact"
+                product={{
+                  productId: product.permanentid,
+                  name: product.ec_name,
+                  imageUrl: image,
+                  clickUri: product.clickUri,
+                  unitPrice: price,
+                }}
+              />
+            )}
           </div>
         );
       })}

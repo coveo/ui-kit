@@ -1,6 +1,8 @@
 import {act, fireEvent, screen, waitFor} from '@testing-library/react';
 import {afterEach, describe, expect, it, vi} from 'vitest';
+import {CartProvider} from '../../cart/CartProvider.js';
 import {SessionSearchBox} from '../../components/SessionSearchBox/SessionSearchBox.js';
+import {createFakeCartStore, type FakeCartStore} from '../../test/fake-cart-store.js';
 import {
   answerInstantProductsShell,
   createTestSession,
@@ -39,12 +41,17 @@ const pause = () =>
 async function renderSearchBox({
   wide = true,
   handler = answerInstantProductsShell,
-}: {wide?: boolean; handler?: ConverseHandler} = {}) {
+  cart,
+}: {wide?: boolean; handler?: ConverseHandler; cart?: FakeCartStore} = {}) {
   stubScreen({wide});
   const onSubmit = vi.fn();
   const test = createTestSession(handler);
   const dispatchAction = vi.spyOn(test.session, 'dispatchAction');
-  renderWithSession(<SessionSearchBox onSubmit={onSubmit} busy={false} />, test.session);
+  const searchBox = <SessionSearchBox onSubmit={onSubmit} busy={false} />;
+  renderWithSession(
+    cart ? <CartProvider store={cart}>{searchBox}</CartProvider> : searchBox,
+    test.session
+  );
   const textarea = await findSearchBox();
   textarea.focus();
   const type = (value: string) => fireEvent.change(textarea, {target: {value}});
@@ -344,5 +351,113 @@ describe('InstantProducts keyboard navigation', () => {
 
     expect(fireEvent.keyDown(textarea, {key: 'ArrowRight'})).toBe(true);
     expect(textarea.getAttribute('aria-activedescendant')).toBe('suggestion-item-completion-0');
+  });
+});
+
+describe('InstantProducts add to cart', () => {
+  const PRICE = 25;
+  const answerPricedProducts: ConverseHandler = (request) =>
+    request.action?.name === 'fetchInstantProducts'
+      ? sseResponse(
+          instantProductsRun(
+            SHELL_SURFACE_ID,
+            String(request.action.context['query']),
+            ['board', 'leash'],
+            PRICE
+          )
+        )
+      : answerInstantProductsShell(request);
+  const productOption = (name: string) =>
+    screen
+      .getAllByRole('option')
+      .find((option) => option.id === `instant-product-${name}`) as HTMLElement;
+
+  async function renderWithCart(cart = createFakeCartStore()) {
+    const rendered = await renderSearchBox({handler: answerPricedProducts, cart});
+    rendered.type('surf');
+    await waitFor(() => expect(productsShown()).toBe('Products for surf boards'));
+    return {...rendered, cart};
+  }
+
+  function press(button: HTMLElement) {
+    fireEvent.pointerDown(button);
+    fireEvent.mouseDown(button);
+    fireEvent.mouseUp(button);
+    fireEvent.click(button);
+  }
+
+  it('shows a control beside each product option, not inside it', async () => {
+    await renderWithCart();
+
+    const button = screen.getByRole('button', {name: 'Add to cart, board'});
+    const option = productOption('board');
+    expect(option.contains(button)).toBe(false);
+    expect(option.parentElement?.contains(button)).toBe(true);
+    expect(option.parentElement?.getAttribute('role')).toBe('presentation');
+  });
+
+  it('adds the product without opening it, closing the popover or taking the focus', async () => {
+    const open = vi.fn();
+    vi.stubGlobal('open', open);
+    const {cart, textarea} = await renderWithCart();
+
+    press(screen.getByRole('button', {name: 'Add to cart, board'}));
+
+    expect(cart.add).toHaveBeenCalledWith(
+      {
+        productId: 'board',
+        name: 'board',
+        imageUrl: undefined,
+        clickUri: 'https://example.com/board',
+        unitPrice: PRICE,
+      },
+      1
+    );
+    expect(open).not.toHaveBeenCalled();
+    expect(document.activeElement).toBe(textarea);
+    expect(productsShown()).toBe('Products for surf boards');
+  });
+
+  it('leaves the highlighted option alone when the control is hovered or pressed', async () => {
+    vi.stubGlobal('open', vi.fn());
+    const {textarea} = await renderWithCart();
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    fireEvent.keyDown(textarea, {key: 'ArrowRight'});
+    expect(textarea.getAttribute('aria-activedescendant')).toBe('instant-product-board');
+
+    const button = screen.getByRole('button', {name: 'Add to cart, leash'});
+    fireEvent.pointerEnter(button);
+    fireEvent.mouseEnter(button);
+    fireEvent.mouseOver(button);
+    press(button);
+
+    expect(textarea.getAttribute('aria-activedescendant')).toBe('instant-product-board');
+    expect(productOption('board').getAttribute('aria-selected')).toBe('true');
+    expect(productOption('leash').getAttribute('aria-selected')).toBe('false');
+  });
+
+  it('keeps the arrow keys and Enter on the product options', async () => {
+    const open = vi.fn();
+    vi.stubGlobal('open', open);
+    const {textarea, cart} = await renderWithCart();
+
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    fireEvent.keyDown(textarea, {key: 'ArrowRight'});
+    expect(textarea.getAttribute('aria-activedescendant')).toBe('instant-product-board');
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    expect(textarea.getAttribute('aria-activedescendant')).toBe('instant-product-leash');
+    expect(productOption('leash').getAttribute('aria-selected')).toBe('true');
+    fireEvent.keyDown(textarea, {key: 'Enter'});
+
+    expect(open).toHaveBeenCalledWith('https://example.com/leash', '_blank', 'noopener,noreferrer');
+    expect(cart.add).not.toHaveBeenCalled();
+  });
+
+  it('shows no control outside a cart', async () => {
+    const {type} = await renderSearchBox({handler: answerPricedProducts});
+    type('surf');
+    await waitFor(() => expect(productsShown()).toBe('Products for surf boards'));
+
+    expect(screen.queryByRole('button', {name: /cart/})).toBeNull();
   });
 });

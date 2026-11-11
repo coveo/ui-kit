@@ -139,7 +139,12 @@ function instantProductsShellRun(surfaceId = SHELL_SURFACE_ID): object[] {
 }
 
 /** The run a producer answers `fetchInstantProducts` with: the products named `names`, for `query`. */
-export function instantProductsRun(surfaceId: string, query: string, names: string[]): object[] {
+export function instantProductsRun(
+  surfaceId: string,
+  query: string,
+  names: string[],
+  price?: number
+): object[] {
   return run([
     {
       version: 'v1.0',
@@ -152,6 +157,7 @@ export function instantProductsRun(surfaceId: string, query: string, names: stri
             permanentid: name,
             ec_name: name,
             clickUri: `https://example.com/${encodeURIComponent(name)}`,
+            ...(price !== undefined && {ec_price: price}),
             additionalFields: {},
           })),
         },

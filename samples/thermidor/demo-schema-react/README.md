@@ -139,6 +139,8 @@ The session sends `initialize` as soon as it is created, and the producer answer
 
 The dropdown follows Atomic commerce's search box, keyboard navigation included.
 
+Each instant product row has a compact add-to-cart control beside its option. It is pointer-only (focus stays in the search input, which drives the listbox via `aria-activedescendant`), so keyboard users add products from the product cards; axe flags its buttons inside the listbox (`aria-required-children`).
+
 ### Search blocks (decomposed commerce)
 
 A gateway search block is a decomposed commerce-search surface, drawn in the feed through the same renderer pipeline every other surface uses. The layout lives entirely on the A2-UI composition plane: the `commerce-search` root composes two `layout-stack` columns, and each generic `layout-stack` mounts its own children (in a column or row) by id.
