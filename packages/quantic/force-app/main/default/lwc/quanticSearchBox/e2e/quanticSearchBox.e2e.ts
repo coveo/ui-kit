@@ -41,21 +41,21 @@ useCaseTestCases.forEach((useCase) => {
             useCase.value === 'insight' ? 'InsightPanel' : 'Search';
           const searchBoxInput = searchBox.searchBoxInput;
           const searchRequestPromise = search.waitForSearchRequest();
+          const searchLegacyAnalyticsPromise =
+            analytics.mode === AnalyticsModeEnum.legacy
+              ? searchBox.waitForSearchLegacyAnalytics({
+                  queryText: testQuery,
+                  originContext: expectedOriginContext,
+                })
+              : undefined;
 
           await searchBoxInput.fill(testQuery);
           await searchBoxInput.press('Enter');
 
-          if (analytics.mode === AnalyticsModeEnum.legacy) {
-            const searchLegacyAnalyticsPromise =
-              searchBox.waitForSearchLegacyAnalytics({
-                queryText: testQuery,
-                originContext: expectedOriginContext,
-              });
-
+          if (searchLegacyAnalyticsPromise) {
             await searchRequestPromise;
             await searchLegacyAnalyticsPromise;
           } else {
-            await searchRequestPromise;
             const searchRequestBody = (
               await searchRequestPromise
             ).postDataJSON();
