@@ -71,11 +71,21 @@ function buildControllerHook<TEngine>(
 export function buildControllerHooks<TEngine>(
   singletonContext: EngineContext<TEngine>,
   controllersMap: Readonly<Record<string, unknown>> = {},
-  getSupportedSolutionTypes: (definition: unknown) => string[] = () => []
+  {
+    getSupportedSolutionTypes = () => [],
+    hookNames = {},
+  }: {
+    getSupportedSolutionTypes?: (definition: unknown) => string[];
+    /**
+     * The hooks not named `use<Name>` after their controller, such as the built-in `context`
+     * controller, whose hook must not shadow React's `useContext`.
+     */
+    hookNames?: Readonly<Record<string, string>>;
+  } = {}
 ) {
   return Object.fromEntries(
     Object.entries(controllersMap).map(([key, definition]) => [
-      `use${capitalize(key)}`,
+      hookNames[key] ?? `use${capitalize(key)}`,
       buildControllerHook(singletonContext, key, getSupportedSolutionTypes(definition)),
     ])
   );

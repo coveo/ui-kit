@@ -82,11 +82,10 @@ export function defineCommerceEngine<TControllers extends ControllerDefinitionsM
   return {
     useEngine: buildEngineHook(singletonContext),
     useHydration: buildHydrationHook(singletonContext),
-    controllers: buildControllerHooks(
-      singletonContext,
-      controllerDefinitions,
-      getSupportedSolutionTypes
-    ) as InferControllerHooksMapFromDefinition<AugmentedControllerDefinition<TControllers>>,
+    controllers: buildControllerHooks(singletonContext, controllerDefinitions, {
+      getSupportedSolutionTypes,
+      hookNames: {context: 'useCommerceContext'},
+    }) as InferControllerHooksMapFromDefinition<AugmentedControllerDefinition<TControllers>>,
     listingEngineDefinition: {
       ...listingEngineDefinition,
       StateProvider: buildStateProvider(singletonContext, SolutionType.listing),
