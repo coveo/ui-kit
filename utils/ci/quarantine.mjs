@@ -4,7 +4,8 @@
 //   {"file": "<path from the repository root>", "title": "<describe › test>", "project": "<optional>",
 //    "bug": "KIT-1234", "added": "2026-11-16", "expires": "2026-12-16"}
 // An entry without a project covers every Playwright project. From its expiry date, the test blocks
-// again.
+// again. On the pull request that adds an entry, the report's dry run also checks that CI runs
+// prove the test flaky (see flaky-report/entry.mjs).
 import {existsSync, readFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {DAY_IN_MS} from './common/constants.mjs';

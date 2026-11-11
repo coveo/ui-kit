@@ -4,6 +4,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {DAY_IN_MS} from '../common/constants.mjs';
 import {parseRecordName} from '../playwright-record-reporter.mjs';
+import {QUARANTINE_FILE} from '../quarantine.mjs';
 
 const WORKFLOW = 'ci.yml';
 const CONCURRENCY = 6;
@@ -286,4 +287,15 @@ export function collectSkips() {
       ticket: findTicket(source.slice(Math.max(0, line - 4), line).join('\n')),
     };
   });
+}
+
+/**
+ * Reads the base branch's quarantine.json, on the last commit of that branch that the checked-out
+ * commit contains. A missing list is empty.
+ */
+export function collectBaseQuarantine(baseBranch) {
+  const repositoryRoot = git('.', ['rev-parse', '--show-toplevel']).trim();
+  const base = git(repositoryRoot, ['merge-base', 'HEAD', `origin/${baseBranch}`]).trim();
+  const listed = git(repositoryRoot, ['ls-tree', '--name-only', base, '--', QUARANTINE_FILE]);
+  return listed ? JSON.parse(git(repositoryRoot, ['show', `${base}:${QUARANTINE_FILE}`])) : [];
 }

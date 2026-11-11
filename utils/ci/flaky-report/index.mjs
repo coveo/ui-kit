@@ -8,20 +8,24 @@
 // Sunday at 11:00 UTC, when the report is scheduled, so a late run saves the same week. --week-end
 // YYYY-MM-DD saves the week that ended on or before that day instead, if that week started in the
 // last 15 days, while its records still exist.
+// In a pull request, it also fails when quarantine.json gains a test that the past 14 days of CI
+// runs don't prove flaky.
 import {execFileSync} from 'node:child_process';
 import {appendFileSync, mkdirSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {parseArgs} from 'node:util';
 import {Octokit} from 'octokit';
 import {DAY_IN_MS, REPO_NAME, REPO_OWNER} from '../common/constants.mjs';
-import {readQuarantine} from '../quarantine.mjs';
+import {QUARANTINE_FILE, readQuarantine} from '../quarantine.mjs';
 import {
+  collectBaseQuarantine,
   collectMergeQueueFailures,
   collectRecords,
   collectRecoveries,
   collectSkips,
   listRuns,
 } from './collect.mjs';
+import {addedEntries, PROVEN_FLAKY, unprovenEntries} from './entry.mjs';
 import {findReportIssue, ISSUE_TITLE, publishReport} from './issue.mjs';
 import {buildModel, buildSnapshot, renderReport} from './report.mjs';
 
@@ -77,6 +81,12 @@ function within({start, end}, collected) {
 const quarantine = readQuarantine(
   execFileSync('git', ['rev-parse', '--show-toplevel'], {encoding: 'utf8'}).trim()
 );
+// GitHub names the base branch in a pull request only.
+const baseBranch = process.env.GITHUB_BASE_REF;
+const added = baseBranch ? addedEntries(quarantine, collectBaseQuarantine(baseBranch)) : [];
+if (baseBranch) {
+  console.log(`Quarantine entries added since ${baseBranch}: ${added.length}.`);
+}
 
 const github = {
   // GitHub answers 502 in bursts of a minute or two; the default three retries wait 14 seconds in all.
@@ -117,8 +127,9 @@ console.log(
   `${runs.length} runs, ${records.length} records, ${recoveries.length} re-run recoveries, ${mergeQueueFailures.length} merge-queue failures, ${skips.length} skipped tests, ${quarantine.length} quarantined tests.`
 );
 const collected = {runs, records, recoveries, mergeQueueFailures, skips, quarantine};
+const lastDays = within(window, collected);
 
-const report = renderReport(buildModel(within(window, collected)), {
+const report = renderReport(buildModel(lastDays), {
   ref: process.env.GITHUB_SHA ?? 'main',
 });
 
@@ -147,4 +158,11 @@ if (options.snapshot) {
     appendFileSync(process.env.GITHUB_OUTPUT, `snapshot=${name}\n`);
   }
   console.log(`Wrote ${file}`);
+}
+
+const unproven = unprovenEntries(added, lastDays);
+if (unproven.length > 0) {
+  throw new Error(
+    `${QUARANTINE_FILE} adds a test that the past ${WINDOW_DAYS} days of CI runs don't prove flaky. ${PROVEN_FLAKY}\n- ${unproven.join('\n- ')}`
+  );
 }
