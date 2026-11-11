@@ -35,10 +35,6 @@ setCustomElementsManifest(customElements);
 setStorybookHelpersConfig({
   categoryOrder: ['attributes', 'cssParts', 'cssProps', 'cssStates', 'events', 'methods', 'slots'],
   hideArgRef: true,
-  // The arg observer syncs reflected attributes back to the Controls panel through an async story
-  // re-render. Under automation, that re-render can land after the next interaction and re-apply a
-  // stale value (e.g. collapse a facet the test just expanded).
-  disableArgObserver: navigator.webdriver,
 });
 
 const preview: Preview = {
