@@ -205,6 +205,51 @@ describe('fetchStaticStateFactory', () => {
     });
   });
 
+  describe('results flag of the definition', () => {
+    it('should execute the first listing request with the listing flag when no controller executes it', async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
+      const factory = fetchStaticStateFactory(definition, {
+        ...mockEngineOptions,
+        enableResults: {listing: true},
+      });
+
+      await factory(SolutionType.listing)({
+        navigatorContext: mockNavigatorContext,
+        context: mockContext,
+      });
+
+      expect(buildProductListing).toHaveBeenCalledWith(mockEngine, {enableResults: true});
+    });
+
+    it('should execute the first search with the search flag when no controller executes it', async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
+      const factory = fetchStaticStateFactory(definition, {
+        ...mockEngineOptions,
+        enableResults: true,
+      });
+
+      await factory(SolutionType.search)({
+        navigatorContext: mockNavigatorContext,
+        context: mockContext,
+        searchParams: {q: 'test'},
+      });
+
+      expect(buildSearch).toHaveBeenCalledWith(mockEngine, {enableResults: true});
+    });
+
+    it('should execute the first request without results when the definition sets no flag', async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
+      const factory = fetchStaticStateFactory(definition, mockEngineOptions);
+
+      await factory(SolutionType.listing)({
+        navigatorContext: mockNavigatorContext,
+        context: mockContext,
+      });
+
+      expect(buildProductListing).toHaveBeenCalledWith(mockEngine, {enableResults: false});
+    });
+  });
+
   describe('when solution type is standalone', () => {
     beforeEach(async () => {
       // @ts-expect-error: do not care about baked-in controller initial state

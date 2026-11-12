@@ -24,11 +24,12 @@ export function augmentCommerceEngineOptions<
   buildConfig: CommonBuildConfig
 ): CommerceEngineOptions {
   const {cart, context} = buildConfig;
+  const {enableResults: _enableResults, ...options} = engineOptions;
 
   ensurenavigatorContext(buildConfig, engineOptions.loggerOptions);
 
   return {
-    ...engineOptions,
+    ...options,
     navigatorContextProvider: () => buildConfig.navigatorContext,
     configuration: {
       ...engineOptions.configuration,

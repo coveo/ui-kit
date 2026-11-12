@@ -21,9 +21,9 @@ export function defineBreadcrumbManager(): BreadcrumbManagerDefinition {
   return {
     listing: true,
     search: true,
-    build: (engine, {solutionType}) =>
+    build: (engine, {solutionType, enableResults}) =>
       solutionType === SolutionType.listing
-        ? buildProductListing(engine).breadcrumbManager()
-        : buildSearch(engine).breadcrumbManager(),
+        ? buildProductListing(engine, {enableResults: enableResults.listing}).breadcrumbManager()
+        : buildSearch(engine, {enableResults: enableResults.search}).breadcrumbManager(),
   };
 }

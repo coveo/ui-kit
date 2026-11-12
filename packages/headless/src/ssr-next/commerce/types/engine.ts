@@ -3,7 +3,7 @@ import type {Controller} from '../../../controllers/controller/headless-controll
 import type {ControllersMap} from '../../common/types/controllers.js';
 import type {EngineStaticState} from '../../common/types/engine.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
-import type {SSRCommerceEngineOptions} from './build.js';
+import type {EnableResultsOption, SSRCommerceEngineOptions} from './build.js';
 import type {SolutionType} from './controller-constants.js';
 import type {BakedInControllers, ControllerDefinitionsMap} from './controller-definitions.js';
 import type {
@@ -33,6 +33,14 @@ export type CommerceEngineDefinitionOptions<
    * The controllers to initialize with the commerce engine.
    */
   controllers?: ValidateControllerNames<TControllers>;
+  /**
+   * Whether the listing and search requests fill `results` (products and spotlight content) rather
+   * than `products`: `true` for both kinds of request, or one flag per kind. The flag applies to every
+   * request of the matching kind, whichever controller triggers it, on the server and in the browser.
+   *
+   * @default false
+   */
+  enableResults?: EnableResultsOption;
 };
 
 export interface CommerceEngineDefinition<

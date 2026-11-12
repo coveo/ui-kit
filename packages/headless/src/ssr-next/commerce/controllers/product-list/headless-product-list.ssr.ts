@@ -21,33 +21,19 @@ export type ProductList = Pick<
 export type ProductListDefinition = SearchAndListingControllerDefinition<ProductList>;
 
 /**
- * Options for configuring the `ProductList` controller.
- */
-export interface ProductListOptions {
-  /**
-   * When set to true, fills the `results` field rather than the `products` field
-   * in the response. It may also include Spotlight Content in the results.
-   * @default false
-   */
-  enableResults?: boolean;
-}
-
-/**
  * Defines a `ProductList` controller instance.
  * @group Definers
  *
- * @param options - The configurable `ProductList` controller options.
- * @returns The `ProductList` controller definition.
+ * @returns The `ProductList` controller definition. Whether its requests fill `results` rather than
+ *  `products` comes from the `enableResults` option of the engine definition.
  */
-export function defineProductList(options: ProductListOptions = {}): ProductListDefinition {
-  const {enableResults = false} = options;
-
+export function defineProductList(): ProductListDefinition {
   return {
     listing: true,
     search: true,
-    build: (engine, {solutionType}) =>
+    build: (engine, {solutionType, enableResults}) =>
       solutionType === SolutionType.listing
-        ? (buildProductListing(engine, {enableResults}) as ProductList)
-        : (buildSearch(engine, {enableResults}) as ProductList),
+        ? (buildProductListing(engine, {enableResults: enableResults.listing}) as ProductList)
+        : (buildSearch(engine, {enableResults: enableResults.search}) as ProductList),
   };
 }

@@ -83,6 +83,17 @@ describe('defineCommerceEngine', () => {
     );
   });
 
+  it('should take the results flag once, on the definition, and on no definer', () => {
+    expectTypeOf<CommerceEngineDefinitionOptions['enableResults']>().toEqualTypeOf<
+      boolean | {search?: boolean; listing?: boolean} | undefined
+    >();
+    expectTypeOf<Parameters<typeof defineProductList>>().toEqualTypeOf<[]>();
+    expectTypeOf<Parameters<typeof defineDidYouMean>>().toEqualTypeOf<[]>();
+    expectTypeOf<
+      NonNullable<NonNullable<Parameters<typeof defineSearchBox>[0]>['options']>
+    >().not.toHaveProperty('enableResults');
+  });
+
   it('should accept the product ID on every engine definition', () => {
     expectTypeOf<ListingFetchOptions['productId']>().toEqualTypeOf<string | undefined>();
     expectTypeOf<SearchFetchOptions['productId']>().toEqualTypeOf<string | undefined>();

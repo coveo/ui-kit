@@ -100,7 +100,7 @@ describe('SSR FacetGenerator', () => {
     ({solutionType, buildGeneratedCSRFacetControllersFunction}) => {
       let generatedCSRFacetControllers: GeneratedFacetControllers;
       beforeEach(() => {
-        options = {props: {solutionType}};
+        options = {props: {solutionType, enableResults: {listing: false, search: false}}};
         facetsInEngineState = [
           {
             facetId: 'category-facet',

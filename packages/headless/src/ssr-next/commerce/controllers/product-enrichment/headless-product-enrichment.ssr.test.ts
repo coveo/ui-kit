@@ -5,9 +5,8 @@ import {
 } from '../../../../controllers/commerce/product-enrichment/headless-product-enrichment.js';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {buildMockSSRCommerceEngine} from '../../../../test/mock-engine-v2.js';
-import {buildMockNavigatorContext} from '../../../../test/mock-navigator-context.js';
+import {buildMockCommerceBuildContext} from '../../../../test/mock-ssr-build-context.js';
 import type {SSRCommerceEngine} from '../../factories/build-factory.js';
-import type {CommonBuildConfig} from '../../types/build.js';
 import {SolutionType} from '../../types/controller-constants.js';
 import {
   defineProductEnrichment,
@@ -18,10 +17,9 @@ vi.mock('../../../../controllers/commerce/product-enrichment/headless-product-en
 const buildProductEnrichmentMock = vi.mocked(buildProductEnrichment);
 
 describe('define product enrichment', () => {
-  const pageFacts: CommonBuildConfig = {
-    navigatorContext: buildMockNavigatorContext(),
-    context: {language: 'en', country: 'US', currency: 'USD', view: {url: 'https://example.com'}},
-  };
+  const standaloneContext = buildMockCommerceBuildContext({
+    solutionType: SolutionType.standalone,
+  });
   let engine: SSRCommerceEngine;
 
   beforeEach(() => {
@@ -47,10 +45,13 @@ describe('define product enrichment', () => {
   it('should build the controller with the static placements and the product ID of the request', () => {
     const definition = defineProductEnrichment({options: {placementIds: ['placement-a']}});
 
-    definition.build(engine, {
-      solutionType: SolutionType.standalone,
-      buildConfig: {...pageFacts, productId: 'product-123'},
-    });
+    definition.build(
+      engine,
+      buildMockCommerceBuildContext({
+        solutionType: SolutionType.standalone,
+        buildConfig: {productId: 'product-123'},
+      })
+    );
 
     expect(buildProductEnrichmentMock).toHaveBeenCalledWith(engine, {
       options: {placementIds: ['placement-a'], productId: 'product-123'},
@@ -60,7 +61,7 @@ describe('define product enrichment', () => {
   it('should leave the product ID out when the request carries none', () => {
     const definition = defineProductEnrichment({options: {placementIds: ['placement-a']}});
 
-    definition.build(engine, {solutionType: SolutionType.standalone, buildConfig: pageFacts});
+    definition.build(engine, standaloneContext);
 
     expect(buildProductEnrichmentMock).toHaveBeenCalledWith(engine, {
       options: {placementIds: ['placement-a']},
@@ -69,10 +70,7 @@ describe('define product enrichment', () => {
   });
 
   it('should build the controller with no static options when the definer takes none', () => {
-    defineProductEnrichment().build(engine, {
-      solutionType: SolutionType.standalone,
-      buildConfig: pageFacts,
-    });
+    defineProductEnrichment().build(engine, standaloneContext);
 
     expect(buildProductEnrichmentMock).toHaveBeenCalledWith(engine, {options: {}});
   });

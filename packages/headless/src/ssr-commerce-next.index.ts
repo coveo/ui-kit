@@ -124,7 +124,6 @@ export type {
 export type {
   DidYouMean,
   DidYouMeanDefinition,
-  DidYouMeanOptions,
   DidYouMeanState,
 } from './ssr-next/commerce/controllers/did-you-mean/headless-did-you-mean.ssr.js';
 export {defineDidYouMean} from './ssr-next/commerce/controllers/did-you-mean/headless-did-you-mean.ssr.js';
@@ -204,7 +203,6 @@ export type {
   ProductList,
   ProductListDefinition,
   ProductListing,
-  ProductListOptions,
   ProductListState,
   Search,
 } from './ssr-next/commerce/controllers/product-list/headless-product-list.ssr.js';
@@ -295,7 +293,9 @@ export type {CommerceStaticState} from './ssr-next/commerce/types/fetch-static-s
 export type {
   BuildConfig,
   ControllerBuildContext,
+  EnableResultsOption,
   RecommendationNames,
+  ResolvedEnableResults,
   SSRCommerceEngineOptions as CommerceEngineOptions,
   SSRContextOptions,
 } from './ssr-next/commerce/types/build.js';

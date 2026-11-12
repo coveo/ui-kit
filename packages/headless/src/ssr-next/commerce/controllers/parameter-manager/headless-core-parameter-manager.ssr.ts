@@ -47,23 +47,25 @@ export function defineParameterManager(): ParameterManagerDefinition {
   return {
     listing: true,
     search: true,
-    build: (engine, {solutionType, buildConfig}) => {
+    build: (engine, {solutionType, buildConfig, enableResults}) => {
       const parameters = parametersOf(buildConfig);
 
       if (solutionType === SolutionType.listing) {
         if (!loadCommerceProductListingParameterReducers(engine)) {
           throw loadReducerError;
         }
-        return buildProductListing(engine).parameterManager({
-          initialState: {parameters: parameters as ProductListingParameters},
-          excludeDefaultParameters: true,
-        });
+        return buildProductListing(engine, {enableResults: enableResults.listing}).parameterManager(
+          {
+            initialState: {parameters: parameters as ProductListingParameters},
+            excludeDefaultParameters: true,
+          }
+        );
       }
 
       if (!loadCommerceSearchParameterReducers(engine)) {
         throw loadReducerError;
       }
-      return buildSearch(engine).parameterManager({
+      return buildSearch(engine, {enableResults: enableResults.search}).parameterManager({
         initialState: {parameters: parameters as CommerceSearchParameters},
         excludeDefaultParameters: true,
       });

@@ -26,9 +26,11 @@ export default {
   configuration: {
     ...getSampleCommerceEngineConfiguration(),
   },
+  // Every listing and search request fills `results` (products and spotlight content).
+  enableResults: true,
   controllers: {
     summary: defineSummary(),
-    productList: defineProductList({enableResults: true}),
+    productList: defineProductList(),
     popularViewed: defineRecommendations({
       options: {
         slotId: 'd73afbd2-8521-4ee6-a9b8-31f064721e73',
@@ -44,10 +46,8 @@ export default {
         slotId: 'ff5d8804-d398-4dd5-b68c-6a729c66454b',
       },
     }),
-    searchBox: defineSearchBox({options: {enableResults: true}}),
-    recentQueriesList: defineRecentQueriesList({
-      options: {enableResults: true},
-    }),
+    searchBox: defineSearchBox(),
+    recentQueriesList: defineRecentQueriesList(),
     notifyTrigger: defineNotifyTrigger(),
     queryTrigger: defineQueryTrigger(),
     redirectionTrigger: defineRedirectionTrigger(),
@@ -58,7 +58,7 @@ export default {
     pagination: definePagination({options: {pageSize: 9}}),
     sort: defineSort(),
     productView: defineProductView(),
-    didYouMean: defineDidYouMean({enableResults: true}),
+    didYouMean: defineDidYouMean(),
     facetGenerator: defineFacetGenerator(),
     breadcrumbManager: defineBreadcrumbManager(),
     productEnrichment: defineProductEnrichment({

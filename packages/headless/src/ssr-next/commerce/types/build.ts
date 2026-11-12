@@ -30,12 +30,31 @@ export type RecommendationNames<TControllers extends ControllerDefinitionsMap<Co
       >;
 
 /**
+ * Whether the listing and search requests fill `results` (products and spotlight content) rather
+ * than `products`: `true` for both kinds of request, or one flag per kind.
+ */
+export type EnableResultsOption = boolean | {search?: boolean; listing?: boolean};
+
+/**
+ * The `enableResults` option of the engine definition, resolved for each kind of request.
+ */
+export interface ResolvedEnableResults {
+  listing: boolean;
+  search: boolean;
+}
+
+/**
  * What a controller definition receives to build its controller for a request: the kind of page it is
- * built for, and the page facts passed to `fetchStaticState()`.
+ * built for, the page facts passed to `fetchStaticState()`, and the results flag of the definition.
  */
 export interface ControllerBuildContext {
   solutionType: SolutionType;
   buildConfig: CommonBuildConfig;
+  /**
+   * Whether the requests the controller triggers fill `results` rather than `products`, from the
+   * `enableResults` option of the engine definition.
+   */
+  enableResults: ResolvedEnableResults;
 }
 
 export interface SearchBuildConfig<

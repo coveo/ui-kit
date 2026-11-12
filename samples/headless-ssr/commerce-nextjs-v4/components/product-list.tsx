@@ -10,7 +10,7 @@ export default function ProductList() {
   const {state, methods} = useProductList();
   const {state: cartState, methods: cartMethods} = useCart();
 
-  const items = state.results.length > 0 ? state.results : state.products;
+  const items = state.results;
 
   return (
     <ul aria-label="Product List">
