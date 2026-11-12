@@ -1,7 +1,7 @@
 export * from '@coveo/headless/ssr-commerce-next';
 export {MissingEngineProviderError} from '../errors.js';
+export {buildProviderWithDefinition} from '../ssr-common/providers.js';
+export type {StateProviderProps} from '../ssr-common/types.js';
 export type {ReactCommerceEngineDefinition} from './commerce-engine.js';
 export {defineCommerceEngine} from './commerce-engine.js';
-export {buildProviderWithDefinition} from './providers.js';
 export {ReactEngineDefinition} from './types.js';
-export type {StateProviderProps} from './types.js';
