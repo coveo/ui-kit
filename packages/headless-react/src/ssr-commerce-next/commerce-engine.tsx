@@ -68,10 +68,6 @@ export function defineCommerceEngine<TControllers extends ControllerDefinitionsM
   listingEngineDefinition: ReactCommerceEngineDefinition<TControllers, SolutionType.listing>;
   searchEngineDefinition: ReactCommerceEngineDefinition<TControllers, SolutionType.search>;
   standaloneEngineDefinition: ReactCommerceEngineDefinition<TControllers, SolutionType.standalone>;
-  recommendationEngineDefinition: ReactCommerceEngineDefinition<
-    TControllers,
-    SolutionType.recommendation
-  >;
 } {
   const singletonContext = createSingletonContext<TControllers>();
 
@@ -80,15 +76,10 @@ export function defineCommerceEngine<TControllers extends ControllerDefinitionsM
   >;
   type ListingContext = ContextStateType<SolutionType.listing>;
   type SearchContext = ContextStateType<SolutionType.search>;
-  type RecommendationContext = ContextStateType<SolutionType.recommendation>;
   type StandaloneContext = ContextStateType<SolutionType.standalone>;
 
-  const {
-    listingEngineDefinition,
-    searchEngineDefinition,
-    standaloneEngineDefinition,
-    recommendationEngineDefinition,
-  } = defineBaseCommerceEngine({...options});
+  const {listingEngineDefinition, searchEngineDefinition, standaloneEngineDefinition} =
+    defineBaseCommerceEngine({...options});
 
   const augmentedControllerDefinition = {
     ...options.controllers,
@@ -114,13 +105,6 @@ export function defineCommerceEngine<TControllers extends ControllerDefinitionsM
       StateProvider: buildStateProvider(
         singletonContext as StandaloneContext,
         SolutionType.standalone
-      ),
-    },
-    recommendationEngineDefinition: {
-      ...recommendationEngineDefinition,
-      StateProvider: buildStateProvider(
-        singletonContext as RecommendationContext,
-        SolutionType.recommendation
       ),
     },
   };

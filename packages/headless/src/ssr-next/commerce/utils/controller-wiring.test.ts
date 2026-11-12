@@ -9,7 +9,6 @@ import type {InferControllerPropsMapFromDefinitions} from '../types/controller-i
 import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
 import {
   listingDefinitionSchema,
-  recommendationsDefinitionSchema,
   searchDefinitionSchema,
   standaloneDefinitionSchema,
   wireControllerParams,
@@ -39,7 +38,7 @@ describe('controller-wiring', () => {
     describe('when validating a listingDefinitionSchema', () => {
       it('should throw for missing required context only', () => {
         const validate = () => {
-          listingDefinitionSchema.validate({});
+          listingDefinitionSchema([]).validate({});
         };
         expect(validate).toThrowError(/context: value is required and is currently undefined/);
       });
@@ -48,7 +47,7 @@ describe('controller-wiring', () => {
     describe('when validating a searchDefinitionSchema', () => {
       it('should throw for missing required search params and context', () => {
         const validate = () => {
-          searchDefinitionSchema.validate({});
+          searchDefinitionSchema([]).validate({});
         };
         expect(validate).toThrowError(/context: value is required and is currently undefined/);
       });
@@ -57,16 +56,7 @@ describe('controller-wiring', () => {
     describe('when validating a standaloneDefinitionSchema', () => {
       it('should throw for missing required parameters and context', () => {
         const validate = () => {
-          standaloneDefinitionSchema.validate({});
-        };
-        expect(validate).toThrowError(/context: value is required and is currently undefined/);
-      });
-    });
-
-    describe('when validating a recommendationsDefinitionSchema', () => {
-      it('should throw for missing required parameters and context', () => {
-        const validate = () => {
-          recommendationsDefinitionSchema([]).validate({});
+          standaloneDefinitionSchema([]).validate({});
         };
         expect(validate).toThrowError(/context: value is required and is currently undefined/);
       });
@@ -74,11 +64,11 @@ describe('controller-wiring', () => {
 
     it('should not throw for missing search parameters', () => {
       expect(() => {
-        searchDefinitionSchema.validate(validCommonConfig);
+        searchDefinitionSchema([]).validate(validCommonConfig);
       }).not.toThrowError(/searchParams: value is require/);
 
       expect(() => {
-        searchDefinitionSchema.validate({
+        searchDefinitionSchema([]).validate({
           ...validCommonConfig,
           searchParams: {},
         });
@@ -91,56 +81,47 @@ describe('controller-wiring', () => {
         searchParams: {q: 'test query'},
       };
       expect(() => {
-        searchDefinitionSchema.validate(searchConfig);
+        searchDefinitionSchema([]).validate(searchConfig);
       }).not.toThrow();
     });
 
-    it('should throw for missing recommendations', () => {
-      expect(() => {
-        recommendationsDefinitionSchema([]).validate(validCommonConfig);
-      }).toThrowError(/recommendations: value is required./);
-    });
+    describe.each([
+      ['listing', listingDefinitionSchema],
+      ['search', searchDefinitionSchema],
+      ['standalone', standaloneDefinitionSchema],
+    ])('recommendation slots of the %s schema', (_, schema) => {
+      it('should not require recommendations', () => {
+        expect(() => schema(['rec1']).validate(validCommonConfig)).not.toThrow();
+      });
 
-    it('should throw if the user refers to recommendation controller that was not defined in the definition', () => {
-      const recommendationsConfig = {
-        ...validCommonConfig,
-        recommendations: ['invalid-rec'],
-      };
-      expect(() => {
-        recommendationsDefinitionSchema(['rec1', 'rec2']).validate(recommendationsConfig);
-      }).toThrowError(/value should be one of: rec1, rec2./);
-    });
+      it('should throw if the user refers to a recommendation controller that was not defined in the definition', () => {
+        expect(() =>
+          schema(['rec1', 'rec2']).validate({
+            ...validCommonConfig,
+            recommendations: ['invalid-rec'],
+          })
+        ).toThrowError(/value should be one of: rec1, rec2./);
+      });
 
-    it('should validate recommendations config with productId', () => {
-      const recommendationsConfig = {
-        ...validCommonConfig,
-        recommendations: ['rec1'],
-        productId: 'product-123',
-      };
-      expect(() => {
-        recommendationsDefinitionSchema(['rec1']).validate(recommendationsConfig);
-      }).not.toThrow();
-    });
+      it('should accept a product ID', () => {
+        expect(() =>
+          schema(['rec1']).validate({
+            ...validCommonConfig,
+            recommendations: ['rec1'],
+            productId: 'product-123',
+          })
+        ).not.toThrow();
+      });
 
-    it('should validate recommendations config without productId', () => {
-      const recommendationsConfig = {
-        ...validCommonConfig,
-        recommendations: ['rec1'],
-      };
-      expect(() => {
-        recommendationsDefinitionSchema(['rec1']).validate(recommendationsConfig);
-      }).not.toThrow();
-    });
-
-    it('should not validate recommendations config with empty productId', () => {
-      const recommendationsConfig = {
-        ...validCommonConfig,
-        recommendations: ['rec1'],
-        productId: '',
-      };
-      expect(() => {
-        recommendationsDefinitionSchema(['rec1']).validate(recommendationsConfig);
-      }).toThrow();
+      it('should reject an empty product ID', () => {
+        expect(() =>
+          schema(['rec1']).validate({
+            ...validCommonConfig,
+            recommendations: ['rec1'],
+            productId: '',
+          })
+        ).toThrow();
+      });
     });
   });
 
@@ -149,7 +130,6 @@ describe('controller-wiring', () => {
       {solutionType: SolutionType.listing},
       {solutionType: SolutionType.search},
       {solutionType: SolutionType.standalone},
-      {solutionType: SolutionType.recommendation},
     ])('%s', ({solutionType}) => {
       const mockCartItem = {
         name: 'Product 1',
@@ -340,6 +320,32 @@ describe('controller-wiring', () => {
     });
 
     describe('recommendation wiring', () => {
+      it.each([SolutionType.listing, SolutionType.search, SolutionType.standalone])(
+        'should wire each recommendation controller with the provided productId for %s',
+        (solutionType) => {
+          const definitionsWithRecommendation = {
+            ...mockControllerDefinitions,
+            rec1: defineMockRecommendationDefinition('rec1-slot'),
+            rec2: defineMockRecommendationDefinition('rec2-slot'),
+          } as CommerceControllerDefinitionsMap;
+
+          const props = wireControllerParams(solutionType, definitionsWithRecommendation, {
+            navigatorContext: buildMockNavigatorContext(),
+            context: {
+              language: 'en',
+              country: 'US',
+              currency: 'USD' as const,
+              view: {url: 'https://example.com'},
+            },
+            recommendations: ['rec1'],
+            productId: 'product-123',
+          });
+
+          expect(props.rec1).toEqual({productId: 'product-123'});
+          expect(props.rec2).toEqual({productId: 'product-123'});
+        }
+      );
+
       it('should wire each recommendation controller with the provided productId', () => {
         const definitionsWithRecommendation = {
           ...mockControllerDefinitions,
@@ -362,7 +368,7 @@ describe('controller-wiring', () => {
         };
 
         const props = wireControllerParams(
-          SolutionType.recommendation,
+          SolutionType.standalone,
           definitionsWithRecommendation,
           params
         );
@@ -389,7 +395,7 @@ describe('controller-wiring', () => {
         };
 
         const props = wireControllerParams(
-          SolutionType.recommendation,
+          SolutionType.standalone,
           definitionsWithRecommendation,
           params
         );
@@ -397,7 +403,7 @@ describe('controller-wiring', () => {
         expect(props.rec1).toEqual({});
       });
 
-      it('should not wire non-recommendation controllers in recommendation solution type', () => {
+      it('should not wire props for the controllers that are not recommendation controllers', () => {
         const definitionsWithMixed = {
           ...mockControllerDefinitions,
           rec1: defineMockRecommendationDefinition('rec1-slot'),
@@ -416,11 +422,7 @@ describe('controller-wiring', () => {
           productId: 'product-123',
         };
 
-        const props = wireControllerParams(
-          SolutionType.recommendation,
-          definitionsWithMixed,
-          params
-        );
+        const props = wireControllerParams(SolutionType.standalone, definitionsWithMixed, params);
 
         expect(props.rec1).toEqual({productId: 'product-123'});
         expect(props.nonRec).toBeUndefined();

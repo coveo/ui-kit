@@ -6,7 +6,6 @@ const engineDefinition = defineCommerceEngine(engineConfig);
 export const {
   listingEngineDefinition,
   searchEngineDefinition,
-  recommendationEngineDefinition,
   standaloneEngineDefinition,
   useEngine,
 } = engineDefinition;
