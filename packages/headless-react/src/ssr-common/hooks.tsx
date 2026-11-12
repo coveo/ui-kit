@@ -2,7 +2,7 @@ import {type Context, type PropsWithChildren, useCallback, useContext, useMemo} 
 import {useSyncMemoizedStore} from '../client-utils.js';
 import {MissingEngineProviderError, UndefinedControllerError} from '../errors.js';
 import {capitalize, mapObject, type SingletonGetter} from '../utils.js';
-import type {ControllerLike, EngineContextState, StateProviderProps} from './types.js';
+import type {ControllerLike, EngineContextState, Hydration, StateProviderProps} from './types.js';
 
 /**
  * @internal The React context that the providers of an engine definition share with its hooks.
@@ -84,6 +84,19 @@ export function buildEngineHook<TEngine>(singletonContext: EngineContext<TEngine
 /**
  * @internal
  */
+export function buildHydrationHook<TEngine>(singletonContext: EngineContext<TEngine>) {
+  return (): Hydration => {
+    const ctx = useEngineContext(singletonContext);
+    if (ctx.hydrationFailure) {
+      return {status: 'error', error: ctx.hydrationFailure.error};
+    }
+    return {status: isHydrated(ctx) ? 'hydrated' : 'static'};
+  };
+}
+
+/**
+ * @internal
+ */
 export function buildStateProvider<TEngine>(
   singletonContext: EngineContext<TEngine>,
   solutionType?: string
@@ -91,6 +104,7 @@ export function buildStateProvider<TEngine>(
   return ({
     engine,
     controllers,
+    hydrationFailure,
     children,
   }: PropsWithChildren<
     StateProviderProps<
@@ -99,6 +113,8 @@ export function buildStateProvider<TEngine>(
     >
   >) => {
     const {Provider} = singletonContext.get();
-    return <Provider value={{engine, controllers, solutionType}}>{children}</Provider>;
+    return (
+      <Provider value={{engine, controllers, solutionType, hydrationFailure}}>{children}</Provider>
+    );
   };
 }
