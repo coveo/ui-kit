@@ -7,9 +7,9 @@ import {
   buildController,
   type Controller,
 } from '../../../../controllers/controller/headless-controller.js';
-import type {NonRecommendationControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
+import type {UniversalControllerDefinition} from '../../types/controller-definitions.js';
 
-export type ProductViewDefinition = NonRecommendationControllerDefinitionWithoutProps<ProductView>;
+export type ProductViewDefinition = UniversalControllerDefinition<ProductView>;
 
 /**
  * Defines a `ProductView` controller instance.

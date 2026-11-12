@@ -6,11 +6,11 @@ import type {
 import {buildProductListing} from '../../../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch} from '../../../../controllers/commerce/search/headless-search.js';
 import {SolutionType} from '../../types/controller-constants.js';
-import type {SearchAndListingControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
+import type {SearchAndListingControllerDefinition} from '../../types/controller-definitions.js';
 
 export type {Sort, SortProps, SortState};
 
-export type SortDefinition = SearchAndListingControllerDefinitionWithoutProps<Sort>;
+export type SortDefinition = SearchAndListingControllerDefinition<Sort>;
 
 /**
  * Defines a `Sort` controller instance.
@@ -24,9 +24,9 @@ export function defineSort(props?: SortProps): SortDefinition {
     listing: true,
     search: true,
     ...props,
-    build: (engine, solutionType) =>
+    build: (engine, {solutionType, enableResults}) =>
       solutionType === SolutionType.listing
-        ? buildProductListing(engine).sort(props)
-        : buildSearch(engine).sort(props),
+        ? buildProductListing(engine, {enableResults: enableResults.listing}).sort(props)
+        : buildSearch(engine, {enableResults: enableResults.search}).sort(props),
   };
 }

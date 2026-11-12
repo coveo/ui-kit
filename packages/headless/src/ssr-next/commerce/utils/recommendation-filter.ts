@@ -12,20 +12,16 @@ import type {
 } from '../types/controller-definitions.js';
 
 /**
- * Type guard to check if a controller definition is a recommendation controller.
- * A recommendation controller must have both the recommendation flag and a slotId.
+ * Type guard to check if a controller definition is a recommendation controller, that is, a definition
+ * created with `defineRecommendations()`, which carries the slot it targets.
  */
 export function isRecommendationDefinition<C extends ControllerDefinition<Controller>>(
   controllerDefinition: C
 ): controllerDefinition is C & RecommendationsDefinitionMeta {
-  const hasRecommendationFlag =
-    'recommendation' in controllerDefinition && controllerDefinition.recommendation === true;
-
-  const hasValidSlotId =
+  return (
     recommendationInternalOptionKey in controllerDefinition &&
-    'slotId' in (controllerDefinition[recommendationInternalOptionKey] as RecommendationsOptions);
-
-  return hasRecommendationFlag && hasValidSlotId;
+    'slotId' in (controllerDefinition[recommendationInternalOptionKey] as RecommendationsOptions)
+  );
 }
 
 /**
@@ -83,7 +79,7 @@ export function filterRecommendationControllers<
      * @param controllers - A record of all controllers where the key is the controller name and the value is the controller instance.
      * @param controllerNames - A list of all recommendation controllers to refresh
      */
-    refresh(whitelist?: Array<keyof TControllerDefinitions>) {
+    refresh(whitelist?: ReadonlyArray<PropertyKey>) {
       if (whitelist === undefined) {
         return;
       }

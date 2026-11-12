@@ -1,7 +1,6 @@
 import type {CommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
 import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {HasKey} from '../../common/types/utilities.js';
 import type {CartInitialState} from '../controllers/cart/headless-cart.ssr.js';
 import type {ContextOptions} from '../controllers/context/headless-context.ssr.js';
 import type {
@@ -14,8 +13,54 @@ import type {
   IsRecommendationController,
 } from './controller-definitions.js';
 
-export interface SearchBuildConfig extends CommonBuildConfig {
-  searchParams: ParameterManagerState<
+/**
+ * The names of the recommendation controllers of an engine definition, as declared with
+ * `defineRecommendations()`.
+ */
+export type RecommendationNames<TControllers extends ControllerDefinitionsMap<Controller>> =
+  string extends keyof TControllers
+    ? string
+    : Extract<
+        keyof TControllers & string,
+        {
+          [K in keyof TControllers]: IsRecommendationController<TControllers[K]> extends never
+            ? never
+            : K;
+        }[keyof TControllers]
+      >;
+
+/**
+ * Whether the listing and search requests fill `results` (products and spotlight content) rather
+ * than `products`: `true` for both kinds of request, or one flag per kind.
+ */
+export type EnableResultsOption = boolean | {search?: boolean; listing?: boolean};
+
+/**
+ * The `enableResults` option of the engine definition, resolved for each kind of request.
+ */
+export interface ResolvedEnableResults {
+  listing: boolean;
+  search: boolean;
+}
+
+/**
+ * What a controller definition receives to build its controller for a request: the kind of page it is
+ * built for, the page facts passed to `fetchStaticState()`, and the results flag of the definition.
+ */
+export interface ControllerBuildContext {
+  solutionType: SolutionType;
+  buildConfig: CommonBuildConfig;
+  /**
+   * Whether the requests the controller triggers fill `results` rather than `products`, from the
+   * `enableResults` option of the engine definition.
+   */
+  enableResults: ResolvedEnableResults;
+}
+
+export interface SearchBuildConfig<
+  TControllers extends ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
+> extends CommonBuildConfig<TControllers> {
+  searchParams?: ParameterManagerState<
     Parameters & {
       /**
        * The query.
@@ -25,81 +70,41 @@ export interface SearchBuildConfig extends CommonBuildConfig {
   >['parameters'];
 }
 
-export interface ListingBuildConfig extends CommonBuildConfig {}
+export interface ListingBuildConfig<
+  TControllers extends ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
+> extends CommonBuildConfig<TControllers> {}
 
-export interface StandaloneBuildConfig extends CommonBuildConfig {}
+export interface StandaloneBuildConfig<
+  TControllers extends ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
+> extends CommonBuildConfig<TControllers> {}
 
 /**
- * Commerce engine options for SSR scenarios where context is defined when fetching static state.
+ * The commerce context passed to `fetchStaticState()`. The URL of the page (`view.url`) is optional:
+ * it defaults to `navigatorContext.location`.
  */
-export type SSRCommerceEngineOptions = Omit<CommerceEngineOptions, 'configuration'> & {
+export type SSRContextOptions = Omit<ContextOptions, 'view'> & {
+  view?: ContextOptions['view'];
+};
+
+/**
+ * Commerce engine options for SSR scenarios.
+ *
+ * The context and the navigator context are per-request data: they are passed to `fetchStaticState()`
+ * rather than to the engine definition.
+ */
+export type SSRCommerceEngineOptions = Omit<
+  CommerceEngineOptions,
+  'configuration' | 'navigatorContextProvider'
+> & {
   configuration: Omit<CommerceEngineOptions['configuration'], 'context'>;
 };
 
 /**
- * The `RecommendationBuildConfig` type defines the shape of the configuration object required when fetching static state for recommendations.
- *
- * The `recommendations` property is a string array containing the names of the recommendation controllers
- * that were defined in your engine definition. This allows you to specify which recommendation controllers
- * should be included in the SSR request.
- *
- * For example, on a storefront homepage, it might make sense to display a carousel of popular products.
- * However, showing recommendations based on items frequently bought together may not be relevant in that context and should not be retrieved unnecessarily.
- *
- * @example
- * Given the following engine definition:
- *
- * ```ts
- * const {recommendationEngineDefinition} = defineCommerceEngine({
- *   controllers: {
- *     popularProducts: defineRecommendations({options: {slotId: '...'}}),
- *     frequentlyBought: defineRecommendations({options: {slotId: '...'}}),
- *     // ...other controllers
- *   },
- * });
- *
- * // When fetching static state for recommendations:
- * const staticState = await recommendationEngineDefinition.fetchStaticState({
- *   recommendations: ['popularProducts'],
- *   // ...other config
- * });
- * ```
- *
- * In this example, only the `popularProducts` recommendation controller will be included in the SSR request.
+ * The options shared by every `fetchStaticState()` call, whatever the engine definition.
  */
-export type RecommendationBuildConfig<TControllers extends ControllerDefinitionsMap<Controller>> =
-  CommonBuildConfig & {
-    /**
-     * The unique identifier of the product to use for seeded recommendations.
-     */
-    productId?: string;
-    /**
-     * An array of recommendation controller names from your engine definition to include in the SSR request.
-     * Each name corresponds to a key used when defining recommendation controllers in your engine definition.
-     * If not specified, no recommendation requests will be executed.
-     */
-    recommendations: Array<
-      Extract<
-        keyof TControllers,
-        {
-          [K in keyof TControllers]: HasKey<
-            TControllers[K],
-            SolutionType.recommendation
-          > extends never
-            ? never
-            : IsRecommendationController<TControllers[K]> extends never
-              ? never
-              : K;
-        }[keyof TControllers]
-      >
-    >;
-  };
-
-export interface ListingBuildConfig extends CommonBuildConfig {}
-
-export interface StandaloneBuildConfig extends CommonBuildConfig {}
-
-export interface CommonBuildConfig {
+export interface CommonBuildConfig<
+  TControllers extends ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
+> {
   /**
    * The `NavigatorContext` interface represents the context of the browser client.
    * See {@link NavigatorContext}
@@ -107,10 +112,12 @@ export interface CommonBuildConfig {
   navigatorContext: NavigatorContext;
 
   /**
-   * The initial context options passed to the engine when fetching the static state.
+   * The commerce context of the request: the language, country and currency of the storefront, and
+   * the URL of the page (`view.url`).
    *
-   * This property is used to configure the commerce context (e.g., currency, language, country)
-   * when calling `fetchStaticState()`.
+   * When `view.url` is omitted, the URL of the page is taken from `navigatorContext.location`, so the
+   * Commerce API and the analytics report the same page. Set it explicitly when the merchandising
+   * configuration targets another URL than the one being rendered.
    *
    * @remarks
    * To access the context after engine creation, use the context controller.
@@ -128,7 +135,7 @@ export interface CommonBuildConfig {
    * console.log(context.state.currency); // 'USD'
    * ```
    */
-  context: ContextOptions;
+  context: SSRContextOptions;
 
   /**
    * The initial search parameters to apply when fetching the static state.
@@ -184,6 +191,29 @@ export interface CommonBuildConfig {
   cart?: CartInitialState;
 
   /**
+   * The names of the recommendation controllers to request on the server, as declared in your engine
+   * definition with `defineRecommendations()`. Only the listed controllers are refreshed; the others
+   * keep an empty state until they are refreshed in the browser.
+   *
+   * The slots are requested alongside the listing or search request of the page, with the same engine,
+   * so one `fetchStaticState()` call and one provider serve a page and its recommendations.
+   *
+   * @example
+   * ```typescript
+   * const staticState = await listingEngineDefinition.fetchStaticState({
+   *   recommendations: ['popularViewed'],
+   *   // ...other config
+   * });
+   * ```
+   */
+  recommendations?: Array<RecommendationNames<TControllers>>;
+
+  /**
+   * The unique identifier of the product being viewed, used to seed the requested recommendation slots.
+   */
+  productId?: string;
+
+  /**
    * A per-request access token (for example, a per-user Coveo search token) to use for this
    * `fetchStaticState()` or `hydrateStaticState()` call only.
    *
@@ -208,11 +238,9 @@ export type BuildConfig<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 > = TSolutionType extends SolutionType.search
-  ? SearchBuildConfig
+  ? SearchBuildConfig<TControllers>
   : TSolutionType extends SolutionType.listing
-    ? ListingBuildConfig
-    : TSolutionType extends SolutionType.recommendation
-      ? RecommendationBuildConfig<TControllers>
-      : TSolutionType extends SolutionType.standalone
-        ? CommonBuildConfig
-        : never;
+    ? ListingBuildConfig<TControllers>
+    : TSolutionType extends SolutionType.standalone
+      ? StandaloneBuildConfig<TControllers>
+      : never;

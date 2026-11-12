@@ -3,11 +3,11 @@ import {
   buildHistoryManager,
   type HistoryManager,
 } from '../../../../controllers/history-manager/headless-history-manager.js';
-import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
+import type {ControllerDefinition} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/history-manager/headless-history-manager.js';
 
-export interface HistoryManagerDefinition extends ControllerDefinitionWithoutProps<
+export interface HistoryManagerDefinition extends ControllerDefinition<
   SearchEngine,
   HistoryManager
 > {}

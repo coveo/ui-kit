@@ -1,14 +1,14 @@
 import type {SearchEngine} from '../../../../app/search-engine/search-engine.js';
 import type {RedirectionTrigger} from '../../../../controllers/core/triggers/headless-core-redirection-trigger.js';
 import {buildRedirectionTrigger} from '../../../../controllers/triggers/headless-redirection-trigger.js';
-import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
+import type {ControllerDefinition} from '../../types/controller-definition.js';
 
 export type {
   RedirectionTrigger,
   RedirectionTriggerState,
 } from '../../../../controllers/core/triggers/headless-core-redirection-trigger.js';
 
-export interface RedirectionTriggerDefinition extends ControllerDefinitionWithoutProps<
+export interface RedirectionTriggerDefinition extends ControllerDefinition<
   SearchEngine,
   RedirectionTrigger
 > {}

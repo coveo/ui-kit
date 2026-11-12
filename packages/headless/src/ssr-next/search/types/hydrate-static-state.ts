@@ -1,20 +1,18 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {CoreEngine, CoreEngineNext} from '../../../app/engine.js';
-import type {ControllersMap, ControllersPropsMap} from '../../common/types/controllers.js';
-import type {BuildConfig} from './build.js';
-import type {
-  SearchEngineDefinitionBuildResult,
-  SearchEngineDefinitionControllersPropsOption,
-} from './engine.js';
+import type {ControllerStaticStateMap, ControllersMap} from '../../common/types/controllers.js';
+import type {BakedInSearchControllers} from './controller-definition.js';
+import type {SearchEngineDefinitionBuildResult} from './engine.js';
+import type {SearchStaticState} from './fetch-static-state.js';
 
+/**
+ * The engine and the live controllers returned by `hydrateStaticState()`, including the baked-in
+ * `parameterManager` controller.
+ */
 export type HydratedState<
   TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllersMap,
-> = SearchEngineDefinitionBuildResult<TEngine, TControllers>;
-
-interface HydrateStaticStateOptions<TSearchAction> {
-  searchActions: TSearchAction[];
-}
+> = SearchEngineDefinitionBuildResult<TEngine, TControllers & BakedInSearchControllers>;
 
 /**
  * Creates a new engine from the snapshot of the engine created in SSR with fetchStaticState.
@@ -25,9 +23,7 @@ export type HydrateStaticState<
   TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllersMap,
   TSearchAction extends UnknownAction,
-  TControllersProps extends ControllersPropsMap,
+  TControllersStaticState extends ControllerStaticStateMap,
 > = (
-  params: BuildConfig &
-    HydrateStaticStateOptions<TSearchAction> &
-    SearchEngineDefinitionControllersPropsOption<TControllersProps>
+  staticState: SearchStaticState<TSearchAction, TControllersStaticState>
 ) => Promise<HydratedState<TEngine, TControllers>>;

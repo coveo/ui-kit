@@ -7,8 +7,6 @@ import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
 import {defineContext} from '../controllers/context/headless-context.ssr.js';
 import {defineParameterManager} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 import {hydratedStaticStateFactory} from '../factories/hydrated-state-factory.js';
-import {hydratedRecommendationStaticStateFactory} from '../factories/recommendation-hydrated-state-factory.js';
-import {fetchRecommendationStaticStateFactory} from '../factories/recommendation-static-state-factory.js';
 import {fetchStaticStateFactory} from '../factories/static-state-factory.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {
@@ -16,13 +14,38 @@ import type {
   ControllerDefinitionsMap,
 } from '../types/controller-definitions.js';
 import type {CommerceEngineDefinition, CommerceEngineDefinitionOptions} from '../types/engine.js';
-import {validateControllerNames} from '../validation/controller-validation.js';
+import {
+  validateControllerNames,
+  validateRecommendationSlots,
+} from '../validation/controller-validation.js';
+
+/**
+ * Adds the baked-in `parameterManager`, `context` and `cart` definitions to the controllers of an
+ * engine definition.
+ *
+ * @internal
+ */
+export function augmentCommerceControllerDefinitions<
+  TControllerDefinitions extends ControllerDefinitionsMap<Controller>,
+>(
+  controllerDefinitions: TControllerDefinitions | undefined
+): AugmentedControllerDefinition<TControllerDefinitions> {
+  return {
+    ...controllerDefinitions,
+    parameterManager: defineParameterManager(),
+    context: defineContext(),
+    cart: defineCart(),
+  } as AugmentedControllerDefinition<TControllerDefinitions>;
+}
 
 /**
  * Initializes a Commerce engine definition in SSR with given controllers definitions and commerce engine config.
  * @param options - The commerce engine definition
- * @returns Three utility functions to fetch the initial state of the engine in SSR, hydrate the state in CSR,
- *  and a build function that can be used for edge cases requiring more control.
+ * @returns Three engine definitions, one per kind of page: `listingEngineDefinition`, `searchEngineDefinition`
+ *  and `standaloneEngineDefinition` (no listing or search request is sent to the API). Each exposes
+ *  `fetchStaticState` to fetch the initial state on the server and `hydrateStaticState` to hydrate it in
+ *  the browser. Recommendation slots are requested by any of them through the `recommendations` option of
+ *  `fetchStaticState`.
  *
  * @remarks
  * You can use the {@link InferStaticState} and {@link InferHydratedState} utility types with the returned engine definitions
@@ -35,6 +58,7 @@ import {validateControllerNames} from '../validation/controller-validation.js';
  * const staticState = await listingEngineDefinition.fetchStaticState({
  *   navigatorContext: {/*...* /},
  *   context: {/*...* /},
+ *   recommendations: ['popularViewed'],
  * });
  *
  * type SearchStaticState = InferStaticState<typeof listingEngineDefinition>;
@@ -54,23 +78,19 @@ export function defineCommerceEngine<
     TControllerDefinitions,
     SolutionType.standalone
   >;
-  recommendationEngineDefinition: CommerceEngineDefinition<
-    TControllerDefinitions,
-    SolutionType.recommendation
-  >;
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
 
   const definitionOptions = {...engineOptions};
 
-  controllerDefinitions && validateControllerNames(controllerDefinitions);
+  if (controllerDefinitions) {
+    validateControllerNames(controllerDefinitions);
+    validateRecommendationSlots(controllerDefinitions);
+  }
 
-  const augmentedControllerDefinition = {
-    ...controllerDefinitions,
-    parameterManager: defineParameterManager(),
-    context: defineContext(),
-    cart: defineCart(),
-  } as AugmentedControllerDefinition<TControllerDefinitions>;
+  const augmentedControllerDefinition = augmentCommerceControllerDefinitions(
+    controllerDefinitions as TControllerDefinitions | undefined
+  );
 
   const fetchStaticState = fetchStaticStateFactory<TControllerDefinitions>(
     augmentedControllerDefinition,
@@ -80,16 +100,6 @@ export function defineCommerceEngine<
     augmentedControllerDefinition,
     definitionOptions
   );
-  const fetchRecommendationStaticState =
-    fetchRecommendationStaticStateFactory<TControllerDefinitions>(
-      augmentedControllerDefinition,
-      definitionOptions
-    );
-  const hydrateRecommendationStaticState =
-    hydratedRecommendationStaticStateFactory<TControllerDefinitions>(
-      augmentedControllerDefinition,
-      definitionOptions
-    );
   return {
     listingEngineDefinition: {
       fetchStaticState: fetchStaticState(SolutionType.listing),
@@ -99,11 +109,6 @@ export function defineCommerceEngine<
       fetchStaticState: fetchStaticState(SolutionType.search),
       hydrateStaticState: hydrateStaticState(SolutionType.search),
     },
-    recommendationEngineDefinition: {
-      fetchStaticState: fetchRecommendationStaticState,
-      hydrateStaticState: hydrateRecommendationStaticState,
-    },
-    // TODO KIT-3738 :  The standaloneEngineDefinition should not be async since no request is sent to the API
     standaloneEngineDefinition: {
       fetchStaticState: fetchStaticState(SolutionType.standalone),
       hydrateStaticState: hydrateStaticState(SolutionType.standalone),

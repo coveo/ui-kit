@@ -1,13 +1,12 @@
-import {headers} from 'next/headers';
 import * as externalCartAPI from '@/actions/external-cart-api';
 import ContextDropdown from '@/components/context-dropdown';
 import ProductBadges from '@/components/product-badges';
 import ProductViewer from '@/components/product-viewer';
-import {RecommendationProvider, StandaloneProvider} from '@/components/providers/providers';
+import {StandaloneProvider} from '@/components/providers/providers';
 import ViewedTogether from '@/components/recommendations/viewed-together';
 import StandaloneSearchBox from '@/components/standalone-search-box';
-import {recommendationEngineDefinition, standaloneEngineDefinition} from '@/lib/commerce-engine';
-import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
+import {standaloneEngineDefinition} from '@/lib/commerce-engine';
+import {getNavigatorContext} from '@/lib/navigator-context';
 import {defaultContext} from '@/utils/context';
 import type {ContextOptions} from '../../../../../../packages/headless/dist/definitions/controllers/commerce/context/headless-context';
 
@@ -18,8 +17,8 @@ export default async function ProductDescriptionPage({
   params: Promise<{productId: string}>;
   searchParams: Promise<{[key: string]: string | string[] | undefined}>;
 }) {
-  // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
-  const navigatorContext = new NextJsNavigatorContext(await headers());
+  // The navigator context describes the visitor's browser. It is passed to every `fetchStaticState` call.
+  const navigatorContext = await getNavigatorContext();
 
   // Fetches the cart items from an external service
   const items = await externalCartAPI.getCart();
@@ -35,26 +34,13 @@ export default async function ProductDescriptionPage({
     },
   };
 
-  // Fetches the static state of the app with initial state (when applicable)
+  // The product ID seeds the "viewed together" slot and the badges with the product being viewed.
   const staticState = await standaloneEngineDefinition.fetchStaticState({
     cart: {items},
     context,
-    navigatorContext: navigatorContext.marshal,
-    controllers: {
-      productEnrichment: {
-        options: {
-          productId,
-          placementIds: ['70b493b2-a1f1-4049-ad70-16695cef39cd'],
-        },
-      },
-    },
-  });
-
-  const recsStaticState = await recommendationEngineDefinition.fetchStaticState({
-    cart: {items},
-    context,
-    navigatorContext: navigatorContext.marshal,
+    navigatorContext,
     recommendations: ['viewedTogether'],
+    productId,
   });
 
   const resolvedSearchParams = await searchParams;
@@ -75,9 +61,7 @@ export default async function ProductDescriptionPage({
       <ProductBadges />
       <br />
 
-      <RecommendationProvider staticState={recsStaticState}>
-        <ViewedTogether />
-      </RecommendationProvider>
+      <ViewedTogether />
     </StandaloneProvider>
   );
 }

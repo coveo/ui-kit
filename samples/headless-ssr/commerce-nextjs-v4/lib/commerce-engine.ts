@@ -6,14 +6,13 @@ const engineDefinition = defineCommerceEngine(engineConfig);
 export const {
   listingEngineDefinition,
   searchEngineDefinition,
-  recommendationEngineDefinition,
   standaloneEngineDefinition,
   useEngine,
 } = engineDefinition;
 
 export const {
   useCart,
-  useContext,
+  useCommerceContext,
   useProductList,
   useDidYouMean,
   useInstantProducts,

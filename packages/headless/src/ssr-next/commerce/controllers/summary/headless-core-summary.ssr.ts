@@ -8,7 +8,7 @@ import type {RecommendationsSummaryState} from '../../../../controllers/commerce
 import {buildSearch} from '../../../../controllers/commerce/search/headless-search.js';
 import type {SearchSummaryState} from '../../../../controllers/commerce/search/summary/headless-search-summary.js';
 import {SolutionType} from '../../types/controller-constants.js';
-import type {SearchAndListingControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
+import type {SearchAndListingControllerDefinition} from '../../types/controller-definitions.js';
 
 export type {
   ProductListingSummaryState,
@@ -18,7 +18,7 @@ export type {
   SummaryState,
 };
 
-export type SummaryDefinition = SearchAndListingControllerDefinitionWithoutProps<
+export type SummaryDefinition = SearchAndListingControllerDefinition<
   Summary<ProductListingSummaryState | SearchSummaryState | RecommendationsSummaryState>
 >;
 
@@ -32,9 +32,9 @@ export function defineSummary(): SummaryDefinition {
   return {
     listing: true,
     search: true,
-    build: (engine, solutionType) =>
+    build: (engine, {solutionType, enableResults}) =>
       solutionType === SolutionType.listing
-        ? buildProductListing(engine).summary()
-        : buildSearch(engine).summary(),
+        ? buildProductListing(engine, {enableResults: enableResults.listing}).summary()
+        : buildSearch(engine, {enableResults: enableResults.search}).summary(),
   };
 }

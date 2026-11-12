@@ -62,8 +62,9 @@ import {categoryFacetSearchStateSelector} from '../../../../features/facets/face
 import {specificFacetSearchStateSelector} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-state-selector.js';
 import type {ManualRangeSection} from '../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../utils/errors.js';
+import type {ResolvedEnableResults} from '../../types/build.js';
 import {SolutionType} from '../../types/controller-constants.js';
-import type {SearchAndListingControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
+import type {SearchAndListingControllerDefinition} from '../../types/controller-definitions.js';
 
 export type {
   BaseFacetSearchResult,
@@ -107,8 +108,7 @@ export type MappedFacetState = {
             : never;
 };
 
-export type FacetGeneratorDefinition =
-  SearchAndListingControllerDefinitionWithoutProps<FacetGenerator>;
+export type FacetGeneratorDefinition = SearchAndListingControllerDefinition<FacetGenerator>;
 
 /**
  * @group Definers
@@ -117,8 +117,8 @@ export function defineFacetGenerator(): FacetGeneratorDefinition {
   return {
     listing: true,
     search: true,
-    build: (engine, solutionType) =>
-      buildFacetGenerator(engine, {props: {solutionType: solutionType!}}),
+    build: (engine, {solutionType, enableResults}) =>
+      buildFacetGenerator(engine, {props: {solutionType, enableResults}}),
   };
 }
 
@@ -161,6 +161,7 @@ export interface FacetGeneratorOptions {
 
 interface FacetGeneratorProps {
   solutionType: SolutionType;
+  enableResults: ResolvedEnableResults;
 }
 
 /**
@@ -179,7 +180,7 @@ export function buildFacetGenerator(
   }
 
   const getEngineState = () => engine[stateKey];
-  const solutionType = options.props.solutionType;
+  const {solutionType, enableResults} = options.props;
 
   const getFacetResponseSelector = (facetId: string) => {
     return solutionType === SolutionType.listing
@@ -204,8 +205,8 @@ export function buildFacetGenerator(
 
   const baseController =
     solutionType === SolutionType.listing
-      ? buildProductListing(engine).facetGenerator()
-      : buildSearch(engine).facetGenerator();
+      ? buildProductListing(engine, {enableResults: enableResults.listing}).facetGenerator()
+      : buildSearch(engine, {enableResults: enableResults.search}).facetGenerator();
 
   const {state: _state, ...restOfBaseController} = baseController;
 

@@ -105,14 +105,12 @@ export type {
 export {defineBreadcrumbManager} from './ssr-next/commerce/controllers/breadcrumb-manager/headless-core-breadcrumb-manager.ssr.js';
 export type {
   Cart,
-  CartBuildProps,
   CartDefinition,
   CartInitialState,
   CartItem,
   CartProps,
   CartState,
 } from './ssr-next/commerce/controllers/cart/headless-cart.ssr.js';
-export {defineCart} from './ssr-next/commerce/controllers/cart/headless-cart.ssr.js';
 export type {
   Context,
   ContextDefinition,
@@ -123,11 +121,9 @@ export type {
   UserLocation,
   View,
 } from './ssr-next/commerce/controllers/context/headless-context.ssr.js';
-export {defineContext} from './ssr-next/commerce/controllers/context/headless-context.ssr.js';
 export type {
   DidYouMean,
   DidYouMeanDefinition,
-  DidYouMeanOptions,
   DidYouMeanState,
 } from './ssr-next/commerce/controllers/did-you-mean/headless-did-you-mean.ssr.js';
 export {defineDidYouMean} from './ssr-next/commerce/controllers/did-you-mean/headless-did-you-mean.ssr.js';
@@ -195,9 +191,7 @@ export type {
   ParameterManagerState,
   Parameters,
   ProductListingParameters,
-  SSRParameterManagerProps,
 } from './ssr-next/commerce/controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
-export {defineParameterManager} from './ssr-next/commerce/controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 export type {
   ProductEnrichment,
   ProductEnrichmentDefinition,
@@ -284,17 +278,30 @@ export type {
   RedirectionTriggerState,
 } from './ssr-next/commerce/controllers/triggers/headless-redirection-trigger.ssr.js';
 export {defineRedirectionTrigger} from './ssr-next/commerce/controllers/triggers/headless-redirection-trigger.ssr.js';
+export {MultipleRecommendationError, SolutionTypeMismatchError} from './ssr-next/common/errors.js';
+export type {
+  BuildNavigatorContextOptions,
+  RequestHeaders,
+} from './ssr-next/common/navigator-context.js';
+export {buildNavigatorContext, CLIENT_ID_COOKIE_NAME} from './ssr-next/common/navigator-context.js';
+export type {ControllerStaticState} from './ssr-next/common/types/controllers.js';
 export {defineCommerceEngine} from './ssr-next/commerce/engine/commerce-engine.ssr.js';
+export {augmentCommerceControllerDefinitions} from './ssr-next/commerce/engine/commerce-engine.ssr.js';
 export type {SSRCommerceEngine as CommerceEngine} from './ssr-next/commerce/factories/build-factory.js';
+export type {CommerceStaticState} from './ssr-next/commerce/types/fetch-static-state.js';
 // Main App
 export type {
   BuildConfig,
+  ControllerBuildContext,
+  EnableResultsOption,
+  RecommendationNames,
+  ResolvedEnableResults,
   SSRCommerceEngineOptions as CommerceEngineOptions,
+  SSRContextOptions,
 } from './ssr-next/commerce/types/build.js';
 export {SolutionType} from './ssr-next/commerce/types/controller-constants.js';
 export type {
   AugmentedControllerDefinition,
-  CommerceEngineDefinitionControllersPropsOption as EngineDefinitionControllersPropsOption,
   ControllerDefinition,
   ControllerDefinitionsMap,
   HydratedState,
@@ -303,7 +310,6 @@ export type {
 } from './ssr-next/commerce/types/controller-definitions.js';
 export type {
   InferControllerFromDefinition,
-  InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllersMapFromDefinition,
   InferHydratedState,

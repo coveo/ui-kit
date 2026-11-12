@@ -1,7 +1,11 @@
 import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import type {SearchEngineConfiguration} from '../../../app/search-engine/search-engine-configuration.js';
 import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
-import {defineMockSearchController} from '../../../test/mock-ssr-controller-definitions.js';
+import {buildMockSearchResponse} from '../../../test/mock-search-response.js';
+import {
+  defineMockSearchController,
+  defineMockSearchControllerReadingPageFacts,
+} from '../../../test/mock-ssr-controller-definitions.js';
 import type {SearchEngineDefinitionOptions} from '../types/engine.js';
 import {defineSearchEngine} from './search-engine.ssr.js';
 
@@ -198,6 +202,139 @@ describe('Search Engine SSR', () => {
 
       expect(stateA.accessToken).toBe('token-user-A');
       expect(stateB.accessToken).toBe('token-user-B');
+    });
+  });
+
+  describe('definition validation', () => {
+    it('should throw when a controller uses the reserved parameterManager name', () => {
+      expect(() =>
+        defineSearchEngine({
+          ...definitionOptions,
+          // @ts-expect-error: the reserved name is rejected at the type level too
+          controllers: {parameterManager: defineMockSearchController()},
+        })
+      ).toThrow('Reserved controller names found: parameterManager');
+    });
+
+    it('should throw when a controller uses the reserved context name', () => {
+      expect(() =>
+        defineSearchEngine({
+          ...definitionOptions,
+          // @ts-expect-error: the reserved name is rejected at the type level too
+          controllers: {context: defineMockSearchController()},
+        })
+      ).toThrow('Reserved controller names found: context');
+    });
+  });
+
+  describe('static state round trip', () => {
+    it('should not serialize the forwarded-for header into the static state', async () => {
+      const {standaloneEngineDefinition} = defineSearchEngine(definitionOptions);
+
+      const staticState = await standaloneEngineDefinition.fetchStaticState({
+        navigatorContext: buildMockNavigatorContext({forwardedFor: '1.2.3.4'}),
+      });
+
+      expect(staticState.navigatorContext).not.toHaveProperty('forwardedFor');
+      expect(staticState.navigatorContext.clientId).toBe(mockNavigatorContext.clientId);
+    });
+  });
+
+  describe('page facts', () => {
+    it('should feed the search params to the parameter manager', async () => {
+      const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+
+      const staticState = await searchEngineDefinition.fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+        searchParams: {q: 'test'},
+      });
+
+      expect(staticState.controllers.parameterManager.state.parameters).toEqual({q: 'test'});
+    });
+
+    it('should feed the custom context to the context controller on both sides', async () => {
+      const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+
+      const staticState = await searchEngineDefinition.fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+        context: {ageGroup: '30-45'},
+      });
+      const hydratedState = await searchEngineDefinition.hydrateStaticState(staticState);
+
+      expect(staticState.context).toEqual({ageGroup: '30-45'});
+      expect(staticState.controllers.context.state.values).toEqual({ageGroup: '30-45'});
+      expect(hydratedState.controllers.context.state.values).toEqual({ageGroup: '30-45'});
+    });
+
+    it('should hand the page facts to every controller definition and carry no controller props', async () => {
+      const {searchEngineDefinition} = defineSearchEngine({
+        ...definitionOptions,
+        controllers: {reader: defineMockSearchControllerReadingPageFacts()},
+      });
+
+      const staticState = await searchEngineDefinition.fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+        searchParams: {q: 'test'},
+        context: {ageGroup: '30-45'},
+      });
+
+      expect(staticState.controllers.reader.state).toEqual({
+        navigatorContext: mockNavigatorContext,
+        searchParams: {q: 'test'},
+        context: {ageGroup: '30-45'},
+      });
+      expect(staticState).not.toHaveProperty('controllerProps');
+    });
+  });
+
+  describe('x-forwarded-for header', () => {
+    let forwardedForPerSearchRequest: (string | null)[];
+
+    beforeEach(() => {
+      forwardedForPerSearchRequest = [];
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async (url: string, init: RequestInit) => {
+          if (url.includes('/rest/search/v2')) {
+            forwardedForPerSearchRequest.push(new Headers(init.headers).get('x-forwarded-for'));
+          }
+          return new Response(JSON.stringify(buildMockSearchResponse()), {
+            headers: {'Content-Type': 'application/json'},
+          });
+        })
+      );
+    });
+
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    it('should send each request its own x-forwarded-for header', async () => {
+      const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+
+      await searchEngineDefinition.fetchStaticState({
+        navigatorContext: buildMockNavigatorContext({forwardedFor: '1.1.1.1'}),
+      });
+      await searchEngineDefinition.fetchStaticState({
+        navigatorContext: buildMockNavigatorContext({forwardedFor: '2.2.2.2'}),
+      });
+
+      expect(forwardedForPerSearchRequest).toEqual(['1.1.1.1', '2.2.2.2']);
+    });
+
+    it('should send each concurrent request its own x-forwarded-for header', async () => {
+      const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+
+      await Promise.all([
+        searchEngineDefinition.fetchStaticState({
+          navigatorContext: buildMockNavigatorContext({forwardedFor: '5.5.5.5'}),
+        }),
+        searchEngineDefinition.fetchStaticState({
+          navigatorContext: buildMockNavigatorContext({forwardedFor: '6.6.6.6'}),
+        }),
+      ]);
+
+      expect(forwardedForPerSearchRequest.toSorted()).toEqual(['5.5.5.5', '6.6.6.6']);
     });
   });
 

@@ -2,7 +2,6 @@ import {
   buildParameterSerializer,
   type ContextOptions,
 } from '@coveo/headless-react/ssr-commerce-next';
-import {headers} from 'next/headers';
 import * as externalCartAPI from '@/actions/external-cart-api';
 import BreadcrumbManager from '@/components/breadcrumb-manager';
 import ContextDropdown from '@/components/context-dropdown';
@@ -17,12 +16,12 @@ import Summary from '@/components/summary';
 import NotifyTrigger from '@/components/triggers/notify-trigger';
 import QueryTrigger from '@/components/triggers/query-trigger';
 import {searchEngineDefinition} from '@/lib/commerce-engine';
-import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
+import {getNavigatorContext} from '@/lib/navigator-context';
 import {defaultContext} from '@/utils/context';
 
 export default async function Search({searchParams}: {searchParams: Promise<URLSearchParams>}) {
-  // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
-  const navigatorContext = new NextJsNavigatorContext(await headers());
+  // The navigator context describes the visitor's browser. It is passed to every `fetchStaticState` call.
+  const navigatorContext = await getNavigatorContext();
 
   const {deserialize} = buildParameterSerializer();
   const parameters = deserialize(await searchParams);
@@ -30,7 +29,8 @@ export default async function Search({searchParams}: {searchParams: Promise<URLS
   // Fetches the cart items from an external service
   const items = await externalCartAPI.getCart();
 
-  // Define the context options for listing and recommendations
+  // The context of the storefront. `view.url` defaults to the page URL of the navigator context; this sample
+  // sets it explicitly because its merchandising rules are configured on the storefront URL, not on localhost.
   const context: ContextOptions = {
     language: defaultContext.language,
     country: defaultContext.country,
@@ -44,7 +44,7 @@ export default async function Search({searchParams}: {searchParams: Promise<URLS
   const staticState = await searchEngineDefinition.fetchStaticState({
     cart: {items},
     context,
-    navigatorContext: navigatorContext.marshal,
+    navigatorContext,
     searchParams: parameters,
   });
 

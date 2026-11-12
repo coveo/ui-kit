@@ -1,18 +1,17 @@
 import type {ContextOptions} from '@coveo/headless-react/ssr-commerce-next';
-import {headers} from 'next/headers';
 import * as externalCartAPI from '@/actions/external-cart-api';
 import Cart from '@/components/cart';
 import ContextDropdown from '@/components/context-dropdown';
-import {RecommendationProvider, StandaloneProvider} from '@/components/providers/providers';
+import {StandaloneProvider} from '@/components/providers/providers';
 import PopularBought from '@/components/recommendations/popular-bought';
 import StandaloneSearchBox from '@/components/standalone-search-box';
-import {recommendationEngineDefinition, standaloneEngineDefinition} from '@/lib/commerce-engine';
-import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
+import {standaloneEngineDefinition} from '@/lib/commerce-engine';
+import {getNavigatorContext} from '@/lib/navigator-context';
 import {defaultContext} from '@/utils/context';
 
 export default async function Search() {
-  // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
-  const navigatorContext = new NextJsNavigatorContext(await headers());
+  // The navigator context describes the visitor's browser. It is passed to every `fetchStaticState` call.
+  const navigatorContext = await getNavigatorContext();
 
   // Fetches the cart items from an external service
   const items = await externalCartAPI.getCart();
@@ -27,25 +26,12 @@ export default async function Search() {
     },
   };
 
-  // Fetches the static state of the app with initial state (when applicable)
+  // One request fetches the badges and the recommendation slot the page shows.
   const staticState = await standaloneEngineDefinition.fetchStaticState({
     cart: {items},
     context,
-    navigatorContext: navigatorContext.marshal,
-    controllers: {
-      productEnrichment: {
-        options: {
-          placementIds: ['70b493b2-a1f1-4049-ad70-16695cef39cd'],
-        },
-      },
-    },
-  });
-
-  const recsStaticState = await recommendationEngineDefinition.fetchStaticState({
-    cart: {items},
-    context,
-    navigatorContext: navigatorContext.marshal,
-    recommendations: ['popularBought', 'popularViewed'],
+    navigatorContext,
+    recommendations: ['popularBought'],
   });
   return (
     <StandaloneProvider staticState={staticState}>
@@ -53,9 +39,7 @@ export default async function Search() {
         <ContextDropdown />
         <StandaloneSearchBox />
         <Cart />
-        <RecommendationProvider staticState={recsStaticState}>
-          <PopularBought />
-        </RecommendationProvider>
+        <PopularBought />
       </div>
     </StandaloneProvider>
   );

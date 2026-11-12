@@ -1,3 +1,4 @@
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
   buildContext,
   type Context,
@@ -5,7 +6,7 @@ import {
 } from '../../../../controllers/commerce/context/headless-context.js';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {buildMockSSRCommerceEngine} from '../../../../test/mock-engine-v2.js';
-import {MissingControllerProps} from '../../../common/errors.js';
+import {buildMockCommerceBuildContext} from '../../../../test/mock-ssr-build-context.js';
 import type {SSRCommerceEngine} from '../../factories/build-factory.js';
 import {type ContextDefinition, defineContext} from './headless-context.ssr.js';
 
@@ -30,46 +31,36 @@ describe('define commerce context', () => {
     },
   };
   let contextDefinition: ContextDefinition;
+  let engine: SSRCommerceEngine;
 
   beforeEach(() => {
     buildContextMock.mockReturnValue({} as Context);
     contextDefinition = defineContext();
+    engine = buildMockSSRCommerceEngine({
+      ...buildMockCommerceState(),
+      commerceContext: {...options},
+    });
   });
 
   afterEach(() => {
     buildContextMock.mockClear();
   });
 
-  it('defineContext returns the proper type', () => {
+  it('should return a definition available on every kind of page', () => {
     expect(contextDefinition).toMatchObject<ContextDefinition>({
-      buildWithProps: expect.any(Function),
+      build: expect.any(Function),
       listing: true,
       search: true,
       standalone: true,
-      recommendation: true,
     });
   });
 
-  it('buildWithProps should pass its parameters to the buildContext', () => {
-    const engine: SSRCommerceEngine = buildMockSSRCommerceEngine({
-      ...buildMockCommerceState(),
-      commerceContext: {...options},
-    });
-
-    contextDefinition.buildWithProps(engine, {initialState: options});
+  it('should build the context with the context passed to fetchStaticState()', () => {
+    contextDefinition.build(
+      engine,
+      buildMockCommerceBuildContext({buildConfig: {context: options}})
+    );
 
     expect(buildContextMock).toHaveBeenCalledWith(engine, {options});
-  });
-
-  it('should throw when props is undefined', () => {
-    const engine: SSRCommerceEngine = buildMockSSRCommerceEngine({
-      ...buildMockCommerceState(),
-      commerceContext: {...options},
-    });
-    const props = undefined;
-
-    expect(() => {
-      contextDefinition.buildWithProps(engine, props);
-    }).toThrow(MissingControllerProps);
   });
 });

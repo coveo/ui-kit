@@ -8,8 +8,7 @@ import {
   type UserLocation,
   type View,
 } from '../../../../controllers/commerce/context/headless-context.js';
-import {MissingControllerProps} from '../../../common/errors.js';
-import type {UniversalControllerDefinitionWithProps} from '../../types/controller-definitions.js';
+import type {UniversalControllerDefinition} from '../../types/controller-definitions.js';
 
 export type {
   Context,
@@ -21,10 +20,7 @@ export type {
   View,
 };
 
-export type ContextDefinition = UniversalControllerDefinitionWithProps<
-  Context,
-  {initialState: ContextOptions}
->;
+export type ContextDefinition = UniversalControllerDefinition<Context>;
 
 /**
  * Defines a `Context` controller instance.
@@ -32,19 +28,15 @@ export type ContextDefinition = UniversalControllerDefinitionWithProps<
  *
  * @returns The `Context` controller definition.
  *
- * Note: This controller is automatically included in all engine definitions. You do not need to add it manually to your engine definition configuration.
+ * Note: This controller is included in every engine definition and fed by the `context` option of `fetchStaticState()`.
  */
 export function defineContext(): ContextDefinition {
   return {
     listing: true,
     search: true,
     standalone: true,
-    recommendation: true,
-    buildWithProps: (engine, props: {initialState: ContextOptions}) => {
-      if (props === undefined) {
-        throw new MissingControllerProps('Context');
-      }
-      return buildContext(engine, {options: props.initialState});
-    },
+    // The view URL is resolved by `withDefaultViewUrl()` before the controllers are built.
+    build: (engine, {buildConfig}) =>
+      buildContext(engine, {options: buildConfig.context as ContextOptions}),
   };
 }

@@ -3,11 +3,10 @@ import type {Controller} from '../../../controllers/controller/headless-controll
 import type {ControllersMap} from '../../common/types/controllers.js';
 import type {EngineStaticState} from '../../common/types/engine.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
-import type {SSRCommerceEngineOptions} from './build.js';
+import type {EnableResultsOption, SSRCommerceEngineOptions} from './build.js';
 import type {SolutionType} from './controller-constants.js';
 import type {BakedInControllers, ControllerDefinitionsMap} from './controller-definitions.js';
 import type {
-  InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllersMapFromDefinition,
 } from './controller-inference.js';
@@ -34,6 +33,14 @@ export type CommerceEngineDefinitionOptions<
    * The controllers to initialize with the commerce engine.
    */
   controllers?: ValidateControllerNames<TControllers>;
+  /**
+   * Whether the listing and search requests fill `results` (products and spotlight content) rather
+   * than `products`: `true` for both kinds of request, or one flag per kind. The flag applies to every
+   * request of the matching kind, whichever controller triggers it, on the server and in the browser.
+   *
+   * @default false
+   */
+  enableResults?: EnableResultsOption;
 };
 
 export interface CommerceEngineDefinition<
@@ -41,15 +48,17 @@ export interface CommerceEngineDefinition<
   TSolutionType extends SolutionType,
 > {
   /**
-   * Executes a commerce search/listing/recommendation request on the server side and returns the static state.
+   * Executes the commerce request of the page (listing or search) and the requested recommendation
+   * slots on the server side, and returns the static state.
    *
-   * This method performs the initial commerce request based on the solution type, captures the response,
+   * This method performs the initial commerce requests based on the solution type, captures the responses,
    * and returns a serializable state snapshot that can be transferred to the client for hydration.
    *
    * The returned static state includes controller states (facets, products, pagination, etc.)
    *
-   * @param params - A configuration object containing navigation context, search parameters,
-   *                 cart state, and controller-specific props
+   * @param params - The page facts: the navigator context, the context, the cart, the search
+   *                 parameters, the recommendation slots to request, the product being viewed and
+   *                 the per-request access token
    * @returns A Promise that resolves to the static state containing controller states
    *
    * @example
@@ -61,11 +70,11 @@ export interface CommerceEngineDefinition<
    *   searchParams: { q: 'running shoes' }
    * });
    *
-   * // For recommendations
-   * const staticState = await recommendationEngineDefinition.fetchStaticState({
+   * // For a product page with a seeded recommendation slot
+   * const staticState = await standaloneEngineDefinition.fetchStaticState({
    *   navigatorContext: { ... },
    *   context: { ... },
-   *   recommendations: ['popularProducts'],
+   *   recommendations: ['viewedTogether'],
    *   productId: 'abc123'
    * });
    * ```
@@ -73,7 +82,6 @@ export interface CommerceEngineDefinition<
   fetchStaticState: FetchStaticState<
     UnknownAction,
     InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>,
-    InferControllerPropsMapFromDefinitions<TControllers>,
     TControllers,
     TSolutionType
   >;
@@ -90,8 +98,9 @@ export interface CommerceEngineDefinition<
    * - Replays search/listing/recommendation actions to synchronize the state
    * - Returns live, interactive controllers ready for user interaction
    *
-   * @param params - A configuration object containing the static state, navigation context,
-   *                 and any controller-specific props needed for hydration
+   * @param params - The static state returned by `fetchStaticState()`. It already carries the page
+   *                 facts (navigator context, context, cart, search parameters, product, requested
+   *                 recommendation slots, per-request access token), so it can be passed as is.
    * @returns A Promise that resolves to the hydrated engine and interactive controllers
    *
    * @example
@@ -106,7 +115,7 @@ export interface CommerceEngineDefinition<
   hydrateStaticState: HydrateStaticState<
     InferControllersMapFromDefinition<TControllers, TSolutionType>,
     UnknownAction,
-    InferControllerPropsMapFromDefinitions<TControllers>,
+    InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>,
     TControllers,
     TSolutionType
   >;
@@ -129,7 +138,7 @@ type FetchStaticStateFunction<
   TSolutionType extends SolutionType,
 > = Definition<TControllerDefinitions, TSolutionType>['fetchStaticState'];
 
-export type HydrateStaticStateFunction<
+type HydrateStaticStateFunction<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
   TSolutionType extends SolutionType,
 > = Definition<TControllerDefinitions, TSolutionType>['hydrateStaticState'];

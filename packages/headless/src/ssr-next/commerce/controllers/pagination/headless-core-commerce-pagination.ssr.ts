@@ -8,7 +8,7 @@ import type {
 import {buildProductListing} from '../../../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch} from '../../../../controllers/commerce/search/headless-search.js';
 import {SolutionType} from '../../types/controller-constants.js';
-import type {SearchAndListingControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
+import type {SearchAndListingControllerDefinition} from '../../types/controller-definitions.js';
 
 export type {
   CorePaginationOptions,
@@ -18,7 +18,7 @@ export type {
   PaginationState,
 };
 
-export type PaginationDefinition = SearchAndListingControllerDefinitionWithoutProps<Pagination>;
+export type PaginationDefinition = SearchAndListingControllerDefinition<Pagination>;
 
 /**
  * Defines a `Pagination` controller instance.
@@ -32,9 +32,9 @@ export function definePagination(props?: PaginationProps): PaginationDefinition 
     listing: true,
     search: true,
     ...props,
-    build: (engine, solutionType) =>
+    build: (engine, {solutionType, enableResults}) =>
       solutionType === SolutionType.listing
-        ? buildProductListing(engine).pagination(props)
-        : buildSearch(engine).pagination(props),
+        ? buildProductListing(engine, {enableResults: enableResults.listing}).pagination(props)
+        : buildSearch(engine, {enableResults: enableResults.search}).pagination(props),
   };
 }

@@ -4,14 +4,11 @@ import {
   type Quickview,
   type QuickviewProps,
 } from '../../../../controllers/quickview/headless-quickview.js';
-import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
+import type {ControllerDefinition} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/quickview/headless-quickview.js';
 
-export interface QuickviewDefinition extends ControllerDefinitionWithoutProps<
-  SearchEngine,
-  Quickview
-> {}
+export interface QuickviewDefinition extends ControllerDefinition<SearchEngine, Quickview> {}
 
 /**
  * Defines a `Quickview` controller instance.

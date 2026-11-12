@@ -2,18 +2,20 @@ import type {UnknownAction} from '@reduxjs/toolkit';
 import type {CoreEngine, CoreEngineNext} from '../../app/engine.js';
 import type {Controller} from '../../controllers/controller/headless-controller.js';
 import {clone, mapObject} from '../../utils/utils.js';
-import {ControllerBuilder} from '../common/builders/controller-builder.js';
-import {createStaticControllerBuilder} from '../common/builders/static-controller-builder.js';
+import type {InferControllerStaticStateMapFromControllers} from '../common/types/controller-inference.js';
+import type {BuildConfig} from './types/build.js';
 import type {
   BakedInSearchControllers,
   ControllerDefinitionsMap,
 } from './types/controller-definition.js';
 import type {
-  InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromDefinitions,
   InferControllersMapFromDefinition,
 } from './types/controller-inference.js';
 
+/**
+ * Builds every controller of the definition with the page facts of the request.
+ */
 export function buildControllerDefinitions<
   TControllerDefinitionsMap extends ControllerDefinitionsMap<
     CoreEngine | CoreEngineNext,
@@ -23,16 +25,15 @@ export function buildControllerDefinitions<
 >({
   definitionsMap,
   engine,
-  propsMap,
+  buildConfig,
 }: {
   definitionsMap: TControllerDefinitionsMap;
   engine: TEngine;
-  propsMap?: InferControllerPropsMapFromDefinitions<TControllerDefinitionsMap>;
+  buildConfig: BuildConfig;
 }): InferControllersMapFromDefinition<TControllerDefinitionsMap> {
-  return mapObject(definitionsMap, (definition, key) => {
-    const props = propsMap?.[key as keyof typeof propsMap];
-    return new ControllerBuilder(definition, engine, props).build();
-  }) as InferControllersMapFromDefinition<TControllerDefinitionsMap>;
+  return mapObject(definitionsMap, (definition) =>
+    definition.build(engine, {buildConfig})
+  ) as InferControllersMapFromDefinition<TControllerDefinitionsMap>;
 }
 
 export function createStaticState<
@@ -46,10 +47,10 @@ export function createStaticState<
   controllers: Record<string, Controller>;
 }) {
   return {
-    controllers: mapObject(controllers, (controller) =>
-      createStaticControllerBuilder(controller).build()
-    ) as InferControllerStaticStateMapFromDefinitions<TControllerDefinitions> &
-      BakedInSearchControllers,
+    controllers: mapObject(controllers, (controller) => ({
+      state: clone(controller.state),
+    })) as InferControllerStaticStateMapFromDefinitions<TControllerDefinitions> &
+      InferControllerStaticStateMapFromControllers<BakedInSearchControllers>,
     searchActions: clone(searchActions),
   };
 }

@@ -1,19 +1,23 @@
 import {
   type AugmentedControllerDefinition,
+  augmentCommerceControllerDefinitions,
   type CommerceEngine,
   type CommerceEngineDefinitionOptions,
   type Controller,
   type ControllerDefinitionsMap,
   defineCommerceEngine as defineBaseCommerceEngine,
-  defineCart,
-  defineContext,
-  defineParameterManager,
   SolutionType,
 } from '@coveo/headless/ssr-commerce-next';
 // Workaround to prevent Next.js erroring about importing CSR only hooks
 import React from 'react';
+import type {Hydration} from '../ssr-common/types.js';
 import {type SingletonGetter, singleton} from '../utils.js';
-import {buildControllerHooks, buildEngineHook, buildStateProvider} from './common.js';
+import {
+  buildControllerHooks,
+  buildEngineHook,
+  buildHydrationHook,
+  buildStateProvider,
+} from './common.js';
 import type {
   ContextState,
   InferControllerHooksMapFromDefinition,
@@ -50,15 +54,18 @@ function createSingletonContext<
 export function defineCommerceEngine<TControllers extends ControllerDefinitionsMap<Controller>>(
   options: CommerceEngineDefinitionOptions<TControllers>
 ): {
+  /**
+   * Returns the engine once the static state is hydrated, and `undefined` before.
+   */
   useEngine: () => CommerceEngine | undefined;
+  /**
+   * Returns whether the components render the static state, the hydrated engine, or a hydration error.
+   */
+  useHydration: () => Hydration;
   controllers: InferControllerHooksMapFromDefinition<AugmentedControllerDefinition<TControllers>>;
   listingEngineDefinition: ReactCommerceEngineDefinition<TControllers, SolutionType.listing>;
   searchEngineDefinition: ReactCommerceEngineDefinition<TControllers, SolutionType.search>;
   standaloneEngineDefinition: ReactCommerceEngineDefinition<TControllers, SolutionType.standalone>;
-  recommendationEngineDefinition: ReactCommerceEngineDefinition<
-    TControllers,
-    SolutionType.recommendation
-  >;
 } {
   const singletonContext = createSingletonContext<TControllers>();
 
@@ -67,25 +74,18 @@ export function defineCommerceEngine<TControllers extends ControllerDefinitionsM
   >;
   type ListingContext = ContextStateType<SolutionType.listing>;
   type SearchContext = ContextStateType<SolutionType.search>;
-  type RecommendationContext = ContextStateType<SolutionType.recommendation>;
   type StandaloneContext = ContextStateType<SolutionType.standalone>;
 
-  const {
-    listingEngineDefinition,
-    searchEngineDefinition,
-    standaloneEngineDefinition,
-    recommendationEngineDefinition,
-  } = defineBaseCommerceEngine({...options});
+  const {listingEngineDefinition, searchEngineDefinition, standaloneEngineDefinition} =
+    defineBaseCommerceEngine({...options});
 
-  const augmentedControllerDefinition = {
-    ...options.controllers,
-    parameterManager: defineParameterManager(),
-    context: defineContext(),
-    cart: defineCart(),
-  } as AugmentedControllerDefinition<TControllers>;
+  const augmentedControllerDefinition = augmentCommerceControllerDefinitions(
+    options.controllers as TControllers | undefined
+  );
 
   return {
     useEngine: buildEngineHook(singletonContext),
+    useHydration: buildHydrationHook(singletonContext),
     controllers: buildControllerHooks(singletonContext, augmentedControllerDefinition),
     listingEngineDefinition: {
       ...listingEngineDefinition,
@@ -100,13 +100,6 @@ export function defineCommerceEngine<TControllers extends ControllerDefinitionsM
       StateProvider: buildStateProvider(
         singletonContext as StandaloneContext,
         SolutionType.standalone
-      ),
-    },
-    recommendationEngineDefinition: {
-      ...recommendationEngineDefinition,
-      StateProvider: buildStateProvider(
-        singletonContext as RecommendationContext,
-        SolutionType.recommendation
       ),
     },
   };

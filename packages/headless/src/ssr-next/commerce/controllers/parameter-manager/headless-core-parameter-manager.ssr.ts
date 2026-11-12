@@ -18,8 +18,9 @@ import {commerceQuerySetReducer as querySet} from '../../../../features/commerce
 import type {CommerceSearchParameters} from '../../../../features/commerce/search-parameters/search-parameters-actions.js';
 import {sortReducer as commerceSort} from '../../../../features/commerce/sort/sort-slice.js';
 import {loadReducerError} from '../../../../utils/errors.js';
+import type {CommonBuildConfig} from '../../types/build.js';
 import {SolutionType} from '../../types/controller-constants.js';
-import type {SearchAndListingControllerDefinitionWithProps} from '../../types/controller-definitions.js';
+import type {SearchAndListingControllerDefinition} from '../../types/controller-definitions.js';
 
 export type {
   CommerceSearchParameters,
@@ -30,9 +31,8 @@ export type {
   ProductListingParameters,
 };
 
-export type ParameterManagerDefinition = SearchAndListingControllerDefinitionWithProps<
-  ParameterManager<ProductListingParameters | CommerceSearchParameters>,
-  SSRParameterManagerProps<ProductListingParameters | CommerceSearchParameters>
+export type ParameterManagerDefinition = SearchAndListingControllerDefinition<
+  ParameterManager<ProductListingParameters | CommerceSearchParameters>
 >;
 
 /**
@@ -41,39 +41,45 @@ export type ParameterManagerDefinition = SearchAndListingControllerDefinitionWit
  *
  * @returns The `ParameterManager` controller definition.
  *
- * Note: This controller is automatically included in all engine definitions. You do not need to add it manually to your engine definition configuration.
+ * Note: This controller is included in every search and listing engine definition and fed by the `searchParams` option of `fetchStaticState()`.
  */
 export function defineParameterManager(): ParameterManagerDefinition {
   return {
     listing: true,
     search: true,
-    buildWithProps: (engine, props, solutionType) => {
+    build: (engine, {solutionType, buildConfig, enableResults}) => {
+      const parameters = parametersOf(buildConfig);
+
       if (solutionType === SolutionType.listing) {
         if (!loadCommerceProductListingParameterReducers(engine)) {
           throw loadReducerError;
         }
-        return buildProductListing(engine).parameterManager({
-          ...props,
-          excludeDefaultParameters: true,
-        });
-      } else {
-        if (!loadCommerceSearchParameterReducers(engine)) {
-          throw loadReducerError;
-        }
-
-        return buildSearch(engine).parameterManager({
-          ...props,
-          excludeDefaultParameters: true,
-        });
+        return buildProductListing(engine, {enableResults: enableResults.listing}).parameterManager(
+          {
+            initialState: {parameters: parameters as ProductListingParameters},
+            excludeDefaultParameters: true,
+          }
+        );
       }
+
+      if (!loadCommerceSearchParameterReducers(engine)) {
+        throw loadReducerError;
+      }
+      return buildSearch(engine, {enableResults: enableResults.search}).parameterManager({
+        initialState: {parameters: parameters as CommerceSearchParameters},
+        excludeDefaultParameters: true,
+      });
     },
   };
 }
 
-export interface SSRParameterManagerProps<T extends Parameters> extends Omit<
-  ParameterManagerProps<T>,
-  'excludeDefaultParameters'
-> {}
+function parametersOf(buildConfig: CommonBuildConfig) {
+  const {q, ...rest} = (buildConfig.searchParams as Parameters & {q?: string}) || {};
+  return {
+    ...{q},
+    ...(rest && typeof rest === 'object' ? rest : {}),
+  };
+}
 
 function loadCommerceCommonParameterReducers(
   engine: CoreEngineNext
