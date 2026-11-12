@@ -665,6 +665,9 @@ jobs:
           path: packages/atomic/reports/a11y-report.shard-${{ matrix.shardIndex }}.json
           retention-days: 1
           if-no-files-found: warn
+          # A re-run must replace the earlier attempt's report: the merge job downloads
+          # one artifact per name, the one with the highest ID, which is not always the newest.
+          overwrite: true
   merge-storybook-a11y-reports:
     name: 'Merge Storybook a11y reports and validate OpenACR'
     needs: [affected, storybook-atomic]
