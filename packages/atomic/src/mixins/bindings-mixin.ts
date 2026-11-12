@@ -61,9 +61,7 @@ class BindingController implements ReactiveController {
       .then((unsubscribeLanguage) => {
         this.unsubscribeLanguage = unsubscribeLanguage;
       })
-      .catch((error) => {
-        this.host = error;
-      });
+      .catch(() => {});
   }
 
   hostDisconnected() {

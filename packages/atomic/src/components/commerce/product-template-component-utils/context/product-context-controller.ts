@@ -29,7 +29,7 @@ import {
  * ```
  */
 export function createProductContextController(
-  host: LitElement & {error: Error | null},
+  host: LitElement & {error?: Error},
   options: {folded?: boolean} = {}
 ): ItemContextController<Product> {
   return new ItemContextController<Product>(host, {
