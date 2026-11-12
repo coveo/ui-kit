@@ -1,12 +1,12 @@
 'use client';
 
-import {useCart, useContext} from '@/lib/commerce-engine';
+import {useCart, useCommerceContext} from '@/lib/commerce-engine';
 import {adjustQuantity, emptyCart, purchase} from '@/utils/cart';
 import {formatCurrency} from '@/utils/format-currency';
 
 export default function Cart() {
   const {state, methods} = useCart();
-  const {state: contextState} = useContext();
+  const {state: contextState} = useCommerceContext();
 
   const isCartEmpty = () => {
     return state.items.length === 0;

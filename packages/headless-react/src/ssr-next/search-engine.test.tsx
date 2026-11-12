@@ -72,11 +72,13 @@ describe('defineSearchEngine', () => {
     expect(searchEngineDefinition.StateProvider).toBe(standaloneEngineDefinition.StateProvider);
   });
 
-  it('should expose one hook per controller, including the baked-in parameter manager', () => {
+  it('should expose one hook per controller, including the baked-in parameter manager and context', () => {
     const {controllers} = defineSearchEngine(definitionOptions);
 
     expect(controllers.useSearchBox).toBeTypeOf('function');
     expect(controllers.useParameterManager).toBeTypeOf('function');
+    expect(controllers.useSearchContext).toBeTypeOf('function');
+    expect(controllers).not.toHaveProperty('useContext');
   });
 
   it('should throw a MissingEngineProviderError when a hook is used outside the provider', () => {
