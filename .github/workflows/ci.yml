@@ -705,6 +705,9 @@ jobs:
           path: packages/atomic/reports/a11y-report.json
           retention-days: 7
           if-no-files-found: warn
+          # Same for a re-run of this job: `a11y:update-openacr --run-id` downloads this report
+          # with `gh run download`, which also keeps the copy with the highest ID.
+          overwrite: true
       - name: 'Check openacr.yaml is up to date'
         run: node scripts/check-openacr-drift.mjs
         working-directory: packages/atomic-a11y
