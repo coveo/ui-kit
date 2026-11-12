@@ -9,7 +9,7 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {createMockNavigatorContextProvider} from '../__tests__/mock-navigator-context-provider.js';
 import {waitForAsyncUpdates} from '../__tests__/test-utils.js';
 import type {ReactCommerceEngineDefinition} from './commerce-engine.js';
-import {buildProviderWithDefinition} from './providers.js';
+import {buildProviderWithDefinition} from './index.js';
 
 class ErrorBoundary extends Component<
   PropsWithChildren<{onError: (error: unknown) => void}>,
