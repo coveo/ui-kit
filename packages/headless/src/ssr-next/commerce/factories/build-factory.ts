@@ -123,8 +123,9 @@ export const buildFactory =
 
     const enabledRecommendationControllers =
       buildOptions && 'recommendations' in buildOptions
-        ? (buildOptions as RecommendationBuildConfig<TControllerDefinitions>)?.recommendations
-            .length
+        ? new Set(
+            (buildOptions as RecommendationBuildConfig<TControllerDefinitions>)?.recommendations
+          ).size
         : 0;
 
     const engineOptions: CommerceEngineOptions = augmentCommerceEngineOptions(
