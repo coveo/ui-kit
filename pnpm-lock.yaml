@@ -2131,6 +2131,40 @@ importers:
         specifier: 6.0.3
         version: 6.0.3
 
+  samples/headless-ssr/search-nextjs-v4:
+    dependencies:
+      '@coveo/headless':
+        specifier: workspace:*
+        version: link:../../../packages/headless
+      '@coveo/headless-react':
+        specifier: workspace:*
+        version: link:../../../packages/headless-react
+      next:
+        specifier: 'catalog:'
+        version: 16.4.3(@babel/core@8.0.5)(@opentelemetry/api@1.10.0)(@playwright/test@1.64.1)(@types/node@24.19.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.107.1)
+      react:
+        specifier: 19.3.1
+        version: 19.3.1
+      react-dom:
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
+    devDependencies:
+      '@playwright/test':
+        specifier: 'catalog:'
+        version: 1.64.1
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.19.2
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.3.0(@types/react@19.3.0)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+
   samples/headless/commerce-react:
     dependencies:
       '@coveo/headless':
