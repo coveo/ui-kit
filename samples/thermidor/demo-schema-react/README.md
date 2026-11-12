@@ -65,6 +65,10 @@ navigator context.
 
 See [`src/public-sample-configuration.ts`](src/public-sample-configuration.ts).
 
+## Cart
+
+The `cartApi()` Vite plugin ([`vite-plugins/cart-api/`](vite-plugins/cart-api/)) serves a fake in-memory merchant cart API at `/api/cart` (one cart per `demo-cart-id` cookie).
+
 ## Pull-request previews
 
 This sample is published as a [pkg.pr.new](https://pkg.pr.new) StackBlitz template,
