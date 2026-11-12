@@ -21,7 +21,7 @@ index 0d9914d3135028e369c8f1be08e5383346a7e212..1c550aed43dde0e0702607367866ceee
      setComponentVariable?: boolean;
  };
 diff --git a/dist/index.js b/dist/index.js
-index 468a76af1d8bf1c70aeb2bcf6d6b19c9d4ad78f7..c00058fbc303351e201b00aed17937d282170cf5 100644
+index 468a76af1d8bf1c70aeb2bcf6d6b19c9d4ad78f7..efc796a9caf74c705792fdd6e5ba712c86d9c82d 100644
 --- a/dist/index.js
 +++ b/dist/index.js
 @@ -319,29 +319,6 @@ function getAttributesAndProperties(component, enabled = true) {
@@ -63,15 +63,16 @@ index 468a76af1d8bf1c70aeb2bcf6d6b19c9d4ad78f7..c00058fbc303351e201b00aed17937d2
    }
    const enumValues = literalOptions.map((option) => removeQuotes(option));
    return arrayInner ? {
-@@ -689,6 +666,7 @@ function formatToValidJson(input) {
+@@ -689,6 +666,8 @@ function formatToValidJson(input) {
  // src/html-templates.ts
  import { action } from "storybook/actions";
  var argObserver;
 +var latestArgs = {};
++var previousArgs;
  var lastTagName;
  var options = {};
  var storyCounter = 0;
-@@ -723,7 +701,7 @@ function transformToScoped(template, tagSelector) {
+@@ -723,13 +702,14 @@ function transformToScoped(template, tagSelector) {
    ${styleContent}
  }`;
  }
@@ -80,12 +81,29 @@ index 468a76af1d8bf1c70aeb2bcf6d6b19c9d4ad78f7..c00058fbc303351e201b00aed17937d2
    if (!args) {
      return html`<${unsafeStatic(component.tagName)}></${unsafeStatic(component.tagName)}>`;
    }
-@@ -748,11 +726,24 @@ function getTemplate(component, args, slot, argTypes, excludeCategories, setComp
+   if (component?.tagName !== lastTagName) {
+     argObserver = void 0;
+     lastTagName = component?.tagName;
++    previousArgs = void 0;
+   }
+   const ops = getTemplateOperators(component, args, argTypes);
+   const { attrOperators, propOperators } = ops;
+@@ -748,11 +728,34 @@ function getTemplate(component, args, slot, argTypes, excludeCategories, setComp
      excludeCategories,
      scopeSelector
    );
 -  syncControls(component);
-+  latestArgs = { ...args };
++  // Storybook reads a render's args before awaiting loaders and beforeEach, so they can predate a sync: take only the args that changed since the previous render.
++  if (!previousArgs) {
++    latestArgs = { ...args };
++  } else {
++    for (const key of new Set([...Object.keys(previousArgs), ...Object.keys(args)])) {
++      if (args[key] !== previousArgs[key]) {
++        latestArgs[key] = args[key];
++      }
++    }
++  }
++  previousArgs = { ...args };
 +  syncControls(component, containerSelector);
    return html`${styleTemplate}
  <${unsafeStatic(component.tagName)} ${spread(operators)}>${slotsTemplate}${slot || ""}</${unsafeStatic(component.tagName)}>
@@ -107,7 +125,7 @@ index 468a76af1d8bf1c70aeb2bcf6d6b19c9d4ad78f7..c00058fbc303351e201b00aed17937d2
    ) : ""}
  `;
  }
-@@ -798,7 +789,7 @@ function getTemplateOperators(component, args, argTypes) {
+@@ -798,7 +801,7 @@ function getTemplateOperators(component, args, argTypes) {
      const attr = attrArgs[key];
      const attrName = attr.name;
      const attrValue = args[key];
@@ -116,7 +134,7 @@ index 468a76af1d8bf1c70aeb2bcf6d6b19c9d4ad78f7..c00058fbc303351e201b00aed17937d2
      if (attrValue !== attrArgs[key].defaultValue || options.renderDefaultValues) {
        attrOperators[prop] = attrValue === "false" ? false : attrValue;
      } else {
-@@ -810,6 +801,9 @@ function getTemplateOperators(component, args, argTypes) {
+@@ -810,6 +813,9 @@ function getTemplateOperators(component, args, argTypes) {
        return;
      }
      const propValue = args[key];
@@ -126,7 +144,7 @@ index 468a76af1d8bf1c70aeb2bcf6d6b19c9d4ad78f7..c00058fbc303351e201b00aed17937d2
      propOperators[`.${key}`] = propValue;
    });
    Object.keys(args).filter((x) => !Object.keys(argTypes || {}).includes(x)).forEach((key) => {
-@@ -902,15 +896,27 @@ function getSlotsTemplate(component, args, excludeCategories) {
+@@ -902,15 +908,27 @@ function getSlotsTemplate(component, args, excludeCategories) {
  ${slotTemplates}
  `) : "";
  }
@@ -148,11 +166,11 @@ index 468a76af1d8bf1c70aeb2bcf6d6b19c9d4ad78f7..c00058fbc303351e201b00aed17937d2
 +    }
 +    if (containerElement.shadowRoot) {
 +      containerElement = containerElement.shadowRoot;
-+    }
+     }
 +    const selectedComponent = containerElement.querySelector(component.tagName);
 +    if (!selectedComponent) {
 +      return;
-     }
++    }
 +    argObserver?.observe(selectedComponent, {
 +      attributes: true,
 +      attributeOldValue: true,
@@ -160,7 +178,7 @@ index 468a76af1d8bf1c70aeb2bcf6d6b19c9d4ad78f7..c00058fbc303351e201b00aed17937d2
    });
  }
  function setArgObserver(component) {
-@@ -923,33 +929,44 @@ function setArgObserver(component) {
+@@ -923,33 +941,45 @@ function setArgObserver(component) {
    if (argObserver) {
      return;
    }
@@ -186,6 +204,7 @@ index 468a76af1d8bf1c70aeb2bcf6d6b19c9d4ad78f7..c00058fbc303351e201b00aed17937d2
 +      if (mutation.oldValue === value) {
 +        return;
 +      }
++      // Skip an attribute the component adds itself with no arg (e.g. facet-id on load), so it doesn't trigger an args update and a render.
 +      if (mutation.oldValue === null && (latestArgs[name] === undefined || latestArgs[name] === "")) {
 +        return;
 +      }
@@ -223,7 +242,7 @@ index 468a76af1d8bf1c70aeb2bcf6d6b19c9d4ad78f7..c00058fbc303351e201b00aed17937d2
      });
    });
  }
-@@ -1001,7 +1018,8 @@ function getStorybookHelpers(tagName, options2) {
+@@ -1001,7 +1031,8 @@ function getStorybookHelpers(tagName, options2) {
        slot,
        argTypes,
        options2?.excludeCategories || [],
