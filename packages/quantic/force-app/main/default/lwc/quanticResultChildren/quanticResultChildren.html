@@ -1,6 +1,6 @@
 <template>
   <div class="slds-var-m-left_medium">
-    <template if:true={shouldDisplayChildren}>
+    <template lwc:if={shouldDisplayChildren}>
       <div class="slds-var-m-top_medium">
         <slot name="before-children"></slot>
         <div class="slds-var-p-left_medium slds-border_left">
@@ -19,7 +19,7 @@
         <slot name="after-children"></slot>
       </div>
     </template>
-    <template if:true={shouldDisplayChildResultsToggle}>
+    <template lwc:if={shouldDisplayChildResultsToggle}>
       <div class="slds-grid slds-grid_align-end result-children__toggle-button">
         <lightning-button
           variant="base"
@@ -31,7 +31,7 @@
       </div>
     </template>
 
-    <template if:true={shouldDisplayNoChildrenMessage}>
+    <template lwc:if={shouldDisplayNoChildrenMessage}>
       <div
         class="result-children__no-more-children-message slds-grid slds-grid_align-end slds-var-p-vertical_x-small slds-text-color_weak"
       >

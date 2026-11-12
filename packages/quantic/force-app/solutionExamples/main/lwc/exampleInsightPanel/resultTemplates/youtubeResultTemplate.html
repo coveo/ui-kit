@@ -41,7 +41,7 @@
         ></c-quantic-result-highlighted-text-field>
       </div>
       <div slot="actions">
-        <template if:true={isHovered}>
+        <template lwc:if={isHovered}>
           <c-quantic-result-action-bar>
             <c-quantic-result-copy-to-clipboard
               engine-id={engineId}
@@ -62,7 +62,7 @@
         <div
           class="result-metadata_container slds-grid slds-text-align_left slds-m-top_small"
         >
-          <template if:true={videoTimeSpan}>
+          <template lwc:if={videoTimeSpan}>
             <div class="slds-var-m-right_medium detail__video-time-span">
               <lightning-icon
                 icon-name="utility:clock"
@@ -83,7 +83,7 @@
             class="slds-var-m-right_medium slds-truncate"
           ></c-quantic-result-field>
         </div>
-        <template if:true={viewedByCustomerTagIsVisible}>
+        <template lwc:if={viewedByCustomerTagIsVisible}>
           <div class="slds-grid slds-var-m-top_xx-small">
             <c-quantic-viewed-by-customer-badge
               result={result}

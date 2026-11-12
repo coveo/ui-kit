@@ -4,10 +4,10 @@
     </c-quantic-component-error>
   </template>
   <template lwc:else>
-    <template if:true={showPlaceholder}>
+    <template lwc:if={showPlaceholder}>
       <c-quantic-placeholder variant="card" number-of-rows={maxLength}></c-quantic-placeholder>
     </template>
-    <template if:false={showPlaceholder}>
+    <template lwc:else>
       <template lwc:if={shouldDisplayRecentResultsCard}>
         <c-quantic-card-container title={label} onquantic__headerclick={toggleVisibility} onquantic__headerkeydown={toggleVisibility}>
           <lightning-button-icon class="slds-p-bottom_small" slot="actions" icon-name={actionButtonIcon}

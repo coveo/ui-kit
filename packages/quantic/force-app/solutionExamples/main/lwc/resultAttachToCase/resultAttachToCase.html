@@ -5,8 +5,8 @@
       loading={_isLoading}>
     </c-quantic-result-action>
   </template>
-  <template if:true={readOnly}>
-    <template if:true={_isAttached}>
+  <template lwc:if={readOnly}>
+    <template lwc:if={_isAttached}>
       <lightning-icon icon-name="utility:attach" alternative-text={labels.resultIsAttached}
         title={labels.resultIsAttached} size="xx-small" class="slds-var-m-horizontal_x-small"></lightning-icon>
     </template>

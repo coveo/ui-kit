@@ -7,7 +7,7 @@
         >
           <div class="searchbox__container">
             <div class={searchBoxContainerClass} role="none">
-              <template if:true={withoutSubmitButton}>
+              <template lwc:if={withoutSubmitButton}>
                 <div
                   class="slds-grid slds-align_absolute-center searchbox__icon-container slds-m-left_x-small"
                 >
@@ -79,7 +79,7 @@
               </template>
             </div>
           </div>
-          <template if:true={shouldDisplaySuggestions}>
+          <template lwc:if={shouldDisplaySuggestions}>
             <c-quantic-search-box-suggestions-list
               onquantic__selection={handleSelection}
               suggestions={suggestions}

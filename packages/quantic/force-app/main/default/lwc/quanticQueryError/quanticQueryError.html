@@ -4,7 +4,7 @@
     </c-quantic-component-error>
   </template>
   <template lwc:else>
-    <template if:true={hasError}>
+    <template lwc:if={hasError}>
       <div
         class="slds-grid slds-grid_align-center slds-gutters slds-grid_vertical"
       >
@@ -16,7 +16,7 @@
           </div>
           <p class="slds-text-align_center">{description}</p>
         </div>
-        <template if:true={link}>
+        <template lwc:if={link}>
           <a
             class="slds-var-m-vertical_x-small slds-align_absolute-center"
             href={link}
@@ -27,7 +27,7 @@
             ></lightning-formatted-rich-text>
           </a>
         </template>
-        <template if:false={link}>
+        <template lwc:else>
           <template if:false={showMoreInfo}>
             <div class="slds-var-m-vertical_x-large slds-align_absolute-center">
               <lightning-button
@@ -39,7 +39,7 @@
             </div>
           </template>
         </template>
-        <template if:true={showMoreInfo}>
+        <template lwc:if={showMoreInfo}>
           <div class="slds-var-m-top_medium">
             <div
               class="slds-rich-text-editor slds-grid slds-grid_vertical slds-nowrap"
@@ -92,7 +92,7 @@
             ></lightning-button>
           </div>
         </template>
-        <template if:false={showMoreInfo}>
+        <template lwc:else>
           <div
             class="slds-var-m-vertical_xx-large slds-illustration slds-illustration_small"
           >

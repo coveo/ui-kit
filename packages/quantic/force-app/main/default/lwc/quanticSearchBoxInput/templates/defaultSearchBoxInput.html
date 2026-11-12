@@ -7,7 +7,7 @@
         >
           <div class="searchbox__container">
             <div class={searchBoxContainerClass} role="none">
-              <template if:true={withoutSubmitButton}>
+              <template lwc:if={withoutSubmitButton}>
                 <lightning-icon
                   class="slds-icon slds-input__icon slds-input__icon_left searchbox__search-icon"
                   icon-name="utility:search"
@@ -69,7 +69,7 @@
               </button>
             </template>
           </div>
-          <template if:true={shouldDisplaySuggestions}>
+          <template lwc:if={shouldDisplaySuggestions}>
             <c-quantic-search-box-suggestions-list
               onquantic__selection={handleSelection}
               suggestions={suggestions}
