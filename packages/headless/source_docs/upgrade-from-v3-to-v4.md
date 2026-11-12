@@ -204,15 +204,17 @@ The commerce `configuration.context` and the `setAccessToken()` and `getAccessTo
 **Headless Version 3**
 
 ```ts
-listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
+setNavigatorContextProvider(() => navigatorContext);
 
-const {engine, controllers} = await listingEngineDefinition.hydrateStaticState({
-  searchActions: staticState.searchActions,
+const {searchParameterManager, context} = staticState.controllers;
+hydrateStaticState({
+  searchAction: staticState.searchAction,
   controllers: {
-    cart: {initialState: {items: staticState.controllers.cart.state.items}},
-    context: staticState.controllers.context.state,
-    parameterManager: {
-      initialState: {parameters: staticState.controllers.parameterManager.state.parameters},
+    context: {
+      initialState: context.state,
+    },
+    searchParameterManager: {
+      initialState: searchParameterManager.state,
     },
   },
 });
@@ -221,10 +223,11 @@ const {engine, controllers} = await listingEngineDefinition.hydrateStaticState({
 **Headless Version 4**
 
 ```ts
-const {engine, controllers} = await listingEngineDefinition.hydrateStaticState(staticState);
+searchEngineDefinition.hydrateStaticState(staticState);
 ```
 
 The static state carries `searchActions` (an array, on search too), the controller states and the page facts, and the commerce static state also carries the `solutionType` of the definition that fetched it.
+The hydrated controllers of a search definition include its `parameterManager` controller, which replaces your `searchParameterManager` controller.
 Mistakes fail early, with these errors:
 
 | Error                                   | Thrown when                                                                                               |

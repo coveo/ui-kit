@@ -1,0 +1,26 @@
+{
+  "name": "@samples/headless-ssr-search-nextjs-v4",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Examples of the @coveo/headless/ssr-next and @coveo/headless-react/ssr-next search APIs using Next.js app router",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "prod": "next start",
+    "e2e": "playwright test"
+  },
+  "dependencies": {
+    "@coveo/headless": "workspace:*",
+    "@coveo/headless-react": "workspace:*",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@playwright/test": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:"
+  }
+}
