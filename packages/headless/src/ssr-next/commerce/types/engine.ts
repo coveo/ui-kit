@@ -1,4 +1,5 @@
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import type {EngineDefinition} from '../../common/types/engine.js';
 import type {BuildConfig, EnableResultsOption, SSRCommerceEngineOptions} from './build.js';
 import type {SolutionType} from './controller-constants.js';
 import type {ControllerDefinitionsMap} from './controller-definitions.js';
@@ -42,6 +43,10 @@ export type CommerceEngineDefinitionOptions<
 export interface CommerceEngineDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
+> extends EngineDefinition<
+  CommerceStaticState<TControllers, TSolutionType>,
+  CommerceHydratedState<TControllers, TSolutionType>,
+  BuildConfig<TControllers, TSolutionType>
 > {
   /**
    * Executes the commerce request of the page (listing or search) and the requested recommendation

@@ -1,6 +1,7 @@
 import {describe, expectTypeOf, it} from 'vitest';
 import {getSampleSearchEngineConfiguration} from '../../../app/search-engine/search-engine-configuration.js';
 import type {ContextPayload} from '../../../features/context/context-state.js';
+import type {EngineDefinition} from '../../common/types/engine.js';
 import {defineResultList} from '../controllers/result-list/headless-result-list.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
 import type {InferHydratedState, InferStaticState} from '../types/controller-definition.js';
@@ -74,5 +75,36 @@ describe('the static and hydrated states of a search engine definition', () => {
     type ControllerNames = 'searchBox' | 'resultList' | 'parameterManager' | 'context';
     expectTypeOf<keyof SearchHydratedState['controllers']>().toEqualTypeOf<ControllerNames>();
     expectTypeOf<keyof SearchStaticState['controllers']>().toEqualTypeOf<ControllerNames>();
+  });
+});
+
+describe('EngineDefinition', () => {
+  // What code written for any engine definition looks like: two plain type parameters.
+  function hydrate<TStaticState, THydratedState>(
+    definition: EngineDefinition<TStaticState, THydratedState>,
+    staticState: TStaticState
+  ) {
+    return definition.hydrateStaticState(staticState);
+  }
+
+  it('should describe every search engine definition', () => {
+    type FetchOptions = Parameters<typeof searchEngineDefinition.fetchStaticState>[0];
+    expectTypeOf(searchEngineDefinition).toExtend<
+      EngineDefinition<SearchStaticState, SearchHydratedState, FetchOptions>
+    >();
+    expectTypeOf(standaloneEngineDefinition).toExtend<
+      EngineDefinition<SearchStaticState, SearchHydratedState, FetchOptions>
+    >();
+  });
+
+  it('should keep the controllers typed in code written for any engine definition', () => {
+    expectTypeOf(
+      hydrate(searchEngineDefinition, {} as SearchStaticState)
+    ).resolves.toEqualTypeOf<SearchHydratedState>();
+  });
+
+  it('should refuse a static state that the engine definition did not fetch', () => {
+    // @ts-expect-error: a static state without the controllers of the definition.
+    hydrate(searchEngineDefinition, {searchActions: [], controllers: {}});
   });
 });
