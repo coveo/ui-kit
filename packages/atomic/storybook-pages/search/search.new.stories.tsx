@@ -236,7 +236,7 @@ const meta: Meta = {
                   <atomic-result-section-visual>
                     <atomic-result-image
                       field="ytthumbnailurl"
-                      fallback="https://picsum.photos/seed/picsum/350"
+                      fallback="/images/thumbnail-350.svg"
                     ></atomic-result-image>
                   </atomic-result-section-visual>
                   <atomic-result-section-title>
