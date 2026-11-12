@@ -10,14 +10,7 @@ import type {
 } from '@coveo/headless/ssr-commerce-next';
 import type {FunctionComponent, PropsWithChildren} from 'react';
 
-export type ContextHydratedState<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-  TSolutionType extends SolutionType,
-> = {
-  engine: SSRCommerceEngine;
-  controllers: InferControllersMapFromDefinition<TControllers, TSolutionType>;
-  solutionType: TSolutionType;
-};
+export type {Hydration, HydrationStatus} from '../ssr-common/types.js';
 
 export type ContextState<
   TControllers extends ControllerDefinitionsMap<Controller>,
@@ -28,13 +21,24 @@ export type ContextState<
     | InferControllersMapFromDefinition<TControllers, TSolutionType>
     | InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>;
   solutionType: TSolutionType;
+  hydrationError?: unknown;
 };
 
+/**
+ * A controller hook: the controller state, and its methods once the engine is hydrated.
+ *
+ * @group Hooks
+ */
 export type ControllerHook<TController extends Controller> = () => {
   state: TController['state'];
   methods?: Omit<TController, 'state' | 'subscribe'>;
 };
 
+/**
+ * The hooks of an engine definition: one `use<Name>` hook per controller.
+ *
+ * @group Hooks
+ */
 export type InferControllerHooksMapFromDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
 > = {
@@ -53,6 +57,10 @@ export type ReactEngineDefinition<
       controllers:
         | InferControllersMapFromDefinition<TControllers, TSolutionType>
         | InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>;
+      /**
+       * @internal Set by the provider built with `buildProviderWithDefinition()` when the hydration fails.
+       */
+      hydrationError?: unknown;
     }>
   >;
 };
