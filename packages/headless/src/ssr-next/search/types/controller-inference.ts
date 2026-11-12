@@ -1,6 +1,5 @@
 import type {CoreEngine, CoreEngineNext} from '../../../app/engine.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {InferControllerStaticStateFromController} from '../../common/types/controller-inference.js';
 import type {HasKeys} from '../../common/types/utilities.js';
 import type {
   ControllerDefinition,
@@ -41,12 +40,3 @@ export type InferControllerFromDefinition<
 export type InferControllersMapFromDefinition<
   TControllers extends ControllerDefinitionsMap<CoreEngine | CoreEngineNext, Controller>,
 > = {[K in keyof TControllers]: InferControllerFromDefinition<TControllers[K]>};
-
-export type InferControllerStaticStateMapFromDefinitions<
-  TControllers extends ControllerDefinitionsMap<CoreEngine | CoreEngineNext, Controller>,
-> = {
-  [K in keyof TControllers]: InferControllerStaticStateFromController<
-    InferControllerFromDefinition<TControllers[K]>
-  > &
-    InferControllerPropsFromDefinition<TControllers[K]>;
-};
