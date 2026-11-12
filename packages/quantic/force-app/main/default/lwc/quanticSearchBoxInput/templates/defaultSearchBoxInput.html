@@ -35,7 +35,7 @@
                 data-value={inputValue}
               />
 
-              <template if:false={isQueryEmpty}>
+              <template lwc:if={hasQuery}>
                 <lightning-button-icon
                   onclick={clearInput}
                   icon-name="utility:close"
@@ -51,7 +51,7 @@
               </template>
             </div>
 
-            <template if:false={withoutSubmitButton}>
+            <template lwc:if={withSubmitButton}>
               <button
                 class="searchbox__submit-button slds-button slds-button_icon-inverse slds-button_icon-brand"
                 title={labels.search}

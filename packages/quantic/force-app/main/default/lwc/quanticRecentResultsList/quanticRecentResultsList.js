@@ -83,6 +83,10 @@ export default class QuanticRecentResultsList extends LightningElement {
   /** @type {boolean} */
   _isCollapsed = false;
 
+  get isExpanded() {
+    return !this.isCollapsed;
+  }
+
   /** @type {RecentResultsState} */
   @track state;
 
@@ -143,6 +147,10 @@ export default class QuanticRecentResultsList extends LightningElement {
 
   get hasResults() {
     return !!this.results.length;
+  }
+
+  get hasNoResults() {
+    return !this.hasResults;
   }
 
   get localStorageKey() {

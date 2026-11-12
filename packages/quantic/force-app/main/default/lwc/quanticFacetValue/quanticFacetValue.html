@@ -10,7 +10,7 @@
     aria-label={ariaLabelValue}
     data-testid="facet__value"
   >
-    <template if:false={displayAsLink}>
+    <template lwc:if={displayAsCheckbox}>
       <lightning-input
         tabindex="-1"
         type="checkbox"

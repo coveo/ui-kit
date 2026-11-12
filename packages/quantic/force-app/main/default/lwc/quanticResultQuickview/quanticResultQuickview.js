@@ -267,6 +267,10 @@ export default class QuanticResultQuickview extends LightningElement {
     return this._isLoading;
   }
 
+  get showFooter() {
+    return !this.isLoading;
+  }
+
   get hasNoPreview() {
     return !this.state?.resultHasPreview;
   }

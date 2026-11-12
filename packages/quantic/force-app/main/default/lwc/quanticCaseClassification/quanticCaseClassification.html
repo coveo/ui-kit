@@ -28,7 +28,7 @@
           aria-describedby="case-classification-error-message"
         >
           <div class="slds-grid slds-wrap">
-            <template if:false={hideSuggestions}>
+            <template lwc:if={showSuggestions}>
               <template for:each={suggestions} for:item="suggestion">
                 <div
                   key={suggestion.value}

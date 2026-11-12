@@ -261,6 +261,10 @@ export default class QuanticRefineModalContent extends LightningElement {
     'c-quantic-facet': this.toDefaultFacet,
   };
 
+  get showSort() {
+    return !this.hideSort;
+  }
+
   /**
    * Returns facet data.
    * @returns {Array<object>}

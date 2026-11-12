@@ -49,7 +49,7 @@
                   >
                 </button>
               </template>
-              <template if:false={isCollapsed}>
+              <template lwc:if={isExpanded}>
                 <fieldset data-testid="facet__body">
                   <legend class="slds-assistive-text">{field}</legend>
                   <ul class="slds-has-dividers_around-space slds-m-top_medium">

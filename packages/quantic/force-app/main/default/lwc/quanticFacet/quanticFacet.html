@@ -49,7 +49,7 @@
                   >
                 </button>
               </template>
-              <template if:false={isCollapsed}>
+              <template lwc:if={isExpanded}>
                 <div data-testid="facet__body" class="slds-has-dividers_around-space slds-m-top_medium">
                   <template lwc:if={displaySearch}>
                     <div onchange={handleKeyUp} class="slds-size_1-of-1">
@@ -80,7 +80,7 @@
                       </template>
                     </template>
                     <div class="slds-p-horizontal_x-small">
-                      <template if:false={hasSearchResults}>
+                      <template lwc:if={hasNoSearchResults}>
                         <li data-testid="facet-search__no-match" class="slds-grid slds-m-top_x-small">
                           <span
                             class="slds-truncate slds-p-around_small slds-size_1-of-1 facet__search-results_no-match"

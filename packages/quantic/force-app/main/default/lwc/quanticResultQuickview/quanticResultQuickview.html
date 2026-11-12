@@ -46,7 +46,7 @@
         <c-quantic-quickview-content id="quickview__content-container" class="quickview__content-container slds-wrap"
           result={result} content-url={contentURL}
           onquantic__loadingstatechange={handleLoadingStateChange}></c-quantic-quickview-content>
-        <template if:false={isLoading}>
+        <template lwc:if={showFooter}>
           <footer onclick={stopPropagation} class="slds-modal__footer quickview-modal__footer slds-p-top_none slds-p-bottom_none">
             <slot name="footer"></slot>
           </footer>

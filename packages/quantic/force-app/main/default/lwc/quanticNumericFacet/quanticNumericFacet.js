@@ -164,6 +164,10 @@ export default class QuanticNumericFacet extends LightningElement {
   /** @type {boolean} */
   _isCollapsed = false;
 
+  get isExpanded() {
+    return !this.isCollapsed;
+  }
+
   static attributes = [
     'facetId',
     'field',

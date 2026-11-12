@@ -52,7 +52,7 @@
                   </button>
                 </template>
 
-                <template if:false={isCollapsed}>
+                <template lwc:if={isExpanded}>
                   <div data-testid="facet__body">
                     <template lwc:if={shouldDisplayDatePicker}>
                       <div

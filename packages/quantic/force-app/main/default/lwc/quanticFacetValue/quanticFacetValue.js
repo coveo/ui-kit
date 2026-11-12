@@ -76,6 +76,10 @@ export default class QuanticFacetValue extends LightningElement {
     inclusionFilter_zero,
   };
 
+  get displayAsCheckbox() {
+    return !this.displayAsLink;
+  }
+
   get isStandardFacet() {
     return !this.isRangeFacet;
   }

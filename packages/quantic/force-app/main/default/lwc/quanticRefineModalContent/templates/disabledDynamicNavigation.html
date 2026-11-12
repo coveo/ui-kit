@@ -4,7 +4,7 @@
     </c-quantic-component-error>
   </template>
   <template lwc:else>
-    <template if:false={hideSort}>
+    <template lwc:if={showSort}>
       <div class="slds-var-m-bottom_large slds-clearfix">
         <template lwc:if={isSortComponentReady}>
           <c-quantic-sort engine-id={engineId} variant="wide">

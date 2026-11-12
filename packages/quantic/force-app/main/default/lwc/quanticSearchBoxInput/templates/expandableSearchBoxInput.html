@@ -40,7 +40,7 @@
               >
               </textarea>
 
-              <template if:false={isQueryEmpty}>
+              <template lwc:if={hasQuery}>
                 <div
                   class="slds-grid slds-align_absolute-center searchbox__icon-container slds-m-right_x-small"
                 >
@@ -60,7 +60,7 @@
                 </div>
               </template>
 
-              <template if:false={withoutSubmitButton}>
+              <template lwc:if={withSubmitButton}>
                 <button
                   class="searchbox__submit-button slds-button slds-button_neutral"
                   title={labels.search}
