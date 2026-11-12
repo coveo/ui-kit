@@ -61,17 +61,6 @@
               </template>
             </template>
             <template lwc:if={isMoreOptionsVisible}>
-              <template if:false={isSelectVisible}>
-                <lightning-button
-                  data-testid="show-select-input-button"
-                  class="slds-var-m-top_x-small"
-                  variant="base"
-                  label={selectPlaceholder}
-                  title={selectPlaceholder}
-                  onclick={showSelect}
-                >
-                </lightning-button>
-              </template>
               <template lwc:if={isSelectVisible}>
                 <lightning-combobox
                   data-testid="case-classification-all-options-combobox"
@@ -82,6 +71,17 @@
                   options={options}
                   onchange={handleSelectChange}
                 ></lightning-combobox>
+              </template>
+              <template lwc:else>
+                <lightning-button
+                  data-testid="show-select-input-button"
+                  class="slds-var-m-top_x-small"
+                  variant="base"
+                  label={selectPlaceholder}
+                  title={selectPlaceholder}
+                  onclick={showSelect}
+                >
+                </lightning-button>
               </template>
             </template>
             <template lwc:else>

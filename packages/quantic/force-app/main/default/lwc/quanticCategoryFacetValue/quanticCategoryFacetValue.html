@@ -18,14 +18,6 @@
       </div>
     </template>
     <template lwc:else>
-      <template if:false={isSearchResult}>
-        <div
-          class="slds-grid slds-grid_vertical-align-center slds-text-color_default facet__child-value-option facet__value-option slds-size_1-of-1 slds-p-around_x-small"
-        >
-          <span class="slds-truncate" title={facetValue}>{facetValue}</span>
-          <span class="facet__number-of-results slds-var-m-left_xx-small">({numberOfResults})</span>
-        </div>
-      </template>
       <template lwc:if={isSearchResult}>
         <div class="facet__value-option slds-size_1-of-1 slds-p-around_x-small slds-text-color_default">
           <div class="slds-grid slds-grid_vertical slds-size_1-of-1">
@@ -43,6 +35,14 @@
               <span class="facet__path slds-truncate" title={pathLabel}>{pathLabel}</span>
             </div>
           </div>
+        </div>
+      </template>
+      <template lwc:else>
+        <div
+          class="slds-grid slds-grid_vertical-align-center slds-text-color_default facet__child-value-option facet__value-option slds-size_1-of-1 slds-p-around_x-small"
+        >
+          <span class="slds-truncate" title={facetValue}>{facetValue}</span>
+          <span class="facet__number-of-results slds-var-m-left_xx-small">({numberOfResults})</span>
         </div>
       </template>
     </template>
