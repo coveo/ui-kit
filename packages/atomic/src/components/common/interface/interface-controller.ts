@@ -11,7 +11,8 @@ type InitializeEventHandler = (bindings: AnyBindings) => void;
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 
 export interface BaseAtomicInterface<EngineType extends AnyEngineType> {
-  analytics: boolean;
+  analytics: boolean; // TODO - (v4) KIT-4990: Remove.
+  disableAnalytics: boolean;
   i18n: i18n;
   languageAssetsPath: string;
   iconAssetsPath: string;
@@ -77,13 +78,17 @@ export class InterfaceController<EngineType extends AnyEngineType> implements Re
     this.initComponents();
   }
 
+  public get analyticsEnabled() {
+    return this.host.analytics && !this.host.disableAnalytics;
+  }
+
   public onAnalyticsChange() {
-    const {engine, analytics} = this.host;
+    const {engine} = this.host;
     if (!this.engineIsCreated(engine)) {
       return;
     }
 
-    if (!analytics) {
+    if (!this.analyticsEnabled) {
       engine.disableAnalytics();
       return;
     }
