@@ -24,8 +24,8 @@ export interface ProductResearchCardOptions {
  * next to a short research summary and a list of product-education bullets. When the agent sends
  * related documents, a "Documentation & manuals" section lists them under the card, one row each.
  * The generic binder resolves `product` / `summary` / `bullets` / `relatedDocuments` from
- * `ProductResearchCardPropsSchema`. Presentational —
- * no actions. `product`, `summary` and `bullets` resolve independently, so any of them still
+ * `ProductResearchCardPropsSchema`. The app may add actions to
+ * its product card through `ProductCardActionsContext`. `product`, `summary` and `bullets` resolve independently, so any of them still
  * `undefined` renders the research skeleton: the conversation drops its own skeleton as soon as the
  * surface is created, before the state arrives. `relatedDocuments` is optional and never holds the
  * card in its loading state.

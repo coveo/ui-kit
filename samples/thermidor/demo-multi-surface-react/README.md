@@ -223,5 +223,5 @@ ProductResearchCard, ProductSummary (which BundleDisplay mounts) and the commerc
 agent answer block with its reasoning steps, `TurnSurfaces`, the session request
 helpers and the renderer bridge are imported from
 [`demo-schema-react`](../demo-schema-react) by relative path rather than copied. Its product cards
-expose `ProductCardActionsContext`, which this sample uses to add **Add to cart**;
-`demo-schema-react` provides none, so its cards are unchanged.
+expose `ProductCardActionsContext`, through which each sample adds its own actions: this sample
+adds its **Add to cart** button, and `demo-schema-react` adds its own add-to-cart control.
