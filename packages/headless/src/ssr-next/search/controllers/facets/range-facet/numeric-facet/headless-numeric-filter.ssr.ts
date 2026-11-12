@@ -4,11 +4,11 @@ import {
   type NumericFilter,
   type NumericFilterProps,
 } from '../../../../../../controllers/facets/range-facet/numeric-facet/headless-numeric-filter.js';
-import type {ControllerDefinitionWithoutProps} from '../../../../types/controller-definition.js';
+import type {ControllerDefinition} from '../../../../types/controller-definition.js';
 
 export * from '../../../../../../controllers/facets/range-facet/numeric-facet/headless-numeric-filter.js';
 
-export interface NumericFilterDefinition extends ControllerDefinitionWithoutProps<
+export interface NumericFilterDefinition extends ControllerDefinition<
   SearchEngine,
   NumericFilter
 > {}

@@ -1,40 +1,30 @@
-import {beforeEach, describe, expect, it} from 'vitest';
+import {describe, expect, it} from 'vitest';
 import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import {
-  defineMockCommerceControllerWithProps,
+  defineMockCommerceController,
   defineMockRecommendationDefinition,
 } from '../../../test/mock-ssr-controller-definitions.js';
+import type {CommonBuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
-import type {InferControllerPropsMapFromDefinitions} from '../types/controller-inference.js';
 import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
 import {
   listingDefinitionSchema,
   searchDefinitionSchema,
   standaloneDefinitionSchema,
-  wireControllerParams,
+  validateBuildConfig,
 } from './controller-wiring.js';
 
 describe('controller-wiring', () => {
-  let mockControllerDefinitions: CommerceControllerDefinitionsMap;
-
-  beforeEach(() => {
-    mockControllerDefinitions = {
-      parameterManager: defineMockCommerceControllerWithProps(),
-      context: defineMockCommerceControllerWithProps(),
-      cart: defineMockCommerceControllerWithProps(),
-    } as CommerceControllerDefinitionsMap;
-  });
+  const validCommonConfig = {
+    context: {
+      language: 'en',
+      country: 'US',
+      currency: 'USD' as const,
+      view: {url: 'https://example.com'},
+    },
+  };
 
   describe('schema validation', () => {
-    const validCommonConfig = {
-      context: {
-        language: 'en',
-        country: 'US',
-        currency: 'USD' as const,
-        view: {url: 'https://example.com'},
-      },
-    };
-
     describe('when validating a listingDefinitionSchema', () => {
       it('should throw for missing required context only', () => {
         const validate = () => {
@@ -125,308 +115,67 @@ describe('controller-wiring', () => {
     });
   });
 
-  describe('#wireControllerParams', () => {
-    describe.each([
-      {solutionType: SolutionType.listing},
-      {solutionType: SolutionType.search},
-      {solutionType: SolutionType.standalone},
-    ])('%s', ({solutionType}) => {
-      const mockCartItem = {
-        name: 'Product 1',
-        price: 100,
-        productId: '1',
-        quantity: 1,
-      };
-      let props: InferControllerPropsMapFromDefinitions<CommerceControllerDefinitionsMap>;
+  describe('#validateBuildConfig', () => {
+    const controllerDefinitions = {
+      parameterManager: defineMockCommerceController(),
+      context: defineMockCommerceController(),
+      cart: defineMockCommerceController(),
+      rec1: defineMockRecommendationDefinition('rec1-slot'),
+    } as CommerceControllerDefinitionsMap;
+    const pageFacts: CommonBuildConfig = {
+      navigatorContext: buildMockNavigatorContext(),
+      ...validCommonConfig,
+      cart: {items: [{name: 'Product 1', price: 100, productId: '1', quantity: 1}]},
+      searchParams: {page: 2},
+      recommendations: ['rec1'],
+      productId: 'product-123',
+      accessToken: 'token',
+    };
 
-      beforeAll(() => {
-        const params = {
-          navigatorContext: buildMockNavigatorContext(),
-          searchParams: {
-            q: 'test',
-          },
-          recommendations: [],
-          context: {
-            language: 'en',
-            country: 'US',
-            currency: 'USD' as const,
-            view: {url: 'https://example.com'},
-          },
-          cart: {
-            items: [mockCartItem],
-          },
-        };
+    it.each([SolutionType.listing, SolutionType.search, SolutionType.standalone])(
+      'should accept the page facts of a %s request',
+      (solutionType) => {
+        expect(() =>
+          validateBuildConfig(solutionType, controllerDefinitions, pageFacts)
+        ).not.toThrow();
+      }
+    );
 
-        props = wireControllerParams(solutionType, mockControllerDefinitions, params);
-      });
-
-      it(`should wire context for ${solutionType} solution type`, () => {
-        expect(props.context).toEqual({
-          initialState: {
-            view: {url: 'https://example.com'},
-            language: 'en',
-            country: 'US',
-            currency: 'USD',
-          },
-        });
-      });
-
-      it(`should wire cart for ${solutionType} solution type`, () => {
-        expect(props.cart).toEqual({
-          initialState: {
-            items: [mockCartItem],
-          },
-        });
-      });
+    it('should accept a search request with a query and no other search parameter', () => {
+      expect(() =>
+        validateBuildConfig(SolutionType.search, controllerDefinitions, {
+          ...pageFacts,
+          searchParams: {q: 'test'},
+        })
+      ).not.toThrow();
     });
 
-    it('should wire parameter manager for search with query', () => {
-      const params = {
-        navigatorContext: buildMockNavigatorContext(),
-        context: {
-          language: 'en',
-          country: 'US',
-          currency: 'USD' as const,
-          view: {url: 'https://example.com'},
-        },
-        searchParams: {
-          q: 'test query',
-        },
-      };
-
-      const {parameterManager} = wireControllerParams(
-        SolutionType.search,
-        mockControllerDefinitions,
-        params
-      );
-
-      expect(parameterManager).toEqual({
-        initialState: {
-          parameters: {
-            q: 'test query',
-          },
-        },
-      });
-    });
-
-    it('should contain props from custom controllers if provided', () => {
-      const params = {
-        navigatorContext: buildMockNavigatorContext(),
-        context: {
-          language: 'en',
-          country: 'US',
-          currency: 'USD' as const,
-          view: {url: 'https://example.com'},
-        },
-        searchParams: {
-          q: 'test query',
-        },
-        controllers: {
-          customController: {
-            initialState: {foo: 'bar'},
-          },
-        },
-      };
-
-      const props = wireControllerParams(SolutionType.search, mockControllerDefinitions, params);
-
-      expect(props.customController).toEqual({
-        initialState: {
-          foo: 'bar',
-        },
-      });
-    });
-
-    it('should handle search params for parameter manager', () => {
-      const params = {
-        navigatorContext: buildMockNavigatorContext(),
-        context: {
-          language: 'en',
-          country: 'US',
-          currency: 'USD' as const,
-          view: {url: 'https://example.com'},
-        },
-        searchParams: {perPage: 12, page: 3},
-      };
-
-      const {parameterManager} = wireControllerParams(
-        SolutionType.listing,
-        mockControllerDefinitions,
-        params
-      );
-
-      expect(parameterManager).toEqual({
-        initialState: {
-          parameters: {
-            perPage: 12,
-            page: 3,
-          },
-        },
-      });
-    });
-
-    it('should not wire controllers that are not in the definition', () => {
-      const definitionsWithoutCart = {
-        context: defineMockCommerceControllerWithProps(),
-      } as CommerceControllerDefinitionsMap;
-
-      const params = {
-        navigatorContext: buildMockNavigatorContext(),
-        context: {
-          language: 'en',
-          country: 'US',
-          currency: 'USD' as const,
-          view: {url: 'https://example.com'},
-        },
-        cart: {items: []},
-      };
-
-      const props = wireControllerParams(SolutionType.listing, definitionsWithoutCart, params);
-
-      expect(props.cart).toBeUndefined();
-      expect(props.parameterManager).toBeUndefined();
-      expect(props.context).toBeDefined();
-    });
-
-    it('should name the engine definition when the build config is invalid', () => {
-      const params = {navigatorContext: buildMockNavigatorContext()};
+    it('should accept a request without search parameters', () => {
+      const {searchParams: _, ...withoutSearchParams} = pageFacts;
 
       expect(() =>
-        wireControllerParams(
-          SolutionType.listing,
-          mockControllerDefinitions,
-          params as unknown as Parameters<typeof wireControllerParams>[2]
-        )
-      ).toThrow(/fetchStaticState\(\) of the listing engine definition/);
+        validateBuildConfig(SolutionType.search, controllerDefinitions, withoutSearchParams)
+      ).not.toThrow();
     });
 
-    it('should not mutate the controllers object received in the build config', () => {
-      const controllers = {context: {initialState: {custom: 'value'}}};
-      const params = {
-        navigatorContext: buildMockNavigatorContext(),
-        context: {
-          language: 'en',
-          country: 'US',
-          currency: 'USD' as const,
-          view: {url: 'https://example.com'},
-        },
-        controllers,
-      };
-
-      const props = wireControllerParams(SolutionType.listing, mockControllerDefinitions, params);
-
-      expect(props).not.toBe(controllers);
-      expect(controllers).toEqual({context: {initialState: {custom: 'value'}}});
-    });
-
-    describe('recommendation wiring', () => {
-      it.each([SolutionType.listing, SolutionType.search, SolutionType.standalone])(
-        'should wire each recommendation controller with the provided productId for %s',
-        (solutionType) => {
-          const definitionsWithRecommendation = {
-            ...mockControllerDefinitions,
-            rec1: defineMockRecommendationDefinition('rec1-slot'),
-            rec2: defineMockRecommendationDefinition('rec2-slot'),
-          } as CommerceControllerDefinitionsMap;
-
-          const props = wireControllerParams(solutionType, definitionsWithRecommendation, {
+    it.each([SolutionType.listing, SolutionType.search, SolutionType.standalone])(
+      'should name the %s engine definition when the page facts are invalid',
+      (solutionType) => {
+        expect(() =>
+          validateBuildConfig(solutionType, controllerDefinitions, {
             navigatorContext: buildMockNavigatorContext(),
-            context: {
-              language: 'en',
-              country: 'US',
-              currency: 'USD' as const,
-              view: {url: 'https://example.com'},
-            },
-            recommendations: ['rec1'],
-            productId: 'product-123',
-          });
+          } as CommonBuildConfig)
+        ).toThrow(new RegExp(`fetchStaticState\\(\\) of the ${solutionType} engine definition`));
+      }
+    );
 
-          expect(props.rec1).toEqual({productId: 'product-123'});
-          expect(props.rec2).toEqual({productId: 'product-123'});
-        }
-      );
-
-      it('should wire each recommendation controller with the provided productId', () => {
-        const definitionsWithRecommendation = {
-          ...mockControllerDefinitions,
-          rec1: defineMockRecommendationDefinition('rec1-slot'),
-          rec2: defineMockRecommendationDefinition('rec2-slot'),
-        } as CommerceControllerDefinitionsMap;
-
-        const params = {
-          navigatorContext: buildMockNavigatorContext(),
-          context: {
-            language: 'en',
-            country: 'US',
-            currency: 'USD' as const,
-            view: {
-              url: 'https://example.com',
-            },
-          },
-          recommendations: ['rec1', 'rec2'],
-          productId: 'product-123',
-        };
-
-        const props = wireControllerParams(
-          SolutionType.standalone,
-          definitionsWithRecommendation,
-          params
-        );
-
-        expect(props.rec1).toEqual({productId: 'product-123'});
-        expect(props.rec2).toEqual({productId: 'product-123'});
-      });
-
-      it('should wire recommendation controllers without productId when not provided', () => {
-        const definitionsWithRecommendation = {
-          ...mockControllerDefinitions,
-          rec1: defineMockRecommendationDefinition('rec1-slot'),
-        } as CommerceControllerDefinitionsMap;
-
-        const params = {
-          navigatorContext: buildMockNavigatorContext(),
-          context: {
-            language: 'en',
-            country: 'US',
-            currency: 'USD' as const,
-            view: {url: 'https://example.com'},
-          },
-          recommendations: ['rec1'],
-        };
-
-        const props = wireControllerParams(
-          SolutionType.standalone,
-          definitionsWithRecommendation,
-          params
-        );
-
-        expect(props.rec1).toEqual({});
-      });
-
-      it('should not wire props for the controllers that are not recommendation controllers', () => {
-        const definitionsWithMixed = {
-          ...mockControllerDefinitions,
-          rec1: defineMockRecommendationDefinition('rec1-slot'),
-          nonRec: defineMockCommerceControllerWithProps(),
-        } as CommerceControllerDefinitionsMap;
-
-        const params = {
-          navigatorContext: buildMockNavigatorContext(),
-          context: {
-            language: 'en',
-            country: 'US',
-            currency: 'USD' as const,
-            view: {url: 'https://example.com'},
-          },
-          recommendations: ['rec1'],
-          productId: 'product-123',
-        };
-
-        const props = wireControllerParams(SolutionType.standalone, definitionsWithMixed, params);
-
-        expect(props.rec1).toEqual({productId: 'product-123'});
-        expect(props.nonRec).toBeUndefined();
-      });
+    it('should accept only the recommendation controllers declared in the definition', () => {
+      expect(() =>
+        validateBuildConfig(SolutionType.standalone, controllerDefinitions, {
+          ...pageFacts,
+          recommendations: ['rec2'],
+        })
+      ).toThrow(/value should be one of: rec1./);
     });
   });
 });

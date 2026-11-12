@@ -4,11 +4,11 @@ import {
   type CategoryFieldSuggestions,
   type CategoryFieldSuggestionsProps,
 } from '../../../../../controllers/field-suggestions/category-facet/headless-category-field-suggestions.js';
-import type {ControllerDefinitionWithoutProps} from '../../../types/controller-definition.js';
+import type {ControllerDefinition} from '../../../types/controller-definition.js';
 
 export * from '../../../../../controllers/field-suggestions/category-facet/headless-category-field-suggestions.js';
 
-export interface CategoryFieldSuggestionsDefinition extends ControllerDefinitionWithoutProps<
+export interface CategoryFieldSuggestionsDefinition extends ControllerDefinition<
   SearchEngine,
   CategoryFieldSuggestions
 > {}

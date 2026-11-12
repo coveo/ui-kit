@@ -34,21 +34,13 @@ export default async function ProductDescriptionPage({
     },
   };
 
-  // The product ID seeds the "viewed together" slot with the product being viewed.
+  // The product ID seeds the "viewed together" slot and the badges with the product being viewed.
   const staticState = await standaloneEngineDefinition.fetchStaticState({
     cart: {items},
     context,
     navigatorContext,
     recommendations: ['viewedTogether'],
     productId,
-    controllers: {
-      productEnrichment: {
-        options: {
-          productId,
-          placementIds: ['70b493b2-a1f1-4049-ad70-16695cef39cd'],
-        },
-      },
-    },
   });
 
   const resolvedSearchParams = await searchParams;

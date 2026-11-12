@@ -7,7 +7,6 @@ import type {SSRCommerceEngineOptions} from './build.js';
 import type {SolutionType} from './controller-constants.js';
 import type {BakedInControllers, ControllerDefinitionsMap} from './controller-definitions.js';
 import type {
-  InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllersMapFromDefinition,
 } from './controller-inference.js';
@@ -49,9 +48,9 @@ export interface CommerceEngineDefinition<
    *
    * The returned static state includes controller states (facets, products, pagination, etc.)
    *
-   * @param params - A configuration object containing navigation context, search parameters,
-   *                 cart state, the recommendation slots to request, the product being viewed and
-   *                 controller-specific props
+   * @param params - The page facts: the navigator context, the context, the cart, the search
+   *                 parameters, the recommendation slots to request, the product being viewed and
+   *                 the per-request access token
    * @returns A Promise that resolves to the static state containing controller states
    *
    * @example
@@ -75,7 +74,6 @@ export interface CommerceEngineDefinition<
   fetchStaticState: FetchStaticState<
     UnknownAction,
     InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>,
-    InferControllerPropsMapFromDefinitions<TControllers>,
     TControllers,
     TSolutionType
   >;
@@ -92,8 +90,9 @@ export interface CommerceEngineDefinition<
    * - Replays search/listing/recommendation actions to synchronize the state
    * - Returns live, interactive controllers ready for user interaction
    *
-   * @param params - A configuration object containing the static state, navigation context,
-   *                 and any controller-specific props needed for hydration
+   * @param params - The static state returned by `fetchStaticState()`. It already carries the page
+   *                 facts (navigator context, context, cart, search parameters, product, requested
+   *                 recommendation slots, per-request access token), so it can be passed as is.
    * @returns A Promise that resolves to the hydrated engine and interactive controllers
    *
    * @example

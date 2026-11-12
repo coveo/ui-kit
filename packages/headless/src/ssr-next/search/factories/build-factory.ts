@@ -14,7 +14,7 @@ import type {
   SearchControllerDefinitionsMap,
   SearchEngineDefinitionOptions,
 } from '../types/engine.js';
-import {wireControllerParams} from '../utils/controller-wiring.js';
+import {validateBuildConfig} from '../utils/controller-wiring.js';
 import {augmentSearchEngineOptions} from '../utils/engine-wiring.js';
 
 function isSearchCompletedAction(action: unknown): action is SearchCompletedAction {
@@ -48,7 +48,7 @@ export const buildFactory =
       | FetchStaticStateParameters<TControllerDefinitions>
       | HydrateStaticStateParameters<TControllerDefinitions>
   ) => {
-    const controllerProps = wireControllerParams(controllerDefinitions, buildOptions);
+    validateBuildConfig(buildOptions);
 
     const engineOptions = augmentSearchEngineOptions(options, buildOptions);
 
@@ -57,7 +57,7 @@ export const buildFactory =
     const controllers = buildControllerDefinitions({
       definitionsMap: controllerDefinitions,
       engine,
-      propsMap: controllerProps,
+      buildConfig: buildOptions,
     });
 
     if (buildOptions && 'searchActions' in buildOptions) {

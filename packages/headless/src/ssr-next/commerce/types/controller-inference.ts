@@ -1,35 +1,14 @@
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {InferHydratedState, InferStaticState} from '../../common/types/engine.js';
-import type {HasKey, HasKeys} from '../../common/types/utilities.js';
+import type {HasKey} from '../../common/types/utilities.js';
 import type {SolutionType} from './controller-constants.js';
 import type {
   ControllerDefinition,
   ControllerDefinitionsMap,
-  ControllerDefinitionWithoutProps,
-  ControllerDefinitionWithProps,
   InferControllerStaticStateFromController,
 } from './controller-definitions.js';
 
 export type {InferHydratedState, InferStaticState};
-
-type InferControllerPropsFromDefinition<TController extends ControllerDefinition<Controller>> =
-  TController extends ControllerDefinitionWithProps<Controller, infer Props>
-    ? Props
-    : TController extends ControllerDefinitionWithoutProps<Controller>
-      ? {}
-      : unknown;
-
-export type InferControllerPropsMapFromDefinitions<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-> = {
-  [
-    K in keyof TControllers as HasKeys<
-      InferControllerPropsFromDefinition<TControllers[K]>
-    > extends false
-      ? never
-      : K
-  ]: InferControllerPropsFromDefinition<TControllers[K]>;
-};
 
 export type InferControllerFromDefinition<TDefinition extends ControllerDefinition<Controller>> =
   TDefinition extends ControllerDefinition<infer TController> ? TController : never;
@@ -49,6 +28,5 @@ export type InferControllerStaticStateMapFromDefinitionsWithSolutionType<
 > = {
   [
     K in keyof TControllers as HasKey<TControllers[K], TSolutionType> extends never ? never : K
-  ]: InferControllerStaticStateFromController<InferControllerFromDefinition<TControllers[K]>> &
-    InferControllerPropsFromDefinition<TControllers[K]>;
+  ]: InferControllerStaticStateFromController<InferControllerFromDefinition<TControllers[K]>>;
 };

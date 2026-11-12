@@ -1,44 +1,43 @@
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {buildContext} from '../../../../controllers/context/headless-context.js';
 import {buildMockSSRSearchEngine} from '../../../../test/mock-engine-v2.js';
+import {buildMockNavigatorContext} from '../../../../test/mock-navigator-context.js';
 import {createMockState} from '../../../../test/mock-state.js';
-import {MissingControllerProps} from '../../../common/errors.js';
-import type {SSRSearchEngine} from '../../engine/search-engine.ssr.js';
-import {type ContextDefinition, type ContextProps, defineContext} from './headless-context.ssr.js';
+import type {SSRSearchEngine} from '../../types/build.js';
+import {type ContextDefinition, defineContext} from './headless-context.ssr.js';
 
 vi.mock('../../../../controllers/context/headless-context.js');
 const buildContextMock = vi.mocked(buildContext);
 
 describe('define context', () => {
   let contextDefinition: ContextDefinition;
+  let engine: SSRSearchEngine;
 
   beforeEach(() => {
     contextDefinition = defineContext();
+    engine = buildMockSSRSearchEngine(createMockState());
     buildContextMock.mockClear();
   });
 
-  it('defineContext returns the proper type', () => {
+  it('should return a definition with a build function', () => {
     expect(contextDefinition).toMatchObject<ContextDefinition>({
-      buildWithProps: expect.any(Function),
+      build: expect.any(Function),
     });
   });
 
-  it('buildWithProps should pass its parameters to the buildContext', () => {
-    const engine: SSRSearchEngine = buildMockSSRSearchEngine(createMockState());
-    const props: ContextProps = {} as unknown as ContextProps;
-
-    contextDefinition.buildWithProps(engine, {
-      initialState: props.initialState,
+  it('should build the context with the custom context values passed to fetchStaticState()', () => {
+    contextDefinition.build(engine, {
+      buildConfig: {navigatorContext: buildMockNavigatorContext(), context: {ageGroup: '30-45'}},
     });
 
-    expect(buildContextMock).toHaveBeenCalledWith(engine, props);
+    expect(buildContextMock).toHaveBeenCalledWith(engine, {
+      initialState: {values: {ageGroup: '30-45'}},
+    });
   });
 
-  it('should throw when props is undefined', () => {
-    const engine: SSRSearchEngine = buildMockSSRSearchEngine(createMockState());
-    const props: ContextProps = undefined as unknown as ContextProps;
+  it('should build the context with no values when the request carries none', () => {
+    contextDefinition.build(engine, {buildConfig: {navigatorContext: buildMockNavigatorContext()}});
 
-    expect(() => {
-      contextDefinition.buildWithProps(engine, props);
-    }).toThrow(MissingControllerProps);
+    expect(buildContextMock).toHaveBeenCalledWith(engine, {initialState: {values: {}}});
   });
 });

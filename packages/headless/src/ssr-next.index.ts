@@ -97,7 +97,6 @@ export type {
   ContextState,
   ContextValue,
 } from './ssr-next/search/controllers/context/headless-context.ssr.js';
-export {defineContext} from './ssr-next/search/controllers/context/headless-context.ssr.js';
 export type {
   DictionaryFieldContext,
   DictionaryFieldContextDefinition,
@@ -344,13 +343,11 @@ export type {
 export {defineSearchBox} from './ssr-next/search/controllers/search-box/headless-search-box.ssr.js';
 export type {
   SearchParameterManager,
-  SearchParameterManagerBuildProps,
   SearchParameterManagerDefinition,
   SearchParameterManagerInitialState,
   SearchParameterManagerState,
   SearchParameters,
 } from './ssr-next/search/controllers/search-parameter-manager/headless-search-parameter-manager.ssr.js';
-export {defineSearchParameterManager} from './ssr-next/search/controllers/search-parameter-manager/headless-search-parameter-manager.ssr.js';
 export type {
   SearchStatus,
   SearchStatusDefinition,
@@ -449,24 +446,19 @@ export type {
 } from './ssr-next/search/controllers/triggers/headless-redirection-trigger.ssr.js';
 export {defineRedirectionTrigger} from './ssr-next/search/controllers/triggers/headless-redirection-trigger.ssr.js';
 export type {
-  UrlManager,
-  UrlManagerBuildProps,
-  UrlManagerInitialState,
-  UrlManagerProps,
-  UrlManagerState,
-} from './ssr-next/search/controllers/url-manager/headless-url-manager.ssr.js';
-export {defineUrlManager} from './ssr-next/search/controllers/url-manager/headless-url-manager.ssr.js';
-export {MissingControllerProps} from './ssr-next/common/errors.js';
-export type {
   BuildNavigatorContextOptions,
   RequestHeaders,
 } from './ssr-next/common/navigator-context.js';
 export {buildNavigatorContext, CLIENT_ID_COOKIE_NAME} from './ssr-next/common/navigator-context.js';
 export type {ControllerStaticState} from './ssr-next/common/types/controllers.js';
 export type {EngineStaticState} from './ssr-next/common/types/engine.js';
-export {defineSearchEngine} from './ssr-next/search/engine/search-engine.ssr.js';
+export {
+  augmentSearchControllerDefinitions,
+  defineSearchEngine,
+} from './ssr-next/search/engine/search-engine.ssr.js';
 export type {
   BuildConfig,
+  ControllerBuildContext,
   SearchCompletedAction,
   SSRSearchEngine as SearchEngine,
 } from './ssr-next/search/types/build.js';

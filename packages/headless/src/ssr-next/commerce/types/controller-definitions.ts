@@ -3,12 +3,12 @@ import type {
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
 } from '../../common/types/controller-inference.js';
-import type {ControllersPropsMap} from '../../common/types/controllers.js';
-import type {HasKey, HasRequiredKeys} from '../../common/types/utilities.js';
+import type {HasKey} from '../../common/types/utilities.js';
 import type {CartDefinition} from '../controllers/cart/headless-cart.ssr.js';
 import type {ContextDefinition} from '../controllers/context/headless-context.ssr.js';
 import type {ParameterManagerDefinition} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
+import type {ControllerBuildContext} from './build.js';
 import {type recommendationInternalOptionKey, SolutionType} from './controller-constants.js';
 import type {
   ListingAndStandaloneController,
@@ -26,47 +26,30 @@ export type {
   InferControllerStaticStateMapFromControllers,
 };
 
-export interface ControllerDefinitionWithoutProps<TController extends Controller> {
-  /**
-   * Creates an instance of the given controller.
-   *
-   * @param engine - The search engine.
-   * @param solutionType - The type of solution for which the controller should be built (e.g. search or listing). This option only applies to sub-controllers.
-   * @returns The created controller instance.
-   */
-  build(engine: SSRCommerceEngine, solutionType?: SolutionType): TController;
-}
-
-export interface ControllerDefinitionWithProps<TController extends Controller, TProps> {
-  /**
-   * Creates an instance of the given controller.
-   *
-   * @param engine - The search engine.
-   * @param props - The controller properties.
-   * @param solutionType - The type of solution for which the controller should be built (e.g. search or listing). This option only applies to sub-controllers.
-   * @returns The created controller instance.
-   */
-  buildWithProps(
-    engine: SSRCommerceEngine,
-    props?: TProps,
-    solutionType?: SolutionType
-  ): TController;
-}
-
 interface SolutionTypeAvailability {
   [SolutionType.search]?: boolean;
   [SolutionType.listing]?: boolean;
   [SolutionType.standalone]?: boolean;
 }
 
-export type ControllerDefinition<TController extends Controller> = SolutionTypeAvailability &
-  (
-    | ControllerDefinitionWithoutProps<TController>
-    | ControllerDefinitionWithProps<TController, unknown>
-  );
+/**
+ * The definition of a controller: how to build it for a request. The kinds of page it is built for are
+ * the solution-type flags set next to it by the definer.
+ */
+export interface ControllerDefinition<TController extends Controller> {
+  /**
+   * Creates an instance of the controller.
+   *
+   * @param engine - The engine of the request.
+   * @param context - The kind of page the controller is built for, and the page facts passed to
+   *  `fetchStaticState()`.
+   * @returns The created controller instance.
+   */
+  build(engine: SSRCommerceEngine, context: ControllerBuildContext): TController;
+}
 
 export interface ControllerDefinitionsMap<TController extends Controller> {
-  [customName: string]: ControllerDefinition<TController>;
+  [customName: string]: ControllerDefinition<TController> & SolutionTypeAvailability;
 }
 
 type BakedInControllerDefinitions = {
@@ -79,9 +62,7 @@ type BakedInControllerDefinitions = {
  * Map of baked-in controllers
  */
 export type BakedInControllers = {
-  [K in keyof BakedInControllerDefinitions]: ReturnType<
-    BakedInControllerDefinitions[K]['buildWithProps']
-  >;
+  [K in keyof BakedInControllerDefinitions]: ReturnType<BakedInControllerDefinitions[K]['build']>;
 };
 
 /**
@@ -116,71 +97,20 @@ export type AugmentedControllerDefinition<
   TControllerDefinitions extends ControllerDefinitionsMap<Controller>,
 > = TControllerDefinitions & BakedInControllerDefinitions;
 
-/**
- * This type defines the required and optional controller props for the commerce engine definition.
- */
-export type CommerceEngineDefinitionControllersPropsOption<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-  TControllersPropsMap extends ControllersPropsMap,
-  TSolutionType extends SolutionType,
-> = RequiredEngineDefinitionControllersPropsOption<
-  TControllers,
-  TControllersPropsMap,
-  TSolutionType
->;
-
-type RequiredEngineDefinitionControllersPropsOption<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-  TControllersPropsMap extends ControllersPropsMap,
-  TSolutionType extends SolutionType,
-> = {
-  [
-    K in keyof TControllers as HasKey<TControllers[K], TSolutionType> extends never
-      ? never
-      : IsRecommendationController<TControllers[K]> extends never
-        ? HasRequiredKeys<
-            DefaultControllerProps<TControllers, TControllersPropsMap, K>
-          > extends false
-          ? never
-          : 'controllers'
-        : never
-  ]: DefaultControllerProps<TControllers, TControllersPropsMap, K>;
-};
-
 export type IsRecommendationController<TController extends ControllerDefinition<Controller>> =
   HasKey<TController, typeof recommendationInternalOptionKey>;
 
-type DefaultControllerProps<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-  TControllersPropsMap extends ControllersPropsMap,
-  K extends keyof TControllers,
-> = {
-  [I in keyof TControllersPropsMap as I extends K ? I : never]: TControllersPropsMap[I];
-};
+export type SearchOnlyControllerDefinition<TController extends Controller> =
+  ControllerDefinition<TController> & SearchOnlyController;
 
-export type SearchOnlyControllerDefinitionWithoutProps<TController extends Controller> =
-  ControllerDefinitionWithoutProps<TController> & SearchOnlyController;
+export type ListingAndStandaloneControllerDefinition<TController extends Controller> =
+  ControllerDefinition<TController> & ListingAndStandaloneController;
 
-export type ListingAndStandaloneControllerWithoutProps<TController extends Controller> =
-  ControllerDefinitionWithoutProps<TController> & ListingAndStandaloneController;
+export type UniversalControllerDefinition<TController extends Controller> =
+  ControllerDefinition<TController> & UniversalController;
 
-export type UniversalControllerDefinitionWithoutProps<TController extends Controller> =
-  ControllerDefinitionWithoutProps<TController> & UniversalController;
+export type SearchAndListingControllerDefinition<TController extends Controller> =
+  ControllerDefinition<TController> & SearchAndListingController;
 
-export type UniversalControllerDefinitionWithProps<
-  TController extends Controller,
-  TProps,
-> = ControllerDefinitionWithProps<TController, TProps> & UniversalController;
-
-export type SearchAndListingControllerDefinitionWithoutProps<TController extends Controller> =
-  ControllerDefinitionWithoutProps<TController> & SearchAndListingController;
-
-export type SearchAndListingControllerDefinitionWithProps<
-  TController extends Controller,
-  TProps,
-> = ControllerDefinitionWithProps<TController, TProps> & SearchAndListingController;
-
-export type StandaloneControllerWithProps<
-  TController extends Controller,
-  TProps,
-> = ControllerDefinitionWithProps<TController, TProps> & StandaloneController;
+export type StandaloneControllerDefinition<TController extends Controller> =
+  ControllerDefinition<TController> & StandaloneController;

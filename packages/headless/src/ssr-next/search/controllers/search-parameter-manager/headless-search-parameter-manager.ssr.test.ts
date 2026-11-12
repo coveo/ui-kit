@@ -1,7 +1,5 @@
-import {
-  buildSearchParameterManager,
-  type SearchParameterManager,
-} from '../../../../controllers/search-parameter-manager/headless-search-parameter-manager.js';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {buildSearchParameterManager} from '../../../../controllers/search-parameter-manager/headless-search-parameter-manager.js';
 import {advancedSearchQueriesReducer} from '../../../../features/advanced-search-queries/advanced-search-queries-slice.js';
 import {configurationReducer} from '../../../../features/configuration/configuration-slice.js';
 import {debugReducer} from '../../../../features/debug/debug-slice.js';
@@ -17,39 +15,35 @@ import {sortCriteriaReducer} from '../../../../features/sort-criteria/sort-crite
 import {staticFilterSetReducer} from '../../../../features/static-filter-set/static-filter-set-slice.js';
 import {tabSetReducer} from '../../../../features/tab-set/tab-set-slice.js';
 import {buildMockSSRSearchEngine} from '../../../../test/mock-engine-v2.js';
+import {buildMockNavigatorContext} from '../../../../test/mock-navigator-context.js';
 import {createMockState} from '../../../../test/mock-state.js';
-import type {SSRSearchEngine} from '../../engine/search-engine.ssr.js';
-import type {ControllerDefinitionWithProps} from '../../types/controller-definition.js';
+import type {SSRSearchEngine} from '../../types/build.js';
 import {
   defineSearchParameterManager,
-  type SearchParameterManagerBuildProps,
+  type SearchParameterManagerDefinition,
 } from './headless-search-parameter-manager.ssr.js';
 
 vi.mock('../../../../controllers/search-parameter-manager/headless-search-parameter-manager.js');
 const buildSearchParameterManagerMock = vi.mocked(buildSearchParameterManager);
 
-type SearchParameterManagerDefinitionType = ControllerDefinitionWithProps<
-  SSRSearchEngine,
-  SearchParameterManager,
-  SearchParameterManagerBuildProps
->;
-
 describe('define search parameter manager', () => {
-  let searchParameterManagerDefinition: SearchParameterManagerDefinitionType;
+  let definition: SearchParameterManagerDefinition;
+  let engine: SSRSearchEngine;
 
   beforeEach(() => {
-    searchParameterManagerDefinition = defineSearchParameterManager();
+    definition = defineSearchParameterManager();
+    engine = buildMockSSRSearchEngine(createMockState());
     buildSearchParameterManagerMock.mockClear();
   });
 
-  it('it adds the correct reducers to engine', () => {
-    const engine: SSRSearchEngine = buildMockSSRSearchEngine(createMockState());
-    const props: SearchParameterManagerBuildProps =
-      {} as unknown as SearchParameterManagerBuildProps;
-
-    searchParameterManagerDefinition.buildWithProps(engine, {
-      initialState: props.initialState,
+  it('should return a definition with a build function', () => {
+    expect(definition).toMatchObject<SearchParameterManagerDefinition>({
+      build: expect.any(Function),
     });
+  });
+
+  it('should add the reducers the parameter manager needs to the engine', () => {
+    definition.build(engine, {buildConfig: {navigatorContext: buildMockNavigatorContext()}});
 
     expect(engine.addReducers).toHaveBeenCalledWith({
       advancedSearchQueries: advancedSearchQueriesReducer,
@@ -69,21 +63,24 @@ describe('define search parameter manager', () => {
     });
   });
 
-  it('defineSearchParameterManager returns the proper type', () => {
-    expect(searchParameterManagerDefinition).toMatchObject<SearchParameterManagerDefinitionType>({
-      buildWithProps: expect.any(Function),
+  it('should build the parameter manager with the search params passed to fetchStaticState()', () => {
+    definition.build(engine, {
+      buildConfig: {
+        navigatorContext: buildMockNavigatorContext(),
+        searchParams: {q: 'test', firstResult: 10},
+      },
+    });
+
+    expect(buildSearchParameterManagerMock).toHaveBeenCalledWith(engine, {
+      initialState: {parameters: {q: 'test', firstResult: 10}},
     });
   });
 
-  it("buildWithProps should pass it's parameters to the buildSearchParameterManager", () => {
-    const engine: SSRSearchEngine = buildMockSSRSearchEngine(createMockState());
-    const props: SearchParameterManagerBuildProps =
-      {} as unknown as SearchParameterManagerBuildProps;
+  it('should build the parameter manager with no parameters when the request carries none', () => {
+    definition.build(engine, {buildConfig: {navigatorContext: buildMockNavigatorContext()}});
 
-    searchParameterManagerDefinition.buildWithProps(engine, {
-      initialState: props.initialState,
+    expect(buildSearchParameterManagerMock).toHaveBeenCalledWith(engine, {
+      initialState: {parameters: {}},
     });
-
-    expect(buildSearchParameterManagerMock).toHaveBeenCalledWith(engine, props);
   });
 });

@@ -31,6 +31,8 @@ describe('hydratedStaticStateFactory', () => {
   const params = {
     navigatorContext: buildMockNavigatorContext(),
     context: {language: 'en', country: 'US', currency: 'USD', view: {url: 'https://example.com'}},
+    cart: {items: []},
+    searchParams: {page: 2},
     searchActions: [{type: 'commerce/productListing/fetch/fulfilled'}],
   } as unknown as HydrateStaticStateParameters<typeof controllerDefinitions, SolutionType.listing>;
 
@@ -51,18 +53,10 @@ describe('hydratedStaticStateFactory', () => {
     expect(mockSolutionTypeFactory).toHaveBeenCalledWith(SolutionType.listing);
   });
 
-  it('should hand the controller props carried by the static state back as the controllers option', async () => {
-    const controllerProps = {productEnrichment: {options: {placementIds: ['placement']}}};
+  it('should hand the static state to the build as is, page facts included', async () => {
+    await hydratedStaticStateFactory(controllerDefinitions, options)(SolutionType.listing)(params);
 
-    await hydratedStaticStateFactory(controllerDefinitions, options)(SolutionType.standalone)({
-      ...params,
-      controllerProps,
-    });
-
-    expect(mockSolutionTypeBuild).toHaveBeenCalledWith(
-      expect.objectContaining({controllers: controllerProps})
-    );
-    expect(mockSolutionTypeBuild.mock.calls[0][0]).not.toHaveProperty('controllerProps');
+    expect(mockSolutionTypeBuild).toHaveBeenCalledExactlyOnceWith(params);
   });
 
   it('should resolve only once every replayed request has completed', async () => {

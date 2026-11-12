@@ -5,7 +5,9 @@ import type {
   InferControllerStaticStateMapFromControllers,
 } from '../../common/types/controller-inference.js';
 import type {InferHydratedState, InferStaticState} from '../../common/types/engine.js';
+import type {ContextDefinition} from '../controllers/context/headless-context.ssr.js';
 import type {SearchParameterManagerDefinition} from '../controllers/search-parameter-manager/headless-search-parameter-manager.ssr.js';
+import type {ControllerBuildContext} from './build.js';
 
 export type {
   InferControllerStaticStateFromController,
@@ -14,40 +16,22 @@ export type {
   InferStaticState,
 };
 
-export interface ControllerDefinitionWithoutProps<
+/**
+ * The definition of a controller: how to build it for a request.
+ */
+export interface ControllerDefinition<
   TEngine extends CoreEngine | CoreEngineNext,
   TController extends Controller,
 > {
   /**
-   * Creates an instance of the given controller.
+   * Creates an instance of the controller.
    *
-   * @param engine - The search engine.
+   * @param engine - The engine of the request.
+   * @param context - The page facts passed to `fetchStaticState()`.
    * @returns The controller.
    */
-  build(engine: TEngine): TController;
+  build(engine: TEngine, context: ControllerBuildContext): TController;
 }
-
-export interface ControllerDefinitionWithProps<
-  TEngine extends CoreEngine | CoreEngineNext,
-  TController extends Controller,
-  TProps,
-> {
-  /**
-   * Creates an instance of the given controller.
-   *
-   * @param engine - The search engine.
-   * @param props - The controller properties.
-   * @returns The controller.
-   */
-  buildWithProps(engine: TEngine, props?: TProps): TController;
-}
-
-export type ControllerDefinition<
-  TEngine extends CoreEngine | CoreEngineNext,
-  TController extends Controller,
-> =
-  | ControllerDefinitionWithoutProps<TEngine, TController>
-  | ControllerDefinitionWithProps<TEngine, TController, unknown>;
 
 export interface ControllerDefinitionsMap<
   TEngine extends CoreEngine | CoreEngineNext,
@@ -58,22 +42,21 @@ export interface ControllerDefinitionsMap<
 
 type BakedInControllerDefinitions = {
   parameterManager: SearchParameterManagerDefinition;
+  context: ContextDefinition;
 };
 
 /**
  * Map of baked-in controllers for search engine (runtime controllers)
  */
 export type BakedInSearchControllers = {
-  [K in keyof BakedInControllerDefinitions]: ReturnType<
-    BakedInControllerDefinitions[K]['buildWithProps']
-  >;
+  [K in keyof BakedInControllerDefinitions]: ReturnType<BakedInControllerDefinitions[K]['build']>;
 };
 
 /**
  * Map of controller definitions available to the search engine definition.
  *
  * This type combines user-defined controllers with the system's baked-in controllers
- * (parameterManager).
+ * (parameterManager and context).
  *
  * @template TControllerDefinitions - The controller definitions map
  */

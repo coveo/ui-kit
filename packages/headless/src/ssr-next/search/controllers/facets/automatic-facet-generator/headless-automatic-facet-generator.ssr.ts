@@ -4,11 +4,11 @@ import {
   type AutomaticFacetGeneratorProps,
   buildAutomaticFacetGenerator,
 } from '../../../../../controllers/facets/automatic-facet-generator/headless-automatic-facet-generator.js';
-import type {ControllerDefinitionWithoutProps} from '../../../types/controller-definition.js';
+import type {ControllerDefinition} from '../../../types/controller-definition.js';
 
 export * from '../../../../../controllers/facets/automatic-facet-generator/headless-automatic-facet-generator.js';
 
-export interface AutomaticFacetGeneratorDefinition extends ControllerDefinitionWithoutProps<
+export interface AutomaticFacetGeneratorDefinition extends ControllerDefinition<
   SearchEngine,
   AutomaticFacetGenerator
 > {}

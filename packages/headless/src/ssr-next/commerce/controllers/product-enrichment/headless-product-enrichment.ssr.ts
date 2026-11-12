@@ -4,31 +4,32 @@ import {
   type ProductEnrichmentProps,
   type ProductEnrichmentState,
 } from '../../../../controllers/commerce/product-enrichment/headless-product-enrichment.js';
-import {MissingControllerProps} from '../../../common/errors.js';
-import type {StandaloneControllerWithProps} from '../../types/controller-definitions.js';
+import type {StandaloneControllerDefinition} from '../../types/controller-definitions.js';
 
 export type {ProductEnrichment, ProductEnrichmentProps, ProductEnrichmentState};
 
-export interface ProductEnrichmentDefinition extends StandaloneControllerWithProps<
-  ProductEnrichment,
-  ProductEnrichmentProps
-> {}
+export interface ProductEnrichmentDefinition extends StandaloneControllerDefinition<ProductEnrichment> {}
 
 /**
  * Defines the `ProductEnrichment` controller for the purpose of server-side rendering.
  * @group Definers
  *
- * @param props - The configurable `ProductEnrichment` properties.
+ * @param props - The static `ProductEnrichment` properties, such as the placements to fetch badges
+ *  from. The product being viewed comes from the `productId` option of `fetchStaticState()`.
  * @returns The `ProductEnrichment` controller definition.
  */
-export function defineProductEnrichment(): ProductEnrichmentDefinition {
+export function defineProductEnrichment(
+  props: ProductEnrichmentProps = {}
+): ProductEnrichmentDefinition {
   return {
     standalone: true,
-    buildWithProps: (engine, props) => {
-      if (props === undefined) {
-        throw new MissingControllerProps('ProductEnrichment');
-      }
-      return buildProductEnrichment(engine, props);
-    },
+    build: (engine, {buildConfig}) =>
+      buildProductEnrichment(engine, {
+        ...props,
+        options: {
+          ...props.options,
+          ...(buildConfig.productId !== undefined && {productId: buildConfig.productId}),
+        },
+      }),
   };
 }

@@ -20,6 +20,25 @@ import {
 } from '../validation/controller-validation.js';
 
 /**
+ * Adds the baked-in `parameterManager`, `context` and `cart` definitions to the controllers of an
+ * engine definition.
+ *
+ * @internal
+ */
+export function augmentCommerceControllerDefinitions<
+  TControllerDefinitions extends ControllerDefinitionsMap<Controller>,
+>(
+  controllerDefinitions: TControllerDefinitions | undefined
+): AugmentedControllerDefinition<TControllerDefinitions> {
+  return {
+    ...controllerDefinitions,
+    parameterManager: defineParameterManager(),
+    context: defineContext(),
+    cart: defineCart(),
+  } as AugmentedControllerDefinition<TControllerDefinitions>;
+}
+
+/**
  * Initializes a Commerce engine definition in SSR with given controllers definitions and commerce engine config.
  * @param options - The commerce engine definition
  * @returns Three engine definitions, one per kind of page: `listingEngineDefinition`, `searchEngineDefinition`
@@ -69,12 +88,9 @@ export function defineCommerceEngine<
     validateRecommendationSlots(controllerDefinitions);
   }
 
-  const augmentedControllerDefinition = {
-    ...controllerDefinitions,
-    parameterManager: defineParameterManager(),
-    context: defineContext(),
-    cart: defineCart(),
-  } as AugmentedControllerDefinition<TControllerDefinitions>;
+  const augmentedControllerDefinition = augmentCommerceControllerDefinitions(
+    controllerDefinitions as TControllerDefinitions | undefined
+  );
 
   const fetchStaticState = fetchStaticStateFactory<TControllerDefinitions>(
     augmentedControllerDefinition,

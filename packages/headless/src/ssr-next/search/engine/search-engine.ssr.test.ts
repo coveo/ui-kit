@@ -2,8 +2,10 @@ import type {NavigatorContext} from '../../../app/navigator-context-provider.js'
 import type {SearchEngineConfiguration} from '../../../app/search-engine/search-engine-configuration.js';
 import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import {buildMockSearchResponse} from '../../../test/mock-search-response.js';
-import {defineMockSearchController} from '../../../test/mock-ssr-controller-definitions.js';
-import {defineContext} from '../controllers/context/headless-context.ssr.js';
+import {
+  defineMockSearchController,
+  defineMockSearchControllerReadingPageFacts,
+} from '../../../test/mock-ssr-controller-definitions.js';
 import type {SearchEngineDefinitionOptions} from '../types/engine.js';
 import {defineSearchEngine} from './search-engine.ssr.js';
 
@@ -213,6 +215,16 @@ describe('Search Engine SSR', () => {
         })
       ).toThrow('Reserved controller names found: parameterManager');
     });
+
+    it('should throw when a controller uses the reserved context name', () => {
+      expect(() =>
+        defineSearchEngine({
+          ...definitionOptions,
+          // @ts-expect-error: the reserved name is rejected at the type level too
+          controllers: {context: defineMockSearchController()},
+        })
+      ).toThrow('Reserved controller names found: context');
+    });
   });
 
   describe('static state round trip', () => {
@@ -228,23 +240,50 @@ describe('Search Engine SSR', () => {
     });
   });
 
-  describe('controller props', () => {
-    it('should carry the controller props from the static state into the hydrated engine', async () => {
+  describe('page facts', () => {
+    it('should feed the search params to the parameter manager', async () => {
+      const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+
+      const staticState = await searchEngineDefinition.fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+        searchParams: {q: 'test'},
+      });
+
+      expect(staticState.controllers.parameterManager.state.parameters).toEqual({q: 'test'});
+    });
+
+    it('should feed the custom context to the context controller on both sides', async () => {
+      const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+
+      const staticState = await searchEngineDefinition.fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+        context: {ageGroup: '30-45'},
+      });
+      const hydratedState = await searchEngineDefinition.hydrateStaticState(staticState);
+
+      expect(staticState.context).toEqual({ageGroup: '30-45'});
+      expect(staticState.controllers.context.state.values).toEqual({ageGroup: '30-45'});
+      expect(hydratedState.controllers.context.state.values).toEqual({ageGroup: '30-45'});
+    });
+
+    it('should hand the page facts to every controller definition and carry no controller props', async () => {
       const {searchEngineDefinition} = defineSearchEngine({
         ...definitionOptions,
-        controllers: {context: defineContext()},
+        controllers: {reader: defineMockSearchControllerReadingPageFacts()},
       });
 
       const staticState = await searchEngineDefinition.fetchStaticState({
         navigatorContext: mockNavigatorContext,
-        controllers: {context: {initialState: {values: {ageGroup: '30-45'}}}},
+        searchParams: {q: 'test'},
+        context: {ageGroup: '30-45'},
       });
-      const hydratedState = await searchEngineDefinition.hydrateStaticState(staticState);
 
-      expect(staticState.controllerProps).toEqual({
-        context: {initialState: {values: {ageGroup: '30-45'}}},
+      expect(staticState.controllers.reader.state).toEqual({
+        navigatorContext: mockNavigatorContext,
+        searchParams: {q: 'test'},
+        context: {ageGroup: '30-45'},
       });
-      expect(hydratedState.controllers.context.state.values).toEqual({ageGroup: '30-45'});
+      expect(staticState).not.toHaveProperty('controllerProps');
     });
   });
 

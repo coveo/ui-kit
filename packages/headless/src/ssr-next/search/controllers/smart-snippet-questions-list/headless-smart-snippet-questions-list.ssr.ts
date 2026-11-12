@@ -4,11 +4,11 @@ import {
   buildSmartSnippetQuestionsList,
   type SmartSnippetQuestionsList,
 } from '../../../../controllers/smart-snippet-questions-list/headless-smart-snippet-questions-list.js';
-import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
+import type {ControllerDefinition} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/smart-snippet-questions-list/headless-smart-snippet-questions-list.js';
 
-export interface SmartSnippetQuestionsListDefinition extends ControllerDefinitionWithoutProps<
+export interface SmartSnippetQuestionsListDefinition extends ControllerDefinition<
   SearchEngine,
   SmartSnippetQuestionsList
 > {}

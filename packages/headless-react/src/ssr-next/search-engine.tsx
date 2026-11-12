@@ -1,7 +1,7 @@
 import {
   type AugmentedControllerDefinition,
+  augmentSearchControllerDefinitions,
   defineSearchEngine as defineBaseSearchEngine,
-  defineSearchParameterManager,
   type SearchEngine,
   type SearchEngineDefinitionOptions,
 } from '@coveo/headless/ssr-next';
@@ -73,10 +73,9 @@ export function defineSearchEngine<TControllers extends SearchControllerDefiniti
 
   const {searchEngineDefinition, standaloneEngineDefinition} = defineBaseSearchEngine(options);
 
-  const augmentedControllerDefinition = {
-    ...options.controllers,
-    parameterManager: defineSearchParameterManager(),
-  } as AugmentedControllerDefinition<TControllers>;
+  const augmentedControllerDefinition = augmentSearchControllerDefinitions(
+    options.controllers as TControllers | undefined
+  );
 
   const StateProvider = buildStateProvider(
     singletonContext

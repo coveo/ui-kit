@@ -21,15 +21,19 @@ describe('hydratedStaticStateFactory', () => {
     dispatch: ReturnType<typeof vi.fn>;
     waitForSearchCompletedAction: ReturnType<typeof vi.fn>;
   };
+  let build: ReturnType<typeof vi.fn>;
+
+  const staticStateWith = (actions: SearchCompletedAction[]) =>
+    ({
+      navigatorContext: buildMockNavigatorContext(),
+      searchParams: {q: 'test'},
+      context: {ageGroup: '30-45'},
+      searchActions: actions,
+      controllers: {},
+    }) as unknown as HydrateStaticStateParameters<typeof controllerDefinitions>;
 
   const hydrate = (actions: SearchCompletedAction[]) =>
-    hydratedStaticStateFactory(
-      controllerDefinitions,
-      options
-    )({
-      navigatorContext: buildMockNavigatorContext(),
-      searchActions: actions,
-    } as HydrateStaticStateParameters<typeof controllerDefinitions>);
+    hydratedStaticStateFactory(controllerDefinitions, options)(staticStateWith(actions));
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -37,11 +41,17 @@ describe('hydratedStaticStateFactory', () => {
       dispatch: vi.fn(),
       waitForSearchCompletedAction: vi.fn().mockResolvedValue(searchActions[0]),
     };
-    vi.mocked(buildFactory).mockReturnValue(
-      vi.fn().mockResolvedValue({engine, controllers: {}}) as unknown as ReturnType<
-        typeof buildFactory
-      >
-    );
+    build = vi.fn().mockResolvedValue({engine, controllers: {}});
+    vi.mocked(buildFactory).mockReturnValue(build as unknown as ReturnType<typeof buildFactory>);
+  });
+
+  it('should hand the static state to buildFactory as is, page facts included', async () => {
+    const staticState = staticStateWith(searchActions);
+
+    await hydratedStaticStateFactory(controllerDefinitions, options)(staticState);
+
+    expect(buildFactory).toHaveBeenCalledWith(controllerDefinitions, options);
+    expect(build).toHaveBeenCalledExactlyOnceWith(staticState);
   });
 
   it('should leave the replay of the search actions to buildFactory instead of dispatching them again', async () => {
@@ -66,23 +76,5 @@ describe('hydratedStaticStateFactory', () => {
     const hydratedState = await hydrate(searchActions);
 
     expect(hydratedState).toEqual({engine, controllers: {}});
-  });
-
-  it('should hand the controller props carried by the static state back as the controllers option', async () => {
-    const build = vi.fn().mockResolvedValue({engine, controllers: {}});
-    vi.mocked(buildFactory).mockReturnValue(build as unknown as ReturnType<typeof buildFactory>);
-    const controllerProps = {customController: {initialState: {foo: 'bar'}}};
-
-    await hydratedStaticStateFactory(
-      controllerDefinitions,
-      options
-    )({
-      navigatorContext: buildMockNavigatorContext(),
-      searchActions: [],
-      controllerProps,
-    } as unknown as HydrateStaticStateParameters<typeof controllerDefinitions>);
-
-    expect(build).toHaveBeenCalledWith(expect.objectContaining({controllers: controllerProps}));
-    expect(build.mock.calls[0][0]).not.toHaveProperty('controllerProps');
   });
 });

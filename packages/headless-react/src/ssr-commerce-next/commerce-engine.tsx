@@ -1,13 +1,11 @@
 import {
   type AugmentedControllerDefinition,
+  augmentCommerceControllerDefinitions,
   type CommerceEngine,
   type CommerceEngineDefinitionOptions,
   type Controller,
   type ControllerDefinitionsMap,
   defineCommerceEngine as defineBaseCommerceEngine,
-  defineCart,
-  defineContext,
-  defineParameterManager,
   SolutionType,
 } from '@coveo/headless/ssr-commerce-next';
 // Workaround to prevent Next.js erroring about importing CSR only hooks
@@ -81,12 +79,9 @@ export function defineCommerceEngine<TControllers extends ControllerDefinitionsM
   const {listingEngineDefinition, searchEngineDefinition, standaloneEngineDefinition} =
     defineBaseCommerceEngine({...options});
 
-  const augmentedControllerDefinition = {
-    ...options.controllers,
-    parameterManager: defineParameterManager(),
-    context: defineContext(),
-    cart: defineCart(),
-  } as AugmentedControllerDefinition<TControllers>;
+  const augmentedControllerDefinition = augmentCommerceControllerDefinitions(
+    options.controllers as TControllers | undefined
+  );
 
   return {
     useEngine: buildEngineHook(singletonContext),

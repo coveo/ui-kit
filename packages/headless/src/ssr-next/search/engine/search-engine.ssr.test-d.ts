@@ -1,5 +1,6 @@
 import {describe, expectTypeOf, it} from 'vitest';
 import {getSampleSearchEngineConfiguration} from '../../../app/search-engine/search-engine-configuration.js';
+import type {ContextPayload} from '../../../features/context/context-state.js';
 import {defineResultList} from '../controllers/result-list/headless-result-list.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
 import type {InferHydratedState, InferStaticState} from '../types/controller-definition.js';
@@ -33,6 +34,14 @@ describe('defineSearchEngine', () => {
     expectTypeOf<SearchEngineDefinitionOptions>().not.toHaveProperty('navigatorContextProvider');
     expectTypeOf<SearchStaticState>().toHaveProperty('navigatorContext');
     expectTypeOf<SearchStaticState['accessToken']>().toEqualTypeOf<string | undefined>();
+  });
+
+  it('should take page facts only, with the custom context as one of them', () => {
+    type SearchFetchOptions = Parameters<typeof searchEngineDefinition.fetchStaticState>[0];
+    expectTypeOf<SearchFetchOptions['context']>().toEqualTypeOf<ContextPayload | undefined>();
+    expectTypeOf<SearchFetchOptions>().not.toHaveProperty('controllers');
+    expectTypeOf<SearchStaticState>().not.toHaveProperty('controllerProps');
+    expectTypeOf<SearchStaticState['controllers']>().toHaveProperty('context');
   });
 
   it('should list the defined controllers and the parameter manager in the static state', () => {

@@ -28,15 +28,8 @@ export function hydratedStaticStateFactory<
     async (params: HydrateStaticStateParameters<TControllerDefinitions, TSolutionType>) => {
       ensureSolutionType(solutionType, params.solutionType);
 
-      const {controllerProps, ...restParams} = params;
-
-      const paramsWithControllerProps = {
-        ...restParams,
-        ...(controllerProps && {controllers: controllerProps}),
-      } as unknown as HydrateStaticStateParameters<TControllerDefinitions, TSolutionType>;
-
       const solutionTypeBuild = await buildFactory(controllerDefinitions, options)(solutionType);
-      const {engine, controllers} = await solutionTypeBuild(paramsWithControllerProps);
+      const {engine, controllers} = await solutionTypeBuild(params);
 
       await Promise.all(engine.waitForRequestCompletedAction());
 

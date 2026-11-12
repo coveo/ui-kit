@@ -3,11 +3,11 @@ import {
   type BreadcrumbManager,
   buildBreadcrumbManager,
 } from '../../../../controllers/breadcrumb-manager/headless-breadcrumb-manager.js';
-import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
+import type {ControllerDefinition} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/breadcrumb-manager/headless-breadcrumb-manager.js';
 
-export interface BreadcrumbManagerDefinition extends ControllerDefinitionWithoutProps<
+export interface BreadcrumbManagerDefinition extends ControllerDefinition<
   SearchEngine,
   BreadcrumbManager
 > {}
