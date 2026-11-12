@@ -1,18 +1,9 @@
 import type {CoreEngine, CoreEngineNext} from '../../../app/engine.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {
-  InferControllerStaticStateFromController,
-  InferControllerStaticStateMapFromControllers,
-} from '../../common/types/controller-inference.js';
 import type {InferHydratedState, InferStaticState} from '../../common/types/engine.js';
 import type {SearchParameterManagerDefinition} from '../controllers/search-parameter-manager/headless-search-parameter-manager.ssr.js';
 
-export type {
-  InferControllerStaticStateFromController,
-  InferControllerStaticStateMapFromControllers,
-  InferHydratedState,
-  InferStaticState,
-};
+export type {InferHydratedState, InferStaticState};
 
 export interface ControllerDefinitionWithoutProps<
   TEngine extends CoreEngine | CoreEngineNext,
