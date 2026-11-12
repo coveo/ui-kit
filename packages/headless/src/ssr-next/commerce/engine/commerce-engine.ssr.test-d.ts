@@ -4,6 +4,7 @@ import {defineProductList} from '../controllers/product-list/headless-product-li
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
 import type {InferHydratedState, InferStaticState} from '../types/controller-inference.js';
+import {SolutionType} from '../types/controller-constants.js';
 import type {CommerceEngineDefinitionOptions} from '../types/engine.js';
 import {defineCommerceEngine} from './commerce-engine.ssr.js';
 
@@ -46,6 +47,19 @@ describe('defineCommerceEngine', () => {
     expectTypeOf<CommerceEngineDefinitionOptions>().not.toHaveProperty('navigatorContextProvider');
     expectTypeOf<ListingStaticState>().toHaveProperty('navigatorContext');
     expectTypeOf<ListingStaticState['accessToken']>().toEqualTypeOf<string | undefined>();
+  });
+
+  it('should stamp the static state with the solution type of its definition', () => {
+    expectTypeOf<ListingStaticState['solutionType']>().toEqualTypeOf<SolutionType.listing>();
+    expectTypeOf<
+      InferStaticState<typeof searchEngineDefinition>['solutionType']
+    >().toEqualTypeOf<SolutionType.search>();
+  });
+
+  it('should refuse the static state of another definition at compile time', () => {
+    expectTypeOf<
+      InferStaticState<typeof searchEngineDefinition>
+    >().not.toMatchTypeOf<ListingStaticState>();
   });
 
   it('should list the controllers of each kind of page in its static state', () => {

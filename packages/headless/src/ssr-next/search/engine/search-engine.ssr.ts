@@ -1,6 +1,7 @@
 /**
  * Utility functions to be used for Server Side Rendering.
  */
+import {validateReservedControllerNames} from '../../common/validation/controller-validation.js';
 import {defineSearchParameterManager} from '../controllers/search-parameter-manager/headless-search-parameter-manager.ssr.js';
 import {hydratedStaticStateFactory} from '../factories/hydrated-state-factory.js';
 import {fetchStandaloneStaticStateFactory} from '../factories/standalone-static-state-factory.js';
@@ -57,6 +58,9 @@ export function defineSearchEngine<
   const {controllers: controllerDefinitions, ...engineOptions} = options;
 
   const definitionOptions = {...engineOptions};
+
+  controllerDefinitions &&
+    validateReservedControllerNames(controllerDefinitions, ['parameterManager']);
 
   const augmentedControllerDefinition = {
     ...controllerDefinitions,
