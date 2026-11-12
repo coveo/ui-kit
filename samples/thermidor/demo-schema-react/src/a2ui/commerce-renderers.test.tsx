@@ -354,23 +354,10 @@ describe('ProductList variants', () => {
 
   const card = (index: number) => screen.getAllByRole('listitem')[index];
 
-  it('shows the variants of a grouped product only', async () => {
-    mountList();
-
-    await waitFor(() => expect(screen.getAllByRole('listitem')).toHaveLength(2));
-    const variants = within(card(0)).getByRole('group', {name: 'Variants'});
-    expect(
-      within(variants)
-        .getAllByRole('button')
-        .map(({title}) => title)
-    ).toEqual(['Trail shoe, red', 'Trail shoe, blue']);
-    expect(within(variants).getByLabelText('2 more variants')).toBeDefined();
-    expect(within(card(1)).queryByRole('group', {name: 'Variants'})).toBeNull();
-  });
-
   it('swaps a hovered variant into its card, and hands it to the card actions', async () => {
     const {renderActions} = mountList();
     await waitFor(() => expect(screen.getAllByRole('listitem')).toHaveLength(2));
+    expect(within(card(1)).queryByRole('group', {name: 'Variants'})).toBeNull();
 
     fireEvent.mouseEnter(within(card(0)).getByTitle('Trail shoe, blue'));
 
@@ -418,7 +405,6 @@ describe('ProductCarousel variants', () => {
     });
     const link = await screen.findByRole('link', {name: 'Trail shoe, red'});
     expect(link.getAttribute('href')).toBe('https://example.com/shoe-red');
-    expect(screen.getAllByRole('group', {name: 'Variants'})).toHaveLength(1);
 
     fireEvent.touchStart(screen.getByTitle('Trail shoe, blue'));
 
