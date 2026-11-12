@@ -6,6 +6,7 @@ import {ThermidorA2UIStream} from '../a2ui/surfaces.js';
 import {isBlocking, SessionRequestProvider, submitQuery} from '../a2ui/session-request.js';
 import {LandingPage} from './LandingPage/LandingPage.js';
 import {ConversationPage} from './ConversationPage/index.js';
+import {TopBar} from './TopBar/TopBar.js';
 
 const catalog = createThermidorCatalog({
   comparisonTable: {maxLinks: 5},
@@ -41,6 +42,7 @@ export function AppShell() {
       <A2UIProvider catalog={catalog} onAction={session.dispatchAction}>
         <ThermidorA2UIStream messages={a2uiMessages}>
           <div className="view-shell">
+            <TopBar />
             <div className="view-panel view-panel--active">
               {turns.length === 0 ? (
                 <LandingPage onSubmit={handleSubmit} isStreaming={locked} />
