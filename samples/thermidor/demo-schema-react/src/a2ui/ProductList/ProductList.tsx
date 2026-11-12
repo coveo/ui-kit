@@ -4,6 +4,8 @@ import type {Product} from '@coveo/thermidor-schema';
 import {ProductListPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {ProductCardActionsContext} from '../ProductCard/product-card-actions.js';
 import {ProductBadges} from '../ProductBadges/ProductBadges.js';
+import {ProductVariants} from '../ProductVariants/ProductVariants.js';
+import {usePromotedProduct} from '../ProductVariants/use-promoted-product.js';
 import {resultsFocusTarget} from '../results-focus.js';
 import styles from './ProductList.module.css';
 
@@ -19,7 +21,8 @@ function resolveProductImage(product: Product): string | null {
   return null;
 }
 
-function ProductCard({product}: {product: Product}) {
+function ProductCard({product: listed}: {product: Product}) {
+  const [product, promote] = usePromotedProduct(listed);
   const imageUrl = resolveProductImage(product);
   const {ec_name: name, ec_brand: brand, ec_price: price, ec_promo_price: promoPrice} = product;
   const hasPromo = promoPrice !== undefined && price !== undefined && promoPrice < price;
@@ -49,6 +52,7 @@ function ProductCard({product}: {product: Product}) {
         <h3 className={styles.name} title={name ?? ''}>
           {name}
         </h3>
+        <ProductVariants product={product} onPromote={promote} />
         <div className={styles.pricing}>
           {price === undefined ? (
             <span className={styles.price}>&mdash;</span>

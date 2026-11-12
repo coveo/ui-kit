@@ -1,0 +1,39 @@
+.variants {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.variant {
+  width: 32px;
+  height: 32px;
+  padding: 2px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: none;
+  cursor: pointer;
+}
+
+.variant:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 1px;
+}
+
+.shown {
+  border-color: var(--color-primary);
+}
+
+.thumbnail {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 2px;
+  object-fit: cover;
+}
+
+.more {
+  font-size: var(--font-size-xs);
+  color: var(--color-primary);
+  padding: 0 var(--space-1);
+}

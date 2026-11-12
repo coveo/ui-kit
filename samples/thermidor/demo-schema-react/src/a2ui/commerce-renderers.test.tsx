@@ -1,6 +1,12 @@
 import {describe, it, expect, afterEach} from 'vitest';
-import {screen, fireEvent, cleanup, waitFor} from '@testing-library/react';
+import {screen, fireEvent, cleanup, waitFor, within} from '@testing-library/react';
+import type {ReactNode} from 'react';
+import {vi} from 'vitest';
 import {mountSurface} from './mount-surface.harness.js';
+import {
+  ProductCardActionsContext,
+  type ProductCardProduct,
+} from './ProductCard/product-card-actions.js';
 
 /**
  * Pagination / Sort / ProductList are `createReactComponent` implementations driven by the generic
@@ -302,5 +308,123 @@ describe('ProductList', () => {
 
     const badges = await screen.findByRole('list', {name: 'Product badges'});
     expect(badges.textContent).toBe('Bestseller!');
+  });
+});
+
+// A product with variants, as producers send it: the product first among its variants.
+function trailShoe() {
+  const variants = [
+    {
+      permanentid: 'shoe-red',
+      ec_name: 'Trail shoe, red',
+      ec_price: 120,
+      ec_images: ['https://example.com/red.png'],
+      ec_thumbnails: ['https://example.com/red-thumb.png'],
+      clickUri: 'https://example.com/shoe-red',
+      additionalFields: {},
+    },
+    {
+      permanentid: 'shoe-blue',
+      ec_name: 'Trail shoe, blue',
+      ec_price: 110,
+      ec_images: ['https://example.com/blue.png'],
+      ec_thumbnails: ['https://example.com/blue-thumb.png'],
+      clickUri: 'https://example.com/shoe-blue',
+      additionalFields: {},
+    },
+  ];
+  return {...variants[0], children: variants, totalNumberOfChildren: 4};
+}
+
+const roadShoe = {permanentid: 'road', ec_name: 'Road shoe', ec_price: 90, additionalFields: {}};
+
+describe('ProductList variants', () => {
+  function mountList(renderActions = vi.fn((_: ProductCardProduct) => null as ReactNode)) {
+    const surface = mountSurface({
+      component: {component: 'ProductList', products: {path: '/state/root/products'}},
+      dataModel: [{path: '/state/root/products', value: [trailShoe(), roadShoe]}],
+      wrapper: ({children}) => (
+        <ProductCardActionsContext.Provider value={renderActions}>
+          {children}
+        </ProductCardActionsContext.Provider>
+      ),
+    });
+    return {...surface, renderActions};
+  }
+
+  const card = (index: number) => screen.getAllByRole('listitem')[index];
+
+  it('shows the variants of a grouped product only', async () => {
+    mountList();
+
+    await waitFor(() => expect(screen.getAllByRole('listitem')).toHaveLength(2));
+    const variants = within(card(0)).getByRole('group', {name: 'Variants'});
+    expect(
+      within(variants)
+        .getAllByRole('button')
+        .map(({title}) => title)
+    ).toEqual(['Trail shoe, red', 'Trail shoe, blue']);
+    expect(within(variants).getByLabelText('2 more variants')).toBeDefined();
+    expect(within(card(1)).queryByRole('group', {name: 'Variants'})).toBeNull();
+  });
+
+  it('swaps a hovered variant into its card, and hands it to the card actions', async () => {
+    const {renderActions} = mountList();
+    await waitFor(() => expect(screen.getAllByRole('listitem')).toHaveLength(2));
+
+    fireEvent.mouseEnter(within(card(0)).getByTitle('Trail shoe, blue'));
+
+    expect(within(card(0)).getByRole('heading').textContent).toBe('Trail shoe, blue');
+    expect(within(card(0)).getByText('$110.00')).toBeDefined();
+    expect(within(card(0)).getAllByRole('img')[0].getAttribute('src')).toBe(
+      'https://example.com/blue.png'
+    );
+    expect(renderActions).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        productId: 'shoe-blue',
+        name: 'Trail shoe, blue',
+        price: 110,
+        clickUri: 'https://example.com/shoe-blue',
+      })
+    );
+    expect(within(card(1)).getByRole('heading').textContent).toBe('Road shoe');
+  });
+
+  it('shows the first variant again when the products are sent again', async () => {
+    const {pushDataModel} = mountList();
+    await waitFor(() => expect(screen.getAllByRole('listitem')).toHaveLength(2));
+    fireEvent.mouseEnter(within(card(0)).getByTitle('Trail shoe, blue'));
+
+    pushDataModel([{path: '/state/root/products', value: [trailShoe(), roadShoe]}]);
+
+    await waitFor(() =>
+      expect(within(card(0)).getByRole('heading').textContent).toBe('Trail shoe, red')
+    );
+  });
+});
+
+describe('ProductCarousel variants', () => {
+  it('links the card to the variant it shows', async () => {
+    mountSurface({
+      component: {
+        component: 'ProductCarousel',
+        heading: {path: '/state/root/heading'},
+        products: {path: '/state/root/products'},
+      },
+      dataModel: [
+        {path: '/state/root/heading', value: 'Shoes'},
+        {path: '/state/root/products', value: [trailShoe(), roadShoe]},
+      ],
+    });
+    const link = await screen.findByRole('link', {name: 'Trail shoe, red'});
+    expect(link.getAttribute('href')).toBe('https://example.com/shoe-red');
+    expect(screen.getAllByRole('group', {name: 'Variants'})).toHaveLength(1);
+
+    fireEvent.touchStart(screen.getByTitle('Trail shoe, blue'));
+
+    expect(screen.getByRole('link', {name: 'Trail shoe, blue'}).getAttribute('href')).toBe(
+      'https://example.com/shoe-blue'
+    );
+    expect(screen.getByText('$110.00')).toBeDefined();
   });
 });

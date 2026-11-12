@@ -1,4 +1,4 @@
-import {useContext} from 'react';
+import {useContext, type ReactNode} from 'react';
 import {formatPrice} from '../../utils.js';
 import {ProductCardActionsContext} from './product-card-actions.js';
 import styles from './ProductCard.module.css';
@@ -10,10 +10,12 @@ interface A2UIProductCardProps {
   ec_image?: string;
   ec_product_id?: string;
   clickUri?: string;
+  /** The product's variants, under its name. */
+  variants?: ReactNode;
 }
 
 export function A2UIProductCard(props: A2UIProductCardProps) {
-  const {ec_name, ec_brand, ec_price, ec_image, ec_product_id, clickUri} = props;
+  const {ec_name, ec_brand, ec_price, ec_image, ec_product_id, clickUri, variants} = props;
   const renderActions = useContext(ProductCardActionsContext);
   const actions =
     renderActions && ec_product_id
@@ -40,6 +42,7 @@ export function A2UIProductCard(props: A2UIProductCardProps) {
           <span className={styles.name}>{ec_name}</span>
         )}
         {ec_brand && <span className={styles.brand}>{ec_brand}</span>}
+        {variants}
         {ec_price !== undefined && <span className={styles.price}>{formatPrice(ec_price)}</span>}
         {actions != null && <div className={styles.actions}>{actions}</div>}
       </div>

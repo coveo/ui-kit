@@ -9,6 +9,8 @@ import {
 import {useMediaQuery} from '../../hooks/use-media-query.js';
 import {formatPrice} from '../../utils.js';
 import {useSearchBoxQuery} from '../SearchBox/search-box-context.js';
+import {ProductVariants} from '../ProductVariants/ProductVariants.js';
+import {usePromotedProduct} from '../ProductVariants/use-promoted-product.js';
 import {InstantProductsSkeleton} from '../Skeleton/Skeleton.js';
 import styles from './InstantProducts.module.css';
 
@@ -145,31 +147,50 @@ function ProductList({products, id}: {products: InstantProduct[]; id?: string}) 
     <div id={id} className={styles.list} role="listbox" aria-label="Instant products">
       {products.map((product) => {
         const optionId = `instant-product-${product.permanentid}`;
-        const active = optionId === activeOptionId;
-        const image = product.ec_images?.[0];
-        const price = product.ec_promo_price ?? product.ec_price;
         return (
-          <div
+          <ProductRow
             key={product.permanentid}
-            id={optionId}
-            className={`${styles.row} ${active ? styles.active : ''}`}
-            role="option"
-            aria-selected={active}
-            onClick={() => openProduct(product)}
-          >
-            {image ? (
-              <img className={styles.image} src={image} alt="" loading="lazy" />
-            ) : (
-              <div className={styles.image} />
-            )}
-            <div className={styles.content}>
-              <span className={styles.name}>{product.ec_name}</span>
-              {product.ec_brand && <span className={styles.brand}>{product.ec_brand}</span>}
-            </div>
-            {price !== undefined && <span className={styles.price}>{formatPrice(price)}</span>}
-          </div>
+            product={product}
+            optionId={optionId}
+            active={optionId === activeOptionId}
+          />
         );
       })}
+    </div>
+  );
+}
+
+function ProductRow({
+  product: listed,
+  optionId,
+  active,
+}: {
+  product: InstantProduct;
+  optionId: string;
+  active: boolean;
+}) {
+  const [product, promote] = usePromotedProduct(listed);
+  const image = product.ec_images?.[0];
+  const price = product.ec_promo_price ?? product.ec_price;
+  return (
+    <div
+      id={optionId}
+      className={`${styles.row} ${active ? styles.active : ''}`}
+      role="option"
+      aria-selected={active}
+      onClick={() => openProduct(product)}
+    >
+      {image ? (
+        <img className={styles.image} src={image} alt="" loading="lazy" />
+      ) : (
+        <div className={styles.image} />
+      )}
+      <div className={styles.content}>
+        <span className={styles.name}>{product.ec_name}</span>
+        {product.ec_brand && <span className={styles.brand}>{product.ec_brand}</span>}
+        <ProductVariants product={product} onPromote={promote} />
+      </div>
+      {price !== undefined && <span className={styles.price}>{formatPrice(price)}</span>}
     </div>
   );
 }
