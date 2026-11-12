@@ -37,7 +37,7 @@ const CHILD_TEMPLATE_EXAMPLE = `<template>
     }
   </style>
   <atomic-result-section-visual>
-    <img loading="lazy" src="https://picsum.photos/seed/picsum/350" class="thumbnail" alt="Thumbnail image"/>
+    <img loading="lazy" src="/images/thumbnail-350.svg" class="thumbnail" alt="Thumbnail image"/>
   </atomic-result-section-visual>
   <atomic-result-section-title>
     <atomic-result-link></atomic-result-link>
@@ -85,7 +85,7 @@ const PARENT_TEMPLATE_EXAMPLE = `<template>
     }
   </style>
   <atomic-result-section-visual>
-    <img loading="lazy" src="https://picsum.photos/seed/picsum/350" class="thumbnail" alt="Thumbnail image"/>
+    <img loading="lazy" src="/images/thumbnail-350.svg" class="thumbnail" alt="Thumbnail image"/>
   </atomic-result-section-visual>
   <atomic-result-section-title>
     <atomic-result-link></atomic-result-link>

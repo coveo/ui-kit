@@ -31,7 +31,7 @@ const insightApiHarness = new MockInsightApi();
 
 const TEMPLATE_EXAMPLE = `<template>
   <atomic-result-section-visual>
-    <atomic-result-image field="ytthumbnailurl" fallback="https://picsum.photos/seed/picsum/350"></atomic-result-image>
+    <atomic-result-image field="ytthumbnailurl" fallback="/images/thumbnail-350.svg"></atomic-result-image>
   </atomic-result-section-visual>
   <atomic-result-section-badges>
     <atomic-field-condition must-match-sourcetype="YouTube">
@@ -95,7 +95,7 @@ const FOLDED_TEMPLATE_EXAMPLE = `<template>
     }
   </style>
   <atomic-result-section-visual>
-    <atomic-result-image field="ytthumbnailurl" fallback="https://picsum.photos/seed/picsum/350" class="thumbnail"></atomic-result-image>
+    <atomic-result-image field="ytthumbnailurl" fallback="/images/thumbnail-350.svg" class="thumbnail"></atomic-result-image>
   </atomic-result-section-visual>
   <atomic-result-section-title>
     <atomic-result-link></atomic-result-link>
@@ -135,7 +135,7 @@ const FOLDED_TEMPLATE_EXAMPLE = `<template>
             }
           </style>
           <atomic-result-section-visual>
-            <atomic-result-image field="ytthumbnailurl" fallback="https://picsum.photos/seed/child/200" class="child-thumbnail"></atomic-result-image>
+            <atomic-result-image field="ytthumbnailurl" fallback="/images/thumbnail-200.svg" class="child-thumbnail"></atomic-result-image>
           </atomic-result-section-visual>
           <atomic-result-section-title>
             <atomic-result-link></atomic-result-link>
