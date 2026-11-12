@@ -377,10 +377,14 @@ describe('ProductList variants', () => {
     expect(within(card(1)).getByRole('heading').textContent).toBe('Road shoe');
   });
 
-  it('shows the first variant again when the products are sent again', async () => {
+  it('keeps the variant through other writes, and shows the first again when the products are sent again', async () => {
     const {pushDataModel} = mountList();
     await waitFor(() => expect(screen.getAllByRole('listitem')).toHaveLength(2));
     fireEvent.mouseEnter(within(card(0)).getByTitle('Trail shoe, blue'));
+
+    pushDataModel([{path: '/state/facet/values', value: [{value: 'Nike', state: 'selected'}]}]);
+    pushDataModel([{path: '/state/cart', value: {items: []}}]);
+    expect(within(card(0)).getByRole('heading').textContent).toBe('Trail shoe, blue');
 
     pushDataModel([{path: '/state/root/products', value: [trailShoe(), roadShoe]}]);
 
@@ -391,8 +395,8 @@ describe('ProductList variants', () => {
 });
 
 describe('ProductCarousel variants', () => {
-  it('links the card to the variant it shows', async () => {
-    mountSurface({
+  it('links the card to the variant it shows, through a write to its heading', async () => {
+    const {pushDataModel} = mountSurface({
       component: {
         component: 'ProductCarousel',
         heading: {path: '/state/root/heading'},
@@ -407,6 +411,8 @@ describe('ProductCarousel variants', () => {
     expect(link.getAttribute('href')).toBe('https://example.com/shoe-red');
 
     fireEvent.touchStart(screen.getByTitle('Trail shoe, blue'));
+    pushDataModel([{path: '/state/root/heading', value: 'More shoes'}]);
+    await screen.findByText('More shoes');
 
     expect(screen.getByRole('link', {name: 'Trail shoe, blue'}).getAttribute('href')).toBe(
       'https://example.com/shoe-blue'
