@@ -1,6 +1,8 @@
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {useContext} from 'react';
 import type {Product} from '@coveo/thermidor-schema';
 import {ProductListPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {ProductCardActionsContext} from '../ProductCard/product-card-actions.js';
 import {ProductBadges} from '../ProductBadges/ProductBadges.js';
 import {resultsFocusTarget} from '../results-focus.js';
 import styles from './ProductList.module.css';
@@ -21,6 +23,14 @@ function ProductCard({product}: {product: Product}) {
   const imageUrl = resolveProductImage(product);
   const {ec_name: name, ec_brand: brand, ec_price: price, ec_promo_price: promoPrice} = product;
   const hasPromo = promoPrice !== undefined && price !== undefined && promoPrice < price;
+  const renderActions = useContext(ProductCardActionsContext);
+  const actions = renderActions?.({
+    productId: product.permanentid,
+    name: name ?? product.permanentid,
+    price: hasPromo ? promoPrice : price,
+    imageUrl: imageUrl ?? undefined,
+    clickUri: product.clickUri,
+  });
 
   return (
     <article className={styles.card} role="listitem">
@@ -52,6 +62,7 @@ function ProductCard({product}: {product: Product}) {
           )}
         </div>
       </div>
+      {actions != null && <div className={styles.actions}>{actions}</div>}
     </article>
   );
 }
@@ -59,8 +70,9 @@ function ProductCard({product}: {product: Product}) {
 /**
  * A2-UI component for the `product-list`. The generic binder resolves `products` from
  * `ProductListPropsSchema`; a grid of product cards for decomposed commerce search surfaces.
- * Presentational — no actions. `products === undefined` (bindings not yet resolved) renders a
- * loading state; an empty list renders nothing.
+ * Presentational — no surface actions; cards render `ProductCardActionsContext` actions.
+ * `products === undefined` (bindings not yet resolved) renders a loading state; an empty list
+ * renders nothing.
  *
  * While a gesture is in flight, an optimistic control already shows the new choice (page 3) while
  * this grid still holds the previous results (page 2); the surface lock dims the grid meanwhile.
