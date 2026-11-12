@@ -105,9 +105,14 @@ export function CartPanel({id, purchasing, orderId, onPurchase}: CartPanelProps)
 
   useEffect(() => {
     const focused = focusedLine.current;
-    if (!focused || cart.items.some((line) => line.productId === focused.productId)) return;
+    if (!focused) return;
+    const index = cart.items.findIndex((line) => line.productId === focused.productId);
+    if (index !== -1) {
+      focusedLine.current = {productId: focused.productId, index};
+      return;
+    }
     focusedLine.current = null;
-    if (panelRef.current?.contains(document.activeElement)) return;
+    if (document.activeElement && document.activeElement !== document.body) return;
     const lines = linesRef.current?.children ?? [];
     const next = lines[Math.min(focused.index, lines.length - 1)];
     (next?.querySelector<HTMLElement>('a, button') ?? headingRef.current)?.focus();

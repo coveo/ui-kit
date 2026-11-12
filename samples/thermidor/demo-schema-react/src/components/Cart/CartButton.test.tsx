@@ -200,6 +200,33 @@ describe('CartPanel', () => {
     expect(document.activeElement).toBe(screen.getByRole('heading', {name: 'Your cart'}));
   });
 
+  it('moves the focus to the line after the removed one when earlier lines were removed first', () => {
+    const [a, b, c, d] = ['A', 'B', 'C', 'D'].map((name) => ({
+      productId: name,
+      name,
+      unitPrice: 1,
+      quantity: 1,
+    }));
+    const {set} = renderCart({cart: cartWith(a, b, c, d)});
+    openCart();
+    screen.getByRole('button', {name: 'Remove B from the cart'}).focus();
+
+    act(() => set({cart: cartWith(b, c, d)}));
+    act(() => set({cart: cartWith(c, d)}));
+    expect(document.activeElement).toBe(screen.getByRole('button', {name: 'Remove one C'}));
+  });
+
+  it('leaves the focus where the shopper moved it while the focused line was being removed', () => {
+    const {set} = renderCart();
+    openCart();
+    screen.getByRole('button', {name: 'Remove Kayak from the cart'}).focus();
+    const toggle = screen.getByRole('button', {name: /^Cart,/});
+    toggle.focus();
+
+    act(() => set({cart: {...CART, items: [CART.items[1]]}}));
+    expect(document.activeElement).toBe(toggle);
+  });
+
   it('moves the focus when − removes the last unit of the focused line', () => {
     const {set} = renderCart();
     openCart();
