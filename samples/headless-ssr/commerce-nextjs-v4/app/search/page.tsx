@@ -29,7 +29,8 @@ export default async function Search({searchParams}: {searchParams: Promise<URLS
   // Fetches the cart items from an external service
   const items = await externalCartAPI.getCart();
 
-  // Define the context options for listing and recommendations
+  // The context of the storefront. `view.url` defaults to the page URL of the navigator context; this sample
+  // sets it explicitly because its merchandising rules are configured on the storefront URL, not on localhost.
   const context: ContextOptions = {
     language: defaultContext.language,
     country: defaultContext.country,
