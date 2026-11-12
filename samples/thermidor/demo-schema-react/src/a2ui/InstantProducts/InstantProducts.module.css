@@ -31,20 +31,11 @@
 .row {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  padding-right: var(--space-2);
-  border-radius: var(--radius-md);
-  transition: background var(--transition-fast);
-}
-
-.option {
-  display: flex;
-  flex: 1;
-  align-items: center;
   gap: var(--space-3);
-  min-width: 0;
   padding: var(--space-2);
+  border-radius: var(--radius-md);
   cursor: pointer;
+  transition: background var(--transition-fast);
 }
 
 .row:hover,
@@ -76,19 +67,9 @@
   text-overflow: ellipsis;
 }
 
-.details {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-2);
-  min-width: 0;
-}
-
 .brand {
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .price {
