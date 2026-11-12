@@ -69,6 +69,24 @@ describe('the static and hydrated states of a search engine definition', () => {
   });
 });
 
+describe('SearchEngineDefinitionOptions', () => {
+  it('should check a configuration kept apart from the definition, with no type argument', () => {
+    const config = {
+      configuration: getSampleSearchEngineConfiguration(),
+      controllers: {searchBox: defineSearchBox()},
+    } satisfies SearchEngineDefinitionOptions;
+
+    expectTypeOf<
+      keyof InferHydratedState<
+        ReturnType<typeof defineSearchEngine<typeof config.controllers>>['searchEngineDefinition']
+      >['controllers']
+    >().toEqualTypeOf<'searchBox' | 'parameterManager'>();
+    expectTypeOf<{searchBox: number}>().not.toExtend<
+      NonNullable<SearchEngineDefinitionOptions['controllers']>
+    >();
+  });
+});
+
 describe('EngineDefinition', () => {
   // What code written for any engine definition looks like: two plain type parameters.
   function hydrate<TStaticState, THydratedState>(
