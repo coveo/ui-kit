@@ -142,7 +142,7 @@ export function CartPanel({id, purchasing, orderId, onPurchase}: CartPanelProps)
           <CartLineItem
             key={line.productId}
             line={line}
-            pending={pendingProductIds.has(line.productId)}
+            pending={purchasing || pendingProductIds.has(line.productId)}
             onFocus={() => {
               focusedLine.current = {productId: line.productId, index};
             }}

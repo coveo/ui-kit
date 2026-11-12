@@ -32,8 +32,8 @@ export function CartButton() {
         setOpen(false);
       }
     };
-    document.addEventListener('pointerdown', onPointerDown);
-    return () => document.removeEventListener('pointerdown', onPointerDown);
+    document.addEventListener('pointerdown', onPointerDown, true);
+    return () => document.removeEventListener('pointerdown', onPointerDown, true);
   }, [open]);
 
   const handleBlur = (event: FocusEvent) => {

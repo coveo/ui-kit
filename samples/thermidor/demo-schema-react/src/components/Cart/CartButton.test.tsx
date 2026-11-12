@@ -93,6 +93,22 @@ describe('CartButton', () => {
     fireEvent.pointerDown(screen.getByRole('button', {name: 'Outside'}));
     expect(screen.queryByRole('dialog')).toBeNull();
   });
+
+  it('closes the panel on a click outside that stops the pointerdown propagation', () => {
+    render(
+      <CartProvider store={createFakeCartStore({cart: CART})}>
+        <button type="button" onPointerDown={(event) => event.stopPropagation()}>
+          Product control
+        </button>
+        <CartButton />
+      </CartProvider>
+    );
+    openCart();
+
+    fireEvent.pointerDown(screen.getByRole('button', {name: 'Product control'}));
+
+    expect(screen.queryByRole('dialog')).toBeNull();
+  });
 });
 
 describe('CartPanel', () => {
@@ -154,6 +170,22 @@ describe('CartPanel', () => {
     expect(screen.getByRole('button', {name: 'Purchase'}).getAttribute('aria-disabled')).toBe(
       'true'
     );
+  });
+
+  it("disables every line's controls while the order is being placed", () => {
+    const {store, purchase} = renderCart();
+    purchase.mockImplementationOnce(() => new Promise<PurchaseResult>(() => {}));
+    openCart();
+    fireEvent.click(screen.getByRole('button', {name: 'Purchase'}));
+
+    for (const name of ['Add one Kayak', 'Remove one Kayak', 'Remove Paddle from the cart']) {
+      const button = screen.getByRole('button', {name});
+      expect(button.getAttribute('aria-disabled')).toBe('true');
+      fireEvent.click(button);
+    }
+
+    expect(store.add).not.toHaveBeenCalled();
+    expect(store.remove).not.toHaveBeenCalled();
   });
 
   it('moves the focus to the next line when the focused line is removed, then to the heading', () => {
