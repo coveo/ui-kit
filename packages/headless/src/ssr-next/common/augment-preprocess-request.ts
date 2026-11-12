@@ -34,13 +34,13 @@ export function augmentPreprocessRequestWithForwardedFor(options: AugmentPreproc
   ) => {
     if (!isBrowser()) {
       const headers = new Headers(request.headers);
-      const forwardedFor = options.navigatorContext.forwardedFor;
+      const forwardedFor = options.navigatorContext?.forwardedFor;
       if (forwardedFor) {
         headers.set('x-forwarded-for', forwardedFor as string);
       } else {
         const logger = buildLogger(options.loggerOptions);
         logger.warn(
-          "[WARNING] Unable to set x-forwarded-for header. Make sure to set the 'forwardedFor' property in the navigator context provider."
+          "[WARNING] Unable to set x-forwarded-for header. Set the 'forwardedFor' property of the navigator context passed to fetchStaticState()."
         );
       }
       request.headers = headers;
