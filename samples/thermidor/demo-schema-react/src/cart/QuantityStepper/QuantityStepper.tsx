@@ -8,8 +8,6 @@ export interface QuantityStepperProps {
   pending: boolean;
   onDecrement(): void;
   onIncrement(): void;
-  /** `compact` for dense rows such as instant-product options. */
-  size?: 'default' | 'compact';
   /** Defaults to `Remove one <productName> from cart`. */
   decrementLabel?: string;
   /** Defaults to `Add one more <productName> to cart`. */
@@ -25,7 +23,6 @@ export function QuantityStepper({
   pending,
   onDecrement,
   onIncrement,
-  size = 'default',
   decrementLabel = `Remove one ${productName} from cart`,
   incrementLabel = `Add one more ${productName} to cart`,
   incrementRef,
@@ -34,9 +31,7 @@ export function QuantityStepper({
   const unlessPending = (action: () => void) => () => {
     if (!pending) action();
   };
-  const classNames = [styles.stepper, size === 'compact' && styles.compact, className]
-    .filter(Boolean)
-    .join(' ');
+  const classNames = [styles.stepper, className].filter(Boolean).join(' ');
 
   return (
     <div className={classNames} role="group" aria-label={`Quantity of ${productName}`}>

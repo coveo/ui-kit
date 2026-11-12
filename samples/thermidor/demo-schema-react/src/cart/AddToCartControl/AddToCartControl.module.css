@@ -40,9 +40,3 @@
 .stepper {
   flex: 1;
 }
-
-.compact {
-  --control-height: 1.5rem;
-  flex: 0 0 auto;
-  font-size: var(--font-size-xs);
-}

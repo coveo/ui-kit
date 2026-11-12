@@ -10,8 +10,6 @@ export type AddToCartControlProduct = Omit<CartProduct, 'unitPrice'> & {
 
 export interface AddToCartControlProps {
   product: AddToCartControlProduct;
-  /** `compact` for dense rows such as instant-product options. */
-  size?: 'default' | 'compact';
 }
 
 function stopAndPrevent(event: SyntheticEvent) {
@@ -24,7 +22,7 @@ function stopAndPrevent(event: SyntheticEvent) {
  * cards, links and popovers; keeps focus where it is on mouse press. Pending buttons are
  * `aria-disabled` (not `disabled`) to keep focus.
  */
-export function AddToCartControl({product, size = 'default'}: AddToCartControlProps) {
+export function AddToCartControl({product}: AddToCartControlProps) {
   const {cart, pendingProductIds, add, remove} = useCart();
   const store = useContext(CartStoreContext);
   const controlRef = useRef<HTMLDivElement>(null);
@@ -68,12 +66,10 @@ export function AddToCartControl({product, size = 'default'}: AddToCartControlPr
   const addOne = () => send(() => add(cartProduct, 1), !inCart);
   const removeOne = () => send(() => remove(product.productId, 1), quantity === 1);
 
-  const className = `${styles.control} ${size === 'compact' ? styles.compact : ''}`;
-
   return (
     <div
       ref={controlRef}
-      className={className}
+      className={styles.control}
       onClick={stopAndPrevent}
       onMouseDown={stopAndPrevent}
       onPointerDown={(event) => event.stopPropagation()}
@@ -89,7 +85,6 @@ export function AddToCartControl({product, size = 'default'}: AddToCartControlPr
           pending={pending}
           onDecrement={removeOne}
           onIncrement={addOne}
-          size={size}
           incrementRef={swapButtonRef}
         />
       ) : (

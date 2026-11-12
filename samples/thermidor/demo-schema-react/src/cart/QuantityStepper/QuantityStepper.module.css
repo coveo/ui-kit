@@ -46,16 +46,6 @@
   color: var(--color-text-primary);
 }
 
-.compact {
-  gap: var(--space-1);
-}
-
-.compact button {
-  width: var(--control-height, 1.5rem);
-  height: var(--control-height, 1.5rem);
-  font-size: var(--font-size-sm);
-}
-
 .visuallyHidden {
   position: absolute;
   width: 1px;
