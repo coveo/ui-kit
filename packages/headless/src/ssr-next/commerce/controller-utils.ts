@@ -3,6 +3,7 @@ import type {Controller} from '../../controllers/controller/headless-controller.
 import {clone, filterObject, mapObject} from '../../utils/utils.js';
 import {ControllerBuilder} from '../common/builders/controller-builder.js';
 import {createStaticControllerBuilder} from '../common/builders/static-controller-builder.js';
+import type {InferControllerStaticStateMapFromControllers} from '../common/types/controller-inference.js';
 import type {SSRCommerceEngine} from './factories/build-factory.js';
 import type {SolutionType} from './types/controller-constants.js';
 import type {
@@ -33,7 +34,7 @@ export function createStaticState<
       TControllerDefinitions,
       TSolutionType
     > &
-      FilteredBakedInControllers<TSolutionType>,
+      InferControllerStaticStateMapFromControllers<FilteredBakedInControllers<TSolutionType>>,
     searchActions: searchActions.map((action) => clone(action)),
   };
 }

@@ -106,7 +106,7 @@ export interface CommerceEngineDefinition<
   hydrateStaticState: HydrateStaticState<
     InferControllersMapFromDefinition<TControllers, TSolutionType>,
     UnknownAction,
-    InferControllerPropsMapFromDefinitions<TControllers>,
+    InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>,
     TControllers,
     TSolutionType
   >;
