@@ -1,8 +1,4 @@
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {
-  InferControllerStaticStateFromController,
-  InferControllerStaticStateMapFromControllers,
-} from '../../common/types/controller-inference.js';
 import type {HasKey} from '../../common/types/utilities.js';
 import type {CartDefinition} from '../controllers/cart/headless-cart.ssr.js';
 import type {ContextDefinition} from '../controllers/context/headless-context.ssr.js';
@@ -17,11 +13,6 @@ import type {
   StandaloneController,
   UniversalController,
 } from './controller-scopes.js';
-
-export type {
-  InferControllerStaticStateFromController,
-  InferControllerStaticStateMapFromControllers,
-};
 
 interface SolutionTypeAvailability {
   [SolutionType.search]?: boolean;

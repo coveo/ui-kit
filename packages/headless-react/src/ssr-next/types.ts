@@ -2,24 +2,17 @@ import type {
   Controller,
   ControllerDefinitionsMap,
   InferControllerFromDefinition,
-  InferControllerStaticStateMapFromDefinitions,
-  InferControllersMapFromDefinition,
   SearchEngine,
   SearchEngineDefinition,
+  SearchHydratedState,
+  SearchStaticState,
 } from '@coveo/headless/ssr-next';
 import type {FunctionComponent, PropsWithChildren} from 'react';
+import type {StateProviderProps} from '../ssr-common/types.js';
 
 export type {Hydration, HydrationStatus} from '../ssr-common/types.js';
 
 export type SearchControllerDefinitionsMap = ControllerDefinitionsMap<SearchEngine, Controller>;
-
-export type ContextState<TControllers extends SearchControllerDefinitionsMap> = {
-  engine?: SearchEngine;
-  controllers:
-    | InferControllersMapFromDefinition<TControllers>
-    | InferControllerStaticStateMapFromDefinitions<TControllers>;
-  hydrationError?: unknown;
-};
 
 /**
  * A controller hook: the controller state, and its methods once the engine is hydrated.
@@ -61,15 +54,8 @@ export type InferControllerHooksMapFromDefinition<
 export type ReactSearchEngineDefinition<TControllers extends SearchControllerDefinitionsMap> =
   SearchEngineDefinition<TControllers> & {
     StateProvider: FunctionComponent<
-      PropsWithChildren<{
-        engine?: SearchEngine;
-        controllers:
-          | InferControllersMapFromDefinition<TControllers>
-          | InferControllerStaticStateMapFromDefinitions<TControllers>;
-        /**
-         * @internal Set by the provider built with `buildProviderWithDefinition()` when the hydration fails.
-         */
-        hydrationError?: unknown;
-      }>
+      PropsWithChildren<
+        StateProviderProps<SearchStaticState<TControllers>, SearchHydratedState<TControllers>>
+      >
     >;
   };

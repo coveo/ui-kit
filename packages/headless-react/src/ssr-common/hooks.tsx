@@ -2,14 +2,21 @@ import {type Context, type PropsWithChildren, useCallback, useContext, useMemo} 
 import {useSyncMemoizedStore} from '../client-utils.js';
 import {MissingEngineProviderError, UndefinedControllerError} from '../errors.js';
 import {capitalize, mapObject, type SingletonGetter} from '../utils.js';
-import type {ControllerLike, EngineContextState, Hydration} from './types.js';
+import type {ControllerLike, EngineContextState, Hydration, StateProviderProps} from './types.js';
 
 /**
  * @internal
  */
-export type EngineContext = SingletonGetter<Context<EngineContextState | null>>;
+/**
+ * The React context that the providers of an engine definition share with its hooks.
+ */
+export type EngineContext<TEngine = unknown> = SingletonGetter<
+  Context<EngineContextState<TEngine> | null>
+>;
 
-function useEngineContext(singletonContext: EngineContext): EngineContextState {
+function useEngineContext<TEngine>(
+  singletonContext: EngineContext<TEngine>
+): EngineContextState<TEngine> {
   const ctx = useContext(singletonContext.get());
   if (ctx === null) {
     throw new MissingEngineProviderError();
@@ -17,13 +24,13 @@ function useEngineContext(singletonContext: EngineContext): EngineContextState {
   return ctx;
 }
 
-const isHydrated = (ctx: EngineContextState) => !!ctx.engine;
+const isHydrated = (ctx: EngineContextState<unknown>) => !!ctx.engine;
 
 /**
  * @internal
  */
-function buildControllerHook(
-  singletonContext: EngineContext,
+function buildControllerHook<TEngine>(
+  singletonContext: EngineContext<TEngine>,
   key: string,
   supportedSolutionTypes: string[]
 ) {
@@ -62,8 +69,8 @@ function buildControllerHook(
 /**
  * @internal
  */
-export function buildControllerHooks(
-  singletonContext: EngineContext,
+export function buildControllerHooks<TEngine>(
+  singletonContext: EngineContext<TEngine>,
   controllersMap: Record<string, object> = {},
   {
     getSupportedSolutionTypes = () => [],
@@ -88,8 +95,8 @@ export function buildControllerHooks(
 /**
  * @internal
  */
-export function buildEngineHook(singletonContext: EngineContext) {
-  return () => {
+export function buildEngineHook<TEngine>(singletonContext: EngineContext<TEngine>) {
+  return (): TEngine | undefined => {
     const ctx = useEngineContext(singletonContext);
     return isHydrated(ctx) ? ctx.engine : undefined;
   };
@@ -98,7 +105,7 @@ export function buildEngineHook(singletonContext: EngineContext) {
 /**
  * @internal
  */
-export function buildHydrationHook(singletonContext: EngineContext) {
+export function buildHydrationHook<TEngine>(singletonContext: EngineContext<TEngine>) {
   return (): Hydration => {
     const ctx = useEngineContext(singletonContext);
     if (ctx.hydrationError !== undefined) {
@@ -111,22 +118,24 @@ export function buildHydrationHook(singletonContext: EngineContext) {
 /**
  * @internal
  */
-export interface StateProviderProps {
-  engine?: unknown;
-  controllers: Record<string, ControllerLike>;
-  hydrationError?: unknown;
-}
-
 /**
  * @internal
  */
-export function buildStateProvider(singletonContext: EngineContext, solutionType?: string) {
+export function buildStateProvider<TEngine>(
+  singletonContext: EngineContext<TEngine>,
+  solutionType?: string
+) {
   return ({
     engine,
     controllers,
     hydrationError,
     children,
-  }: PropsWithChildren<StateProviderProps>) => {
+  }: PropsWithChildren<
+    StateProviderProps<
+      {controllers: Record<string, ControllerLike>},
+      {engine: TEngine; controllers: Record<string, ControllerLike>}
+    >
+  >) => {
     const {Provider} = singletonContext.get();
     return (
       <Provider value={{engine, controllers, solutionType, hydrationError}}>{children}</Provider>

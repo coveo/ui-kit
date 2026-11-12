@@ -1,25 +1,25 @@
-/* oxlint-disable @typescript-eslint/no-explicit-any -- <> */
-import {
-  SolutionType,
-  type CommerceEngine as SSRCommerceEngine,
-} from '@coveo/headless/ssr-commerce-next';
 import {cleanup, render, screen} from '@testing-library/react';
-import React, {type Context, createContext} from 'react';
+import React, {createContext} from 'react';
 import {afterEach, describe, expect, test, vi} from 'vitest';
-import {buildStateProvider} from './common.js';
-import type {ContextState} from './types.js';
+import {buildStateProvider} from './hooks.js';
+import type {EngineContextState} from './types.js';
 
-type MockContext = ContextState<any, any>;
-describe('SSR Commerce Common functions', () => {
-  const mockContext = createContext(null) as unknown as Context<MockContext | null>;
+interface MockEngine {
+  subscribe: () => void;
+  dispatch: () => void;
+}
+
+type MockContext = EngineContextState<MockEngine>;
+describe('SSR state provider', () => {
+  const mockContext = createContext<MockContext | null>(null);
   const mockSingletonContext = {
     get: () => mockContext,
   };
 
-  const mockEngine = {
+  const mockEngine: MockEngine = {
     subscribe: vi.fn(),
     dispatch: vi.fn(),
-  } as unknown as SSRCommerceEngine;
+  };
 
   const mockControllers = {
     searchBox: {
@@ -35,7 +35,7 @@ describe('SSR Commerce Common functions', () => {
     },
   };
 
-  const mockSolutionType = SolutionType.listing;
+  const mockSolutionType = 'listing';
 
   function TestComponent() {
     return <div data-testid="test-component">Test</div>;

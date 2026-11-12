@@ -1,28 +1,16 @@
 import type {
   CommerceEngineDefinition,
+  CommerceHydratedState,
+  CommerceStaticState,
   Controller,
   ControllerDefinitionsMap,
   InferControllerFromDefinition,
-  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
-  InferControllersMapFromDefinition,
   SolutionType,
-  CommerceEngine as SSRCommerceEngine,
 } from '@coveo/headless/ssr-commerce-next';
 import type {FunctionComponent, PropsWithChildren} from 'react';
+import type {StateProviderProps} from '../ssr-common/types.js';
 
 export type {Hydration, HydrationStatus} from '../ssr-common/types.js';
-
-export type ContextState<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-  TSolutionType extends SolutionType,
-> = {
-  engine?: SSRCommerceEngine;
-  controllers:
-    | InferControllersMapFromDefinition<TControllers, TSolutionType>
-    | InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>;
-  solutionType: TSolutionType;
-  hydrationError?: unknown;
-};
 
 /**
  * A controller hook: the controller state, and its methods once the engine is hydrated.
@@ -56,20 +44,21 @@ export type InferControllerHooksMapFromDefinition<
   >;
 };
 
+/**
+ * A commerce engine definition with the React `StateProvider` of its hooks.
+ *
+ * @group Engine
+ */
 export type ReactEngineDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 > = CommerceEngineDefinition<TControllers, TSolutionType> & {
   StateProvider: FunctionComponent<
-    PropsWithChildren<{
-      engine?: SSRCommerceEngine;
-      controllers:
-        | InferControllersMapFromDefinition<TControllers, TSolutionType>
-        | InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>;
-      /**
-       * @internal Set by the provider built with `buildProviderWithDefinition()` when the hydration fails.
-       */
-      hydrationError?: unknown;
-    }>
+    PropsWithChildren<
+      StateProviderProps<
+        CommerceStaticState<TControllers, TSolutionType>,
+        CommerceHydratedState<TControllers, TSolutionType>
+      >
+    >
   >;
 };

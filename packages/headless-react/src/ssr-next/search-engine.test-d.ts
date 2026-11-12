@@ -7,7 +7,7 @@ import {
 import type {ComponentProps} from 'react';
 import {describe, expectTypeOf, it} from 'vitest';
 import type {Hydration} from '../ssr-common/types.js';
-import {buildProviderWithDefinition} from './providers.js';
+import {buildProviderWithDefinition} from './index.js';
 import {defineSearchEngine} from './search-engine.js';
 
 // Everything below is inferred from the controllers of the definition, with no annotation on the

@@ -10,19 +10,16 @@ import {
 } from '@coveo/headless/ssr-commerce-next';
 // Workaround to prevent Next.js erroring about importing CSR only hooks
 import React from 'react';
-import type {Hydration} from '../ssr-common/types.js';
-import {type SingletonGetter, singleton} from '../utils.js';
 import {
   buildControllerHooks,
   buildEngineHook,
   buildHydrationHook,
   buildStateProvider,
-} from './common.js';
-import type {
-  ContextState,
-  InferControllerHooksMapFromDefinition,
-  ReactEngineDefinition,
-} from './types.js';
+  type EngineContext,
+} from '../ssr-common/hooks.js';
+import type {EngineContextState, Hydration} from '../ssr-common/types.js';
+import {singleton} from '../utils.js';
+import type {InferControllerHooksMapFromDefinition, ReactEngineDefinition} from './types.js';
 /**
  * A React engine definition that includes context providers for static and hydrated states.
  *
@@ -35,14 +32,14 @@ export type ReactCommerceEngineDefinition<
 
 // TODO: remove hack: KIT-5009
 // Wrapper to workaround the limitation that `createContext()` cannot be called directly during SSR in next.js
-function createSingletonContext<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-  TSolutionType extends SolutionType = SolutionType,
->() {
-  return singleton(() =>
-    React.createContext<ContextState<TControllers, TSolutionType> | null>(null)
-  );
+function createSingletonContext(): EngineContext<CommerceEngine> {
+  return singleton(() => React.createContext<EngineContextState<CommerceEngine> | null>(null));
 }
+
+const supportedSolutionTypes = (definition: object) =>
+  Object.values(SolutionType).filter(
+    (solutionType) => (definition as Record<string, unknown>)[solutionType] === true
+  );
 
 /**
  * Returns engine and controller hooks, and context providers.
@@ -67,14 +64,7 @@ export function defineCommerceEngine<TControllers extends ControllerDefinitionsM
   searchEngineDefinition: ReactCommerceEngineDefinition<TControllers, SolutionType.search>;
   standaloneEngineDefinition: ReactCommerceEngineDefinition<TControllers, SolutionType.standalone>;
 } {
-  const singletonContext = createSingletonContext<TControllers>();
-
-  type ContextStateType<TSolutionType extends SolutionType> = SingletonGetter<
-    React.Context<ContextState<TControllers, TSolutionType> | null>
-  >;
-  type ListingContext = ContextStateType<SolutionType.listing>;
-  type SearchContext = ContextStateType<SolutionType.search>;
-  type StandaloneContext = ContextStateType<SolutionType.standalone>;
+  const singletonContext = createSingletonContext();
 
   const {listingEngineDefinition, searchEngineDefinition, standaloneEngineDefinition} =
     defineBaseCommerceEngine({...options});
@@ -86,21 +76,21 @@ export function defineCommerceEngine<TControllers extends ControllerDefinitionsM
   return {
     useEngine: buildEngineHook(singletonContext),
     useHydration: buildHydrationHook(singletonContext),
-    controllers: buildControllerHooks(singletonContext, augmentedControllerDefinition),
+    controllers: buildControllerHooks(singletonContext, augmentedControllerDefinition, {
+      getSupportedSolutionTypes: supportedSolutionTypes,
+      hookNames: {context: 'useCommerceContext'},
+    }) as InferControllerHooksMapFromDefinition<AugmentedControllerDefinition<TControllers>>,
     listingEngineDefinition: {
       ...listingEngineDefinition,
-      StateProvider: buildStateProvider(singletonContext as ListingContext, SolutionType.listing),
+      StateProvider: buildStateProvider(singletonContext, SolutionType.listing),
     },
     searchEngineDefinition: {
       ...searchEngineDefinition,
-      StateProvider: buildStateProvider(singletonContext as SearchContext, SolutionType.search),
+      StateProvider: buildStateProvider(singletonContext, SolutionType.search),
     },
     standaloneEngineDefinition: {
       ...standaloneEngineDefinition,
-      StateProvider: buildStateProvider(
-        singletonContext as StandaloneContext,
-        SolutionType.standalone
-      ),
+      StateProvider: buildStateProvider(singletonContext, SolutionType.standalone),
     },
   };
 }

@@ -465,16 +465,10 @@ export type {
 export type {
   AugmentedControllerDefinition,
   ControllerDefinitionsMap,
-  InferControllerStaticStateFromController,
-  InferControllerStaticStateMapFromControllers,
   InferHydratedState,
   InferStaticState,
 } from './ssr-next/search/types/controller-definition.js';
-export type {
-  InferControllerFromDefinition,
-  InferControllerStaticStateMapFromDefinitions,
-  InferControllersMapFromDefinition,
-} from './ssr-next/search/types/controller-inference.js';
+export type {InferControllerFromDefinition} from './ssr-next/search/types/controller-inference.js';
 export type {
   SearchEngineDefinition,
   SearchEngineDefinitionOptions,

@@ -32,10 +32,34 @@ export interface ControllerLike {
 }
 
 /**
+ * The props of the `StateProvider` of an engine definition: the controllers that its hooks read (their
+ * static state, or the live controllers once hydrated) and the hydrated engine.
+ *
+ * @typeParam TStaticState - The static state of the engine definition.
+ * @typeParam THydratedState - The hydrated state of the engine definition.
+ *
+ * @group Providers
+ */
+export interface StateProviderProps<
+  TStaticState extends {controllers: object} = {controllers: Record<string, ControllerLike>},
+  THydratedState extends {engine: unknown; controllers: object} = {
+    engine: unknown;
+    controllers: Record<string, ControllerLike>;
+  },
+> {
+  engine?: THydratedState['engine'];
+  controllers: TStaticState['controllers'] | THydratedState['controllers'];
+  /**
+   * @internal Set by the provider built with `buildProviderWithDefinition()` when the hydration fails.
+   */
+  hydrationError?: unknown;
+}
+
+/**
  * @internal The value that the providers of an engine definition share with its hooks.
  */
-export interface EngineContextState {
-  engine?: unknown;
+export interface EngineContextState<TEngine = unknown> {
+  engine?: TEngine;
   controllers: Record<string, ControllerLike>;
   solutionType?: string;
   hydrationError?: unknown;

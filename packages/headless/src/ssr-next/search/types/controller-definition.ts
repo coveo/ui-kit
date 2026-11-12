@@ -1,20 +1,11 @@
 import type {CoreEngine, CoreEngineNext} from '../../../app/engine.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {
-  InferControllerStaticStateFromController,
-  InferControllerStaticStateMapFromControllers,
-} from '../../common/types/controller-inference.js';
 import type {InferHydratedState, InferStaticState} from '../../common/types/engine.js';
 import type {ContextDefinition} from '../controllers/context/headless-context.ssr.js';
 import type {SearchParameterManagerDefinition} from '../controllers/search-parameter-manager/headless-search-parameter-manager.ssr.js';
 import type {ControllerBuildContext} from './build.js';
 
-export type {
-  InferControllerStaticStateFromController,
-  InferControllerStaticStateMapFromControllers,
-  InferHydratedState,
-  InferStaticState,
-};
+export type {InferHydratedState, InferStaticState};
 
 /**
  * The definition of a controller: how to build it for a request.

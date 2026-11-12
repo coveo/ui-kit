@@ -14,10 +14,9 @@ import {
   buildStateProvider,
   type EngineContext,
 } from '../ssr-common/hooks.js';
-import type {Hydration} from '../ssr-common/types.js';
+import type {EngineContextState, Hydration} from '../ssr-common/types.js';
 import {singleton} from '../utils.js';
 import type {
-  ContextState,
   InferControllerHooksMapFromDefinition,
   ReactSearchEngineDefinition,
   SearchControllerDefinitionsMap,
@@ -25,8 +24,8 @@ import type {
 
 // TODO: remove hack: KIT-5009
 // Wrapper to workaround the limitation that `createContext()` cannot be called directly during SSR in next.js
-function createSingletonContext<TControllers extends SearchControllerDefinitionsMap>() {
-  return singleton(() => React.createContext<ContextState<TControllers> | null>(null));
+function createSingletonContext(): EngineContext<SearchEngine> {
+  return singleton(() => React.createContext<EngineContextState<SearchEngine> | null>(null));
 }
 
 /**
@@ -70,7 +69,7 @@ export function defineSearchEngine<TControllers extends SearchControllerDefiniti
   searchEngineDefinition: ReactSearchEngineDefinition<TControllers>;
   standaloneEngineDefinition: ReactSearchEngineDefinition<TControllers>;
 } {
-  const singletonContext = createSingletonContext<TControllers>() as unknown as EngineContext;
+  const singletonContext = createSingletonContext();
 
   const {searchEngineDefinition, standaloneEngineDefinition} = defineBaseSearchEngine(options);
 
@@ -78,12 +77,10 @@ export function defineSearchEngine<TControllers extends SearchControllerDefiniti
     options.controllers as TControllers | undefined
   );
 
-  const StateProvider = buildStateProvider(
-    singletonContext
-  ) as ReactSearchEngineDefinition<TControllers>['StateProvider'];
+  const StateProvider = buildStateProvider(singletonContext);
 
   return {
-    useEngine: buildEngineHook(singletonContext) as () => SearchEngine | undefined,
+    useEngine: buildEngineHook(singletonContext),
     useHydration: buildHydrationHook(singletonContext),
     controllers: buildControllerHooks(singletonContext, augmentedControllerDefinition, {
       hookNames: {context: 'useSearchContext'},

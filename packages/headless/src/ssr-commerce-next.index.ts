@@ -305,13 +305,9 @@ export type {
   AugmentedControllerDefinition,
   ControllerDefinition,
   ControllerDefinitionsMap,
-  InferControllerStaticStateFromController,
-  InferControllerStaticStateMapFromControllers,
 } from './ssr-next/commerce/types/controller-definitions.js';
 export type {
   InferControllerFromDefinition,
-  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
-  InferControllersMapFromDefinition,
   InferHydratedState,
   InferStaticState,
 } from './ssr-next/commerce/types/controller-inference.js';
