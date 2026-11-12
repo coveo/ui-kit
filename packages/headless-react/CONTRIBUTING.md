@@ -73,7 +73,9 @@ Handwritten documentation articles live in `source_docs/` and are included via t
 
 `/src/ssr-next` re-exports from `ssr` for experimental/upcoming breaking changes.
 
-`/src/ssr-commerce-next` re-exports from `ssr-commerce` for experimental/upcoming breaking changes.
+`/src/ssr-common` contains the hook and provider builders shared by the two `-next` sub-packages.
+
+`/src/ssr-commerce-next` contains the commerce SSR engine definition, React hooks, and providers built on `@coveo/headless/ssr-commerce-next`, the upcoming major version of the commerce SSR API.
 
 `/src/__tests__` contains shared test utilities, mocks, and setup.
 

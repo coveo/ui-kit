@@ -1,8 +1,24 @@
 'use client';
 
-import type {EngineDefinition} from '@coveo/headless/ssr-commerce-next';
+import type {EngineDefinition} from '@coveo/headless/ssr-next';
 import {type ComponentType, type PropsWithChildren, useEffect, useState} from 'react';
 import type {StateProviderProps} from './types.js';
+
+/**
+ * What a provider needs from an engine definition: how to hydrate its static state, and the
+ * `StateProvider` that hands the controllers to the hooks.
+ *
+ * @typeParam TStaticState - The static state of the engine definition.
+ * @typeParam THydratedState - The hydrated state of the engine definition.
+ *
+ * @group Providers
+ */
+export interface HydratableDefinition<
+  TStaticState extends {controllers: object},
+  THydratedState extends {engine: unknown; controllers: object},
+> extends Pick<EngineDefinition<TStaticState, THydratedState>, 'hydrateStaticState'> {
+  StateProvider: ComponentType<PropsWithChildren<StateProviderProps<TStaticState, THydratedState>>>;
+}
 
 /**
  * Providers take care of displaying your page with the static
@@ -18,13 +34,7 @@ import type {StateProviderProps} from './types.js';
 export function buildProviderWithDefinition<
   TStaticState extends {controllers: object},
   THydratedState extends {engine: unknown; controllers: object},
->(
-  definition: Pick<EngineDefinition<TStaticState, THydratedState>, 'hydrateStaticState'> & {
-    StateProvider: ComponentType<
-      PropsWithChildren<StateProviderProps<TStaticState, THydratedState>>
-    >;
-  }
-) {
+>(definition: HydratableDefinition<TStaticState, THydratedState>) {
   return function WrappedProvider({
     staticState,
     children,
