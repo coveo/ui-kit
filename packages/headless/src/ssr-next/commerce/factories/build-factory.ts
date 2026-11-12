@@ -5,20 +5,20 @@ import {
   type CommerceEngineOptions,
 } from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
+import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {
   createWaitForActionMiddleware,
   createWaitForActionMiddlewareForRecommendation,
 } from '../../../utils/utils.js';
 import {buildControllerDefinitions} from '../controller-utils.js';
 import {SolutionType} from '../types/controller-constants.js';
-import type {BakedInControllers} from '../types/controller-definitions.js';
-import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
 import type {
   CommerceControllerDefinitionsMap,
   CommerceEngineDefinitionOptions,
   FetchStaticStateParameters,
   HydrateStaticStateParameters,
 } from '../types/engine.js';
+import type {CommerceHydratedState} from '../types/hydrate-static-state.js';
 import {validateBuildConfig} from '../utils/controller-wiring.js';
 import {resolveEnableResults} from '../utils/enable-results.js';
 import {augmentCommerceEngineOptions} from '../utils/engine-wiring.js';
@@ -128,7 +128,7 @@ export const buildFactory =
       enabledRecommendationControllers
     );
 
-    const controllers = buildControllerDefinitions({
+    const controllers: Record<string, Controller> = buildControllerDefinitions({
       definitionsMap: controllerDefinitions ?? {},
       engine,
       solutionType,
@@ -144,10 +144,9 @@ export const buildFactory =
 
     return {
       engine,
-      controllers: controllers as InferControllersMapFromDefinition<
+      controllers: controllers as CommerceHydratedState<
         TControllerDefinitions,
         TSolutionType
-      > &
-        BakedInControllers,
+      >['controllers'],
     };
   };

@@ -75,8 +75,8 @@ export function defineSearchEngine<
 >(
   options: SearchEngineDefinitionOptions<TControllerDefinitions>
 ): {
-  searchEngineDefinition: SearchEngineDefinition<SSRSearchEngine, TControllerDefinitions>;
-  standaloneEngineDefinition: SearchEngineDefinition<SSRSearchEngine, TControllerDefinitions>;
+  searchEngineDefinition: SearchEngineDefinition<TControllerDefinitions>;
+  standaloneEngineDefinition: SearchEngineDefinition<TControllerDefinitions>;
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
 

@@ -1,18 +1,12 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../controllers/controller/headless-controller.js';
 import {clone, filterObject, mapObject} from '../../utils/utils.js';
-import type {InferControllerStaticStateMapFromControllers} from '../common/types/controller-inference.js';
 import type {SSRCommerceEngine} from './factories/build-factory.js';
 import type {CommonBuildConfig, ResolvedEnableResults} from './types/build.js';
 import type {SolutionType} from './types/controller-constants.js';
-import type {
-  ControllerDefinitionsMap,
-  FilteredBakedInControllers,
-} from './types/controller-definitions.js';
-import type {
-  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
-  InferControllersMapFromDefinition,
-} from './types/controller-inference.js';
+import type {ControllerDefinitionsMap} from './types/controller-definitions.js';
+import type {InferControllersMapFromDefinition} from './types/controller-inference.js';
+import type {CommerceStaticState} from './types/fetch-static-state.js';
 
 export function createStaticState<
   TSearchAction extends UnknownAction,
@@ -28,11 +22,7 @@ export function createStaticState<
   return {
     controllers: mapObject(controllers, (controller) => ({
       state: clone(controller.state),
-    })) as InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-      TControllerDefinitions,
-      TSolutionType
-    > &
-      InferControllerStaticStateMapFromControllers<FilteredBakedInControllers<TSolutionType>>,
+    })) as CommerceStaticState<TControllerDefinitions, TSolutionType>['controllers'],
     searchActions: searchActions.map((action) => clone(action)),
   };
 }

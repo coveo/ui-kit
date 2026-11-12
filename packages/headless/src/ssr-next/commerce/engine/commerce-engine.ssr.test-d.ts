@@ -8,25 +8,30 @@ import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr
 import {SolutionType} from '../types/controller-constants.js';
 import type {InferHydratedState, InferStaticState} from '../types/controller-inference.js';
 import type {CommerceEngineDefinitionOptions} from '../types/engine.js';
+import type {CommerceStaticState} from '../types/fetch-static-state.js';
+import type {CommerceHydratedState} from '../types/hydrate-static-state.js';
 import {defineCommerceEngine} from './commerce-engine.ssr.js';
+
+const controllers = {
+  productList: defineProductList(),
+  searchBox: defineSearchBox(),
+  didYouMean: defineDidYouMean(),
+  popularViewed: defineRecommendations({options: {slotId: 'slot-viewed'}}),
+  popularBought: defineRecommendations({options: {slotId: 'slot-bought'}}),
+  productEnrichment: defineProductEnrichment({options: {placementIds: ['placement-a']}}),
+};
 
 // Types the customer relies on for IntelliSense: everything below is inferred from the controllers
 // of the definition, with no annotation on the customer's side.
 const {listingEngineDefinition, searchEngineDefinition, standaloneEngineDefinition, ...rest} =
   defineCommerceEngine({
     configuration: getSampleCommerceEngineConfiguration(),
-    controllers: {
-      productList: defineProductList(),
-      searchBox: defineSearchBox(),
-      didYouMean: defineDidYouMean(),
-      popularViewed: defineRecommendations({options: {slotId: 'slot-viewed'}}),
-      popularBought: defineRecommendations({options: {slotId: 'slot-bought'}}),
-      productEnrichment: defineProductEnrichment({options: {placementIds: ['placement-a']}}),
-    },
+    controllers,
   });
 
 type ListingStaticState = InferStaticState<typeof listingEngineDefinition>;
 type ListingHydratedState = InferHydratedState<typeof listingEngineDefinition>;
+type StandaloneHydratedState = InferHydratedState<typeof standaloneEngineDefinition>;
 type ListingFetchOptions = Parameters<typeof listingEngineDefinition.fetchStaticState>[0];
 type SearchFetchOptions = Parameters<typeof searchEngineDefinition.fetchStaticState>[0];
 type StandaloneFetchOptions = Parameters<typeof standaloneEngineDefinition.fetchStaticState>[0];
@@ -151,5 +156,40 @@ describe('defineCommerceEngine', () => {
     expectTypeOf<
       InferHydratedState<typeof standaloneEngineDefinition>['controllers']
     >().not.toHaveProperty('parameterManager');
+  });
+});
+
+describe('the static and hydrated states of a commerce engine definition', () => {
+  it('should be named after the controllers and the kind of page of the definition', () => {
+    expectTypeOf<ListingStaticState>().toEqualTypeOf<
+      CommerceStaticState<typeof controllers, SolutionType.listing>
+    >();
+    expectTypeOf<ListingHydratedState>().toEqualTypeOf<
+      CommerceHydratedState<typeof controllers, SolutionType.listing>
+    >();
+  });
+
+  it('should name exactly the controllers built for each kind of page', () => {
+    type RecommendationSlots = 'popularViewed' | 'popularBought';
+    expectTypeOf<keyof ListingHydratedState['controllers']>().toEqualTypeOf<
+      'productList' | RecommendationSlots | 'parameterManager' | 'context' | 'cart'
+    >();
+    expectTypeOf<
+      keyof InferHydratedState<typeof searchEngineDefinition>['controllers']
+    >().toEqualTypeOf<
+      | 'productList'
+      | 'searchBox'
+      | 'didYouMean'
+      | RecommendationSlots
+      | 'parameterManager'
+      | 'context'
+      | 'cart'
+    >();
+    expectTypeOf<keyof StandaloneHydratedState['controllers']>().toEqualTypeOf<
+      RecommendationSlots | 'productEnrichment' | 'context' | 'cart'
+    >();
+    expectTypeOf<keyof ListingStaticState['controllers']>().toEqualTypeOf<
+      keyof ListingHydratedState['controllers']
+    >();
   });
 });

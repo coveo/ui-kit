@@ -1,19 +1,9 @@
-import type {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {ControllersMap} from '../../common/types/controllers.js';
-import type {EngineStaticState} from '../../common/types/engine.js';
-import type {SSRCommerceEngine} from '../factories/build-factory.js';
-import type {EnableResultsOption, SSRCommerceEngineOptions} from './build.js';
+import type {BuildConfig, EnableResultsOption, SSRCommerceEngineOptions} from './build.js';
 import type {SolutionType} from './controller-constants.js';
-import type {BakedInControllers, ControllerDefinitionsMap} from './controller-definitions.js';
-import type {
-  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
-  InferControllersMapFromDefinition,
-} from './controller-inference.js';
-import type {FetchStaticState} from './fetch-static-state.js';
-import type {HydrateStaticState, HydrateStaticStateOptions} from './hydrate-static-state.js';
-
-export type {EngineStaticState, FetchStaticState, HydrateStaticState, HydrateStaticStateOptions};
+import type {ControllerDefinitionsMap} from './controller-definitions.js';
+import type {CommerceStaticState} from './fetch-static-state.js';
+import type {CommerceHydratedState} from './hydrate-static-state.js';
 
 type ReservedControllerNames = 'context' | 'parameterManager' | 'cart';
 
@@ -43,6 +33,12 @@ export type CommerceEngineDefinitionOptions<
   enableResults?: EnableResultsOption;
 };
 
+/**
+ * An engine definition for one kind of commerce page: listing, search or standalone.
+ *
+ * @typeParam TControllers - The controllers passed to `defineCommerceEngine()`.
+ * @typeParam TSolutionType - The kind of page the engine definition serves.
+ */
 export interface CommerceEngineDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
@@ -79,12 +75,9 @@ export interface CommerceEngineDefinition<
    * });
    * ```
    */
-  fetchStaticState: FetchStaticState<
-    UnknownAction,
-    InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>,
-    TControllers,
-    TSolutionType
-  >;
+  fetchStaticState: (
+    params: BuildConfig<TControllers, TSolutionType>
+  ) => Promise<CommerceStaticState<TControllers, TSolutionType>>;
   /**
    * Creates a commerce engine on the client side from the server-side static state.
    *
@@ -98,7 +91,7 @@ export interface CommerceEngineDefinition<
    * - Replays search/listing/recommendation actions to synchronize the state
    * - Returns live, interactive controllers ready for user interaction
    *
-   * @param params - The static state returned by `fetchStaticState()`. It already carries the page
+   * @param staticState - The static state returned by `fetchStaticState()`. It already carries the page
    *                 facts (navigator context, context, cart, search parameters, product, requested
    *                 recommendation slots, per-request access token), so it can be passed as is.
    * @returns A Promise that resolves to the hydrated engine and interactive controllers
@@ -112,18 +105,9 @@ export interface CommerceEngineDefinition<
    * result.controllers.productListing.sort({ criterion: 'price' });
    * ```
    */
-  hydrateStaticState: HydrateStaticState<
-    InferControllersMapFromDefinition<TControllers, TSolutionType>,
-    UnknownAction,
-    InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>,
-    TControllers,
-    TSolutionType
-  >;
-}
-
-export interface CommerceEngineDefinitionBuildResult<TControllers extends ControllersMap> {
-  engine: SSRCommerceEngine;
-  controllers: TControllers & BakedInControllers;
+  hydrateStaticState: (
+    staticState: CommerceStaticState<TControllers, TSolutionType>
+  ) => Promise<CommerceHydratedState<TControllers, TSolutionType>>;
 }
 
 export type CommerceControllerDefinitionsMap = ControllerDefinitionsMap<Controller>;

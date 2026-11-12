@@ -59,7 +59,7 @@ export type InferControllerHooksMapFromDefinition<
  * @group Engine
  */
 export type ReactSearchEngineDefinition<TControllers extends SearchControllerDefinitionsMap> =
-  SearchEngineDefinition<SearchEngine, TControllers> & {
+  SearchEngineDefinition<TControllers> & {
     StateProvider: FunctionComponent<
       PropsWithChildren<{
         engine?: SearchEngine;

@@ -2,16 +2,11 @@ import type {UnknownAction} from '@reduxjs/toolkit';
 import type {CoreEngine, CoreEngineNext} from '../../app/engine.js';
 import type {Controller} from '../../controllers/controller/headless-controller.js';
 import {clone, mapObject} from '../../utils/utils.js';
-import type {InferControllerStaticStateMapFromControllers} from '../common/types/controller-inference.js';
 import type {BuildConfig} from './types/build.js';
-import type {
-  BakedInSearchControllers,
-  ControllerDefinitionsMap,
-} from './types/controller-definition.js';
-import type {
-  InferControllerStaticStateMapFromDefinitions,
-  InferControllersMapFromDefinition,
-} from './types/controller-inference.js';
+import type {ControllerDefinitionsMap} from './types/controller-definition.js';
+import type {InferControllersMapFromDefinition} from './types/controller-inference.js';
+import type {SearchControllerDefinitionsMap} from './types/engine.js';
+import type {SearchStaticState} from './types/fetch-static-state.js';
 
 /**
  * Builds every controller of the definition with the page facts of the request.
@@ -38,7 +33,7 @@ export function buildControllerDefinitions<
 
 export function createStaticState<
   TSearchAction extends UnknownAction,
-  TControllerDefinitions extends ControllerDefinitionsMap<CoreEngine | CoreEngineNext, Controller>,
+  TControllerDefinitions extends SearchControllerDefinitionsMap,
 >({
   searchActions,
   controllers,
@@ -49,8 +44,7 @@ export function createStaticState<
   return {
     controllers: mapObject(controllers, (controller) => ({
       state: clone(controller.state),
-    })) as InferControllerStaticStateMapFromDefinitions<TControllerDefinitions> &
-      InferControllerStaticStateMapFromControllers<BakedInSearchControllers>,
+    })) as SearchStaticState<TControllerDefinitions>['controllers'],
     searchActions: clone(searchActions),
   };
 }

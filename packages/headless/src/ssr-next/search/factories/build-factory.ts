@@ -3,17 +3,17 @@ import {
   buildSearchEngine,
   type SearchEngineOptions,
 } from '../../../app/search-engine/search-engine.js';
+import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {createWaitForActionMiddleware} from '../../../utils/utils.js';
 import {buildControllerDefinitions} from '../controller-utils.js';
 import type {SearchCompletedAction, SSRSearchEngine} from '../types/build.js';
-import type {BakedInSearchControllers} from '../types/controller-definition.js';
-import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
 import type {
   FetchStaticStateParameters,
   HydrateStaticStateParameters,
   SearchControllerDefinitionsMap,
   SearchEngineDefinitionOptions,
 } from '../types/engine.js';
+import type {SearchHydratedState} from '../types/hydrate-static-state.js';
 import {validateBuildConfig} from '../utils/controller-wiring.js';
 import {augmentSearchEngineOptions} from '../utils/engine-wiring.js';
 
@@ -54,7 +54,7 @@ export const buildFactory =
 
     const engine = buildSSRSearchEngine(engineOptions);
 
-    const controllers = buildControllerDefinitions({
+    const controllers: Record<string, Controller> = buildControllerDefinitions({
       definitionsMap: controllerDefinitions,
       engine,
       buildConfig: buildOptions,
@@ -68,7 +68,6 @@ export const buildFactory =
 
     return {
       engine,
-      controllers: controllers as InferControllersMapFromDefinition<TControllerDefinitions> &
-        BakedInSearchControllers,
+      controllers: controllers as SearchHydratedState<TControllerDefinitions>['controllers'],
     };
   };
