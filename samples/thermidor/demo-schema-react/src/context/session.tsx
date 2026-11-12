@@ -2,6 +2,8 @@ import {createContext, useContext, useRef, type PropsWithChildren} from 'react';
 import {createSession, type NavigatorContext, type Session} from '@coveo/thermidor';
 import {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
 import {getSampleConfiguration} from '../env.js';
+import {CartStoreContext} from '../cart/CartProvider.js';
+import type {CartStore} from '../cart/cart-store.js';
 
 /**
  * The concrete contract this sample injects into the runtime. `@coveo/thermidor`
@@ -18,8 +20,14 @@ interface SessionProviderProps {
 }
 
 export function SessionProvider({session, children}: PropsWithChildren<SessionProviderProps>) {
+  const cart = useContext(CartStoreContext);
   const sessionRef = useRef<DemoSession | null>(session ?? null);
-  sessionRef.current ??= createThermidorSession();
+  if (!sessionRef.current) {
+    if (!cart) {
+      throw new Error('SessionProvider must be used within a CartProvider, or be given a session');
+    }
+    sessionRef.current = createThermidorSession(cart);
+  }
 
   return <SessionContext.Provider value={sessionRef.current}>{children}</SessionContext.Provider>;
 }
@@ -32,7 +40,19 @@ export function useSession(): DemoSession {
   return session;
 }
 
-function createThermidorSession(): DemoSession {
+/** Read fresh for each request. */
+function getCartCommerceContext(cart: CartStore) {
+  return {
+    cart: cart.getSnapshot().cart.items.map(({productId, name, unitPrice, quantity}) => ({
+      productId,
+      name,
+      price: unitPrice,
+      quantity,
+    })),
+  };
+}
+
+function createThermidorSession(cart: CartStore): DemoSession {
   const {
     organizationId,
     accessToken,
@@ -52,6 +72,7 @@ function createThermidorSession(): DemoSession {
     agentConfigurationId,
     trackingId,
     navigatorContextProvider: () => ({...getNavigatorContext(), language, country, currency}),
+    commerceContextProvider: () => getCartCommerceContext(cart),
   });
 }
 
