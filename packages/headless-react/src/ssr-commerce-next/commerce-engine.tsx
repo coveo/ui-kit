@@ -16,10 +16,11 @@ import React from 'react';
 import {
   buildControllerHooks,
   buildEngineHook,
+  buildHydrationHook,
   buildStateProvider,
   type EngineContext,
 } from '../ssr-common/hooks.js';
-import type {EngineContextState} from '../ssr-common/types.js';
+import type {EngineContextState, Hydration} from '../ssr-common/types.js';
 import {singleton} from '../utils.js';
 import type {InferControllerHooksMapFromDefinition, ReactEngineDefinition} from './types.js';
 /**
@@ -51,7 +52,14 @@ const getSupportedSolutionTypes = (definition: ControllerDefinition<Controller>)
 export function defineCommerceEngine<TControllers extends ControllerDefinitionsMap<Controller>>(
   options: CommerceEngineDefinitionOptions<TControllers>
 ): {
+  /**
+   * Returns the engine once the static state is hydrated, and `undefined` before.
+   */
   useEngine: () => CommerceEngine | undefined;
+  /**
+   * Returns whether the components render the static state, the hydrated engine, or a hydration error.
+   */
+  useHydration: () => Hydration;
   controllers: InferControllerHooksMapFromDefinition<AugmentedControllerDefinition<TControllers>>;
   listingEngineDefinition: ReactCommerceEngineDefinition<TControllers, SolutionType.listing>;
   searchEngineDefinition: ReactCommerceEngineDefinition<TControllers, SolutionType.search>;
@@ -79,6 +87,7 @@ export function defineCommerceEngine<TControllers extends ControllerDefinitionsM
 
   return {
     useEngine: buildEngineHook(singletonContext),
+    useHydration: buildHydrationHook(singletonContext),
     controllers: buildControllerHooks(
       singletonContext,
       augmentedControllerDefinition,
