@@ -77,7 +77,7 @@ The template set lives in
 Storefront Preview (admin-ui) uses one Thermidor session per view today. This sample keeps the
 views and puts them on one session:
 
-| View                                                 | `context.custom.surfaceId`     | Components                                                                                 |
+| View                                                 | `context.custom.viewId`        | Components                                                                                 |
 | ---------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------ |
 | Home page: recommendations                           | `storefront-preview-home`      | ProductCarousel                                                                            |
 | Search box: a committed prompt, routed by the server | `storefront-preview`           | The assistant's components for a question, the search's otherwise                          |
@@ -99,7 +99,7 @@ The behaviour is kept:
 ## The model
 
 - **One `createSession` for the whole app.** Every view sends its requests through it.
-- **Each request declares its view** in `context.custom.surfaceId`, with the values of the
+- **Each request declares its view** in `context.custom.viewId`, with the values of the
   published contract above. The value names a view, not an A2-UI surface: the surfaces get
   server-chosen `ui-<uuid>` ids.
 - **The app maps views to surfaces.** It remembers which view sent each turn (and, for a page, which
@@ -149,7 +149,7 @@ rather than tracking requests itself:
   nothing. So the pages and the panel call `session.dispatchAction` directly, as
   `demo-schema-react` does. Leaving a page mid-answer lets the answer finish.
 - **The app records which view sent each turn.** Just before a send it sets the view that
-  `context.custom.surfaceId` names, and after a prompt it records the turn the session opened with
+  `context.custom.viewId` names, and after a prompt it records the turn the session opened with
   its view and page visit (`src/session/storefront-session.tsx`). The chat panel records its turns
   under the page's visit with the assistant view, so the page and its panel split by view.
 
@@ -196,8 +196,7 @@ The views share the session's server state, as Agent Gateway does today:
   holding a `SearchBox` and its `QuerySuggestions`, and a pause in typing dispatches
   `fetchSuggestions`. The header can then draw that surface as its search box, with suggestions.
 - **The server:** a view id for listing pages, and a
-  spike on what a view id should map to (today `custom.surfaceId` names a view, which reads oddly
-  next to A2-UI's `surfaceId`).
+  spike on what a view id should map to.
 
 ## Structure
 
