@@ -53,17 +53,13 @@ describe('ProductVariants', () => {
     expect(screen.getByLabelText('4 more variants').textContent).toBe('+4');
   });
 
-  it('counts the variants a group holds beyond those listed', () => {
-    render(<Slot product={group([variant('a'), variant('b')], 4)} />);
-
+  it('counts the variants a group holds beyond those listed, if any', () => {
+    const {rerender} = render(<Slot product={group([variant('a'), variant('b')], 4)} />);
     expect(thumbnails()).toHaveLength(2);
     expect(screen.getByLabelText('2 more variants').textContent).toBe('+2');
-  });
 
-  it('shows no count when every variant is shown', () => {
-    render(<Slot product={group([variant('a'), variant('b')])} />);
-
-    expect(screen.queryByLabelText(/more variants/)).toBeNull();
+    rerender(<Slot product={group([variant('a'), variant('b')])} />);
+    expect(screen.queryByLabelText(/more variant/)).toBeNull();
   });
 
   it('shows a fallback for a variant without a web image', () => {
@@ -110,23 +106,16 @@ describe('ProductVariants', () => {
     expect(pressed()).toEqual(['Shoe d']);
   });
 
-  it('keeps the variants in place while one is promoted', () => {
-    render(<Slot product={group([variant('a'), variant('b')], 7)} />);
-
-    fireEvent.mouseEnter(thumbnails()[1]);
-
-    expect(thumbnails().map((button) => button.title)).toEqual(['Shoe a', 'Shoe b']);
-    expect(screen.getByLabelText('5 more variants')).toBeDefined();
-  });
-
-  it('keeps the promotion until the product is sent again', () => {
+  it('keeps the variants in place, and the promotion until the product is sent again', () => {
     const variants = [variant('a'), variant('b')];
-    const product = group(variants);
+    const product = group(variants, 7);
     const {rerender} = render(<Slot product={product} />);
     fireEvent.mouseEnter(thumbnails()[1]);
 
     rerender(<Slot product={product} />);
     expect(shownName()).toBe('Shoe b');
+    expect(thumbnails().map((button) => button.title)).toEqual(['Shoe a', 'Shoe b']);
+    expect(screen.getByLabelText('5 more variants')).toBeDefined();
 
     rerender(<Slot product={group(variants)} />);
     expect(shownName()).toBe('Shoe a');
