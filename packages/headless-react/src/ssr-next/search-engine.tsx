@@ -72,10 +72,10 @@ export function defineSearchEngine<TControllers extends SearchControllerDefiniti
 
   const {searchEngineDefinition, standaloneEngineDefinition} = defineBaseSearchEngine(options);
 
-  const augmentedControllerDefinition = {
+  const controllerDefinitions: Readonly<Record<string, unknown>> = {
     ...options.controllers,
     parameterManager: defineSearchParameterManager(),
-  } as AugmentedControllerDefinition<TControllers>;
+  };
 
   const StateProvider = buildStateProvider(singletonContext);
 
@@ -84,7 +84,7 @@ export function defineSearchEngine<TControllers extends SearchControllerDefiniti
     useHydration: buildHydrationHook(singletonContext),
     controllers: buildControllerHooks(
       singletonContext,
-      augmentedControllerDefinition
+      controllerDefinitions
     ) as InferControllerHooksMapFromDefinition<AugmentedControllerDefinition<TControllers>>,
     searchEngineDefinition: {...searchEngineDefinition, StateProvider},
     standaloneEngineDefinition: {...standaloneEngineDefinition, StateProvider},

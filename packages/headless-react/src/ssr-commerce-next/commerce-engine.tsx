@@ -39,8 +39,20 @@ function createSingletonContext(): EngineContext<CommerceEngine> {
   return singleton(() => React.createContext<EngineContextState<CommerceEngine> | null>(null));
 }
 
-const getSupportedSolutionTypes = (definition: ControllerDefinition<Controller>) =>
-  Object.values(SolutionType).filter((solutionType) => definition[solutionType] === true);
+function isControllerDefinition(
+  definition: unknown
+): definition is ControllerDefinition<Controller> {
+  return (
+    typeof definition === 'object' &&
+    definition !== null &&
+    ('build' in definition || 'buildWithProps' in definition)
+  );
+}
+
+const getSupportedSolutionTypes = (definition: unknown) =>
+  isControllerDefinition(definition)
+    ? Object.values(SolutionType).filter((solutionType) => definition[solutionType] === true)
+    : [];
 
 /**
  * Returns engine and controller hooks, and context providers.
@@ -78,19 +90,19 @@ export function defineCommerceEngine<TControllers extends ControllerDefinitionsM
     recommendationEngineDefinition,
   } = defineBaseCommerceEngine({...options});
 
-  const augmentedControllerDefinition = {
+  const controllerDefinitions: Readonly<Record<string, unknown>> = {
     ...options.controllers,
     parameterManager: defineParameterManager(),
     context: defineContext(),
     cart: defineCart(),
-  } as AugmentedControllerDefinition<TControllers>;
+  };
 
   return {
     useEngine: buildEngineHook(singletonContext),
     useHydration: buildHydrationHook(singletonContext),
     controllers: buildControllerHooks(
       singletonContext,
-      augmentedControllerDefinition,
+      controllerDefinitions,
       getSupportedSolutionTypes
     ) as InferControllerHooksMapFromDefinition<AugmentedControllerDefinition<TControllers>>,
     listingEngineDefinition: {
