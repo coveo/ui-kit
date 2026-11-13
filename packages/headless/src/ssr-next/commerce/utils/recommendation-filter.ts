@@ -1,7 +1,4 @@
-import type {
-  Recommendations,
-  RecommendationsOptions,
-} from '../../../controllers/commerce/recommendations/headless-recommendations.js';
+import type {Recommendations} from '../../../controllers/commerce/recommendations/headless-recommendations.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {MultipleRecommendationError} from '../../common/errors.js';
 import type {RecommendationsDefinitionMeta} from '../controllers/recommendations/headless-recommendations.ssr.js';
@@ -12,20 +9,21 @@ import type {
 } from '../types/controller-definitions.js';
 
 /**
- * Type guard to check if a controller definition is a recommendation controller.
+ * Type guard to check if a value is a recommendation controller definition.
  * A recommendation controller must have both the recommendation flag and a slotId.
  */
-export function isRecommendationDefinition<C extends ControllerDefinition<Controller>>(
-  controllerDefinition: C
-): controllerDefinition is C & RecommendationsDefinitionMeta {
-  const hasRecommendationFlag =
-    'recommendation' in controllerDefinition && controllerDefinition.recommendation === true;
-
-  const hasValidSlotId =
-    recommendationInternalOptionKey in controllerDefinition &&
-    'slotId' in (controllerDefinition[recommendationInternalOptionKey] as RecommendationsOptions);
-
-  return hasRecommendationFlag && hasValidSlotId;
+export function isRecommendationDefinition(
+  value: unknown
+): value is ControllerDefinition<Controller> & RecommendationsDefinitionMeta {
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
+  const hasRecommendationFlag = 'recommendation' in value && value.recommendation === true;
+  if (!hasRecommendationFlag || !(recommendationInternalOptionKey in value)) {
+    return false;
+  }
+  const options = value[recommendationInternalOptionKey];
+  return typeof options === 'object' && options !== null && 'slotId' in options;
 }
 
 /**
@@ -35,7 +33,7 @@ export function isRecommendationDefinition<C extends ControllerDefinition<Contro
  * @returns Object containing only the recommendation controller definitions
  */
 export function getRecommendationDefinitions(
-  controllerDefinitions: ControllerDefinitionsMap<Controller>
+  controllerDefinitions: Readonly<Record<string, unknown>>
 ): Record<string, ControllerDefinition<Controller> & RecommendationsDefinitionMeta> {
   const recommendationMap: Record<
     string,

@@ -1,8 +1,6 @@
 import {MultipleRecommendationError} from '../../common/errors.js';
 import {validateReservedControllerNames} from '../../common/validation/controller-validation.js';
 import {recommendationInternalOptionKey} from '../types/controller-constants.js';
-import type {ControllerDefinitionsMap} from '../types/controller-definitions.js';
-import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {getRecommendationDefinitions} from '../utils/recommendation-filter.js';
 
 export const validateControllerNames = (controllers: Record<string, unknown>) =>
@@ -14,9 +12,7 @@ export const validateControllerNames = (controllers: Record<string, unknown>) =>
  */
 export const validateRecommendationSlots = (controllers: Record<string, unknown>) => {
   const slotIds = new Set<string>();
-  const recommendationDefinitions = getRecommendationDefinitions(
-    controllers as ControllerDefinitionsMap<Controller>
-  );
+  const recommendationDefinitions = getRecommendationDefinitions(controllers);
   for (const definition of Object.values(recommendationDefinitions)) {
     const {slotId} = definition[recommendationInternalOptionKey];
     if (slotIds.has(slotId)) {
