@@ -2,7 +2,8 @@ import {describe, expectTypeOf, it} from 'vitest';
 import {getSampleSearchEngineConfiguration} from '../../../app/search-engine/search-engine-configuration.js';
 import {defineResultList} from '../controllers/result-list/headless-result-list.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
-import type {InferStaticState} from '../types/controller-definition.js';
+import type {InferHydratedState, InferStaticState} from '../types/controller-definition.js';
+import type {SearchEngineDefinitionOptions} from '../types/engine.js';
 import {defineSearchEngine} from './search-engine.ssr.js';
 
 // Types the customer relies on for IntelliSense: everything below is inferred from the controllers
@@ -16,6 +17,7 @@ const {searchEngineDefinition, standaloneEngineDefinition} = defineSearchEngine(
 });
 
 type SearchStaticState = InferStaticState<typeof searchEngineDefinition>;
+type SearchHydratedState = InferHydratedState<typeof searchEngineDefinition>;
 
 describe('defineSearchEngine', () => {
   it('should hydrate each definition with the static state it fetched, as is', () => {
@@ -25,5 +27,26 @@ describe('defineSearchEngine', () => {
     expectTypeOf<
       Parameters<typeof standaloneEngineDefinition.hydrateStaticState>[0]
     >().toEqualTypeOf<InferStaticState<typeof standaloneEngineDefinition>>();
+  });
+
+  it('should take the navigator context per request, not on the definition', () => {
+    expectTypeOf<SearchEngineDefinitionOptions>().not.toHaveProperty('navigatorContextProvider');
+    expectTypeOf<SearchStaticState>().toHaveProperty('navigatorContext');
+    expectTypeOf<SearchStaticState['accessToken']>().toEqualTypeOf<string | undefined>();
+  });
+
+  it('should list the defined controllers and the parameter manager in the static state', () => {
+    expectTypeOf<SearchStaticState['controllers']>().toHaveProperty('searchBox');
+    expectTypeOf<SearchStaticState['controllers']>().toHaveProperty('resultList');
+    expectTypeOf<SearchStaticState['controllers']>().toHaveProperty('parameterManager');
+    expectTypeOf<SearchStaticState['controllers']['searchBox']>().toHaveProperty('state');
+    expectTypeOf<SearchStaticState['controllers']['searchBox']>().not.toHaveProperty('subscribe');
+  });
+
+  it('should hydrate the controllers as live controllers', () => {
+    expectTypeOf<SearchHydratedState['controllers']['searchBox']>().toHaveProperty('subscribe');
+    expectTypeOf<SearchHydratedState['controllers']['parameterManager']>().toHaveProperty(
+      'synchronize'
+    );
   });
 });

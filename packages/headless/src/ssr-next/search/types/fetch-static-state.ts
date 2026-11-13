@@ -1,4 +1,5 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
+import type {InferControllerStaticStateMapFromControllers} from '../../common/types/controller-inference.js';
 import type {
   ControllerStaticStateMap,
   ControllersPropsMap,
@@ -18,7 +19,10 @@ import type {SearchEngineDefinitionControllersPropsOption} from './engine.js';
 export type SearchStaticState<
   TSearchAction extends UnknownAction,
   TControllersStaticState extends ControllerStaticStateMap,
-> = EngineStaticState<TSearchAction, TControllersStaticState & BakedInSearchControllers> &
+> = EngineStaticState<
+  TSearchAction,
+  TControllersStaticState & InferControllerStaticStateMapFromControllers<BakedInSearchControllers>
+> &
   BuildConfig & {
     /**
      * The controller props that were passed to `fetchStaticState()` through the `controllers` option.
