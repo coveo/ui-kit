@@ -348,8 +348,8 @@ describe('InstantProducts keyboard navigation', () => {
   });
 });
 
-describe('InstantProducts variants', () => {
-  const variants = [
+describe('InstantProducts children', () => {
+  const children = [
     {
       permanentid: 'board-white',
       ec_name: 'Surf board, white',
@@ -369,20 +369,20 @@ describe('InstantProducts variants', () => {
     request.action?.name === 'fetchInstantProducts'
       ? sseResponse(
           instantProductsRunOf(request.action.surfaceId!, String(request.action.context['query']), [
-            {...variants[0], children: variants, totalNumberOfChildren: 3},
+            {...children[0], children, totalNumberOfChildren: 3},
           ])
         )
       : answerInstantProductsShell(request);
 
-  it('opens the variant a product shows once picked', async () => {
+  it('opens the child a product shows once picked', async () => {
     const open = vi.fn();
     vi.stubGlobal('open', open);
     const {type} = await renderSearchBox({handler: answerWithGroups});
     type('surf');
-    const variantsRow = await screen.findByRole('group', {name: 'Available in:'});
-    expect(within(variantsRow).getByLabelText('1 more variant')).toBeDefined();
+    const childrenRow = await screen.findByRole('group', {name: 'Available in:'});
+    expect(within(childrenRow).getByLabelText('1 more product')).toBeDefined();
 
-    fireEvent.mouseEnter(within(variantsRow).getByTitle('Surf board, blue'));
+    fireEvent.mouseEnter(within(childrenRow).getByTitle('Surf board, blue'));
     const option = screen.getByRole('option', {name: /Surf board, blue/});
     expect(option.id).toBe('instant-product-board-white');
     expect(option.textContent).toContain('$420.00');
@@ -395,7 +395,7 @@ describe('InstantProducts variants', () => {
     );
   });
 
-  it('picks a variant on click without opening the product', async () => {
+  it('picks a child on click without opening the product', async () => {
     const open = vi.fn();
     vi.stubGlobal('open', open);
     const {type} = await renderSearchBox({handler: answerWithGroups});

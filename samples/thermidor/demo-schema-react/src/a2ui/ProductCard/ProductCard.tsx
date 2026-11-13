@@ -10,12 +10,12 @@ interface A2UIProductCardProps {
   ec_image?: string;
   ec_product_id?: string;
   clickUri?: string;
-  /** The product's variants, under its name. */
-  variants?: ReactNode;
+  /** The product's children, under its name. */
+  productChildren?: ReactNode;
 }
 
 export function A2UIProductCard(props: A2UIProductCardProps) {
-  const {ec_name, ec_brand, ec_price, ec_image, ec_product_id, clickUri, variants} = props;
+  const {ec_name, ec_brand, ec_price, ec_image, ec_product_id, clickUri, productChildren} = props;
   const renderActions = useContext(ProductCardActionsContext);
   const actions =
     renderActions && ec_product_id
@@ -50,7 +50,7 @@ export function A2UIProductCard(props: A2UIProductCardProps) {
           </span>
         )}
         {ec_brand && <span className={styles.brand}>{ec_brand}</span>}
-        {variants}
+        {productChildren}
         {ec_price !== undefined && <span className={styles.price}>{formatPrice(ec_price)}</span>}
         {actions != null && <div className={styles.actions}>{actions}</div>}
       </div>

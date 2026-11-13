@@ -311,9 +311,9 @@ describe('ProductList', () => {
   });
 });
 
-// A product with variants, as producers send it: the product first among its variants.
+// A product with children, as producers send it: the product first among its children.
 function trailShoe() {
-  const variants = [
+  const children = [
     {
       permanentid: 'shoe-red',
       ec_name: 'Trail shoe, red',
@@ -333,12 +333,12 @@ function trailShoe() {
       additionalFields: {},
     },
   ];
-  return {...variants[0], children: variants, totalNumberOfChildren: 4};
+  return {...children[0], children, totalNumberOfChildren: 4};
 }
 
 const roadShoe = {permanentid: 'road', ec_name: 'Road shoe', ec_price: 90, additionalFields: {}};
 
-describe('ProductList variants', () => {
+describe('ProductList children', () => {
   function mountList(renderActions = vi.fn((_: ProductCardProduct) => null as ReactNode)) {
     const surface = mountSurface({
       component: {component: 'ProductList', products: {path: '/state/root/products'}},
@@ -354,7 +354,7 @@ describe('ProductList variants', () => {
 
   const card = (index: number) => screen.getAllByRole('listitem')[index];
 
-  it('swaps a hovered variant into its card, and hands it to the card actions', async () => {
+  it('swaps a hovered child into its card, and hands it to the card actions', async () => {
     const {renderActions} = mountList();
     await waitFor(() => expect(screen.getAllByRole('listitem')).toHaveLength(2));
     expect(within(card(1)).queryByRole('group', {name: 'Available in:'})).toBeNull();
@@ -377,7 +377,7 @@ describe('ProductList variants', () => {
     expect(within(card(1)).getByRole('heading').textContent).toBe('Road shoe');
   });
 
-  it('keeps the variant through other writes, and shows the first again when the products are sent again', async () => {
+  it('keeps the child through other writes, and shows the first again when the products are sent again', async () => {
     const {pushDataModel} = mountList();
     await waitFor(() => expect(screen.getAllByRole('listitem')).toHaveLength(2));
     fireEvent.mouseEnter(within(card(0)).getByTitle('Trail shoe, blue'));
@@ -394,8 +394,8 @@ describe('ProductList variants', () => {
   });
 });
 
-describe('ProductCarousel variants', () => {
-  it('links the card to the variant it shows, through a write to its heading', async () => {
+describe('ProductCarousel children', () => {
+  it('links the card to the child it shows, through a write to its heading', async () => {
     const {pushDataModel} = mountSurface({
       component: {
         component: 'ProductCarousel',
