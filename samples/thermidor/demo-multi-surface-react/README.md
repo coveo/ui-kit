@@ -52,8 +52,13 @@ Try it:
    as they are and keep working: pick a brand and ask again. A follow-up chip of a panel answer is
    sent in the panel too. A search from the header on the assistant layout also keeps the
    conversation in the panel of the search layout it opens.
-6. Open a **Listing pages** entry: it shows an _In progress_ placeholder and sends no request.
-7. Open **One session** at the bottom: every turn, the view that sent it, and the surfaces it
+6. On that search, pick a brand, then search `surfboards` and go back, with **← Back** or the
+   browser's Back: the `kayak` search comes back with its brand, its sort and its page. The page
+   sends `restoreState` for it, so the server runs that search again and the chat panel answers
+   about it. Each page is a browser history entry, so both Backs do the same thing.
+7. Open a **Listing pages** entry: it shows an _In progress_ placeholder and sends no request.
+   Back from it restores the search before it.
+8. Open **One session** at the bottom: every turn, the view that sent it, and the surfaces it
    created that are still alive.
 
 ## Pull-request previews
