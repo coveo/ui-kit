@@ -1,5 +1,6 @@
 import {describe, expectTypeOf, it} from 'vitest';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
+import type {EngineDefinition} from '../../common/types/engine.js';
 import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
@@ -115,5 +116,50 @@ describe('the static and hydrated states of a commerce engine definition', () =>
     expectTypeOf<keyof ListingStaticState['controllers']>().toEqualTypeOf<
       keyof ListingHydratedState['controllers']
     >();
+  });
+});
+
+describe('EngineDefinition', () => {
+  // What code written for any engine definition looks like: two plain type parameters.
+  function hydrate<TStaticState, THydratedState>(
+    definition: EngineDefinition<TStaticState, THydratedState>,
+    staticState: TStaticState
+  ) {
+    return definition.hydrateStaticState(staticState);
+  }
+
+  function fetchThenHydrate<TStaticState, THydratedState, TFetchOptions>(
+    definition: EngineDefinition<TStaticState, THydratedState, TFetchOptions>,
+    options: TFetchOptions
+  ) {
+    return definition.fetchStaticState(options).then(definition.hydrateStaticState);
+  }
+
+  type ListingFetchOptions = Parameters<typeof listingEngineDefinition.fetchStaticState>[0];
+
+  it('should describe every commerce engine definition', () => {
+    expectTypeOf(listingEngineDefinition).toExtend<
+      EngineDefinition<ListingStaticState, ListingHydratedState, ListingFetchOptions>
+    >();
+    expectTypeOf(recommendationEngineDefinition).toExtend<
+      EngineDefinition<
+        InferStaticState<typeof recommendationEngineDefinition>,
+        InferHydratedState<typeof recommendationEngineDefinition>
+      >
+    >();
+  });
+
+  it('should keep the controllers typed in code written for any engine definition', () => {
+    expectTypeOf(
+      hydrate(listingEngineDefinition, {} as ListingStaticState)
+    ).resolves.toEqualTypeOf<ListingHydratedState>();
+    expectTypeOf(
+      fetchThenHydrate(listingEngineDefinition, {} as ListingFetchOptions)
+    ).resolves.toEqualTypeOf<ListingHydratedState>();
+  });
+
+  it('should refuse fetch options that the engine definition does not take', () => {
+    // @ts-expect-error: the context is missing.
+    fetchThenHydrate(listingEngineDefinition, {navigatorContext: {} as never});
   });
 });

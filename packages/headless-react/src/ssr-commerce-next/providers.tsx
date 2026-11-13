@@ -1,5 +1,6 @@
 'use client';
 
+import type {EngineDefinition} from '@coveo/headless/ssr-commerce-next';
 import {type ComponentType, type PropsWithChildren, useEffect, useState} from 'react';
 import type {StateProviderProps} from './types.js';
 
@@ -17,10 +18,13 @@ import type {StateProviderProps} from './types.js';
 export function buildProviderWithDefinition<
   TStaticState extends {controllers: object},
   THydratedState extends {engine: unknown; controllers: object},
->(definition: {
-  hydrateStaticState: (staticState: TStaticState) => Promise<THydratedState>;
-  StateProvider: ComponentType<PropsWithChildren<StateProviderProps<TStaticState, THydratedState>>>;
-}) {
+>(
+  definition: Pick<EngineDefinition<TStaticState, THydratedState>, 'hydrateStaticState'> & {
+    StateProvider: ComponentType<
+      PropsWithChildren<StateProviderProps<TStaticState, THydratedState>>
+    >;
+  }
+) {
   return function WrappedProvider({
     staticState,
     children,

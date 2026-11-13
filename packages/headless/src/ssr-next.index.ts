@@ -478,6 +478,7 @@ export type {
 } from './ssr-next/search/types/engine.js';
 export type {SearchStaticState} from './ssr-next/search/types/fetch-static-state.js';
 export type {SearchHydratedState} from './ssr-next/search/types/hydrate-static-state.js';
+export type {EngineDefinition} from './ssr-next/common/types/engine.js';
 // State
 export type {SearchAppState, SearchParametersState} from './state/search-app-state.js';
 

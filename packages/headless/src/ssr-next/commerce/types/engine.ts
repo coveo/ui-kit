@@ -1,4 +1,5 @@
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import type {EngineDefinition} from '../../common/types/engine.js';
 import type {BuildConfig, SSRCommerceEngineOptions} from './build.js';
 import type {SolutionType} from './controller-constants.js';
 import type {
@@ -52,6 +53,10 @@ export type CommerceEngineDefinitionOptions<
 export interface CommerceEngineDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
+> extends EngineDefinition<
+  CommerceStaticState<TControllers, TSolutionType>,
+  CommerceHydratedState<TControllers, TSolutionType>,
+  FetchStaticStateOptions<TControllers, TSolutionType>
 > {
   /**
    * Executes a commerce search/listing/recommendation request on the server side and returns the static state.
