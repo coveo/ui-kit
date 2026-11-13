@@ -14,17 +14,13 @@ export function hydratedStaticStateFactory<
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ) {
   return <TSolutionType extends SolutionType>(solutionType: TSolutionType) =>
-    async (
-      params: HydrateStaticStateParameters<TControllerDefinitions, TSolutionType> & {
-        controllerProps?: Record<string, unknown>;
-      }
-    ) => {
+    async (params: HydrateStaticStateParameters<TControllerDefinitions, TSolutionType>) => {
       const {controllerProps, ...restParams} = params;
 
       const paramsWithControllerProps = {
         ...restParams,
         ...(controllerProps && {controllers: controllerProps}),
-      } as HydrateStaticStateParameters<TControllerDefinitions, TSolutionType>;
+      } as unknown as HydrateStaticStateParameters<TControllerDefinitions, TSolutionType>;
 
       const solutionTypeBuild = await buildFactory(controllerDefinitions, options)(solutionType);
       const {engine, controllers} = await solutionTypeBuild(paramsWithControllerProps);

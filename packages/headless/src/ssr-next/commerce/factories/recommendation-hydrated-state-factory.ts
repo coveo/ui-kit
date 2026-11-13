@@ -17,12 +17,22 @@ export function hydratedRecommendationStaticStateFactory<
   return async (
     params: HydrateStaticStateParameters<TControllerDefinitions, SolutionType.recommendation>
   ) => {
+    const {controllerProps, ...restParams} = params;
+
+    const paramsWithControllerProps = {
+      ...restParams,
+      ...(controllerProps && {controllers: controllerProps}),
+    } as unknown as HydrateStaticStateParameters<
+      TControllerDefinitions,
+      SolutionType.recommendation
+    >;
+
     const solutionTypeBuild = await buildFactory(
       controllerDefinitions,
       options
     )(SolutionType.recommendation);
 
-    const {engine, controllers} = await solutionTypeBuild(params);
+    const {engine, controllers} = await solutionTypeBuild(paramsWithControllerProps);
 
     if (params.searchActions.length > 0) {
       await Promise.all(engine.waitForRequestCompletedAction());
