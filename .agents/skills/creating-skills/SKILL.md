@@ -11,13 +11,7 @@ metadata:
 
 ## Skill Location
 
-Skills following the [Agent Skills open standard](https://agentskills.io) can be stored in multiple locations:
-
-- **`.claude/skills/`** - Workspace-level (recommended for local development, maximum compatibility)
-- **`.skills/`** or `skills/`\*\* - Alternative workspace conventions
-- **`~/.claude/skills/`** - User-level personal skills
-
-This skill recommends `.agents/skills/` for workspace development as it's compatible with multiple AI tools (GitHub Copilot, Claude Code, OpenCode, etc.).
+In ui-kit, skills live in `.agents/skills/`. `.claude/skills` and `.kiro/skills` are symlinks to it, so every supported agent reads the same files. Personal skills that should not be committed go in `~/.claude/skills/`.
 
 ## Process
 
@@ -36,7 +30,7 @@ Before creating, answer:
 node <skills-dir>/creating-skills/scripts/init_skill.mjs <skill-name> --path <skills-dir>
 ```
 
-Default `<skills-dir>` is `.claude/skills` (workspace-level). Other common locations: `.skills`, `skills/`, `~/.claude/skills` (user-level).
+Use `.agents/skills` as `<skills-dir>`.
 
 Creates: `SKILL.md` template, `scripts/`, `references/`, `assets/` directories.
 
@@ -127,11 +121,11 @@ Produces a `.skill` archive (tar.gz) for distribution.
 
 ## ui-kit Notes
 
-**Naming pattern:** `generating-*`, `migrating-*`, `validating-*`, `documenting-*`
+**Naming pattern:** a gerund prefix naming the activity, as in the existing `managing-*`, `creating-*`, `diagnosing-*`, `running-*` and `applying-*` skills
 
 **Integration:**
 
-- Skills stored in `.claude/skills/` (workspace-level, compatible with all AI tools)
+- Skills stored in `.agents/skills/` (`.claude/skills` and `.kiro/skills` are symlinks to it)
 - Skills reference workspace instructions for context
 - Agents compose skills for complex workflows
 - Prompts should migrate to skills for better portability

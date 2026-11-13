@@ -10,7 +10,7 @@ The v3 to v4 guides follow the v2 to v3 guide (`packages/headless/source_docs/up
 | `@coveo/headless-react`                                         | `packages/headless-react/source_docs/upgrade-from-v3-to-v4.md` |
 | `@coveo/atomic`, `@coveo/atomic-react`, `@coveo/atomic-angular` | `packages/atomic/upgrade-from-v3-to-v4.md`                     |
 
-Each file has three sections: `## Requirements`, `## Modified behaviors` and `## Removals`. Inside a section, changes sit under a theme heading such as `### Server-side rendering`; add the theme when it is missing. A changed behaviour or a replaced API gets an entry under `## Modified behaviors`. A removed member gets a row in the removals table of its theme, plus an entry when the replacement needs code to explain.
+Each file has three sections: `## Requirements`, `## Modified behaviors` and `## Removals`. The Atomic file does not exist yet: the first Atomic v4 story creates `packages/atomic/upgrade-from-v3-to-v4.md` with these three sections, following the Headless guide's intro but not its TypeDoc front matter. Inside a section, changes sit under a theme heading such as `### Server-side rendering`; add the theme when it is missing. A changed behaviour or a replaced API gets an entry under `## Modified behaviors`. A removed member gets a row in the removals table of its theme, plus an entry when the replacement needs code to explain.
 
 ## Entry template
 
@@ -38,7 +38,7 @@ Rules:
 
 - The heading names the member or behaviour as a customer searches for it in v3, one level below its theme.
 - The labels name the package line: **Headless Version 3** and **Headless Version 4** in the Headless and Headless React guides, **Atomic Version 3** and **Atomic Version 4** in the Atomic notes.
-- Take both code blocks from a sample that compiles and runs, trimmed to the lines that change, and name the sample files in the pull request description. When the v4 sample does not exist yet, write the block against the decided shape and put `<!-- decided YYYY-MM-DD, not yet built -->` on the line under the heading; remove the marker when the sample lands.
+- Take both code blocks from a sample that compiles and runs, trimmed to the lines that change, and name the sample files in the pull request description. The `-v4` samples (today only `samples/headless-ssr/commerce-nextjs-v4`) import from the experimental entry points; in the guide, write `ssr-next` as `/ssr` and `ssr-commerce-next` as `/ssr-commerce`, the paths v4 publishes that API under. When the v4 sample does not exist yet, write the block against the decided shape and put `<!-- decided YYYY-MM-DD, not yet built -->` on the line under the heading; remove the marker in the PR where both the API and the v4 sample match the entry.
 - Prose stays under 15 lines per entry. Details go to the reference docs.
 - Write the v4 path customers will use. Experimental entry points stay out of the guide.
 - Link the Jira issue in an HTML comment on the heading, so the guide stays readable and the history stays traceable.
@@ -60,7 +60,7 @@ Group members that leave together in one row. When nothing replaces a member, wr
 
 ## Filled example
 
-Based on the recommendations entry of `packages/headless/source_docs/upgrade-from-v3-to-v4.md`, taken from the listing pages of the `samples/headless-ssr/commerce-nextjs` and `samples/headless-ssr/commerce-nextjs-v4` samples:
+Adapted from the recommendations entry of `packages/headless/source_docs/upgrade-from-v3-to-v4.md`, taken from the listing pages of the `samples/headless-ssr/commerce-nextjs` and `samples/headless-ssr/commerce-nextjs-v4` samples. The entries already in the guides have no Jira comment on their heading; add one to every entry you write or edit:
 
 ````markdown
 #### Recommendations <!-- KIT-6384 -->

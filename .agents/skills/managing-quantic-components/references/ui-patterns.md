@@ -45,9 +45,7 @@ Arguments are positional and map to `{{0}}`, `{{1}}`, etc.
 
 ### Plural, singular, and zero label variants
 
-When a label needs different text based on count (e.g., "1 result" vs. "2 results" vs. "No results"), define three label variants using the suffixes ``, `\_plural`, and `\_zero`, then use `I18nUtils.getLabelNameWithCount()` to select the right one:
-
-Define three label variants in `CustomLabels.labels-meta.xml` with suffixes: base (singular), `_plural`, and `_zero`. Then import and group all three:
+When a label needs different text based on count (e.g., "1 result" vs. "2 results" vs. "No results"), define three variants in `CustomLabels.labels-meta.xml`: the base name (singular), `<base>_plural`, and `<base>_zero`. Import and group all three, then use `I18nUtils.getLabelNameWithCount()` to select one:
 
 ```javascript
 import inclusionFilter from '@salesforce/label/c.quantic_InclusionFilter';
@@ -98,7 +96,7 @@ Use `lwc:if` / `lwc:elseif` / `lwc:else` for top-level conditional branches:
 <!-- prettier-ignore -->
 ```html
 <template lwc:if={hasInitializationError}>
-  <c-quantic-component-error></c-quantic-component-error>
+  <c-quantic-component-error component-name={template.host.localName}></c-quantic-component-error>
 </template>
 <template lwc:else>
   <!-- Normal content -->

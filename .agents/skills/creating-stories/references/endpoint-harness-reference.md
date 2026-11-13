@@ -34,8 +34,8 @@ searchApiHarness.querySuggestEndpoint; // EndpointHarness<QuerySuggestResponse>
   - Permanently changes the base response factory for the entire story file.
   - Use when all stories share the same modified dataset.
 
-- `mockOnce((baseResponse) => nextResponse)`
-  - Queues a single response for the next matching request.
+- `mockOnce((baseResponse) => nextResponse, httpResponseInit?)`
+  - Queues a single response for the next matching request. The optional second argument sets the HTTP status and headers of that one response.
   - Use for story-specific states or sequential flows (pagination, refinements).
 
 - `mockErrorOnce()`
@@ -49,6 +49,11 @@ searchApiHarness.querySuggestEndpoint; // EndpointHarness<QuerySuggestResponse>
 - `reset()`
   - Restores the original base response factory.
   - Rarely needed; prefer `clear()` for story isolation.
+
+- `addRequestTransformer(...transformers)` / `removeRequestTransformer(...transformers)`
+  - A transformer is `(requestBody, response) => response`, applied after `mock`/`mockOnce` on every request, in the order added. `clear()` does not remove transformers.
+  - Use when the response must react to the request (facet selections, pagination). Domains export ready-made ones, such as `searchFacetTransformer` and `commercePaginationTransformer`.
+  - Register at module scope when every story in the file needs it. For a single story, add it in that story's `beforeEach` and return a cleanup that calls `removeRequestTransformer` with the same reference.
 
 ## Examples
 

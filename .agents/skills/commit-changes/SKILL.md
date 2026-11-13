@@ -58,7 +58,7 @@ If you determine that a changeset is required, run `pnpm changeset` and follow t
 
 ## Commit changes
 
-If the user is only asking for a commit message or PR description, output that in GitHub Markdown format and STOP.
+If the user only asks for a commit message or PR description, output it in GitHub Markdown and do not commit, push, or open a PR.
 
 If the user is asking to commit changes or open a PR:
 
