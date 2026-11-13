@@ -4,6 +4,7 @@ import {buildSearch} from '../../../controllers/commerce/search/headless-search.
 import {toSerializableNavigatorContext} from '../../common/serializable-navigator-context.js';
 import {createStaticState} from '../controller-utils.js';
 import type {BuildParameters} from '../types/build.js';
+import {filterRecommendationControllers} from '../utils/recommendation-filter.js';
 import {withDefaultViewUrl} from '../utils/view-url.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {AugmentedControllerDefinition} from '../types/controller-definitions.js';
@@ -65,6 +66,10 @@ export function fetchStaticStateFactory<
           executeFirstRequestForSearch(controllers, engine);
           break;
       }
+
+      filterRecommendationControllers(controllers, controllerDefinitions).refresh(
+        params.recommendations
+      );
 
       const searchActions = await Promise.all(engine.waitForRequestCompletedAction());
 

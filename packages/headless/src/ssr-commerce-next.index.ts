@@ -301,6 +301,7 @@ export type {SSRCommerceEngine as CommerceEngine} from './ssr-next/commerce/fact
 // Main App
 export type {
   BuildConfig,
+  RecommendationNames,
   SSRCommerceEngineOptions as CommerceEngineOptions,
   SSRContextOptions,
 } from './ssr-next/commerce/types/build.js';
