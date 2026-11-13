@@ -7,7 +7,7 @@
         >
           <div class="searchbox__container">
             <div class={searchBoxContainerClass} role="none">
-              <template if:true={withoutSubmitButton}>
+              <template lwc:if={withoutSubmitButton}>
                 <div
                   class="slds-grid slds-align_absolute-center searchbox__icon-container slds-m-left_x-small"
                 >
@@ -40,7 +40,7 @@
               >
               </textarea>
 
-              <template if:false={isQueryEmpty}>
+              <template lwc:if={hasQuery}>
                 <div
                   class="slds-grid slds-align_absolute-center searchbox__icon-container slds-m-right_x-small"
                 >
@@ -60,7 +60,7 @@
                 </div>
               </template>
 
-              <template if:false={withoutSubmitButton}>
+              <template lwc:if={withSubmitButton}>
                 <button
                   class="searchbox__submit-button slds-button slds-button_neutral"
                   title={labels.search}
@@ -79,7 +79,7 @@
               </template>
             </div>
           </div>
-          <template if:true={shouldDisplaySuggestions}>
+          <template lwc:if={shouldDisplaySuggestions}>
             <c-quantic-search-box-suggestions-list
               onquantic__selection={handleSelection}
               suggestions={suggestions}

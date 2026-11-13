@@ -37,7 +37,7 @@
 
     <c-quantic-search-interface slot="preview" engine-id={engineId}>
       <c-quantic-facet-manager engine-id={engineId}>
-        <template if:false={facetWithoutInputs}>
+        <template lwc:if={facetWithInputs}>
           <c-quantic-facet
             engine-id={engineId}
             facet-id="objecttype"

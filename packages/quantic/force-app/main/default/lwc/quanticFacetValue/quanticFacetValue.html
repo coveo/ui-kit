@@ -10,7 +10,7 @@
     aria-label={ariaLabelValue}
     data-testid="facet__value"
   >
-    <template if:false={displayAsLink}>
+    <template lwc:if={displayAsCheckbox}>
       <lightning-input
         tabindex="-1"
         type="checkbox"
@@ -22,7 +22,7 @@
         checked={isChecked}
       ></lightning-input>
     </template>
-    <template if:true={isChecked}>
+    <template lwc:if={isChecked}>
       <span
         class="slds-truncate slds-var-m-right_xx-small slds-var-m-top_xxx-small facet__value-text facet__value_selected"
         title={formattedFacetValue}
@@ -34,8 +34,8 @@
         ({numberOfResults})
       </span>
     </template>
-    <template if:false={isChecked}>
-      <template if:true={isStandardFacet}>
+    <template lwc:else>
+      <template lwc:if={isStandardFacet}>
         <span
           class="slds-truncate slds-var-m-right_xx-small slds-var-m-top_xxx-small facet__value-text facet__value_idle"
           title={formattedFacetValue}
@@ -43,7 +43,7 @@
           <lightning-formatted-rich-text value={item.highlightedResult} disable-linkify></lightning-formatted-rich-text>
         </span>
       </template>
-      <template if:false={isStandardFacet}>
+      <template lwc:else>
         <span
           class="slds-truncate slds-var-m-right_xx-small slds-var-m-top_xxx-small facet__value-text facet__value_idle"
           title={formattedFacetValue}

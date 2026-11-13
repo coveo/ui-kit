@@ -120,6 +120,10 @@ export default class QuanticSearchBoxInput extends LightningElement {
     this.input.value = value;
   }
 
+  get withSubmitButton() {
+    return !this.withoutSubmitButton;
+  }
+
   /**
    * @returns {quanticSearchBoxSuggestionsList}
    */
@@ -354,6 +358,10 @@ export default class QuanticSearchBoxInput extends LightningElement {
 
   get isQueryEmpty() {
     return !this.input?.value && !this.inputValue;
+  }
+
+  get hasQuery() {
+    return !this.isQueryEmpty;
   }
 
   /**

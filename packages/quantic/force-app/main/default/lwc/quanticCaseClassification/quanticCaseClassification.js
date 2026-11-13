@@ -310,6 +310,10 @@ export default class QuanticCaseClassification extends LightningElement {
    * Whether the suggested options are visible.
    * @type{boolean}
    */
+  get showSuggestions() {
+    return !this.hideSuggestions;
+  }
+
   get isSuggestionsVisible() {
     return this._isSuggestionsVisible;
   }

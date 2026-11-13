@@ -1,8 +1,8 @@
 <template>
-  <template if:true={error}>
+  <template lwc:if={error}>
     <div class="error-message slds-text-color_destructive">{error}</div>
   </template>
-  <template if:true={isValid}>
+  <template lwc:if={isValid}>
     <c-quantic-result-text result={result} field={field} label={label} formatting-function={formattingFunction}></c-quantic-result-text>
   </template>
 </template>

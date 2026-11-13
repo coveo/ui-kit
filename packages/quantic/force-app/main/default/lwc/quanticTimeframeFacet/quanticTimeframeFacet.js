@@ -214,6 +214,11 @@ export default class QuanticTimeframeFacet extends LightningElement {
   engine;
 
   _isCollapsed = false;
+
+  get isExpanded() {
+    return !this.isCollapsed;
+  }
+
   _showValues = true;
 
   labels = {

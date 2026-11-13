@@ -172,6 +172,11 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
   /** @type {boolean} */
   _isCollapsed = false;
+
+  get isExpanded() {
+    return !this.isCollapsed;
+  }
+
   static attributes = [
     'facetId',
     'field',
@@ -403,6 +408,10 @@ export default class QuanticCategoryFacet extends LightningElement {
 
   get hasSearchResults() {
     return this.getSearchValues().length > 0;
+  }
+
+  get hasNoSearchResults() {
+    return !this.hasSearchResults;
   }
 
   get canShowMoreSearchResults() {
