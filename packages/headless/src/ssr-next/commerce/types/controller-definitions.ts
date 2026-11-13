@@ -1,8 +1,4 @@
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {
-  InferControllerStaticStateFromController,
-  InferControllerStaticStateMapFromControllers,
-} from '../../common/types/controller-inference.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import type {HasKey, HasRequiredKeys} from '../../common/types/utilities.js';
 import type {CartDefinition} from '../controllers/cart/headless-cart.ssr.js';
@@ -19,11 +15,6 @@ import type {
   StandaloneController,
   UniversalController,
 } from './controller-scopes.js';
-
-export type {
-  InferControllerStaticStateFromController,
-  InferControllerStaticStateMapFromControllers,
-};
 
 export interface ControllerDefinitionWithoutProps<TController extends Controller> {
   /**

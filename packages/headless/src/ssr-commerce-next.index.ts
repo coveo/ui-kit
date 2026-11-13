@@ -304,14 +304,10 @@ export type {
   CommerceEngineDefinitionControllersPropsOption as EngineDefinitionControllersPropsOption,
   ControllerDefinition,
   ControllerDefinitionsMap,
-  InferControllerStaticStateFromController,
-  InferControllerStaticStateMapFromControllers,
 } from './ssr-next/commerce/types/controller-definitions.js';
 export type {
   InferControllerFromDefinition,
   InferControllerPropsMapFromDefinitions,
-  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
-  InferControllersMapFromDefinition,
   InferHydratedState,
   InferStaticState,
 } from './ssr-next/commerce/types/controller-inference.js';

@@ -3,13 +3,13 @@ import type {
   ControllerDefinitionsMap,
   SolutionType,
 } from '@coveo/headless/ssr-commerce-next';
-import {render} from '@testing-library/react';
+import {render, waitFor} from '@testing-library/react';
 import {Component, type PropsWithChildren} from 'react';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {createMockNavigatorContextProvider} from '../__tests__/mock-navigator-context-provider.js';
 import {waitForAsyncUpdates} from '../__tests__/test-utils.js';
 import type {ReactCommerceEngineDefinition} from './commerce-engine.js';
-import {buildProviderWithDefinition} from './providers.js';
+import {buildProviderWithDefinition} from './index.js';
 
 class ErrorBoundary extends Component<
   PropsWithChildren<{onError: (error: unknown) => void}>,
@@ -179,6 +179,22 @@ describe('buildProviderWithDefinition', () => {
 
     expect(onError).not.toHaveBeenCalled();
     expect(getByTestId('engine').textContent).toBe('second');
+  });
+
+  it('should not throw and should call onHydrationError when it is provided', async () => {
+    const failure = new Error('hydration failed');
+    hydrateStaticState.mockRejectedValue(failure);
+    const onHydrationError = vi.fn();
+    const Provider = buildProviderWithDefinition(definition);
+
+    const {getByTestId} = render(
+      <Provider staticState={buildStaticState()} onHydrationError={onHydrationError}>
+        <div />
+      </Provider>
+    );
+
+    await waitFor(() => expect(onHydrationError).toHaveBeenCalledWith(failure));
+    expect(getByTestId('engine').textContent).toBe('static');
   });
 
   it('should rethrow a hydration failure during render so that an error boundary reports it', async () => {
