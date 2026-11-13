@@ -1,5 +1,6 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import type {InferControllerStaticStateMapFromControllers} from '../../common/types/controller-inference.js';
 import type {
   ControllerStaticStateMap,
   ControllersPropsMap,
@@ -27,7 +28,8 @@ export type CommerceStaticState<
   TSolutionType extends SolutionType,
 > = EngineStaticState<
   TSearchAction,
-  TControllersStaticState & FilteredBakedInControllers<TSolutionType>
+  TControllersStaticState &
+    InferControllerStaticStateMapFromControllers<FilteredBakedInControllers<TSolutionType>>
 > &
   BuildConfig<TControllersDefinitionsMap, TSolutionType> & {
     /**
