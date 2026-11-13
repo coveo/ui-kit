@@ -291,6 +291,19 @@ describe('atomic-recs-interface', () => {
         });
       });
 
+      it('should keep analytics disabled when the options include an analytics configuration', async () => {
+        const element = await setupElement({analytics: false});
+
+        await element.initialize({
+          ...recommendationEngineConfig,
+          analytics: {trackingId: 'sports'},
+        });
+
+        expect(
+          vi.mocked(buildRecommendationEngine).mock.calls[0][0].configuration.analytics
+        ).toMatchObject({trackingId: 'sports', enabled: false});
+      });
+
       it('should default searchHub to "default" when not provided', async () => {
         const element = await setupElement();
         const mockedBuildRecommendationEngine = vi.mocked(buildRecommendationEngine);

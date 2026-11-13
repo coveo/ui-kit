@@ -303,8 +303,8 @@ export class AtomicRecsInterface
           searchHub: this.searchHub ?? 'default',
           locale: this.language,
           timezone: this.timezone,
-          analytics: analyticsConfig,
           ...options,
+          analytics: analyticsConfig,
         },
         loggerOptions: {
           level: this.logLevel,
