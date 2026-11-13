@@ -168,20 +168,22 @@ describe('#augmentCommerceEngineOptions', () => {
       });
     });
 
-    it('should keep the cart of the definition configuration when buildConfig has no cart', () => {
-      const definitionCart = {
-        items: [{name: 'bar', price: 5, productId: 'bar_id', quantity: 2}],
-      };
-
+    it('should ignore a cart in the definition configuration, since the definition is shared by every request', () => {
       const engineOptions = augmentCommerceEngineOptions(
-        {configuration: {...sampleCommerceConfig.configuration, cart: definitionCart}},
+        {
+          configuration: {
+            ...sampleCommerceConfig.configuration,
+            // @ts-expect-error: the definition configuration does not accept a cart
+            cart: {items: [{name: 'bar', price: 5, productId: 'bar_id', quantity: 2}]},
+          },
+        },
         {
           navigatorContext: createNavigatorContext(),
           context: buildMockCommerceContext(),
         }
       );
 
-      expect(engineOptions.configuration.cart).toEqual(definitionCart);
+      expect(engineOptions.configuration.cart).toBeUndefined();
     });
   });
 
