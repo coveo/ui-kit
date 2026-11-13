@@ -12,6 +12,7 @@ import {
   type ConverseEvent,
   type UpdateDataModelOp,
 } from '../events.js';
+import {groupChildren} from './product-groups.js';
 
 const runId = 'b41e5d90-2f8c-4c1e-9b7a-3d6f0a1c8e42';
 
@@ -233,8 +234,9 @@ interface WaterSportsProduct {
   ec_color: string;
   clickUri: string;
   permanentid: string;
-  children: never[];
   badgePlacements?: BadgePlacement[];
+  children?: WaterSportsProduct[];
+  totalNumberOfChildren?: number;
 }
 
 interface BadgePlacement {
@@ -261,6 +263,16 @@ interface ProductSeed {
   price: number;
   color: string;
   rating: number;
+  children?: ChildSeed[];
+  totalNumberOfChildren?: number;
+}
+
+// Another product of a seed's group. Its image comes next in the leaf's pool unless `image` is null,
+// for a product without imagery.
+interface ChildSeed {
+  color: string;
+  price?: number;
+  image?: null;
 }
 
 const PRODUCT_SEEDS: ProductSeed[] = [
@@ -272,6 +284,7 @@ const PRODUCT_SEEDS: ProductSeed[] = [
     price: 99.99,
     color: 'Black',
     rating: 4.4,
+    children: [{color: 'Blue'}, {color: 'Red', price: 94.99}],
   },
   {
     name: 'EcoWave Performance Wetsuit',
@@ -280,6 +293,14 @@ const PRODUCT_SEEDS: ProductSeed[] = [
     price: 199.99,
     color: 'Yellow',
     rating: 3.0,
+    children: [
+      {color: 'Black'},
+      {color: 'Blue'},
+      {color: 'Green', price: 189.99},
+      {color: 'Red'},
+      {color: 'White'},
+    ],
+    totalNumberOfChildren: 9,
   },
   {
     name: 'ArcticShield Full Drysuit',
@@ -322,6 +343,8 @@ const PRODUCT_SEEDS: ProductSeed[] = [
     price: 449.99,
     color: 'White',
     rating: 4.5,
+    children: [{color: 'Blue', price: 469.99}],
+    totalNumberOfChildren: 4,
   },
   {
     name: 'GlideMax Longboard Surfboard',
@@ -415,6 +438,7 @@ const PRODUCT_SEEDS: ProductSeed[] = [
     price: 549.99,
     color: 'Yellow',
     rating: 4.5,
+    children: [{color: 'Red'}, {color: 'Green', image: null}],
   },
   {
     name: 'LakeGlide Touring Kayak',
@@ -474,6 +498,8 @@ const PRODUCT_SEEDS: ProductSeed[] = [
     price: 49.99,
     color: 'Red',
     rating: 4.1,
+    children: [{color: 'Yellow'}, {color: 'Blue'}, {color: 'Orange', price: 54.99}],
+    totalNumberOfChildren: 6,
   },
   {
     name: 'AquaGuard Kids Life Jacket',
@@ -651,10 +677,15 @@ function imageForLeaf(leaf: string[]): string {
   return fallback;
 }
 
+function childImage(leaf: string[], productImage: string, offset: number): string {
+  const pool = CATEGORY_IMAGES[leaf[leaf.length - 1]] ?? FALLBACK_IMAGES;
+  return pool[(pool.indexOf(productImage) + offset) % pool.length];
+}
+
 const products: WaterSportsProduct[] = PRODUCT_SEEDS.map((seed, index) => {
   const image = imageForLeaf(seed.leaf);
   const id = 9950000000000 + index;
-  return {
+  const product: WaterSportsProduct = {
     additionalFields: {},
     ec_name: seed.name,
     ec_brand: seed.brand,
@@ -668,13 +699,29 @@ const products: WaterSportsProduct[] = PRODUCT_SEEDS.map((seed, index) => {
     ec_color: seed.color,
     clickUri: `https://barca-sports.myshopify.com/products/ws_${index}`,
     permanentid: `gid://shopify/ProductVariant/${50680000000000 + index}`,
-    children: [],
     ...(BADGES_BY_PRODUCT_INDEX[index] && {
       badgePlacements: [
         {placementId: 'badge-placement-id', badges: BADGES_BY_PRODUCT_INDEX[index]},
       ],
     }),
   };
+  if (!seed.children) {
+    return product;
+  }
+  const otherChildren = seed.children.map((child, childIndex): WaterSportsProduct => {
+    const images = child.image === null ? [] : [childImage(seed.leaf, image, childIndex + 1)];
+    return {
+      ...product,
+      ec_name: `${seed.name} - ${child.color}`,
+      ec_color: child.color,
+      ec_price: child.price ?? seed.price,
+      ec_thumbnails: images,
+      ec_images: images,
+      clickUri: `${product.clickUri}?variant=${childIndex + 1}`,
+      permanentid: `gid://shopify/ProductVariant/${50690000000000 + index * 10 + childIndex + 1}`,
+    };
+  });
+  return groupChildren(product, otherChildren, seed.totalNumberOfChildren);
 });
 
 const MAX_INSTANT_PRODUCTS = 4;

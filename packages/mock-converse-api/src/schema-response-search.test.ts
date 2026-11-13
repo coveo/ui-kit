@@ -1,6 +1,7 @@
 import {describe, it, expect, beforeEach} from 'vitest';
 import {converseSchemaResponses} from '@coveo/platform-mock-api/converse';
 import type {ConverseEvent} from '@coveo/platform-mock-api/converse';
+import {expectNormalizedGroups, groupsOf} from './product-groups.test-utils.js';
 
 const {matchSchemaPrompt, buildSearchActionEvents} = converseSchemaResponses;
 
@@ -291,6 +292,49 @@ describe('schema-response-search initial response totals', () => {
     expect(summary.firstIndex).toBe(1);
     expect(summary.lastIndex).toBe(12);
     expect(summary.totalEntries).toBe(43);
+  });
+});
+
+describe('schema-response-search product groups', () => {
+  const components = collectComponentState(resetSurface());
+  const products = (components['product-list-2'] as {products: Array<Record<string, unknown>>})
+    .products;
+
+  it('lists grouped and ungrouped products, some groups larger than their listed children', () => {
+    expect(groupsOf(products).slice(0, 8)).toEqual([
+      {name: 'HydroLite Sleeveless Wetsuit', listed: 3, total: 3},
+      {name: 'EcoWave Performance Wetsuit', listed: 6, total: 9},
+      {name: 'ArcticShield Full Drysuit', listed: undefined, total: undefined},
+      {name: 'SunSeeker Spring Wetsuit', listed: undefined, total: undefined},
+      {name: 'DeepBlue Diving Wetsuit', listed: undefined, total: undefined},
+      {name: 'TideRunner Junior Wetsuit', listed: undefined, total: undefined},
+      {name: 'WaveRider Shortboard Surfboard', listed: 2, total: 4},
+      {name: 'GlideMax Longboard Surfboard', listed: undefined, total: undefined},
+    ]);
+  });
+
+  it('lists each product first among its children', () => {
+    expectNormalizedGroups(products);
+  });
+
+  it('gives each child its own name, price, image and link', () => {
+    const [, blue, red] = products[0].children as Array<Record<string, unknown>>;
+    expect(blue).toMatchObject({ec_name: 'HydroLite Sleeveless Wetsuit - Blue', ec_price: 99.99});
+    expect(red).toMatchObject({ec_name: 'HydroLite Sleeveless Wetsuit - Red', ec_price: 94.99});
+    expect(blue.ec_images).not.toEqual(products[0].ec_images);
+    expect(blue.clickUri).not.toBe(products[0].clickUri);
+  });
+
+  it('keeps a child without imagery', () => {
+    const kayaks = collectComponentState(matchSchemaPrompt('kayaks'));
+    const [riverRun] = (kayaks['product-list-2'] as {products: Array<Record<string, unknown>>})
+      .products;
+    const children = riverRun.children as Array<Record<string, unknown>>;
+    expect(children.map(({ec_images}) => ec_images)).toEqual([
+      riverRun.ec_images,
+      expect.any(Array),
+      [],
+    ]);
   });
 });
 
