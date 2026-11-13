@@ -106,7 +106,7 @@ describe('atomic-ipx-result-link', () => {
 
     it('should initialize without error', async () => {
       const {element} = await renderComponent();
-      expect(element.error).toBeNull();
+      expect(element.error).toBeUndefined();
     });
 
     it('should dispatch atomic/resolveStopPropagation event', async () => {

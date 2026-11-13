@@ -10,7 +10,6 @@ import {createProductContextController} from '@/src/components/commerce/product-
 import {bindStateToController} from '@/src/decorators/bind-state.js';
 import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {bindings} from '@/src/decorators/bindings.js';
-import {errorGuard} from '@/src/decorators/error-guard.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map.js';
 import {LightDomMixin} from '@/src/mixins/light-dom.js';
@@ -37,7 +36,7 @@ export class AtomicProductPrice
   bindings!: CommerceBindings;
 
   @state()
-  error!: Error;
+  error?: Error;
 
   private productController = createProductContextController(this);
   context!: Context;
@@ -81,7 +80,6 @@ export class AtomicProductPrice
     );
   }
 
-  @errorGuard()
   @bindingGuard()
   render() {
     const hasPromo = this.hasPromotionalPrice;
