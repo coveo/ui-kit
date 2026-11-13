@@ -55,7 +55,7 @@ export interface SearchEngineDefinition<
     TEngine,
     InferControllersMapFromDefinition<TControllers>,
     UnknownAction,
-    InferControllerPropsMapFromDefinitions<TControllers>
+    InferControllerStaticStateMapFromDefinitions<TControllers>
   >;
 }
 

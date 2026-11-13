@@ -1,6 +1,8 @@
+import type {UnknownAction} from '@reduxjs/toolkit';
 import type {CommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
 import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import type {HasKey} from '../../common/types/utilities.js';
 import type {CartInitialState} from '../controllers/cart/headless-cart.ssr.js';
 import type {ContextOptions} from '../controllers/context/headless-context.ssr.js';
@@ -216,3 +218,13 @@ export type BuildConfig<
       : TSolutionType extends SolutionType.standalone
         ? CommonBuildConfig
         : never;
+
+/**
+ * What a build reads: the build configuration, the controller props under `controllers` and, when
+ * hydrating, the search actions to replay.
+ */
+export type BuildParameters<TControllers extends ControllerDefinitionsMap<Controller>> =
+  BuildConfig<TControllers, SolutionType> & {
+    controllers?: ControllersPropsMap;
+    searchActions?: UnknownAction[];
+  };

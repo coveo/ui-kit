@@ -6,6 +6,7 @@ import type {
   HydrateStaticStateFunction,
   HydrateStaticStateParameters,
 } from '../types/engine.js';
+import type {BuildParameters} from '../types/build.js';
 import {buildFactory} from './build-factory.js';
 
 export function hydratedRecommendationStaticStateFactory<
@@ -17,12 +18,19 @@ export function hydratedRecommendationStaticStateFactory<
   return async (
     params: HydrateStaticStateParameters<TControllerDefinitions, SolutionType.recommendation>
   ) => {
+    const {controllerProps, ...restParams} = params;
+
+    const buildParameters: BuildParameters<TControllerDefinitions> = {
+      ...restParams,
+      ...(controllerProps && {controllers: controllerProps}),
+    };
+
     const solutionTypeBuild = await buildFactory(
       controllerDefinitions,
       options
     )(SolutionType.recommendation);
 
-    const {engine, controllers} = await solutionTypeBuild(params);
+    const {engine, controllers} = await solutionTypeBuild(buildParameters);
 
     if (params.searchActions.length > 0) {
       await Promise.all(engine.waitForRequestCompletedAction());

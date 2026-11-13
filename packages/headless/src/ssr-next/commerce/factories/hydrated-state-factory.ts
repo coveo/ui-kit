@@ -5,6 +5,7 @@ import type {
   CommerceEngineDefinitionOptions,
   HydrateStaticStateParameters,
 } from '../types/engine.js';
+import type {BuildParameters} from '../types/build.js';
 import {buildFactory} from './build-factory.js';
 
 export function hydratedStaticStateFactory<
@@ -14,20 +15,16 @@ export function hydratedStaticStateFactory<
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ) {
   return <TSolutionType extends SolutionType>(solutionType: TSolutionType) =>
-    async (
-      params: HydrateStaticStateParameters<TControllerDefinitions, TSolutionType> & {
-        controllerProps?: Record<string, unknown>;
-      }
-    ) => {
+    async (params: HydrateStaticStateParameters<TControllerDefinitions, TSolutionType>) => {
       const {controllerProps, ...restParams} = params;
 
-      const paramsWithControllerProps = {
+      const buildParameters: BuildParameters<TControllerDefinitions> = {
         ...restParams,
         ...(controllerProps && {controllers: controllerProps}),
-      } as HydrateStaticStateParameters<TControllerDefinitions, TSolutionType>;
+      };
 
       const solutionTypeBuild = await buildFactory(controllerDefinitions, options)(solutionType);
-      const {engine, controllers} = await solutionTypeBuild(paramsWithControllerProps);
+      const {engine, controllers} = await solutionTypeBuild(buildParameters);
 
       if (params.searchActions.length > 0) {
         await Promise.all(engine.waitForRequestCompletedAction());
