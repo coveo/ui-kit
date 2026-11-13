@@ -47,13 +47,16 @@ export interface BuildNavigatorContextOptions {
 
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
+function isHeaders(headers: RequestHeaders): headers is Headers {
+  return typeof headers.get === 'function';
+}
+
 function readHeader(headers: RequestHeaders, name: string): string | null {
-  if (typeof (headers as Headers).get === 'function') {
-    return (headers as Headers).get(name);
+  if (isHeaders(headers)) {
+    return headers.get(name);
   }
-  const record = headers as Record<string, string | string[] | undefined>;
-  const key = Object.keys(record).find((candidate) => candidate.toLowerCase() === name);
-  const value = key === undefined ? undefined : record[key];
+  const key = Object.keys(headers).find((candidate) => candidate.toLowerCase() === name);
+  const value = key === undefined ? undefined : headers[key];
   if (Array.isArray(value)) {
     return value.join(', ');
   }
