@@ -33,6 +33,7 @@
   font-weight: 600;
   color: var(--color-text-primary);
   line-height: 1.3;
+  min-height: 2.6em;
   text-decoration: none;
   display: -webkit-box;
   -webkit-line-clamp: 2;

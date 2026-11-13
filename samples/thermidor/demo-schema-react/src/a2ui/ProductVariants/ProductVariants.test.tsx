@@ -51,6 +51,9 @@ describe('ProductVariants', () => {
     ]);
     expect(pressed()).toEqual(['Shoe a']);
     expect(screen.getByLabelText('4 more variants').textContent).toBe('+4');
+    expect(screen.getByRole('group', {name: 'Available in:'}).firstChild?.textContent).toBe(
+      'Available in:'
+    );
   });
 
   it('counts the variants a group holds beyond those listed, if any', () => {
@@ -82,10 +85,10 @@ describe('ProductVariants', () => {
 
   it('shows nothing for a product without variants', () => {
     const {rerender} = render(<Slot product={variant('a')} />);
-    expect(screen.queryByRole('group', {name: 'Variants'})).toBeNull();
+    expect(screen.queryByRole('group', {name: 'Available in:'})).toBeNull();
 
     rerender(<Slot product={group([variant('a')])} />);
-    expect(screen.queryByRole('group', {name: 'Variants'})).toBeNull();
+    expect(screen.queryByRole('group', {name: 'Available in:'})).toBeNull();
   });
 
   it('promotes a variant on hover, Enter or touch', () => {

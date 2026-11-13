@@ -35,11 +35,19 @@ export function A2UIProductCard(props: A2UIProductCardProps) {
       )}
       <div className={styles.content}>
         {clickUri ? (
-          <a className={styles.name} href={clickUri} target="_blank" rel="noopener noreferrer">
+          <a
+            className={styles.name}
+            title={ec_name}
+            href={clickUri}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {ec_name}
           </a>
         ) : (
-          <span className={styles.name}>{ec_name}</span>
+          <span className={styles.name} title={ec_name}>
+            {ec_name}
+          </span>
         )}
         {ec_brand && <span className={styles.brand}>{ec_brand}</span>}
         {variants}

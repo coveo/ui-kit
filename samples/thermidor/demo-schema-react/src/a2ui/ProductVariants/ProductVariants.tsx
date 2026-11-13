@@ -1,3 +1,4 @@
+import {useId} from 'react';
 import type {Product, ProductVariant} from '@coveo/thermidor-schema';
 import styles from './ProductVariants.module.css';
 
@@ -26,6 +27,7 @@ interface ProductVariantsProps {
  * product without variants shows nothing.
  */
 export function ProductVariants({product, onPromote}: ProductVariantsProps) {
+  const labelId = useId();
   const variants = product.children ?? [];
   const visible = variants.slice(0, VISIBLE_VARIANTS);
   const more = Math.max(product.totalNumberOfChildren ?? 0, variants.length) - visible.length;
@@ -34,45 +36,50 @@ export function ProductVariants({product, onPromote}: ProductVariantsProps) {
   }
 
   return (
-    <div className={styles.variants} role="group" aria-label="Variants">
-      {visible.map((variant) => {
-        const shown = variant.permanentid === product.permanentid;
-        return (
-          <button
-            key={variant.permanentid}
-            type="button"
-            className={`${styles.variant} ${shown ? styles.shown : ''}`}
-            title={variant.ec_name}
-            aria-pressed={shown}
-            onMouseEnter={() => onPromote(variant)}
-            onTouchStart={() => onPromote(variant)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
+    <div role="group" aria-labelledby={labelId}>
+      <span id={labelId} className={styles.label}>
+        Available in:
+      </span>
+      <div className={styles.variants}>
+        {visible.map((variant) => {
+          const shown = variant.permanentid === product.permanentid;
+          return (
+            <button
+              key={variant.permanentid}
+              type="button"
+              className={`${styles.variant} ${shown ? styles.shown : ''}`}
+              title={variant.ec_name}
+              aria-pressed={shown}
+              onMouseEnter={() => onPromote(variant)}
+              onTouchStart={() => onPromote(variant)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  onPromote(variant);
+                }
+              }}
+              onClick={(event) => {
+                event.stopPropagation();
                 onPromote(variant);
-              }
-            }}
-            onClick={(event) => {
-              event.stopPropagation();
-              onPromote(variant);
-            }}
+              }}
+            >
+              <img
+                className={styles.thumbnail}
+                src={thumbnailOf(variant)}
+                alt={variant.ec_name}
+                loading="lazy"
+              />
+            </button>
+          );
+        })}
+        {more > 0 && (
+          <span
+            className={styles.more}
+            aria-label={`${more} more ${more === 1 ? 'variant' : 'variants'}`}
           >
-            <img
-              className={styles.thumbnail}
-              src={thumbnailOf(variant)}
-              alt={variant.ec_name}
-              loading="lazy"
-            />
-          </button>
-        );
-      })}
-      {more > 0 && (
-        <span
-          className={styles.more}
-          aria-label={`${more} more ${more === 1 ? 'variant' : 'variants'}`}
-        >
-          +{more}
-        </span>
-      )}
+            +{more}
+          </span>
+        )}
+      </div>
     </div>
   );
 }

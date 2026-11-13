@@ -186,7 +186,9 @@ function ProductRow({
         <div className={styles.image} />
       )}
       <div className={styles.content}>
-        <span className={styles.name}>{product.ec_name}</span>
+        <span className={styles.name} title={product.ec_name}>
+          {product.ec_name}
+        </span>
         {product.ec_brand && <span className={styles.brand}>{product.ec_brand}</span>}
         <ProductVariants product={product} onPromote={promote} />
       </div>
