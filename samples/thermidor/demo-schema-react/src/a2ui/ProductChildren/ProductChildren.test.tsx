@@ -38,7 +38,7 @@ const pressed = () =>
     .map((button) => button.title);
 
 describe('ProductChildren', () => {
-  it('shows up to five children, the shown one marked, and counts the rest of the group', () => {
+  it('shows up to five children, the shown one marked, and counts the others', () => {
     const children = ['a', 'b', 'c', 'd', 'e', 'f'].map((id) => child(id));
     render(<Slot product={group(children, 9)} />);
 
@@ -56,7 +56,7 @@ describe('ProductChildren', () => {
     );
   });
 
-  it('counts the children a group holds beyond those listed, if any', () => {
+  it('counts the children beyond those listed, if any', () => {
     const {rerender} = render(<Slot product={group([child('a'), child('b')], 4)} />);
     expect(thumbnails()).toHaveLength(2);
     expect(screen.getByLabelText('2 more products').textContent).toBe('+2');
