@@ -5,7 +5,6 @@ import {defineSearchParameterManager} from '../controllers/search-parameter-mana
 import {hydratedStaticStateFactory} from '../factories/hydrated-state-factory.js';
 import {fetchStandaloneStaticStateFactory} from '../factories/standalone-static-state-factory.js';
 import {fetchStaticStateFactory} from '../factories/static-state-factory.js';
-import type {SSRSearchEngine} from '../types/build.js';
 import type {AugmentedControllerDefinition} from '../types/controller-definition.js';
 import type {
   SearchControllerDefinitionsMap,
@@ -51,8 +50,8 @@ export function defineSearchEngine<
 >(
   options: SearchEngineDefinitionOptions<TControllerDefinitions>
 ): {
-  searchEngineDefinition: SearchEngineDefinition<SSRSearchEngine, TControllerDefinitions>;
-  standaloneEngineDefinition: SearchEngineDefinition<SSRSearchEngine, TControllerDefinitions>;
+  searchEngineDefinition: SearchEngineDefinition<TControllerDefinitions>;
+  standaloneEngineDefinition: SearchEngineDefinition<TControllerDefinitions>;
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
 

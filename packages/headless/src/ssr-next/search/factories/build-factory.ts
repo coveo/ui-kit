@@ -6,12 +6,11 @@ import {
 import {createWaitForActionMiddleware} from '../../../utils/utils.js';
 import {buildControllerDefinitions} from '../controller-utils.js';
 import type {BuildParameters, SearchCompletedAction, SSRSearchEngine} from '../types/build.js';
-import type {BakedInSearchControllers} from '../types/controller-definition.js';
-import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
 import type {
   SearchControllerDefinitionsMap,
   SearchEngineDefinitionOptions,
 } from '../types/engine.js';
+import type {SearchHydratedState} from '../types/hydrate-static-state.js';
 import {wireControllerParams} from '../utils/controller-wiring.js';
 import {augmentSearchEngineOptions} from '../utils/engine-wiring.js';
 
@@ -60,7 +59,6 @@ export const buildFactory =
 
     return {
       engine,
-      controllers: controllers as InferControllersMapFromDefinition<TControllerDefinitions> &
-        BakedInSearchControllers,
+      controllers: controllers as SearchHydratedState<TControllerDefinitions>['controllers'],
     };
   };
