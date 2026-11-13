@@ -145,6 +145,43 @@ describe('buildProviderWithDefinition', () => {
     expect(getByTestId('engine').textContent).toBe('second');
   });
 
+  it('should ignore the failure of a hydration that a newer static state superseded', async () => {
+    let failFirstHydration: (reason: unknown) => void = () => {};
+    hydrateStaticState
+      .mockImplementationOnce(
+        () =>
+          new Promise((_, reject) => {
+            failFirstHydration = reject;
+          })
+      )
+      .mockResolvedValueOnce({engine: {id: 'second'}, controllers: {}});
+    const onError = vi.fn();
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    const Provider = buildProviderWithDefinition(definition);
+
+    const {rerender, getByTestId} = render(
+      <ErrorBoundary onError={onError}>
+        <Provider staticState={buildStaticState()}>
+          <div />
+        </Provider>
+      </ErrorBoundary>
+    );
+    rerender(
+      <ErrorBoundary onError={onError}>
+        <Provider staticState={buildStaticState()}>
+          <div />
+        </Provider>
+      </ErrorBoundary>
+    );
+    await waitForAsyncUpdates();
+
+    failFirstHydration(new Error('superseded hydration failed'));
+    await waitForAsyncUpdates();
+
+    expect(onError).not.toHaveBeenCalled();
+    expect(getByTestId('engine').textContent).toBe('second');
+  });
+
   it('should rethrow a hydration failure during render so that an error boundary reports it', async () => {
     const failure = new Error('hydration failed');
     hydrateStaticState.mockRejectedValue(failure);
