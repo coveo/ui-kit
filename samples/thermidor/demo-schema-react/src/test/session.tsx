@@ -140,21 +140,31 @@ function instantProductsShellRun(surfaceId = SHELL_SURFACE_ID): object[] {
 
 /** The run a producer answers `fetchInstantProducts` with: the products named `names`, for `query`. */
 export function instantProductsRun(surfaceId: string, query: string, names: string[]): object[] {
+  return instantProductsRunOf(
+    surfaceId,
+    query,
+    names.map((name) => ({
+      permanentid: name,
+      ec_name: name,
+      clickUri: `https://example.com/${encodeURIComponent(name)}`,
+      additionalFields: {},
+    }))
+  );
+}
+
+/** The run a producer answers `fetchInstantProducts` with: `products`, for `query`. */
+export function instantProductsRunOf(
+  surfaceId: string,
+  query: string,
+  products: object[]
+): object[] {
   return run([
     {
       version: 'v1.0',
       updateDataModel: {
         surfaceId,
         path: `/state/${INSTANT_PRODUCTS_ID}`,
-        value: {
-          query,
-          products: names.map((name) => ({
-            permanentid: name,
-            ec_name: name,
-            clickUri: `https://example.com/${encodeURIComponent(name)}`,
-            additionalFields: {},
-          })),
-        },
+        value: {query, products},
       },
     },
   ]);

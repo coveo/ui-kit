@@ -1,4 +1,4 @@
-import {useContext} from 'react';
+import {useContext, type ReactNode} from 'react';
 import {formatPrice} from '../../utils.js';
 import {ProductCardActionsContext} from './product-card-actions.js';
 import styles from './ProductCard.module.css';
@@ -10,10 +10,12 @@ interface A2UIProductCardProps {
   ec_image?: string;
   ec_product_id?: string;
   clickUri?: string;
+  /** The product's children, under its name. */
+  productChildren?: ReactNode;
 }
 
 export function A2UIProductCard(props: A2UIProductCardProps) {
-  const {ec_name, ec_brand, ec_price, ec_image, ec_product_id, clickUri} = props;
+  const {ec_name, ec_brand, ec_price, ec_image, ec_product_id, clickUri, productChildren} = props;
   const renderActions = useContext(ProductCardActionsContext);
   const actions =
     renderActions && ec_product_id
@@ -33,13 +35,22 @@ export function A2UIProductCard(props: A2UIProductCardProps) {
       )}
       <div className={styles.content}>
         {clickUri ? (
-          <a className={styles.name} href={clickUri} target="_blank" rel="noopener noreferrer">
+          <a
+            className={styles.name}
+            title={ec_name}
+            href={clickUri}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {ec_name}
           </a>
         ) : (
-          <span className={styles.name}>{ec_name}</span>
+          <span className={styles.name} title={ec_name}>
+            {ec_name}
+          </span>
         )}
         {ec_brand && <span className={styles.brand}>{ec_brand}</span>}
+        {productChildren}
         {ec_price !== undefined && <span className={styles.price}>{formatPrice(ec_price)}</span>}
         {actions != null && <div className={styles.actions}>{actions}</div>}
       </div>

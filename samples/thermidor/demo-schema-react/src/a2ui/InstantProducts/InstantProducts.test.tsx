@@ -1,4 +1,4 @@
-import {act, fireEvent, screen, waitFor} from '@testing-library/react';
+import {act, fireEvent, screen, waitFor, within} from '@testing-library/react';
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import {SessionSearchBox} from '../../components/SessionSearchBox/SessionSearchBox.js';
 import {
@@ -7,6 +7,7 @@ import {
   findSearchBox,
   INSTANT_PRODUCTS_ID,
   instantProductsRun,
+  instantProductsRunOf,
   renderWithSession,
   sseResponse,
   SHELL_SURFACE_ID,
@@ -213,7 +214,7 @@ describe('InstantProducts', () => {
     type('surf');
 
     await waitFor(() => expect(panelShown()).toBe('Loading products for surf boards'));
-    expect(screen.getByLabelText('Loading products')).toBeDefined();
+    expect(screen.getByLabelText('Loading products').children).toHaveLength(4);
     release();
     await waitFor(() => expect(productsShown()).toBe('Products for surf boards'));
     expect(screen.queryByLabelText('Loading products')).toBeNull();
@@ -344,5 +345,65 @@ describe('InstantProducts keyboard navigation', () => {
 
     expect(fireEvent.keyDown(textarea, {key: 'ArrowRight'})).toBe(true);
     expect(textarea.getAttribute('aria-activedescendant')).toBe('suggestion-item-completion-0');
+  });
+});
+
+describe('InstantProducts children', () => {
+  const children = [
+    {
+      permanentid: 'board-white',
+      ec_name: 'Surf board, white',
+      ec_price: 400,
+      clickUri: 'https://example.com/board-white',
+      additionalFields: {},
+    },
+    {
+      permanentid: 'board-blue',
+      ec_name: 'Surf board, blue',
+      ec_price: 420,
+      clickUri: 'https://example.com/board-blue',
+      additionalFields: {},
+    },
+  ];
+  const answerWithGroups: ConverseHandler = (request) =>
+    request.action?.name === 'fetchInstantProducts'
+      ? sseResponse(
+          instantProductsRunOf(request.action.surfaceId!, String(request.action.context['query']), [
+            {...children[0], children, totalNumberOfChildren: 3},
+          ])
+        )
+      : answerInstantProductsShell(request);
+
+  it('opens the child a product shows once picked', async () => {
+    const open = vi.fn();
+    vi.stubGlobal('open', open);
+    const {type} = await renderSearchBox({handler: answerWithGroups});
+    type('surf');
+    const childrenRow = await screen.findByRole('group', {name: 'Available in:'});
+    expect(within(childrenRow).getByLabelText('1 more product')).toBeDefined();
+
+    fireEvent.mouseEnter(within(childrenRow).getByTitle('Surf board, blue'));
+    const option = screen.getByRole('option', {name: /Surf board, blue/});
+    expect(option.id).toBe('instant-product-board-white');
+    expect(option.textContent).toContain('$420.00');
+
+    fireEvent.click(option);
+    expect(open).toHaveBeenCalledWith(
+      'https://example.com/board-blue',
+      '_blank',
+      'noopener,noreferrer'
+    );
+  });
+
+  it('picks a child on click without opening the product', async () => {
+    const open = vi.fn();
+    vi.stubGlobal('open', open);
+    const {type} = await renderSearchBox({handler: answerWithGroups});
+    type('surf');
+
+    fireEvent.click(await screen.findByTitle('Surf board, blue'));
+
+    expect(open).not.toHaveBeenCalled();
+    expect(screen.getByRole('option', {name: /Surf board, blue/})).toBeDefined();
   });
 });

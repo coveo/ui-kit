@@ -4,6 +4,8 @@ import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {Product} from '@coveo/thermidor-schema';
 import {ProductCarouselPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {A2UIProductCard} from '../ProductCard/ProductCard.js';
+import {ProductChildren} from '../ProductChildren/ProductChildren.js';
+import {usePromotedProduct} from '../ProductChildren/use-promoted-product.js';
 import styles from './ProductCarousel.module.css';
 
 /**
@@ -80,14 +82,7 @@ export const ProductCarousel = createReactComponent(
           >
             {products.map((product: Product) => (
               <div className={styles.cardSlot} key={product.permanentid}>
-                <A2UIProductCard
-                  ec_name={product.ec_name}
-                  ec_brand={product.ec_brand}
-                  ec_price={product.ec_promo_price ?? product.ec_price}
-                  ec_image={product.ec_images?.[0]}
-                  ec_product_id={product.permanentid}
-                  clickUri={product.clickUri}
-                />
+                <CarouselProductCard product={product} />
               </div>
             ))}
           </div>
@@ -105,3 +100,18 @@ export const ProductCarousel = createReactComponent(
     );
   }
 );
+
+function CarouselProductCard({product}: {product: Product}) {
+  const [shown, promote] = usePromotedProduct(product);
+  return (
+    <A2UIProductCard
+      ec_name={shown.ec_name}
+      ec_brand={shown.ec_brand}
+      ec_price={shown.ec_promo_price ?? shown.ec_price}
+      ec_image={shown.ec_images?.[0]}
+      ec_product_id={shown.permanentid}
+      clickUri={shown.clickUri}
+      productChildren={<ProductChildren product={shown} onPromote={promote} />}
+    />
+  );
+}
