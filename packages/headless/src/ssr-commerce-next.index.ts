@@ -297,7 +297,6 @@ export type {
   CommerceEngineDefinitionControllersPropsOption as EngineDefinitionControllersPropsOption,
   ControllerDefinition,
   ControllerDefinitionsMap,
-  HydratedState,
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
 } from './ssr-next/commerce/types/controller-definitions.js';
@@ -311,13 +310,11 @@ export type {
 } from './ssr-next/commerce/types/controller-inference.js';
 export type {
   CommerceEngineDefinition,
-  CommerceEngineDefinitionBuildResult,
   CommerceEngineDefinitionOptions,
-  EngineStaticState,
-  FetchStaticState,
-  HydrateStaticState,
-  HydrateStaticStateOptions,
 } from './ssr-next/commerce/types/engine.js';
+export type {CommerceStaticState} from './ssr-next/commerce/types/fetch-static-state.js';
+export type {CommerceHydratedState} from './ssr-next/commerce/types/hydrate-static-state.js';
+export type {EngineStaticState} from './ssr-next/common/types/engine.js';
 // State
 export type {
   CommerceAppState,

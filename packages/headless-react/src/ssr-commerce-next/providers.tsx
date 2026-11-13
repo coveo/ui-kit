@@ -1,14 +1,7 @@
 'use client';
 
-import type {
-  Controller,
-  ControllerDefinitionsMap,
-  InferHydratedState,
-  InferStaticState,
-  SolutionType,
-} from '@coveo/headless/ssr-commerce-next';
-import {type PropsWithChildren, useEffect, useState} from 'react';
-import type {ReactCommerceEngineDefinition} from './commerce-engine.js';
+import {type ComponentType, type PropsWithChildren, useEffect, useState} from 'react';
+import type {StateProviderProps} from './types.js';
 
 /**
  * Providers take care of displaying your page with the static
@@ -22,9 +15,12 @@ import type {ReactCommerceEngineDefinition} from './commerce-engine.js';
  * @group Providers
  */
 export function buildProviderWithDefinition<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-  TSolutionType extends SolutionType,
->(definition: ReactCommerceEngineDefinition<TControllers, TSolutionType>) {
+  TStaticState extends {controllers: object},
+  THydratedState extends {engine: unknown; controllers: object},
+>(definition: {
+  hydrateStaticState: (staticState: TStaticState) => Promise<THydratedState>;
+  StateProvider: ComponentType<PropsWithChildren<StateProviderProps<TStaticState, THydratedState>>>;
+}) {
   return function WrappedProvider({
     staticState,
     children,
@@ -32,20 +28,18 @@ export function buildProviderWithDefinition<
     /**
      * The static state returned by this definition's `fetchStaticState()`.
      */
-    staticState: InferStaticState<typeof definition>;
+    staticState: TStaticState;
   }>) {
-    const [hydratedState, setHydratedState] = useState<
-      InferHydratedState<typeof definition> | undefined
-    >(undefined);
+    const [hydratedState, setHydratedState] = useState<THydratedState | undefined>(undefined);
     const [hydrationError, setHydrationError] = useState<{error: unknown} | undefined>(undefined);
 
     useEffect(() => {
       let superseded = false;
 
       definition.hydrateStaticState(staticState).then(
-        ({engine, controllers}) => {
+        (result) => {
           if (!superseded) {
-            setHydratedState({engine, controllers});
+            setHydratedState(result);
           }
         },
         (error: unknown) => {

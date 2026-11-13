@@ -1,12 +1,11 @@
 import {
+  type CommerceHydratedState,
+  type CommerceStaticState,
   type Controller,
   type ControllerDefinition,
   type ControllerDefinitionsMap,
   type InferControllerFromDefinition,
-  type InferControllerStaticStateMapFromDefinitionsWithSolutionType,
-  type InferControllersMapFromDefinition,
   SolutionType,
-  type CommerceEngine as SSRCommerceEngine,
 } from '@coveo/headless/ssr-commerce-next';
 import {type Context, type PropsWithChildren, useCallback, useContext, useMemo} from 'react';
 import {useSyncMemoizedStore} from '../client-utils.js';
@@ -17,6 +16,7 @@ import type {
   ContextState,
   ControllerHook,
   InferControllerHooksMapFromDefinition,
+  StateProviderProps,
 } from './types.js';
 
 function isHydratedStateContext<
@@ -121,13 +121,27 @@ export function buildStateProvider<
     engine,
     controllers,
     children,
-  }: PropsWithChildren<{
-    engine?: SSRCommerceEngine;
-    controllers:
-      | InferControllersMapFromDefinition<TControllers, TSolutionType>
-      | InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>;
-  }>) => {
+  }: PropsWithChildren<
+    StateProviderProps<
+      CommerceStaticState<TControllers, TSolutionType>,
+      CommerceHydratedState<TControllers, TSolutionType>
+    >
+  >) => {
     const {Provider} = singletonContext.get();
-    return <Provider value={{engine, controllers, solutionType}}>{children}</Provider>;
+    const controllersByName: Record<string, {state: unknown}> = controllers;
+    return (
+      <Provider
+        value={{
+          engine,
+          controllers: controllersByName as ContextState<
+            TControllers,
+            TSolutionType
+          >['controllers'],
+          solutionType,
+        }}
+      >
+        {children}
+      </Provider>
+    );
   };
 }
