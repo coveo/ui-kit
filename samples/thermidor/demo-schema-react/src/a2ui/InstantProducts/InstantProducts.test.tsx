@@ -214,7 +214,7 @@ describe('InstantProducts', () => {
     type('surf');
 
     await waitFor(() => expect(panelShown()).toBe('Loading products for surf boards'));
-    expect(screen.getByLabelText('Loading products')).toBeDefined();
+    expect(screen.getByLabelText('Loading products').children).toHaveLength(4);
     release();
     await waitFor(() => expect(productsShown()).toBe('Products for surf boards'));
     expect(screen.queryByLabelText('Loading products')).toBeNull();
