@@ -1,7 +1,8 @@
 import {ContextConsumer} from '@lit/context';
-import type {ReactiveElement} from 'lit';
+import type {LitElement} from 'lit';
 import {bindingsContext} from '@/src/components/common/context/bindings-context';
 import type {AnyBindings} from '@/src/components/common/interface/bindings';
+import type {Constructor} from '@/src/mixins/mixin-common';
 import {
   findInterfaceParent,
   MissingInterfaceParentError,
@@ -9,15 +10,13 @@ import {
 import {logComponentError, renderComponentError} from './component-error';
 import type {InitializableComponent} from './types';
 
+const bindingsConsumer = Symbol('bindingsConsumer');
 const missingInterfaceError = Symbol('missingInterfaceError');
 
-type BindingsHost = ReactiveElement &
-  InitializableComponent<AnyBindings> & {
-    [missingInterfaceError]?: MissingInterfaceParentError;
-  };
+type BindingsHost = LitElement & InitializableComponent<AnyBindings>;
 
-type BindingsHostClass = Pick<typeof ReactiveElement, 'createProperty' | 'elementProperties'> & {
-  prototype: BindingsHost;
+type BindingsElement = BindingsHost & {
+  [missingInterfaceError]?: MissingInterfaceParentError;
 };
 
 /**
@@ -30,9 +29,13 @@ export const SHOW_MISSING_INTERFACE_ERROR = false;
  * A decorator that will initialize the component with the bindings provided by the bindings context.
  * It ensures that the component is initialized only once and that the language is updated when the language changes.
  *
- * It also owns the component error: `error` is a reactive property whether or not the class declares it,
- * every error is logged once, and an error replaces the component as soon as the component has its bindings,
- * or right away when the component has no parent interface to get bindings from.
+ * It also owns the component error: every error is logged once, and an error replaces the component as soon as
+ * the component has its bindings, or right away when the component has no parent interface to get bindings from.
+ *
+ * The decorator returns a subclass of the decorated class, like a Lit class mixin applied last. The subclass creates
+ * the `ContextConsumer` reactive controller as a class field, so the component's own controllers connect before the
+ * bindings arrive, and it overrides `connectedCallback`, `disconnectedCallback` and `render`, calling `super` in each.
+ * Place the decorator below `@customElement` so that the subclass is the class that gets registered.
  *
  * @example
  * ```ts
@@ -54,82 +57,73 @@ export const SHOW_MISSING_INTERFACE_ERROR = false;
  * ```
  */
 export function bindings() {
-  return (target: BindingsHostClass) => {
-    if (!target.elementProperties?.has('error')) {
-      target.createProperty('error', {state: true});
-    }
+  return <T extends Constructor<BindingsHost>>(Base: T): T =>
+    class extends Base {
+      [missingInterfaceError]?: MissingInterfaceParentError;
 
-    const prototype = target.prototype as unknown as {render?: () => unknown};
-    const render = prototype.render;
-    if (render) {
-      prototype.render = function (this: BindingsHost) {
+      [bindingsConsumer] = new ContextConsumer(this, {
+        context: bindingsContext,
+        callback: (value) => receiveBindings(this, value),
+        subscribe: true,
+      });
+
+      connectedCallback() {
+        super.connectedCallback();
+        checkInterfaceParent(this);
+      }
+
+      disconnectedCallback() {
+        this.unsubscribeLanguage?.();
+        super.disconnectedCallback();
+      }
+
+      render() {
         const error = this.bindings ? this.error : this[missingInterfaceError];
         if (error) {
           logComponentError(error, this);
           return renderComponentError(this, error);
         }
-        return render.call(this);
-      };
+        return super.render();
+      }
+    };
+}
+
+function receiveBindings(host: BindingsHost, value: AnyBindings) {
+  if (host.initialized || Object.keys(value).length === 0) {
+    return;
+  }
+
+  host.initialized = true;
+
+  try {
+    host.bindings = value;
+    const updateLanguage = () => host.requestUpdate();
+    host.bindings.i18n.on('languageChanged', updateLanguage);
+    const unsubscribeLanguage = () => host.bindings?.i18n.off('languageChanged', updateLanguage);
+
+    host.initialize?.();
+
+    host.unsubscribeLanguage = unsubscribeLanguage;
+  } catch (error) {
+    host.error = error as Error;
+    logComponentError(host.error, host);
+    host.requestUpdate();
+  }
+}
+
+function checkInterfaceParent(host: BindingsElement) {
+  if (host.initialized || findInterfaceParent(host)) {
+    if (host[missingInterfaceError]) {
+      host[missingInterfaceError] = undefined;
+      host.requestUpdate();
     }
+    return;
+  }
 
-    const connectedCallback = target.prototype.connectedCallback;
-
-    target.prototype.connectedCallback = function () {
-      let hasProvider = false;
-
-      new ContextConsumer(this, {
-        context: bindingsContext,
-        callback: (value) => {
-          hasProvider = true;
-          if (this[missingInterfaceError]) {
-            this[missingInterfaceError] = undefined;
-            this.requestUpdate();
-          }
-
-          if (this.initialized || Object.keys(value).length === 0) {
-            return;
-          }
-
-          this.initialized = true;
-
-          try {
-            this.bindings = value;
-            const updateLanguage = () => this.requestUpdate();
-            this.bindings.i18n.on('languageChanged', updateLanguage);
-            const unsubscribeLanguage = () =>
-              this.bindings?.i18n.off('languageChanged', updateLanguage);
-
-            this.initialize?.();
-
-            this.unsubscribeLanguage = unsubscribeLanguage;
-          } catch (error) {
-            this.error = error as Error;
-          }
-        },
-        subscribe: true,
-      });
-
-      if (connectedCallback) {
-        connectedCallback.call(this);
-      }
-
-      if (!hasProvider && !this.initialized && !findInterfaceParent(this)) {
-        const error = new MissingInterfaceParentError(this.nodeName.toLowerCase());
-        if (SHOW_MISSING_INTERFACE_ERROR) {
-          this[missingInterfaceError] = error;
-          this.requestUpdate();
-        } else {
-          logComponentError(error, this);
-        }
-      }
-    };
-
-    const disconnectedCallback = target.prototype.disconnectedCallback;
-    target.prototype.disconnectedCallback = function () {
-      this.unsubscribeLanguage?.();
-      if (disconnectedCallback) {
-        disconnectedCallback.call(this);
-      }
-    };
-  };
+  const error = new MissingInterfaceParentError(host.nodeName.toLowerCase());
+  logComponentError(error, host);
+  if (SHOW_MISSING_INTERFACE_ERROR) {
+    host[missingInterfaceError] = error;
+    host.requestUpdate();
+  }
 }
