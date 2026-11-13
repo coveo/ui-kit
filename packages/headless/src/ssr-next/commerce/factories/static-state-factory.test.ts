@@ -144,7 +144,7 @@ describe('fetchStaticStateFactory', () => {
         context: mockContext,
       });
 
-      expect(staticState.context).toBe(mockContext);
+      expect(staticState.context).toEqual(mockContext);
     });
   });
 

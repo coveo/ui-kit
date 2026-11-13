@@ -302,6 +302,7 @@ export type {SSRCommerceEngine as CommerceEngine} from './ssr-next/commerce/fact
 export type {
   BuildConfig,
   SSRCommerceEngineOptions as CommerceEngineOptions,
+  SSRContextOptions,
 } from './ssr-next/commerce/types/build.js';
 export {SolutionType} from './ssr-next/commerce/types/controller-constants.js';
 export type {

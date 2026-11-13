@@ -153,6 +153,23 @@ describe('Commerce Engine SSR', () => {
       expect(staticState.navigatorContext).not.toHaveProperty('forwardedFor');
       expect(staticState.navigatorContext.clientId).toBe(mockNavigatorContext.clientId);
     });
+
+    it('should default the view URL to the navigator context location', async () => {
+      const {listingEngineDefinition} = defineCommerceEngine(definitionOptions);
+      const {view: _view, ...contextWithoutView} = context;
+
+      const staticState = await listingEngineDefinition.fetchStaticState({
+        navigatorContext: buildMockNavigatorContext({
+          location: 'https://example.com/browse/toys',
+        }),
+        context: contextWithoutView,
+      });
+
+      expect(staticState.context.view?.url).toBe('https://example.com/browse/toys');
+      expect(staticState.controllers.context.state.view.url).toBe(
+        'https://example.com/browse/toys'
+      );
+    });
   });
 
   describe('requests sent to the Commerce API', () => {

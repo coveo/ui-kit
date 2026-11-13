@@ -67,6 +67,17 @@ describe('defineCommerceEngine', () => {
     >().not.toMatchTypeOf<ListingStaticState>();
   });
 
+  it('should let a page leave out its view URL', () => {
+    type ListingContext = Parameters<typeof listingEngineDefinition.fetchStaticState>[0]['context'];
+
+    expectTypeOf<{
+      language: string;
+      country: string;
+      currency: 'USD';
+    }>().toMatchTypeOf<ListingContext>();
+    expectTypeOf<ListingContext['view']>().toEqualTypeOf<{url: string} | undefined>();
+  });
+
   it('should list the controllers of each kind of page in its static state', () => {
     expectTypeOf<ListingStaticState['controllers']>().toHaveProperty('productList');
     expectTypeOf<ListingStaticState['controllers']>().toHaveProperty('cart');
