@@ -70,11 +70,48 @@
   height: 16px;
 }
 
-/* InstantProducts skeleton: the same grid as InstantProducts' cards */
-.instantProductsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: var(--space-2);
+/* InstantProducts skeleton: the same rows as InstantProducts' list */
+.instantProductsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.instantProductRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2);
+}
+
+.instantProductImage {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+}
+
+.instantProductContent {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.instantProductName {
+  width: 70%;
+  height: 14px;
+}
+
+.instantProductBrand {
+  width: 40%;
+  height: 12px;
+}
+
+.instantProductPrice {
+  flex-shrink: 0;
+  width: 48px;
+  height: 14px;
 }
 
 /* BundleDisplay skeleton */
