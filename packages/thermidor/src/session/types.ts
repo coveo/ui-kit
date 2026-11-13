@@ -256,8 +256,9 @@ export interface TurnResponse {
   /**
    * The live surfaces this turn created, in creation order, so a transcript
    * knows where to draw them. Consumers read this instead of walking
-   * `activities` themselves. A surface a later run deletes leaves the list, and
-   * one a later turn creates again under the same id belongs to that turn.
+   * `activities` themselves. A surface a later run deletes leaves the list. One
+   * a later run creates again under its live id, such as the answer to an
+   * action recorded with a later turn, stays with this turn.
    */
   surfaces: DiscoveredSurface[];
 

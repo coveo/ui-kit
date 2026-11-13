@@ -65,17 +65,46 @@ describe('deriveSessionSurfaces', () => {
     expect(view.ownerTurnIds.has('placeholder')).toBe(false);
   });
 
-  it('gives a surface a later turn creates again under the same id to that turn', () => {
+  it('keeps a surface a later turn creates again under its live id with the turn that created it', () => {
     const view = deriveSessionSurfaces({
-      turns: [turn('t1', [create('carousel')]), turn('t2', [create('carousel')])],
+      turns: [turn('t1', [create('search')]), turn('t2', [create('answer')], [create('search')])],
     });
 
-    expect(ids(view.surfaces)).toEqual(['carousel']);
+    expect(ids(view.surfaces)).toEqual(['answer', 'search']);
+    expect(view.turns.map((candidate) => ids(candidate.response.surfaces))).toEqual([
+      ['search'],
+      ['answer'],
+    ]);
+    expect(view.ownerTurnIds.get('search')).toBe('t1');
+  });
+
+  it('gives a surface a later turn creates again after its deletion to that turn', () => {
+    const view = deriveSessionSurfaces({
+      turns: [
+        turn('t1', [create('carousel')]),
+        turn('t2', [remove('carousel'), create('carousel')]),
+      ],
+    });
+
     expect(view.turns.map((candidate) => ids(candidate.response.surfaces))).toEqual([
       [],
       ['carousel'],
     ]);
     expect(view.ownerTurnIds.get('carousel')).toBe('t2');
+  });
+
+  it('gives a surface to the turn that first creates it with a catalog', () => {
+    const view = deriveSessionSurfaces({
+      turns: [
+        turn('t1', [{version: 'v1.0', createSurface: {surfaceId: 'carousel', components: []}}]),
+        turn('t2', [create('carousel')]),
+      ],
+    });
+
+    expect(view.turns.map((candidate) => ids(candidate.response.surfaces))).toEqual([
+      [],
+      ['carousel'],
+    ]);
   });
 
   it('records the turn that created a surface the projection leaves out', () => {
@@ -140,6 +169,17 @@ describe('deriveSessionSurfaces', () => {
     it('abandons nothing in a turn that is still streaming', () => {
       expect([...abandonedPlaceholderIds({turns: [withStatus('streaming')]}, T1)]).toEqual([]);
     });
+
+    it('lists a placeholder a later run creates again while that run streams, under its first turn', () => {
+      const runs = {turns: [turn('t1', [create('search')]), turn('t2', [placeholder('search')])]};
+      const T2 = {kind: 'turn', turnId: 't2'} as const;
+
+      const streaming = deriveSessionSurfaces(runs, T2);
+
+      expect(ids(streaming.turns[0].response.surfaces)).toEqual(['search']);
+      expect(ids(deriveSessionSurfaces(runs).surfaces)).toEqual([]);
+      expect([...abandonedPlaceholderIds(runs, T2)]).toEqual(['search']);
+    });
   });
 
   describe('the initialization', () => {
@@ -170,13 +210,33 @@ describe('deriveSessionSurfaces', () => {
       expect(view.ownerTurnIds.has('shell')).toBe(false);
     });
 
-    it('gives a surface a turn creates again under its id to that turn', () => {
+    it('keeps a surface a turn creates again under its live id in no turn', () => {
       const view = deriveSessionSurfaces({
         initialization: initialization('complete', [create('shell', 'SessionShell')]),
         turns: [turn('t1', [create('shell', 'SessionShell')])],
       });
 
-      expect(ids(view.turns[0].response.surfaces)).toEqual(['shell']);
+      expect(ids(view.surfaces)).toEqual(['shell']);
+      expect(ids(view.turns[0].response.surfaces)).toEqual([]);
+      expect(view.ownerTurnIds.has('shell')).toBe(false);
+    });
+
+    it('lists a placeholder a turn creates again under its live id while that turn streams', () => {
+      const runs = {
+        initialization: initialization('complete', [create('shell', 'SessionShell')]),
+        turns: [
+          turn('t1', [
+            {...skeleton, createSurface: {...skeleton.createSurface, surfaceId: 'shell'}},
+          ]),
+        ],
+      };
+
+      expect(ids(deriveSessionSurfaces(runs, T1).surfaces)).toEqual(['shell']);
+      expect(ids(deriveSessionSurfaces(runs, T1).turns[0].response.surfaces)).toEqual([]);
+      expect(ids(deriveSessionSurfaces(runs, INITIALIZATION).surfaces)).toEqual([]);
+      expect(ids(deriveSessionSurfaces(runs).surfaces)).toEqual([]);
+      expect([...abandonedPlaceholderIds(runs, T1)]).toEqual(['shell']);
+      expect([...abandonedPlaceholderIds(runs, INITIALIZATION)]).toEqual([]);
     });
 
     it('lists its placeholders only while it streams, or while a request streams into it', () => {
