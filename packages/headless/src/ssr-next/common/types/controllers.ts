@@ -5,7 +5,15 @@ export interface ControllersMap {
 }
 
 export interface ControllerStaticState<TState> {
+  /**
+   * The state of the controller when the static state was fetched.
+   */
   state: TState;
+  /**
+   * For controllers defined with props, the state they were built with. It is used as the initial
+   * state of the controller when hydrating without explicit controller props.
+   */
+  initialState?: TState;
 }
 
 export interface ControllerStaticStateMap {
