@@ -1,6 +1,8 @@
+import type {UnknownAction} from '@reduxjs/toolkit';
 import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import type {LegacySearchAction} from '../../../features/analytics/analytics-utils.js';
+import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import type {SearchParameterManagerInitialState} from '../controllers/search-parameter-manager/headless-search-parameter-manager.ssr.js';
 
 /**
@@ -39,4 +41,13 @@ export type BuildConfig = {
    * on the engine configuration rather than mutating the shared definition.
    */
   accessToken?: string;
+};
+
+/**
+ * What a build reads: the build configuration, the controller props under `controllers` and, when
+ * hydrating, the search actions to replay.
+ */
+export type BuildParameters = BuildConfig & {
+  controllers?: ControllersPropsMap;
+  searchActions?: UnknownAction[];
 };
