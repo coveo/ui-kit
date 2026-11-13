@@ -1,4 +1,3 @@
-import type {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {ControllerStaticState, ControllersPropsMap} from '../../common/types/controllers.js';
 import type {EngineStaticState} from '../../common/types/engine.js';
@@ -33,7 +32,6 @@ export type CommerceStaticState<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 > = EngineStaticState<
-  UnknownAction,
   {
     [
       K in keyof TControllers as HasKey<TControllers[K], TSolutionType> extends never ? never : K
