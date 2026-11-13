@@ -39,6 +39,9 @@ export class AtomicProductMultiValueText
   @state()
   error!: Error;
 
+  /**
+   * @internal
+   */
   public breadcrumbManager!: BreadcrumbManager;
 
   private productController = createProductContextController(this);
