@@ -314,7 +314,7 @@ export type {
 } from './ssr-next/commerce/types/engine.js';
 export type {CommerceStaticState} from './ssr-next/commerce/types/fetch-static-state.js';
 export type {CommerceHydratedState} from './ssr-next/commerce/types/hydrate-static-state.js';
-export type {EngineStaticState} from './ssr-next/common/types/engine.js';
+export type {EngineDefinition, EngineStaticState} from './ssr-next/common/types/engine.js';
 // State
 export type {
   CommerceAppState,

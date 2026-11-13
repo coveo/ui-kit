@@ -36,6 +36,7 @@ You pass the facts of the page (navigator context, context, cart, search paramet
 | Navigator context  | `setNavigatorContextProvider()` on the shared definition                             | `navigatorContext` option of `fetchStaticState()`, built with `buildNavigatorContext()`                                                                                                                         |
 | Page inputs        | `controllers` props map and `configuration.context`                                  | `context`, `cart`, `searchParams` and `accessToken` options of `fetchStaticState()`                                                                                                                             |
 | Hydration          | `hydrateStaticState({searchAction, controllers})`                                    | `hydrateStaticState(staticState)`                                                                                                                                                                               |
+| Definition types   | `EngineDefinition<TControllers, TEngineOptions, TSolutionType>`                      | `EngineDefinition<TStaticState, THydratedState>`; states named after the controllers of the definition                                                                                                          |
 | Recommendations    | `recommendationEngineDefinition` with an `enabled` prop per slot                     | `recommendations` and `productId` options on any definition                                                                                                                                                     |
 | Controller props   | Per request, through `controllers`                                                   | Static options in the definers; page facts in `fetchStaticState()` <!-- decided 2026-10-21, not yet built -->                                                                                                   |
 | `enableResults`    | On each definer                                                                      | Once, on the engine definition <!-- decided 2026-10-21, not yet built -->                                                                                                                                       |
@@ -233,6 +234,35 @@ Mistakes fail early, with these errors:
 | `Error` naming the reserved controllers | A controller is named `parameterManager` (search), or `context`, `cart` or `parameterManager` (commerce). |
 | `Error` naming the engine definition    | An option of `fetchStaticState()` fails validation, for example an unknown recommendation name.           |
 | `Error` asking for the page URL         | Neither `context.view.url` nor `navigatorContext.location` is set (commerce).                             |
+
+#### Engine definition types <!-- KIT-6384 -->
+
+`EngineDefinition` describes a definition by its static state and its hydrated state, instead of its controllers, engine options and solution type, so code that takes any definition needs two plain type parameters.
+
+**Headless Version 3**
+
+```ts
+type ProviderProps<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+  TEngineOptions,
+  TSolutionType extends SolutionType,
+> = {
+  definition: EngineDefinition<TControllers, TEngineOptions, TSolutionType>;
+  staticState: InferStaticState<EngineDefinition<TControllers, TEngineOptions, TSolutionType>>;
+};
+```
+
+**Headless Version 4**
+
+```ts
+type ProviderProps<TStaticState, THydratedState> = {
+  definition: EngineDefinition<TStaticState, THydratedState>;
+  staticState: TStaticState;
+};
+```
+
+Both type parameters are inferred from the definition you pass, so the controllers stay typed.
+For one definition, keep using `InferStaticState<typeof definition>` and `InferHydratedState<typeof definition>`: their `controllers` list the controllers of the page by name, and so do editor tooltips and compiler errors.
 
 #### Recommendations
 
@@ -432,7 +462,7 @@ Removals outside server-side rendering will be listed here.
 | `configuration.context` of the commerce engine definition                                                                                                                                                                                                                                    | `context` option of `fetchStaticState()`                                                                                                                                                                             |
 | `searchAction` in the search static state                                                                                                                                                                                                                                                    | `searchActions`                                                                                                                                                                                                      |
 | `listing` and `search` options of the commerce definers                                                                                                                                                                                                                                      | None: controllers are built for both search and listing pages                                                                                                                                                        |
-| `EngineDefinition`, `EngineDefinitionOptions`, `OptionsTuple`, `Kind` and `ControllerWithKind`                                                                                                                                                                                               | `SearchEngineDefinition`, `CommerceEngineDefinition`, `SearchEngineDefinitionOptions` and `CommerceEngineDefinitionOptions`; `InferStaticState<typeof definition>` for the static state                              |
+| The type parameters of `EngineDefinition` (engine, controllers, engine options, solution type), `EngineDefinitionOptions`, `OptionsTuple`, `Kind` and `ControllerWithKind`                                                                                                                   | `EngineDefinition<TStaticState, THydratedState>` for code that takes any definition; `SearchEngineDefinitionOptions` and `CommerceEngineDefinitionOptions` for the definition's options                              |
 | `HydratedState`, `FetchStaticState`, `HydrateStaticState` and `HydrateStaticStateOptions` (commerce)                                                                                                                                                                                         | `InferStaticState<typeof definition>` and `InferHydratedState<typeof definition>`; their `controllers` list the controllers of the page                                                                              |
 | The search action type parameter of `EngineStaticState` (commerce)                                                                                                                                                                                                                           | `EngineStaticState<TControllers>`, or `InferStaticState<typeof definition>` for the static state of a definition                                                                                                     |
 | `defineCart()`, `defineContext()` and `defineParameterManager()` (commerce)                                                                                                                                                                                                                  | None: the `cart`, `context` and `parameterManager` controllers are included in every commerce definition and fed by the `cart`, `context` and `searchParams` options <!-- decided 2026-10-21, not yet built -->      |
