@@ -60,6 +60,10 @@ vi.mock('../a2ui/surfaces.js', () => ({
   ThermidorA2UIStream: ({children}: {children?: React.ReactNode}) => <>{children}</>,
 }));
 
+vi.mock('./TopBar/TopBar.js', () => ({
+  TopBar: () => <header data-testid="top-bar" />,
+}));
+
 vi.mock('./LandingPage/LandingPage.js', () => ({
   LandingPage: (props: any) => (
     <div data-testid="landing-page">
@@ -107,6 +111,12 @@ describe('AppShell', () => {
 
     expect(screen.getByTestId('landing-page')).toBeDefined();
     expect(screen.queryByTestId('conversation-page')).toBeNull();
+  });
+
+  it('renders the top bar', () => {
+    render(<AppShell />);
+
+    expect(screen.getByTestId('top-bar')).toBeDefined();
   });
 
   it('submits a prompt from the landing page', () => {

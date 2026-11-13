@@ -1,0 +1,42 @@
+.control {
+  --control-height: 2rem;
+  display: flex;
+  flex: 1;
+  font-size: var(--font-size-sm);
+}
+
+.addButton {
+  flex: 1;
+  box-sizing: border-box;
+  height: var(--control-height);
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-primary);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.addButton:hover:not([aria-disabled='true']) {
+  background: var(--color-primary);
+  color: var(--color-surface);
+}
+
+.addButton:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.addButton[aria-disabled='true'] {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.stepper {
+  flex: 1;
+}

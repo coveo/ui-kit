@@ -33,7 +33,7 @@ const insightApiHarness = new MockInsightApi();
 
 const TEMPLATE_EXAMPLE = `<template>
   <atomic-result-section-visual>
-    <atomic-result-image field="ytthumbnailurl" fallback="https://picsum.photos/seed/picsum/350"></atomic-result-image>
+    <atomic-result-image field="ytthumbnailurl" fallback="/images/thumbnail-350.svg"></atomic-result-image>
   </atomic-result-section-visual>
   <atomic-result-section-badges>
     <atomic-field-condition must-match-sourcetype="YouTube">

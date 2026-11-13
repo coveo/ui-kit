@@ -40,7 +40,13 @@ describe('A2UIProductCard', () => {
     ));
     render(
       <ProductCardActionsContext.Provider value={renderActions}>
-        <A2UIProductCard ec_name="Gadget Pro" ec_product_id="gadget-1" ec_price={10} />
+        <A2UIProductCard
+          ec_name="Gadget Pro"
+          ec_product_id="gadget-1"
+          ec_price={10}
+          ec_image="https://example.com/gadget.png"
+          clickUri="https://example.com/gadget"
+        />
       </ProductCardActionsContext.Provider>
     );
 
@@ -49,6 +55,18 @@ describe('A2UIProductCard', () => {
       productId: 'gadget-1',
       name: 'Gadget Pro',
       price: 10,
+      imageUrl: 'https://example.com/gadget.png',
+      clickUri: 'https://example.com/gadget',
     });
+  });
+
+  it('renders no actions row when the actions render nothing for the product', () => {
+    const {container} = render(
+      <ProductCardActionsContext.Provider value={() => null}>
+        <A2UIProductCard ec_name="Gadget Pro" ec_product_id="gadget-1" />
+      </ProductCardActionsContext.Provider>
+    );
+
+    expect(container.querySelector('[class*="actions"]')).toBeNull();
   });
 });

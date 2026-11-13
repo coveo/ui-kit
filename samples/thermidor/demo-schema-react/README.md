@@ -65,6 +65,12 @@ navigator context.
 
 See [`src/public-sample-configuration.ts`](src/public-sample-configuration.ts).
 
+## Cart
+
+The `cartApi()` Vite plugin ([`vite-plugins/cart-api/`](vite-plugins/cart-api/)) serves a fake in-memory merchant cart API at `/api/cart` (one cart per `demo-cart-id` cookie). `useCart()` exposes it to components, and the session sends its items in `context.cart`. `index.html` loads `/api/cart/bootstrap.js` before the app so that `initialize` carries the shopper's cart.
+
+Only the agent sees `context.cart` today. Search blocks, instant products and query suggestions read the cart that the schema's `Cart.updateCart` action fills, and nothing sends that action, so the cart doesn't affect search results. Who owns the cart is still being decided in ADR-021 ([#8846](https://github.com/coveo/ui-kit/pull/8846)).
+
 ## Pull-request previews
 
 This sample is published as a [pkg.pr.new](https://pkg.pr.new) StackBlitz template,

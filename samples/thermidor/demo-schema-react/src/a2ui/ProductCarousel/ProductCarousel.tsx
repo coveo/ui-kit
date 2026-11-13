@@ -9,7 +9,8 @@ import styles from './ProductCarousel.module.css';
 /**
  * A2-UI component for the `product-carousel`. The generic binder resolves `products` / `heading`
  * from `ProductCarouselPropsSchema`; a horizontally scrollable track of product cards, with
- * scroll-affordance nav buttons driven by local scroll state. Presentational — no actions.
+ * scroll-affordance nav buttons driven by local scroll state. The app may add actions to each card
+ * through `ProductCardActionsContext`.
  */
 export const ProductCarousel = createReactComponent(
   {
@@ -85,6 +86,7 @@ export const ProductCarousel = createReactComponent(
                   ec_price={product.ec_promo_price ?? product.ec_price}
                   ec_image={product.ec_images?.[0]}
                   ec_product_id={product.permanentid}
+                  clickUri={product.clickUri}
                 />
               </div>
             ))}

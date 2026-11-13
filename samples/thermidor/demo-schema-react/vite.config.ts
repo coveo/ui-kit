@@ -1,6 +1,7 @@
 import react from '@vitejs/plugin-react';
 import {defineConfig, loadEnv} from 'vite';
 import {PUBLIC_SAMPLE_CONFIGURATION} from './src/public-sample-configuration.js';
+import {cartApi} from './vite-plugins/cart-api/index.js';
 
 type PlatformEnvironment = 'prod' | 'dev' | 'stg' | 'hipaa';
 
@@ -114,7 +115,7 @@ export default defineConfig(({mode}) => {
   );
 
   return {
-    plugins: [react()],
+    plugins: [react(), cartApi()],
     server: {
       open: true,
       ...(useProxy && targets

@@ -38,7 +38,7 @@ function searchTurnResponse() {
 
 function sentViews(fetchMock: ReturnType<typeof vi.fn>): unknown[] {
   return fetchMock.mock.calls.map(
-    ([, init]) => JSON.parse((init as RequestInit).body as string).context.custom.surfaceId
+    ([, init]) => JSON.parse((init as RequestInit).body as string).context.custom.viewId
   );
 }
 
