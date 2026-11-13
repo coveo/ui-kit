@@ -13,7 +13,7 @@ import {
   toolCall,
   type ConverseEvent,
 } from '../events.js';
-import {groupVariants} from './product-groups.js';
+import {groupChildren} from './product-groups.js';
 
 const runId = 'schema-discovery-d8d8e15c';
 
@@ -100,12 +100,12 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
   },
 });
 
-// The other variants of a carousel product's group, as producers list them after the product.
-function variantsOf<Product extends object>(
+// The other products of a carousel product's group, as producers list them after the product.
+function childrenOf<Product extends object>(
   product: Product,
-  variants: {id: string; name: string; price: number; image: string}[]
+  others: {id: string; name: string; price: number; image: string}[]
 ): Product[] {
-  return variants.map(({id, name, price, image}) => ({
+  return others.map(({id, name, price, image}) => ({
     ...product,
     permanentid: `gid://shopify/ProductVariant/${id}`,
     ec_name: name,
@@ -153,9 +153,9 @@ const aquaGuardianSafetyVest = {
 const lifeJacketsState = {
   heading: 'Life Jackets',
   products: [
-    groupVariants(
+    groupChildren(
       aquaSecureLifeJacket,
-      variantsOf(aquaSecureLifeJacket, [
+      childrenOf(aquaSecureLifeJacket, [
         {
           id: '50681799180562',
           name: 'AquaSecure Life Jacket - Blue / Child',
@@ -328,9 +328,9 @@ const lifeJacketsState = {
 const safetyGearState = {
   heading: 'Boating Safety Gear',
   products: [
-    groupVariants(
+    groupChildren(
       aquaGuardianSafetyVest,
-      variantsOf(aquaGuardianSafetyVest, [
+      childrenOf(aquaGuardianSafetyVest, [
         {
           id: '50681803178258',
           name: 'AquaGuardian Safety Vest - Black / Adult Universal',

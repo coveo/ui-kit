@@ -3,8 +3,8 @@ import {expect} from 'vitest';
 type Product = Record<string, unknown>;
 
 /**
- * Each product's name, how many variants it lists and the size of its group, both absent for a
- * product without variants.
+ * Each product's name, how many children it lists and the size of its group, both absent for a
+ * product without children.
  */
 export function groupsOf(products: Product[]) {
   return products.map((product) => ({
@@ -15,8 +15,8 @@ export function groupsOf(products: Product[]) {
 }
 
 /**
- * Asserts that every grouped product lists its variants as producers do: the product itself first,
- * variants one level deep with distinct ids, and a group counting at least every listed variant.
+ * Asserts that every grouped product lists its children as producers do: the product itself first,
+ * children one level deep with distinct ids, and a group counting at least every listed child.
  */
 export function expectNormalizedGroups(products: Product[]) {
   for (const {children, totalNumberOfChildren, ...product} of products) {
@@ -24,13 +24,13 @@ export function expectNormalizedGroups(products: Product[]) {
       expect(totalNumberOfChildren).toBeUndefined();
       continue;
     }
-    const variants = children as Product[];
-    expect(variants[0]).toEqual(product);
-    for (const variant of variants) {
-      expect(variant).not.toHaveProperty('children');
-      expect(variant).not.toHaveProperty('totalNumberOfChildren');
+    const listed = children as Product[];
+    expect(listed[0]).toEqual(product);
+    for (const child of listed) {
+      expect(child).not.toHaveProperty('children');
+      expect(child).not.toHaveProperty('totalNumberOfChildren');
     }
-    expect(new Set(variants.map(({permanentid}) => permanentid)).size).toBe(variants.length);
-    expect(totalNumberOfChildren).toBeGreaterThanOrEqual(variants.length);
+    expect(new Set(listed.map(({permanentid}) => permanentid)).size).toBe(listed.length);
+    expect(totalNumberOfChildren).toBeGreaterThanOrEqual(listed.length);
   }
 }
