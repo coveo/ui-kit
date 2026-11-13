@@ -9,8 +9,8 @@ import {
 import {useMediaQuery} from '../../hooks/use-media-query.js';
 import {formatPrice} from '../../utils.js';
 import {useSearchBoxQuery} from '../SearchBox/search-box-context.js';
-import {ProductVariants} from '../ProductVariants/ProductVariants.js';
-import {usePromotedProduct} from '../ProductVariants/use-promoted-product.js';
+import {ProductChildren} from '../ProductChildren/ProductChildren.js';
+import {usePromotedProduct} from '../ProductChildren/use-promoted-product.js';
 import {InstantProductsSkeleton} from '../Skeleton/Skeleton.js';
 import styles from './InstantProducts.module.css';
 
@@ -190,7 +190,7 @@ function ProductRow({
           {product.ec_name}
         </span>
         {product.ec_brand && <span className={styles.brand}>{product.ec_brand}</span>}
-        <ProductVariants product={product} onPromote={promote} />
+        <ProductChildren product={product} onPromote={promote} />
       </div>
       {price !== undefined && <span className={styles.price}>{formatPrice(price)}</span>}
     </div>

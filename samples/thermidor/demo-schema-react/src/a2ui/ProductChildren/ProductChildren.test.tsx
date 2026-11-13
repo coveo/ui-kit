@@ -1,12 +1,12 @@
 import {cleanup, fireEvent, render, screen} from '@testing-library/react';
 import {afterEach, describe, expect, it} from 'vitest';
-import type {Product, ProductVariant} from '@coveo/thermidor-schema';
-import {FALLBACK_THUMBNAIL, ProductVariants} from './ProductVariants.js';
+import type {Product, ProductChild} from '@coveo/thermidor-schema';
+import {FALLBACK_THUMBNAIL, ProductChildren} from './ProductChildren.js';
 import {usePromotedProduct} from './use-promoted-product.js';
 
 afterEach(() => cleanup());
 
-function variant(id: string, overrides: Partial<ProductVariant> = {}): ProductVariant {
+function child(id: string, overrides: Partial<ProductChild> = {}): ProductChild {
   return {
     permanentid: id,
     ec_name: `Shoe ${id}`,
@@ -16,8 +16,8 @@ function variant(id: string, overrides: Partial<ProductVariant> = {}): ProductVa
   };
 }
 
-function group(variants: ProductVariant[], totalNumberOfChildren = variants.length): Product {
-  return {...variants[0], children: variants, totalNumberOfChildren};
+function group(children: ProductChild[], totalNumberOfChildren = children.length): Product {
+  return {...children[0], children: children, totalNumberOfChildren};
 }
 
 function Slot({product}: {product: Product}) {
@@ -25,7 +25,7 @@ function Slot({product}: {product: Product}) {
   return (
     <>
       <h3>{shown.ec_name}</h3>
-      <ProductVariants product={shown} onPromote={promote} />
+      <ProductChildren product={shown} onPromote={promote} />
     </>
   );
 }
@@ -37,10 +37,10 @@ const pressed = () =>
     .filter((button) => button.getAttribute('aria-pressed') === 'true')
     .map((button) => button.title);
 
-describe('ProductVariants', () => {
-  it('shows up to five variants, the shown one marked, and counts the rest of the group', () => {
-    const variants = ['a', 'b', 'c', 'd', 'e', 'f'].map((id) => variant(id));
-    render(<Slot product={group(variants, 9)} />);
+describe('ProductChildren', () => {
+  it('shows up to five children, the shown one marked, and counts the rest of the group', () => {
+    const children = ['a', 'b', 'c', 'd', 'e', 'f'].map((id) => child(id));
+    render(<Slot product={group(children, 9)} />);
 
     expect(thumbnails().map((button) => button.title)).toEqual([
       'Shoe a',
@@ -50,28 +50,28 @@ describe('ProductVariants', () => {
       'Shoe e',
     ]);
     expect(pressed()).toEqual(['Shoe a']);
-    expect(screen.getByLabelText('4 more variants').textContent).toBe('+4');
+    expect(screen.getByLabelText('4 more products').textContent).toBe('+4');
     expect(screen.getByRole('group', {name: 'Available in:'}).firstChild?.textContent).toBe(
       'Available in:'
     );
   });
 
-  it('counts the variants a group holds beyond those listed, if any', () => {
-    const {rerender} = render(<Slot product={group([variant('a'), variant('b')], 4)} />);
+  it('counts the children a group holds beyond those listed, if any', () => {
+    const {rerender} = render(<Slot product={group([child('a'), child('b')], 4)} />);
     expect(thumbnails()).toHaveLength(2);
-    expect(screen.getByLabelText('2 more variants').textContent).toBe('+2');
+    expect(screen.getByLabelText('2 more products').textContent).toBe('+2');
 
-    rerender(<Slot product={group([variant('a'), variant('b')])} />);
-    expect(screen.queryByLabelText(/more variant/)).toBeNull();
+    rerender(<Slot product={group([child('a'), child('b')])} />);
+    expect(screen.queryByLabelText(/more product/)).toBeNull();
   });
 
-  it('shows a fallback for a variant without a web image', () => {
+  it('shows a fallback for a child without a web image', () => {
     render(
       <Slot
         product={group([
-          variant('a'),
-          variant('b', {ec_thumbnails: []}),
-          variant('c', {ec_thumbnails: ['javascript:alert(1)']}),
+          child('a'),
+          child('b', {ec_thumbnails: []}),
+          child('c', {ec_thumbnails: ['javascript:alert(1)']}),
         ])}
       />
     );
@@ -83,16 +83,16 @@ describe('ProductVariants', () => {
     ]);
   });
 
-  it('shows nothing for a product without variants', () => {
-    const {rerender} = render(<Slot product={variant('a')} />);
+  it('shows nothing for a product without children', () => {
+    const {rerender} = render(<Slot product={child('a')} />);
     expect(screen.queryByRole('group', {name: 'Available in:'})).toBeNull();
 
-    rerender(<Slot product={group([variant('a')])} />);
+    rerender(<Slot product={group([child('a')])} />);
     expect(screen.queryByRole('group', {name: 'Available in:'})).toBeNull();
   });
 
-  it('promotes a variant on hover, Enter or touch', () => {
-    render(<Slot product={group([variant('a'), variant('b'), variant('c'), variant('d')])} />);
+  it('promotes a child on hover, Enter or touch', () => {
+    render(<Slot product={group([child('a'), child('b'), child('c'), child('d')])} />);
 
     fireEvent.mouseEnter(thumbnails()[1]);
     expect(shownName()).toBe('Shoe b');
@@ -109,18 +109,18 @@ describe('ProductVariants', () => {
     expect(pressed()).toEqual(['Shoe d']);
   });
 
-  it('keeps the variants in place, and the promotion until the product is sent again', () => {
-    const variants = [variant('a'), variant('b')];
-    const product = group(variants, 7);
+  it('keeps the children in place, and the promotion until the product is sent again', () => {
+    const children = [child('a'), child('b')];
+    const product = group(children, 7);
     const {rerender} = render(<Slot product={product} />);
     fireEvent.mouseEnter(thumbnails()[1]);
 
     rerender(<Slot product={product} />);
     expect(shownName()).toBe('Shoe b');
     expect(thumbnails().map((button) => button.title)).toEqual(['Shoe a', 'Shoe b']);
-    expect(screen.getByLabelText('5 more variants')).toBeDefined();
+    expect(screen.getByLabelText('5 more products')).toBeDefined();
 
-    rerender(<Slot product={group(variants)} />);
+    rerender(<Slot product={group(children)} />);
     expect(shownName()).toBe('Shoe a');
     expect(pressed()).toEqual(['Shoe a']);
   });

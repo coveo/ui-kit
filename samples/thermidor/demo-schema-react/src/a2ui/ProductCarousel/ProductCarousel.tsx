@@ -4,8 +4,8 @@ import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {Product} from '@coveo/thermidor-schema';
 import {ProductCarouselPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {A2UIProductCard} from '../ProductCard/ProductCard.js';
-import {ProductVariants} from '../ProductVariants/ProductVariants.js';
-import {usePromotedProduct} from '../ProductVariants/use-promoted-product.js';
+import {ProductChildren} from '../ProductChildren/ProductChildren.js';
+import {usePromotedProduct} from '../ProductChildren/use-promoted-product.js';
 import styles from './ProductCarousel.module.css';
 
 /**
@@ -111,7 +111,7 @@ function CarouselProductCard({product}: {product: Product}) {
       ec_image={shown.ec_images?.[0]}
       ec_product_id={shown.permanentid}
       clickUri={shown.clickUri}
-      variants={<ProductVariants product={shown} onPromote={promote} />}
+      productChildren={<ProductChildren product={shown} onPromote={promote} />}
     />
   );
 }
