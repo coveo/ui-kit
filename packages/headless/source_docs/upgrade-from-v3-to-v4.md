@@ -123,9 +123,12 @@ const staticState = await fetchStaticState({
 **Headless Version 4**
 
 ```ts
-// proxy.ts: read or mint the client ID, store it in the `coveo_visitorId` cookie
-// (`CLIENT_ID_COOKIE_NAME`) and forward it with the page URL as request headers
-const clientId = request.cookies.get('coveo_visitorId')?.value ?? crypto.randomUUID();
+// proxy.ts: read the client ID from the `coveo_visitorId` cookie (`CLIENT_ID_COOKIE_NAME`), mint one
+// when it is missing or not a valid UUID, store it and forward it with the page URL as request headers
+const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const cookieClientId = request.cookies.get('coveo_visitorId')?.value;
+const clientId =
+  cookieClientId && uuidPattern.test(cookieClientId) ? cookieClientId : crypto.randomUUID();
 const requestHeaders = new Headers(request.headers);
 requestHeaders.set('x-coveo-client-id', clientId);
 requestHeaders.set('x-href', request.nextUrl.href);
@@ -154,8 +157,8 @@ const staticState = await searchEngineDefinition.fetchStaticState({
 });
 ```
 
-`buildNavigatorContext()` reads the referrer, the user agent and the `x-forwarded-for` header, and generates a client ID when none is given.
-Store that client ID in the `coveo_visitorId` cookie (exported as `CLIENT_ID_COOKIE_NAME`): your server reads the cookie on each request and sets it on the response, and the browser reports the same visitor after hydration.
+`buildNavigatorContext()` reads the referrer, the user agent and the `x-forwarded-for` header, and generates a client ID for that request alone when none, or an invalid one, is given.
+Keep the visitor across requests where the response can still set cookies, as the proxy above does: read the `coveo_visitorId` cookie (exported as `CLIENT_ID_COOKIE_NAME`), store a new client ID when it is missing, and pass it on. The browser then reports the same visitor after hydration.
 The static state carries the navigator context to `hydrateStaticState()`, without `forwardedFor`, so you set it once per request.
 
 #### Page inputs
