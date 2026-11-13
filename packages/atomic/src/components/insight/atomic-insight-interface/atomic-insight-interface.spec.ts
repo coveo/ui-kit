@@ -47,6 +47,7 @@ describe('atomic-insight-interface', () => {
   const setupElement = async (
     props: {
       analytics?: boolean; // TODO - (v4) KIT-4990: remove.
+      disableAnalytics?: boolean;
       fieldsToInclude?: string[];
       iconAssetsPath?: string;
       language?: string;
@@ -58,6 +59,7 @@ describe('atomic-insight-interface', () => {
     const element = (await fixture<AtomicInsightInterface>(
       html`<atomic-insight-interface
         analytics=${props.analytics}
+        ?disable-analytics=${props.disableAnalytics}
         fields-to-include=${ifDefined(JSON.stringify(props.fieldsToInclude))}
         icon-assets-path=${ifDefined(props.iconAssetsPath)}
         language=${ifDefined(props.language)}
@@ -287,6 +289,14 @@ describe('atomic-insight-interface', () => {
         });
       });
 
+      it('should pass analytics as disabled to #getAnalyticsConfig when the disable-analytics attribute is set', async () => {
+        const element = await setupElement({disableAnalytics: true});
+
+        await element.initialize(insightEngineConfig);
+
+        expect(getAnalyticsConfig).toHaveBeenCalledExactlyOnceWith(insightEngineConfig, false);
+      });
+
       it('should set the error when #buildCommerceEngine throws', async () => {
         vi.spyOn(console, 'error').mockImplementation(() => {});
         const element = await setupElement();
@@ -358,7 +368,6 @@ describe('atomic-insight-interface', () => {
     });
   });
 
-  // TODO - KIT-4994 / KIT-4990: adjust
   // #toggleAnalytics
   it('should call InterfaceController.onAnalyticsChange when the analytics attribute changes', async () => {
     const element = await setupElement();
@@ -372,6 +381,22 @@ describe('atomic-insight-interface', () => {
     expect(onAnalyticsChangeSpy).toHaveBeenCalledOnce();
 
     element.analytics = true;
+    await element.updateComplete;
+
+    expect(onAnalyticsChangeSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it('should call InterfaceController.onAnalyticsChange when the disable-analytics attribute changes', async () => {
+    const element = await setupElement();
+    await element.initialize(insightEngineConfig);
+    const onAnalyticsChangeSpy = vi.spyOn(InterfaceController.prototype, 'onAnalyticsChange');
+
+    element.toggleAttribute('disable-analytics', true);
+    await element.updateComplete;
+
+    expect(onAnalyticsChangeSpy).toHaveBeenCalledOnce();
+
+    element.toggleAttribute('disable-analytics', false);
     await element.updateComplete;
 
     expect(onAnalyticsChangeSpy).toHaveBeenCalledTimes(2);

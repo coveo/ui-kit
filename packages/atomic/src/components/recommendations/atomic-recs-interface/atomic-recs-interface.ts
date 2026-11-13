@@ -94,12 +94,10 @@ export class AtomicRecsInterface
   @property({type: String, attribute: 'search-hub', reflect: true})
   public searchHub?: string;
 
-  // TODO - KIT-4994: Add disableAnalytics property that defaults to false.
-
-  // TODO - KIT-4994: Deprecate in favor of disableAnalytics property.
   // TODO - (v4) KIT-4990: Remove.
   /**
    * Whether analytics should be enabled.
+   * @deprecated - Use `disable-analytics` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
@@ -107,6 +105,16 @@ export class AtomicRecsInterface
     reflect: true,
   })
   public analytics = true;
+
+  /**
+   * Whether to disable analytics.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'disable-analytics',
+    reflect: true,
+  })
+  public disableAnalytics = false;
 
   /**
    * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items.
@@ -202,7 +210,7 @@ export class AtomicRecsInterface
   }
   /**
    * Initializes the interface using the provided [headless recommendation engine](https://docs.coveo.com/en/headless/latest/reference/modules/Recommendation.html), as opposed to the `initialize` method which internally builds a recommendation engine instance.
-   * This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone, and logLevel.
+   * This bypasses the properties set on the component, such as disableAnalytics, searchHub, pipeline, language, timezone, and logLevel.
    */
   public initializeWithRecommendationEngine(engine: RecommendationEngine) {
     if (this.pipeline && this.pipeline !== engine.state.pipeline) {
@@ -249,6 +257,7 @@ export class AtomicRecsInterface
   }
 
   @watch('analytics')
+  @watch('disableAnalytics')
   public toggleAnalytics() {
     if (!this.interfaceController.engineIsCreated(this.engine)) {
       return;
@@ -295,7 +304,7 @@ export class AtomicRecsInterface
   }
 
   private initEngine(options: RecsInitializationOptions) {
-    const analyticsConfig = getAnalyticsConfig(options, this.analytics);
+    const analyticsConfig = getAnalyticsConfig(options, this.interfaceController.analyticsEnabled);
     try {
       this.engine = buildRecommendationEngine({
         configuration: {

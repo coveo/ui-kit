@@ -61,6 +61,7 @@ describe('atomic-search-interface', () => {
   const setupElement = async (
     props: {
       analytics?: boolean;
+      disableAnalytics?: boolean;
       disableStateReflectionInUrl?: boolean;
       iconAssetsPath?: string;
       language?: string;
@@ -80,6 +81,7 @@ describe('atomic-search-interface', () => {
     const element = (await fixture<AtomicSearchInterface>(
       html`<atomic-search-interface
         ?analytics=${props.analytics}
+        ?disable-analytics=${props.disableAnalytics}
         ?disable-state-reflection-in-url=${props.disableStateReflectionInUrl}
         icon-assets-path=${ifDefined(props.iconAssetsPath)}
         language=${ifDefined(props.language)}
@@ -541,6 +543,18 @@ describe('atomic-search-interface', () => {
         });
       });
 
+      it('should pass analytics as disabled to #getAnalyticsConfig when the disable-analytics attribute is set', async () => {
+        const element = await setupElement({disableAnalytics: true});
+
+        await element.initialize(searchEngineConfig);
+
+        expect(getAnalyticsConfig).toHaveBeenCalledExactlyOnceWith(
+          searchEngineConfig,
+          false,
+          element.bindings.store
+        );
+      });
+
       it('should use searchHub from options.search when both property and options.search are provided', async () => {
         const element = await setupElement({searchHub: 'property-hub'});
 
@@ -920,6 +934,22 @@ describe('atomic-search-interface', () => {
     expect(onAnalyticsChangeSpy).toHaveBeenCalledOnce();
 
     element.analytics = true;
+    await element.updateComplete;
+
+    expect(onAnalyticsChangeSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it('should call InterfaceController.onAnalyticsChange when the disable-analytics attribute changes', async () => {
+    const element = await setupElement();
+    await element.initialize(searchEngineConfig);
+    const onAnalyticsChangeSpy = vi.spyOn(InterfaceController.prototype, 'onAnalyticsChange');
+
+    element.toggleAttribute('disable-analytics', true);
+    await element.updateComplete;
+
+    expect(onAnalyticsChangeSpy).toHaveBeenCalledOnce();
+
+    element.toggleAttribute('disable-analytics', false);
     await element.updateComplete;
 
     expect(onAnalyticsChangeSpy).toHaveBeenCalledTimes(2);
