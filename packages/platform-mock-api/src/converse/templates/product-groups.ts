@@ -1,7 +1,7 @@
 /**
  * Lists a product's children the way producers send them: the product itself first, then the
- * other products of its group, with the size of the whole group, which may count products that are
- * not listed.
+ * other products of its group, with how many of the group's products product grouping fetched, the
+ * product included, which may be more than are listed.
  */
 function groupChildren<Child extends object>(
   product: Child,
