@@ -24,10 +24,6 @@ import {
   toggleSelectDateFacetValue,
 } from '../facets/date-facet/date-facet-actions.js';
 import {
-  type ToggleSelectLocationFacetValuePayload,
-  toggleSelectLocationFacetValue,
-} from '../facets/location-facet/location-facet-actions.js';
-import {
   type ToggleExcludeNumericFacetValuePayload,
   type ToggleSelectNumericFacetValuePayload,
   toggleExcludeNumericFacetValue,
@@ -124,10 +120,6 @@ export const parametersReducer = createReducer(getCommerceParametersInitialState
       handleToggleExcludeDateFacetValue(state, action.payload)
     )
 
-    .addCase(toggleSelectLocationFacetValue, (state, action) =>
-      handleToggleSelectLocationFacetValue(state, action.payload)
-    )
-
     .addCase(setView, getCommerceParametersInitialState)
 
     .addCase(restoreProductListingParameters, (state, action) => {
@@ -212,7 +204,6 @@ const handleClearAllCoreFacets = (state: CommerceParametersState) => {
   state.cf = undefined;
   state.df = undefined;
   state.dfExcluded = undefined;
-  state.lf = undefined;
   state.mnf = undefined;
   state.mnfExcluded = undefined;
   state.nf = undefined;
@@ -242,11 +233,6 @@ const handleDeselectAllValuesInCoreFacet = (
   if (state.dfExcluded) {
     delete state.dfExcluded[facetId];
     Object.keys(state.dfExcluded).length === 0 && delete state.dfExcluded;
-  }
-
-  if (state.lf) {
-    delete state.lf[facetId];
-    Object.keys(state.lf).length === 0 && delete state.lf;
   }
 
   if (state.mnf) {
@@ -521,27 +507,9 @@ const handleToggleExcludeDateFacetValue = (
   }
 };
 
-const handleToggleSelectLocationFacetValue = (
-  state: CommerceParametersState,
-  payload: ToggleSelectLocationFacetValuePayload
-) => {
-  state.page = undefined;
-
-  switch (payload.selection.state) {
-    case 'selected':
-      unsetRegularValue(state, 'lf', state.lf, payload.facetId, payload.selection.value);
-      break;
-    case 'excluded':
-    case 'idle':
-      state.lf ??= {};
-      state.lf[payload.facetId] = [...(state.lf[payload.facetId] ?? []), payload.selection.value];
-      break;
-  }
-};
-
 const unsetRegularValue = (
   state: CommerceParametersState,
-  stateKey: keyof Pick<CommerceParametersState, 'f' | 'fExcluded' | 'lf'>,
+  stateKey: keyof Pick<CommerceParametersState, 'f' | 'fExcluded'>,
   stateParameter: Record<string, string[]> | undefined,
   facetId: string,
   selection: string

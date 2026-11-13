@@ -42,10 +42,6 @@ export type NumericFacetRequest = BaseCommerceFacetRequest<NumericRangeRequest, 
 export type RegularFacetRequest = BaseCommerceFacetRequest<FacetValueRequest, 'regular'> &
   FreezableFacetRequestProperties;
 
-export type LocationFacetValueRequest = FacetValueRequest;
-
-export type LocationFacetRequest = BaseCommerceFacetRequest<LocationFacetValueRequest, 'location'>;
-
 type BaseCommerceFacetRequest<Value, Type extends FacetType> = Pick<
   FacetRequest,
   'facetId' | 'field' | 'isFieldExpanded'
@@ -59,7 +55,6 @@ type BaseCommerceFacetRequest<Value, Type extends FacetType> = Pick<
 
 export type AnyFacetValueRequest =
   | FacetValueRequest
-  | LocationFacetValueRequest
   | CategoryFacetValueRequest
   | NumericRangeRequest
   | DateRangeRequest;

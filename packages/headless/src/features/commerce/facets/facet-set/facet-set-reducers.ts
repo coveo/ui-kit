@@ -8,7 +8,6 @@ import type {
   CategoryFacetRequest,
   CategoryFacetValueRequest,
   DateFacetRequest,
-  LocationFacetValueRequest,
   NumericFacetRequest,
 } from './interfaces/request.js';
 
@@ -18,10 +17,7 @@ export function restoreFromParameters(state: CommerceFacetSetState, action: {pay
   }
 
   if (action.payload.f) {
-    restoreFacets(state, action.payload.f, 'regular');
-  }
-  if (action.payload.lf) {
-    restoreFacets(state, action.payload.lf, 'location');
+    restoreFacets(state, action.payload.f);
   }
   if (action.payload.nf) {
     restoreRangeFacets(state, action.payload.nf, 'numericalRange');
@@ -37,29 +33,20 @@ export function restoreFromParameters(state: CommerceFacetSetState, action: {pay
   }
 }
 
-function restoreFacets(
-  state: CommerceFacetSetState,
-  parameterFacets: Record<string, string[]>,
-  type: 'regular' | 'location'
-) {
+function restoreFacets(state: CommerceFacetSetState, parameterFacets: Record<string, string[]>) {
   const entries = Object.entries(parameterFacets);
   for (const [facetId, values] of entries) {
     state[facetId] = {
       request: {
         ...restoreFacet(facetId),
-        type,
-        values: values.map((value) => {
-          const facetValue = {
-            ...restoreFacetValue(),
-            value,
-          };
-          switch (type) {
-            case 'regular':
-              return facetValue as FacetValueRequest;
-            case 'location':
-              return facetValue as LocationFacetValueRequest;
-          }
-        }),
+        type: 'regular',
+        values: values.map(
+          (value) =>
+            ({
+              ...restoreFacetValue(),
+              value,
+            }) as FacetValueRequest
+        ),
       },
     };
   }
