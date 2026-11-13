@@ -26,7 +26,7 @@ type ValidateControllerNames<T extends SearchControllerDefinitionsMap> = {
  * @group Engine
  */
 export type SearchEngineDefinitionOptions<
-  TControllers extends SearchControllerDefinitionsMap = {},
+  TControllers extends SearchControllerDefinitionsMap = SearchControllerDefinitionsMap,
 > = Omit<SearchEngineOptions, 'navigatorContextProvider'> & {
   /**
    * The controllers to initialize with the search engine.
