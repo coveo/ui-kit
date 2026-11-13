@@ -7,6 +7,7 @@ import {
 } from '../../demo-schema-react/src/a2ui/ProductCard/product-card-actions.js';
 import {ThermidorA2UIStream} from '../../demo-schema-react/src/a2ui/surfaces.js';
 import {AddToCartButton} from './a2ui/AddToCartButton/AddToCartButton.js';
+import {ReturnedVisitContext} from './a2ui/CommerceSearch/returned-visit.js';
 import {createStorefrontCatalog} from './a2ui/catalog.js';
 import {SessionInspector} from './components/SessionInspector.js';
 import {TopBar} from './components/TopBar.js';
@@ -45,6 +46,14 @@ function pageView(visit: Visit): StorefrontView {
  */
 const FOLLOW_UP_ACTION = 'selectAction';
 
+/** The key of the storefront's browser history entries: the page's position in the history. */
+const DEPTH_KEY = 'storefrontDepth';
+
+function depthOf(state: unknown): number | undefined {
+  const depth = (state as Record<string, unknown> | null)?.[DEPTH_KEY];
+  return typeof depth === 'number' ? depth : undefined;
+}
+
 /**
  * The Storefront Preview layout on one session: a header (the search box and the cart) that stays,
  * over a page (home, a prompt's answer or a listing) that changes.
@@ -57,17 +66,49 @@ export function StorefrontApp() {
   // The pages the shopper went through, the current one last: Back returns to the one before.
   const [history, setHistory] = useState<readonly Visit[]>(() => [visitHome()]);
   const visit = history[history.length - 1];
+  const historyRef = useRef(history);
+  historyRef.current = history;
+  // The page the shopper last returned to, and how many returns so far: its search is restored.
+  const [returned, setReturned] = useState<{visitId: number; count: number}>();
   // The conversation of every prompt visit, which outlives the history.
   const visitThreads = useRef(new Map<number, number>());
 
+  // Each page is a browser history entry, so the browser's Back and the page's Back button do the
+  // same thing. Forward is not kept: the pages after the one Back returns to are dropped.
   const navigate = useCallback((next: Visit, {replace = false} = {}) => {
     const thread = threadOf(next);
     if (thread !== undefined) {
       visitThreads.current.set(next.id, thread);
     }
+    const depth = historyRef.current.length - (replace ? 1 : 0);
+    if (replace) {
+      window.history.replaceState({[DEPTH_KEY]: depth}, '');
+    } else {
+      window.history.pushState({[DEPTH_KEY]: depth}, '');
+    }
     setHistory((pages) => [...(replace ? pages.slice(0, -1) : pages), next]);
   }, []);
-  const goBack = useCallback(() => setHistory((pages) => pages.slice(0, -1)), []);
+  const goBack = useCallback(() => window.history.back(), []);
+
+  useEffect(() => {
+    window.history.replaceState({[DEPTH_KEY]: 0}, '');
+    const onPopState = (event: PopStateEvent) => {
+      const depth = depthOf(event.state);
+      const pages = historyRef.current;
+      if (depth === undefined || depth === pages.length - 1) {
+        return;
+      }
+      // Forward to a dropped page goes back to the shown one, so the next Back leaves it.
+      if (depth > pages.length - 1) {
+        window.history.go(pages.length - 1 - depth);
+        return;
+      }
+      setHistory(pages.slice(0, depth + 1));
+      setReturned((last) => ({visitId: pages[depth].id, count: (last?.count ?? 0) + 1}));
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
 
   const visitRef = useRef(visit);
   visitRef.current = visit;
@@ -182,15 +223,19 @@ export function StorefrontApp() {
             onSearch={(query) => navigate(visitPrompt(query, undefined, threadOf(visit)))}
             searchDisabled={request !== undefined}
           />
-          <Page
-            visit={visit}
-            conversationVisits={visitsOfThread(visitThreads.current, threadOf(visit))}
-            busy={request !== undefined}
-            onSend={sendPrompt}
-            onHome={() => navigate(visitHome())}
-            onBack={history.length > 1 ? goBack : undefined}
-            onShowResults={showResults}
-          />
+          <ReturnedVisitContext.Provider
+            value={returned?.visitId === visit.id ? returned.count : undefined}
+          >
+            <Page
+              visit={visit}
+              conversationVisits={visitsOfThread(visitThreads.current, threadOf(visit))}
+              busy={request !== undefined}
+              onSend={sendPrompt}
+              onHome={() => navigate(visitHome())}
+              onBack={history.length > 1 ? goBack : undefined}
+              onShowResults={showResults}
+            />
+          </ReturnedVisitContext.Provider>
           <SessionInspector />
         </ThermidorA2UIStream>
       </ProductCardActionsContext.Provider>
