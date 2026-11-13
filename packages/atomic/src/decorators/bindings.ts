@@ -112,7 +112,7 @@ function receiveBindings(host: BindingsHost, value: AnyBindings) {
 }
 
 function checkInterfaceParent(host: BindingsElement) {
-  if (host.initialized || findInterfaceParent(host)) {
+  if (host.bindings || findInterfaceParent(host)) {
     if (host[missingInterfaceError]) {
       host[missingInterfaceError] = undefined;
       host.requestUpdate();
