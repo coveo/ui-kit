@@ -28,6 +28,7 @@ export interface EngineStaticState<
  *
  * This type extracts the resolved type from the Promise returned by `fetchStaticState`,
  * allowing you to work with the static state type without manually specifying it.
+ * Editor tooltips and compiler errors show it under its own name, such as `SearchStaticState`.
  *
  * @template T - An object with a `fetchStaticState` method that returns a Promise
  *
@@ -47,13 +48,14 @@ export type InferStaticState<
   T extends {
     fetchStaticState(...args: unknown[]): Promise<unknown>;
   },
-> = Awaited<ReturnType<T['fetchStaticState']>>;
+> = ReturnType<T['fetchStaticState']> extends Promise<infer TStaticState> ? TStaticState : never;
 
 /**
  * Utility type to infer the hydrated state type from an engine definition's `hydrateStaticState` method.
  *
  * This type extracts the resolved type from the Promise returned by `hydrateStaticState`,
  * allowing you to work with the hydrated state type without manually specifying it.
+ * Editor tooltips and compiler errors show it under its own name, such as `SearchHydratedState`.
  *
  * @template T - An object with a `hydrateStaticState` method that returns a Promise
  *
@@ -73,4 +75,7 @@ export type InferHydratedState<
   T extends {
     hydrateStaticState(...args: unknown[]): Promise<unknown>;
   },
-> = Awaited<ReturnType<T['hydrateStaticState']>>;
+> =
+  ReturnType<T['hydrateStaticState']> extends Promise<infer THydratedState>
+    ? THydratedState
+    : never;
