@@ -17,16 +17,12 @@ export type WithViewUrl<TBuildConfig extends CommonBuildConfig> = TBuildConfig &
 export function withDefaultViewUrl<TBuildConfig extends CommonBuildConfig>(
   buildConfig: TBuildConfig
 ): WithViewUrl<TBuildConfig> {
-  if (buildConfig.context?.view?.url) {
-    return buildConfig as WithViewUrl<TBuildConfig>;
-  }
-
-  const location = buildConfig.navigatorContext?.location;
-  if (!location) {
+  const url = buildConfig.context?.view?.url || buildConfig.navigatorContext?.location;
+  if (!url) {
     throw new Error(
       'The URL of the page is required: set it in `context.view.url`, or in `navigatorContext.location` to use it for both the Commerce API and the analytics.'
     );
   }
 
-  return {...buildConfig, context: {...buildConfig.context, view: {url: location}}};
+  return {...buildConfig, context: {...buildConfig.context, view: {url}}};
 }
