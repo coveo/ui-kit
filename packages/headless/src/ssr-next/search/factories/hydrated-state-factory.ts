@@ -9,6 +9,7 @@ import type {
   HydrateStaticStateParameters,
   SearchEngineDefinitionOptions,
 } from '../types/engine.js';
+import type {BuildParameters} from '../types/build.js';
 import {buildFactory} from './build-factory.js';
 
 export function hydratedStaticStateFactory<
@@ -20,15 +21,15 @@ export function hydratedStaticStateFactory<
   return async (params: HydrateStaticStateParameters<TControllerDefinitions>) => {
     const {controllerProps, ...restParams} = params;
 
-    const paramsWithControllerProps = {
+    const buildParameters: BuildParameters = {
       ...restParams,
       ...(controllerProps && {controllers: controllerProps}),
-    } as HydrateStaticStateParameters<TControllerDefinitions>;
+    };
 
     const {engine, controllers} = await buildFactory(
       controllerDefinitions,
       options
-    )(paramsWithControllerProps);
+    )(buildParameters);
 
     if (params.searchActions.length > 0) {
       await engine.waitForSearchCompletedAction();

@@ -1,5 +1,6 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import {createStaticState} from '../controller-utils.js';
+import type {BuildParameters} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {AugmentedControllerDefinition} from '../types/controller-definitions.js';
 import type {
@@ -43,9 +44,10 @@ export function fetchRecommendationStaticStateFactory<
       controllers,
     });
 
-    const {controllers: controllerProps, ...restParams} = params as {
-      controllers?: Record<string, unknown>;
-    } & typeof params;
+    const {
+      controllers: controllerProps,
+      ...restParams
+    }: BuildParameters<TControllerDefinitions> & typeof params = params;
 
     return {
       ...restParams,
