@@ -87,7 +87,7 @@ export function defineMockRecommendationDefinition(slotId: string) {
     },
     buildWithProps: vi.fn((engine, props) => ({
       ...buildMockControllerWithInitialState(engine, {
-        initialState: props?.initialState,
+        initialState: props,
       }),
     })),
   };

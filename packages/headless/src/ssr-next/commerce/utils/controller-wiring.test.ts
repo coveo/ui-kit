@@ -336,16 +336,8 @@ describe('controller-wiring', () => {
           params
         );
 
-        expect(props.rec1).toEqual({
-          initialState: {
-            productId: 'product-123',
-          },
-        });
-        expect(props.rec2).toEqual({
-          initialState: {
-            productId: 'product-123',
-          },
-        });
+        expect(props.rec1).toEqual({productId: 'product-123'});
+        expect(props.rec2).toEqual({productId: 'product-123'});
       });
 
       it('should wire recommendation controllers without productId when not provided', () => {
@@ -371,9 +363,7 @@ describe('controller-wiring', () => {
           params
         );
 
-        expect(props.rec1).toEqual({
-          initialState: {},
-        });
+        expect(props.rec1).toEqual({});
       });
 
       it('should not wire non-recommendation controllers in recommendation solution type', () => {
@@ -401,11 +391,7 @@ describe('controller-wiring', () => {
           params
         );
 
-        expect(props.rec1).toEqual({
-          initialState: {
-            productId: 'product-123',
-          },
-        });
+        expect(props.rec1).toEqual({productId: 'product-123'});
         expect(props.nonRec).toBeUndefined();
       });
     });
