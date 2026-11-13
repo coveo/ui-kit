@@ -357,7 +357,7 @@ describe('ProductList variants', () => {
   it('swaps a hovered variant into its card, and hands it to the card actions', async () => {
     const {renderActions} = mountList();
     await waitFor(() => expect(screen.getAllByRole('listitem')).toHaveLength(2));
-    expect(within(card(1)).queryByRole('group', {name: 'Variants'})).toBeNull();
+    expect(within(card(1)).queryByRole('group', {name: 'Available in:'})).toBeNull();
 
     fireEvent.mouseEnter(within(card(0)).getByTitle('Trail shoe, blue'));
 
@@ -414,9 +414,9 @@ describe('ProductCarousel variants', () => {
     pushDataModel([{path: '/state/root/heading', value: 'More shoes'}]);
     await screen.findByText('More shoes');
 
-    expect(screen.getByRole('link', {name: 'Trail shoe, blue'}).getAttribute('href')).toBe(
-      'https://example.com/shoe-blue'
-    );
+    const promoted = screen.getByRole('link', {name: 'Trail shoe, blue'});
+    expect(promoted.getAttribute('href')).toBe('https://example.com/shoe-blue');
+    expect(promoted.getAttribute('title')).toBe('Trail shoe, blue');
     expect(screen.getByText('$110.00')).toBeDefined();
   });
 });

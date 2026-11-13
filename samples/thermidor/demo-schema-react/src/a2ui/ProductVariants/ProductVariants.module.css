@@ -1,3 +1,10 @@
+.label {
+  display: block;
+  margin-bottom: 2px;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
 .variants {
   display: flex;
   align-items: center;

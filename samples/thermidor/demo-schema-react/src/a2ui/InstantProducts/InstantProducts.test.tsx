@@ -379,7 +379,7 @@ describe('InstantProducts variants', () => {
     vi.stubGlobal('open', open);
     const {type} = await renderSearchBox({handler: answerWithGroups});
     type('surf');
-    const variantsRow = await screen.findByRole('group', {name: 'Variants'});
+    const variantsRow = await screen.findByRole('group', {name: 'Available in:'});
     expect(within(variantsRow).getByLabelText('1 more variant')).toBeDefined();
 
     fireEvent.mouseEnter(within(variantsRow).getByTitle('Surf board, blue'));
