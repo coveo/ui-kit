@@ -257,7 +257,7 @@ static styles = styles;
 
 ### Light DOM
 
-Light DOM components (via `LightDomMixin`) render without Shadow DOM. They inherit styles from the parent context. Do not define `static styles`.
+Light DOM components (via `LightDomMixin`) render without Shadow DOM, so document styles reach them. `LightDomMixin` injects the component's `static styles` into the root node on connect. Do not use `:host` in those styles: without a shadow boundary it matches parent elements and leaks styles. `pnpm run validate:light-dom-styles` checks this.
 
 ## Result/Product Template Components
 

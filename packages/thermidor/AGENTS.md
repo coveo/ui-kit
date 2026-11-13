@@ -1,18 +1,17 @@
-## Headless Future AGENTS.md
+# Thermidor Package AGENTS.md
 
 The thermidor package is experimental, under active development, and published
 publicly as `0.x`. Add a changeset file when modifying its source code, as for
 any public package.
 
-Some instructions from the root `AGENTS.md` don't apply when working in this
-package. Namely, you do **NOT** have to:
+Some repository-wide instructions don't apply when working in this package. Namely, you do not have to:
 
-- Use the Conventional Commits 1.0.0 specification when composing a commit message
-- Ask before introducing a potentially breaking change
+- Use the Conventional Commits 1.0.0 specification (from the `commit-changes` skill) when composing a commit message
+- Ask before introducing a potentially breaking change (a root `AGENTS.md` boundary)
 
 ## Boundaries
 
-**You must ALWAYS**:
+**Always**:
 
-- Ensure that any architectural changes you suggest or make satisfy the requirements of `thermidor/docs/internal/adr/ADR-009-architecture-decision-charter-v2.md` (the current charter, which supersedes the deprecated `ADR-000-architecture-decision-charter.md`).
-- Document every symbol that is part of the package's public API with JSDoc. "Public" means anything re-exported from the entry point (`src/index.ts`) — functions, classes, interfaces, and types — **including symbols that are declared under `internal/` but re-exported through the public surface** (e.g. `Engine`, the generative `Turn`/`AgentResponse`/… types, `GenerativeUnifiedInterface`). Document their members too (methods, and non-trivial fields). Symbols that are *not* re-exported (internal-only) do not require JSDoc.
+- Ensure that any architectural changes you suggest or make satisfy the requirements of `docs/internal/adr/ADR-009-architecture-decision-charter-v2.md` in this package (the current charter, which supersedes the deprecated `ADR-000-architecture-decision-charter.md`).
+- Document every symbol that is part of the package's public API with JSDoc. "Public" means anything re-exported from the entry point (`src/index.ts`) — functions, classes, interfaces, and types — **including symbols that are declared under `internal/` but re-exported through the public surface** (e.g. the context types `NavigatorContext` and `CommerceContext` from `src/internal/context/`). Document their members too (methods, and non-trivial fields). Symbols that are *not* re-exported (internal-only) do not require JSDoc.

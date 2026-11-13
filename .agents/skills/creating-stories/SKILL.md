@@ -73,7 +73,7 @@ For page examples, see [sample-page-examples.md](references/sample-page-examples
 node .agents/skills/creating-stories/scripts/validate_story.mjs packages/atomic/src/components/.../component.new.stories.tsx
 
 # Run Storybook to verify visually
-cd packages/atomic && pnpm storybook
+pnpm turbo dev --filter=@coveo/atomic   # Storybook on http://localhost:4400
 ```
 
 ## Story Structure
@@ -154,12 +154,13 @@ export const NoResults: Story = {
 
 ## Interface Wrappers
 
-| Wrapper                   | Import                                                  | Options                              |
-| ------------------------- | ------------------------------------------------------- | ------------------------------------ |
-| `wrapInSearchInterface`   | `@/storybook-utils/search/search-interface-wrapper`     | `skipFirstSearch`, `includeCodeRoot` |
-| `wrapInCommerceInterface` | `@/storybook-utils/commerce/commerce-interface-wrapper` | `skipFirstSearch`, `includeCodeRoot` |
-| `wrapInInsightInterface`  | `@/storybook-utils/insight/insight-interface-wrapper`   | `skipFirstSearch`                    |
-| `wrapInResultTemplate`    | `@/storybook-utils/search/result-template-wrapper`      | `autoLoad`                           |
+| Wrapper                         | Import                                                  | Options                                                           |
+| ------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------------- |
+| `wrapInSearchInterface`         | `@/storybook-utils/search/search-interface-wrapper`     | object: `config`, `skipFirstSearch`, `includeCodeRoot`            |
+| `wrapInCommerceInterface`       | `@/storybook-utils/commerce/commerce-interface-wrapper` | object: `engineConfig`, `skipFirstRequest`, `type`, `includeCodeRoot` |
+| `wrapInInsightInterface`        | `@/storybook-utils/insight/insight-interface-wrapper`   | positional: `(config?, skipFirstSearch?, includeCodeRoot?)`       |
+| `wrapInRecommendationInterface` | `@/storybook-utils/search/recs-interface-wrapper`       | object: `config`, `skipFirstQuery`, `skipInitialization`, `includeCodeRoot` |
+| `wrapInResultTemplate`          | `@/storybook-utils/search/result-template-wrapper`      | positional: `(includeCodeRoot = true)`                            |
 
 ## Reference Documentation
 
@@ -213,18 +214,16 @@ beforeEach: () => {
 
 ### Stories show wrong data in docs mode
 
-Every story needs story-level `beforeEach` queuing `mockOnce()`. Create helper:
+Docs mode renders all stories of a file on one page, so a story that queues nothing can receive a response another story queued with `mockOnce()`. If you see this, give the affected stories their own `beforeEach` that queues a response, even an unmodified one:
 
 ```typescript
-const mockDefault = () => harness.endpoint.mockOnce((r) => r);
+const mockDefault = () => harness.searchEndpoint.mockOnce((r) => r);
 ```
-
-Call in ALL stories' `beforeEach`, even for default responses.
 
 ### State persists between stories
 
 **Cause:** Missing endpoint clear in meta `beforeEach`  
-**Fix:** Add `harness.endpoint.clear()` to meta-level `beforeEach`
+**Fix:** Add `harness.searchEndpoint.clear()` to meta-level `beforeEach`
 
 ### Not spreading base response
 

@@ -37,9 +37,9 @@ Pick the type based on the nature of the work:
 
 Analyze the user's description against the bucket table above. Match on:
 
-- Keywords and domain (security → Snyk, flaky test → Failing tests, refactor → Continuous Improvement).
-- Nature of work (support ticket → Maintenance).
-- Urgency and origin (incident → Maintenance, CVE → Snyk).
+- Keywords and domain (security → Security Vulnerabilities, flaky test → Failing or flaky tests, refactor → Continuous Improvement).
+- Nature of work (support ticket → Maintenance DXUI).
+- Urgency and origin (incident → Maintenance DXUI, CVE → Security Vulnerabilities).
 
 If the classification is ambiguous (work could reasonably fit two buckets), ask the user which bucket they prefer and explain the trade-off.
 

@@ -7,7 +7,7 @@ When a skill needs consistent output formatting, use one of these patterns.
 Define the expected structure. Use `[placeholder]` for variable content.
 
 <example name="strict-template">
-ALWAYS use this structure for test files:
+Use exactly this structure for test files:
 
 import {describe, it, expect} from 'vitest';
 

@@ -9,7 +9,7 @@
  *   - new deprecation notices name a replacement.
  *
  * Usage:
- *   node check-v4-change.mjs [--base origin/main] [--track v3|v4|experimental|no-release]
+ *   node .agents/skills/working-on-ui-kit-v4/scripts/check-v4-change.mjs [--base origin/main] [--track v3|v4|experimental|no-release]   (run from the repository root)
  *
  * Compares the working tree (including untracked files) with the merge base of HEAD and --base.
  * Exits 1 on a failure; warnings do not fail the check. Without --track, a major changeset means v4

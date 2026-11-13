@@ -7,15 +7,12 @@
 
 ## Quantic Package Linting and Formatting
 
-Quantic does **not** use oxlint or oxfmt like the rest of the monorepo. When working
-anywhere under `packages/quantic`, the following tools apply:
+Quantic's source does **not** use oxlint or oxfmt like the rest of the monorepo (only its top-level `*.json` files and `catalog-info.yaml` are formatted by the root oxfmt config). For everything else under `packages/quantic`, the following tools apply:
 
 - **Linting**: ESLint 9 flat config (configured in `eslint.config.js`, using `@salesforce/eslint-config-lwc`)
 - **Formatting**: Prettier (configured in `.prettierrc.js`, including `prettier-plugin-apex` for `.cls` and `.trigger` files)
 
-**You must NEVER**:
-
-- Use oxlint, oxfmt, or Biome to lint or format files in this package.
+Don't run oxlint, oxfmt, or Biome directly on files in this package.
 
 Always lint and format by running the package `lint:check` / `lint:fix` scripts rather
 than invoking a linter or formatter binary directly.
