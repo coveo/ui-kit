@@ -300,7 +300,7 @@ describe('schema-response-search product groups', () => {
   const products = (components['product-list-2'] as {products: Array<Record<string, unknown>>})
     .products;
 
-  it('lists grouped and ungrouped products, some groups larger than their listed variants', () => {
+  it('lists grouped and ungrouped products, some groups larger than their listed children', () => {
     expect(groupsOf(products).slice(0, 8)).toEqual([
       {name: 'HydroLite Sleeveless Wetsuit', listed: 3, total: 3},
       {name: 'EcoWave Performance Wetsuit', listed: 6, total: 9},
@@ -313,11 +313,11 @@ describe('schema-response-search product groups', () => {
     ]);
   });
 
-  it('lists each product first among its variants', () => {
+  it('lists each product first among its children', () => {
     expectNormalizedGroups(products);
   });
 
-  it('gives each variant its own name, price, image and link', () => {
+  it('gives each child its own name, price, image and link', () => {
     const [, blue, red] = products[0].children as Array<Record<string, unknown>>;
     expect(blue).toMatchObject({ec_name: 'HydroLite Sleeveless Wetsuit - Blue', ec_price: 99.99});
     expect(red).toMatchObject({ec_name: 'HydroLite Sleeveless Wetsuit - Red', ec_price: 94.99});
@@ -325,12 +325,12 @@ describe('schema-response-search product groups', () => {
     expect(blue.clickUri).not.toBe(products[0].clickUri);
   });
 
-  it('keeps a variant without imagery', () => {
+  it('keeps a child without imagery', () => {
     const kayaks = collectComponentState(matchSchemaPrompt('kayaks'));
     const [riverRun] = (kayaks['product-list-2'] as {products: Array<Record<string, unknown>>})
       .products;
-    const variants = riverRun.children as Array<Record<string, unknown>>;
-    expect(variants.map(({ec_images}) => ec_images)).toEqual([
+    const children = riverRun.children as Array<Record<string, unknown>>;
+    expect(children.map(({ec_images}) => ec_images)).toEqual([
       riverRun.ec_images,
       expect.any(Array),
       [],
