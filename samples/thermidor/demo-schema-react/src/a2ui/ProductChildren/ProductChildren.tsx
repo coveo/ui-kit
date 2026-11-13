@@ -23,7 +23,7 @@ interface ProductChildrenProps {
 
 /**
  * The thumbnails of a product's children, with the one its slot shows marked, and how many more
- * the group holds. Hovering, touching or pressing Enter on a thumbnail promotes its child. A
+ * `totalNumberOfChildren` counts. Hovering, touching or pressing Enter on a thumbnail promotes its child. A
  * product without children shows nothing.
  */
 export function ProductChildren({product, onPromote}: ProductChildrenProps) {
