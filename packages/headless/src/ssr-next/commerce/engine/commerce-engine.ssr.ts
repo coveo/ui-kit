@@ -21,8 +21,10 @@ import {validateControllerNames} from '../validation/controller-validation.js';
 /**
  * Initializes a Commerce engine definition in SSR with given controllers definitions and commerce engine config.
  * @param options - The commerce engine definition
- * @returns Three utility functions to fetch the initial state of the engine in SSR, hydrate the state in CSR,
- *  and a build function that can be used for edge cases requiring more control.
+ * @returns Four engine definitions, one per use case: `listingEngineDefinition`, `searchEngineDefinition`,
+ *  `standaloneEngineDefinition` (no request is sent to the API) and `recommendationEngineDefinition`.
+ *  Each exposes `fetchStaticState` to fetch the initial state on the server and `hydrateStaticState` to
+ *  hydrate it in the browser.
  *
  * @remarks
  * You can use the {@link InferStaticState} and {@link InferHydratedState} utility types with the returned engine definitions
@@ -30,15 +32,15 @@ import {validateControllerNames} from '../validation/controller-validation.js';
  *
  * @example
  * ```ts
- * const { listingEngineDefinition } = defineCommerceEngine(engineConfig);
+ * const {listingEngineDefinition} = defineCommerceEngine(engineConfig);
  *
  * const staticState = await listingEngineDefinition.fetchStaticState({
  *   navigatorContext: {/*...* /},
  *   context: {/*...* /},
  * });
  *
- * type SearchStaticState = InferStaticState<typeof listingEngineDefinition>;
- * type SearchHydratedState = InferHydratedState<typeof listingEngineDefinition>;
+ * type ListingStaticState = InferStaticState<typeof listingEngineDefinition>;
+ * type ListingHydratedState = InferHydratedState<typeof listingEngineDefinition>;
  * ```
  *
  * @group Engine
