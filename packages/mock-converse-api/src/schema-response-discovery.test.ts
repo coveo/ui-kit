@@ -36,10 +36,10 @@ describe('schema-response-discovery product groups', () => {
     ]);
   });
 
-  it('lists each product first among its variants, each with its own thumbnail', () => {
+  it('lists each product first among its children, each with its own thumbnail', () => {
     expectNormalizedGroups([...lifeJackets, ...safetyGear]);
-    for (const variant of lifeJackets[0].children as Product[]) {
-      expect(variant.ec_thumbnails).toEqual(variant.ec_images);
+    for (const child of lifeJackets[0].children as Product[]) {
+      expect(child.ec_thumbnails).toEqual(child.ec_images);
     }
   });
 });

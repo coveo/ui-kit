@@ -12,7 +12,7 @@ import {
   type ConverseEvent,
   type UpdateDataModelOp,
 } from '../events.js';
-import {groupVariants} from './product-groups.js';
+import {groupChildren} from './product-groups.js';
 
 const runId = 'b41e5d90-2f8c-4c1e-9b7a-3d6f0a1c8e42';
 
@@ -263,13 +263,13 @@ interface ProductSeed {
   price: number;
   color: string;
   rating: number;
-  variants?: VariantSeed[];
+  children?: ChildSeed[];
   groupSize?: number;
 }
 
-// A variant of a seed's group. Its image comes next in the leaf's pool unless `image` is null, for a
-// variant without imagery.
-interface VariantSeed {
+// Another product of a seed's group. Its image comes next in the leaf's pool unless `image` is null,
+// for a product without imagery.
+interface ChildSeed {
   color: string;
   price?: number;
   image?: null;
@@ -284,7 +284,7 @@ const PRODUCT_SEEDS: ProductSeed[] = [
     price: 99.99,
     color: 'Black',
     rating: 4.4,
-    variants: [{color: 'Blue'}, {color: 'Red', price: 94.99}],
+    children: [{color: 'Blue'}, {color: 'Red', price: 94.99}],
   },
   {
     name: 'EcoWave Performance Wetsuit',
@@ -293,7 +293,7 @@ const PRODUCT_SEEDS: ProductSeed[] = [
     price: 199.99,
     color: 'Yellow',
     rating: 3.0,
-    variants: [
+    children: [
       {color: 'Black'},
       {color: 'Blue'},
       {color: 'Green', price: 189.99},
@@ -343,7 +343,7 @@ const PRODUCT_SEEDS: ProductSeed[] = [
     price: 449.99,
     color: 'White',
     rating: 4.5,
-    variants: [{color: 'Blue', price: 469.99}],
+    children: [{color: 'Blue', price: 469.99}],
     groupSize: 4,
   },
   {
@@ -438,7 +438,7 @@ const PRODUCT_SEEDS: ProductSeed[] = [
     price: 549.99,
     color: 'Yellow',
     rating: 4.5,
-    variants: [{color: 'Red'}, {color: 'Green', image: null}],
+    children: [{color: 'Red'}, {color: 'Green', image: null}],
   },
   {
     name: 'LakeGlide Touring Kayak',
@@ -498,7 +498,7 @@ const PRODUCT_SEEDS: ProductSeed[] = [
     price: 49.99,
     color: 'Red',
     rating: 4.1,
-    variants: [{color: 'Yellow'}, {color: 'Blue'}, {color: 'Orange', price: 54.99}],
+    children: [{color: 'Yellow'}, {color: 'Blue'}, {color: 'Orange', price: 54.99}],
     groupSize: 6,
   },
   {
@@ -677,7 +677,7 @@ function imageForLeaf(leaf: string[]): string {
   return fallback;
 }
 
-function variantImage(leaf: string[], productImage: string, offset: number): string {
+function childImage(leaf: string[], productImage: string, offset: number): string {
   const pool = CATEGORY_IMAGES[leaf[leaf.length - 1]] ?? FALLBACK_IMAGES;
   return pool[(pool.indexOf(productImage) + offset) % pool.length];
 }
@@ -705,23 +705,23 @@ const products: WaterSportsProduct[] = PRODUCT_SEEDS.map((seed, index) => {
       ],
     }),
   };
-  if (!seed.variants) {
+  if (!seed.children) {
     return product;
   }
-  const otherVariants = seed.variants.map((variant, variantIndex): WaterSportsProduct => {
-    const images = variant.image === null ? [] : [variantImage(seed.leaf, image, variantIndex + 1)];
+  const otherChildren = seed.children.map((child, childIndex): WaterSportsProduct => {
+    const images = child.image === null ? [] : [childImage(seed.leaf, image, childIndex + 1)];
     return {
       ...product,
-      ec_name: `${seed.name} - ${variant.color}`,
-      ec_color: variant.color,
-      ec_price: variant.price ?? seed.price,
+      ec_name: `${seed.name} - ${child.color}`,
+      ec_color: child.color,
+      ec_price: child.price ?? seed.price,
       ec_thumbnails: images,
       ec_images: images,
-      clickUri: `${product.clickUri}?variant=${variantIndex + 1}`,
-      permanentid: `gid://shopify/ProductVariant/${50690000000000 + index * 10 + variantIndex + 1}`,
+      clickUri: `${product.clickUri}?variant=${childIndex + 1}`,
+      permanentid: `gid://shopify/ProductVariant/${50690000000000 + index * 10 + childIndex + 1}`,
     };
   });
-  return groupVariants(product, otherVariants, seed.groupSize);
+  return groupChildren(product, otherChildren, seed.groupSize);
 });
 
 const MAX_INSTANT_PRODUCTS = 4;
