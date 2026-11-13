@@ -36,7 +36,7 @@ export class XInternal extends LitElement {}
     );
 
     expect(findElement(manifest, 'x-internal')).toBeUndefined();
-    expect(findModule(manifest, 'src/x-internal.ts').exports).toEqual([]);
+    expect(findModule(manifest, 'src/x-internal.ts')).toBeUndefined();
   });
 
   it('should drop exports that are not custom elements', () => {
@@ -58,8 +58,7 @@ export * from './x-foo';
       'custom-element-definition:x-foo->XFoo',
       'js:XFoo->XFoo',
     ]);
-    expect(findModule(manifest, 'src/utils.ts').exports).toEqual([]);
-    expect(findModule(manifest, 'src/utils.ts').declarations).toEqual([]);
+    expect(findModule(manifest, 'src/utils.ts')).toBeUndefined();
   });
 
   it('should keep the members a custom element inherits from a mixin', () => {
@@ -87,5 +86,71 @@ export class XFoo extends WithGreeting(LitElement) {}
       kind: 'method',
       inheritedFrom: {name: 'WithGreeting'},
     });
+  });
+
+  it('should drop overloaded functions instead of duplicating their exports', () => {
+    const manifest = analyze(
+      {
+        'src/utils.ts': `
+export function closest(element: Element, selector: string): Element | null;
+export function closest(element: Node, selector: string): Node | null;
+export function closest(element: Node, selector: string) {
+  return null;
+}
+`,
+      },
+      plugins()
+    );
+
+    expect(findModule(manifest, 'src/utils.ts')).toBeUndefined();
+  });
+
+  it('should drop barrel re-exports instead of duplicating them', () => {
+    const manifest = analyze(
+      {
+        'src/x-foo.ts': litElement('x-foo', 'XFoo', ''),
+        'src/x-bar.ts': litElement('x-bar', 'XBar', ''),
+        'src/x-baz.ts': litElement('x-baz', 'XBaz', ''),
+        'src/index.ts': `
+export * from './x-foo';
+export * from './x-bar';
+export * from './x-baz';
+`,
+      },
+      plugins()
+    );
+
+    expect(findModule(manifest, 'src/index.ts')).toBeUndefined();
+    expect(findElement(manifest, 'x-baz')).toBeDefined();
+  });
+
+  it('should drop type alias exports', () => {
+    const manifest = analyze(
+      {
+        'src/index.ts': `
+import type {Components as _Components} from './components';
+export type {_Components as Components, _Components as JSX};
+`,
+      },
+      plugins()
+    );
+
+    expect(findModule(manifest, 'src/index.ts')).toBeUndefined();
+  });
+
+  it('should drop a declaration that an object literal default names', () => {
+    const manifest = analyze(
+      {
+        'src/x-foo.ts': `${litElement('x-foo', 'XFoo', '')}
+const id = 'x-foo';
+export const options = {id};
+`,
+      },
+      plugins()
+    );
+
+    expect(findModule(manifest, 'src/x-foo.ts').declarations.map(({name}) => name)).toEqual([
+      'XFoo',
+    ]);
   });
 });

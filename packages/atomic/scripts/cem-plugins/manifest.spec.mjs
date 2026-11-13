@@ -52,21 +52,15 @@ describe('the custom elements manifest of Atomic', () => {
     expect(new Set(tagNames).size).toBe(tagNames.length);
   });
 
-  it('should export each custom element class and definition once', () => {
+  it('should only list modules that declare a custom element, with its class export and definition', () => {
     for (const module of manifest.modules) {
-      const definitions = module.exports.filter(
-        (entry) => entry.kind === 'custom-element-definition'
-      );
-      if (definitions.length === 0) {
-        continue;
-      }
-      expect(definitions, module.path).toHaveLength(1);
+      expect(module.declarations, module.path).toHaveLength(1);
+      const [element] = module.declarations;
+      expect(element.customElement, module.path).toBe(true);
       expect(
-        module.exports.filter(
-          (entry) => entry.kind === 'js' && entry.name === definitions[0].declaration.name
-        ),
+        module.exports.map(({kind, declaration}) => `${kind}:${declaration.name}`).toSorted(),
         module.path
-      ).toHaveLength(1);
+      ).toEqual([`custom-element-definition:${element.name}`, `js:${element.name}`]);
     }
   });
 
