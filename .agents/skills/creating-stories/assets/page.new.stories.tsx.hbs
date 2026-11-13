@@ -1,11 +1,7 @@
 import { {{engineConfig}} } from '{{headlessPath}}';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import {Mock{{apiClass}}} from '@coveo/platform-mock-api/{{apiPath}}/mock';
-import {
-  type baseResponse,
-  richResponse,
-} from '@coveo/platform-mock-api/{{apiPath}}/search-response';
+import {Mock{{apiClass}}, searchResponses} from '@coveo/platform-mock-api/{{apiPath}}';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 // Import all components used in the page template below.
 
@@ -33,7 +29,7 @@ const meta: Meta = {
   },
   beforeEach: async () => {
     mock{{apiClass}}.searchEndpoint.mock(
-      () => richResponse as unknown as typeof baseResponse
+      () => searchResponses.richResponse as unknown as typeof searchResponses.baseResponse
     );
   },
   render: () => html`

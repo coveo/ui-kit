@@ -49,6 +49,7 @@ describe('atomic-commerce-recommendation-interface', () => {
   const setupElement = async (
     props: {
       analytics?: boolean; // TODO - (v4) KIT-4990: remove.
+      disableAnalytics?: boolean;
       iconAssetsPath?: string;
       language?: string; // TODO - (v4) KIT-4365: remove.
       languageAssetsPath?: string;
@@ -59,6 +60,7 @@ describe('atomic-commerce-recommendation-interface', () => {
     const element = (await fixture<AtomicCommerceRecommendationInterface>(
       html`<atomic-commerce-recommendation-interface
         analytics=${ifDefined(props.analytics)}
+        ?disable-analytics=${props.disableAnalytics}
         icon-assets-path=${ifDefined(props.iconAssetsPath)}
         language=${ifDefined(props.language)}
         language-assets-path=${ifDefined(props.languageAssetsPath)}
@@ -513,6 +515,22 @@ describe('atomic-commerce-recommendation-interface', () => {
     expect(onAnalyticsChangeSpy).toHaveBeenCalledOnce();
 
     element.analytics = true;
+    await element.updateComplete;
+
+    expect(onAnalyticsChangeSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it('should call InterfaceController.onAnalyticsChange when the disable-analytics attribute changes', async () => {
+    const element = await setupElement();
+    await element.initializeWithEngine(buildFakeCommerceEngine({}));
+    const onAnalyticsChangeSpy = vi.spyOn(InterfaceController.prototype, 'onAnalyticsChange');
+
+    element.toggleAttribute('disable-analytics', true);
+    await element.updateComplete;
+
+    expect(onAnalyticsChangeSpy).toHaveBeenCalledOnce();
+
+    element.toggleAttribute('disable-analytics', false);
     await element.updateComplete;
 
     expect(onAnalyticsChangeSpy).toHaveBeenCalledTimes(2);

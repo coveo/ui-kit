@@ -2,6 +2,7 @@ import type {CommerceEngineConfiguration} from '../../../app/commerce-engine/com
 import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import {defineMockCommerceController} from '../../../test/mock-ssr-controller-definitions.js';
+import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
 import type {CommerceEngineDefinitionOptions} from '../types/engine.js';
 import {defineCommerceEngine} from './commerce-engine.ssr.js';
 
@@ -100,6 +101,70 @@ describe('Commerce Engine SSR', () => {
         },
       });
       expect(staticState.controllers).toHaveProperty('parameterManager');
+    });
+  });
+
+  describe('requests sent to the Commerce API', () => {
+    interface CapturedRequest {
+      url: string;
+      body: Record<string, unknown>;
+    }
+
+    let commerceRequests: CapturedRequest[];
+
+    const context = {
+      view: {url: 'http://example.com'},
+      country: 'US',
+      currency: 'USD' as const,
+      language: 'en',
+    };
+
+    beforeEach(() => {
+      commerceRequests = [];
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async (url: string, init: RequestInit) => {
+          if (url.includes('/commerce/v2/')) {
+            commerceRequests.push({
+              url,
+              body: JSON.parse(String(init.body)),
+            });
+          }
+          // The request is what matters here: an error response completes the request without
+          // having to replicate a full Commerce API payload.
+          return new Response(
+            JSON.stringify({message: 'Stubbed response', statusCode: 500, type: 'Stubbed'}),
+            {status: 500, headers: {'Content-Type': 'application/json'}}
+          );
+        })
+      );
+    });
+
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    it('should seed the recommendation requests with the product ID', async () => {
+      const {recommendationEngineDefinition} = defineCommerceEngine({
+        ...definitionOptions,
+        controllers: {
+          viewedTogether: defineRecommendations({options: {slotId: 'some-slot-id'}}),
+        },
+      });
+
+      await recommendationEngineDefinition.fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+        context,
+        recommendations: ['viewedTogether'],
+        productId: 'product-123',
+      });
+
+      const recommendationRequest = commerceRequests.find((request) =>
+        request.url.includes('/recommendations')
+      );
+      expect(recommendationRequest?.body.context).toEqual(
+        expect.objectContaining({product: {productId: 'product-123'}})
+      );
     });
   });
 });

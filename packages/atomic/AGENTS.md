@@ -5,13 +5,14 @@
 - **Build the Atomic package**: `pnpm turbo build --filter=@coveo/atomic`
 - **Run all Atomic unit tests**: `pnpm turbo test --filter=@coveo/atomic`
 - **Run a specific unit test suite**: `npx vitest run <relative/path/to/test-suite.spec.ts>`
-- **Run the Atomic and Storybook dev servers**: `pnpm turbo dev --filter=@coveo/atomic`
+- **Run the Storybook dev server**: `pnpm turbo dev --filter=@coveo/atomic`
+- **Run the Atomic dev page (`dev/`)**: `pnpm turbo web:dev --filter=@coveo/atomic`
 - **Run all Atomic end-to-end tests**: `npx playwright test`
 - **Run a specific end-to-end test suite**: `npx playwright test -g <test-suite.e2e.ts>`
 
 **Notes**:
 
-- By default, the Atomic and Storybook dev servers run on ports 3333 and 4400 respectively
+- By default, Storybook runs on port 4400 and the Atomic dev page on port 3333
 - End-to-end testing commands must be executed from `packages/atomic/` while the Storybook server is running
 
 ## Atomic Package Structure
@@ -39,7 +40,7 @@ In addition to the technology listed in the root `AGENTS.md` file, the following
 
 In addition to the boundaries listed in the root `AGENTS.md` file, the following boundaries apply when working in the Atomic package:
 
-**You must ALWAYS**:
+**Always**:
 
 - Add unit tests in the corresponding test suite (`.spec.ts`) when:
   - Adding a new feature or behavior

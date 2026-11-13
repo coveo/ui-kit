@@ -38,8 +38,16 @@ export class Mock<Domain>Api implements MockApi {
   get handlers(): HttpHandler[] {
     return [this.<endpoint>Endpoint.generateHandler()];
   }
+
+  clearAll(): void {
+    this.<endpoint>Endpoint.clear();
+  }
 }
 ```
+
+## 4) Expose the domain
+
+Create `packages/platform-mock-api/src/<api-domain>/index.ts` exporting `Mock<Domain>Api` (and any response namespaces), add `export {Mock<Domain>Api} from './<api-domain>/mock.js';` to `packages/platform-mock-api/src/index.ts`, and add a `"./<api-domain>"` entry to the `exports` map of `packages/platform-mock-api/package.json` modeled on the existing ones. Stories import it as `@coveo/platform-mock-api/<api-domain>`; only subpaths listed in `exports` resolve.
 
 ## Multiple endpoints
 

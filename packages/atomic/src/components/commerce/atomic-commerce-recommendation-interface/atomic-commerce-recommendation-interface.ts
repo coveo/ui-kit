@@ -133,12 +133,10 @@ export class AtomicCommerceRecommendationInterface
   @property({type: Boolean, attribute: 'localize-with-country', reflect: true})
   localizeWithCountry = false;
 
-  // TODO - KIT-4994: Add disableAnalytics property that defaults to false.
-
-  // TODO - KIT-4994: Deprecate in favor of disableAnalytics property.
   // TODO - (v4) KIT-4990: Remove.
   /**
    * Whether to enable analytics.
+   * @deprecated - Use `disable-analytics` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
@@ -146,6 +144,16 @@ export class AtomicCommerceRecommendationInterface
     reflect: true,
   })
   analytics: boolean = true;
+
+  /**
+   * Whether to disable analytics.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'disable-analytics',
+    reflect: true,
+  })
+  disableAnalytics = false;
   private i18Initialized: Promise<void>;
 
   public constructor() {
@@ -229,6 +237,7 @@ export class AtomicCommerceRecommendationInterface
   }
 
   @watch('analytics')
+  @watch('disableAnalytics')
   public toggleAnalytics() {
     this.interfaceController.onAnalyticsChange();
   }

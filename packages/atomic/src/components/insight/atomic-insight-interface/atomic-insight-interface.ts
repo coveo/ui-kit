@@ -75,12 +75,10 @@ export class AtomicInsightInterface
    */
   @property({type: Object}) public engine?: InsightEngine;
 
-  // TODO - KIT-4994: add disableAnalytics prop
-
-  // TODO - KIT-4994: deprecate in favor of disableAnalytics
-  // TODO - KIT-4990: remove
+  // TODO - (v4) KIT-4990: Remove.
   /**
    * Whether analytics should be enabled.
+   * @deprecated - Use `disable-analytics` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
@@ -88,6 +86,16 @@ export class AtomicInsightInterface
     reflect: true,
   })
   public analytics = true;
+
+  /**
+   * Whether to disable analytics.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'disable-analytics',
+    reflect: true,
+  })
+  public disableAnalytics = false;
 
   /**
    * The service insight interface i18next instance.
@@ -199,8 +207,8 @@ export class AtomicInsightInterface
     this.engine.executeFirstSearch();
   }
 
-  // TODO - KIT-4994 / KIT-4990: adjust
   @watch('analytics')
+  @watch('disableAnalytics')
   public toggleAnalytics() {
     this.interfaceController.onAnalyticsChange();
   }
@@ -244,9 +252,8 @@ export class AtomicInsightInterface
     this.interfaceController.onComponentInitializing(event);
   };
 
-  // TODO - KIT-4994 / KIT-4990: adjust
   private initEngine(options: InsightInitializationOptions) {
-    const analyticsConfig = getAnalyticsConfig(options, this.analytics);
+    const analyticsConfig = getAnalyticsConfig(options, this.interfaceController.analyticsEnabled);
     try {
       this.engine = buildInsightEngine({
         configuration: {

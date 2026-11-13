@@ -9,12 +9,7 @@ metadata:
 
 # User Story Companion
 
-Support two modes: Creation and Review. Use the command markers below to switch modes.
-
-Commands:
-
-- /create: Switch to Creation mode
-- /review: Switch to Review mode
+Work in one of two modes, chosen from the user's request: Creation (drafting new stories) or Review (critiquing stories the user provides). Ask only when the request fits neither.
 
 ## Creation mode
 
@@ -61,7 +56,3 @@ Ask for a 1-5 rating for clarity and completeness. If below 4, ask for more deta
 - Identify ambiguities and missing details.
 - Flag stories that are too large and propose splits.
 - Summarize main gaps and suggested improvements.
-
-## Related documents
-
-- Supports Feature delivery. See OVERVIEW.md for document relationships.
