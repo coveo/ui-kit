@@ -264,7 +264,7 @@ interface ProductSeed {
   color: string;
   rating: number;
   children?: ChildSeed[];
-  groupSize?: number;
+  totalNumberOfChildren?: number;
 }
 
 // Another product of a seed's group. Its image comes next in the leaf's pool unless `image` is null,
@@ -300,7 +300,7 @@ const PRODUCT_SEEDS: ProductSeed[] = [
       {color: 'Red'},
       {color: 'White'},
     ],
-    groupSize: 9,
+    totalNumberOfChildren: 9,
   },
   {
     name: 'ArcticShield Full Drysuit',
@@ -344,7 +344,7 @@ const PRODUCT_SEEDS: ProductSeed[] = [
     color: 'White',
     rating: 4.5,
     children: [{color: 'Blue', price: 469.99}],
-    groupSize: 4,
+    totalNumberOfChildren: 4,
   },
   {
     name: 'GlideMax Longboard Surfboard',
@@ -499,7 +499,7 @@ const PRODUCT_SEEDS: ProductSeed[] = [
     color: 'Red',
     rating: 4.1,
     children: [{color: 'Yellow'}, {color: 'Blue'}, {color: 'Orange', price: 54.99}],
-    groupSize: 6,
+    totalNumberOfChildren: 6,
   },
   {
     name: 'AquaGuard Kids Life Jacket',
@@ -721,7 +721,7 @@ const products: WaterSportsProduct[] = PRODUCT_SEEDS.map((seed, index) => {
       permanentid: `gid://shopify/ProductVariant/${50690000000000 + index * 10 + childIndex + 1}`,
     };
   });
-  return groupChildren(product, otherChildren, seed.groupSize);
+  return groupChildren(product, otherChildren, seed.totalNumberOfChildren);
 });
 
 const MAX_INSTANT_PRODUCTS = 4;

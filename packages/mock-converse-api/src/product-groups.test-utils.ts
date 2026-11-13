@@ -3,8 +3,8 @@ import {expect} from 'vitest';
 type Product = Record<string, unknown>;
 
 /**
- * Each product's name, how many children it lists and the size of its group, both absent for a
- * product without children.
+ * Each product's name, how many children it lists and its `totalNumberOfChildren`, both absent for
+ * a product without children.
  */
 export function groupsOf(products: Product[]) {
   return products.map((product) => ({
