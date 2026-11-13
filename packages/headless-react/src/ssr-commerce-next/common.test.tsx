@@ -2,6 +2,8 @@
 import {
   type CommerceHydratedState,
   type CommerceStaticState,
+  type Controller,
+  type ControllerDefinitionsMap,
   SolutionType,
   type CommerceEngine as SSRCommerceEngine,
 } from '@coveo/headless/ssr-commerce-next';
@@ -11,10 +13,11 @@ import {afterEach, describe, expect, test, vi} from 'vitest';
 import {buildStateProvider} from './common.js';
 import type {ContextState, StateProviderProps} from './types.js';
 
-type MockContext = ContextState<any, any>;
+type MockDefinitions = ControllerDefinitionsMap<Controller>;
+type MockContext = ContextState<MockDefinitions, SolutionType.listing>;
 type MockControllers = StateProviderProps<
-  CommerceStaticState<any, any>,
-  CommerceHydratedState<any, any>
+  CommerceStaticState<MockDefinitions, SolutionType.listing>,
+  CommerceHydratedState<MockDefinitions, SolutionType.listing>
 >['controllers'];
 describe('SSR Commerce Common functions', () => {
   const mockContext = createContext(null) as unknown as Context<MockContext | null>;
