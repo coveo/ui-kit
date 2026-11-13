@@ -772,6 +772,24 @@ describe('createSession lifecycle', () => {
       await action;
     });
 
+    it('keeps a surface an action re-creates on the turn that drew it', async () => {
+      const session = createSession(baseConfig);
+      await prompt(session, searchSurface);
+      await prompt(session, answerSurface);
+
+      const stream = queueStream();
+      const action = session.dispatchAction(selectPageMessage(2));
+      await stream.opened;
+      stream.emit({...searchSurface, messageId: 'restored-search'});
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await action;
+
+      expect(
+        session.turns.map((turn) => turn.response.surfaces.map((surface) => surface.surfaceId))
+      ).toEqual([['commerce-search-surface'], ['answer-surface']]);
+    });
+
     it('applies a later turn validated write to the state of an earlier surface', async () => {
       const session = createSession(baseConfig);
       await prompt(session, searchSurface);
