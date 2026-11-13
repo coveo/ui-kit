@@ -12,7 +12,9 @@ import type {
 
 export type {InferHydratedState, InferStaticState};
 
-type InferControllerPropsFromDefinition<TController extends ControllerDefinition<Controller>> =
+export type InferControllerPropsFromDefinition<
+  TController extends ControllerDefinition<Controller>,
+> =
   TController extends ControllerDefinitionWithProps<Controller, infer Props>
     ? Props
     : TController extends ControllerDefinitionWithoutProps<Controller>

@@ -1,48 +1,37 @@
-import type {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {ControllerStaticStateMap, ControllersMap} from '../../common/types/controllers.js';
+import type {HasKey} from '../../common/types/utilities.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import type {SolutionType} from './controller-constants.js';
 import type {
+  AugmentedControllerDefinition,
   ControllerDefinitionsMap,
-  FilteredBakedInControllers,
 } from './controller-definitions.js';
-import type {CommerceStaticState} from './fetch-static-state.js';
+import type {InferControllerFromDefinition} from './controller-inference.js';
 
 /**
  * The engine and the live controllers returned by `hydrateStaticState()`.
  *
- * Only the controllers available to the solution type are built, including the baked-in ones
- * (`context` and `cart` everywhere, `parameterManager` for search and listing).
+ * @typeParam TControllers - The controllers of the engine definition.
+ * @typeParam TSolutionType - The kind of page the engine definition serves.
  */
-export interface HydratedState<
-  TControllers extends ControllersMap,
+export interface CommerceHydratedState<
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 > {
   engine: SSRCommerceEngine;
-  controllers: TControllers & FilteredBakedInControllers<TSolutionType>;
+  /**
+   * The live controllers of the page, by name: the controllers of the engine definition that are
+   * available to the solution type, and the baked-in ones (`context` and `cart` everywhere,
+   * `parameterManager` for search and listing).
+   */
+  controllers: {
+    [
+      K in keyof AugmentedControllerDefinition<TControllers> as HasKey<
+        AugmentedControllerDefinition<TControllers>[K],
+        TSolutionType
+      > extends never
+        ? never
+        : K
+    ]: InferControllerFromDefinition<AugmentedControllerDefinition<TControllers>[K]>;
+  };
 }
-
-export interface HydrateStaticStateOptions<TSearchAction> {
-  searchActions: TSearchAction[];
-}
-
-/**
- * Creates a new engine from the snapshot of the engine created in SSR with fetchStaticState.
- *
- * Useful when hydrating a server-side-rendered engine.
- */
-export type HydrateStaticState<
-  TControllers extends ControllersMap,
-  TSearchAction extends UnknownAction,
-  TControllersStaticState extends ControllerStaticStateMap,
-  TControllersDefinitionsMap extends ControllerDefinitionsMap<Controller>,
-  TSolutionType extends SolutionType,
-> = (
-  staticState: CommerceStaticState<
-    TSearchAction,
-    TControllersStaticState,
-    TControllersDefinitionsMap,
-    TSolutionType
-  >
-) => Promise<HydratedState<TControllers, TSolutionType>>;

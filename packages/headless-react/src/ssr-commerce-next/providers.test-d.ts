@@ -1,6 +1,8 @@
 import {
+  type CommerceEngine,
   defineProductList,
   getSampleCommerceEngineConfiguration,
+  type InferHydratedState,
   type InferStaticState,
 } from '@coveo/headless/ssr-commerce-next';
 import type {ComponentProps} from 'react';
@@ -20,5 +22,26 @@ describe('buildProviderWithDefinition', () => {
     expectTypeOf<ComponentProps<typeof ListingProvider>['staticState']>().toEqualTypeOf<
       InferStaticState<typeof listingEngineDefinition>
     >();
+  });
+});
+
+describe('the StateProvider of an engine definition', () => {
+  type StateProviderProps = ComponentProps<typeof listingEngineDefinition.StateProvider>;
+
+  it('should take the controllers of its definition, static or hydrated', () => {
+    expectTypeOf<StateProviderProps['controllers']>().toEqualTypeOf<
+      | InferStaticState<typeof listingEngineDefinition>['controllers']
+      | InferHydratedState<typeof listingEngineDefinition>['controllers']
+    >();
+  });
+
+  it('should name the controllers of the page, the baked-in ones included', () => {
+    expectTypeOf<keyof StateProviderProps['controllers']>().toEqualTypeOf<
+      'productList' | 'parameterManager' | 'context' | 'cart'
+    >();
+  });
+
+  it('should take the hydrated engine', () => {
+    expectTypeOf<StateProviderProps['engine']>().toEqualTypeOf<CommerceEngine | undefined>();
   });
 });

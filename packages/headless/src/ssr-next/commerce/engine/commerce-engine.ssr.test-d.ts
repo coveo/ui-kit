@@ -3,9 +3,18 @@ import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine
 import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
+import type {SolutionType} from '../types/controller-constants.js';
 import type {InferHydratedState, InferStaticState} from '../types/controller-inference.js';
 import type {CommerceEngineDefinitionOptions} from '../types/engine.js';
+import type {CommerceStaticState} from '../types/fetch-static-state.js';
+import type {CommerceHydratedState} from '../types/hydrate-static-state.js';
 import {defineCommerceEngine} from './commerce-engine.ssr.js';
+
+const controllers = {
+  productList: defineProductList(),
+  searchBox: defineSearchBox(),
+  popularViewed: defineRecommendations({options: {slotId: 'slot-viewed'}}),
+};
 
 // Types the customer relies on for IntelliSense: everything below is inferred from the controllers
 // of the definition, with no annotation on the customer's side.
@@ -16,11 +25,7 @@ const {
   recommendationEngineDefinition,
 } = defineCommerceEngine({
   configuration: getSampleCommerceEngineConfiguration(),
-  controllers: {
-    productList: defineProductList(),
-    searchBox: defineSearchBox(),
-    popularViewed: defineRecommendations({options: {slotId: 'slot-viewed'}}),
-  },
+  controllers,
 });
 
 type ListingStaticState = InferStaticState<typeof listingEngineDefinition>;
@@ -81,5 +86,34 @@ describe('defineCommerceEngine', () => {
     expectTypeOf<
       InferHydratedState<typeof standaloneEngineDefinition>['controllers']
     >().not.toHaveProperty('parameterManager');
+  });
+});
+
+describe('the static and hydrated states of a commerce engine definition', () => {
+  it('should be named after the controllers and the kind of page of the definition', () => {
+    expectTypeOf<ListingStaticState>().toEqualTypeOf<
+      CommerceStaticState<typeof controllers, SolutionType.listing>
+    >();
+    expectTypeOf<ListingHydratedState>().toEqualTypeOf<
+      CommerceHydratedState<typeof controllers, SolutionType.listing>
+    >();
+  });
+
+  it('should name exactly the controllers built for each kind of page', () => {
+    expectTypeOf<keyof ListingHydratedState['controllers']>().toEqualTypeOf<
+      'productList' | 'parameterManager' | 'context' | 'cart'
+    >();
+    expectTypeOf<
+      keyof InferHydratedState<typeof searchEngineDefinition>['controllers']
+    >().toEqualTypeOf<'productList' | 'searchBox' | 'parameterManager' | 'context' | 'cart'>();
+    expectTypeOf<
+      keyof InferHydratedState<typeof standaloneEngineDefinition>['controllers']
+    >().toEqualTypeOf<'context' | 'cart'>();
+    expectTypeOf<
+      keyof InferHydratedState<typeof recommendationEngineDefinition>['controllers']
+    >().toEqualTypeOf<'popularViewed' | 'context' | 'cart'>();
+    expectTypeOf<keyof ListingStaticState['controllers']>().toEqualTypeOf<
+      keyof ListingHydratedState['controllers']
+    >();
   });
 });

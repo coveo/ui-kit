@@ -1,5 +1,9 @@
 /* oxlint-disable @typescript-eslint/no-explicit-any -- <> */
 import {
+  type CommerceHydratedState,
+  type CommerceStaticState,
+  type Controller,
+  type ControllerDefinitionsMap,
   SolutionType,
   type CommerceEngine as SSRCommerceEngine,
 } from '@coveo/headless/ssr-commerce-next';
@@ -7,9 +11,14 @@ import {cleanup, render, screen} from '@testing-library/react';
 import React, {type Context, createContext} from 'react';
 import {afterEach, describe, expect, test, vi} from 'vitest';
 import {buildStateProvider} from './common.js';
-import type {ContextState} from './types.js';
+import type {ContextState, StateProviderProps} from './types.js';
 
-type MockContext = ContextState<any, any>;
+type MockDefinitions = ControllerDefinitionsMap<Controller>;
+type MockContext = ContextState<MockDefinitions, SolutionType.listing>;
+type MockControllers = StateProviderProps<
+  CommerceStaticState<MockDefinitions, SolutionType.listing>,
+  CommerceHydratedState<MockDefinitions, SolutionType.listing>
+>['controllers'];
 describe('SSR Commerce Common functions', () => {
   const mockContext = createContext(null) as unknown as Context<MockContext | null>;
   const mockSingletonContext = {
@@ -27,13 +36,13 @@ describe('SSR Commerce Common functions', () => {
       subscribe: vi.fn(),
       methods: {updateText: vi.fn()},
     },
-  };
+  } as unknown as MockControllers;
 
   const mockStaticControllers = {
     searchBox: {
       state: {value: 'test'},
     },
-  };
+  } as unknown as MockControllers;
 
   const mockSolutionType = SolutionType.listing;
 
