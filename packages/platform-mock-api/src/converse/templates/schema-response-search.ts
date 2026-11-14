@@ -728,14 +728,11 @@ interface SortField {
   displayName: string;
 }
 
-interface SortCriterion {
-  sortCriteria: 'relevance' | 'fields';
-  fields: SortField[];
-}
+type SortCriterion = {sortCriteria: 'relevance'} | {sortCriteria: 'fields'; fields: SortField[]};
 
 // The sorts Agent Gateway sends, as the Commerce API returns them: relevance carries no fields, and
 // each field sort is named by the Commerce API's displayName on its field.
-const RELEVANCE_SORT: SortCriterion = {sortCriteria: 'relevance', fields: []};
+const RELEVANCE_SORT: SortCriterion = {sortCriteria: 'relevance'};
 
 const availableSorts: SortCriterion[] = [
   RELEVANCE_SORT,
@@ -749,28 +746,80 @@ const availableSorts: SortCriterion[] = [
   },
 ];
 
-function sameSortFields(sort: SortCriterion, fields: unknown): boolean {
-  if (!Array.isArray(fields) || fields.length !== sort.fields.length) {
-    return false;
-  }
-  return sort.fields.every((sortField, index) => {
-    const candidate = fields[index] as Record<string, unknown> | null;
-    return candidate?.field === sortField.field && candidate?.direction === sortField.direction;
-  });
+interface RequestedSortField {
+  field: string;
+  direction: unknown;
 }
 
-// Like the gateway, a `fields` sort is identified by its fields (field and direction), never by a
-// name, and a `fields` sort without fields is relevance. The gateway forwards any other fields to the
-// Commerce API; the mock only sorts on its available sorts and applies relevance for the rest.
-function resolveSort(context: Record<string, unknown>): SortCriterion {
-  if (context.sortCriteria !== 'fields') {
+function requestedSortFields(fields: unknown): RequestedSortField[] {
+  return (Array.isArray(fields) ? fields : []).filter(
+    (field): field is RequestedSortField => typeof field?.field === 'string'
+  );
+}
+
+function sameSortFields(sort: SortCriterion, fields: RequestedSortField[]): boolean {
+  if (sort.sortCriteria !== 'fields' || fields.length !== sort.fields.length) {
+    return false;
+  }
+  return sort.fields.every(
+    (sortField, index) =>
+      fields[index].field === sortField.field && fields[index].direction === sortField.direction
+  );
+}
+
+// Like the gateway, a field sort is identified by its fields (field and direction), never by a
+// name. The gateway forwards any other fields to the Commerce API; the mock only sorts on its
+// available sorts and applies relevance for the rest. `undefined` is a sort the gateway rejects
+// (see sortActionRejection).
+function resolveSort(sort: unknown): SortCriterion | undefined {
+  const {sortCriteria, fields} = (sort ?? {}) as Record<string, unknown>;
+  if (sortCriteria === 'relevance') {
     return RELEVANCE_SORT;
   }
-  return (
-    availableSorts.find(
-      (sort) => sort.sortCriteria === 'fields' && sameSortFields(sort, context.fields)
-    ) ?? RELEVANCE_SORT
-  );
+  const requested = requestedSortFields(fields);
+  if (sortCriteria !== 'fields' || requested.length === 0) {
+    return undefined;
+  }
+  return availableSorts.find((available) => sameSortFields(available, requested)) ?? RELEVANCE_SORT;
+}
+
+interface ActionRejection {
+  errorCode: 'INVALID_JSON' | 'AGENT:ACTION_NOT_APPLICABLE';
+  message: string;
+}
+
+/**
+ * How the gateway rejects a sort action before the stream starts, or `undefined` when it accepts
+ * it. A sort with another `sortCriteria`, or none, does not deserialize (`INVALID_JSON`).
+ * `selectSort` without a sort, the old flat payload included, and a field sort that names no field
+ * do not apply (`AGENT:ACTION_NOT_APPLICABLE`). A `restoreState` without a sort, the old
+ * `sortCriteria` key included, restores the default sort.
+ */
+function sortActionRejection(action: {
+  name: string;
+  context: Record<string, unknown>;
+}): ActionRejection | undefined {
+  const {name, context} = action;
+  if (name !== 'selectSort' && name !== 'restoreState') {
+    return undefined;
+  }
+  const sort = context.sort;
+  if (sort === undefined || sort === null) {
+    return name === 'selectSort'
+      ? {errorCode: 'AGENT:ACTION_NOT_APPLICABLE', message: 'selectSort requires a sort'}
+      : undefined;
+  }
+  const {sortCriteria} = (typeof sort === 'object' ? sort : {}) as Record<string, unknown>;
+  if (sortCriteria !== 'relevance' && sortCriteria !== 'fields') {
+    return {errorCode: 'INVALID_JSON', message: `${name} has a sort with an unknown sortCriteria`};
+  }
+  if (!resolveSort(sort)) {
+    return {
+      errorCode: 'AGENT:ACTION_NOT_APPLICABLE',
+      message: `${name} has a field sort without a field`,
+    };
+  }
+  return undefined;
 }
 
 interface PriceRange {
@@ -847,6 +896,9 @@ const QUERY_SUMMARY_ID = 'query-summary-2';
 
 // Relevance preserves the original catalog order; a field sort orders by each field in turn.
 function sortProducts(input: WaterSportsProduct[], sort: SortCriterion): WaterSportsProduct[] {
+  if (sort.sortCriteria === 'relevance') {
+    return input;
+  }
   return [...input].sort((a, b) => {
     for (const {field, direction} of sort.fields) {
       const difference = a[field] - b[field];
@@ -1720,9 +1772,7 @@ function restoreView(context: Record<string, unknown>): SearchViewState {
     query: String(context.query ?? DEFAULT_VIEW.query),
     page: Number(context.page) || 0,
     pageSize: Number(context.pageSize) || DEFAULT_VIEW.pageSize,
-    // The restore payload names the sort by `sortCriteria` only, so a restored field sort becomes
-    // relevance, as on the gateway.
-    sort: resolveSort(context),
+    sort: resolveSort(context.sort) ?? RELEVANCE_SORT,
     selectedBrands: (restored(FACET_FIELDS.regular.field)?.values ?? []).map(String),
     selectedPriceRange: range ? {start: Number(range.start), end: Number(range.end)} : null,
     selectedCategoryPath: (restored(FACET_FIELDS.category.field)?.path ?? []).map(String),
@@ -1748,7 +1798,7 @@ function deriveNonFacetState(action: {name: string; context: Record<string, unkn
       // changing sort resets to the first page
       currentView = {
         ...currentView,
-        sort: resolveSort(action.context),
+        sort: resolveSort(action.context.sort) ?? currentView.sort,
         page: 0,
       };
       break;
@@ -1879,4 +1929,5 @@ export {
   productSearchQuery,
   searchProductsFor,
   rerunsSearch,
+  sortActionRejection,
 };
