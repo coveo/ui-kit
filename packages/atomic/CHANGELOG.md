@@ -1,3 +1,17 @@
+## 3.66.0
+
+### Minor Changes
+
+- [#8920](https://github.com/coveo/ui-kit/pull/8920) [`3973cbd`](https://github.com/coveo/ui-kit/commit/3973cbd98acae04af6d8d4038d8f8a194f0f41a2) - Add the `disable-analytics` attribute to `atomic-search-interface`, `atomic-commerce-interface`, `atomic-commerce-recommendation-interface`, `atomic-insight-interface`, and `atomic-recs-interface`. It follows the HTML boolean attribute rules: it defaults to `false`, and setting it has the same effect as `analytics="false"`. The `analytics` attribute is deprecated and will be removed in the next major version of Atomic (v4): replace `analytics="false"` with `disable-analytics`, or set the `disableAnalytics` property to `true` instead of setting `analytics` to `false`. Until then, analytics are off when either attribute turns them off.
+
+### Patch Changes
+
+- [#8871](https://github.com/coveo/ui-kit/pull/8871) [`ee36a80`](https://github.com/coveo/ui-kit/commit/ee36a80e1f23ab33d14fb15efece9e4f7748cc0b) - The accessible name of the facet clear button now contains its visible text in every locale, so it meets WCAG 2.5.3 Label in Name. The `clear-filters-for-facet` i18n key changed in several locales; in English, the singular form now reads "Clear filter for the {{label}} facet" instead of "Clear {{count}} filter for the {{label}} facet". The clear button of a category facet's selected value uses the same key.
+
+- Updated dependencies [[`2472f58`](https://github.com/coveo/ui-kit/commit/2472f5888fcf47b0055b59a69a09bdb310fbb22f), [`e7a84e1`](https://github.com/coveo/ui-kit/commit/e7a84e1272991e411bff60adb003a4a0b3ba9efb), [`0fc1e71`](https://github.com/coveo/ui-kit/commit/0fc1e714a1dc481bf3b3963f994015bf068ca6de), [`95d6e97`](https://github.com/coveo/ui-kit/commit/95d6e97e9c6b471425ad1a6b82fd0eea5547b8f9), [`a925e7f`](https://github.com/coveo/ui-kit/commit/a925e7f253283cd88734c6d045bf27c2dcecf769)]:
+  - @coveo/headless@3.58.2
+  - @coveo/atomic-legacy@0.1.11
+
 ## 3.65.1
 
 ### Patch Changes

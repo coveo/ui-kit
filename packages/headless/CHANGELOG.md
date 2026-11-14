@@ -1,3 +1,17 @@
+## 3.58.2
+
+### Patch Changes
+
+- [#8938](https://github.com/coveo/ui-kit/pull/8938) [`2472f58`](https://github.com/coveo/ui-kit/commit/2472f5888fcf47b0055b59a69a09bdb310fbb22f) - Make `enableAnalytics()` and `disableAnalytics()` work on the commerce engine. Before, they had no effect: the engine kept the analytics state it was built with, so events were still sent after `disableAnalytics()`.
+
+- [#8909](https://github.com/coveo/ui-kit/pull/8909) [`e7a84e1`](https://github.com/coveo/ui-kit/commit/e7a84e1272991e411bff60adb003a4a0b3ba9efb) - In the experimental commerce SSR sub-package, `hydrateStaticState()` now awaits the replayed actions with `Promise.all()` instead of awaiting an array of promises. The replayed actions already settle while they are dispatched, so the hydration timing does not change.
+
+- [`0fc1e71`](https://github.com/coveo/ui-kit/commit/0fc1e714a1dc481bf3b3963f994015bf068ca6de) - In the experimental commerce SSR sub-package, a recommendation slot listed twice in `fetchStaticState()` is requested once instead of making the call wait forever.
+
+- [#8907](https://github.com/coveo/ui-kit/pull/8907) [`95d6e97`](https://github.com/coveo/ui-kit/commit/95d6e97e9c6b471425ad1a6b82fd0eea5547b8f9) - In the experimental commerce SSR sub-package, recommendation slots are now seeded with the `productId` passed to `fetchStaticState()`.
+
+- [`a925e7f`](https://github.com/coveo/ui-kit/commit/a925e7f253283cd88734c6d045bf27c2dcecf769) - In the experimental search SSR sub-package, hydration replays the search actions of the static state once instead of twice.
+
 ## 3.58.1
 
 ### Patch Changes
