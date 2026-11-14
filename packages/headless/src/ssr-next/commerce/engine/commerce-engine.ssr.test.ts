@@ -166,5 +166,24 @@ describe('Commerce Engine SSR', () => {
         expect.objectContaining({product: {productId: 'product-123'}})
       );
     });
+
+    it('should request a slot listed twice once instead of waiting for a second request', async () => {
+      const {recommendationEngineDefinition} = defineCommerceEngine({
+        ...definitionOptions,
+        controllers: {
+          viewedTogether: defineRecommendations({options: {slotId: 'some-slot-id'}}),
+        },
+      });
+
+      await recommendationEngineDefinition.fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+        context,
+        recommendations: ['viewedTogether', 'viewedTogether'],
+      });
+
+      expect(
+        commerceRequests.filter((request) => request.url.includes('/recommendations'))
+      ).toHaveLength(1);
+    });
   });
 });
