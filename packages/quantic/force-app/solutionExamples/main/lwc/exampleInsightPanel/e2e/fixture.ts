@@ -30,6 +30,7 @@ export const testInsight = quanticBase.extend<InsightPanelE2EFixtures>({
   },
   insightPanel: async ({page, insightSetup}, use) => {
     const insightPanel = new InsightPanelObject(page);
+    await insightPanel.mockInsightApi();
     const firstSearchResponsePromise =
       insightPanel.waitForSuccessfulSearchResponse(() => true);
     await page.goto(pageUrl);
