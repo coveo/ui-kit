@@ -790,6 +790,46 @@ describe('createSession lifecycle', () => {
       ).toEqual([['commerce-search-surface'], ['answer-surface']]);
     });
 
+    it('keeps a placeholder its turn left behind out when a later turn creates it without a catalog', async () => {
+      const session = createSession(baseConfig);
+      await prompt(
+        session,
+        surfaceSnapshot('placeholder', [
+          {
+            version: 'v1.0',
+            createSurface: {
+              surfaceId: 'carousel-placeholder',
+              catalogId: 'catalog',
+              components: [{id: 'root', component: 'ProductCarousel'}],
+              dataModel: {isLoading: true},
+            },
+          },
+        ])
+      );
+
+      const stream = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'go'}});
+      await stream.opened;
+      stream.emit(
+        surfaceSnapshot('no-catalog', [
+          {
+            version: 'v1.0',
+            createSurface: {
+              surfaceId: 'carousel-placeholder',
+              components: [{id: 'root', component: 'ProductCarousel'}],
+            },
+          },
+        ])
+      );
+      await flush();
+      const during = session.surfaces.map((surface) => surface.surfaceId);
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
+
+      expect(during).toEqual([]);
+    });
+
     it('applies a later turn validated write to the state of an earlier surface', async () => {
       const session = createSession(baseConfig);
       await prompt(session, searchSurface);

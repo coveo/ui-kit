@@ -87,12 +87,13 @@ interface SurfaceRuns {
  * does, so a surface the projection leaves out (no catalog, no root) still has its turns. A
  * `createSurface` for an id the renderer stream holds, such as the answer to an action recorded
  * with a later turn, keeps the surface's owner; the stream holds an id from a `createSurface` with
- * a catalog until its `deleteSurface`.
+ * a catalog until its `deleteSurface`. One without a catalog, which the renderer drops, leaves the
+ * turns of the surface the stream holds as they are.
  */
 function deriveSurfaceRuns({turns, initialization}: SessionRuns): SurfaceRuns {
   const ownerTurnIds = new Map<string, string>();
   const creatorTurnIds = new Map<string, string>();
-  const rendered = new Set<string>();
+  const live = new Set<string>();
   const runs = [
     {turnId: undefined, activities: initialization?.activities ?? []},
     ...turns.map((turn) => ({turnId: turn.id, activities: turn.response.activities})),
@@ -103,8 +104,8 @@ function deriveSurfaceRuns({turns, initialization}: SessionRuns): SurfaceRuns {
         activity.kind === SURFACE_ACTIVITY_KIND ? activity.payload['messages'] : null;
       for (const message of Array.isArray(messages) ? messages : []) {
         const {created, rendered: isRendered, deleted} = surfaceLifecycle(message);
-        if (created !== undefined) {
-          const runIds = rendered.has(created) ? [creatorTurnIds] : [ownerTurnIds, creatorTurnIds];
+        if (created !== undefined && (isRendered || !live.has(created))) {
+          const runIds = live.has(created) ? [creatorTurnIds] : [ownerTurnIds, creatorTurnIds];
           for (const ids of runIds) {
             if (turnId === undefined) {
               ids.delete(created);
@@ -113,12 +114,12 @@ function deriveSurfaceRuns({turns, initialization}: SessionRuns): SurfaceRuns {
             }
           }
           if (isRendered) {
-            rendered.add(created);
+            live.add(created);
           }
         } else if (deleted !== undefined) {
           ownerTurnIds.delete(deleted);
           creatorTurnIds.delete(deleted);
-          rendered.delete(deleted);
+          live.delete(deleted);
         }
       }
     }

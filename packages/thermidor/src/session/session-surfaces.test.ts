@@ -180,6 +180,16 @@ describe('deriveSessionSurfaces', () => {
       expect(ids(deriveSessionSurfaces(runs).surfaces)).toEqual([]);
       expect([...abandonedPlaceholderIds(runs, T2)]).toEqual(['search']);
     });
+
+    it('leaves a placeholder with its run when a later run creates it again without a catalog', () => {
+      const noCatalog = {version: 'v1.0', createSurface: {surfaceId: 'skeleton', components: []}};
+      const runs = {turns: [turn('t1', [placeholder('skeleton')]), turn('t2', [noCatalog])]};
+      const T2 = {kind: 'turn', turnId: 't2'} as const;
+
+      expect(ids(deriveSessionSurfaces(runs, T2).surfaces)).toEqual([]);
+      expect([...abandonedPlaceholderIds(runs, T1)]).toEqual(['skeleton']);
+      expect([...abandonedPlaceholderIds(runs, T2)]).toEqual([]);
+    });
   });
 
   describe('the initialization', () => {
