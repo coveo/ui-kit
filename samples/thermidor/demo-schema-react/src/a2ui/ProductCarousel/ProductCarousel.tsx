@@ -3,7 +3,7 @@ import {useState, useRef, useEffect, useCallback} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {Product} from '@coveo/thermidor-schema';
 import {ProductCarouselPropsSchema} from '@coveo/thermidor-schema/zod3';
-import {PromotableProductCard} from '../ProductCard/ProductCard.js';
+import {A2UIProductCard} from '../ProductCard/ProductCard.js';
 import styles from './ProductCarousel.module.css';
 
 /**
@@ -80,7 +80,14 @@ export const ProductCarousel = createReactComponent(
           >
             {products.map((product: Product) => (
               <div className={styles.cardSlot} key={product.permanentid}>
-                <PromotableProductCard product={product} />
+                <A2UIProductCard
+                  ec_name={product.ec_name}
+                  ec_brand={product.ec_brand}
+                  ec_price={product.ec_promo_price ?? product.ec_price}
+                  ec_image={product.ec_images?.[0]}
+                  ec_product_id={product.permanentid}
+                  clickUri={product.clickUri}
+                />
               </div>
             ))}
           </div>

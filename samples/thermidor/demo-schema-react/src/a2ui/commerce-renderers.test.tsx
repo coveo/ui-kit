@@ -338,86 +338,36 @@ function trailShoe() {
 
 const roadShoe = {permanentid: 'road', ec_name: 'Road shoe', ec_price: 90, additionalFields: {}};
 
-const CHILD_RENDERERS = [
-  {
-    name: 'ProductList',
-    component: {component: 'ProductList', products: {path: '/state/root/products'}},
-    dataModel: () => [{path: '/state/root/products', value: [trailShoe(), roadShoe]}],
-  },
-  {
-    name: 'ProductCarousel',
-    component: {
-      component: 'ProductCarousel',
-      heading: 'Shoes',
-      products: {path: '/state/root/products'},
-    },
-    dataModel: () => [{path: '/state/root/products', value: [trailShoe(), roadShoe]}],
-    link: true,
-  },
-  {
-    name: 'ProductSummary',
-    component: {
-      component: 'ProductSummary',
-      categoryLabel: 'Shoes',
-      product: {path: '/state/root/product'},
-    },
-    dataModel: () => [{path: '/state/root/product', value: trailShoe()}],
-    noActions: true,
-  },
-  {
-    name: 'ProductResearchCard',
-    component: {
-      component: 'ProductResearchCard',
-      product: {path: '/state/root/product'},
-      summary: 'A grippy trail shoe.',
-      bullets: ['Light'],
-    },
-    dataModel: () => [{path: '/state/root/product', value: trailShoe()}],
-    link: true,
-    agentText: ['A grippy trail shoe.', 'Light'],
-  },
-];
+describe('ProductList children', () => {
+  it('shows the picked child, hands it to the card actions, and keeps it until the products are sent again', async () => {
+    const renderActions = vi.fn((_: ProductCardProduct) => null as ReactNode);
+    const products = () => [{path: '/state/root/products', value: [trailShoe(), roadShoe]}];
+    const {pushDataModel} = mountSurface({
+      component: {component: 'ProductList', products: {path: '/state/root/products'}},
+      dataModel: products(),
+      wrapper: ({children}) => (
+        <ProductCardActionsContext.Provider value={renderActions}>
+          {children}
+        </ProductCardActionsContext.Provider>
+      ),
+    });
+    fireEvent.click(await screen.findByTitle('Trail shoe, blue'));
 
-describe('Product children', () => {
-  it.each(CHILD_RENDERERS)(
-    '$name shows the picked child until the product is sent again',
-    async ({component, dataModel, link, noActions, agentText = []}) => {
-      const renderActions = vi.fn((_: ProductCardProduct) => null as ReactNode);
-      const {pushDataModel} = mountSurface({
-        component,
-        dataModel: dataModel(),
-        wrapper: ({children}) => (
-          <ProductCardActionsContext.Provider value={renderActions}>
-            {children}
-          </ProductCardActionsContext.Provider>
-        ),
-      });
-      fireEvent.click(await screen.findByTitle('Trail shoe, blue'));
+    expect(screen.getByRole('heading', {name: 'Trail shoe, blue'})).toBeDefined();
+    expect(screen.getByText('$110.00')).toBeDefined();
+    expect(screen.getAllByRole('img')[0].getAttribute('src')).toBe('https://example.com/blue.png');
+    expect(renderActions).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        productId: 'shoe-blue',
+        price: 110,
+        clickUri: 'https://example.com/shoe-blue',
+      })
+    );
 
-      expect(screen.getByText('Trail shoe, blue')).toBeDefined();
-      expect(screen.getByText('$110.00')).toBeDefined();
-      expect(screen.getAllByRole('img')[0].getAttribute('src')).toBe(
-        'https://example.com/blue.png'
-      );
-      if (link) {
-        expect(screen.getByRole('link', {name: 'Trail shoe, blue'}).getAttribute('href')).toBe(
-          'https://example.com/shoe-blue'
-        );
-      }
-      if (!noActions) {
-        expect(renderActions).toHaveBeenLastCalledWith(
-          expect.objectContaining({productId: 'shoe-blue', price: 110})
-        );
-      }
-      for (const text of agentText) {
-        expect(screen.getByText(text)).toBeDefined();
-      }
+    pushDataModel([{path: '/state/cart', value: {items: []}}]);
+    expect(screen.getByText('$110.00')).toBeDefined();
 
-      pushDataModel([{path: '/state/cart', value: {items: []}}]);
-      expect(screen.getByText('$110.00')).toBeDefined();
-
-      pushDataModel(dataModel());
-      await screen.findByText('$120.00');
-    }
-  );
+    pushDataModel(products());
+    await screen.findByText('$120.00');
+  });
 });

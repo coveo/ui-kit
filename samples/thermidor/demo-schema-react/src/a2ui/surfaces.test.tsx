@@ -23,20 +23,12 @@ const CATALOG = createThermidorCatalog();
 const SURFACE_ID = 'turn-surface';
 const NOTE = 'Earlier results. Ask a follow-up or search again to refine.';
 
-const WETSUIT_CHILD = {
+const WETSUIT = {
   permanentid: 'wetsuit',
   ec_name: 'Wetsuit',
   ec_price: 400,
   clickUri: 'https://example.com/wetsuit',
   additionalFields: {},
-};
-const WETSUIT = {
-  ...WETSUIT_CHILD,
-  children: [
-    WETSUIT_CHILD,
-    {...WETSUIT_CHILD, permanentid: 'wetsuit-blue', ec_name: 'Wetsuit, blue', ec_price: 420},
-  ],
-  totalNumberOfChildren: 2,
 };
 
 /** A surface holding a page size select, which acts on the surface. */
@@ -81,6 +73,34 @@ const WITH_PRODUCTS = [
   {
     version: 'v0.9',
     updateDataModel: {surfaceId: SURFACE_ID, path: '/state/root/products', value: [WETSUIT]},
+  },
+] as unknown as A2uiV09Message[];
+
+/** The same surface showing a product list of one grouped product. */
+const WITH_GROUPED_LIST = [
+  ...surfaceMessages(SURFACE_ID),
+  {
+    version: 'v0.9',
+    updateComponents: {
+      surfaceId: SURFACE_ID,
+      components: [
+        {id: ROOT_COMPONENT_ID, component: 'ProductList', products: {path: '/state/root/products'}},
+      ],
+    },
+  },
+  {
+    version: 'v0.9',
+    updateDataModel: {
+      surfaceId: SURFACE_ID,
+      path: '/state/root/products',
+      value: [
+        {
+          ...WETSUIT,
+          children: [WETSUIT, {...WETSUIT, permanentid: 'wetsuit-blue', ec_name: 'Wetsuit, blue'}],
+          totalNumberOfChildren: 2,
+        },
+      ],
+    },
   },
 ] as unknown as A2uiV09Message[];
 
@@ -185,13 +205,13 @@ describe('TurnSurfaces', () => {
   });
 
   it('promotes a child in an earlier turn', async () => {
-    render(<Turn interactive={false} messages={WITH_PRODUCTS} />);
+    render(<Turn interactive={false} messages={WITH_GROUPED_LIST} />);
 
     const thumbnail = await screen.findByRole('button', {name: 'Wetsuit, blue'});
     expect(isDisabled(thumbnail)).toBe(false);
     fireEvent.click(thumbnail);
 
-    expect(screen.getByRole('link', {name: 'Wetsuit, blue'})).toBeDefined();
+    expect(screen.getByRole('heading', {name: 'Wetsuit, blue'})).toBeDefined();
   });
 
   it('keeps an earlier turn readable by assistive technology', async () => {

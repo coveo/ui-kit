@@ -1,7 +1,7 @@
 import {useId} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import {ProductResearchCardPropsSchema} from '@coveo/thermidor-schema/zod3';
-import {PromotableProductCard} from '../ProductCard/ProductCard.js';
+import {A2UIProductCard} from '../ProductCard/ProductCard.js';
 import {A2UISkeleton} from '../Skeleton/Skeleton.js';
 import {
   DEFAULT_MAX_LINKS,
@@ -25,8 +25,7 @@ export interface ProductResearchCardOptions {
  * related documents, a "Documentation & manuals" section lists them under the card, one row each.
  * The generic binder resolves `product` / `summary` / `bullets` / `relatedDocuments` from
  * `ProductResearchCardPropsSchema`. The app may add actions to
- * its product card through `ProductCardActionsContext`, and a child of the product can be promoted
- * into the card; the research text stays as the agent wrote it. `product`, `summary` and `bullets` resolve independently, so any of them still
+ * its product card through `ProductCardActionsContext`. `product`, `summary` and `bullets` resolve independently, so any of them still
  * `undefined` renders the research skeleton: the conversation drops its own skeleton as soon as the
  * surface is created, before the state arrives. `relatedDocuments` is optional and never holds the
  * card in its loading state.
@@ -56,7 +55,14 @@ export function createProductResearchCard({
         <div className={styles.root}>
           <article className={styles.container} aria-label={`Product research: ${product.ec_name}`}>
             <div className={styles.productColumn}>
-              <PromotableProductCard product={product} />
+              <A2UIProductCard
+                ec_name={product.ec_name}
+                ec_brand={product.ec_brand}
+                ec_price={product.ec_promo_price ?? product.ec_price}
+                ec_image={product.ec_images?.[0]}
+                ec_product_id={product.permanentid}
+                clickUri={product.clickUri}
+              />
               {rating !== null && (
                 <span className={styles.rating} role="img" aria-label={`Rated ${rating} out of 5`}>
                   ★ {rating} / 5
