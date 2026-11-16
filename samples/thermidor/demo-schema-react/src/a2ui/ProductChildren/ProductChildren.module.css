@@ -1,5 +1,6 @@
-.label {
-  display: block;
+.header {
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 2px;
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
@@ -14,7 +15,7 @@
 
 .child {
   flex: 0 1 32px;
-  min-width: 20px;
+  min-width: 24px;
   aspect-ratio: 1;
   padding: 2px;
   border: 1px solid transparent;
@@ -41,8 +42,17 @@
 }
 
 .more {
-  font-size: var(--font-size-xs);
-  flex-shrink: 0;
   color: var(--color-primary);
-  padding: 0 var(--space-1);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }

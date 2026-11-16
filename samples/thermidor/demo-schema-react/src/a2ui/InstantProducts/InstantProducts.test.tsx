@@ -379,13 +379,13 @@ describe('InstantProducts children', () => {
     vi.stubGlobal('open', open);
     const {type} = await renderSearchBox({handler: answerWithGroups});
     type('surf');
-    const childrenRow = await screen.findByRole('group', {name: 'Available in:'});
-    expect(within(childrenRow).getByLabelText('1 more product')).toBeDefined();
+    const option = await screen.findByRole('option', {name: /Surf board, white/});
+    expect(within(option).getByText('1 more product')).toBeDefined();
+    expect(within(option).queryByRole('button')).toBeNull();
 
-    fireEvent.mouseEnter(within(childrenRow).getByTitle('Surf board, blue'));
-    const option = screen.getByRole('option', {name: /Surf board, blue/});
+    fireEvent.mouseEnter(within(option).getByTitle('Surf board, blue'));
+    expect(screen.getByRole('option', {name: /^Surf board, blue/})).toBe(option);
     expect(option.id).toBe('instant-product-board-white');
-    expect(option.textContent).toContain('$420.00');
 
     fireEvent.click(option);
     expect(open).toHaveBeenCalledWith(
@@ -401,9 +401,10 @@ describe('InstantProducts children', () => {
     const {type} = await renderSearchBox({handler: answerWithGroups});
     type('surf');
 
-    fireEvent.click(await screen.findByTitle('Surf board, blue'));
+    const option = await screen.findByRole('option', {name: /Surf board, white/});
+    fireEvent.click(within(option).getByTitle('Surf board, blue'));
 
     expect(open).not.toHaveBeenCalled();
-    expect(screen.getByRole('option', {name: /Surf board, blue/})).toBeDefined();
+    expect(option.textContent).toContain('$420.00');
   });
 });

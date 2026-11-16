@@ -410,7 +410,7 @@ describe('ProductCarousel children', () => {
     const link = await screen.findByRole('link', {name: 'Trail shoe, red'});
     expect(link.getAttribute('href')).toBe('https://example.com/shoe-red');
 
-    fireEvent.touchStart(screen.getByTitle('Trail shoe, blue'));
+    fireEvent.click(screen.getByTitle('Trail shoe, blue'));
     pushDataModel([{path: '/state/root/heading', value: 'More shoes'}]);
     await screen.findByText('More shoes');
 

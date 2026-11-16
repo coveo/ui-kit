@@ -19,44 +19,56 @@ interface ProductChildrenProps {
   product: Product;
   /** Promotes a child into the slot. */
   onPromote: (child: ProductChild) => void;
+  /** Hides the thumbnails from assistive technologies, for a slot inside an interactive element. */
+  presentational?: boolean;
 }
 
 /**
  * The thumbnails of a product's children, with the one its slot shows marked, and how many more
- * `totalNumberOfChildren` counts. Hovering, touching or pressing Enter on a thumbnail promotes its child. A
- * product without children shows nothing.
+ * `totalNumberOfChildren` counts. Hovering or clicking a thumbnail promotes its child; unlike
+ * Atomic, a click does not open the product. A product without children shows nothing.
  */
-export function ProductChildren({product, onPromote}: ProductChildrenProps) {
+export function ProductChildren({
+  product,
+  onPromote,
+  presentational = false,
+}: ProductChildrenProps) {
   const labelId = useId();
   const children = product.children ?? [];
-  const visible = children.slice(0, VISIBLE_CHILDREN);
-  const more = Math.max(product.totalNumberOfChildren ?? 0, children.length) - visible.length;
-  if (visible.length + more < 2) {
+  if (children.length === 0) {
     return null;
   }
+  const visible = children.slice(0, VISIBLE_CHILDREN);
+  const more = Math.max(product.totalNumberOfChildren ?? 0, children.length) - visible.length;
+  const Thumbnail = presentational ? 'span' : 'button';
 
   return (
-    <div role="group" aria-labelledby={labelId}>
-      <span id={labelId} className={styles.label}>
-        Available in:
-      </span>
+    <div
+      role={presentational ? undefined : 'group'}
+      aria-labelledby={presentational ? undefined : labelId}
+      aria-hidden={presentational || undefined}
+    >
+      <div className={styles.header}>
+        <span id={labelId}>Available in:</span>
+        {more > 0 && (
+          <span className={styles.more}>
+            <span aria-hidden="true">+{more}</span>
+            <span className={styles.visuallyHidden}>
+              {more} more {more === 1 ? 'product' : 'products'}
+            </span>
+          </span>
+        )}
+      </div>
       <div className={styles.children}>
         {visible.map((child) => {
           const shown = child.permanentid === product.permanentid;
           return (
-            <button
+            <Thumbnail
               key={child.permanentid}
-              type="button"
+              {...(presentational ? {} : {type: 'button' as const, 'aria-pressed': shown})}
               className={`${styles.child} ${shown ? styles.shown : ''}`}
               title={child.ec_name}
-              aria-pressed={shown}
               onMouseEnter={() => onPromote(child)}
-              onTouchStart={() => onPromote(child)}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  onPromote(child);
-                }
-              }}
               onClick={(event) => {
                 event.stopPropagation();
                 onPromote(child);
@@ -68,17 +80,9 @@ export function ProductChildren({product, onPromote}: ProductChildrenProps) {
                 alt={child.ec_name}
                 loading="lazy"
               />
-            </button>
+            </Thumbnail>
           );
         })}
-        {more > 0 && (
-          <span
-            className={styles.more}
-            aria-label={`${more} more ${more === 1 ? 'product' : 'products'}`}
-          >
-            +{more}
-          </span>
-        )}
       </div>
     </div>
   );

@@ -190,7 +190,7 @@ function ProductRow({
           {product.ec_name}
         </span>
         {product.ec_brand && <span className={styles.brand}>{product.ec_brand}</span>}
-        <ProductChildren product={product} onPromote={promote} />
+        <ProductChildren product={product} onPromote={promote} presentational />
       </div>
       {price !== undefined && <span className={styles.price}>{formatPrice(price)}</span>}
     </div>

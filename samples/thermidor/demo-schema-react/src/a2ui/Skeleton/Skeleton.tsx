@@ -21,7 +21,7 @@ export function A2UISkeleton({componentType}: A2UISkeletonProps) {
   }
 }
 
-/** The instant-products grid before its first answer: as many cards as fit beside the suggestions. */
+/** The instant-products list before its first answer. */
 export function InstantProductsSkeleton() {
   return (
     <div className={styles.instantProductsList} aria-label="Loading products">
