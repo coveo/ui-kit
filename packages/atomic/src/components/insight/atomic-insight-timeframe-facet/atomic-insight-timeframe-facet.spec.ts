@@ -130,6 +130,7 @@ describe('atomic-insight-timeframe-facet', () => {
       isCollapsed: boolean;
       headingLevel: number;
       filterFacetCount: boolean;
+      disableFacetCountFiltering: boolean;
       injectionDepth: number;
       dependsOn: Record<string, string>;
       sortCriteria: 'ascending' | 'descending';
@@ -154,6 +155,7 @@ describe('atomic-insight-timeframe-facet', () => {
         heading-level=${ifDefined(props?.headingLevel)}
         .dependsOn=${props?.dependsOn || {}}
         ?filter-facet-count=${props?.filterFacetCount}
+        ?disable-facet-count-filtering=${props?.disableFacetCountFiltering}
         ?is-collapsed=${props?.isCollapsed}
         ?with-date-picker=${props?.withDatePicker}
       >
@@ -250,6 +252,22 @@ describe('atomic-insight-timeframe-facet', () => {
           injectionDepth: 500,
           generateAutomaticRanges: false,
         }),
+      });
+    });
+
+    it('should call buildDateFacet with filterFacetCount true by default', async () => {
+      const {element} = await setupElement();
+
+      expect(buildDateFacet).toHaveBeenCalledWith(element.bindings.engine, {
+        options: expect.objectContaining({filterFacetCount: true}),
+      });
+    });
+
+    it('should call buildDateFacet with filterFacetCount false when disableFacetCountFiltering is true', async () => {
+      const {element} = await setupElement({disableFacetCountFiltering: true});
+
+      expect(buildDateFacet).toHaveBeenCalledWith(element.bindings.engine, {
+        options: expect.objectContaining({filterFacetCount: false}),
       });
     });
 

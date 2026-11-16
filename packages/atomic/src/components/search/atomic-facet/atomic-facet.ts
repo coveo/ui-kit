@@ -48,7 +48,7 @@ import {initializePopover} from '../../common/facets/popover/popover-type';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import '../../common/atomic-facet-placeholder/atomic-facet-placeholder';
 import {arrayConverter} from '@/src/converters/array-converter';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {booleanConverter, createBooleanConverter} from '@/src/converters/boolean-converter';
 import {bindings} from '@/src/decorators/bindings';
 import facetCommonStyles from '../../common/facets/facet-common.tw.css';
 import {FacetVisibilityController} from '../../common/facets/facet-visibility-controller';
@@ -230,14 +230,22 @@ export class AtomicFacet extends LitElement implements InitializableComponent<Bi
   /**
    * Whether this facet should contain a search box.
    *
+   * @deprecated - Use `disable-search` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-search'),
     attribute: 'with-search',
     reflect: true,
   })
   public withSearch = true;
+
+  /**
+   * Whether to remove the search box from this facet.
+   */
+  @property({type: Boolean, attribute: 'disable-search', reflect: true})
+  public disableSearch = false;
+
   /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
@@ -281,14 +289,22 @@ export class AtomicFacet extends LitElement implements InitializableComponent<Bi
    * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
    * The target folding field must be a facet field with the **Use cache for nested queries** options enabled (see [Manage fields](https://docs.coveo.com/en/1833/)).
 
+   * @deprecated - Use `disable-facet-count-filtering` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-facet-count-filtering'),
     attribute: 'filter-facet-count',
     reflect: true,
   })
   public filterFacetCount = true;
+
+  /**
+   * Whether to stop excluding the parents of folded results when estimating the result count for each facet value.
+   */
+  @property({type: Boolean, attribute: 'disable-facet-count-filtering', reflect: true})
+  public disableFacetCountFiltering = false;
+
   /**
    * Whether to allow excluding values from the facet.
    */
@@ -503,7 +519,7 @@ export class AtomicFacet extends LitElement implements InitializableComponent<Bi
         {
           canShowMoreValues: this.facetState.canShowMoreValues,
           numberOfDisplayedValues: this.facetState.values.length,
-          withSearch: this.withSearch,
+          withSearch: this.hasSearch,
         },
         () =>
           renderFacetSearchInput({
@@ -649,7 +665,7 @@ export class AtomicFacet extends LitElement implements InitializableComponent<Bi
       sortCriteria: this.sortCriteria,
       resultsMustMatch: this.resultsMustMatch,
       facetSearch: {numberOfValues: this.numberOfValues},
-      filterFacetCount: this.filterFacetCount,
+      filterFacetCount: this.shouldFilterFacetCount,
       injectionDepth: this.injectionDepth,
       allowedValues: this.allowedValues.length ? [...this.allowedValues] : undefined,
       customSort: this.customSort.length ? [...this.customSort] : undefined,
@@ -748,5 +764,13 @@ export class AtomicFacet extends LitElement implements InitializableComponent<Bi
       showMore: this.showMoreFocus,
       header: this.headerFocus,
     };
+  }
+
+  private get shouldFilterFacetCount() {
+    return this.filterFacetCount && !this.disableFacetCountFiltering;
+  }
+
+  private get hasSearch() {
+    return this.withSearch && !this.disableSearch;
   }
 }

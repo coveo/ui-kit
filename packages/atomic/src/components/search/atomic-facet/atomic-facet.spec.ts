@@ -41,12 +41,14 @@ describe('atomic-facet', () => {
       allowedValues?: string[];
       injectionDepth?: number;
       filterFacetCount?: boolean;
+      disableFacetCountFiltering?: boolean;
       resultsMustMatch?: 'allValues' | 'atLeastOneValue';
       sortCriteria?: 'score' | 'alphanumeric' | 'occurrences';
       numberOfValues?: number;
       isCollapsed?: boolean;
       displayValuesAs?: 'checkbox' | 'link' | 'box';
       withSearch?: boolean;
+      disableSearch?: boolean;
       enableExclusion?: boolean;
       facetId?: string;
       headingLevel?: number;
@@ -68,8 +70,10 @@ describe('atomic-facet', () => {
         .tabsIncluded=${props.tabsIncluded || []}
         .tabsExcluded=${props.tabsExcluded || []}
         filter-facet-count=${ifDefined(props.filterFacetCount)}
+        ?disable-facet-count-filtering=${props.disableFacetCountFiltering}
         is-collapsed=${ifDefined(props.isCollapsed)}
         with-search=${ifDefined(props.withSearch)}
+        ?disable-search=${props.disableSearch}
         enable-exclusion=${ifDefined(props.enableExclusion)}
       ></atomic-facet>`,
       selector: 'atomic-facet',
@@ -181,6 +185,12 @@ describe('atomic-facet', () => {
 
     it('should not render search parts when search is disabled', async () => {
       const {locators} = await setupElement({withSearch: false});
+      await expect.element(locators.searchWrapper).not.toBeInTheDocument();
+      await expect.element(locators.searchInput).not.toBeInTheDocument();
+    });
+
+    it('should not render search parts when disableSearch is true', async () => {
+      const {locators} = await setupElement({disableSearch: true});
       await expect.element(locators.searchWrapper).not.toBeInTheDocument();
       await expect.element(locators.searchInput).not.toBeInTheDocument();
     });
@@ -887,6 +897,32 @@ describe('atomic-facet', () => {
         expect.objectContaining({
           options: expect.objectContaining({
             filterFacetCount: false,
+          }),
+        })
+      );
+    });
+
+    it('should pass filterFacetCount as false to buildFacet options when disableFacetCountFiltering is true', async () => {
+      await setupElement({disableFacetCountFiltering: true});
+
+      expect(buildFacet).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          options: expect.objectContaining({
+            filterFacetCount: false,
+          }),
+        })
+      );
+    });
+
+    it('should pass filterFacetCount as true to buildFacet options by default', async () => {
+      await setupElement();
+
+      expect(buildFacet).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          options: expect.objectContaining({
+            filterFacetCount: true,
           }),
         })
       );

@@ -48,7 +48,7 @@ import {ValidatePropsController} from '@/src/components/common/validate-props-co
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {renderColorFacetCheckbox} from '@/src/components/search/facets/color-facet-checkbox/color-facet-checkbox';
 import {arrayConverter} from '@/src/converters/array-converter';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {booleanConverter, createBooleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -245,14 +245,22 @@ export class AtomicColorFacet extends LitElement implements InitializableCompone
 
   /**
    * Whether this facet should contain a search box.
+   * @deprecated - Use `disable-search` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-search'),
     attribute: 'with-search',
     reflect: true,
   })
   public withSearch = true;
+
+  /**
+   * Whether to remove the search box from this facet.
+   */
+  @property({type: Boolean, attribute: 'disable-search', reflect: true})
+  public disableSearch = false;
+
   /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
@@ -295,14 +303,22 @@ export class AtomicColorFacet extends LitElement implements InitializableCompone
    *
    * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
    * The target folding field must be a facet field with the **Use cache for nested queries** options enabled (see [Manage fields](https://docs.coveo.com/en/1833/)).
+   * @deprecated - Use `disable-facet-count-filtering` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-facet-count-filtering'),
     attribute: 'filter-facet-count',
     reflect: true,
   })
   public filterFacetCount = true;
+
+  /**
+   * Whether to stop excluding the parents of folded results when estimating the result count for each facet value.
+   */
+  @property({type: Boolean, attribute: 'disable-facet-count-filtering', reflect: true})
+  public disableFacetCountFiltering = false;
+
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    * Note: A high injectionDepth may negatively impact the facet request performance.
@@ -442,7 +458,7 @@ export class AtomicColorFacet extends LitElement implements InitializableCompone
   }
 
   public shouldUpdate(changedProperties: Map<string, unknown>) {
-    if (changedProperties.has('facetState') && this.withSearch) {
+    if (changedProperties.has('facetState') && this.hasSearch) {
       const currentFacetState = this.facetState;
       const previousFacetState = changedProperties.get('facetState') as FacetState;
 
@@ -509,7 +525,7 @@ export class AtomicColorFacet extends LitElement implements InitializableCompone
         {
           canShowMoreValues: this.facetState.canShowMoreValues,
           numberOfDisplayedValues: this.facetState.values.length,
-          withSearch: this.withSearch,
+          withSearch: this.hasSearch,
         },
         () =>
           renderFacetSearchInput({
@@ -708,7 +724,7 @@ export class AtomicColorFacet extends LitElement implements InitializableCompone
       sortCriteria: this.sortCriteria,
       resultsMustMatch: this.resultsMustMatch,
       facetSearch: {numberOfValues: this.numberOfValues},
-      filterFacetCount: this.filterFacetCount,
+      filterFacetCount: this.shouldFilterFacetCount,
       injectionDepth: this.injectionDepth,
       allowedValues: this.allowedValues.length ? this.allowedValues : undefined,
       customSort: this.customSort.length ? this.customSort : undefined,
@@ -794,6 +810,14 @@ export class AtomicColorFacet extends LitElement implements InitializableCompone
       showMore: this.showMoreFocus,
       header: this.headerFocus,
     };
+  }
+
+  private get shouldFilterFacetCount() {
+    return this.filterFacetCount && !this.disableFacetCountFiltering;
+  }
+
+  private get hasSearch() {
+    return this.withSearch && !this.disableSearch;
   }
 }
 

@@ -16,7 +16,7 @@ import {createRef, type RefOrCallback, ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
 import {renderButton} from '@/src/components/common/button';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {booleanConverter, createBooleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -203,14 +203,22 @@ export class AtomicCommerceSearchBox
   /**
    * Whether to clear all active query filters when the end user submits a new query from the search box.
    * Setting this option to "false" is not recommended and can lead to an increasing number of queries returning no products.
+   * @deprecated - Use `disable-clear-filters` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
     attribute: 'clear-filters',
     reflect: true,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-clear-filters'),
   })
   public clearFilters = true;
+
+  /**
+   * Whether to keep the active query filters when the end user submits a new query from the search box.
+   * Setting this option is not recommended and can lead to an increasing number of queries returning no results.
+   */
+  @property({type: Boolean, attribute: 'disable-clear-filters', reflect: true})
+  public disableClearFilters = false;
 
   // TODO - (v4) KIT-4365: Remove and always render the clear recent queries button.
   /**
@@ -397,7 +405,7 @@ export class AtomicCommerceSearchBox
           enumerable: true,
         },
         clearFilters: {
-          get: () => this.clearFilters,
+          get: () => this.shouldClearFilters,
           enumerable: true,
         },
       }
@@ -420,7 +428,7 @@ export class AtomicCommerceSearchBox
           close: '</span>',
         },
       },
-      clearFilters: this.clearFilters,
+      clearFilters: this.shouldClearFilters,
     };
   }
 
@@ -843,6 +851,10 @@ export class AtomicCommerceSearchBox
 
   private announceClearSearchBoxToScreenReader() {
     this.searchBoxAriaMessage.message = this.bindings.i18n.t('search-box-cleared');
+  }
+
+  private get shouldClearFilters() {
+    return this.clearFilters && !this.disableClearFilters;
   }
 }
 

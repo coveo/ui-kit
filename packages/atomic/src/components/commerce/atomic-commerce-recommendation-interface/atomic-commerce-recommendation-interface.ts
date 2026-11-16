@@ -11,7 +11,7 @@ import {provide} from '@lit/context';
 import i18next, {type i18n} from 'i18next';
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {booleanConverter} from '@/src/converters/boolean-converter.js';
+import {createBooleanConverter} from '@/src/converters/boolean-converter.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
@@ -140,7 +140,7 @@ export class AtomicCommerceRecommendationInterface
    */
   @property({
     type: Boolean,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-analytics'),
     reflect: true,
   })
   analytics: boolean = true;

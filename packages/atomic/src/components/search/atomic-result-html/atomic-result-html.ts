@@ -6,7 +6,7 @@ import {when} from 'lit/directives/when.js';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {createBooleanConverter} from '@/src/converters/boolean-converter';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -42,13 +42,21 @@ export class AtomicResultHtml
   @property({type: String, reflect: true}) field?: string;
   /**
    * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
+   * @deprecated - Use `disable-sanitization` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
     reflect: true,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-sanitization'),
   })
   sanitize = true;
+
+  /**
+   * Whether to render the HTML content without sanitizing it.
+   * Only set this when the content comes from a trusted source.
+   */
+  @property({type: Boolean, attribute: 'disable-sanitization', reflect: true})
+  public disableSanitization = false;
 
   @state() private result?: Result;
   @state() public bindings!: Bindings;
@@ -100,7 +108,13 @@ export class AtomicResultHtml
       return nothing;
     }
 
-    return html` <atomic-html value=${resultValue} ?sanitize=${this.sanitize}></atomic-html> `;
+    return html`
+      <atomic-html
+        value=${resultValue}
+        ?sanitize=${this.sanitize}
+        ?disable-sanitization=${this.disableSanitization}
+      ></atomic-html>
+    `;
   }
 }
 

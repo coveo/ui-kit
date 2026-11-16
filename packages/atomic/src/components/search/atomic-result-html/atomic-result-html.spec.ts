@@ -35,13 +35,14 @@ describe('atomic-result-html', () => {
     props = {},
     result = mockResult,
   }: {
-    props?: Partial<{field: string; sanitize: boolean}>;
+    props?: Partial<{field: string; sanitize: boolean; disableSanitization: boolean}>;
     result?: Result | null;
   } = {}) => {
     const {element} = await renderInAtomicResult<AtomicResultHtml>({
       template: html`<atomic-result-html
         field=${ifDefined(props.field)}
         ?sanitize=${props.sanitize ?? true}
+        ?disable-sanitization=${props.disableSanitization}
       ></atomic-result-html>`,
       selector: 'atomic-result-html',
       result: result === null ? undefined : result,
@@ -150,6 +151,24 @@ describe('atomic-result-html', () => {
 
         expect(htmlElement).toBeDefined();
         expect(htmlElement?.hasAttribute('sanitize')).toBe(true);
+      });
+
+      it('should not set the disable-sanitization attribute on atomic-html by default', async () => {
+        const {element} = await renderResultHtml({
+          props: {field: 'custom_html_field'},
+        });
+        const htmlElement = locators.getHtml(element);
+
+        expect(htmlElement?.hasAttribute('disable-sanitization')).toBe(false);
+      });
+
+      it('should set the disable-sanitization attribute on atomic-html when disableSanitization is true', async () => {
+        const {element} = await renderResultHtml({
+          props: {field: 'custom_html_field', disableSanitization: true},
+        });
+        const htmlElement = locators.getHtml(element);
+
+        expect(htmlElement?.hasAttribute('disable-sanitization')).toBe(true);
       });
     });
 

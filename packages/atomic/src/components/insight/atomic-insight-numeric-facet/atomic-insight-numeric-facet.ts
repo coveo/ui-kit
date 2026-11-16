@@ -52,6 +52,7 @@ import {mapProperty} from '@/src/utils/props-utils';
 import {randomID} from '@/src/utils/utils';
 import '@/src/components/common/atomic-facet-number-input/atomic-facet-number-input';
 import '@/src/components/common/atomic-numeric-range/atomic-numeric-range';
+import {createBooleanConverter} from '@/src/converters/boolean-converter';
 
 /**
  * The `atomic-insight-numeric-facet` component displays a facet of the results for the current query as numeric ranges.
@@ -166,9 +167,21 @@ export class AtomicInsightNumericFacet
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    *
    * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
+   * @deprecated - Use `disable-facet-count-filtering` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
-  @property({type: Boolean, reflect: true, attribute: 'filter-facet-count'})
+  @property({
+    type: Boolean,
+    reflect: true,
+    attribute: 'filter-facet-count',
+    converter: createBooleanConverter('disable-facet-count-filtering'),
+  })
   filterFacetCount = true;
+
+  /**
+   * Whether to stop excluding the parents of folded results when estimating the result count for each facet value.
+   */
+  @property({type: Boolean, attribute: 'disable-facet-count-filtering', reflect: true})
+  public disableFacetCountFiltering = false;
 
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
@@ -358,7 +371,7 @@ export class AtomicInsightNumericFacet
         field: this.field,
         sortCriteria: this.sortCriteria,
         rangeAlgorithm: this.rangeAlgorithm,
-        filterFacetCount: this.filterFacetCount,
+        filterFacetCount: this.shouldFilterFacetCount,
         injectionDepth: this.injectionDepth,
       },
     });
@@ -398,7 +411,7 @@ export class AtomicInsightNumericFacet
         rangeAlgorithm: this.rangeAlgorithm,
         currentValues: this.manualRanges,
         generateAutomaticRanges: !this.manualRanges.length,
-        filterFacetCount: this.filterFacetCount,
+        filterFacetCount: this.shouldFilterFacetCount,
         injectionDepth: this.injectionDepth,
       },
     });
@@ -618,6 +631,10 @@ export class AtomicInsightNumericFacet
         )}`
       )
     )}`;
+  }
+
+  private get shouldFilterFacetCount() {
+    return this.filterFacetCount && !this.disableFacetCountFiltering;
   }
 }
 

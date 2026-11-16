@@ -37,7 +37,7 @@ import {
   InterfaceController,
 } from '@/src/components/common/interface/interface-controller';
 import {MobileBreakpointController} from '@/src/components/common/layout/mobile-breakpoint-controller';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {booleanConverter, createBooleanConverter} from '@/src/converters/boolean-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
@@ -131,7 +131,7 @@ export class AtomicCommerceInterface
    */
   @property({
     type: Boolean,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-analytics'),
     reflect: true,
   })
   public analytics = true;

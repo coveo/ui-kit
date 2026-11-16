@@ -1,0 +1,5 @@
+---
+'@coveo/atomic': minor
+---
+
+Boolean options that are on by default now each have an attribute that turns them off: `disable-facet-count-filtering` on the facets, `disable-search` on `atomic-facet` and `atomic-color-facet`, `disable-clear-filters` on the search boxes, `disable-base-path-filtering` on `atomic-category-facet`, `disable-automatic-query-correction` on `atomic-did-you-mean`, `disable-sanitization` on `atomic-html` and `atomic-result-html`, and `disable-hide-self` on `atomic-focus-trap`. Use them instead of setting `filter-facet-count`, `with-search`, `clear-filters`, `filter-by-base-path`, `automatically-correct-query`, `sanitize` or `should-hide-self` to `"false"`, which v4 won't support. The `="false"` warning now names the attribute to use, including `disable-analytics` on the interfaces. `filter-facet-count="false"` on `atomic-numeric-facet`, `atomic-insight-facet` and `atomic-insight-numeric-facet` is now read as `false`, like on the other facets. `sanitize="false"` on `atomic-html` now logs the warning but still sanitizes, as before: use `disable-sanitization` to render the HTML without sanitizing it.

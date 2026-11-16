@@ -32,7 +32,7 @@ import {
   firstSearchExecutedSelector,
   noResultsSelector,
 } from '@/src/components/search/atomic-search-layout/search-layout';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {booleanConverter, createBooleanConverter} from '@/src/converters/boolean-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
@@ -155,7 +155,7 @@ export class AtomicSearchInterface
    */
   @property({
     type: Boolean,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-analytics'),
     reflect: true,
   })
   public analytics = true;

@@ -56,6 +56,7 @@ import {mapProperty} from '@/src/utils/props-utils';
 import {randomID} from '@/src/utils/utils';
 import '@/src/components/common/atomic-facet-number-input/atomic-facet-number-input';
 import '@/src/components/common/atomic-numeric-range/atomic-numeric-range';
+import {createBooleanConverter} from '@/src/converters/boolean-converter';
 
 /**
  * The `atomic-numeric-facet` component displays a facet of the results for the current query as numeric ranges.
@@ -200,9 +201,21 @@ export class AtomicNumericFacet extends LitElement implements InitializableCompo
    *
    * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
    * The target folding field must be a facet field with the **Use cache for nested queries** options enabled (see [Manage fields](https://docs.coveo.com/en/1833/)).
+   * @deprecated - Use `disable-facet-count-filtering` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
-  @property({type: Boolean, reflect: true, attribute: 'filter-facet-count'})
+  @property({
+    type: Boolean,
+    reflect: true,
+    attribute: 'filter-facet-count',
+    converter: createBooleanConverter('disable-facet-count-filtering'),
+  })
   filterFacetCount = true;
+
+  /**
+   * Whether to stop excluding the parents of folded results when estimating the result count for each facet value.
+   */
+  @property({type: Boolean, attribute: 'disable-facet-count-filtering', reflect: true})
+  public disableFacetCountFiltering = false;
 
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
@@ -409,7 +422,7 @@ export class AtomicNumericFacet extends LitElement implements InitializableCompo
         field: this.field,
         sortCriteria: this.sortCriteria,
         rangeAlgorithm: this.rangeAlgorithm,
-        filterFacetCount: this.filterFacetCount,
+        filterFacetCount: this.shouldFilterFacetCount,
         injectionDepth: this.injectionDepth,
         tabs: {
           included: this.tabsIncluded,
@@ -453,7 +466,7 @@ export class AtomicNumericFacet extends LitElement implements InitializableCompo
         rangeAlgorithm: this.rangeAlgorithm,
         currentValues: this.manualRanges,
         generateAutomaticRanges: !this.manualRanges.length,
-        filterFacetCount: this.filterFacetCount,
+        filterFacetCount: this.shouldFilterFacetCount,
         injectionDepth: this.injectionDepth,
         tabs: {
           included: this.tabsIncluded,
@@ -681,6 +694,10 @@ export class AtomicNumericFacet extends LitElement implements InitializableCompo
         )}`
       )
     )}`;
+  }
+
+  private get shouldFilterFacetCount() {
+    return this.filterFacetCount && !this.disableFacetCountFiltering;
   }
 }
 

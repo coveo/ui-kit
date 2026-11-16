@@ -3,7 +3,7 @@ import {customElement, property} from 'lit/decorators.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {booleanConverter} from './boolean-converter';
+import {booleanConverter, createBooleanConverter} from './boolean-converter';
 
 describe('booleanConverter', () => {
   beforeEach(() => {
@@ -87,5 +87,59 @@ describe('booleanConverter', () => {
     );
 
     await expect.element(page.getByText('true')).toBeInTheDocument();
+  });
+
+  describe('#createBooleanConverter', () => {
+    @customElement('test-element-with-replacement')
+    class TestElementWithReplacement extends LitElement {
+      @property({
+        converter: createBooleanConverter('disable-value'),
+        type: Boolean,
+      })
+      value = true;
+
+      render() {
+        return html`<div>${this.value}</div>`;
+      }
+    }
+
+    it('should name the replacement attribute in the warning when converting "false" to false', async () => {
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      await fixture<TestElementWithReplacement>(
+        html`<test-element-with-replacement value="false"></test-element-with-replacement>`
+      );
+
+      await expect.element(page.getByText('false')).toBeInTheDocument();
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'Using `value="false"` for a boolean attribute is not compliant with HTML standards (see https://html.spec.whatwg.org/#boolean-attributes). This behavior will not be supported in Atomic v4. Use the `disable-value` attribute instead.'
+      );
+    });
+
+    @customElement('test-element-ignoring-false')
+    class TestElementIgnoringFalse extends LitElement {
+      @property({
+        converter: createBooleanConverter('disable-value', {ignoreFalse: true}),
+        type: Boolean,
+      })
+      value = true;
+
+      render() {
+        return html`<div>${this.value}</div>`;
+      }
+    }
+
+    it('should keep "false" as true and say it is ignored when ignoreFalse is set', async () => {
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      await fixture<TestElementIgnoringFalse>(
+        html`<test-element-ignoring-false value="false"></test-element-ignoring-false>`
+      );
+
+      await expect.element(page.getByText('true')).toBeInTheDocument();
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'The `"false"` value is ignored. Use the `disable-value` attribute instead.'
+        )
+      );
+    });
   });
 });

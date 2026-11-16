@@ -7,6 +7,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {createBooleanConverter} from '@/src/converters/boolean-converter';
 
 /**
  * The `atomic-html` component renders the HTML value of a string.
@@ -28,8 +29,21 @@ export class AtomicHtml extends LitElement implements InitializableComponent<Bin
   @property({type: String, reflect: false}) value!: string;
   /**
    * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
+   * @deprecated - Use `disable-sanitization` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
-  @property({type: Boolean, reflect: true}) sanitize = true;
+  @property({
+    type: Boolean,
+    reflect: true,
+    converter: createBooleanConverter('disable-sanitization', {ignoreFalse: true}),
+  })
+  sanitize = true;
+
+  /**
+   * Whether to render the HTML content without sanitizing it.
+   * Only set this when the content comes from a trusted source.
+   */
+  @property({type: Boolean, attribute: 'disable-sanitization', reflect: true})
+  public disableSanitization = false;
 
   public initialize() {
     this.validateProps();
@@ -38,7 +52,7 @@ export class AtomicHtml extends LitElement implements InitializableComponent<Bin
   @errorGuard()
   public render() {
     return html`<span
-      .innerHTML=${this.sanitize ? DOMPurify.sanitize(this.value) : this.value}
+      .innerHTML=${this.shouldSanitize ? DOMPurify.sanitize(this.value) : this.value}
     ></span>`;
   }
 
@@ -50,6 +64,10 @@ export class AtomicHtml extends LitElement implements InitializableComponent<Bin
     AtomicHtml.propsSchema.validate({
       value: this.value,
     });
+  }
+
+  private get shouldSanitize() {
+    return this.sanitize && !this.disableSanitization;
   }
 }
 

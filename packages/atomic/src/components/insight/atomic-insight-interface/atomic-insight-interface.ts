@@ -18,7 +18,7 @@ import {
   InterfaceController,
 } from '@/src/components/common/interface/interface-controller';
 import {arrayConverter} from '@/src/converters/array-converter.js';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {createBooleanConverter} from '@/src/converters/boolean-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
@@ -82,7 +82,7 @@ export class AtomicInsightInterface
    */
   @property({
     type: Boolean,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-analytics'),
     reflect: true,
   })
   public analytics = true;

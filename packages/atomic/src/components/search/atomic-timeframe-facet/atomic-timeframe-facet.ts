@@ -30,7 +30,7 @@ import {TimeframeFacetCommon} from '@/src/components/common/facets/timeframe-fac
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {arrayConverter} from '@/src/converters/array-converter';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {booleanConverter, createBooleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -154,14 +154,22 @@ export class AtomicTimeframeFacet extends LitElement implements InitializableCom
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    *
    * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
+   * @deprecated - Use `disable-facet-count-filtering` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
     reflect: true,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-facet-count-filtering'),
     attribute: 'filter-facet-count',
   })
   filterFacetCount = true;
+
+  /**
+   * Whether to stop excluding the parents of folded results when estimating the result count for each facet value.
+   */
+  @property({type: Boolean, attribute: 'disable-facet-count-filtering', reflect: true})
+  public disableFacetCountFiltering = false;
+
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    * Note: A high injectionDepth may negatively impact the facet request performance.
@@ -331,7 +339,7 @@ export class AtomicTimeframeFacet extends LitElement implements InitializableCom
         numberOfValues: 1,
         generateAutomaticRanges: true,
         field: this.field,
-        filterFacetCount: this.filterFacetCount,
+        filterFacetCount: this.shouldFilterFacetCount,
         injectionDepth: this.injectionDepth,
         tabs: {
           included: this.tabsIncluded,
@@ -349,7 +357,7 @@ export class AtomicTimeframeFacet extends LitElement implements InitializableCom
         currentValues: values,
         generateAutomaticRanges: false,
         sortCriteria: this.sortCriteria,
-        filterFacetCount: this.filterFacetCount,
+        filterFacetCount: this.shouldFilterFacetCount,
         injectionDepth: this.injectionDepth,
         tabs: {
           included: this.tabsIncluded,
@@ -404,6 +412,10 @@ export class AtomicTimeframeFacet extends LitElement implements InitializableCom
           },
         })
     )}`;
+  }
+
+  private get shouldFilterFacetCount() {
+    return this.filterFacetCount && !this.disableFacetCountFiltering;
   }
 }
 

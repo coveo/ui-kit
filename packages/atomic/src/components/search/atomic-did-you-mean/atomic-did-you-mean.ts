@@ -11,7 +11,7 @@ import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {createBooleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -73,14 +73,22 @@ export class AtomicDidYouMean extends LitElement implements InitializableCompone
    * When `automaticallyCorrectQuery` is `false`, the component returns the suggested term without triggering a new query.
    *
    * The default value is `true`.
+   * @deprecated - Use `disable-automatic-query-correction` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     reflect: true,
     type: Boolean,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-automatic-query-correction'),
     attribute: 'automatically-correct-query',
   })
   public automaticallyCorrectQuery = true;
+
+  /**
+   * Whether to disable the automatic correction of queries that would otherwise return no results.
+   * When set, the component returns the suggested term without triggering a new query.
+   */
+  @property({type: Boolean, attribute: 'disable-automatic-query-correction', reflect: true})
+  public disableAutomaticQueryCorrection = false;
 
   /**
    * Define which query correction system to use
@@ -109,7 +117,7 @@ export class AtomicDidYouMean extends LitElement implements InitializableCompone
   public initialize() {
     this.didYouMean = buildDidYouMean(this.bindings.engine, {
       options: {
-        automaticallyCorrectQuery: this.automaticallyCorrectQuery,
+        automaticallyCorrectQuery: this.shouldAutomaticallyCorrectQuery,
         queryCorrectionMode: this.queryCorrectionMode,
       },
     });
@@ -198,6 +206,10 @@ export class AtomicDidYouMean extends LitElement implements InitializableCompone
     }
 
     return '';
+  }
+
+  private get shouldAutomaticallyCorrectQuery() {
+    return this.automaticallyCorrectQuery && !this.disableAutomaticQueryCorrection;
   }
 }
 

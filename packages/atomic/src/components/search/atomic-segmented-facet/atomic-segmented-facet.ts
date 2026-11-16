@@ -28,7 +28,7 @@ import type {Bindings} from '@/src/components/search/atomic-search-interface/ato
 import {renderFacetSegmentedValue} from '@/src/components/search/facets/facet-segmented-value/facet-segmented-value';
 import facetSegmentedValueStyles from '@/src/components/search/facets/facet-segmented-value/facet-segmented-value.tw.css.js';
 import {arrayConverter} from '@/src/converters/array-converter';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {createBooleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -141,14 +141,21 @@ export class AtomicSegmentedFacet extends LitElement implements InitializableCom
    *
    * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
    * The target folding field must be a facet field with the **Use cache for nested queries** options enabled (see [Manage fields](https://docs.coveo.com/en/1833/)).
+   * @deprecated - Use `disable-facet-count-filtering` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-facet-count-filtering'),
     attribute: 'filter-facet-count',
     reflect: true,
   })
   filterFacetCount = true;
+
+  /**
+   * Whether to stop excluding the parents of folded results when estimating the result count for each facet value.
+   */
+  @property({type: Boolean, attribute: 'disable-facet-count-filtering', reflect: true})
+  public disableFacetCountFiltering = false;
 
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
@@ -352,7 +359,7 @@ export class AtomicSegmentedFacet extends LitElement implements InitializableCom
       numberOfValues: this.numberOfValues,
       sortCriteria: this.sortCriteria,
       facetSearch: {numberOfValues: this.numberOfValues},
-      filterFacetCount: this.filterFacetCount,
+      filterFacetCount: this.shouldFilterFacetCount,
       injectionDepth: this.injectionDepth,
       hasBreadcrumbs: false,
       allowedValues: this.allowedValues.length ? this.allowedValues : undefined,
@@ -362,6 +369,10 @@ export class AtomicSegmentedFacet extends LitElement implements InitializableCom
         excluded: this.tabsExcluded,
       },
     };
+  }
+
+  private get shouldFilterFacetCount() {
+    return this.filterFacetCount && !this.disableFacetCountFiltering;
   }
 }
 
