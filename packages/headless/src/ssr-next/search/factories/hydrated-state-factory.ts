@@ -1,5 +1,5 @@
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {SSRSearchEngine} from '../types/build.js';
+import type {BuildParameters, SSRSearchEngine} from '../types/build.js';
 import type {
   AugmentedControllerDefinition,
   ControllerDefinitionsMap,
@@ -9,7 +9,6 @@ import type {
   HydrateStaticStateParameters,
   SearchEngineDefinitionOptions,
 } from '../types/engine.js';
-import type {BuildParameters} from '../types/build.js';
 import {buildFactory} from './build-factory.js';
 
 export function hydratedStaticStateFactory<
