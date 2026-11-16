@@ -356,12 +356,8 @@ export default class QuanticSearchBoxInput extends LightningElement {
     }`;
   }
 
-  get isQueryEmpty() {
-    return !this.input?.value && !this.inputValue;
-  }
-
   get hasQuery() {
-    return !this.isQueryEmpty;
+    return !!(this.input?.value || this.inputValue);
   }
 
   /**

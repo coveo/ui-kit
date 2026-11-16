@@ -76,10 +76,6 @@ export default class ExampleQuanticRefineToggle extends LightningElement {
     this.isConfigured = true;
   }
 
-  get facetWithInputs() {
-    return !this.facetWithoutInputs;
-  }
-
   render() {
     if (this.withoutFacets) {
       return templateWithoutFacets;

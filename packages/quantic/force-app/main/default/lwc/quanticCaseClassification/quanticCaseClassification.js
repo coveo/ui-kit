@@ -167,7 +167,7 @@ export default class QuanticCaseClassification extends LightningElement {
   /** @type {boolean} */
   hasInitializationError = false;
   /** @type {boolean} */
-  hideSuggestions = false;
+  showSuggestions = true;
   /** @type {boolean} */
   lockedState = false;
   /** @type {boolean} */
@@ -312,10 +312,6 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   get isSuggestionsVisible() {
     return this._isSuggestionsVisible;
-  }
-
-  get showSuggestions() {
-    return !this.hideSuggestions;
   }
 
   /**
@@ -502,10 +498,10 @@ export default class QuanticCaseClassification extends LightningElement {
       !this.isSuggestion(this._value) &&
       this.isMoreOptionsVisible
     ) {
-      this.hideSuggestions = true;
+      this.showSuggestions = false;
       this.showSelect();
     } else {
-      this.hideSuggestions = false;
+      this.showSuggestions = true;
       this.hideSelect();
     }
   }
