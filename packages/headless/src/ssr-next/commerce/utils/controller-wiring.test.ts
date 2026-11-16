@@ -308,6 +308,25 @@ describe('controller-wiring', () => {
       expect(props.context).toBeDefined();
     });
 
+    it('should not mutate the controllers object received in the build config', () => {
+      const controllers = {context: {initialState: {custom: 'value'}}};
+      const params = {
+        navigatorContext: buildMockNavigatorContext(),
+        context: {
+          language: 'en',
+          country: 'US',
+          currency: 'USD' as const,
+          view: {url: 'https://example.com'},
+        },
+        controllers,
+      };
+
+      const props = wireControllerParams(SolutionType.listing, mockControllerDefinitions, params);
+
+      expect(props).not.toBe(controllers);
+      expect(controllers).toEqual({context: {initialState: {custom: 'value'}}});
+    });
+
     describe('recommendation wiring', () => {
       it('should wire each recommendation controller with the provided productId', () => {
         const definitionsWithRecommendation = {
