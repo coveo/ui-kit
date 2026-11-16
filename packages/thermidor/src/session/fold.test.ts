@@ -1,7 +1,7 @@
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import type {NormalizedStreamEvent} from '@/src/internal/api/protocol/stream-types.js';
 import {convertA2uiMessages} from './a2ui-v09-projection.js';
-import {createTurn, deriveSurfaces, foldActivities} from './fold.js';
+import {createTurn, deriveSurfaces, foldActivities, foldInitialization} from './fold.js';
 import type {A2uiV09Message, Activity} from './types.js';
 
 /** The v0.9 messages a renderer receives for the surface activities of a folded turn. */
@@ -42,6 +42,41 @@ describe('fold Turn/TurnResponse shape', () => {
 
       expect(turn.status).toBe('error');
       expect(turn.error).toBe('boom');
+    });
+
+    it('marks a RUN_ERROR failed and keeps its code', () => {
+      const turn = foldActivities(createTurn('t1', {prompt: 'hi'}), [
+        activity({type: 'RUN_ERROR', message: 'busy', code: 'AGENT:AGENT_BUSY'}),
+      ]);
+
+      expect(turn).toMatchObject({
+        status: 'error',
+        error: 'busy',
+        reason: 'failed',
+        errorCode: 'AGENT:AGENT_BUSY',
+      });
+    });
+
+    it('omits errorCode when the RUN_ERROR has no code', () => {
+      const turn = foldActivities(createTurn('t1', {prompt: 'hi'}), [runError]);
+
+      expect(turn.reason).toBe('failed');
+      expect(turn).not.toHaveProperty('errorCode');
+    });
+
+    it('carries reason and errorCode into the initialization', () => {
+      const initialization = foldInitialization(
+        {activities: [], status: 'streaming'},
+        activity({type: 'RUN_ERROR', message: 'late', code: 'AGENT:UPSTREAM_TIMEOUT'})
+      );
+
+      expect(initialization).toEqual({
+        activities: [],
+        status: 'error',
+        error: 'late',
+        reason: 'failed',
+        errorCode: 'AGENT:UPSTREAM_TIMEOUT',
+      });
     });
 
     it('omits error on a completed (RUN_FINISHED) sequence', () => {

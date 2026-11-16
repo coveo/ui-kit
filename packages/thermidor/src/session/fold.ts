@@ -32,16 +32,13 @@ function cloneResponse(response: TurnResponse): TurnResponse {
 }
 
 function cloneTurn(turn: Turn): Turn {
-  const next: Turn = {
+  return {
     id: turn.id,
     input: {...turn.input},
     response: cloneResponse(turn.response),
     status: turn.status,
+    ...runOutcome(turn),
   };
-  if (turn.error !== undefined) {
-    next.error = turn.error;
-  }
-  return next;
 }
 
 function ensureAgent(response: TurnResponse): TurnAgent {
@@ -213,8 +210,13 @@ export function foldActivity(previousTurn: Turn, activity: NormalizedStreamEvent
     }
 
     case 'RUN_ERROR': {
+      const {message, code} = activity as {message?: string; code?: unknown};
       turn.status = 'error';
-      turn.error = (activity as {message?: string}).message || 'An error occurred during the turn.';
+      turn.error = message || 'An error occurred during the turn.';
+      turn.reason = 'failed';
+      if (typeof code === 'string' && code) {
+        turn.errorCode = code;
+      }
       return turn;
     }
 
@@ -374,6 +376,7 @@ function foldUnknown(turn: Turn, activity: NormalizedStreamEvent): Turn {
       typeof errorObj === 'object' && errorObj !== null && 'message' in errorObj
         ? String((errorObj as {message: unknown}).message)
         : 'A gateway error occurred.';
+    turn.reason = 'failed';
     return turn;
   }
   return turn;
@@ -404,14 +407,25 @@ export function foldInitialization(
         surfaces: deriveSurfaces(initialization.activities),
       },
       status: initialization.status,
-      ...(initialization.error === undefined ? {} : {error: initialization.error}),
+      ...runOutcome(initialization),
     },
     activity
   );
   return {
     activities: folded.response.activities,
     status: folded.status,
-    ...(folded.error === undefined ? {} : {error: folded.error}),
+    ...runOutcome(folded),
+  };
+}
+
+/** The `error`, `reason` and `errorCode` a run carries, without the keys it lacks. */
+export function runOutcome(
+  run: Pick<Turn, 'error' | 'reason' | 'errorCode'>
+): Pick<Turn, 'error' | 'reason' | 'errorCode'> {
+  return {
+    ...(run.error === undefined ? {} : {error: run.error}),
+    ...(run.reason === undefined ? {} : {reason: run.reason}),
+    ...(run.errorCode === undefined ? {} : {errorCode: run.errorCode}),
   };
 }
 

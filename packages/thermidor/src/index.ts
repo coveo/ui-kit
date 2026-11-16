@@ -50,6 +50,7 @@ export type {
   TurnInput,
   TurnAction,
   TurnResponse,
+  TurnErrorReason,
   TurnStatus,
   TurnAgent,
   A2uiState,

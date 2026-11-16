@@ -96,7 +96,7 @@ The runtime owns the initialize / dispatch / cancel / retry orchestration and th
 - **`dispatchAction(message)`** — the single consumer-facing entry point, wired as the renderer's `onAction`. It never rejects: every refusal is a dev-only warning. A dispatch made while a request is in flight is withheld, unless the producer announced it as concurrent (see [The concurrent lane](#the-concurrent-lane)).
   - A `submitPrompt` action (`{name: 'submitPrompt', payload: {prompt}}`) needs no active turn. It opens a new `streaming` turn, builds a request (invoking both context providers fresh), POSTs to the endpoint, and folds the streamed response into that turn.
   - An A2-UI client message is unwrapped to its `userAction`. The runtime recovers the dispatching component's `component` discriminant from the session's node-identity registry (derived from the session's activity log), validates the payload against that component's action schema, and sends the action to its own originating surface. It is withheld when the node resolves to no component, when the payload fails validation, or when it opens no turn and there is neither an active turn nor an initialization to stream into. The action's response streams into the active turn, or into the initialization before the first turn, unless the producer announced the action as opening a turn, in the AG-UI `metadata` of the surface's snapshot (`turnOpeningActions`, read by `src/session/turn-opening.ts`; the fold keeps each activity's `metadata`, and merges a replacing snapshot's onto it by entry): then it opens a new `streaming` turn whose `input.action` records it, even before the first turn, and that turn becomes the active turn ([ADR-019](./internal/adr/ADR-019-turn-opening-actions.md)). An action that does not open a turn only folds its surface snapshots, whichever run created its surface: its run, its text and its failure leave the status and response of the active turn, or of the initialization, as they are, and a failure sets `actionError` (ADR-018, as amended).
-- **`cancel()`** — stops consuming the in-flight stream. A streaming initialization, or a streaming turn, opened by a prompt or by an action, keeps the partial `response` already folded and is marked `error` with the message `'Cancelled'`; an action that streams into a complete turn leaves it as it was. `request` stays set until the stopped request has unwound, so a dispatch made right after `cancel()` is withheld. A no-op when nothing is in flight.
+- **`cancel()`** — stops consuming the in-flight stream. A streaming initialization, or a streaming turn, opened by a prompt or by an action, keeps the partial `response` already folded and is marked `error` with `reason: 'cancelled'` (message `'Cancelled'`); an action that streams into a complete turn leaves it as it was. `request` stays set until the stopped request has unwound, so a dispatch made right after `cancel()` is withheld. A no-op when nothing is in flight.
 - **`retry(turnId)`** — re-submits the original input of the last turn, only when it is `error`: its prompt, or the action that opened it, re-sent from the surface it was dispatched from without resolving it against the active turn. Withheld like any dispatch while a request is in flight; any other `turnId` (unknown, non-error, or an earlier turn, whose answer would land before later turns' surfaces) is a no-op.
 
 Prompts and actions reach the endpoint one at a time, through `sendRequest` in `create-session.ts`, except the concurrent actions below: the Gateway processes a single request per session, and each response is a whole-node snapshot, so overlapping streams would let the last to arrive win over a newer action. A dispatch made while a request is in flight is withheld rather than queued or preempted: the integrator holds it back until the session is free, reading `request`.
@@ -116,7 +116,12 @@ An action the producer announces as concurrent, in the AG-UI `metadata` of the s
 
 The runtime holds the in-flight stream's `AbortController` per session instance — never module-level — so two sessions never contend, and a stream superseded by a newer one never touches the turn.
 
-Cancellation is modeled as a terminal `error` turn (message `'Cancelled'`), not a distinct status. A cancelled turn and a failed turn share every lifecycle property — both are terminal, non-streaming, retryable, and preserve their partial `response` — so no runtime branch distinguishes them, and adding a separate `cancelled` status would only widen `TurnStatus` without changing behavior. Consumers that need to tell a user-initiated stop from a genuine failure should not string-match the message; if that distinction is ever required, prefer a structured discriminator (e.g. an error `reason`) over a new status.
+Cancellation is modeled as a terminal `error` turn, not a distinct status. A cancelled turn and a failed turn share every lifecycle property — both are terminal, non-streaming, retryable, and preserve their partial `response` — so no runtime branch distinguishes them, and adding a separate `cancelled` status would only widen `TurnStatus` without changing behavior. What tells them apart is a structured `reason` on the errored turn or initialization, present only when `status === 'error'`, so consumers never string-match `error`:
+
+- `'cancelled'` — `cancel()` stopped it while it streamed (`cancelRun`). `error` stays `'Cancelled'`.
+- `'failed'` — anything else: a `RUN_ERROR` (folded in `src/session/fold.ts`), a request the endpoint rejected, a network error, a request that could not be built, a stream that ended without a terminal event (all through `failRun`), or a run restored while it was streaming (`'Stream was interrupted'`).
+
+A `RUN_ERROR` also keeps the Gateway's `code` as `errorCode` (an `AGENT:<ID>` string such as `AGENT:UPSTREAM_TIMEOUT`), on the turn or the initialization it fails, or on `actionError` when it fails an action that does not own its turn. The Gateway's messages end with a documentation URL, so consumers choose their text from `reason` and `errorCode` rather than showing `error` as is; the codes it marks as client errors (`AGENT:AGENT_BUSY`, `AGENT:PENDING_INTERRUPTS`, `AGENT:ATTACHMENT_REJECTED`) are the ones a retry does not fix. A stop never reaches the wire, so `reason` is session state only. `retry` rebuilds the turn, which drops `error`, `reason` and `errorCode`.
 
 ## The observable store
 
@@ -183,18 +188,18 @@ The injected contracts schema is validated against at two boundaries, both insid
 
 `src/session/serialize.ts` ([ADR-011](./internal/adr/ADR-011-session-serialization.md)) defines a versioned `SerializedSession` (integer `version >= 1`), intentionally distinct from the runtime `Turn` type:
 
-| Field                                        | Persisted | Scope            |
-| -------------------------------------------- | --------- | ---------------- |
-| `id`, `input`, `status`, `error`             | yes       | all turns        |
-| `initialization` (activities, status, error) | yes       | session-level    |
-| `sessionId`, `sessionToken`, `activeTurnId`  | yes       | session-level    |
-| `response.activities`                        | yes       | all turns        |
-| `response.agent.{messages,reasoningSteps}`   | yes       | turns with agent |
-| `state` (validated data model)               | yes       | session-level    |
-| `response.surfaces`                          | no        | derived          |
-| renderer stream (`a2uiMessages`)             | no        | derived          |
+| Field                                                           | Persisted | Scope            |
+| --------------------------------------------------------------- | --------- | ---------------- |
+| `id`, `input`, `status`, `error`, `reason`, `errorCode`         | yes       | all turns        |
+| `initialization` (activities, status, error, reason, errorCode) | yes       | session-level    |
+| `sessionId`, `sessionToken`, `activeTurnId`                     | yes       | session-level    |
+| `response.activities`                                           | yes       | all turns        |
+| `response.agent.{messages,reasoningSteps}`                      | yes       | turns with agent |
+| `state` (validated data model)                                  | yes       | session-level    |
+| `response.surfaces`                                             | no        | derived          |
+| renderer stream (`a2uiMessages`)                                | no        | derived          |
 
-On restore, the surfaces and the renderer stream are re-derived from the persisted `activities` of the initialization, then of each turn, in order; a turn or initialization persisted mid-stream (`streaming`) is downgraded to `error` (`'Stream was interrupted'`) preserving its partial response; an unsupported `version` is rejected without partially populating a session. `sessionId` / `sessionToken` are used only as continuity keys to continue the same backend conversation.
+On restore, the surfaces and the renderer stream are re-derived from the persisted `activities` of the initialization, then of each turn, in order; a turn or initialization persisted mid-stream (`streaming`) is downgraded to `error` (`'Stream was interrupted'`, `reason: 'failed'`) preserving its partial response; an unsupported `version` is rejected without partially populating a session. `sessionId` / `sessionToken` are used only as continuity keys to continue the same backend conversation.
 
 ## Surface derivation (ADR-015 — recorded interim debt)
 

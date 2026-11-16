@@ -324,7 +324,8 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    */
   dispatchAction: (message: A2uiClientMessage | SubmitPromptAction) => Promise<void>;
   /**
-   * Stops the request in flight, `initialize` included, but no concurrent action. {@link Session.request} stays set until the stopped request has
+   * Stops the request in flight, `initialize` included, but no concurrent action. A streaming turn
+   * or initialization it stops ends in `'error'` with `reason: 'cancelled'`. {@link Session.request} stays set until the stopped request has
    * unwound, a few microtasks later, so a dispatch made right after `cancel()` is withheld: wait for
    * `request` to become `undefined`, through {@link Session.subscribe}, before sending the next one.
    */
@@ -353,6 +354,9 @@ interface RecoveredAction extends ActionOrigin {
   discriminant: string;
   context: unknown;
 }
+
+/** The fields that settle a run. */
+type RunSettlement = Pick<Turn, 'status' | 'error' | 'reason' | 'errorCode'>;
 
 interface RequestFailure {
   error: string;
@@ -661,10 +665,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     });
   }
 
-  function settleRun(
-    target: RunTarget,
-    settle: (run: Pick<Turn, 'status' | 'error'>) => Pick<Turn, 'status' | 'error'>
-  ): void {
+  function settleRun(target: RunTarget, settle: (run: RunSettlement) => RunSettlement): void {
     if (target.kind === 'turn') {
       replaceTurn(target.turnId, (turn) => ({...turn, ...settle(turn)}));
       return;
@@ -680,13 +681,13 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   }
 
   function failRun(target: RunTarget, error: string): void {
-    settleRun(target, () => ({status: 'error', error}));
+    settleRun(target, () => ({status: 'error', error, reason: 'failed'}));
   }
 
   // An action streams into a run that is already complete; cancelling it must leave that run be.
   function cancelRun(target: RunTarget): void {
     settleRun(target, (run) =>
-      run.status === 'streaming' ? {status: 'error', error: 'Cancelled'} : run
+      run.status === 'streaming' ? {status: 'error', error: 'Cancelled', reason: 'cancelled'} : run
     );
   }
 
@@ -778,8 +779,10 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     action: ActionSource | undefined
   ): Promise<void> {
     let terminalEventReceived = false;
-    const fail = (message: string) =>
-      action ? setActionError({message, ...action}) : failRun(target, message);
+    const fail = (message: string, errorCode?: string) =>
+      action
+        ? setActionError({message, ...(errorCode ? {errorCode} : {}), ...action})
+        : failRun(target, message);
 
     await readEventStream({
       stream,
@@ -800,7 +803,11 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
         if (action) {
           if (event.type === 'RUN_ERROR') {
             terminalEventReceived = true;
-            fail((event as {message?: string}).message || 'An error occurred during the action.');
+            const {message, code} = event as {message?: string; code?: unknown};
+            fail(
+              message || 'An error occurred during the action.',
+              typeof code === 'string' ? code : undefined
+            );
           } else if (event.type === 'RUN_FINISHED' || event.type === 'turn_complete') {
             terminalEventReceived = true;
           } else if (event.type === 'ACTIVITY_SNAPSHOT') {
@@ -930,7 +937,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
 
   /**
    * Stops consuming the in-flight stream. A streaming prompt turn, or a streaming initialization, is
-   * marked `error`, retaining whatever it has already folded; an action in flight leaves the run it
+   * marked `error` with `reason: 'cancelled'`, retaining whatever it has already folded; an action in flight leaves the run it
    * is recorded with unchanged. `request` is cleared once the stopped request has unwound, not here.
    * When nothing is in flight, it is a no-op that leaves every run unchanged.
    */

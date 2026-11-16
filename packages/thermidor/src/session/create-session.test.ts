@@ -962,6 +962,29 @@ describe('createSession lifecycle', () => {
       expect(session.actionError).toEqual({message: 'Search failed', ...PAGE_ACTION});
     });
 
+    it("keeps the code of an action's RUN_ERROR on actionError", async () => {
+      const session = createSession(baseConfig);
+      await prompt(session, searchSurface);
+      await prompt(session, answerSurface);
+
+      const stream = queueStream();
+      const action = session.dispatchAction(selectPageMessage(2));
+      await stream.opened;
+      stream.emit({
+        type: 'RUN_ERROR',
+        message: 'Upstream timed out',
+        code: 'AGENT:UPSTREAM_TIMEOUT',
+      });
+      stream.close();
+      await action;
+
+      expect(session.actionError).toEqual({
+        message: 'Upstream timed out',
+        errorCode: 'AGENT:UPSTREAM_TIMEOUT',
+        ...PAGE_ACTION,
+      });
+    });
+
     it('leaves the active turn as it is when an action on an earlier surface ends without a terminal event', async () => {
       const session = createSession(baseConfig);
       await prompt(session, searchSurface);
@@ -1430,8 +1453,8 @@ describe('createSession lifecycle', () => {
       await submitPromise;
 
       const turn = session.turns[0];
-      expect(turn.status).toBe('error');
-      expect(turn.error).toBeDefined();
+      expect(turn).toMatchObject({status: 'error', error: 'Cancelled', reason: 'cancelled'});
+      expect(turn.errorCode).toBeUndefined();
       // Partial response already folded is retained.
       expect(turn.response.agent?.messages).toEqual([{content: 'partial', role: 'assistant'}]);
     });
@@ -1465,6 +1488,7 @@ describe('createSession lifecycle', () => {
       expect(session.turns).toHaveLength(1);
       expect(session.turns[0]).toBe(completedTurn);
       expect(session.turns[0].status).toBe('complete');
+      expect(session.turns[0].reason).toBeUndefined();
     });
   });
 
@@ -1532,6 +1556,131 @@ describe('createSession lifecycle', () => {
       expect(callMock).toHaveBeenCalledTimes(2);
       expect(session.turns[0].status).toBe('complete');
       expect(session.request).toBeUndefined();
+    });
+  });
+
+  describe('why a turn errored', () => {
+    async function settledPrompt(
+      session: ReturnType<typeof createSession>,
+      events: Record<string, unknown>[]
+    ) {
+      const stream = queueStream();
+      const submit = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'find shoes'},
+      });
+      await stream.opened;
+      for (const event of events) {
+        stream.emit(event);
+      }
+      stream.close();
+      await submit;
+      return session.turns[0];
+    }
+
+    it('fails the turn with the code of a RUN_ERROR', async () => {
+      const session = createSession(baseConfig);
+
+      const turn = await settledPrompt(session, [
+        {type: 'RUN_STARTED'},
+        {type: 'RUN_ERROR', message: 'The agent is busy.', code: 'AGENT:AGENT_BUSY'},
+      ]);
+
+      expect(turn).toMatchObject({
+        status: 'error',
+        error: 'The agent is busy.',
+        reason: 'failed',
+        errorCode: 'AGENT:AGENT_BUSY',
+      });
+    });
+
+    it('fails the turn without a code when the RUN_ERROR has none', async () => {
+      const session = createSession(baseConfig);
+
+      const turn = await settledPrompt(session, [{type: 'RUN_ERROR', message: 'Boom'}]);
+
+      expect(turn).toMatchObject({status: 'error', error: 'Boom', reason: 'failed'});
+      expect(turn).not.toHaveProperty('errorCode');
+    });
+
+    it('fails the turn when the stream ends without a terminal event', async () => {
+      const session = createSession(baseConfig);
+
+      const turn = await settledPrompt(session, [{type: 'RUN_STARTED'}]);
+
+      expect(turn).toMatchObject({
+        status: 'error',
+        error: 'Stream ended without a terminal event.',
+        reason: 'failed',
+      });
+      expect(turn).not.toHaveProperty('errorCode');
+    });
+
+    it('fails the turn when the endpoint rejects the request', async () => {
+      callMock.mockImplementationOnce(async () => ({success: false, error: 'Bad gateway'}));
+      const session = createSession(baseConfig);
+
+      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+
+      expect(session.turns[0]).toMatchObject({
+        status: 'error',
+        error: 'Bad gateway',
+        reason: 'failed',
+      });
+    });
+
+    it('fails the turn when the request throws', async () => {
+      callMock.mockImplementationOnce(async () => {
+        throw new TypeError('Failed to fetch');
+      });
+      const session = createSession(baseConfig);
+
+      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+
+      expect(session.turns[0]).toMatchObject({
+        status: 'error',
+        error: 'Failed to fetch',
+        reason: 'failed',
+      });
+    });
+
+    it('keeps reason and errorCode through serialize and restore', async () => {
+      const session = createSession(baseConfig);
+      await settledPrompt(session, [
+        {type: 'RUN_ERROR', message: 'Rejected', code: 'AGENT:ATTACHMENT_REJECTED'},
+      ]);
+
+      const restored = createSession({...baseConfig, sessionToRestore: session.serialize()});
+
+      expect(restored.turns[0]).toEqual(session.turns[0]);
+      expect(restored.turns[0]).toMatchObject({
+        reason: 'failed',
+        errorCode: 'AGENT:ATTACHMENT_REJECTED',
+      });
+    });
+
+    it('clears error, reason and errorCode on retry', async () => {
+      const session = createSession(baseConfig);
+      const turn = await settledPrompt(session, [
+        {type: 'RUN_ERROR', message: 'Timed out', code: 'AGENT:UPSTREAM_TIMEOUT'},
+      ]);
+
+      const retryStream = queueStream();
+      session.retry(turn.id);
+      await retryStream.opened;
+
+      const retried = session.turns[0];
+      expect(retried.status).toBe('streaming');
+      expect(retried).not.toHaveProperty('error');
+      expect(retried).not.toHaveProperty('reason');
+      expect(retried).not.toHaveProperty('errorCode');
+
+      retryStream.emit({type: 'RUN_FINISHED'});
+      retryStream.close();
+      await vi.waitFor(() => expect(session.request).toBeUndefined());
+
+      expect(session.turns[0].status).toBe('complete');
+      expect(session.turns[0]).not.toHaveProperty('reason');
     });
   });
 
@@ -2218,6 +2367,7 @@ describe('createSession lifecycle', () => {
         activities: [],
         status: 'error',
         error: 'Unknown action',
+        reason: 'failed',
       });
       expect(session.request).toBeUndefined();
 
@@ -2237,7 +2387,11 @@ describe('createSession lifecycle', () => {
       session.cancel();
       await vi.waitFor(() => expect(session.request).toBeUndefined());
 
-      expect(session.initialization).toMatchObject({status: 'error', error: 'Cancelled'});
+      expect(session.initialization).toMatchObject({
+        status: 'error',
+        error: 'Cancelled',
+        reason: 'cancelled',
+      });
     });
 
     it('marks the initialization cancelled when cancelled in flight', async () => {
@@ -2249,7 +2403,12 @@ describe('createSession lifecycle', () => {
       stream.close();
       await vi.waitFor(() => expect(session.request).toBeUndefined());
 
-      expect(session.initialization).toEqual({activities: [], status: 'error', error: 'Cancelled'});
+      expect(session.initialization).toEqual({
+        activities: [],
+        status: 'error',
+        error: 'Cancelled',
+        reason: 'cancelled',
+      });
       expect(session.turns).toEqual([]);
       expect(callMock).toHaveBeenCalledTimes(1);
     });
@@ -2410,14 +2569,14 @@ describe('createSession lifecycle', () => {
       ]);
     });
 
-    it('round-trips the initialization, the turns and the session state through serialized format 4', async () => {
+    it('round-trips the initialization, the turns and the session state through serialized format 5', async () => {
       const session = await initializedSession();
       await completePrompt(session, 'first', [shellPageUpdate('shell-page')]);
 
       const serialized = session.serialize();
       const restored = createSession({...shellConfig, sessionToRestore: serialized});
 
-      expect(serialized.version).toBe(4);
+      expect(serialized.version).toBe(5);
       expect(serialized.initialization).toEqual({
         activities: session.initialization?.activities,
         status: 'complete',
@@ -2442,6 +2601,7 @@ describe('createSession lifecycle', () => {
       expect(restored.initialization).toMatchObject({
         status: 'error',
         error: 'Stream was interrupted',
+        reason: 'failed',
       });
       expect(restored.a2uiMessages).toEqual(session.a2uiMessages);
       session.cancel();
