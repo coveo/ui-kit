@@ -2,7 +2,7 @@ import {CaseClassificationObject} from './pageObject';
 import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
 import {
   CaseAssistObject,
-  caseAssistConfigurationsTimeoutMs,
+  fakeCaseAssistId,
 } from '../../../../../../playwright/page-object/caseAssistObject';
 import {
   allOptions,
@@ -12,7 +12,6 @@ import {
 } from './data';
 
 const pageUrl = 's/quantic-case-classification';
-const readinessTimeoutMs = caseAssistConfigurationsTimeoutMs + 5_000;
 
 interface CaseClassificationOptions {
   fetchOnInit: boolean;
@@ -36,7 +35,7 @@ export const test = quanticBase.extend<QuanticCaseClassificationE2EFixtures>({
   ) => {
     const caseClassificationObject = new CaseClassificationObject(page);
     await page.goto(pageUrl);
-    await caseAssist.mockCaseAssistConfigurations();
+    await caseAssist.mockDocumentSuggestions();
     await caseClassificationObject.mockSfPicklistValues(
       sfDefaultField,
       allOptions
@@ -45,10 +44,8 @@ export const test = quanticBase.extend<QuanticCaseClassificationE2EFixtures>({
       coveoDefaultField,
       caseClassificationSuggestions
     );
-    await configuration.configure({...options});
-    await caseClassificationObject.allOptionsSelectInput.waitFor({
-      timeout: readinessTimeoutMs,
-    });
+    await configuration.configure({caseAssistId: fakeCaseAssistId, ...options});
+    await caseClassificationObject.allOptionsSelectInput.waitFor();
 
     const caseClassificationsResponsePromise =
       caseAssist.waitForCaseClassificationsResponse();

@@ -10,3 +10,4 @@ export {MockAnswerApi} from './answer/mock.js';
 export {MockConverseApi} from './converse/mock.js';
 export {MockHostedPageApi} from './hostedpage/mock.js';
 export {MockMachineLearningApi} from './machinelearning/mock.js';
+export {MockCaseAssistApi} from './caseassist/mock.js';

@@ -1,5 +1,3 @@
-// @ts-ignore
-import {getCaseAssistId} from 'c/caseAssistUtils';
 import {LightningElement, track} from 'lwc';
 
 export default class ExampleQuanticCaseClassification extends LightningElement {
@@ -16,6 +14,13 @@ export default class ExampleQuanticCaseClassification extends LightningElement {
       label: 'Engine id',
       description: 'The ID of the engine instance the component registers to.',
       defaultValue: 'case-assist-engine',
+    },
+    {
+      attribute: 'caseAssistId',
+      label: 'Case Assist ID',
+      description:
+        'The ID of the Case Assist configuration the case assist interface uses.',
+      defaultValue: '',
     },
     {
       attribute: 'sfFieldApiName',
@@ -83,8 +88,7 @@ export default class ExampleQuanticCaseClassification extends LightningElement {
     },
   ];
 
-  async handleTryItNow(evt) {
-    this.caseAssistId = await getCaseAssistId('Demo');
+  handleTryItNow(evt) {
     this.config = evt.detail;
     this.isConfigured = true;
   }
