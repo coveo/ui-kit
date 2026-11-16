@@ -8,7 +8,12 @@ export const EarlierTurnContext = createContext(false);
 function SurfaceControls({children}: {children: ReactNode}) {
   const earlier = useContext(EarlierTurnContext);
   return (
-    <fieldset className={styles.surfaceControls} disabled={earlier} role="none">
+    <fieldset
+      className={styles.surfaceControls}
+      data-surface-controls
+      disabled={earlier}
+      role="none"
+    >
       {children}
     </fieldset>
   );
