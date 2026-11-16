@@ -42,6 +42,7 @@ describe('atomic-generated-answer', () => {
     generatedAnswerState?: Partial<GeneratedAnswerState>;
     searchStatusState?: {hasError?: boolean};
     tabManagerState?: {activeTab?: string};
+    engine?: ReturnType<typeof buildFakeSearchEngine>;
     generatedAnswerOverrides?: Partial<GeneratedAnswer> & Record<string, unknown>;
   };
 
@@ -51,6 +52,7 @@ describe('atomic-generated-answer', () => {
     searchStatusState = {},
     tabManagerState = {},
     generatedAnswerOverrides = {},
+    engine = mockedEngine,
   }: RenderGeneratedAnswerOptions = {}) => {
     mockedGeneratedAnswer = Object.assign(
       buildFakeGeneratedAnswer({
@@ -98,7 +100,7 @@ describe('atomic-generated-answer', () => {
       ></atomic-generated-answer>`,
       selector: 'atomic-generated-answer',
       bindings: (bindings) => {
-        bindings.engine = mockedEngine;
+        bindings.engine = engine;
         return bindings;
       },
     });
@@ -1405,6 +1407,45 @@ describe('atomic-generated-answer', () => {
   });
 
   describe('fieldsToIncludeInCitations property', () => {
+    describe('deprecation warning', () => {
+      it('should log a deprecation warning when the attribute is a comma-separated string', async () => {
+        const engine = buildFakeSearchEngine();
+        await renderGeneratedAnswer({engine, props: {fieldsToIncludeInCitations: 'author,date'}});
+
+        expect(engine.logger.warn).toHaveBeenCalledWith(
+          expect.stringContaining(
+            '[Deprecated] A comma-separated `fields-to-include-in-citations` value on `atomic-generated-answer`'
+          )
+        );
+      });
+
+      it('should log a deprecation warning when the property is set to a comma-separated string', async () => {
+        const engine = buildFakeSearchEngine();
+        const {element} = await renderGeneratedAnswer({engine});
+
+        element.fieldsToIncludeInCitations = 'author,date';
+        await element.updateComplete;
+
+        expect(engine.logger.warn).toHaveBeenCalledWith(
+          expect.stringContaining(
+            '[Deprecated] A comma-separated `fields-to-include-in-citations` value on `atomic-generated-answer`'
+          )
+        );
+      });
+
+      it('should not log a deprecation warning when the attribute is a JSON array', async () => {
+        const engine = buildFakeSearchEngine();
+        await renderGeneratedAnswer({
+          engine,
+          props: {fieldsToIncludeInCitations: '["author","date"]'},
+        });
+
+        expect(engine.logger.warn).not.toHaveBeenCalledWith(
+          expect.stringContaining('[Deprecated]')
+        );
+      });
+    });
+
     // TODO V4 (KIT-5306): Remove legacy comma-separated string support and update tests
     it('should parse comma-separated fields and pass to buildGeneratedAnswer', async () => {
       await renderGeneratedAnswer({

@@ -101,7 +101,7 @@ describe('atomic-commerce-interface', () => {
         language-assets-path=${ifDefined(props.languageAssetsPath)}
         ?localize-with-country=${props.localizeWithCountry}
         log-level=${ifDefined(props.logLevel)}
-        reflect-state-in-url=${props.reflectStateInUrl}
+        reflect-state-in-url=${ifDefined(props.reflectStateInUrl)}
         scroll-container=${ifDefined(props.scrollContainer)}
         type=${ifDefined(props.type)}
         >${when(props.mobileBreakpoint, () => html`<atomic-commerce-layout mobile-breakpoint=${ifDefined(props.mobileBreakpoint)}></atomic-commerce-layout>`)}<div>Interface content</div></atomic-commerce-layout></atomic-commerce-interface

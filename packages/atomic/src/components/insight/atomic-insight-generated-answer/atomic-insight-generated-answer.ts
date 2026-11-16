@@ -25,6 +25,7 @@ import {ValidatePropsController} from '@/src/components/common/validate-props-co
 import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {createLegacyArrayStringConverter} from '@/src/converters/legacy-array-string-converter';
+import {warnOnCommaSeparatedFieldList} from '@/src/utils/deprecation-utils';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -90,13 +91,7 @@ export class AtomicInsightGeneratedAnswer
   });
 
   // TODO V4 (KIT-5306): Remove converter and use arrayConverter directly.
-  private static readonly fieldsToIncludeInCitationsConverter = createLegacyArrayStringConverter(
-    (value) => {
-      console.warn(
-        `Starting from Atomic v4, the "fields-to-include-in-citations" property will only accept an array of strings. Using a comma-separated string value ("${value}") is now deprecated. Please update the value to be a JSON array. For example: fields-to-include-in-citations='["fieldA","fieldB"]'`
-      );
-    }
-  );
+  private static readonly fieldsToIncludeInCitationsConverter = createLegacyArrayStringConverter();
 
   private readonly DEFAULT_COLLAPSED_HEIGHT = 16;
   private readonly MAX_COLLAPSED_HEIGHT = 32;
@@ -239,6 +234,12 @@ export class AtomicInsightGeneratedAnswer
   }
 
   protected willUpdate(changedProperties: PropertyValueMap<this>) {
+    warnOnCommaSeparatedFieldList(
+      this,
+      this.bindings?.engine?.logger,
+      'fields-to-include-in-citations',
+      this.fieldsToIncludeInCitations
+    );
     if (changedProperties.has('generatedAnswerState' as keyof this)) {
       const oldState = changedProperties.get('generatedAnswerState' as keyof this) as
         | InsightGeneratedAnswerState
