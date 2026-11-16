@@ -11,6 +11,7 @@
 import {useEffect, useMemo, useRef, type ReactNode} from 'react';
 import {A2UIRenderer, useA2UI} from '@copilotkit/a2ui-renderer';
 import type {A2uiV09Message, DiscoveredSurface} from '@coveo/thermidor';
+import {turnSurfacesTarget} from './results-focus.js';
 import {A2UISkeleton} from './Skeleton/Skeleton.js';
 import {useActionError, useSurfaceLocked} from './session-request.js';
 import styles from './surfaces.module.css';
@@ -118,6 +119,7 @@ export function TurnSurfaces({surfaces, interactive, isStreaming}: TurnSurfacesP
     // local state when the turn stops being the active one.
     <fieldset
       ref={fieldsetRef}
+      {...turnSurfacesTarget}
       className={[styles.surfaces, !interactive && styles.readOnly, dimmed && styles.locked]
         .filter(Boolean)
         .join(' ')}

@@ -3,7 +3,7 @@ import {screen, fireEvent, cleanup, waitFor, act, within} from '@testing-library
 import type {PageSizeProps, PaginationProps, Product, SortProps} from '@coveo/thermidor-schema';
 import type {PropsWithChildren} from 'react';
 import {mountSurface} from './mount-surface.harness.js';
-import {turnStartTarget} from './results-focus.js';
+import {turnStartTarget, turnSurfacesTarget} from './results-focus.js';
 
 afterEach(cleanup);
 
@@ -128,7 +128,19 @@ describe('Page change focus', () => {
 
   afterEach(() => {
     delete (Element.prototype as Partial<Element>).scrollIntoView;
+    document.querySelectorAll('[data-earlier-turn]').forEach((turn) => turn.remove());
   });
+
+  /** An earlier turn with results of its own, ahead of the surface in the page. */
+  function addEarlierTurn() {
+    const earlierTurn = document.createElement('div');
+    earlierTurn.setAttribute('data-earlier-turn', '');
+    earlierTurn.setAttribute('data-turn-start', '');
+    earlierTurn.innerHTML =
+      '<fieldset data-turn-surfaces><div data-product-list>' +
+      '<article role="listitem" tabindex="-1">Earlier product</article></div></fieldset>';
+    document.body.prepend(earlierTurn);
+  }
 
   function products(page: number): Product[] {
     return [1, 2].map((n) => ({
@@ -158,7 +170,7 @@ describe('Page change focus', () => {
   function Turn({children}: PropsWithChildren) {
     return (
       <div role="article" aria-label="Current turn" {...turnStartTarget}>
-        {children}
+        <fieldset {...turnSurfacesTarget}>{children}</fieldset>
       </div>
     );
   }
@@ -254,11 +266,7 @@ describe('Page change focus', () => {
   });
 
   it("leaves an earlier turn's results alone", async () => {
-    const earlierTurn = document.createElement('div');
-    earlierTurn.setAttribute('data-turn-start', '');
-    earlierTurn.innerHTML =
-      '<div data-product-list><article role="listitem" tabindex="-1">Earlier product</article></div>';
-    document.body.prepend(earlierTurn);
+    addEarlierTurn();
     const request = held();
     mountResults(request.gate, Turn);
 
@@ -269,7 +277,23 @@ describe('Page change focus', () => {
     expect(scrollIntoView.mock.contexts).toEqual([
       screen.getByRole('article', {name: 'Current turn'}),
     ]);
-    earlierTurn.remove();
+  });
+
+  it("leaves an earlier turn's results alone when the new page has no products", async () => {
+    addEarlierTurn();
+    const request = held();
+    const {pushDataModel} = mountResults(request.gate, Turn);
+
+    await changePage('Next page');
+    pushDataModel([{path: '/state/list/products', value: []}]);
+    await request.answer();
+
+    await waitFor(() => expect(screen.queryByRole('list', {name: 'Product list'})).toBeNull());
+    await waitFor(() =>
+      expect((screen.getByLabelText('Next page') as HTMLButtonElement).disabled).toBe(false)
+    );
+    expect(scrollIntoView).not.toHaveBeenCalled();
+    expect(document.activeElement).toBe(document.body);
   });
 
   it('leaves scroll and focus alone when the page change fails', async () => {

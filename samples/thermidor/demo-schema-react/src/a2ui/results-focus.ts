@@ -7,15 +7,22 @@ export const productListTarget = {'data-product-list': true} as const;
 /** Spread on the start of a turn, which a page change in that turn scrolls back to. */
 export const turnStartTarget = {'data-turn-start': true} as const;
 
+/** Spread on the element holding all the surfaces of one turn. */
+export const turnSurfacesTarget = {'data-turn-surfaces': true} as const;
+
 /**
- * Searches outward from `from` so the closest match wins: earlier turns keep their own result
- * lists on the page, and reaching one of those would send the shopper back in the conversation.
+ * Searches outward from `from` so the closest match wins, without leaving the turn: earlier turns
+ * keep their own result lists on the page, and reaching one of those would send the shopper back
+ * in the conversation.
  */
 function findNearest(from: Element | null, selector: string): HTMLElement | null {
   for (let node = from; node; node = node.parentElement) {
     const target = node.querySelector<HTMLElement>(selector);
     if (target) {
       return target;
+    }
+    if (node.hasAttribute('data-turn-surfaces')) {
+      return null;
     }
   }
   return null;
