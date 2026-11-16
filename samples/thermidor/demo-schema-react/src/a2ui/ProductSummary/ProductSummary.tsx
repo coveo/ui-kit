@@ -42,17 +42,13 @@ export const ProductSummary = createReactComponent(
       );
     }
 
-    return <SummaryRow categoryLabel={props.categoryLabel} product={props.product} />;
+    return props.product ? (
+      <PromotableSummaryRow categoryLabel={props.categoryLabel} product={props.product} />
+    ) : (
+      <SummaryRowContent name={props.categoryLabel} />
+    );
   }
 );
-
-function SummaryRow({categoryLabel, product}: {categoryLabel: string; product?: Product | null}) {
-  return product ? (
-    <PromotableSummaryRow categoryLabel={categoryLabel} product={product} />
-  ) : (
-    <SummaryRowContent name={categoryLabel} />
-  );
-}
 
 function PromotableSummaryRow({categoryLabel, product}: {categoryLabel: string; product: Product}) {
   const [shown, promote] = usePromotedProduct(product);

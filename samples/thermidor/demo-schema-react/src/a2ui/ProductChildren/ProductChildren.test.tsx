@@ -31,6 +31,10 @@ function Slot({product}: {product: Product}) {
 }
 
 const thumbnails = () => screen.queryAllByRole('button');
+const titles = () =>
+  thumbnails()
+    .map((button) => button.title)
+    .join();
 const shownName = () => screen.getByRole('heading').textContent;
 const pressed = () =>
   thumbnails()
@@ -40,27 +44,18 @@ const pressed = () =>
 describe('ProductChildren', () => {
   it('shows up to five children, the shown one marked, and counts the others', () => {
     const children = ['a', 'b', 'c', 'd', 'e', 'f'].map((id) => child(id));
-    render(<Slot product={group(children, 9)} />);
+    const {rerender} = render(<Slot product={group(children, 9)} />);
 
-    expect(thumbnails().map((button) => button.title)).toEqual([
-      'Shoe a',
-      'Shoe b',
-      'Shoe c',
-      'Shoe d',
-      'Shoe e',
-    ]);
+    expect(titles()).toBe('Shoe a,Shoe b,Shoe c,Shoe d,Shoe e');
     expect(pressed()).toEqual(['Shoe a']);
     expect(screen.getByText('4 more products')).toBeDefined();
     expect(screen.getByRole('group', {name: 'Available in:'})).toBeDefined();
-  });
-
-  it('counts the children beyond those listed, if any', () => {
-    const {rerender} = render(<Slot product={group([child('a'), child('b')], 4)} />);
-    expect(thumbnails()).toHaveLength(2);
-    expect(screen.getByText('2 more products')).toBeDefined();
 
     rerender(<Slot product={group([child('a'), child('b')])} />);
     expect(screen.queryByText(/more product/)).toBeNull();
+
+    rerender(<Slot product={child('a')} />);
+    expect(screen.queryByRole('group', {name: 'Available in:'})).toBeNull();
   });
 
   it('shows a fallback for a child without a web image', () => {
@@ -81,13 +76,8 @@ describe('ProductChildren', () => {
     ]);
   });
 
-  it('shows nothing for a product without children', () => {
-    render(<Slot product={child('a')} />);
-    expect(screen.queryByRole('group', {name: 'Available in:'})).toBeNull();
-  });
-
-  it('promotes a child on hover or click, not on focus', () => {
-    render(<Slot product={group([child('a'), child('b'), child('c')])} />);
+  it('promotes a child on hover or click, not on focus, keeping the children in place', () => {
+    render(<Slot product={group([child('a'), child('b'), child('c')], 7)} />);
 
     fireEvent.mouseEnter(thumbnails()[1]);
     expect(shownName()).toBe('Shoe b');
@@ -99,16 +89,8 @@ describe('ProductChildren', () => {
     fireEvent.click(thumbnails()[2]);
     expect(shownName()).toBe('Shoe c');
     expect(pressed()).toEqual(['Shoe c']);
-  });
-
-  it('keeps the children in place once one is promoted', () => {
-    const children = [child('a'), child('b')];
-    render(<Slot product={group(children, 7)} />);
-
-    fireEvent.mouseEnter(thumbnails()[1]);
-
-    expect(thumbnails().map((button) => button.title)).toEqual(['Shoe a', 'Shoe b']);
-    expect(screen.getByText('5 more products')).toBeDefined();
+    expect(titles()).toBe('Shoe a,Shoe b,Shoe c');
+    expect(screen.getByText('4 more products')).toBeDefined();
   });
 
   it('hides presentational thumbnails from assistive technologies', () => {

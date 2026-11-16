@@ -374,7 +374,7 @@ describe('InstantProducts children', () => {
         )
       : answerInstantProductsShell(request);
 
-  it('opens the child a product shows once picked', async () => {
+  it('picks a child on click without opening it, then opens the child the option shows', async () => {
     const open = vi.fn();
     vi.stubGlobal('open', open);
     const {type} = await renderSearchBox({handler: answerWithGroups});
@@ -383,7 +383,8 @@ describe('InstantProducts children', () => {
     expect(within(option).getByText('1 more product')).toBeDefined();
     expect(within(option).queryByRole('button')).toBeNull();
 
-    fireEvent.mouseEnter(within(option).getByTitle('Surf board, blue'));
+    fireEvent.click(within(option).getByTitle('Surf board, blue'));
+    expect(open).not.toHaveBeenCalled();
     expect(screen.getByRole('option', {name: /^Surf board, blue/})).toBe(option);
     expect(option.id).toBe('instant-product-board-white');
 
@@ -393,19 +394,6 @@ describe('InstantProducts children', () => {
       '_blank',
       'noopener,noreferrer'
     );
-  });
-
-  it('picks a child on click without opening the product', async () => {
-    const open = vi.fn();
-    vi.stubGlobal('open', open);
-    const {type} = await renderSearchBox({handler: answerWithGroups});
-    type('surf');
-
-    const option = await screen.findByRole('option', {name: /Surf board, white/});
-    fireEvent.click(within(option).getByTitle('Surf board, blue'));
-
-    expect(open).not.toHaveBeenCalled();
-    expect(option.textContent).toContain('$420.00');
   });
 
   it('drops the pick when the cache answers the product again', async () => {
