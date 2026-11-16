@@ -21,6 +21,7 @@ import {
   updateFacetSortCriterion,
   updateFreezeCurrentValues,
 } from './facet-set-actions.js';
+import {withDeprecationWarning} from '../../../utils/deprecation.js';
 
 export type {
   RegisterFacetActionCreatorPayload,
@@ -141,7 +142,13 @@ export function loadFacetSetActions(engine: SearchEngine): FacetSetActionCreator
 
   return {
     deselectAllFacetValues,
-    registerFacet,
+    registerFacet: withDeprecationWarning(
+      engine.logger,
+      registerFacet,
+      'The `activeTab` option of `registerFacet`',
+      'Omit it, since Headless reads the active tab from the engine state.',
+      (payload) => payload.activeTab !== undefined
+    ),
     toggleSelectFacetValue,
     toggleExcludeFacetValue,
     updateFacetIsFieldExpanded,

@@ -65,6 +65,15 @@ describe('fieldSuggestionsGenerator', () => {
     expect(fieldSuggestionsGenerator).toBeTruthy();
   });
 
+  it('logs a deprecation warning once per engine', () => {
+    initCommerceFacetGenerator();
+
+    expect(engine.logger.warn).toHaveBeenCalledOnce();
+    expect(engine.logger.warn).toHaveBeenCalledWith(
+      expect.stringContaining('Use `buildFilterSuggestionsGenerator` instead.')
+    );
+  });
+
   it('adds correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       fieldSuggestionsOrder,

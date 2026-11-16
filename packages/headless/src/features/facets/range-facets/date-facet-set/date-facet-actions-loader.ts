@@ -13,6 +13,7 @@ import {
   updateDateFacetSortCriterion,
   updateDateFacetValues,
 } from './date-facet-actions.js';
+import {withDeprecationWarning} from '../../../../utils/deprecation.js';
 
 export type {
   RegisterDateFacetActionCreatorPayload,
@@ -101,7 +102,13 @@ export function loadDateFacetSetActions(engine: CoreEngine): DateFacetSetActionC
 
   return {
     deselectAllDateFacetValues,
-    registerDateFacet,
+    registerDateFacet: withDeprecationWarning(
+      engine.logger,
+      registerDateFacet,
+      'The `activeTab` option of `registerDateFacet`',
+      'Omit it, since Headless reads the active tab from the engine state.',
+      (payload) => payload.activeTab !== undefined
+    ),
     toggleSelectDateFacetValue,
     toggleExcludeDateFacetValue,
     updateDateFacetSortCriterion,

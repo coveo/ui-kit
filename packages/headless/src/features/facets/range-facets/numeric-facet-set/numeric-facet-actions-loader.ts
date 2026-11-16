@@ -13,6 +13,7 @@ import {
   updateNumericFacetSortCriterion,
   updateNumericFacetValues,
 } from './numeric-facet-actions.js';
+import {withDeprecationWarning} from '../../../../utils/deprecation.js';
 
 export type {
   RegisterNumericFacetActionCreatorPayload,
@@ -101,7 +102,13 @@ export function loadNumericFacetSetActions(engine: CoreEngine): NumericFacetSetA
 
   return {
     deselectAllNumericFacetValues,
-    registerNumericFacet,
+    registerNumericFacet: withDeprecationWarning(
+      engine.logger,
+      registerNumericFacet,
+      'The `activeTab` option of `registerNumericFacet`',
+      'Omit it, since Headless reads the active tab from the engine state.',
+      (payload) => payload.activeTab !== undefined
+    ),
     toggleSelectNumericFacetValue,
     toggleExcludeNumericFacetValue,
     updateNumericFacetSortCriterion,

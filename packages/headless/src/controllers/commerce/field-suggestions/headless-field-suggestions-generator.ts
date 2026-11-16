@@ -9,6 +9,7 @@ import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../fe
 import type {FieldSuggestionsFacet} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-state.js';
 import {executeSearch} from '../../../features/commerce/search/search-actions.js';
 import type {FieldSuggestionsOrderSection} from '../../../state/state-sections.js';
+import {warnDeprecatedOnce} from '../../../utils/deprecation.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {buildController, type Controller} from '../../controller/headless-controller.js';
 import {
@@ -22,7 +23,7 @@ import {
 
 /**
  * @alpha
- * @deprecated
+ * @deprecated Use `buildFilterSuggestionsGenerator` instead.
  */
 export type GeneratedFieldSuggestionsControllers = Array<CategoryFieldSuggestions>;
 
@@ -32,7 +33,7 @@ export type GeneratedFieldSuggestionsControllers = Array<CategoryFieldSuggestion
  * @group Buildable controllers
  * @category FieldSuggestionsGenerator
  * @alpha
- * @deprecated
+ * @deprecated Use `buildFilterSuggestionsGenerator` instead.
  */
 export interface FieldSuggestionsGenerator extends Controller {
   /**
@@ -54,12 +55,18 @@ export interface FieldSuggestionsGenerator extends Controller {
  * @group Buildable controllers
  * @category FieldSuggestionsGenerator
  * @alpha
- * @deprecated
+ * @deprecated Use `buildFilterSuggestionsGenerator` instead.
  */
 export function buildFieldSuggestionsGenerator(engine: CommerceEngine): FieldSuggestionsGenerator {
   if (!loadFieldSuggestionsGeneratorReducers(engine)) {
     throw loadReducerError;
   }
+
+  warnDeprecatedOnce(
+    engine.logger,
+    '`buildFieldSuggestionsGenerator`',
+    'Use `buildFilterSuggestionsGenerator` instead.'
+  );
 
   const commonOptions = {
     fetchProductsActionCreator: executeSearch,
