@@ -3,7 +3,7 @@ import type {Product, ProductChild} from '@coveo/thermidor-schema';
 import styles from './ProductChildren.module.css';
 
 /** How many child thumbnails a product shows; the others are counted. */
-export const VISIBLE_CHILDREN = 5;
+const VISIBLE_CHILDREN = 5;
 
 /** The thumbnail of a child without an image, or whose image is not a web or data image URL. */
 export const FALLBACK_THUMBNAIL =
