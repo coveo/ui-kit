@@ -1,4 +1,3 @@
-import type {UnknownAction} from '@reduxjs/toolkit';
 import {buildProductListing} from '../../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch} from '../../../controllers/commerce/search/headless-search.js';
 import {createStaticState} from '../controller-utils.js';
@@ -64,7 +63,7 @@ export function fetchStaticStateFactory<
 
       const searchActions = await Promise.all(engine.waitForRequestCompletedAction());
 
-      const staticState = createStaticState<UnknownAction, TControllerDefinitions, TSolutionType>({
+      const staticState = createStaticState<TControllerDefinitions, TSolutionType>({
         searchActions,
         controllers,
       });

@@ -33,14 +33,11 @@ export function buildControllerDefinitions<
   }) as InferControllersMapFromDefinition<TControllerDefinitionsMap>;
 }
 
-export function createStaticState<
-  TSearchAction extends UnknownAction,
-  TControllerDefinitions extends SearchControllerDefinitionsMap,
->({
+export function createStaticState<TControllerDefinitions extends SearchControllerDefinitionsMap>({
   searchActions,
   controllers,
 }: {
-  searchActions: TSearchAction[];
+  searchActions: UnknownAction[];
   controllers: Record<string, Controller>;
 }) {
   return {

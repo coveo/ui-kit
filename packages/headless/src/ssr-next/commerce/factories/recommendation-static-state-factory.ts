@@ -1,4 +1,3 @@
-import type {UnknownAction} from '@reduxjs/toolkit';
 import {createStaticState} from '../controller-utils.js';
 import type {BuildParameters} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
@@ -35,11 +34,7 @@ export function fetchRecommendationStaticStateFactory<
 
     const searchActions = await Promise.all(engine.waitForRequestCompletedAction());
 
-    const staticState = createStaticState<
-      UnknownAction,
-      TControllerDefinitions,
-      SolutionType.recommendation
-    >({
+    const staticState = createStaticState<TControllerDefinitions, SolutionType.recommendation>({
       searchActions,
       controllers,
     });
