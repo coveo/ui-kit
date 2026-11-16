@@ -2,6 +2,6 @@
 '@coveo/atomic': patch
 ---
 
-Remove commerce location facets from the breadbox
+Removing sunsetted experimental feature: commerce location facets
 
-`LocationFacetValue` is removed from the internal breadcrumb value union, following the removal of commerce location facets from `@coveo/headless`. This type is not exported from any Atomic entry point, so there is no public Atomic API change.
+Following the removal of commerce location facets from `@coveo/headless`, `LocationFacetValue` is removed from the internal breadcrumb value type of `atomic-commerce-breadbox`. This type is not exported from any Atomic entry point, so there is no public Atomic API change and no change in behavior.
