@@ -1,73 +1,58 @@
 /**
- * The Coveo Headless SSR Commerce sub-package exposes exposes the engine, definers, controllers, actions, and utility functions to build a server side rendered commerce experience.
+ * The Coveo Headless SSR Commerce sub-package exposes the engine definer, controller definers, actions, and utility functions to build a server-side rendered commerce experience.
  *
  * @example
  * ```typescript
  * import {
- *   Controller,
- *   ControllerDefinitionsMap,
- *   CommerceEngineDefinitionOptions,
- *   CommerceEngine,
  *   defineCommerceEngine,
- *   InferStaticState,
- *   InferHydratedState,
+ *   definePagination,
  *   defineProductList,
+ *   defineRecommendations,
  *   getSampleCommerceEngineConfiguration,
+ *   type InferHydratedState,
+ *   type InferStaticState,
  * } from '@coveo/headless/ssr-commerce';
  *
- * type CommerceEngineConfig = CommerceEngineDefinitionOptions<
- *   ControllerDefinitionsMap<CommerceEngine, Controller>
- * >;
- *
- * const config = {
- *   configuration: {
- *     ...getSampleCommerceEngineConfiguration(),
- *     context: {
- *       language: 'en',
- *       country: 'US',
- *       currency: 'USD',
- *       view: {
- *         url: '...',
- *       },
- *     },
- *   },
- *   controllers: {
- *     productList: defineProductList(),
- *   },
- * } satisfies CommerceEngineConfig;
- *
- * const engineDefinition = defineCommerceEngine(engineConfig);
- *
+ * // Shared by the server and the browser. The context, the cart and the navigator context
+ * // are per-request data: they are passed to `fetchStaticState()`, not to the configuration.
  * export const {
  *   listingEngineDefinition,
  *   searchEngineDefinition,
  *   standaloneEngineDefinition,
- * } = engineDefinition;
- *
- * await listingEngineDefinition.fetchStaticState({
- *   navigatorContextProvider: () => {/*...* /},
- *   context: {/*...* /},
+ *   recommendationEngineDefinition,
+ * } = defineCommerceEngine({
+ *   configuration: getSampleCommerceEngineConfiguration(),
+ *   controllers: {
+ *     productList: defineProductList(),
+ *     pagination: definePagination(),
+ *     popularViewed: defineRecommendations({options: {slotId: '...'}}),
+ *   },
  * });
  *
- * export type ListingStaticState = InferStaticState<
- *   typeof listingEngineDefinition
- * >;
- * export type ListingHydratedState = InferHydratedState<
- *   typeof listingEngineDefinition
- * >;
+ * export type ListingStaticState = InferStaticState<typeof listingEngineDefinition>;
+ * export type ListingHydratedState = InferHydratedState<typeof listingEngineDefinition>;
  *
- * export type SearchStaticState = InferStaticState<typeof searchEngineDefinition>;
- * export type SearchHydratedState = InferHydratedState<
- *   typeof searchEngineDefinition
- * >;
+ * // On the server, once per request
+ * const staticState = await listingEngineDefinition.fetchStaticState({
+ *   navigatorContext: {
+ *     clientId: '...',
+ *     location: 'https://example.com/browse/toys',
+ *     referrer: null,
+ *     userAgent: '...',
+ *     forwardedFor: '...',
+ *   },
+ *   context: {
+ *     language: 'en',
+ *     country: 'US',
+ *     currency: 'USD',
+ *     view: {url: 'https://example.com/browse/toys'},
+ *   },
+ *   cart: {items: []},
+ * });
  *
- * export type StandaloneStaticState = InferStaticState<
- *   typeof standaloneEngineDefinition
- * >;
- * export type StandaloneHydratedState = InferHydratedState<
- *   typeof standaloneEngineDefinition
- * >;
- *
+ * // In the browser, from the serialized static state, passed as is: it already carries the
+ * // navigator context, the context, the cart, the search parameters and the access token.
+ * const {engine, controllers} = await listingEngineDefinition.hydrateStaticState(staticState);
  * ```
  * @module SSR Commerce
  */
