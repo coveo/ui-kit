@@ -23,12 +23,20 @@ const CATALOG = createThermidorCatalog();
 const SURFACE_ID = 'turn-surface';
 const NOTE = 'Earlier results. Ask a follow-up or search again to refine.';
 
-const WETSUIT = {
+const WETSUIT_CHILD = {
   permanentid: 'wetsuit',
   ec_name: 'Wetsuit',
   ec_price: 400,
   clickUri: 'https://example.com/wetsuit',
   additionalFields: {},
+};
+const WETSUIT = {
+  ...WETSUIT_CHILD,
+  children: [
+    WETSUIT_CHILD,
+    {...WETSUIT_CHILD, permanentid: 'wetsuit-blue', ec_name: 'Wetsuit, blue', ec_price: 420},
+  ],
+  totalNumberOfChildren: 2,
 };
 
 /** A surface holding a page size select, which acts on the surface. */
@@ -174,6 +182,16 @@ describe('TurnSurfaces', () => {
       'https://example.com/wetsuit'
     );
     expect(isDisabled(pageSizeSelect())).toBe(true);
+  });
+
+  it('promotes a child in an earlier turn', async () => {
+    render(<Turn interactive={false} messages={WITH_PRODUCTS} />);
+
+    const thumbnail = await screen.findByRole('button', {name: 'Wetsuit, blue'});
+    expect(isDisabled(thumbnail)).toBe(false);
+    fireEvent.click(thumbnail);
+
+    expect(screen.getByRole('link', {name: 'Wetsuit, blue'})).toBeDefined();
   });
 
   it('keeps an earlier turn readable by assistive technology', async () => {
