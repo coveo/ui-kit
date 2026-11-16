@@ -1,9 +1,11 @@
 import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import type {SearchEngineConfiguration} from '../../../app/search-engine/search-engine-configuration.js';
+import {buildMockController} from '../../../test/mock-controller.js';
 import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import {buildMockSearchResponse} from '../../../test/mock-search-response.js';
 import {defineMockSearchController} from '../../../test/mock-ssr-controller-definitions.js';
 import {defineContext} from '../controllers/context/headless-context.ssr.js';
+import type {SSRSearchEngine} from '../types/build.js';
 import type {SearchEngineDefinitionOptions} from '../types/engine.js';
 import {defineSearchEngine} from './search-engine.ssr.js';
 
@@ -220,6 +222,25 @@ describe('Search Engine SSR', () => {
         context: {initialState: {values: {ageGroup: '30-45'}}},
       });
       expect(hydratedState.controllers.context.state.values).toEqual({ageGroup: '30-45'});
+    });
+
+    it('should rebuild a controller with its props when its state does not carry them', async () => {
+      const buildWithProps = vi.fn((_engine: SSRSearchEngine, _props?: {label: string}) =>
+        buildMockController()
+      );
+      const {searchEngineDefinition} = defineSearchEngine({
+        ...definitionOptions,
+        controllers: {labelled: {buildWithProps}},
+      });
+
+      const staticState = await searchEngineDefinition.fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+        controllers: {labelled: {label: 'from the request'}},
+      });
+      buildWithProps.mockClear();
+      await searchEngineDefinition.hydrateStaticState(JSON.parse(JSON.stringify(staticState)));
+
+      expect(buildWithProps).toHaveBeenCalledWith(expect.anything(), {label: 'from the request'});
     });
   });
 

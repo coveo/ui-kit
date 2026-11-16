@@ -56,8 +56,12 @@ describe('hydratedStaticStateFactory', () => {
 
     await hydratedStaticStateFactory(controllerDefinitions, options)(SolutionType.standalone)({
       ...params,
+      controllers: {productEnrichment: {state: {stale: true}}},
       controllerProps,
-    });
+    } as unknown as HydrateStaticStateParameters<
+      typeof controllerDefinitions,
+      SolutionType.listing
+    >);
 
     expect(mockSolutionTypeBuild).toHaveBeenCalledWith(
       expect.objectContaining({controllers: controllerProps})

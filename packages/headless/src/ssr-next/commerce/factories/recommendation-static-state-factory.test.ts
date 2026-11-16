@@ -83,4 +83,27 @@ describe('fetchRecommendationStaticStateFactory', () => {
 
     expect(engineSpy).toHaveBeenCalledWith(controllerDefinitions, options);
   });
+
+  it('should carry the controller props in the static state', async () => {
+    const controllerProps = {rec1: {options: {productId: 'some-product'}}};
+    const factory = fetchRecommendationStaticStateFactory(
+      // @ts-expect-error: do not care about baked-in controller initial state
+      controllerDefinitions,
+      options
+    );
+
+    const staticState = await factory({
+      navigatorContext: mockNavigatorContext,
+      recommendations: ['rec1', 'rec2'],
+      context: {
+        country: 'CA',
+        currency: 'USD',
+        language: 'en',
+        view: {url: 'https://example.com'},
+      },
+      controllers: controllerProps,
+    } as unknown as Parameters<typeof factory>[0]);
+
+    expect(staticState.controllerProps).toEqual(controllerProps);
+  });
 });

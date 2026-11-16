@@ -79,6 +79,7 @@ describe('hydratedStaticStateFactory', () => {
     )({
       navigatorContext: buildMockNavigatorContext(),
       searchActions: [],
+      controllers: {customController: {state: {foo: 'stale'}}},
       controllerProps,
     } as unknown as HydrateStaticStateParameters<typeof controllerDefinitions>);
 
