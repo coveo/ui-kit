@@ -96,6 +96,18 @@
   color: var(--color-text-muted);
 }
 
+.footerEnd {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+}
+
+.footerActions {
+  display: flex;
+  min-width: 12rem;
+}
+
 .footerPrice {
   font-size: var(--font-size-xl);
   font-weight: 700;

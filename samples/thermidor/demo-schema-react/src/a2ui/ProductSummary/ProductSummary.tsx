@@ -1,6 +1,8 @@
+import {useContext, useEffect} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {Product} from '@coveo/thermidor-schema';
 import {ProductSummaryPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {BundleSlotProductContext} from '../BundleDisplay/bundle-actions.js';
 import styles from './ProductSummary.module.css';
 
 function formatPrice(value: number): string {
@@ -22,8 +24,9 @@ function resolvePrice(product: Product): number | undefined {
 /**
  * A2-UI component for the `product-summary`: a compact single-product summary row for a bundle
  * category slot. The generic binder resolves `categoryLabel` / `product` from
- * `ProductSummaryPropsSchema`. Presentational — no actions. `categoryLabel === undefined`
- * (bindings not yet resolved) renders a loading state.
+ * `ProductSummaryPropsSchema`. Presentational — no actions; inside a bundle slot it reports its
+ * product through `BundleSlotProductContext`. `categoryLabel === undefined` (bindings not yet
+ * resolved) renders a loading state.
  */
 export const ProductSummary = createReactComponent(
   {
@@ -31,6 +34,29 @@ export const ProductSummary = createReactComponent(
     schema: ProductSummaryPropsSchema,
   },
   ({props}) => {
+    const reportToBundle = useContext(BundleSlotProductContext);
+    const productId = props.product?.permanentid;
+    const productName = props.product?.ec_name ?? productId;
+    const productPrice = props.product ? resolvePrice(props.product) : undefined;
+    const productImageUrl = props.product ? resolveProductImage(props.product) : null;
+    const productClickUri = props.product?.clickUri;
+
+    useEffect(() => {
+      if (!reportToBundle) return;
+      reportToBundle(
+        productId && productName
+          ? {
+              productId,
+              name: productName,
+              price: productPrice,
+              imageUrl: productImageUrl ?? undefined,
+              clickUri: productClickUri,
+            }
+          : null
+      );
+      return () => reportToBundle(null);
+    }, [reportToBundle, productId, productName, productPrice, productImageUrl, productClickUri]);
+
     if (props.categoryLabel === undefined) {
       return (
         <div className={styles.loading} aria-label="Loading product summary">

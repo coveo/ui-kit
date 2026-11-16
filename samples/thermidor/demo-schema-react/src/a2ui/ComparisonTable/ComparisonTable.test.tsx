@@ -1,11 +1,17 @@
 import {describe, expect, it, afterEach} from 'vitest';
-import {screen, cleanup, waitFor, within} from '@testing-library/react';
+import {screen, cleanup, fireEvent, waitFor, within} from '@testing-library/react';
+import type {JSXElementConstructor, PropsWithChildren} from 'react';
+import {renderProductCardCartActions} from '../../cart/AddToCartControl/product-card-cart-actions.js';
+import {CartProvider} from '../../cart/CartProvider.js';
+import {createFakeCartStore, type FakeCartStore} from '../../test/fake-cart-store.js';
 import {mountSurface} from '../mount-surface.harness.js';
 import type {ThermidorCatalogOptions} from '../components.js';
+import {ProductCardActionsContext} from '../ProductCard/product-card-actions.js';
 
 /**
  * Mounts ComparisonTable through the real thermidor catalog and checks the Additional information
- * row, which lists each compared product's related documents.
+ * row, which lists each compared product's related documents, and the cart controls of the header
+ * cells.
  */
 
 afterEach(() => cleanup());
@@ -24,9 +30,11 @@ function relatedDocument(index: number) {
 function mountComparisonTable(
   products: Record<string, unknown>[],
   catalogOptions?: ThermidorCatalogOptions,
-  attributes: Record<string, unknown>[] = []
+  attributes: Record<string, unknown>[] = [],
+  wrapper?: JSXElementConstructor<PropsWithChildren>
 ) {
   mountSurface({
+    wrapper,
     component: {
       component: 'ComparisonTable',
       heading: {path: '/state/root/heading'},
@@ -96,5 +104,51 @@ describe('ComparisonTable Additional information row', () => {
 
     expect(await documentCells()).toBeNull();
     expect(screen.queryByRole('rowheader', {name: 'Standout'})).not.toBeNull();
+  });
+});
+
+describe('ComparisonTable cart controls', () => {
+  function cartWrapper(store: FakeCartStore) {
+    return function Wrapper({children}: PropsWithChildren) {
+      return (
+        <CartProvider store={store}>
+          <ProductCardActionsContext.Provider value={renderProductCardCartActions}>
+            {children}
+          </ProductCardActionsContext.Provider>
+        </CartProvider>
+      );
+    };
+  }
+
+  const PRODUCTS = [
+    {productId: 'a', name: 'Wetsuit A', price: 199, imageUrl: 'https://example.com/a.png'},
+    {productId: 'b', name: 'Wetsuit B'},
+  ];
+
+  it('adds a compared product to the cart from its header cell', async () => {
+    const store = createFakeCartStore();
+    mountComparisonTable(PRODUCTS, undefined, [], cartWrapper(store));
+
+    const header = (await screen.findAllByRole('columnheader'))[1];
+    fireEvent.click(within(header).getByRole('button', {name: 'Add to cart, Wetsuit A'}));
+
+    expect(store.add).toHaveBeenCalledWith(
+      {productId: 'a', name: 'Wetsuit A', unitPrice: 199, imageUrl: 'https://example.com/a.png'},
+      1
+    );
+  });
+
+  it('gives a product with no price no control', async () => {
+    mountComparisonTable(PRODUCTS, undefined, [], cartWrapper(createFakeCartStore()));
+
+    await screen.findByRole('button', {name: 'Add to cart, Wetsuit A'});
+    expect(screen.queryByRole('button', {name: 'Add to cart, Wetsuit B'})).toBeNull();
+  });
+
+  it('renders no control without card actions', async () => {
+    mountComparisonTable(PRODUCTS);
+
+    await waitFor(() => expect(screen.queryByRole('table', {name: HEADING})).not.toBeNull());
+    expect(screen.queryByRole('button')).toBeNull();
   });
 });

@@ -1,12 +1,36 @@
-import {Fragment, useState} from 'react';
+import {useCallback, useContext, useMemo, useState, type ReactNode} from 'react';
 
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {BundleSlot, BundleTier} from '@coveo/thermidor-schema';
 import {BundleDisplayPropsSchema} from '@coveo/thermidor-schema/zod3';
+import type {ProductCardProduct} from '../ProductCard/product-card-actions.js';
+import {BundleActionsContext, BundleSlotProductContext} from './bundle-actions.js';
 import styles from './BundleDisplay.module.css';
 
 function formatPrice(value: number): string {
   return `$${value.toFixed(2)}`;
+}
+
+type ReportSlotProduct = (childId: string, product: ProductCardProduct | null) => void;
+
+function BundleSlotChild({
+  childId,
+  report,
+  children,
+}: {
+  childId: string;
+  report: ReportSlotProduct;
+  children: ReactNode;
+}) {
+  const reportProduct = useCallback(
+    (product: ProductCardProduct | null) => report(childId, product),
+    [report, childId]
+  );
+  return (
+    <BundleSlotProductContext.Provider value={reportProduct}>
+      {children}
+    </BundleSlotProductContext.Provider>
+  );
 }
 
 /**
@@ -15,7 +39,9 @@ function formatPrice(value: number): string {
  * The generic binder resolves `heading` and `tiers` from `BundleDisplayPropsSchema`; the heading is
  * left out when the backend sends none. For the active tier only it mounts each slot's
  * product-summary child via `buildChild(slot.childId)`. Each child owns its own resolved state
- * (price included); the per-tier total is the backend-computed `tier.total`, rendered as-is.
+ * (price included) and reports its product through `BundleSlotProductContext`; the per-tier total
+ * is the backend-computed `tier.total`, rendered as-is. Once every active slot has reported a
+ * product, the footer renders the `BundleActionsContext` actions for the tier.
  */
 export const BundleDisplay = createReactComponent(
   {
@@ -26,9 +52,37 @@ export const BundleDisplay = createReactComponent(
     const heading = props.heading;
     const tiers = props.tiers ?? [];
     const [activeTierIndex, setActiveTierIndex] = useState(0);
+    const [slotProducts, setSlotProducts] = useState<ReadonlyMap<string, ProductCardProduct>>(
+      () => new Map()
+    );
+    const renderActions = useContext(BundleActionsContext);
+
+    const reportSlotProduct = useCallback<ReportSlotProduct>((childId, product) => {
+      setSlotProducts((previous) => {
+        const next = new Map(previous);
+        if (product) {
+          next.set(childId, product);
+        } else {
+          next.delete(childId);
+        }
+        return next;
+      });
+    }, []);
 
     const activeTier = tiers[activeTierIndex] ?? tiers[0];
-    const activeSlots = activeTier?.slots ?? [];
+    const activeSlots: BundleSlot[] = activeTier?.slots ?? [];
+
+    const activeProducts = useMemo(() => {
+      const products = activeSlots.map((slot) => slotProducts.get(slot.childId));
+      return products.every((product) => product !== undefined)
+        ? (products as ProductCardProduct[])
+        : null;
+    }, [activeSlots, slotProducts]);
+
+    const actions =
+      renderActions && activeTier && activeProducts && activeProducts.length > 0
+        ? renderActions({label: activeTier.label, products: activeProducts})
+        : null;
 
     return (
       <section className={styles.container}>
@@ -58,7 +112,13 @@ export const BundleDisplay = createReactComponent(
             )}
             <div className={styles.itemList} role="list" aria-label="Bundle items">
               {activeSlots.map((slot: BundleSlot) => (
-                <Fragment key={slot.childId}>{buildChild(slot.childId)}</Fragment>
+                <BundleSlotChild
+                  key={slot.childId}
+                  childId={slot.childId}
+                  report={reportSlotProduct}
+                >
+                  {buildChild(slot.childId)}
+                </BundleSlotChild>
               ))}
             </div>
             {activeSlots.length > 0 && (
@@ -69,7 +129,10 @@ export const BundleDisplay = createReactComponent(
                     {activeSlots.length} {activeSlots.length === 1 ? 'item' : 'items'}
                   </span>
                 </div>
-                <span className={styles.footerPrice}>{formatPrice(activeTier.total)}</span>
+                <div className={styles.footerEnd}>
+                  <span className={styles.footerPrice}>{formatPrice(activeTier.total)}</span>
+                  {actions != null && <div className={styles.footerActions}>{actions}</div>}
+                </div>
               </div>
             )}
           </div>
