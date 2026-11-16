@@ -296,9 +296,15 @@ describe('schema-response-search initial response totals', () => {
 });
 
 describe('schema-response-search product groups', () => {
-  const components = collectComponentState(resetSurface());
-  const products = (components['product-list-2'] as {products: Array<Record<string, unknown>>})
-    .products;
+  const productsFor = (prompt: string) =>
+    (
+      collectComponentState(matchSchemaPrompt(prompt))['product-list-2'] as {
+        products: Array<Record<string, unknown>>;
+      }
+    ).products;
+  const products = productsFor('water sports');
+  const kayaks = productsFor('kayaks');
+  const lifeJackets = productsFor('life jackets');
 
   it('lists grouped and ungrouped products, some groups larger than their listed children', () => {
     expect(groupsOf(products).slice(0, 8)).toEqual([
@@ -311,10 +317,14 @@ describe('schema-response-search product groups', () => {
       {name: 'WaveRider Shortboard Surfboard', listed: 2, total: 4},
       {name: 'GlideMax Longboard Surfboard', listed: undefined, total: undefined},
     ]);
+    expect(groupsOf(lifeJackets)).toEqual([
+      {name: 'SafeFloat Adult Life Jacket', listed: 4, total: 6},
+      {name: 'AquaGuard Kids Life Jacket', listed: undefined, total: undefined},
+    ]);
   });
 
   it('lists each product first among its children', () => {
-    expectNormalizedGroups(products);
+    expectNormalizedGroups([...products, ...kayaks, ...lifeJackets]);
   });
 
   it('gives each child its own color, price and link', () => {
@@ -331,9 +341,7 @@ describe('schema-response-search product groups', () => {
   });
 
   it('keeps a child without imagery', () => {
-    const kayaks = collectComponentState(matchSchemaPrompt('kayaks'));
-    const [riverRun] = (kayaks['product-list-2'] as {products: Array<Record<string, unknown>>})
-      .products;
+    const [riverRun] = kayaks;
     const children = riverRun.children as Array<Record<string, unknown>>;
     expect(children.map(({ec_images}) => ec_images)).toEqual([
       riverRun.ec_images,
