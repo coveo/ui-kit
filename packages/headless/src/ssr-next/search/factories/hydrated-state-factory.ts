@@ -18,7 +18,7 @@ export function hydratedStaticStateFactory<
   options: SearchEngineDefinitionOptions<TControllerDefinitions>
 ): HydrateStaticStateFunction<TControllerDefinitions> {
   return async (params: HydrateStaticStateParameters<TControllerDefinitions>) => {
-    const {controllerProps, ...restParams} = params;
+    const {controllerProps, controllers: _snapshots, ...restParams} = params;
 
     const buildParameters: BuildParameters = {
       ...restParams,

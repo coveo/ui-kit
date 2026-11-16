@@ -224,6 +224,26 @@ describe('Search Engine SSR', () => {
       expect(hydratedState.controllers.context.state.values).toEqual({ageGroup: '30-45'});
     });
 
+    it('should rebuild a controller without props when the fetch passed none', async () => {
+      const buildWithProps = vi.fn((_engine: SSRSearchEngine, _props?: {label: string}) =>
+        buildMockController()
+      );
+      const {searchEngineDefinition} = defineSearchEngine({
+        ...definitionOptions,
+        controllers: {labelled: {buildWithProps}},
+      });
+
+      const staticState = await searchEngineDefinition.fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+      } as Parameters<typeof searchEngineDefinition.fetchStaticState>[0]);
+      const propsAtFetch = buildWithProps.mock.calls[0][1];
+      buildWithProps.mockClear();
+      await searchEngineDefinition.hydrateStaticState(JSON.parse(JSON.stringify(staticState)));
+
+      expect(propsAtFetch).toBeUndefined();
+      expect(buildWithProps.mock.calls[0][1]).toBeUndefined();
+    });
+
     it('should rebuild a controller with its props when its state does not carry them', async () => {
       const buildWithProps = vi.fn((_engine: SSRSearchEngine, _props?: {label: string}) =>
         buildMockController()
