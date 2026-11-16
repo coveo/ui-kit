@@ -18,7 +18,11 @@ function resolveProductImage(product: Product): string | null {
 }
 
 function resolvePrice(product: Product): number | undefined {
-  return product.ec_promo_price ?? product.ec_price;
+  const {ec_price: price, ec_promo_price: promoPrice} = product;
+  if (promoPrice === undefined) {
+    return price;
+  }
+  return price === undefined || promoPrice < price ? promoPrice : price;
 }
 
 /**

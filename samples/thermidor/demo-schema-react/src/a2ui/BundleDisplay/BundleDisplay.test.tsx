@@ -23,6 +23,7 @@ const PRO_BOARD = {
   permanentid: 'pro-board',
   ec_name: 'Pro board',
   ec_price: 900,
+  ec_promo_price: 950,
   additionalFields: {},
 };
 
@@ -83,6 +84,21 @@ describe('BundleDisplay cart controls', () => {
         imageUrl: 'https://example.com/board.png',
         clickUri: 'https://example.com/board',
       },
+      1
+    );
+  });
+
+  it('ignores a promo price above the regular price', async () => {
+    const store = createFakeCartStore();
+    mountBundle(store);
+    await screen.findByRole('button', {name: 'Add to cart, Surfboard'});
+    fireEvent.click(screen.getByRole('button', {name: 'Pro'}));
+
+    fireEvent.click(await screen.findByRole('button', {name: 'Add to cart, Pro board'}));
+
+    expect(screen.queryByText('$950.00')).toBeNull();
+    expect(store.add).toHaveBeenCalledWith(
+      expect.objectContaining({productId: 'pro-board', unitPrice: 900}),
       1
     );
   });
