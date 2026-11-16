@@ -134,7 +134,7 @@ describe('Sort', () => {
 
   // The sorts Agent Gateway sends: relevance without fields, and each field sort with the Commerce
   // API's displayName on its field.
-  const relevance = {sortCriteria: 'relevance', fields: []};
+  const relevance = {sortCriteria: 'relevance'};
   const priceAscending = {
     sortCriteria: 'fields',
     fields: [{field: 'ec_price', direction: 'asc', displayName: 'Price (Low to High)'}],
@@ -211,7 +211,7 @@ describe('Sort', () => {
     expect((screen.getByLabelText('Sort by:') as HTMLSelectElement).value).toBe('2');
   });
 
-  it('dispatches a selectSort action with the typed fields of the selected sort', async () => {
+  it('dispatches a selectSort action with the whole selected sort', async () => {
     const {lastAction} = mountSort({
       appliedSort: relevance,
       availableSorts: [relevance, priceAscending, priceDescending],
@@ -221,7 +221,7 @@ describe('Sort', () => {
     fireEvent.change(screen.getByLabelText('Sort by:'), {target: {value: '1'}});
 
     await waitFor(() => expect(lastAction()?.name).toBe('selectSort'));
-    expect(lastAction()?.context).toEqual(priceAscending);
+    expect(lastAction()?.context).toEqual({sort: priceAscending});
   });
 });
 

@@ -447,7 +447,9 @@ describe('recent queries', () => {
     const surfaceId = await searchSurface(session);
     await session.restore(surfaceId, 'kayaks');
 
-    await readEvents(session.act('selectSort', {sortCriteria: 'relevance'}, surfaceId, 'sort-2'));
+    await readEvents(
+      session.act('selectSort', {sort: {sortCriteria: 'relevance'}}, surfaceId, 'sort-2')
+    );
 
     expect(await session.recentQueries()).toEqual(['kayaks', 'water sports']);
   });
