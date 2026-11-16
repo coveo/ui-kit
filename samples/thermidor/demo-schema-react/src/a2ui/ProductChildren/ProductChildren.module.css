@@ -3,7 +3,7 @@
   justify-content: space-between;
   margin-bottom: 2px;
   font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
 }
 
 .children {
