@@ -2,10 +2,12 @@ import {describe, expectTypeOf, it} from 'vitest';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
-import type {EngineDefinition} from '../../common/types/engine.js';
+import type {ControllersPropsMap} from '../../common/types/controllers.js';
+import type {EngineDefinition, EngineStaticState} from '../../common/types/engine.js';
 import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
+import type {BuildConfig} from '../types/build.js';
 import type {SolutionType} from '../types/controller-constants.js';
 import type {ControllerDefinitionsMap} from '../types/controller-definitions.js';
 import type {InferHydratedState, InferStaticState} from '../types/controller-inference.js';
@@ -177,6 +179,31 @@ describe('defineCommerceEngine', () => {
 });
 
 describe('the static and hydrated states of a commerce engine definition', () => {
+  it('should keep the shape of the static state, the build configuration of its page included', () => {
+    type Shape<TSolutionType extends SolutionType> = EngineStaticState<
+      CommerceStaticState<typeof controllers, TSolutionType>['controllers']
+    > &
+      BuildConfig<typeof controllers, TSolutionType> & {
+        solutionType: TSolutionType;
+        controllerProps?: ControllersPropsMap;
+      };
+    type Listing = CommerceStaticState<typeof controllers, SolutionType.listing>;
+    type Search = CommerceStaticState<typeof controllers, SolutionType.search>;
+    type Standalone = CommerceStaticState<typeof controllers, SolutionType.standalone>;
+
+    expectTypeOf<keyof Listing>().toEqualTypeOf<keyof Shape<SolutionType.listing>>();
+    expectTypeOf<Listing>().toExtend<Shape<SolutionType.listing>>();
+    expectTypeOf<Shape<SolutionType.listing>>().toExtend<Listing>();
+    expectTypeOf<keyof Search>().toEqualTypeOf<keyof Shape<SolutionType.search>>();
+    expectTypeOf<Search>().toExtend<Shape<SolutionType.search>>();
+    expectTypeOf<Shape<SolutionType.search>>().toExtend<Search>();
+    expectTypeOf<keyof Standalone>().toEqualTypeOf<keyof Shape<SolutionType.standalone>>();
+    expectTypeOf<Standalone>().toExtend<Shape<SolutionType.standalone>>();
+    expectTypeOf<Shape<SolutionType.standalone>>().toExtend<Standalone>();
+    expectTypeOf<NonNullable<Search['searchParams']>>().toHaveProperty('q');
+    expectTypeOf<NonNullable<Listing['searchParams']>>().not.toHaveProperty('q');
+  });
+
   it('should be named after the controllers and the kind of page of the definition', () => {
     expectTypeOf<ListingStaticState>().toEqualTypeOf<
       CommerceStaticState<typeof controllers, SolutionType.listing>
