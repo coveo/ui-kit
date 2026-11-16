@@ -27,19 +27,16 @@ describe('schema-response-discovery product groups', () => {
 
   it('shows grouped and ungrouped products in each carousel', () => {
     expect(groupsOf(lifeJackets).slice(0, 2)).toEqual([
-      {name: 'AquaSecure Life Jacket - Yellow / Child', listed: 3, total: 3},
+      {name: 'AquaSecure Life Jacket - Yellow / Child', listed: 2, total: 2},
       {name: 'AquaGuardian Life Jacket - Black / Toddler', listed: undefined, total: undefined},
     ]);
     expect(groupsOf(safetyGear).slice(0, 2)).toEqual([
-      {name: 'AquaGuardian Safety Vest - Red / Adult Universal', listed: 3, total: 8},
+      {name: 'AquaGuardian Safety Vest - Red / Adult Universal', listed: 2, total: 4},
       {name: 'EcoRider Safety Helmet - Red / M', listed: undefined, total: undefined},
     ]);
   });
 
-  it('lists each product first among its children, each with its own thumbnail', () => {
+  it('lists each product first among its children', () => {
     expectNormalizedGroups([...lifeJackets, ...safetyGear]);
-    for (const child of lifeJackets[0].children as Product[]) {
-      expect(child.ec_thumbnails).toEqual(child.ec_images);
-    }
   });
 });

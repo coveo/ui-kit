@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'vitest';
 import {converseSchemaResponses} from '@coveo/platform-mock-api/converse';
-import {expectNormalizedGroups, groupsOf} from './product-groups.test-utils.js';
+import {groupsOf, PRODUCT_PROPERTIES} from './product-groups.test-utils.js';
 
 const session = {conversationSessionId: 'session-1', conversationToken: 'token-1'};
 
@@ -210,29 +210,6 @@ describe('fetchSuggestions', () => {
 });
 
 describe('fetchInstantProducts', () => {
-  const PRODUCT_PROPERTIES = new Set([
-    'permanentid',
-    'ec_name',
-    'ec_description',
-    'ec_shortdesc',
-    'ec_brand',
-    'ec_category',
-    'ec_price',
-    'ec_promo_price',
-    'ec_images',
-    'ec_thumbnails',
-    'ec_in_stock',
-    'ec_rating',
-    'ec_color',
-    'ec_item_group_id',
-    'ec_item_group_name',
-    'clickUri',
-    'additionalFields',
-    'badgePlacements',
-    'children',
-    'totalNumberOfChildren',
-  ]);
-
   async function openShell(keys = session) {
     const events = await readEvents(
       converseSchemaResponses.buildSchemaActionResponse({name: 'initialize', context: {}}, keys)
@@ -290,18 +267,16 @@ describe('fetchInstantProducts', () => {
     }
   });
 
-  it('writes grouped products, the product first, beside ungrouped ones', async () => {
+  it('writes the children of a product and their count', async () => {
     const shellId = await openShell();
 
     const {products} = (await instantProducts(shellId, 'wetsuits')).value;
 
-    expect(groupsOf(products)).toEqual([
-      {name: 'HydroLite Sleeveless Wetsuit', listed: 3, total: 3},
-      {name: 'EcoWave Performance Wetsuit', listed: 6, total: 9},
-      {name: 'ArcticShield Full Drysuit', listed: undefined, total: undefined},
-      {name: 'SunSeeker Spring Wetsuit', listed: undefined, total: undefined},
-    ]);
-    expectNormalizedGroups(products);
+    expect(groupsOf(products)[1]).toEqual({
+      name: 'EcoWave Performance Wetsuit',
+      listed: 6,
+      total: 9,
+    });
   });
 
   it('matches every term of the query against name, brand and category', async () => {

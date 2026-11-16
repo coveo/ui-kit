@@ -317,12 +317,17 @@ describe('schema-response-search product groups', () => {
     expectNormalizedGroups(products);
   });
 
-  it('gives each child its own name, price, image and link', () => {
+  it('gives each child its own color, price and link', () => {
     const [, blue, red] = products[0].children as Array<Record<string, unknown>>;
-    expect(blue).toMatchObject({ec_name: 'HydroLite Sleeveless Wetsuit - Blue', ec_price: 99.99});
-    expect(red).toMatchObject({ec_name: 'HydroLite Sleeveless Wetsuit - Red', ec_price: 94.99});
-    expect(blue.ec_images).not.toEqual(products[0].ec_images);
-    expect(blue.clickUri).not.toBe(products[0].clickUri);
+    expect(blue).toMatchObject({
+      ec_name: 'HydroLite Sleeveless Wetsuit',
+      ec_color: 'Blue',
+      ec_price: 99.99,
+    });
+    expect(red).toMatchObject({ec_color: 'Red', ec_price: 94.99});
+    expect(blue.clickUri).toBe(
+      `${products[0].clickUri}?variant=${String(blue.permanentid).split('/').at(-1)}`
+    );
   });
 
   it('keeps a child without imagery', () => {

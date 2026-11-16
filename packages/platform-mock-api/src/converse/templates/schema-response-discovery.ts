@@ -103,9 +103,9 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
 // The other products of a carousel product's group, as producers list them after the product.
 function childrenOf<Product extends object>(
   product: Product,
-  others: {id: string; name: string; price: number; image: string}[]
-): Product[] {
-  return others.map(({id, name, price, image}) => ({
+  others: [ChildSeed, ...ChildSeed[]]
+): [Product, ...Product[]] {
+  const [first, ...rest] = others.map(({id, name, price, image}) => ({
     ...product,
     permanentid: `gid://shopify/ProductVariant/${id}`,
     ec_name: name,
@@ -113,6 +113,14 @@ function childrenOf<Product extends object>(
     ec_images: [image],
     ec_thumbnails: [image],
   }));
+  return [first, ...rest];
+}
+
+interface ChildSeed {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
 }
 
 const aquaSecureLifeJacket = {
@@ -157,18 +165,11 @@ const lifeJacketsState = {
       aquaSecureLifeJacket,
       childrenOf(aquaSecureLifeJacket, [
         {
-          id: '50681799180562',
-          name: 'AquaSecure Life Jacket - Blue / Child',
+          id: '50681799049490',
+          name: 'AquaSecure Life Jacket - Red / Child',
           price: 29.99,
           image:
-            'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/5e0c51297428_top_left_bb56bd05-ccc0-4697-a9a8-fef450f1ad61.webp?v=1766163678',
-        },
-        {
-          id: '50681799213330',
-          name: 'AquaSecure Life Jacket - Orange / Adult',
-          price: 34.99,
-          image:
-            'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/327f704e9618_bottom_right.webp?v=1766163620',
+            'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/905d491b8bff_top_left.webp?v=1766163666',
         },
       ])
     ),
@@ -332,21 +333,14 @@ const safetyGearState = {
       aquaGuardianSafetyVest,
       childrenOf(aquaGuardianSafetyVest, [
         {
-          id: '50681803178258',
-          name: 'AquaGuardian Safety Vest - Black / Adult Universal',
+          id: '50681803112722',
+          name: 'AquaGuardian Safety Vest - Blue / Adult Universal',
           price: 59.99,
           image:
-            'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/cf2bd6719aed_top_right.webp?v=1766163680',
-        },
-        {
-          id: '50681803211026',
-          name: 'AquaGuardian Safety Vest - Yellow / Youth',
-          price: 54.99,
-          image:
-            'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/a7621e6658d4_bottom_right_29681cfc-e9ee-47fb-aa7d-1d0061ddf6b2.webp?v=1766163665',
+            'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/cf07b6b8ad6f_bottom_right_1e282681-91d1-42f3-8855-d519650990d2.webp?v=1766163681',
         },
       ]),
-      8
+      4
     ),
     {
       permanentid: 'gid://shopify/ProductVariant/50681980125458',
