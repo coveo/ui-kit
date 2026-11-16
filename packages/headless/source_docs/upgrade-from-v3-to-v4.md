@@ -36,7 +36,7 @@ You pass the facts of the page (navigator context, context, cart, search paramet
 | Navigator context  | `setNavigatorContextProvider()` on the shared definition                             | `navigatorContext` option of `fetchStaticState()`, built with `buildNavigatorContext()`                                                                                                                         |
 | Page inputs        | `controllers` props map and `configuration.context`                                  | `context`, `cart`, `searchParams` and `accessToken` options of `fetchStaticState()`                                                                                                                             |
 | Hydration          | `hydrateStaticState({searchAction, controllers})`                                    | `hydrateStaticState(staticState)`                                                                                                                                                                               |
-| Definition types   | `EngineDefinition<TControllers, TEngineOptions, TSolutionType>`                      | `EngineDefinition<TStaticState, THydratedState>`; states named after the controllers of the definition                                                                                                          |
+| Definition types   | `EngineDefinition` typed by controllers, engine options, and engine or solution type | `EngineDefinition<TStaticState, THydratedState>`; `InferStaticState<typeof definition>` for one definition                                                                                                      |
 | Recommendations    | `recommendationEngineDefinition` with an `enabled` prop per slot                     | `recommendations` and `productId` options on any definition                                                                                                                                                     |
 | Controller props   | Per request, through `controllers`                                                   | Static options in the definers; page facts in `fetchStaticState()` <!-- decided 2026-10-21, not yet built -->                                                                                                   |
 | `enableResults`    | On each definer                                                                      | Once, on the engine definition <!-- decided 2026-10-21, not yet built -->                                                                                                                                       |
@@ -237,7 +237,7 @@ Mistakes fail early, with these errors:
 
 #### Engine definition types <!-- KIT-6384 -->
 
-`EngineDefinition` describes a definition by its static state and its hydrated state, instead of its controllers, engine options and solution type, so code that takes any definition needs two plain type parameters.
+`EngineDefinition` describes a definition by its static state and its hydrated state, instead of its controllers, its engine options and its engine (search) or solution type (commerce), so code that takes any definition has two type parameters, constrained to what it reads.
 
 **Headless Version 3**
 
@@ -255,13 +255,17 @@ type ProviderProps<
 **Headless Version 4**
 
 ```ts
-type ProviderProps<TStaticState, THydratedState> = {
+type ProviderProps<
+  TStaticState extends {controllers: object},
+  THydratedState extends {engine: unknown; controllers: object},
+> = {
   definition: EngineDefinition<TStaticState, THydratedState>;
   staticState: TStaticState;
 };
 ```
 
 Both type parameters are inferred from the definition you pass, so the controllers stay typed.
+Code that also fetches takes the options of `fetchStaticState()` as a third type parameter, `EngineDefinition<TStaticState, THydratedState, TFetchOptions>`, and types them `NoInfer<TFetchOptions>` so that they are checked against the definition.
 For one definition, keep using `InferStaticState<typeof definition>` and `InferHydratedState<typeof definition>`: their `controllers` list the controllers of the page by name, and so do editor tooltips and compiler errors.
 
 #### Recommendations

@@ -7,20 +7,21 @@ import type {ControllerStaticStateMap} from './controllers.js';
  * live controllers.
  *
  * Use it to type code that works with any engine definition, such as a provider or a framework
- * integration. The static and hydrated states are inferred from the definition passed in, so the
- * controllers stay typed.
+ * integration, and constrain the states to what that code reads, as in the example. The static and
+ * hydrated states are inferred from the definition passed in, so the controllers stay typed.
  *
  * @typeParam TStaticState - The static state returned by `fetchStaticState()`.
  * @typeParam THydratedState - The engine and the live controllers returned by `hydrateStaticState()`.
  * @typeParam TFetchOptions - The options of `fetchStaticState()`. Leave it out in code that only
- *  hydrates.
+ *  hydrates. In code that fetches, type the options `NoInfer<TFetchOptions>` (TypeScript 5.4 and
+ *  later), so that they are checked against the definition, misspelled options included.
  *
  * @example
  * ```typescript
- * function hydrate<TStaticState, THydratedState>(
- *   definition: EngineDefinition<TStaticState, THydratedState>,
- *   staticState: TStaticState
- * ) {
+ * function hydrate<
+ *   TStaticState extends {controllers: object},
+ *   THydratedState extends {engine: unknown; controllers: object},
+ * >(definition: EngineDefinition<TStaticState, THydratedState>, staticState: TStaticState) {
  *   return definition.hydrateStaticState(staticState);
  * }
  *
