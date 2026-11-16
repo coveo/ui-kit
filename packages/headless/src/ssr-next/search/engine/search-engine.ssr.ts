@@ -39,8 +39,8 @@ import type {
  *   navigatorContext: {/*...* /},
  * });
  *
- * type SearchStaticState = InferStaticState<typeof searchEngineDefinition>;
- * type SearchHydratedState = InferHydratedState<typeof searchEngineDefinition>;
+ * type StaticState = InferStaticState<typeof searchEngineDefinition>;
+ * type HydratedState = InferHydratedState<typeof searchEngineDefinition>;
  * ```
  *
  * @group Engine

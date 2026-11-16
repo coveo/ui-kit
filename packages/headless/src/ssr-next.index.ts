@@ -1,48 +1,45 @@
 /**
- * The Coveo Headless SSR sub-package exposes exposes the engine, definers, controllers, actions, and utility functions to build a server side rendered search experience.
+ * The Coveo Headless SSR sub-package exposes the engine definer, controller definers, actions, and utility functions to build a server-side rendered search experience.
  *
  * @example
  * ```typescript
- *   import {
- *     Controller,
- *     ControllerDefinitionsMap,
- *     defineSearchEngine,
- *     InferStaticState,
- *     InferHydratedState,
- *     SearchEngine,
- *     SearchEngineDefinitionOptions,
- *     getSampleSearchEngineConfiguration,
- *     defineResultList,
- *     defineSearchBox,
- *   } from '@coveo/headless/ssr';
+ * import {
+ *   defineResultList,
+ *   defineSearchBox,
+ *   defineSearchEngine,
+ *   getSampleSearchEngineConfiguration,
+ *   type InferHydratedState,
+ *   type InferStaticState,
+ * } from '@coveo/headless/ssr';
  *
- *  const config = {
- *     configuration: {
- *       ...getSampleSearchEngineConfiguration(),
- *       analytics: {
- *         trackingId: 'sports-ui-samples',
- *       },
- *     },
- *     controllers: {
- *       searchBox: defineSearchBox(),
- *       resultList: defineResultList(),
- *     },
- *   } satisfies SearchEngineDefinitionOptions<
- *     ControllerDefinitionsMap<SearchEngine, Controller>
- *   >;
- *
- * const engineDefinition = defineSearchEngine(config);
- *
- * export type SearchStaticState = InferStaticState<typeof engineDefinition>;
- * export type SearchHydratedState = InferHydratedState<typeof engineDefinition>;
- *
- * export const {fetchStaticState, hydrateStaticState} = engineDefinition;
- *
- * await fetchStaticState({
- *   navigatorContextProvider: () => {/*...* /},
- *   context: {/*...* /},
+ * // Shared by the server and the browser. The navigator context is per-request data: it is passed
+ * // to `fetchStaticState()`, not to the configuration.
+ * export const {searchEngineDefinition, standaloneEngineDefinition} = defineSearchEngine({
+ *   configuration: getSampleSearchEngineConfiguration(),
+ *   controllers: {
+ *     searchBox: defineSearchBox(),
+ *     resultList: defineResultList(),
+ *   },
  * });
-
+ *
+ * export type StaticState = InferStaticState<typeof searchEngineDefinition>;
+ * export type HydratedState = InferHydratedState<typeof searchEngineDefinition>;
+ *
+ * // On the server, once per request
+ * const staticState = await searchEngineDefinition.fetchStaticState({
+ *   navigatorContext: {
+ *     clientId: '...',
+ *     location: 'https://example.com/search?q=running+shoes',
+ *     referrer: null,
+ *     userAgent: '...',
+ *     forwardedFor: '...',
+ *   },
+ *   searchParams: {q: 'running shoes'},
+ * });
+ *
+ * // In the browser, from the serialized static state, passed as is: it already carries the
+ * // navigator context, the search parameters and the access token.
+ * const {engine, controllers} = await searchEngineDefinition.hydrateStaticState(staticState);
  * ```
  * @module SSR Search
  */
