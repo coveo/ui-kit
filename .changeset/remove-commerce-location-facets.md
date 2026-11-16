@@ -2,7 +2,7 @@
 '@coveo/headless': patch
 ---
 
-Remove commerce location facets
+Removing sunsetted experimental feature: commerce location facets
 
 Location facets were released behind a platform feature flag and were never adopted. The feature and its flags are being retired, so all support is removed from `@coveo/headless`.
 
@@ -10,7 +10,7 @@ Location facets were released behind a platform feature flag and were never adop
 
 - Removed the location facet controller and its actions: `buildCommerceLocationFacet`, `loadLocationFacetActions`, `LocationFacetActionCreators`, `toggleSelectLocationFacetValue`, and `ToggleSelectLocationFacetValuePayload`.
 - Removed the location facet types: `LocationFacet`, `LocationFacetState`, `LocationFacetOptions`, `LocationFacetValue`, `LocationFacetValueRequest`, `LocationFacetRequest`, and `LocationFacetResponse`.
-- Removed `'location'` from the `FacetType` union. A facet response with `type: 'location'` is no longer recognized, and `FacetGenerator` no longer creates a controller for it.
+- Removed `'location'` from the `FacetType` union. A facet response with `type: 'location'`, or with any other unsupported type, is now dropped when the response is processed, so it no longer appears in the facet state, the facet order, the `FacetGenerator`, or the breadcrumbs.
 - Removed the `lf` key from the `Parameters` type and the `lf-*` URL search parameter. A URL that still contains `lf-*` parameters is now ignored instead of restoring location facet selections.
 
 The user location context API is **not** removed. `Context.setLocation`, `UserLocation`, and `SetLocationPayload` are unchanged, and `context.user.latitude` and `context.user.longitude` are still sent on commerce requests. Only the facet built on top of that data is removed.

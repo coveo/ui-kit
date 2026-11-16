@@ -13,6 +13,7 @@ import {fetchProductListing} from '../../product-listing/product-listing-actions
 import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions.js';
 import {executeSearch as executeCommerceSearch} from '../../search/search-actions.js';
 import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions.js';
+import type {AnyFacetResponse} from '../facet-set/interfaces/response.js';
 import {commerceFacetOrderReducer} from './commerce-facet-order-slice.js';
 
 describe('commerce facet-order slice', () => {
@@ -62,6 +63,22 @@ describe('commerce facet-order slice', () => {
       const facetIds = ['facetA', 'facetB'];
       dispatchMock(buildQueryAction(facetIds));
       expect(state).toEqual(facetIds);
+    });
+
+    it('excludes facets with an unsupported type from the facet order', () => {
+      const response = responseBuilder();
+      response.response.facets = [
+        buildMockCommerceRegularFacetResponse({facetId: 'facetA'}),
+        {
+          ...buildMockCommerceRegularFacetResponse({facetId: 'locationFacet'}),
+          type: 'location',
+        } as unknown as AnyFacetResponse,
+      ];
+
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
+      dispatchMock(action(response as any, ''));
+
+      expect(state).toEqual(['facetA']);
     });
   });
 

@@ -127,7 +127,7 @@ describe('SSR FacetGenerator', () => {
         expect(facetGenerator).toBeTruthy();
       });
       it('#state is an array containing the state of each facet', () => {
-        expect(facetGenerator.state.length).toBe(5);
+        expect(facetGenerator.state.length).toBe(4);
         expect(
           facetGenerator.state.map((facet) => ({
             facetId: facet.facetId,

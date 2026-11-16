@@ -245,9 +245,7 @@ describe.each([
     it('should deserialize fExcluded-* parameters', () => {
       const result = deserialize('fExcluded-one=a&fExcluded-two=b,c');
 
-      expect(result).toStrictEqual({
-        fExcluded: {one: ['a'], two: ['b', 'c']},
-      });
+      expect(result).toStrictEqual({fExcluded: {one: ['a'], two: ['b', 'c']}});
     });
 
     it('should deserialize mnf-* parameters', () => {

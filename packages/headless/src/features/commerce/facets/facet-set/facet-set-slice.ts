@@ -18,6 +18,7 @@ import {setContext, setView} from '../../context/context-actions.js';
 import {fetchProductListing} from '../../product-listing/product-listing-actions.js';
 import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions.js';
 import {fetchQuerySuggestions} from '../../query-suggest/query-suggest-actions.js';
+import {isSupportedFacetType} from './supported-facet-types.js';
 import {executeSearch} from '../../search/search-actions.js';
 import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions.js';
 import {
@@ -424,6 +425,9 @@ function handleQueryFulfilled(
   const existingFacets = new Set(Object.keys(state));
   const facets = action.payload.response.facets;
   for (const facetResponse of facets) {
+    if (!isSupportedFacetType(facetResponse.type)) {
+      continue;
+    }
     updateStateFromFacetResponse(state, facetResponse, existingFacets);
   }
 

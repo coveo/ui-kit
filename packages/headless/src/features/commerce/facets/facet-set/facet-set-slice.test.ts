@@ -134,6 +134,18 @@ describe('commerceFacetSetReducer', () => {
         expect(finalState[facetId]).toBeUndefined();
       });
 
+      it('does not register facets with an unsupported type', () => {
+        const unsupportedFacet = {
+          ...buildMockCommerceRegularFacetResponse({facetId}),
+          type: 'location',
+        } as unknown as AnyFacetResponse;
+
+        const action = buildQueryAction([unsupportedFacet]);
+        const finalState = commerceFacetSetReducer(state, action);
+
+        expect(facetId in finalState).toBe(false);
+      });
+
       describe('when a facet is found in the response', () => {
         describe('when found facet is not already registered in the state', () => {
           it('registers the facet in the state', () => {
@@ -292,10 +304,7 @@ describe('commerceFacetSetReducer', () => {
           });
 
           state[facetId] = buildMockCommerceFacetSlice({
-            request: buildMockCommerceFacetRequest({
-              type: 'regular',
-              facetId,
-            }),
+            request: buildMockCommerceFacetRequest({type: 'regular', facetId}),
           });
 
           const action2 = buildQueryAction([facetResponse2]);
@@ -867,9 +876,7 @@ describe('commerceFacetSetReducer', () => {
 
                 const action = toggleAction({
                   facetId,
-                  selection: buildMockCommerceRegularFacetValue({
-                    value: 'TED',
-                  }),
+                  selection: buildMockCommerceRegularFacetValue({value: 'TED'}),
                 });
                 const finalState = commerceFacetSetReducer(state, action);
 
@@ -2375,10 +2382,7 @@ describe('commerceFacetSetReducer', () => {
 
     const finalState = commerceFacetSetReducer(
       state,
-      updateCoreFacetFreezeCurrentValues({
-        facetId,
-        freezeCurrentValues: false,
-      })
+      updateCoreFacetFreezeCurrentValues({facetId, freezeCurrentValues: false})
     );
 
     expect(finalState[facetId]!.request.freezeCurrentValues).toBe(false);

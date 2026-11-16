@@ -9,6 +9,7 @@ import {fetchProductListing} from '../../product-listing/product-listing-actions
 import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions.js';
 import {executeSearch as executeCommerceSearch} from '../../search/search-actions.js';
 import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions.js';
+import {isSupportedFacetType} from '../facet-set/supported-facet-types.js';
 
 export const commerceFacetOrderReducer = createReducer(getFacetOrderInitialState(), (builder) => {
   builder
@@ -21,7 +22,9 @@ export const commerceFacetOrderReducer = createReducer(getFacetOrderInitialState
 });
 
 function handleQueryFulfilled(_: FacetOrderState, action: AnyAction) {
-  return action.payload.response.facets.map((facet: {facetId: string}) => facet.facetId);
+  return action.payload.response.facets
+    .filter((facet: {type: string}) => isSupportedFacetType(facet.type))
+    .map((facet: {facetId: string}) => facet.facetId);
 }
 
 function handleRestoreParameters(_: FacetOrderState, action: {payload: Parameters}) {

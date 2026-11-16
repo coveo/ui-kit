@@ -155,7 +155,7 @@ describe('CSR FacetGenerator', () => {
 
       const facetState = facetGenerator.facets;
 
-      expect(facetState.length).toEqual(5);
+      expect(facetState.length).toEqual(4);
       expect(facetState.map((f) => f.state.facetId)).toEqual(facets.map((f) => f.facetId));
     });
   });
