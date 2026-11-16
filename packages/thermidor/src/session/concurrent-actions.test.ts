@@ -259,6 +259,22 @@ describe('concurrent and cached actions (ADR-020)', () => {
     expect(shownQuery(session)).toBe('boots');
   });
 
+  it('delivers each cache hit as new objects, so a renderer can tell it from a render', async () => {
+    const session = shellSession();
+    const lastWrite = () =>
+      (session.a2uiMessages.at(-1) as {updateDataModel: {value: unknown}}).updateDataModel.value;
+    const boots = dispatch(session, 'boots');
+    answer(calls[0], 'boots');
+    await boots;
+    const answered = lastWrite();
+
+    await dispatch(session, 'boots');
+
+    expect(sentQueries()).toEqual(['boots']);
+    expect(lastWrite()).toEqual(answered);
+    expect(lastWrite()).not.toBe(answered);
+  });
+
   it('sends a cached action again once the navigator locale changed', async () => {
     let currency = 'USD';
     const session = createSession({
