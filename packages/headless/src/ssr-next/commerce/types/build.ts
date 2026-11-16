@@ -30,10 +30,10 @@ export interface ListingBuildConfig extends CommonBuildConfig {}
 export interface StandaloneBuildConfig extends CommonBuildConfig {}
 
 /**
- * Commerce engine options for SSR scenarios where context is defined when fetching static state.
+ * Commerce engine options for SSR scenarios, where the context and the cart are defined when fetching static state.
  */
 export type SSRCommerceEngineOptions = Omit<CommerceEngineOptions, 'configuration'> & {
-  configuration: Omit<CommerceEngineOptions['configuration'], 'context'>;
+  configuration: Omit<CommerceEngineOptions['configuration'], 'context' | 'cart'>;
 };
 
 /**
