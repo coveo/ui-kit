@@ -1,7 +1,9 @@
 import {describe, it, expect, afterEach, beforeEach, vi, type Mock} from 'vitest';
 import {screen, fireEvent, cleanup, waitFor, act, within} from '@testing-library/react';
 import type {PageSizeProps, PaginationProps, Product, SortProps} from '@coveo/thermidor-schema';
+import type {PropsWithChildren} from 'react';
 import {mountSurface} from './mount-surface.harness.js';
+import {turnStartTarget} from './results-focus.js';
 
 afterEach(cleanup);
 
@@ -153,7 +155,15 @@ describe('Page change focus', () => {
     };
   }
 
-  function mountResults(dispatchGate: () => Promise<void>) {
+  function Turn({children}: PropsWithChildren) {
+    return (
+      <div role="article" aria-label="Current turn" {...turnStartTarget}>
+        {children}
+      </div>
+    );
+  }
+
+  function mountResults(dispatchGate: () => Promise<void>, wrapper?: typeof Turn) {
     return mountSurface({
       component: {
         component: 'LayoutStack',
@@ -180,6 +190,7 @@ describe('Page change focus', () => {
         },
       ],
       dispatchGate,
+      wrapper,
     });
   }
 
@@ -228,19 +239,36 @@ describe('Page change focus', () => {
     expect(scrollIntoView.mock.contexts).toEqual([productList()]);
   });
 
-  it("leaves an earlier turn's results alone", async () => {
-    const earlierTurn = document.createElement('div');
-    earlierTurn.setAttribute('data-product-list', '');
-    earlierTurn.innerHTML = '<article role="listitem" tabindex="-1">Earlier product</article>';
-    document.body.prepend(earlierTurn);
+  it('scrolls back to the start of the turn holding the results', async () => {
     const request = held();
-    mountResults(request.gate);
+    mountResults(request.gate, Turn);
 
     await changePage('Next page');
     await request.answer();
 
     await waitFor(() => expect(document.activeElement).toBe(firstProduct()));
-    expect(scrollIntoView.mock.contexts).toEqual([productList()]);
+    expect(scrollIntoView).toHaveBeenCalledExactlyOnceWith({block: 'start'});
+    expect(scrollIntoView.mock.contexts).toEqual([
+      screen.getByRole('article', {name: 'Current turn'}),
+    ]);
+  });
+
+  it("leaves an earlier turn's results alone", async () => {
+    const earlierTurn = document.createElement('div');
+    earlierTurn.setAttribute('data-turn-start', '');
+    earlierTurn.innerHTML =
+      '<div data-product-list><article role="listitem" tabindex="-1">Earlier product</article></div>';
+    document.body.prepend(earlierTurn);
+    const request = held();
+    mountResults(request.gate, Turn);
+
+    await changePage('Next page');
+    await request.answer();
+
+    await waitFor(() => expect(document.activeElement).toBe(firstProduct()));
+    expect(scrollIntoView.mock.contexts).toEqual([
+      screen.getByRole('article', {name: 'Current turn'}),
+    ]);
     earlierTurn.remove();
   });
 

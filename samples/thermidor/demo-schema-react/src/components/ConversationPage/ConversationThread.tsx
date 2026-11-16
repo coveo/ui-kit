@@ -3,6 +3,7 @@ import {AgentResponseBlock} from './AgentResponseBlock.js';
 import {ErrorTurnBlock} from './ErrorTurnBlock.js';
 import {UserPromptBubble} from './UserPromptBubble.js';
 import {TurnSeparator} from './TurnSeparator.js';
+import {turnStartTarget} from '../../a2ui/results-focus.js';
 import {TurnSurfaces} from '../../a2ui/surfaces.js';
 import styles from './ConversationThread.module.css';
 
@@ -27,6 +28,7 @@ export function ConversationThread({turns, turnRefs}: ConversationThreadProps) {
               className={styles.turnWrapper}
               role="article"
               aria-label={`Turn ${index + 1}`}
+              {...turnStartTarget}
               ref={(el) => {
                 if (el) {
                   turnRefs.current.set(turn.id, el);
