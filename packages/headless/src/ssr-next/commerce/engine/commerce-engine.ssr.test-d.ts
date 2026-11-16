@@ -131,6 +131,25 @@ describe('the static and hydrated states of a commerce engine definition', () =>
     expectTypeOf(readBakedInControllers).toBeFunction();
   });
 
+  it('should keep the baked-in controllers typed when the controllers map is omitted or widened', () => {
+    const {listingEngineDefinition: withoutControllers} = defineCommerceEngine({
+      configuration: getSampleCommerceEngineConfiguration(),
+    });
+    type Widened = ControllerDefinitionsMap<Controller>;
+    expectTypeOf<
+      InferHydratedState<typeof withoutControllers>['controllers']['cart']
+    >().toHaveProperty('empty');
+    expectTypeOf<
+      InferStaticState<typeof withoutControllers>['controllers']['cart']['state']
+    >().toHaveProperty('items');
+    expectTypeOf<
+      CommerceHydratedState<Widened, SolutionType.listing>['controllers']['parameterManager']
+    >().toHaveProperty('synchronize');
+    expectTypeOf<
+      CommerceStaticState<Widened, SolutionType.listing>['controllers']['cart']['state']
+    >().toHaveProperty('items');
+  });
+
   it('should name exactly the controllers built for each kind of page', () => {
     expectTypeOf<keyof ListingHydratedState['controllers']>().toEqualTypeOf<
       'productList' | 'parameterManager' | 'context' | 'cart'

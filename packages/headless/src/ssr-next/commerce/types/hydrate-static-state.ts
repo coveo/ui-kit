@@ -28,12 +28,12 @@ export interface CommerceHydratedState<
    * `parameterManager` for search and listing).
    */
   controllers: {
+    [K in AvailableControllerNames<TControllers, TSolutionType>]: InferControllerFromDefinition<
+      TControllers[K & keyof TControllers]
+    >;
+  } & {
     [
-      K in
-        | AvailableControllerNames<TControllers, TSolutionType>
-        | AvailableControllerNames<BakedInControllerDefinitions, TSolutionType>
-    ]: K extends keyof BakedInControllers
-      ? BakedInControllers[K]
-      : InferControllerFromDefinition<TControllers[K & keyof TControllers]>;
+      K in AvailableControllerNames<BakedInControllerDefinitions, TSolutionType>
+    ]: BakedInControllers[K];
   };
 }

@@ -34,15 +34,13 @@ export type CommerceStaticState<
 > = EngineStaticState<
   UnknownAction,
   {
+    [K in AvailableControllerNames<TControllers, TSolutionType>]: ControllerStaticState<
+      InferControllerFromDefinition<TControllers[K & keyof TControllers]>['state']
+    >;
+  } & {
     [
-      K in
-        | AvailableControllerNames<TControllers, TSolutionType>
-        | AvailableControllerNames<BakedInControllerDefinitions, TSolutionType>
-    ]: K extends keyof BakedInControllers
-      ? ControllerStaticState<BakedInControllers[K]['state']>
-      : ControllerStaticState<
-          InferControllerFromDefinition<TControllers[K & keyof TControllers]>['state']
-        >;
+      K in AvailableControllerNames<BakedInControllerDefinitions, TSolutionType>
+    ]: ControllerStaticState<BakedInControllers[K]['state']>;
   }
 > &
   BuildConfig<TControllers, TSolutionType> & {
