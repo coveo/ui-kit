@@ -107,6 +107,7 @@ describe('Commerce Engine SSR', () => {
   describe('requests sent to the Commerce API', () => {
     interface CapturedRequest {
       url: string;
+      forwardedFor: string | null;
       body: Record<string, unknown>;
     }
 
@@ -127,6 +128,7 @@ describe('Commerce Engine SSR', () => {
           if (url.includes('/commerce/v2/')) {
             commerceRequests.push({
               url,
+              forwardedFor: new Headers(init.headers).get('x-forwarded-for'),
               body: JSON.parse(String(init.body)),
             });
           }
@@ -142,6 +144,44 @@ describe('Commerce Engine SSR', () => {
 
     afterEach(() => {
       vi.unstubAllGlobals();
+    });
+
+    it('should send each request its own x-forwarded-for header', async () => {
+      const {listingEngineDefinition} = defineCommerceEngine(definitionOptions);
+
+      await listingEngineDefinition.fetchStaticState({
+        navigatorContext: buildMockNavigatorContext({forwardedFor: '1.1.1.1'}),
+        context,
+      });
+      await listingEngineDefinition.fetchStaticState({
+        navigatorContext: buildMockNavigatorContext({forwardedFor: '2.2.2.2'}),
+        context,
+      });
+
+      expect(commerceRequests.map((request) => request.forwardedFor)).toEqual([
+        '1.1.1.1',
+        '2.2.2.2',
+      ]);
+    });
+
+    it('should send each concurrent request its own x-forwarded-for header', async () => {
+      const {listingEngineDefinition} = defineCommerceEngine(definitionOptions);
+
+      await Promise.all([
+        listingEngineDefinition.fetchStaticState({
+          navigatorContext: buildMockNavigatorContext({forwardedFor: '5.5.5.5'}),
+          context,
+        }),
+        listingEngineDefinition.fetchStaticState({
+          navigatorContext: buildMockNavigatorContext({forwardedFor: '6.6.6.6'}),
+          context,
+        }),
+      ]);
+
+      expect(commerceRequests.map((request) => request.forwardedFor).toSorted()).toEqual([
+        '5.5.5.5',
+        '6.6.6.6',
+      ]);
     });
 
     it('should seed the recommendation requests with the product ID', async () => {
