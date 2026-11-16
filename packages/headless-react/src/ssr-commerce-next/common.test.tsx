@@ -1,4 +1,3 @@
-/* oxlint-disable @typescript-eslint/no-explicit-any -- <> */
 import {
   type CommerceHydratedState,
   type CommerceStaticState,
