@@ -4,7 +4,7 @@ import type {Product} from '@coveo/thermidor-schema';
 import {ProductListPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {ProductCardActionsContext} from '../ProductCard/product-card-actions.js';
 import {ProductBadges} from '../ProductBadges/ProductBadges.js';
-import {resultsFocusTarget} from '../results-focus.js';
+import {productListTarget, resultsFocusTarget} from '../results-focus.js';
 import styles from './ProductList.module.css';
 
 function formatPrice(value: number): string {
@@ -33,7 +33,7 @@ function ProductCard({product}: {product: Product}) {
   });
 
   return (
-    <article className={styles.card} role="listitem">
+    <article className={styles.card} role="listitem" tabIndex={-1}>
       <div className={styles.imageWrapper}>
         {imageUrl ? (
           <img className={styles.image} src={imageUrl} alt={name ?? ''} />
@@ -96,7 +96,13 @@ export const ProductList = createReactComponent(
 
     return (
       <section>
-        <div className={styles.grid} role="list" aria-label="Product list" {...resultsFocusTarget}>
+        <div
+          className={styles.grid}
+          role="list"
+          aria-label="Product list"
+          {...resultsFocusTarget}
+          {...productListTarget}
+        >
           {products.map((product) => (
             <ProductCard key={product.permanentid} product={product} />
           ))}
