@@ -22,7 +22,7 @@ import {createCartStore, type CartStore} from './cart-store.js';
 type StorefrontSession = Session<typeof ComponentContractsSchema>;
 
 /**
- * The view a request comes from. It is sent to the server in `context.custom.surfaceId`, with the
+ * The view a request comes from. It is sent to the server in `context.custom.viewId`, with the
  * values of the published contract.
  */
 export type StorefrontView =
@@ -52,7 +52,7 @@ interface StorefrontValue extends TurnViews {
 const StorefrontContext = createContext<StorefrontValue | null>(null);
 
 /**
- * Owns the page's ONE session. Every view (the home, assistant and search pages) sends its requests through it, naming itself in `context.custom.surfaceId`, and draws the
+ * Owns the page's ONE session. Every view (the home, assistant and search pages) sends its requests through it, naming itself in `context.custom.viewId`, and draws the
  * surfaces its own turns created. The session's request in flight is shared with the surfaces.
  */
 export function StorefrontSessionProvider({children}: PropsWithChildren) {
@@ -83,7 +83,7 @@ function createStorefront(): StorefrontValue {
     // The cart is app state: every request carries it, whichever view sends it.
     commerceContextProvider: () => ({
       cart: cart.getItems().map((item) => ({...item})),
-      custom: {surfaceId: currentView},
+      custom: {viewId: currentView},
     }),
   });
 

@@ -20,7 +20,7 @@ This creates two scratch orgs:
 - `Quantic__LWS_enabled` — Lightning Web Security enabled
 - `Quantic__LWS_disabled` — Locker Service enabled (LWS disabled)
 
-After the script completes, a `.env` file is generated with the community URLs.
+After the script completes, `.env/Quantic__LWS_enabled.env` and `.env/Quantic__LWS_disabled.env` each define `<alias>_URL` with the community URL that `playwright.config.ts` reads. The `running-quantic-e2e-tests` skill's setup script checks all of this and runs `setup:examples` only when something is missing.
 
 ### Creating the component bundle
 
@@ -105,9 +105,12 @@ setInitializationError() {
 
 In templates:
 
+> Note: the `<!-- prettier-ignore -->` below is a markdown formatting directive only — do not include it in real templates.
+
+<!-- prettier-ignore -->
 ```html
-<template lwc:if="{hasInitializationError}">
-  <c-quantic-component-error component-name="{template.host.localName}">
+<template lwc:if={hasInitializationError}>
+  <c-quantic-component-error component-name={template.host.localName}>
   </c-quantic-component-error>
 </template>
 ```

@@ -107,7 +107,7 @@ const renderResultNumber = async ({
 - **Search** — `renderInAtomicSearchInterface` / `buildFakeSearchEngine`
 - **Commerce** — `renderInAtomicCommerceInterface` / `buildFakeCommerceEngine`
 - **Insight** — `renderInAtomicInsightInterface` / `buildFakeInsightEngine`
-- **Recommendation** — `renderInAtomicRecommendationInterface` / `buildFakeRecommendationEngine`
+- **Recommendation** — `renderInAtomicRecsInterface` / `buildFakeRecommendationEngine`
 
 ## Inline Controller Mocks
 

@@ -162,12 +162,12 @@ it('should not apply selected class when unchecked', async () => {
 ### Conditional rendering
 
 ```typescript
-it('renders nothing when both flags are false', async () => {
+it('should render nothing when both flags are false', async () => {
   const container = await renderComponent();
   expect(container.textContent).toBe('');
 });
 
-it('renders only show more when canShowMoreValues is true', async () => {
+it('should render only show more when canShowMoreValues is true', async () => {
   await renderComponent({canShowMoreValues: true});
   await expect.element(locators.showMoreButton).toBeInTheDocument();
   await expect.element(locators.showLessButton).not.toBeInTheDocument();

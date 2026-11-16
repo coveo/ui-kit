@@ -1,5 +1,5 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {act, cleanup, fireEvent, render, screen, within} from '@testing-library/react';
+import {act, cleanup, fireEvent, render, screen, waitFor, within} from '@testing-library/react';
 import App from './App.js';
 
 function stream(events: object[]) {
@@ -36,9 +36,118 @@ function searchTurnResponse() {
   ]);
 }
 
+/** A search surface with its pagination, which a restore needs. */
+function paginatedSearchResponse(surfaceId: string) {
+  const createSurface = {
+    surfaceId,
+    catalogId: 'https://schema.thermidor.coveo.com/a2-ui/catalog.json',
+    components: [
+      {id: 'root', component: 'CommerceSearch', mainChild: 'pagination'},
+      {
+        id: 'pagination',
+        component: 'Pagination',
+        page: {path: '/state/pagination/page'},
+        pageSize: {path: '/state/pagination/pageSize'},
+        totalEntries: {path: '/state/pagination/totalEntries'},
+        totalPages: {path: '/state/pagination/totalPages'},
+      },
+    ],
+    dataModel: {state: {pagination: {page: 1, pageSize: 20, totalEntries: 82, totalPages: 5}}},
+  };
+  return stream([
+    {type: 'RUN_STARTED'},
+    {
+      type: 'ACTIVITY_SNAPSHOT',
+      messageId: `search-${surfaceId}`,
+      activityType: 'a2ui-surface',
+      content: {messages: [{version: 'v1.0', createSurface}]},
+    },
+    {type: 'RUN_FINISHED'},
+  ]);
+}
+
+const SORTS = [
+  {sortCriteria: 'relevance'},
+  {
+    sortCriteria: 'fields',
+    fields: [{field: 'ec_price', direction: 'asc', displayName: 'Price (Low to High)'}],
+  },
+];
+
+/** A search surface with its pagination and its sort. */
+function sortableSearchResponse(surfaceId: string) {
+  const createSurface = {
+    surfaceId,
+    catalogId: 'https://schema.thermidor.coveo.com/a2-ui/catalog.json',
+    components: [
+      {id: 'root', component: 'CommerceSearch', mainChild: 'main'},
+      {id: 'main', component: 'LayoutStack', children: ['sort', 'pagination']},
+      {
+        id: 'sort',
+        component: 'Sort',
+        appliedSort: {path: '/state/sort/appliedSort'},
+        availableSorts: {path: '/state/sort/availableSorts'},
+      },
+      {
+        id: 'pagination',
+        component: 'Pagination',
+        page: {path: '/state/pagination/page'},
+        pageSize: {path: '/state/pagination/pageSize'},
+        totalEntries: {path: '/state/pagination/totalEntries'},
+        totalPages: {path: '/state/pagination/totalPages'},
+      },
+    ],
+    dataModel: {
+      state: {
+        sort: {appliedSort: SORTS[0], availableSorts: SORTS},
+        pagination: {page: 0, pageSize: 20, totalEntries: 82, totalPages: 5},
+      },
+    },
+  };
+  return stream([
+    {type: 'RUN_STARTED'},
+    {
+      type: 'ACTIVITY_SNAPSHOT',
+      messageId: `search-${surfaceId}`,
+      activityType: 'a2ui-surface',
+      content: {messages: [{version: 'v1.0', createSurface}]},
+    },
+    {type: 'RUN_FINISHED'},
+  ]);
+}
+
+/** The answer to a search action: the surface's new state at `path`. */
+function stateUpdateResponse(surfaceId: string, path: string, value: unknown) {
+  return stream([
+    {type: 'RUN_STARTED'},
+    {
+      type: 'ACTIVITY_SNAPSHOT',
+      messageId: `update-${surfaceId}-${path}`,
+      activityType: 'a2ui-surface',
+      content: {messages: [{version: 'v1.0', updateDataModel: {surfaceId, path, value}}]},
+    },
+    {type: 'RUN_FINISHED'},
+  ]);
+}
+
+function sentActions(fetchMock: ReturnType<typeof vi.fn>): unknown[] {
+  return fetchMock.mock.calls
+    .map(([, init]) => JSON.parse((init as RequestInit).body as string).action)
+    .filter((action) => action !== null && action !== undefined);
+}
+
+function restoreOf(surfaceId: string) {
+  return expect.objectContaining({
+    surfaceId,
+    name: 'restoreState',
+    sourceComponentId: 'root',
+    context: {query: '', page: 1, pageSize: 20},
+  });
+}
+
 function sentViews(fetchMock: ReturnType<typeof vi.fn>): unknown[] {
   return fetchMock.mock.calls.map(
-    ([, init]) => JSON.parse((init as RequestInit).body as string).context.custom.surfaceId
+    ([, init]) => JSON.parse((init as RequestInit).body as string).context.custom.viewId
   );
 }
 
@@ -46,6 +155,14 @@ function sentViews(fetchMock: ReturnType<typeof vi.fn>): unknown[] {
 async function search(query: string) {
   fireEvent.change(screen.getByRole('searchbox', {name: 'Search'}), {target: {value: query}});
   fireEvent.submit(screen.getByRole('search'));
+  await act(async () => {});
+}
+
+async function openListing(name: RegExp) {
+  fireEvent.click(screen.getByRole('button', {name: /Listing pages/}));
+  fireEvent.click(
+    within(screen.getByRole('list', {name: 'Listing pages'})).getByRole('button', {name})
+  );
   await act(async () => {});
 }
 
@@ -127,9 +244,8 @@ describe('the conversation and the search layout', () => {
     await askInPanel('which one is warmest?');
 
     fireEvent.click(screen.getByRole('button', {name: '← Back'}));
-    await act(async () => {});
-
-    expect(heading()).toBe('Shopping assistant');
+    // Back goes through the browser history, whose popstate comes asynchronously.
+    await waitFor(() => expect(heading()).toBe('Shopping assistant'));
     const turns = within(screen.getByRole('log', {name: 'Conversation'})).getAllByRole('article');
     expect(turns.map((turn) => turn.textContent)).toEqual([
       expect.stringContaining('what is a wetsuit?'),
@@ -153,8 +269,7 @@ describe('the conversation and the search layout', () => {
     expect(panelPrompts()).toEqual([expect.stringContaining('what is a wetsuit?')]);
 
     fireEvent.click(screen.getByRole('button', {name: '← Back'}));
-    await act(async () => {});
-    expect(heading()).toBe('Shopping assistant');
+    await waitFor(() => expect(heading()).toBe('Shopping assistant'));
   });
 
   it('opens a plain search with an empty panel', async () => {
@@ -173,7 +288,181 @@ describe('the conversation and the search layout', () => {
     expect(heading()).toBe('Results for “show me kayaks”');
 
     fireEvent.click(screen.getByRole('button', {name: '← Back'}));
+    await waitFor(() => expect(heading()).toBe('Home'));
+  });
+});
+
+describe('going Back to an earlier search', () => {
+  let fetchMock: ReturnType<typeof vi.fn>;
+
+  beforeEach(async () => {
+    fetchMock = vi.fn(async () => emptyTurnResponse());
+    vi.stubGlobal('fetch', fetchMock);
+    render(<App />);
     await act(async () => {});
-    expect(heading()).toBe('Home');
+    fetchMock.mockImplementationOnce(async () => paginatedSearchResponse('ui-kayaks'));
+    await search('kayaks');
+  });
+
+  afterEach(() => {
+    cleanup();
+    vi.unstubAllGlobals();
+  });
+
+  it("restores it with the page's Back button, and the assistant then answers about it", async () => {
+    fetchMock.mockImplementationOnce(async () => paginatedSearchResponse('ui-surfboards'));
+    await search('surfboards');
+    expect(sentActions(fetchMock)).toEqual([]);
+
+    fireEvent.click(screen.getByRole('button', {name: '← Back'}));
+
+    await waitFor(() => expect(heading()).toBe('Results for “kayaks”'));
+    await waitFor(() => expect(sentActions(fetchMock)).toEqual([restoreOf('ui-kayaks')]));
+    expect(sentViews(fetchMock).at(-1)).toBe('storefront-preview');
+  });
+
+  it("restores it with the browser's Back", async () => {
+    fetchMock.mockImplementationOnce(async () => paginatedSearchResponse('ui-surfboards'));
+    await search('surfboards');
+
+    act(() => window.history.back());
+
+    await waitFor(() => expect(heading()).toBe('Results for “kayaks”'));
+    await waitFor(() => expect(sentActions(fetchMock)).toEqual([restoreOf('ui-kayaks')]));
+  });
+
+  it('restores it from a listing page', async () => {
+    await openListing(/Surfing/);
+    expect(heading()).toBe('Surfing');
+
+    act(() => window.history.back());
+
+    await waitFor(() => expect(heading()).toBe('Results for “kayaks”'));
+    await waitFor(() => expect(sentActions(fetchMock)).toEqual([restoreOf('ui-kayaks')]));
+  });
+
+  it('sends nothing for a listing page Back returns to, which draws no search', async () => {
+    await openListing(/Surfing/);
+    fetchMock.mockImplementationOnce(async () => paginatedSearchResponse('ui-surfboards'));
+    await search('surfboards');
+
+    fireEvent.click(screen.getByRole('button', {name: '← Back'}));
+    await waitFor(() => expect(heading()).toBe('Surfing'));
+    await act(async () => {});
+    expect(sentActions(fetchMock)).toEqual([]);
+
+    act(() => window.history.back());
+    await waitFor(() => expect(heading()).toBe('Results for “kayaks”'));
+    await waitFor(() => expect(sentActions(fetchMock)).toEqual([restoreOf('ui-kayaks')]));
+  });
+
+  it('restores it again on every return', async () => {
+    fetchMock.mockImplementationOnce(async () => paginatedSearchResponse('ui-surfboards'));
+    await search('surfboards');
+    fireEvent.click(screen.getByRole('button', {name: '← Back'}));
+    await waitFor(() => expect(sentActions(fetchMock)).toHaveLength(1));
+
+    fetchMock.mockImplementationOnce(async () => paginatedSearchResponse('ui-paddles'));
+    await search('paddles');
+    fireEvent.click(screen.getByRole('button', {name: '← Back'}));
+
+    await waitFor(() => expect(heading()).toBe('Results for “kayaks”'));
+    await waitFor(() =>
+      expect(sentActions(fetchMock)).toEqual([restoreOf('ui-kayaks'), restoreOf('ui-kayaks')])
+    );
+  });
+
+  it("keeps the page Back returned to on the browser's Forward, so the next Back leaves it", async () => {
+    fetchMock.mockImplementationOnce(async () => paginatedSearchResponse('ui-surfboards'));
+    await search('surfboards');
+    fireEvent.click(screen.getByRole('button', {name: '← Back'}));
+    await waitFor(() => expect(heading()).toBe('Results for “kayaks”'));
+
+    // jsdom traverses the history in later tasks, and the state was already at depth 1 before
+    // Forward: wait for Forward's popstate and the one of the app's return to the shown page.
+    const popped: unknown[] = [];
+    const onPopState = (event: PopStateEvent) => popped.push(event.state);
+    window.addEventListener('popstate', onPopState);
+    act(() => window.history.forward());
+    await waitFor(() => expect(popped).toEqual([{storefrontDepth: 2}, {storefrontDepth: 1}]));
+    window.removeEventListener('popstate', onPopState);
+    expect(heading()).toBe('Results for “kayaks”');
+
+    fireEvent.click(screen.getByRole('button', {name: '← Back'}));
+    await waitFor(() => expect(heading()).toBe('Home'));
+  });
+});
+
+describe('going Back to a search whose action is still in flight', () => {
+  let fetchMock: ReturnType<typeof vi.fn>;
+  let answerAction: (() => void) | undefined;
+
+  /** Sends the next action, and holds its answer until `answerAction` is called. */
+  function holdAnswer(path: string, value: unknown) {
+    fetchMock.mockImplementationOnce(
+      () =>
+        new Promise<Response>((resolve) => {
+          answerAction = () => resolve(stateUpdateResponse('ui-kayaks', path, value));
+        })
+    );
+  }
+
+  /** Leaves for a listing page and comes Back while the action is in flight, then answers it. */
+  async function leaveAndComeBackBeforeTheAnswer() {
+    await openListing(/Surfing/);
+    act(() => window.history.back());
+    await waitFor(() => expect(heading()).toBe('Results for “kayaks”'));
+    await act(async () => {});
+    expect(sentActions(fetchMock)).toHaveLength(1);
+    await act(async () => answerAction?.());
+  }
+
+  function restores() {
+    return sentActions(fetchMock).filter(
+      (action) => (action as {name: string}).name === 'restoreState'
+    );
+  }
+
+  beforeEach(async () => {
+    fetchMock = vi.fn(async () => emptyTurnResponse());
+    vi.stubGlobal('fetch', fetchMock);
+    render(<App />);
+    await act(async () => {});
+    fetchMock.mockImplementationOnce(async () => sortableSearchResponse('ui-kayaks'));
+    await search('kayaks');
+  });
+
+  afterEach(() => {
+    cleanup();
+    vi.unstubAllGlobals();
+    answerAction = undefined;
+  });
+
+  it("restores the page the shopper picked, once that page's answer has landed", async () => {
+    holdAnswer('/state/pagination', {page: 2, pageSize: 20, totalEntries: 82, totalPages: 5});
+    fireEvent.click(screen.getByRole('button', {name: 'Page 3'}));
+    await act(async () => {});
+
+    await leaveAndComeBackBeforeTheAnswer();
+
+    await waitFor(() => expect(restores()).toHaveLength(1));
+    expect(restores()[0]).toEqual(
+      expect.objectContaining({context: expect.objectContaining({page: 2})})
+    );
+  });
+
+  it("restores the sort the shopper picked, once that sort's answer has landed", async () => {
+    holdAnswer('/state/sort/appliedSort', SORTS[1]);
+    fireEvent.change(screen.getByLabelText(/Sort by/), {target: {value: '1'}});
+    await act(async () => {});
+
+    await leaveAndComeBackBeforeTheAnswer();
+
+    await waitFor(() => expect(restores()).toHaveLength(1));
+    // The restore carries the sort as its `sortCriteria`, or as the whole `sort` where
+    // `restoreState` sends the whole sort.
+    expect(JSON.stringify((restores()[0] as {context: unknown}).context)).toContain(
+      '"sortCriteria":"fields"'
+    );
   });
 });

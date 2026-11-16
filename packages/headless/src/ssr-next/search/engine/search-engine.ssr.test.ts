@@ -1,6 +1,7 @@
 import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import type {SearchEngineConfiguration} from '../../../app/search-engine/search-engine-configuration.js';
 import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
+import {buildMockSearchResponse} from '../../../test/mock-search-response.js';
 import {defineMockSearchController} from '../../../test/mock-ssr-controller-definitions.js';
 import type {SearchEngineDefinitionOptions} from '../types/engine.js';
 import {defineSearchEngine} from './search-engine.ssr.js';
@@ -198,6 +199,57 @@ describe('Search Engine SSR', () => {
 
       expect(stateA.accessToken).toBe('token-user-A');
       expect(stateB.accessToken).toBe('token-user-B');
+    });
+  });
+
+  describe('x-forwarded-for header', () => {
+    let forwardedForPerSearchRequest: (string | null)[];
+
+    beforeEach(() => {
+      forwardedForPerSearchRequest = [];
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async (url: string, init: RequestInit) => {
+          if (url.includes('/rest/search/v2')) {
+            forwardedForPerSearchRequest.push(new Headers(init.headers).get('x-forwarded-for'));
+          }
+          return new Response(JSON.stringify(buildMockSearchResponse()), {
+            headers: {'Content-Type': 'application/json'},
+          });
+        })
+      );
+    });
+
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    it('should send each request its own x-forwarded-for header', async () => {
+      const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+
+      await searchEngineDefinition.fetchStaticState({
+        navigatorContext: buildMockNavigatorContext({forwardedFor: '1.1.1.1'}),
+      });
+      await searchEngineDefinition.fetchStaticState({
+        navigatorContext: buildMockNavigatorContext({forwardedFor: '2.2.2.2'}),
+      });
+
+      expect(forwardedForPerSearchRequest).toEqual(['1.1.1.1', '2.2.2.2']);
+    });
+
+    it('should send each concurrent request its own x-forwarded-for header', async () => {
+      const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+
+      await Promise.all([
+        searchEngineDefinition.fetchStaticState({
+          navigatorContext: buildMockNavigatorContext({forwardedFor: '5.5.5.5'}),
+        }),
+        searchEngineDefinition.fetchStaticState({
+          navigatorContext: buildMockNavigatorContext({forwardedFor: '6.6.6.6'}),
+        }),
+      ]);
+
+      expect(forwardedForPerSearchRequest.toSorted()).toEqual(['5.5.5.5', '6.6.6.6']);
     });
   });
 

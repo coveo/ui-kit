@@ -71,7 +71,7 @@
 
 ## Boundaries
 
-**You must ALWAYS**:
+**Always**:
 
 - Discover available Agent Skills under `.agents/skills` when beginning a new session
 - Add a changeset file when modifying source code of any public package
@@ -79,14 +79,14 @@
 
 ---
 
-**You must ASK BEFORE**:
+**Ask before**:
 
 - Adding a new dependency in the monorepo
 - Introducing a potentially breaking change
 
 ---
 
-**You must NEVER**:
+**Never**:
 
 - Commit unencrypted API keys, secrets, or Personally Identifiable Information (PII)
 - Write inline comments that restate what the code is doing

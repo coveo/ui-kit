@@ -1,6 +1,6 @@
 ---
 name: jira-writer
-description: Drafts and creates Jira task artifacts (epics, spikes, user stories, bugs) from notes or source artifacts, with strict routing and confirmation gates.
+description: Drafts and creates Jira issues (epics, spikes, execution-ready user stories, bugs) from notes or source artifacts such as support tickets, Slack threads or logs, showing a draft and waiting for explicit confirmation before creating anything. Use when the user asks to write, draft, file or create one of these Jira issue types. For drafting or reviewing planning-phase user stories use the user-story skill; to file work under a KIT bucket epic use jira-create-issue-in-bucket, which calls this skill.
 metadata:
   version: "1.0.0"
   last-evaluated: "2026-07-06"

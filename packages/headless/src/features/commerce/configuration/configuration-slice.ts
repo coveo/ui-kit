@@ -1,6 +1,10 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
-import {updateBasicConfiguration} from '../../configuration/configuration-actions.js';
+import {
+  disableAnalytics as disableCoreAnalytics,
+  enableAnalytics as enableCoreAnalytics,
+  updateBasicConfiguration,
+} from '../../configuration/configuration-actions.js';
 import {
   disableAnalytics,
   enableAnalytics,
@@ -32,6 +36,13 @@ export const configurationReducer = createReducer(getConfigurationInitialState()
       state.analytics.enabled = false;
     })
     .addCase(enableAnalytics, (state) => {
+      state.analytics.enabled = true;
+    })
+    // This is to handle the engine's disableAnalytics and enableAnalytics methods
+    .addCase(disableCoreAnalytics, (state) => {
+      state.analytics.enabled = false;
+    })
+    .addCase(enableCoreAnalytics, (state) => {
       state.analytics.enabled = true;
     })
 );

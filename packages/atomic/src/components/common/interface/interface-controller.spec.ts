@@ -275,6 +275,49 @@ describe('InterfaceController', () => {
 
       expect(engine.enableAnalytics).toHaveBeenCalled();
     });
+
+    it('should call the atomic interface #engine.disableAnalytics method when atomic interface #disableAnalytics is true', async () => {
+      const atomicInterface = await setupElement();
+      atomicInterface.analytics = true;
+      atomicInterface.disableAnalytics = true;
+      const engine = buildFakeCommerceEngine();
+      (atomicInterface as BaseAtomicInterface<CommerceEngine>).engine = engine;
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic', VERSION);
+
+      helper.onAnalyticsChange();
+
+      expect(engine.disableAnalytics).toHaveBeenCalled();
+      expect(engine.enableAnalytics).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('#analyticsEnabled', () => {
+    it('should be true when atomic interface #analytics is true and #disableAnalytics is false', async () => {
+      const atomicInterface = await setupElement();
+      atomicInterface.analytics = true;
+      atomicInterface.disableAnalytics = false;
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic', VERSION);
+
+      expect(helper.analyticsEnabled).toBe(true);
+    });
+
+    it('should be false when atomic interface #analytics is false', async () => {
+      const atomicInterface = await setupElement();
+      atomicInterface.analytics = false;
+      atomicInterface.disableAnalytics = false;
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic', VERSION);
+
+      expect(helper.analyticsEnabled).toBe(false);
+    });
+
+    it('should be false when atomic interface #disableAnalytics is true', async () => {
+      const atomicInterface = await setupElement();
+      atomicInterface.analytics = true;
+      atomicInterface.disableAnalytics = true;
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic', VERSION);
+
+      expect(helper.analyticsEnabled).toBe(false);
+    });
   });
 
   describe('#onLanguageChange', () => {

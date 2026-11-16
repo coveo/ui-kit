@@ -133,12 +133,10 @@ export class AtomicSearchInterface
   @property({type: String, attribute: 'search-hub', reflect: true})
   public searchHub?: string;
 
-  // TODO - KIT-4994: Add disableAnalytics property that defaults to false.
-
-  // TODO - KIT-4994: Deprecate in favor of disableAnalytics property.
   // TODO - (v4) KIT-4990: Remove.
   /**
    * Whether analytics should be enabled.
+   * @deprecated - Use `disable-analytics` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
@@ -146,6 +144,16 @@ export class AtomicSearchInterface
     reflect: true,
   })
   public analytics = true;
+
+  /**
+   * Whether to disable analytics.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'disable-analytics',
+    reflect: true,
+  })
+  public disableAnalytics = false;
 
   /**
    * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items.
@@ -330,7 +338,7 @@ export class AtomicSearchInterface
 
   /**
    * Initializes the interface using the provided [headless search engine](https://docs.coveo.com/en/headless/latest/reference/modules/Search.html, as opposed to the `initialize` method which internally builds a search engine instance.
-   * This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone, and logLevel.
+   * This bypasses the properties set on the component, such as disableAnalytics, searchHub, pipeline, language, timezone, and logLevel.
    */
   public initializeWithSearchEngine(engine: SearchEngine) {
     if (this.pipeline && this.pipeline !== engine.state.pipeline) {
@@ -426,6 +434,7 @@ export class AtomicSearchInterface
   }
 
   @watch('analytics')
+  @watch('disableAnalytics')
   public toggleAnalytics() {
     if (!this.interfaceController.engineIsCreated(this.engine)) {
       return;
@@ -499,7 +508,11 @@ export class AtomicSearchInterface
 
   private initEngine(options: InitializationOptions) {
     const searchConfig = this.getSearchConfiguration(options);
-    const analyticsConfig = getAnalyticsConfig(options, this.analytics, this.store);
+    const analyticsConfig = getAnalyticsConfig(
+      options,
+      this.interfaceController.analyticsEnabled,
+      this.store
+    );
     try {
       this.engine = buildSearchEngine({
         configuration: {

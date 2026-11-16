@@ -58,8 +58,6 @@ All TypeScript classes in the thermidor package must follow this member ordering
 └── static {}
 ```
 
-The `static {}` block initializes module-scoped accessor hooks (e.g., `getInterfaceInternals`, `getComposedInternals`, `getFullEngine`) following the ADR-005 `#private` + `static {}` pattern.
-
 ### 4. Constructor
 
 ### 5. Instance Methods
@@ -68,46 +66,6 @@ The `static {}` block initializes module-scoped accessor hooks (e.g., `getInterf
 ├── public
 ├── protected
 └── private
-```
-
-## Examples
-
-### BaseInterface (reference implementation)
-
-```typescript
-export abstract class BaseInterface<T extends InterfaceType> {
-  // 2. Instance Properties — public readonly (phantom brand)
-  declare readonly [SupportsBrand]: {[K in Facades[T]]: true};
-
-  // 2. Instance Properties — public get/set
-  get disposed(): boolean {
-    return this.#disposed;
-  }
-
-  // 2. Instance Properties — private
-  #engine: FullEngine;
-  #stateId: string;
-  #type: T;
-  #facadeResolvers: Record<Facades[T], FacadeResolverFactory>;
-  #facadeCache = new WeakMap<InterfaceHandle, Map<Facades[T], EndpointThunk>>();
-  #cacheRegistry = new InterfaceCacheRegistry();
-  #disposed = false;
-
-  // 3. Static Hook
-  static {
-    getInterfaceInternals = ...;
-  }
-
-  // 4. Constructor
-  protected constructor(...) { ... }
-
-  // 5. Methods — public
-  dispose() { ... }
-
-  // 5. Methods — private
-  #resolveFacades(...) { ... }
-  #assertNotDisposed() { ... }
-}
 ```
 
 ## Notes

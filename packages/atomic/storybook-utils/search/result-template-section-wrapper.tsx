@@ -57,7 +57,7 @@ export const wrapInResultTemplateForSections = (): {
       },
       {
         tag: 'atomic-result-section-visual',
-        content: `<img src="https://picsum.photos/seed/picsum/200" alt="Result Image" class="w-full h-auto rounded-lg">`,
+        content: `<img src="/images/thumbnail-200.svg" alt="Result Image" class="w-full h-auto rounded-lg">`,
       },
       {
         tag: 'atomic-result-section-title-metadata',

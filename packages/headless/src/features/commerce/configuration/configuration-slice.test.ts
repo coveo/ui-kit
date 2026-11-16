@@ -1,4 +1,8 @@
-import {updateBasicConfiguration} from '../../configuration/configuration-actions.js';
+import {
+  disableAnalytics as disableCoreAnalytics,
+  enableAnalytics as enableCoreAnalytics,
+  updateBasicConfiguration,
+} from '../../configuration/configuration-actions.js';
 import {
   disableAnalytics,
   enableAnalytics,
@@ -197,5 +201,19 @@ describe('commerce configuration slice', () => {
     state.analytics.enabled = true;
 
     expect(configurationReducer(state, enableAnalytics()).analytics.enabled).toBe(true);
+  });
+
+  it('#disableAnalytics dispatched by the engine works as expected', () => {
+    const state = getConfigurationInitialState();
+    state.analytics.enabled = true;
+
+    expect(configurationReducer(state, disableCoreAnalytics()).analytics.enabled).toBe(false);
+  });
+
+  it('#enableAnalytics dispatched by the engine works as expected', () => {
+    const state = getConfigurationInitialState();
+    state.analytics.enabled = false;
+
+    expect(configurationReducer(state, enableCoreAnalytics()).analytics.enabled).toBe(true);
   });
 });

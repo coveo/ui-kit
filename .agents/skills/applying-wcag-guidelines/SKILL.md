@@ -11,15 +11,7 @@ metadata:
 
 ## Process
 
-### Step 1: Plan for Accessibility
-
-Before generating code:
-
-- Reflect on WCAG 2.2 Level AA requirements
-- Identify which persona-based guidelines apply (keyboard, screen reader, low vision, cognitive, voice)
-- Plan semantic HTML structure and ARIA attributes
-
-### Step 2: Implement Accessible Patterns
+### Step 1: Implement Accessible Patterns
 
 Apply appropriate patterns from this skill and [detailed patterns reference](references/wcag-patterns.md):
 
@@ -38,7 +30,7 @@ Apply appropriate patterns from this skill and [detailed patterns reference](ref
 - Navigation: roving tabindex, `aria-expanded` for expandable menus
 - Focus management: visible focus indicators, logical tab order, `tabindex="-1"` for programmatic focus
 
-### Step 3: Review and Test
+### Step 2: Review and Test
 
 After generating code:
 
@@ -47,7 +39,7 @@ After generating code:
 - Verify focus indicators are visible
 - Check color contrast ratios
 
-### Step 4: Communicate Limitations
+### Step 3: Communicate Limitations
 
 Inform users that code was built with accessibility in mind but should be reviewed and tested with tools like [Accessibility Insights](https://accessibilityinsights.io/).
 
@@ -147,17 +139,15 @@ For detailed implementation patterns, see [wcag-patterns.md](references/wcag-pat
 
 ## Inclusive Language
 
-- Use people-first language ("person using a screen reader" not "blind user")
-- Avoid stereotypes or assumptions
-- Include reasoning and references to standards
-- Neutral, helpful, respectful tone
+- Use people-first language ("person using a screen reader" not "blind user").
+- When explaining an accessibility choice, cite the WCAG success criterion or standard behind it.
 
 ## Automated Validation
 
-**Storybook automatically runs Axe-core accessibility checks** on all stories in the Atomic package:
+**Storybook runs Axe-core accessibility checks** on all stories in the Atomic package:
 
-- Configured in `packages/atomic/.storybook/preview.ts` with `a11y: {test: 'error'}`
-- CI fails if any WCAG violations detected
+- `packages/atomic/.storybook/preview.ts` sets `a11y: {test: 'todo'}`, scoped to the WCAG 2.0/2.1/2.2 A and AA tags, so violations are recorded instead of thrown at test time. Keep it at `'todo'`: `'error'` drops the report data.
+- The `VitestA11yReporter` from `@coveo/atomic-a11y` (registered in `packages/atomic/vitest.config.js`) collects the results and fails the run when violations are found.
 - Axe-core checks 50+ rules including color contrast, ARIA attributes, keyboard accessibility, form labels, semantic HTML, and focus management
 - Creates comprehensive coverage when components have stories for all states
 

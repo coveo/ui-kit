@@ -65,7 +65,7 @@ quantic{ComponentName}/
 | Error handling | `hasInitializationError` flag + `<c-quantic-component-error>` in template |
 | CSS naming | BEM-like with component prefix: `.generated-answer__card-header--collapsed` |
 | Lightning base components | **Always prefer an existing `lightning-*` base component over custom markup or an SLDS blueprint.** Before building any UI element, discover candidates with the `salesforce-lbc` MCP tools (see Working Workflow step 2). Build custom markup only when no base component fits, and state why |
-| SLDS tokens | Use `var(--lwc-*)` design tokens; **always use SLDS utility classes first — for every style need, ask yourself whether an SLDS class covers it before writing a single line of custom CSS**. Custom CSS is only permitted when no SLDS class achieves the needed result |
+| SLDS tokens | Use `var(--lwc-*)` design tokens. Use SLDS utility classes for every style need they cover; write custom CSS only for what no SLDS class achieves |
 | Meta XML | `isExposed: false`; no `targets` or `targetConfigs`; **always generated via `sf lightning generate component`** — never created manually (manual creation risks using a stale `apiVersion`) |
 | `render()` | Only for multi-template components; always the **last method** in the class |
 | Property validation | Use `getBueno(this)` from `c/quanticHeadlessLoader` to validate user-supplied `@api` props (strings, numbers). Log via `console.error` with `this.template.host.localName` and call `this.setInitializationError()` on failure |
@@ -106,7 +106,7 @@ When a peer component closely matches your use case, also inspect its structure 
 
 ### Documentation Requirements
 
-Quantic reference docs are generated from component JSDoc. Every component class and `@api` property must be documented. See the full rules, valid categories, and code templates in **Section 8** of `references/docs-accessibility-testing.md`.
+Quantic reference docs are generated from component JSDoc. Every component class and `@api` property must be documented. See the full rules, valid categories, and code templates in the Documentation Requirements section of `references/docs-accessibility-testing.md`.
 
 ### Testing Strategy
 

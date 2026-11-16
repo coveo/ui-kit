@@ -21,14 +21,16 @@ No setup needed — just input → output:
 import {describe, expect, it} from 'vitest';
 import {filterProtocol} from './xss-utils';
 
-describe('filterProtocol', () => {
-  it('when passing a problematic protocol, it returns empty string', () => {
-    expect(filterProtocol('javascript:alert(1)')).toBe('');
-  });
+describe('xss-utils', () => {
+  describe('#filterProtocol', () => {
+    it('should return an empty string for a problematic protocol', () => {
+      expect(filterProtocol('javascript:alert(1)')).toBe('');
+    });
 
-  it('allows good protocols', () => {
-    expect(filterProtocol('https://github.com/')).toBe('https://github.com/');
-    expect(filterProtocol('mailto:user@example.com')).toBe('mailto:user@example.com');
+    it('should keep allowed protocols', () => {
+      expect(filterProtocol('https://github.com/')).toBe('https://github.com/');
+      expect(filterProtocol('mailto:user@example.com')).toBe('mailto:user@example.com');
+    });
   });
 });
 ```
@@ -66,17 +68,13 @@ describe('promise-utils', () => {
 
 ## Browser/Global API Mocking
 
-Use `vi.stubGlobal` + `vi.restoreAllMocks()` — not `Object.defineProperty` with manual save/restore:
+Use `vi.stubGlobal` — not `Object.defineProperty` with manual save/restore. `vitest-utils/setup.ts` calls `vi.unstubAllGlobals()` after every test, so stubbed globals need no manual cleanup:
 
 ```typescript
-import {afterEach, describe, expect, it, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {isIOS} from './device-utils';
 
 describe('#isIOS', () => {
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
   it('should return true for iPad user agent', () => {
     vi.stubGlobal('navigator', {
       ...navigator,
@@ -165,15 +163,15 @@ describe('#createRipple', () => {
 
 ## Data-Driven Tests
 
-Use `test.each` / `it.each` with descriptive labels for combinatorial logic:
+Use `it.each` with descriptive labels for combinatorial logic:
 
 ```typescript
-describe('Given no tab is active', () => {
-  test.each([
+describe('when no tab is active', () => {
+  it.each([
     ['not included or excluded', [], []],
     ['included', ['tab1', 'tab2'], []],
     ['excluded', [], ['tab1', 'tab2']],
-  ])('returns true when tabs are %s', (_, includeTabs, excludeTabs) => {
+  ])('should return true when tabs are %s', (_, includeTabs, excludeTabs) => {
     expect(shouldDisplayOnCurrentTab(includeTabs, excludeTabs, '')).toBe(true);
   });
 });

@@ -132,14 +132,11 @@ class ControllerWirer<
     if (!('recommendations' in this.buildConfig)) {
       return;
     }
+    const productId = 'productId' in this.buildConfig ? this.buildConfig.productId : undefined;
     for (const recController in this.controllerDefinitions) {
       if (isRecommendationDefinition(this.controllerDefinitions[recController])) {
         this.controllerProps[recController] = {
-          initialState: {
-            ...('productId' in this.buildConfig && {
-              productId: this.buildConfig.productId,
-            }),
-          },
+          ...(productId !== undefined && {productId}),
         };
       }
     }
@@ -201,7 +198,7 @@ export function wireControllerParams<
 ): InferControllerPropsMapFromDefinitions<TControllerDefinitions> {
   validateBuildConfig(solutionType, controllerDefinitions, buildConfig);
 
-  const controllerProps: ControllersPropsMap = buildConfig.controllers ?? {};
+  const controllerProps: ControllersPropsMap = {...buildConfig.controllers};
 
   new ControllerWirer(buildConfig, controllerDefinitions, controllerProps).wire(solutionType);
 

@@ -115,12 +115,10 @@ export class AtomicCommerceInterface
    */
   @property({type: String, reflect: true}) public type: 'search' | 'product-listing' = 'search';
 
-  // TODO - KIT-4994: Add disableAnalytics property that defaults to false.
-
-  // TODO - KIT-4994: Deprecate in favor of disableAnalytics property.
   // TODO - (v4) KIT-4990: Remove.
   /**
    * Whether analytics should be enabled.
+   * @deprecated - Use `disable-analytics` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
@@ -128,6 +126,16 @@ export class AtomicCommerceInterface
     reflect: true,
   })
   public analytics = true;
+
+  /**
+   * Whether to disable analytics.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'disable-analytics',
+    reflect: true,
+  })
+  public disableAnalytics = false;
 
   /**
    * The minimum severity level of messages to log in the console.
@@ -266,7 +274,7 @@ export class AtomicCommerceInterface
 
   /**
    * Initializes the connection with a preconfigured [headless commerce engine](https://docs.coveo.com/en/headless/latest/reference/interfaces/Commerce.CommerceEngine.html), as opposed to the `initialize` method, which internally creates a new commerce engine instance.
-   * This bypasses the properties set on the component, such as analytics and language.
+   * This bypasses the properties set on the component, such as disableAnalytics and language.
    */
   public initializeWithEngine(engine: CommerceEngine) {
     engine.dispatch(
@@ -370,6 +378,7 @@ export class AtomicCommerceInterface
   }
 
   @watch('analytics')
+  @watch('disableAnalytics')
   public toggleAnalytics() {
     if (!this.interfaceController.engineIsCreated(this.engine)) {
       return;
@@ -430,7 +439,7 @@ export class AtomicCommerceInterface
   }
 
   private initEngine(options: CommerceInitializationOptions) {
-    const analyticsConfig = getAnalyticsConfig(options, this.analytics);
+    const analyticsConfig = getAnalyticsConfig(options, this.interfaceController.analyticsEnabled);
     try {
       this.engine = buildCommerceEngine({
         configuration: {
