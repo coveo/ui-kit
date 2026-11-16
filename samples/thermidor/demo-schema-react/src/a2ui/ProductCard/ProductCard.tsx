@@ -1,5 +1,8 @@
 import {useContext, type ReactNode} from 'react';
+import type {Product} from '@coveo/thermidor-schema';
 import {formatPrice} from '../../utils.js';
+import {ProductChildren} from '../ProductChildren/ProductChildren.js';
+import {usePromotedProduct} from '../ProductChildren/use-promoted-product.js';
 import {ProductCardActionsContext} from './product-card-actions.js';
 import styles from './ProductCard.module.css';
 
@@ -55,5 +58,21 @@ export function A2UIProductCard(props: A2UIProductCardProps) {
         {actions != null && <div className={styles.actions}>{actions}</div>}
       </div>
     </div>
+  );
+}
+
+/** A product card whose children can be promoted into it. */
+export function PromotableProductCard({product}: {product: Product}) {
+  const [shown, promote] = usePromotedProduct(product);
+  return (
+    <A2UIProductCard
+      ec_name={shown.ec_name}
+      ec_brand={shown.ec_brand}
+      ec_price={shown.ec_promo_price ?? shown.ec_price}
+      ec_image={shown.ec_images?.[0]}
+      ec_product_id={shown.permanentid}
+      clickUri={shown.clickUri}
+      productChildren={<ProductChildren product={shown} onPromote={promote} />}
+    />
   );
 }

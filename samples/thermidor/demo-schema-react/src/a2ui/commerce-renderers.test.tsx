@@ -420,3 +420,64 @@ describe('ProductCarousel children', () => {
     expect(screen.getByText('$110.00')).toBeDefined();
   });
 });
+
+describe('Product children of a bundle slot and a research card', () => {
+  it('swaps a picked child into a bundle slot, beside a slot without children', async () => {
+    mountSurface({
+      component: {
+        component: 'LayoutStack',
+        children: ['grouped', 'single'],
+      },
+      children: [
+        {
+          id: 'grouped',
+          component: 'ProductSummary',
+          categoryLabel: 'Shoes',
+          product: {path: '/state/grouped'},
+        },
+        {
+          id: 'single',
+          component: 'ProductSummary',
+          categoryLabel: 'Shoes',
+          product: {path: '/state/single'},
+        },
+      ],
+      dataModel: [
+        {path: '/state/grouped', value: trailShoe()},
+        {path: '/state/single', value: roadShoe},
+      ],
+    });
+    const [grouped, single] = await screen.findAllByRole('listitem');
+    expect(within(single).queryByRole('group', {name: 'Available in:'})).toBeNull();
+
+    fireEvent.click(within(grouped).getByTitle('Trail shoe, blue'));
+
+    expect(within(grouped).getByText('$110.00')).toBeDefined();
+    expect(within(grouped).getAllByRole('img')[0].getAttribute('src')).toBe(
+      'https://example.com/blue.png'
+    );
+  });
+
+  it("links a research card to the picked child and keeps the agent's text", async () => {
+    mountSurface({
+      component: {
+        component: 'ProductResearchCard',
+        product: {path: '/state/root/product'},
+        summary: {path: '/state/root/summary'},
+        bullets: {path: '/state/root/bullets'},
+      },
+      dataModel: [
+        {path: '/state/root/product', value: trailShoe()},
+        {path: '/state/root/summary', value: 'A grippy trail shoe.'},
+        {path: '/state/root/bullets', value: ['Light']},
+      ],
+    });
+    fireEvent.click(await screen.findByTitle('Trail shoe, blue'));
+
+    expect(screen.getByRole('link', {name: 'Trail shoe, blue'}).getAttribute('href')).toBe(
+      'https://example.com/shoe-blue'
+    );
+    expect(screen.getByText('A grippy trail shoe.')).toBeDefined();
+    expect(screen.getByText('Light')).toBeDefined();
+  });
+});

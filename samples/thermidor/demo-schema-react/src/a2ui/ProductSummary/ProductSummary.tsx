@@ -1,6 +1,9 @@
+import type {ReactNode} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {Product} from '@coveo/thermidor-schema';
 import {ProductSummaryPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {ProductChildren} from '../ProductChildren/ProductChildren.js';
+import {usePromotedProduct} from '../ProductChildren/use-promoted-product.js';
 import styles from './ProductSummary.module.css';
 
 function formatPrice(value: number): string {
@@ -22,8 +25,8 @@ function resolvePrice(product: Product): number | undefined {
 /**
  * A2-UI component for the `product-summary`: a compact single-product summary row for a bundle
  * category slot. The generic binder resolves `categoryLabel` / `product` from
- * `ProductSummaryPropsSchema`. Presentational — no actions. `categoryLabel === undefined`
- * (bindings not yet resolved) renders a loading state.
+ * `ProductSummaryPropsSchema`. No actions; a child of the product can be promoted into the row.
+ * `categoryLabel === undefined` (bindings not yet resolved) renders a loading state.
  */
 export const ProductSummary = createReactComponent(
   {
@@ -39,30 +42,59 @@ export const ProductSummary = createReactComponent(
       );
     }
 
-    const {categoryLabel, product} = props;
-    const name = product?.ec_name ?? categoryLabel;
-    const imageUrl = product ? resolveProductImage(product) : null;
-    const price = product ? resolvePrice(product) : undefined;
-
-    return (
-      <div className={styles.itemRow} role="listitem">
-        {imageUrl ? (
-          <img className={styles.itemImage} src={imageUrl} alt={name ?? ''} />
-        ) : (
-          <div className={styles.itemImage} aria-label="No image available" />
-        )}
-        <div className={styles.itemInfo}>
-          <span className={styles.itemName} title={name ?? ''}>
-            {name}
-          </span>
-          {product?.ec_shortdesc && (
-            <span className={styles.itemDescription} title={product.ec_shortdesc}>
-              {product.ec_shortdesc}
-            </span>
-          )}
-          {price !== undefined && <span className={styles.itemPrice}>{formatPrice(price)}</span>}
-        </div>
-      </div>
-    );
+    return <SummaryRow categoryLabel={props.categoryLabel} product={props.product} />;
   }
 );
+
+function SummaryRow({categoryLabel, product}: {categoryLabel: string; product?: Product | null}) {
+  return product ? (
+    <PromotableSummaryRow categoryLabel={categoryLabel} product={product} />
+  ) : (
+    <SummaryRowContent name={categoryLabel} />
+  );
+}
+
+function PromotableSummaryRow({categoryLabel, product}: {categoryLabel: string; product: Product}) {
+  const [shown, promote] = usePromotedProduct(product);
+  return (
+    <SummaryRowContent
+      name={shown.ec_name ?? categoryLabel}
+      product={shown}
+      productChildren={<ProductChildren product={shown} onPromote={promote} />}
+    />
+  );
+}
+
+function SummaryRowContent({
+  name,
+  product,
+  productChildren,
+}: {
+  name: string;
+  product?: Product;
+  productChildren?: ReactNode;
+}) {
+  const imageUrl = product ? resolveProductImage(product) : null;
+  const price = product ? resolvePrice(product) : undefined;
+  return (
+    <div className={styles.itemRow} role="listitem">
+      {imageUrl ? (
+        <img className={styles.itemImage} src={imageUrl} alt={name} />
+      ) : (
+        <div className={styles.itemImage} aria-label="No image available" />
+      )}
+      <div className={styles.itemInfo}>
+        <span className={styles.itemName} title={name}>
+          {name}
+        </span>
+        {product?.ec_shortdesc && (
+          <span className={styles.itemDescription} title={product.ec_shortdesc}>
+            {product.ec_shortdesc}
+          </span>
+        )}
+        {price !== undefined && <span className={styles.itemPrice}>{formatPrice(price)}</span>}
+      </div>
+      {productChildren && <div className={styles.itemChildren}>{productChildren}</div>}
+    </div>
+  );
+}

@@ -27,6 +27,7 @@
 }
 
 .itemInfo {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -54,4 +55,9 @@
   font-weight: 700;
   color: var(--color-text-primary);
   margin-top: 2px;
+}
+
+/* Beside the row's text, so a grouped slot stays as tall as the others. */
+.itemChildren {
+  flex-shrink: 0;
 }
