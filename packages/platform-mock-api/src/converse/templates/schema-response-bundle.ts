@@ -17,6 +17,7 @@ import {
   type ConverseEvent,
   type UpdateDataModelOp,
 } from '../events.js';
+import {groupChildren, storeVariantsOf} from './product-groups.js';
 
 const runId = 'schema-bundle-4957b383';
 
@@ -114,6 +115,22 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
   },
 });
 
+const WAVE_RIDER_RED_IMAGE =
+  'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8f733582382a_bottom_right_c2b6748c-af4a-4c57-a032-8501dcd7873c.webp?v=1766163591';
+
+const waveRiderKidsSoftTop = {
+  permanentid: 'gid://shopify/ProductVariant/50674988548370',
+  ec_name: 'Wave Rider Kids Soft Top - Red',
+  ec_shortdesc:
+    'Introducing the Wave Rider Kids Soft Top, the perfect beginner surfboard for young aspiring surfers.',
+  ec_brand: 'Storm Blade',
+  ec_price: 199.99,
+  ec_images: [WAVE_RIDER_RED_IMAGE],
+  ec_thumbnails: [WAVE_RIDER_RED_IMAGE],
+  ec_in_stock: true,
+  additionalFields: {},
+};
+
 // Whole-component Component_State for every node on the bundle surface, keyed by node id. Each
 // entry is written whole at `statePath(id)` on `bundle-surface`.
 const bundleComponentState: Record<string, unknown> = {
@@ -159,19 +176,18 @@ const bundleComponentState: Record<string, unknown> = {
   },
   'ps-budget-surfboard': {
     categoryLabel: 'Surfboard',
-    product: {
-      permanentid: 'gid://shopify/ProductVariant/50674988548370',
-      ec_name: 'Wave Rider Kids Soft Top - Red',
-      ec_shortdesc:
-        'Introducing the Wave Rider Kids Soft Top, the perfect beginner surfboard for young aspiring surfers.',
-      ec_brand: 'Storm Blade',
-      ec_price: 199.99,
-      ec_images: [
-        'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/8f733582382a_bottom_right_c2b6748c-af4a-4c57-a032-8501dcd7873c.webp?v=1766163591',
-      ],
-      ec_in_stock: true,
-      additionalFields: {},
-    },
+    product: groupChildren(
+      waveRiderKidsSoftTop,
+      storeVariantsOf(waveRiderKidsSoftTop, [
+        {
+          id: '50676916683026',
+          name: 'Wave Rider Kids Soft Top - Yellow',
+          price: 199.99,
+          image:
+            'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/9c19a06ad70d_top_right_533309a7-d931-4501-bdb5-ca405cf66909.webp?v=1766163591',
+        },
+      ])
+    ),
   },
   'ps-budget-wetsuit': {
     categoryLabel: 'Wetsuit',
