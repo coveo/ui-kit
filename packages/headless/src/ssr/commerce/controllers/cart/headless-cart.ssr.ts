@@ -8,6 +8,7 @@ import {
 } from '../../../../controllers/commerce/context/cart/headless-cart.js';
 import {MissingControllerProps} from '../../../common/errors.js';
 import type {UniversalControllerDefinitionWithProps} from '../../types/controller-definitions.js';
+import {withDeprecatedDefinitionWarning} from '../../controller-utils.js';
 import {createControllerWithKind, Kind} from '../../types/kind.js';
 
 export type {Cart, CartInitialState, CartItem, CartProps, CartState};
@@ -29,7 +30,7 @@ export interface CartDefinition extends UniversalControllerDefinitionWithProps<
  * @returns The `Cart` controller definition.
  */
 export function defineCart(): CartDefinition {
-  return {
+  const definition: CartDefinition = {
     listing: true,
     search: true,
     standalone: true,
@@ -42,4 +43,9 @@ export function defineCart(): CartDefinition {
       return createControllerWithKind(controller, Kind.Cart);
     },
   };
+  return withDeprecatedDefinitionWarning(
+    definition,
+    '`defineCart`',
+    'In v4, every commerce engine definition includes the `cart` controller, so remove this definition when you upgrade.'
+  );
 }

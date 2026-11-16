@@ -48,6 +48,16 @@ describe('deprecation', () => {
       expect(firstLogger.warn).toHaveBeenCalledOnce();
       expect(secondLogger.warn).toHaveBeenCalledOnce();
     });
+
+    it('logs once for each key when a key is given', () => {
+      const key = {};
+
+      warnDeprecatedOnce(buildLogger(), '`foo`', 'Use `bar` instead.', key);
+      const secondLogger = buildLogger();
+      warnDeprecatedOnce(secondLogger, '`foo`', 'Use `bar` instead.', key);
+
+      expect(secondLogger.warn).not.toHaveBeenCalled();
+    });
   });
 
   describe('#withDeprecationWarning', () => {

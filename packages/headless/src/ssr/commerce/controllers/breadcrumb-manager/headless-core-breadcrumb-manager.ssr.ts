@@ -4,7 +4,10 @@ import type {
 } from '../../../../controllers/commerce/core/breadcrumb-manager/headless-core-breadcrumb-manager.js';
 import {buildProductListing} from '../../../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch} from '../../../../controllers/commerce/search/headless-search.js';
-import {ensureAtLeastOneSolutionType} from '../../../../ssr/commerce/controller-utils.js';
+import {
+  ensureAtLeastOneSolutionType,
+  withSolutionTypeOptionsWarning,
+} from '../../../../ssr/commerce/controller-utils.js';
 import {SolutionType} from '../../types/controller-constants.js';
 import type {
   ControllerDefinitionOption,
@@ -25,7 +28,7 @@ export function defineBreadcrumbManager<TOptions extends ControllerDefinitionOpt
   options?: TOptions
 ) {
   ensureAtLeastOneSolutionType(options);
-  return {
+  const definition = {
     listing: true,
     search: true,
     ...options,
@@ -34,4 +37,5 @@ export function defineBreadcrumbManager<TOptions extends ControllerDefinitionOpt
         ? buildProductListing(engine).breadcrumbManager()
         : buildSearch(engine).breadcrumbManager(),
   } as SubControllerDefinitionWithoutProps<BreadcrumbManager, TOptions>;
+  return withSolutionTypeOptionsWarning(definition, 'defineBreadcrumbManager', options);
 }

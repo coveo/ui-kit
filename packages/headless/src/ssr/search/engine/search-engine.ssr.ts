@@ -12,6 +12,7 @@ import {
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {LegacySearchAction} from '../../../features/analytics/analytics-utils.js';
 import {loadConfigurationActions} from '../../../features/configuration/configuration-actions-loader.js';
+import {warnDeprecatedOnce, withDeprecationWarning} from '../../../utils/deprecation.js';
 import {createWaitForActionMiddleware} from '../../../utils/utils.js';
 import {createAccessTokenManager} from '../../common/access-token-manager.js';
 import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
@@ -109,6 +110,12 @@ export function defineSearchEngine<
     Parameters<HydrateStaticStateFromBuildResultFunction>;
 
   const tokenManager = createAccessTokenManager(engineOptions.configuration.accessToken);
+  const deprecationLogger = buildLogger(options.loggerOptions);
+  const deprecate = <TFunction extends (...args: never[]) => unknown>(
+    fn: TFunction,
+    api: string,
+    instruction: string
+  ) => withDeprecationWarning(deprecationLogger, fn, api, instruction);
 
   const getOptions = () => {
     return engineOptions;
@@ -125,8 +132,15 @@ export function defineSearchEngine<
     tokenManager.setAccessToken(accessToken);
   };
 
-  const build: BuildFunction = async (...[buildOptions]: BuildParameters) => {
+  const buildEngine: BuildFunction = async (...[buildOptions]: BuildParameters) => {
     const logger = buildLogger(options.loggerOptions);
+    if (buildOptions?.extend) {
+      warnDeprecatedOnce(
+        deprecationLogger,
+        'The `extend` build option',
+        'Set the engine options, such as `middlewares` or `preprocessRequest` in the configuration, in `defineSearchEngine()` instead.'
+      );
+    }
     const baseOptions = buildOptions?.extend
       ? await buildOptions.extend(getOptions())
       : getOptions();
@@ -176,64 +190,88 @@ export function defineSearchEngine<
     };
   };
 
+  const fetchStaticStateFromBuildResult: FetchStaticStateFromBuildResultFunction = async (
+    ...params: FetchStaticStateFromBuildResultParameters
+  ) => {
+    const [
+      {
+        buildResult: {engine, controllers},
+      },
+    ] = params;
+
+    engine.executeFirstSearch();
+    return createStaticState({
+      searchAction: await engine.waitForSearchCompletedAction(),
+      controllers,
+    }) as EngineStaticState<
+      UnknownAction,
+      InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>
+    >;
+  };
+
+  const hydrateStaticStateFromBuildResult: HydrateStaticStateFromBuildResultFunction = async (
+    ...params: HydrateStaticStateFromBuildResultParameters
+  ) => {
+    const [
+      {
+        buildResult: {engine, controllers},
+        searchAction,
+      },
+    ] = params;
+    engine.dispatch(searchAction);
+    await engine.waitForSearchCompletedAction();
+    return {engine, controllers};
+  };
+
   const fetchStaticState: FetchStaticStateFunction = composeFunction(
     async (...params: FetchStaticStateParameters) => {
-      const buildResult = await build(...params);
-      const staticState = await fetchStaticState.fromBuildResult({
-        buildResult,
-      });
-      return staticState;
+      const buildResult = await buildEngine(...params);
+      return fetchStaticStateFromBuildResult({buildResult});
     },
     {
-      fromBuildResult: async (...params: FetchStaticStateFromBuildResultParameters) => {
-        const [
-          {
-            buildResult: {engine, controllers},
-          },
-        ] = params;
-
-        engine.executeFirstSearch();
-        return createStaticState({
-          searchAction: await engine.waitForSearchCompletedAction(),
-          controllers,
-        }) as EngineStaticState<
-          UnknownAction,
-          InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>
-        >;
-      },
+      fromBuildResult: deprecate(
+        fetchStaticStateFromBuildResult,
+        '`fetchStaticState.fromBuildResult`',
+        'Use `fetchStaticState()` instead.'
+      ),
     }
   );
 
   const hydrateStaticState: HydrateStaticStateFunction = composeFunction(
     async (...params: HydrateStaticStateParameters) => {
-      const buildResult = await build(...(params as BuildParameters));
-      const staticState = await hydrateStaticState.fromBuildResult({
+      const buildResult = await buildEngine(...(params as BuildParameters));
+      return hydrateStaticStateFromBuildResult({
         buildResult,
         searchAction: params[0]!.searchAction,
       });
-      return staticState;
     },
     {
-      fromBuildResult: async (...params: HydrateStaticStateFromBuildResultParameters) => {
-        const [
-          {
-            buildResult: {engine, controllers},
-            searchAction,
-          },
-        ] = params;
-        engine.dispatch(searchAction);
-        await engine.waitForSearchCompletedAction();
-        return {engine, controllers};
-      },
+      fromBuildResult: deprecate(
+        hydrateStaticStateFromBuildResult,
+        '`hydrateStaticState.fromBuildResult`',
+        'Use `hydrateStaticState()` instead.'
+      ),
     }
   );
 
   return {
-    build,
+    build: deprecate(buildEngine, '`build`', 'Use `fetchStaticState()` instead.'),
     fetchStaticState,
     hydrateStaticState,
-    setNavigatorContextProvider,
-    getAccessToken,
-    setAccessToken,
+    setNavigatorContextProvider: deprecate(
+      setNavigatorContextProvider,
+      '`setNavigatorContextProvider`',
+      'Pass a per-request `navigatorContext` to `fetchStaticState()` and `hydrateStaticState()` instead, or a `navigatorContextProvider` to `defineSearchEngine()`.'
+    ),
+    getAccessToken: deprecate(
+      getAccessToken,
+      '`getAccessToken`',
+      'Use the access token from your engine configuration instead.'
+    ),
+    setAccessToken: deprecate(
+      setAccessToken,
+      '`setAccessToken`',
+      'To renew an expiring token, configure `renewAccessToken`. To change the token of an engine you already have, dispatch `loadConfigurationActions(engine).updateBasicConfiguration({accessToken})` on it.'
+    ),
   };
 }

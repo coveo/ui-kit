@@ -72,4 +72,18 @@ describe('define commerce context', () => {
       contextDefinition.buildWithProps(engine, props);
     }).toThrow(MissingControllerProps);
   });
+
+  it('logs a deprecation warning once per definition when it builds controllers', () => {
+    const firstEngine = buildMockSSRCommerceEngine(buildMockCommerceState());
+    const secondEngine = buildMockSSRCommerceEngine(buildMockCommerceState());
+
+    contextDefinition.buildWithProps(firstEngine, options);
+    contextDefinition.buildWithProps(secondEngine, options);
+
+    expect(firstEngine.logger.warn).toHaveBeenCalledOnce();
+    expect(firstEngine.logger.warn).toHaveBeenCalledWith(
+      expect.stringContaining('[Deprecated] `defineContext` is deprecated')
+    );
+    expect(secondEngine.logger.warn).not.toHaveBeenCalled();
+  });
 });
