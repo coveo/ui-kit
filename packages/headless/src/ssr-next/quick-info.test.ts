@@ -13,7 +13,7 @@ const packageRoot = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 function getQuickInfo(directory: string, source: string, names: string[]): Record<string, string> {
   const {config} = ts.readConfigFile(join(packageRoot, 'tsconfig.json'), ts.sys.readFile);
   const {options} = ts.parseJsonConfigFileContent(config, ts.sys, packageRoot);
-  const fileName = join(packageRoot, directory, 'quick-info-fixture.ts');
+  const fileName = join(packageRoot, directory, 'quick-info-fixture.ts').replaceAll('\\', '/');
   const readFile = (path: string) => (path === fileName ? source : ts.sys.readFile(path));
   const service = ts.createLanguageService(
     {

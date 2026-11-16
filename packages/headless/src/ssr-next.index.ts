@@ -57,12 +57,13 @@ export type {
 } from './app/engine-configuration.js';
 export type {LoggerOptions, LogLevel} from './app/logger.js';
 export type {NavigatorContext, NavigatorContextProvider} from './app/navigator-context-provider.js';
+export type {ControllerStaticState} from './ssr-next/common/types/controllers.js';
 // Main App
 export type {
   SearchConfigurationOptions,
   SearchEngineConfiguration,
-  SearchEngineOptions,
 } from './app/search-engine/search-engine.js';
+export type {SSRSearchEngineOptions as SearchEngineOptions} from './ssr-next/search/types/build.js';
 export {getSampleSearchEngineConfiguration} from './app/search-engine/search-engine.js';
 export type {ErrorPayload} from './controllers/controller/error-payload.js';
 //#region Controllers

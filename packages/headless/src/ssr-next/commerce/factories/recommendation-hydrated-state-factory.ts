@@ -18,7 +18,7 @@ export function hydratedRecommendationStaticStateFactory<
   return async (
     params: HydrateStaticStateParameters<TControllerDefinitions, SolutionType.recommendation>
   ) => {
-    const {controllerProps, ...restParams} = params;
+    const {controllerProps, controllers: _snapshots, ...restParams} = params;
 
     const buildParameters: BuildParameters<TControllerDefinitions> = {
       ...restParams,

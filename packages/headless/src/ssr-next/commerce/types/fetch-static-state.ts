@@ -44,7 +44,8 @@ export type CommerceStaticState<
   BuildConfig<TControllers, TSolutionType> & {
     /**
      * The controller props that were passed to `fetchStaticState()` through the `controllers` option.
-     * `hydrateStaticState()` reuses them to rebuild the controllers with the same props.
+     * `hydrateStaticState()` reuses them to rebuild the controllers with the same props. They are sent
+     * to the browser with the static state, so they must be serializable and must not hold secrets.
      */
     controllerProps?: ControllersPropsMap;
   };

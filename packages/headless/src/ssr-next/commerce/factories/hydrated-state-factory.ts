@@ -16,7 +16,7 @@ export function hydratedStaticStateFactory<
 ) {
   return <TSolutionType extends SolutionType>(solutionType: TSolutionType) =>
     async (params: HydrateStaticStateParameters<TControllerDefinitions, TSolutionType>) => {
-      const {controllerProps, ...restParams} = params;
+      const {controllerProps, controllers: _snapshots, ...restParams} = params;
 
       const buildParameters: BuildParameters<TControllerDefinitions> = {
         ...restParams,
