@@ -1,10 +1,12 @@
 import {describe, expectTypeOf, it} from 'vitest';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
+import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
 import type {SolutionType} from '../types/controller-constants.js';
+import type {ControllerDefinitionsMap} from '../types/controller-definitions.js';
 import type {InferHydratedState, InferStaticState} from '../types/controller-inference.js';
 import type {CommerceStaticState} from '../types/fetch-static-state.js';
 import type {CommerceHydratedState} from '../types/hydrate-static-state.js';
@@ -114,6 +116,19 @@ describe('the static and hydrated states of a commerce engine definition', () =>
     expectTypeOf<ListingHydratedState>().toEqualTypeOf<
       CommerceHydratedState<typeof controllers, SolutionType.listing>
     >();
+  });
+
+  it('should let code that is generic over the controllers reach the baked-in ones', () => {
+    function readBakedInControllers<TControllers extends ControllerDefinitionsMap<Controller>>(
+      staticState: CommerceStaticState<TControllers, SolutionType.listing>,
+      hydratedState: CommerceHydratedState<TControllers, SolutionType.listing>
+    ) {
+      expectTypeOf(staticState.controllers.cart).toHaveProperty('state');
+      expectTypeOf(hydratedState.controllers.cart).toHaveProperty('empty');
+      expectTypeOf(hydratedState.controllers.context).toHaveProperty('state');
+      expectTypeOf(hydratedState.controllers.parameterManager).toHaveProperty('synchronize');
+    }
+    expectTypeOf(readBakedInControllers).toBeFunction();
   });
 
   it('should name exactly the controllers built for each kind of page', () => {

@@ -12,9 +12,7 @@ import type {
 
 export type {InferHydratedState, InferStaticState};
 
-export type InferControllerPropsFromDefinition<
-  TController extends ControllerDefinition<Controller>,
-> =
+type InferControllerPropsFromDefinition<TController extends ControllerDefinition<Controller>> =
   TController extends ControllerDefinitionWithProps<Controller, infer Props>
     ? Props
     : TController extends ControllerDefinitionWithoutProps<Controller>
@@ -35,6 +33,13 @@ export type InferControllerPropsMapFromDefinitions<
 
 export type InferControllerFromDefinition<TDefinition extends ControllerDefinition<Controller>> =
   TDefinition extends ControllerDefinition<infer TController> ? TController : never;
+
+/**
+ * The names of the controller definitions that are available to the solution type.
+ */
+export type AvailableControllerNames<TDefinitions, TSolutionType extends SolutionType> = {
+  [K in keyof TDefinitions]: HasKey<TDefinitions[K], TSolutionType> extends never ? never : K;
+}[keyof TDefinitions];
 
 export type InferControllersMapFromDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,

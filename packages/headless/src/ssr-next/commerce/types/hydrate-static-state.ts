@@ -1,12 +1,15 @@
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {HasKey} from '../../common/types/utilities.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import type {SolutionType} from './controller-constants.js';
 import type {
-  AugmentedControllerDefinition,
+  BakedInControllerDefinitions,
+  BakedInControllers,
   ControllerDefinitionsMap,
 } from './controller-definitions.js';
-import type {InferControllerFromDefinition} from './controller-inference.js';
+import type {
+  AvailableControllerNames,
+  InferControllerFromDefinition,
+} from './controller-inference.js';
 
 /**
  * The engine and the live controllers returned by `hydrateStaticState()`.
@@ -26,12 +29,11 @@ export interface CommerceHydratedState<
    */
   controllers: {
     [
-      K in keyof AugmentedControllerDefinition<TControllers> as HasKey<
-        AugmentedControllerDefinition<TControllers>[K],
-        TSolutionType
-      > extends never
-        ? never
-        : K
-    ]: InferControllerFromDefinition<AugmentedControllerDefinition<TControllers>[K]>;
+      K in
+        | AvailableControllerNames<TControllers, TSolutionType>
+        | AvailableControllerNames<BakedInControllerDefinitions, TSolutionType>
+    ]: K extends keyof BakedInControllers
+      ? BakedInControllers[K]
+      : InferControllerFromDefinition<TControllers[K & keyof TControllers]>;
   };
 }

@@ -2,7 +2,6 @@ import type {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {ControllerStaticState, ControllersPropsMap} from '../../common/types/controllers.js';
 import type {EngineStaticState} from '../../common/types/engine.js';
-import type {HasKey} from '../../common/types/utilities.js';
 import type {BuildConfig} from './build.js';
 import type {SolutionType} from './controller-constants.js';
 import type {
@@ -11,8 +10,8 @@ import type {
   ControllerDefinitionsMap,
 } from './controller-definitions.js';
 import type {
+  AvailableControllerNames,
   InferControllerFromDefinition,
-  InferControllerPropsFromDefinition,
 } from './controller-inference.js';
 
 /**
@@ -36,18 +35,14 @@ export type CommerceStaticState<
   UnknownAction,
   {
     [
-      K in keyof TControllers as HasKey<TControllers[K], TSolutionType> extends never ? never : K
-    ]: ControllerStaticState<InferControllerFromDefinition<TControllers[K]>['state']> &
-      InferControllerPropsFromDefinition<TControllers[K]>;
-  } & {
-    [
-      K in keyof BakedInControllers as HasKey<
-        BakedInControllerDefinitions[K],
-        TSolutionType
-      > extends never
-        ? never
-        : K
-    ]: ControllerStaticState<BakedInControllers[K]['state']>;
+      K in
+        | AvailableControllerNames<TControllers, TSolutionType>
+        | AvailableControllerNames<BakedInControllerDefinitions, TSolutionType>
+    ]: K extends keyof BakedInControllers
+      ? ControllerStaticState<BakedInControllers[K]['state']>
+      : ControllerStaticState<
+          InferControllerFromDefinition<TControllers[K & keyof TControllers]>['state']
+        >;
   }
 > &
   BuildConfig<TControllers, TSolutionType> & {
