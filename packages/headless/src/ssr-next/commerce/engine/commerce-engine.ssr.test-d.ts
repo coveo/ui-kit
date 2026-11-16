@@ -152,17 +152,22 @@ describe('the static and hydrated states of a commerce engine definition', () =>
 });
 
 describe('EngineDefinition', () => {
-  // What code written for any engine definition looks like: two plain type parameters.
-  function hydrate<TStaticState, THydratedState>(
-    definition: EngineDefinition<TStaticState, THydratedState>,
-    staticState: TStaticState
-  ) {
+  // What code written for any engine definition looks like: type parameters constrained to what it
+  // reads, inferred from the definition passed in.
+  function hydrate<
+    TStaticState extends {controllers: object},
+    THydratedState extends {engine: unknown; controllers: object},
+  >(definition: EngineDefinition<TStaticState, THydratedState>, staticState: TStaticState) {
     return definition.hydrateStaticState(staticState);
   }
 
-  function fetchThenHydrate<TStaticState, THydratedState, TFetchOptions>(
+  function fetchThenHydrate<
+    TStaticState extends {controllers: object},
+    THydratedState extends {engine: unknown; controllers: object},
+    TFetchOptions,
+  >(
     definition: EngineDefinition<TStaticState, THydratedState, TFetchOptions>,
-    options: TFetchOptions
+    options: NoInfer<TFetchOptions>
   ) {
     return definition.fetchStaticState(options).then(definition.hydrateStaticState);
   }
@@ -190,8 +195,18 @@ describe('EngineDefinition', () => {
     ).resolves.toEqualTypeOf<ListingHydratedState>();
   });
 
-  it('should refuse fetch options that the engine definition does not take', () => {
+  it('should check the fetch options against the engine definition', () => {
+    const navigatorContext = buildMockNavigatorContext();
+    const context = {
+      language: 'en',
+      country: 'US',
+      currency: 'USD',
+      view: {url: 'https://example.com'},
+    } as const;
+    fetchThenHydrate(listingEngineDefinition, {navigatorContext, context, searchParams: {page: 2}});
     // @ts-expect-error: the context is missing.
-    fetchThenHydrate(listingEngineDefinition, {navigatorContext: {} as never});
+    fetchThenHydrate(listingEngineDefinition, {navigatorContext});
+    // @ts-expect-error: searchParams is misspelled.
+    fetchThenHydrate(listingEngineDefinition, {navigatorContext, context, serachParams: {page: 2}});
   });
 });

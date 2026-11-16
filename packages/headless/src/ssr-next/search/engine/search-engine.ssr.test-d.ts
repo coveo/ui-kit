@@ -91,11 +91,12 @@ describe('the static and hydrated states of a search engine definition', () => {
 });
 
 describe('EngineDefinition', () => {
-  // What code written for any engine definition looks like: two plain type parameters.
-  function hydrate<TStaticState, THydratedState>(
-    definition: EngineDefinition<TStaticState, THydratedState>,
-    staticState: TStaticState
-  ) {
+  // What code written for any engine definition looks like: type parameters constrained to what it
+  // reads, inferred from the definition passed in.
+  function hydrate<
+    TStaticState extends {controllers: object},
+    THydratedState extends {engine: unknown; controllers: object},
+  >(definition: EngineDefinition<TStaticState, THydratedState>, staticState: TStaticState) {
     return definition.hydrateStaticState(staticState);
   }
 
@@ -115,8 +116,11 @@ describe('EngineDefinition', () => {
     ).resolves.toEqualTypeOf<SearchHydratedState>();
   });
 
-  it('should refuse a static state that the engine definition did not fetch', () => {
-    // @ts-expect-error: a static state without the controllers of the definition.
-    hydrate(searchEngineDefinition, {searchActions: [], controllers: {}});
+  it('should refuse a static state that lacks a controller of the engine definition', () => {
+    const staticState = {} as SearchStaticState;
+    const {searchBox: _searchBox, ...withoutSearchBox} = staticState.controllers;
+    hydrate(searchEngineDefinition, {...staticState});
+    // @ts-expect-error: a static state without the searchBox controller of the definition.
+    hydrate(searchEngineDefinition, {...staticState, controllers: withoutSearchBox});
   });
 });
