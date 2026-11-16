@@ -4,6 +4,7 @@ import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js
 import {defineResultList} from '../controllers/result-list/headless-result-list.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
 import type {InferHydratedState, InferStaticState} from '../types/controller-definition.js';
+import type {SearchEngineOptions} from '../../../ssr-next.index.js';
 import {defineSearchEngine} from './search-engine.ssr.js';
 
 // Types the customer relies on for IntelliSense: everything below is inferred from the controllers
@@ -39,6 +40,11 @@ describe('defineSearchEngine', () => {
     defineSearchEngine(withProvider);
     expectTypeOf<SearchStaticState>().toHaveProperty('navigatorContext');
     expectTypeOf<SearchStaticState['accessToken']>().toEqualTypeOf<string | undefined>();
+  });
+
+  it('should accept options typed with the SearchEngineOptions of the sub-package', () => {
+    const options: SearchEngineOptions = {configuration: getSampleSearchEngineConfiguration()};
+    defineSearchEngine({...options, controllers: {searchBox: defineSearchBox()}});
   });
 
   it('should list the defined controllers and the parameter manager in the static state', () => {
