@@ -70,6 +70,15 @@ export function StorefrontApp() {
   historyRef.current = history;
   // The page the shopper last returned to, and how many returns so far: its search is restored.
   const [returned, setReturned] = useState<{visitId: number; count: number}>();
+  // The return reaches the page only once the session is free, so the search it restores includes
+  // the answer of an action that was in flight when the shopper left. This effect runs after the
+  // one of `ThermidorA2UIStream`, a child, which gives that answer to the renderer.
+  const [settledReturn, setSettledReturn] = useState(returned);
+  useEffect(() => {
+    if (request === undefined) {
+      setSettledReturn(returned);
+    }
+  }, [request, returned]);
   // The conversation of every prompt visit, which outlives the history.
   const visitThreads = useRef(new Map<number, number>());
 
@@ -224,7 +233,11 @@ export function StorefrontApp() {
             searchDisabled={request !== undefined}
           />
           <ReturnedVisitContext.Provider
-            value={returned?.visitId === visit.id ? returned.count : undefined}
+            value={
+              settledReturn === returned && returned?.visitId === visit.id
+                ? returned.count
+                : undefined
+            }
           >
             <Page
               visit={visit}

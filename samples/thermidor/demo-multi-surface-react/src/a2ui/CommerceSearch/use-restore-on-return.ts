@@ -1,4 +1,3 @@
-import {useEffect, useRef, useState} from 'react';
 import type {RestoreStatePayload} from '@coveo/thermidor-schema';
 import {useLatestWhenFree} from '../../../../demo-schema-react/src/a2ui/session-request.js';
 import {buildRestoreSnapshot} from '../../../../demo-schema-react/src/a2ui/CommerceSearch/restore-snapshot.js';
@@ -13,26 +12,16 @@ function snapshotOf(context: SearchSurfaceContext): RestoreStatePayload | undefi
 /**
  * When the shopper returns to this search with Back, sends `restoreState` with the search the
  * surface shows, its facets and sort included: the server runs it again and makes this surface
- * the one the assistant answers about. Sent once the session is free.
+ * the one the assistant answers about. Sent once the session is free, and built then, so it
+ * includes the answer of an action that was in flight when the shopper left.
  */
 export function useRestoreOnReturn(context: SearchSurfaceContext): void {
   const returned = useReturnedVisit();
-  const handled = useRef<number | undefined>(undefined);
-  const [pending, setPending] = useState<RestoreStatePayload>();
 
-  useEffect(() => {
-    if (returned === undefined || handled.current === returned) {
-      return;
-    }
-    handled.current = returned;
+  useLatestWhenFree(returned, () => {
     const snapshot = snapshotOf(context);
     if (snapshot) {
-      setPending(snapshot);
+      void context.dispatchAction({event: {name: 'restoreState', context: snapshot}});
     }
-  }, [returned, context]);
-
-  useLatestWhenFree(pending, (snapshot) => {
-    setPending(undefined);
-    void context.dispatchAction({event: {name: 'restoreState', context: snapshot}});
   });
 }

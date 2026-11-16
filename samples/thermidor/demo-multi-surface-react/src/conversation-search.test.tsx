@@ -66,6 +66,70 @@ function paginatedSearchResponse(surfaceId: string) {
   ]);
 }
 
+const SORTS = [
+  {sortCriteria: 'relevance', fields: []},
+  {
+    sortCriteria: 'fields',
+    fields: [{field: 'ec_price', direction: 'asc', displayName: 'Price (Low to High)'}],
+  },
+];
+
+/** A search surface with its pagination and its sort. */
+function sortableSearchResponse(surfaceId: string) {
+  const createSurface = {
+    surfaceId,
+    catalogId: 'https://schema.thermidor.coveo.com/a2-ui/catalog.json',
+    components: [
+      {id: 'root', component: 'CommerceSearch', mainChild: 'main'},
+      {id: 'main', component: 'LayoutStack', children: ['sort', 'pagination']},
+      {
+        id: 'sort',
+        component: 'Sort',
+        appliedSort: {path: '/state/sort/appliedSort'},
+        availableSorts: {path: '/state/sort/availableSorts'},
+      },
+      {
+        id: 'pagination',
+        component: 'Pagination',
+        page: {path: '/state/pagination/page'},
+        pageSize: {path: '/state/pagination/pageSize'},
+        totalEntries: {path: '/state/pagination/totalEntries'},
+        totalPages: {path: '/state/pagination/totalPages'},
+      },
+    ],
+    dataModel: {
+      state: {
+        sort: {appliedSort: SORTS[0], availableSorts: SORTS},
+        pagination: {page: 0, pageSize: 20, totalEntries: 82, totalPages: 5},
+      },
+    },
+  };
+  return stream([
+    {type: 'RUN_STARTED'},
+    {
+      type: 'ACTIVITY_SNAPSHOT',
+      messageId: `search-${surfaceId}`,
+      activityType: 'a2ui-surface',
+      content: {messages: [{version: 'v1.0', createSurface}]},
+    },
+    {type: 'RUN_FINISHED'},
+  ]);
+}
+
+/** The answer to a search action: the surface's new state at `path`. */
+function stateUpdateResponse(surfaceId: string, path: string, value: unknown) {
+  return stream([
+    {type: 'RUN_STARTED'},
+    {
+      type: 'ACTIVITY_SNAPSHOT',
+      messageId: `update-${surfaceId}-${path}`,
+      activityType: 'a2ui-surface',
+      content: {messages: [{version: 'v1.0', updateDataModel: {surfaceId, path, value}}]},
+    },
+    {type: 'RUN_FINISHED'},
+  ]);
+}
+
 function sentActions(fetchMock: ReturnType<typeof vi.fn>): unknown[] {
   return fetchMock.mock.calls
     .map(([, init]) => JSON.parse((init as RequestInit).body as string).action)
@@ -326,5 +390,77 @@ describe('going Back to an earlier search', () => {
 
     fireEvent.click(screen.getByRole('button', {name: '← Back'}));
     await waitFor(() => expect(heading()).toBe('Home'));
+  });
+});
+
+describe('going Back to a search whose action is still in flight', () => {
+  let fetchMock: ReturnType<typeof vi.fn>;
+  let answerAction: (() => void) | undefined;
+
+  /** Sends the next action, and holds its answer until `answerAction` is called. */
+  function holdAnswer(path: string, value: unknown) {
+    fetchMock.mockImplementationOnce(
+      () =>
+        new Promise<Response>((resolve) => {
+          answerAction = () => resolve(stateUpdateResponse('ui-kayaks', path, value));
+        })
+    );
+  }
+
+  /** Leaves for a listing page and comes Back while the action is in flight, then answers it. */
+  async function leaveAndComeBackBeforeTheAnswer() {
+    await openListing(/Surfing/);
+    act(() => window.history.back());
+    await waitFor(() => expect(heading()).toBe('Results for “kayaks”'));
+    await act(async () => {});
+    expect(sentActions(fetchMock)).toHaveLength(1);
+    await act(async () => answerAction?.());
+  }
+
+  function restores() {
+    return sentActions(fetchMock).filter(
+      (action) => (action as {name: string}).name === 'restoreState'
+    );
+  }
+
+  beforeEach(async () => {
+    fetchMock = vi.fn(async () => emptyTurnResponse());
+    vi.stubGlobal('fetch', fetchMock);
+    render(<App />);
+    await act(async () => {});
+    fetchMock.mockImplementationOnce(async () => sortableSearchResponse('ui-kayaks'));
+    await search('kayaks');
+  });
+
+  afterEach(() => {
+    cleanup();
+    vi.unstubAllGlobals();
+    answerAction = undefined;
+  });
+
+  it("restores the page the shopper picked, once that page's answer has landed", async () => {
+    holdAnswer('/state/pagination', {page: 2, pageSize: 20, totalEntries: 82, totalPages: 5});
+    fireEvent.click(screen.getByRole('button', {name: 'Page 3'}));
+    await act(async () => {});
+
+    await leaveAndComeBackBeforeTheAnswer();
+
+    await waitFor(() => expect(restores()).toHaveLength(1));
+    expect(restores()[0]).toEqual(
+      expect.objectContaining({context: expect.objectContaining({page: 2})})
+    );
+  });
+
+  it("restores the sort the shopper picked, once that sort's answer has landed", async () => {
+    holdAnswer('/state/sort/appliedSort', SORTS[1]);
+    fireEvent.change(screen.getByLabelText(/Sort by/), {target: {value: '1'}});
+    await act(async () => {});
+
+    await leaveAndComeBackBeforeTheAnswer();
+
+    await waitFor(() => expect(restores()).toHaveLength(1));
+    expect(restores()[0]).toEqual(
+      expect.objectContaining({context: expect.objectContaining({sortCriteria: 'fields'})})
+    );
   });
 });
