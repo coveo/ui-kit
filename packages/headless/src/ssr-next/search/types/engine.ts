@@ -37,6 +37,11 @@ export type SearchEngineDefinitionOptions<
    * The controllers to initialize with the search engine.
    */
   controllers?: ValidateControllerNames<TControllers>;
+  /**
+   * Not supported: the navigator context is per-request data. Pass `navigatorContext` to
+   * `fetchStaticState()` instead.
+   */
+  navigatorContextProvider?: 'ERROR: navigatorContextProvider is removed. Pass navigatorContext to fetchStaticState() instead.';
 };
 
 export interface SearchEngineDefinition<

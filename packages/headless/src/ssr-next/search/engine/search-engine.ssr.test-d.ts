@@ -1,9 +1,9 @@
 import {describe, expectTypeOf, it} from 'vitest';
 import {getSampleSearchEngineConfiguration} from '../../../app/search-engine/search-engine-configuration.js';
+import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import {defineResultList} from '../controllers/result-list/headless-result-list.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
 import type {InferHydratedState, InferStaticState} from '../types/controller-definition.js';
-import type {SearchEngineDefinitionOptions} from '../types/engine.js';
 import {defineSearchEngine} from './search-engine.ssr.js';
 
 // Types the customer relies on for IntelliSense: everything below is inferred from the controllers
@@ -30,7 +30,13 @@ describe('defineSearchEngine', () => {
   });
 
   it('should take the navigator context per request, not on the definition', () => {
-    expectTypeOf<SearchEngineDefinitionOptions>().not.toHaveProperty('navigatorContextProvider');
+    const options = {configuration: getSampleSearchEngineConfiguration()};
+    const withProvider = {...options, navigatorContextProvider: () => buildMockNavigatorContext()};
+    defineSearchEngine({...options, controllers: {}});
+    // @ts-expect-error: a navigatorContextProvider spread from shared options.
+    defineSearchEngine({...withProvider, controllers: {}});
+    // @ts-expect-error: a navigatorContextProvider in an options variable.
+    defineSearchEngine(withProvider);
     expectTypeOf<SearchStaticState>().toHaveProperty('navigatorContext');
     expectTypeOf<SearchStaticState['accessToken']>().toEqualTypeOf<string | undefined>();
   });
@@ -41,6 +47,9 @@ describe('defineSearchEngine', () => {
     expectTypeOf<SearchStaticState['controllers']>().toHaveProperty('parameterManager');
     expectTypeOf<SearchStaticState['controllers']['searchBox']>().toHaveProperty('state');
     expectTypeOf<SearchStaticState['controllers']['searchBox']>().not.toHaveProperty('subscribe');
+    expectTypeOf<SearchStaticState['controllers']['parameterManager']>().not.toHaveProperty(
+      'synchronize'
+    );
   });
 
   it('should hydrate the controllers as live controllers', () => {

@@ -1,10 +1,10 @@
 import {describe, expectTypeOf, it} from 'vitest';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
+import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
 import type {InferHydratedState, InferStaticState} from '../types/controller-inference.js';
-import type {CommerceEngineDefinitionOptions} from '../types/engine.js';
 import {defineCommerceEngine} from './commerce-engine.ssr.js';
 
 // Types the customer relies on for IntelliSense: everything below is inferred from the controllers
@@ -43,7 +43,13 @@ describe('defineCommerceEngine', () => {
   });
 
   it('should take the navigator context per request, not on the definition', () => {
-    expectTypeOf<CommerceEngineDefinitionOptions>().not.toHaveProperty('navigatorContextProvider');
+    const options = {configuration: getSampleCommerceEngineConfiguration()};
+    const withProvider = {...options, navigatorContextProvider: () => buildMockNavigatorContext()};
+    defineCommerceEngine({...options, controllers: {}});
+    // @ts-expect-error: a navigatorContextProvider spread from shared options.
+    defineCommerceEngine({...withProvider, controllers: {}});
+    // @ts-expect-error: a navigatorContextProvider in an options variable.
+    defineCommerceEngine(withProvider);
     expectTypeOf<ListingStaticState>().toHaveProperty('navigatorContext');
     expectTypeOf<ListingStaticState['accessToken']>().toEqualTypeOf<string | undefined>();
   });
@@ -71,6 +77,17 @@ describe('defineCommerceEngine', () => {
     expectTypeOf<ListingStaticState['controllers']['productList']>().not.toHaveProperty(
       'subscribe'
     );
+    expectTypeOf<ListingStaticState['controllers']['cart']>().toHaveProperty('state');
+    expectTypeOf<ListingStaticState['controllers']['cart']>().not.toHaveProperty('empty');
+    expectTypeOf<ListingStaticState['controllers']['parameterManager']>().not.toHaveProperty(
+      'synchronize'
+    );
+  });
+
+  it('should not offer controller props on the static state, which never carries them', () => {
+    expectTypeOf<
+      InferStaticState<typeof recommendationEngineDefinition>['controllers']['popularViewed']
+    >().not.toHaveProperty('productId');
   });
 
   it('should hydrate the controllers of the page as live controllers', () => {
