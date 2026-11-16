@@ -82,6 +82,10 @@ export default class QuanticResultLabel extends LightningElement {
       ?.style.setProperty('font-size', this.size);
   }
 
+  get showLabel() {
+    return !this.iconOnly;
+  }
+
   get iconToDisplay() {
     if (this.icon) {
       return this.icon;
