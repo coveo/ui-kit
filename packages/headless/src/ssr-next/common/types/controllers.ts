@@ -10,9 +10,8 @@ export interface ControllerStaticState<TState> {
    */
   state: TState;
   /**
-   * For controllers defined with props, the state they were built with. When the static state has no
-   * `controllerProps`, hydration uses it as the initial state of the controllers you defined; the
-   * `parameterManager` and the commerce `context` are rebuilt from `searchParams` and `context` instead.
+   * For controllers defined with props, the state they were built with. Hydration rebuilds them from
+   * the `controllerProps` of the static state, not from this snapshot.
    */
   initialState?: TState;
 }

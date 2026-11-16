@@ -1,9 +1,8 @@
-import type {SearchEngineOptions} from '../../../app/search-engine/search-engine.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import type {EngineDefinition} from '../../common/types/engine.js';
 import type {HasKeys} from '../../common/types/utilities.js';
-import type {BuildConfig, SSRSearchEngine} from './build.js';
+import type {BuildConfig, SSRSearchEngine, SSRSearchEngineOptions} from './build.js';
 import type {ControllerDefinitionsMap} from './controller-definition.js';
 import type {InferControllerPropsMapFromDefinitions} from './controller-inference.js';
 import type {SearchStaticState} from './fetch-static-state.js';
@@ -27,7 +26,7 @@ type ValidateControllerNames<T extends SearchControllerDefinitionsMap> = {
  */
 export type SearchEngineDefinitionOptions<
   TControllers extends SearchControllerDefinitionsMap = {},
-> = Omit<SearchEngineOptions, 'navigatorContextProvider'> & {
+> = SSRSearchEngineOptions & {
   /**
    * The controllers to initialize with the search engine.
    */

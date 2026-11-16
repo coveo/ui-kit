@@ -8,6 +8,7 @@ import type {InferHydratedState, InferStaticState} from '../types/controller-def
 import type {SearchControllerDefinitionsMap} from '../types/engine.js';
 import type {SearchStaticState as StaticStateOf} from '../types/fetch-static-state.js';
 import type {SearchHydratedState as HydratedStateOf} from '../types/hydrate-static-state.js';
+import type {SearchEngineOptions} from '../../../ssr-next.index.js';
 import {defineSearchEngine} from './search-engine.ssr.js';
 
 const controllers = {
@@ -45,6 +46,11 @@ describe('defineSearchEngine', () => {
     defineSearchEngine(withProvider);
     expectTypeOf<SearchStaticState>().toHaveProperty('navigatorContext');
     expectTypeOf<SearchStaticState['accessToken']>().toEqualTypeOf<string | undefined>();
+  });
+
+  it('should accept options typed with the SearchEngineOptions of the sub-package', () => {
+    const options: SearchEngineOptions = {configuration: getSampleSearchEngineConfiguration()};
+    defineSearchEngine({...options, controllers: {searchBox: defineSearchBox()}});
   });
 
   it('should list the defined controllers and the parameter manager in the static state', () => {

@@ -30,21 +30,22 @@ import type {
 export type CommerceStaticState<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
-> = EngineStaticState<{
-  [
-    K in
-      | AvailableControllerNames<TControllers, TSolutionType>
-      | AvailableControllerNames<BakedInControllerDefinitions, TSolutionType>
-  ]: K extends keyof BakedInControllers
-    ? ControllerStaticState<BakedInControllers[K]['state']>
-    : ControllerStaticState<
-        InferControllerFromDefinition<TControllers[K & keyof TControllers]>['state']
-      >;
-}> &
+> = EngineStaticState<
+  {
+    [K in AvailableControllerNames<TControllers, TSolutionType>]: ControllerStaticState<
+      InferControllerFromDefinition<TControllers[K & keyof TControllers]>['state']
+    >;
+  } & {
+    [
+      K in AvailableControllerNames<BakedInControllerDefinitions, TSolutionType>
+    ]: ControllerStaticState<BakedInControllers[K]['state']>;
+  }
+> &
   BuildConfig<TControllers, TSolutionType> & {
     /**
      * The controller props that were passed to `fetchStaticState()` through the `controllers` option.
-     * `hydrateStaticState()` reuses them to rebuild the controllers with the same props.
+     * `hydrateStaticState()` reuses them to rebuild the controllers with the same props. They are sent
+     * to the browser with the static state, so they must be serializable and must not hold secrets.
      */
     controllerProps?: ControllersPropsMap;
   };
