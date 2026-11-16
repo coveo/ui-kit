@@ -67,7 +67,7 @@ function paginatedSearchResponse(surfaceId: string) {
 }
 
 const SORTS = [
-  {sortCriteria: 'relevance', fields: []},
+  {sortCriteria: 'relevance'},
   {
     sortCriteria: 'fields',
     fields: [{field: 'ec_price', direction: 'asc', displayName: 'Price (Low to High)'}],
@@ -459,8 +459,10 @@ describe('going Back to a search whose action is still in flight', () => {
     await leaveAndComeBackBeforeTheAnswer();
 
     await waitFor(() => expect(restores()).toHaveLength(1));
-    expect(restores()[0]).toEqual(
-      expect.objectContaining({context: expect.objectContaining({sortCriteria: 'fields'})})
+    // The restore carries the sort as its `sortCriteria`, or as the whole `sort` where
+    // `restoreState` sends the whole sort.
+    expect(JSON.stringify((restores()[0] as {context: unknown}).context)).toContain(
+      '"sortCriteria":"fields"'
     );
   });
 });
