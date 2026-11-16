@@ -1,3 +1,4 @@
+import type {ContextOptions} from '@coveo/headless-react/ssr-commerce-next';
 import * as externalCartAPI from '@/actions/external-cart-api';
 import ContextDropdown from '@/components/context-dropdown';
 import ProductBadges from '@/components/product-badges';
@@ -8,7 +9,6 @@ import StandaloneSearchBox from '@/components/standalone-search-box';
 import {standaloneEngineDefinition} from '@/lib/commerce-engine';
 import {getNavigatorContext} from '@/lib/navigator-context';
 import {defaultContext} from '@/utils/context';
-import type {ContextOptions} from '../../../../../../packages/headless/dist/definitions/controllers/commerce/context/headless-context';
 
 export default async function ProductDescriptionPage({
   params,
