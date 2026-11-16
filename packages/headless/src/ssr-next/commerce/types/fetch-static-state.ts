@@ -30,19 +30,17 @@ import type {
 export type CommerceStaticState<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
-> = EngineStaticState<
-  {
-    [
-      K in
-        | AvailableControllerNames<TControllers, TSolutionType>
-        | AvailableControllerNames<BakedInControllerDefinitions, TSolutionType>
-    ]: K extends keyof BakedInControllers
-      ? ControllerStaticState<BakedInControllers[K]['state']>
-      : ControllerStaticState<
-          InferControllerFromDefinition<TControllers[K & keyof TControllers]>['state']
-        >;
-  }
-> &
+> = EngineStaticState<{
+  [
+    K in
+      | AvailableControllerNames<TControllers, TSolutionType>
+      | AvailableControllerNames<BakedInControllerDefinitions, TSolutionType>
+  ]: K extends keyof BakedInControllers
+    ? ControllerStaticState<BakedInControllers[K]['state']>
+    : ControllerStaticState<
+        InferControllerFromDefinition<TControllers[K & keyof TControllers]>['state']
+      >;
+}> &
   BuildConfig<TControllers, TSolutionType> & {
     /**
      * The controller props that were passed to `fetchStaticState()` through the `controllers` option.
