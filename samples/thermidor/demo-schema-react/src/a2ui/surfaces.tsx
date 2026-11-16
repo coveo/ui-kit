@@ -50,7 +50,9 @@ export function ThermidorA2UIStream({messages, children}: ThermidorA2UIStreamPro
   const fedRef = useRef<readonly A2uiV09Message[]>([]);
 
   // The session's stream only grows, so only its new messages are fed. A stream that does not
-  // extend the one already fed, such as another session's, is fed again from the start.
+  // extend the one already fed, such as another session's, is fed again from the start. Messages
+  // are fed as copies: a cache replay reuses its values, and each write must reach the components
+  // as new objects, so they can tell it apart from a render.
   useEffect(() => {
     const {clearSurfaces, processMessages} = actionsRef.current;
     const fed = fedRef.current;
@@ -61,7 +63,7 @@ export function ThermidorA2UIStream({messages, children}: ThermidorA2UIStreamPro
     }
     fedRef.current = messages;
     if (messages.length > start) {
-      processMessages(messages.slice(start) as A2uiV09Message[]);
+      processMessages(structuredClone(messages.slice(start)) as A2uiV09Message[]);
     }
   }, [messages]);
 

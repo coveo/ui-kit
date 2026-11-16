@@ -407,4 +407,21 @@ describe('InstantProducts children', () => {
     expect(open).not.toHaveBeenCalled();
     expect(option.textContent).toContain('$420.00');
   });
+
+  it('drops the pick when the cache answers the product again', async () => {
+    const {type, dispatchedQueries, queriesSent} = await renderSearchBox({
+      handler: answerWithGroups,
+    });
+    type('surf');
+    await screen.findByRole('option', {name: /Surf board, white/});
+    fireEvent.mouseEnter(screen.getByRole('option', {name: 'surf wax'}));
+    fireEvent.mouseEnter(screen.getByRole('option', {name: 'surf boards'}));
+    const option = await screen.findByRole('option', {name: /Surf board, white/});
+    fireEvent.mouseEnter(within(option).getByTitle('Surf board, blue'));
+    expect(option.textContent).toContain('$420.00');
+
+    await waitFor(() => expect(dispatchedQueries()).toEqual(['surf boards', 'surf boards']));
+    await waitFor(() => expect(option.textContent).toContain('$400.00'));
+    expect(queriesSent()).toEqual(['surf boards']);
+  });
 });
