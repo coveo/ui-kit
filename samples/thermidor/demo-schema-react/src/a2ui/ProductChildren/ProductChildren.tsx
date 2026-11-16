@@ -62,12 +62,13 @@ export function ProductChildren({
       <div className={styles.children}>
         {visible.map((child) => {
           const shown = child.permanentid === product.permanentid;
+          const name = child.ec_name ?? child.permanentid;
           return (
             <Thumbnail
               key={child.permanentid}
               {...(presentational ? {} : {type: 'button' as const, 'aria-pressed': shown})}
               className={`${styles.child} ${shown ? styles.shown : ''}`}
-              title={child.ec_name}
+              title={name}
               onMouseEnter={() => onPromote(child)}
               onClick={(event) => {
                 event.stopPropagation();
@@ -77,7 +78,7 @@ export function ProductChildren({
               <img
                 className={styles.thumbnail}
                 src={thumbnailOf(child)}
-                alt={child.ec_name}
+                alt={name}
                 loading="lazy"
               />
             </Thumbnail>

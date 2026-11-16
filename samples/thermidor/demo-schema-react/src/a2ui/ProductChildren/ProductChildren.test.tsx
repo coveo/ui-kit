@@ -58,13 +58,13 @@ describe('ProductChildren', () => {
     expect(screen.queryByRole('group', {name: 'Available in:'})).toBeNull();
   });
 
-  it('shows a fallback for a child without a web image', () => {
+  it('shows a fallback for a child without a web image or name', () => {
     render(
       <Slot
         product={group([
           child('a'),
           child('b', {ec_thumbnails: []}),
-          child('c', {ec_thumbnails: ['javascript:alert(1)']}),
+          child('c', {ec_thumbnails: ['javascript:alert(1)'], ec_name: undefined}),
         ])}
       />
     );
@@ -74,6 +74,7 @@ describe('ProductChildren', () => {
       FALLBACK_THUMBNAIL,
       FALLBACK_THUMBNAIL,
     ]);
+    expect(screen.getByRole('button', {name: 'c'}).title).toBe('c');
   });
 
   it('promotes a child on hover or click, not on focus, keeping the children in place', () => {
