@@ -314,8 +314,14 @@ describe('going Back to an earlier search', () => {
     fireEvent.click(screen.getByRole('button', {name: '← Back'}));
     await waitFor(() => expect(heading()).toBe('Results for “kayaks”'));
 
+    // jsdom traverses the history in later tasks, and the state was already at depth 1 before
+    // Forward: wait for Forward's popstate and the one of the app's return to the shown page.
+    const popped: unknown[] = [];
+    const onPopState = (event: PopStateEvent) => popped.push(event.state);
+    window.addEventListener('popstate', onPopState);
     act(() => window.history.forward());
-    await waitFor(() => expect(window.history.state).toEqual({storefrontDepth: 1}));
+    await waitFor(() => expect(popped).toEqual([{storefrontDepth: 2}, {storefrontDepth: 1}]));
+    window.removeEventListener('popstate', onPopState);
     expect(heading()).toBe('Results for “kayaks”');
 
     fireEvent.click(screen.getByRole('button', {name: '← Back'}));
