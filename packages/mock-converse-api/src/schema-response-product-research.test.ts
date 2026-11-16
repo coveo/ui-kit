@@ -1,13 +1,35 @@
 import {describe, it, expect} from 'vitest';
 import {converseSchemaResponses} from '@coveo/platform-mock-api/converse';
 import type {ConverseEvent} from '@coveo/platform-mock-api/converse';
-import {PRODUCT_PROPERTIES} from './product-groups.test-utils.js';
 
 const {matchSchemaPrompt} = converseSchemaResponses;
 
 const RESEARCH_PROMPT = 'tell me more about the thermoflex winter wetsuit';
 const RESEARCH_SURFACE_ID = 'product-research-surface';
 const STATE_PREFIX = '/state/';
+
+// The property set of the thermidor-schema `Product` definition, which is closed
+// (`additionalProperties: false`).
+const PRODUCT_PROPERTIES = new Set([
+  'permanentid',
+  'ec_name',
+  'ec_description',
+  'ec_shortdesc',
+  'ec_brand',
+  'ec_category',
+  'ec_price',
+  'ec_promo_price',
+  'ec_images',
+  'ec_thumbnails',
+  'ec_in_stock',
+  'ec_rating',
+  'ec_color',
+  'ec_item_group_id',
+  'ec_item_group_name',
+  'clickUri',
+  'additionalFields',
+  'children',
+]);
 
 // The property set of the thermidor-schema `ProductResearchRelatedDocument` definition, which is
 // closed (`additionalProperties: false`).

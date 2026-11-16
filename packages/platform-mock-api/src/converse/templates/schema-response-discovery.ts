@@ -13,7 +13,6 @@ import {
   toolCall,
   type ConverseEvent,
 } from '../events.js';
-import {groupChildren, storeVariantsOf} from './product-groups.js';
 
 const runId = 'schema-discovery-d8d8e15c';
 
@@ -100,56 +99,23 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
   },
 });
 
-const aquaSecureLifeJacket = {
-  permanentid: 'gid://shopify/ProductVariant/50681799147794',
-  ec_name: 'AquaSecure Life Jacket - Yellow / Child',
-  ec_shortdesc:
-    'Your ultimate companion for family water activities. Lightweight Type II life jacket with 15.5 lbs buoyancy.',
-  ec_brand: "O'Neill",
-  ec_price: 29.99,
-  ec_rating: 4.3,
-  ec_images: [
-    'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/a7621e6658d4_bottom_right_29681cfc-e9ee-47fb-aa7d-1d0061ddf6b2.webp?v=1766163665',
-  ],
-  ec_thumbnails: [
-    'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/a7621e6658d4_bottom_right_29681cfc-e9ee-47fb-aa7d-1d0061ddf6b2.webp?v=1766163665',
-  ],
-  ec_in_stock: true,
-  additionalFields: {},
-};
-
-const aquaGuardianSafetyVest = {
-  permanentid: 'gid://shopify/ProductVariant/50681803145490',
-  ec_name: 'AquaGuardian Safety Vest - Red / Adult Universal',
-  ec_shortdesc: 'Perfect companion for recreational boaters. Type III with 16 lbs buoyancy.',
-  ec_brand: 'Stearns',
-  ec_price: 59.99,
-  ec_rating: 3.0,
-  ec_images: [
-    'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/5d0082428ac8_bottom_left.webp?v=1766163681',
-  ],
-  ec_thumbnails: [
-    'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/5d0082428ac8_bottom_left.webp?v=1766163681',
-  ],
-  ec_in_stock: true,
-  additionalFields: {},
-};
-
 const lifeJacketsState = {
   heading: 'Life Jackets',
   products: [
-    groupChildren(
-      aquaSecureLifeJacket,
-      storeVariantsOf(aquaSecureLifeJacket, [
-        {
-          id: '50681799049490',
-          name: 'AquaSecure Life Jacket - Red / Child',
-          price: 29.99,
-          image:
-            'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/905d491b8bff_top_left.webp?v=1766163666',
-        },
-      ])
-    ),
+    {
+      permanentid: 'gid://shopify/ProductVariant/50681799147794',
+      ec_name: 'AquaSecure Life Jacket - Yellow / Child',
+      ec_shortdesc:
+        'Your ultimate companion for family water activities. Lightweight Type II life jacket with 15.5 lbs buoyancy.',
+      ec_brand: "O'Neill",
+      ec_price: 29.99,
+      ec_rating: 4.3,
+      ec_images: [
+        'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/a7621e6658d4_bottom_right_29681cfc-e9ee-47fb-aa7d-1d0061ddf6b2.webp?v=1766163665',
+      ],
+      ec_in_stock: true,
+      additionalFields: {},
+    },
     {
       permanentid: 'gid://shopify/ProductVariant/50681803047186',
       ec_name: 'AquaGuardian Life Jacket - Black / Toddler',
@@ -306,19 +272,19 @@ const lifeJacketsState = {
 const safetyGearState = {
   heading: 'Boating Safety Gear',
   products: [
-    groupChildren(
-      aquaGuardianSafetyVest,
-      storeVariantsOf(aquaGuardianSafetyVest, [
-        {
-          id: '50681803112722',
-          name: 'AquaGuardian Safety Vest - Blue / Adult Universal',
-          price: 59.99,
-          image:
-            'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/cf07b6b8ad6f_bottom_right_1e282681-91d1-42f3-8855-d519650990d2.webp?v=1766163681',
-        },
-      ]),
-      4
-    ),
+    {
+      permanentid: 'gid://shopify/ProductVariant/50681803145490',
+      ec_name: 'AquaGuardian Safety Vest - Red / Adult Universal',
+      ec_shortdesc: 'Perfect companion for recreational boaters. Type III with 16 lbs buoyancy.',
+      ec_brand: 'Stearns',
+      ec_price: 59.99,
+      ec_rating: 3.0,
+      ec_images: [
+        'https://cdn.shopify.com/s/files/1/0910/6502/4786/files/5d0082428ac8_bottom_left.webp?v=1766163681',
+      ],
+      ec_in_stock: true,
+      additionalFields: {},
+    },
     {
       permanentid: 'gid://shopify/ProductVariant/50681980125458',
       ec_name: 'EcoRider Safety Helmet - Red / M',
