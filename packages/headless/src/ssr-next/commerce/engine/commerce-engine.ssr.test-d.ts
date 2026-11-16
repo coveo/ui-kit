@@ -149,9 +149,9 @@ describe('defineCommerceEngine', () => {
   });
 
   it('should not offer controller props on the static state, which never carries them', () => {
-    expectTypeOf<
-      InferStaticState<typeof recommendationEngineDefinition>['controllers']['popularViewed']
-    >().not.toHaveProperty('productId');
+    expectTypeOf<ListingStaticState['controllers']['popularViewed']>().not.toHaveProperty(
+      'productId'
+    );
   });
 
   it('should let code that is generic over the solution type reach cart and context', () => {

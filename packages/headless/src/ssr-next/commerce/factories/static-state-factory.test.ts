@@ -242,11 +242,10 @@ describe('fetchStaticStateFactory', () => {
               controllers: {
                 rec1: {refresh: refreshRec1},
                 rec2: {refresh: refreshRec2},
-              } as unknown as InferControllersMapFromDefinition<
+              } as unknown as CommerceHydratedState<
                 CommerceControllerDefinitionsMap,
                 T
-              > &
-                BakedInControllers,
+              >['controllers'],
             })
       );
     });
