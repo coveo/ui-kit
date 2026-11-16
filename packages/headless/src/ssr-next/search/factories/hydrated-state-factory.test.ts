@@ -86,4 +86,20 @@ describe('hydratedStaticStateFactory', () => {
     expect(build).toHaveBeenCalledWith(expect.objectContaining({controllers: controllerProps}));
     expect(build.mock.calls[0][0]).not.toHaveProperty('controllerProps');
   });
+
+  it('should not hand the controller snapshots to the build when the static state has no controller props', async () => {
+    const build = vi.fn().mockResolvedValue({engine, controllers: {}});
+    vi.mocked(buildFactory).mockReturnValue(build as unknown as ReturnType<typeof buildFactory>);
+
+    await hydratedStaticStateFactory(
+      controllerDefinitions,
+      options
+    )({
+      navigatorContext: buildMockNavigatorContext(),
+      searchActions: [],
+      controllers: {customController: {state: {foo: 'snapshot'}}},
+    } as unknown as HydrateStaticStateParameters<typeof controllerDefinitions>);
+
+    expect(build.mock.calls[0][0]).not.toHaveProperty('controllers');
+  });
 });
