@@ -4,6 +4,7 @@ import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js
 import {defineResultList} from '../controllers/result-list/headless-result-list.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
 import type {InferHydratedState, InferStaticState} from '../types/controller-definition.js';
+import type {SearchControllerDefinitionsMap} from '../types/engine.js';
 import type {SearchStaticState as StaticStateOf} from '../types/fetch-static-state.js';
 import type {SearchHydratedState as HydratedStateOf} from '../types/hydrate-static-state.js';
 import {defineSearchEngine} from './search-engine.ssr.js';
@@ -68,6 +69,17 @@ describe('the static and hydrated states of a search engine definition', () => {
   it('should be named after the controllers of the definition', () => {
     expectTypeOf<SearchStaticState>().toEqualTypeOf<StaticStateOf<typeof controllers>>();
     expectTypeOf<SearchHydratedState>().toEqualTypeOf<HydratedStateOf<typeof controllers>>();
+  });
+
+  it('should let code that is generic over the controllers reach the parameter manager', () => {
+    function readParameterManager<TControllers extends SearchControllerDefinitionsMap>(
+      staticState: StaticStateOf<TControllers>,
+      hydratedState: HydratedStateOf<TControllers>
+    ) {
+      expectTypeOf(staticState.controllers.parameterManager.state).toHaveProperty('parameters');
+      expectTypeOf(hydratedState.controllers.parameterManager).toHaveProperty('synchronize');
+    }
+    expectTypeOf(readParameterManager).toBeFunction();
   });
 
   it('should name exactly the defined controllers and the baked-in parameter manager', () => {

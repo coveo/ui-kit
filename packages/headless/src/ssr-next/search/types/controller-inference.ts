@@ -9,7 +9,7 @@ import type {
   ControllerDefinitionWithProps,
 } from './controller-definition.js';
 
-export type InferControllerPropsFromDefinition<
+type InferControllerPropsFromDefinition<
   TController extends ControllerDefinition<CoreEngine | CoreEngineNext, Controller>,
 > =
   TController extends ControllerDefinitionWithProps<

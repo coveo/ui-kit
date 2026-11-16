@@ -1,5 +1,8 @@
 import type {SSRSearchEngine} from './build.js';
-import type {AugmentedControllerDefinition} from './controller-definition.js';
+import type {
+  AugmentedControllerDefinition,
+  BakedInSearchControllers,
+} from './controller-definition.js';
 import type {InferControllerFromDefinition} from './controller-inference.js';
 import type {SearchControllerDefinitionsMap} from './engine.js';
 
@@ -15,8 +18,10 @@ export interface SearchHydratedState<TControllers extends SearchControllerDefini
    * baked-in `parameterManager`.
    */
   controllers: {
-    [K in keyof AugmentedControllerDefinition<TControllers>]: InferControllerFromDefinition<
-      AugmentedControllerDefinition<TControllers>[K]
-    >;
+    [
+      K in keyof AugmentedControllerDefinition<TControllers>
+    ]: K extends keyof BakedInSearchControllers
+      ? BakedInSearchControllers[K]
+      : InferControllerFromDefinition<AugmentedControllerDefinition<TControllers>[K]>;
   };
 }

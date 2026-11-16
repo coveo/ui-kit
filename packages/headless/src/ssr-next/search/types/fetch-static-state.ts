@@ -1,11 +1,11 @@
 import type {ControllerStaticState, ControllersPropsMap} from '../../common/types/controllers.js';
 import type {EngineStaticState} from '../../common/types/engine.js';
 import type {BuildConfig} from './build.js';
-import type {BakedInSearchControllers} from './controller-definition.js';
 import type {
-  InferControllerFromDefinition,
-  InferControllerPropsFromDefinition,
-} from './controller-inference.js';
+  AugmentedControllerDefinition,
+  BakedInSearchControllers,
+} from './controller-definition.js';
+import type {InferControllerFromDefinition} from './controller-inference.js';
 import type {SearchControllerDefinitionsMap} from './engine.js';
 
 /**
@@ -20,23 +20,21 @@ import type {SearchControllerDefinitionsMap} from './engine.js';
  *
  * @typeParam TControllers - The controllers of the engine definition.
  */
-export type SearchStaticState<TControllers extends SearchControllerDefinitionsMap> =
-  EngineStaticState<
-    {
-      [K in keyof TControllers]: ControllerStaticState<
-        InferControllerFromDefinition<TControllers[K]>['state']
-      > &
-        InferControllerPropsFromDefinition<TControllers[K]>;
-    } & {
-      [K in keyof BakedInSearchControllers]: ControllerStaticState<
-        BakedInSearchControllers[K]['state']
-      >;
-    }
-  > &
-    BuildConfig & {
-      /**
-       * The controller props that were passed to `fetchStaticState()` through the `controllers` option.
-       * `hydrateStaticState()` reuses them to rebuild the controllers with the same props.
-       */
-      controllerProps?: ControllersPropsMap;
-    };
+export interface SearchStaticState<TControllers extends SearchControllerDefinitionsMap>
+  extends
+    EngineStaticState<{
+      [
+        K in keyof AugmentedControllerDefinition<TControllers>
+      ]: K extends keyof BakedInSearchControllers
+        ? ControllerStaticState<BakedInSearchControllers[K]['state']>
+        : ControllerStaticState<
+            InferControllerFromDefinition<AugmentedControllerDefinition<TControllers>[K]>['state']
+          >;
+    }>,
+    BuildConfig {
+  /**
+   * The controller props that were passed to `fetchStaticState()` through the `controllers` option.
+   * `hydrateStaticState()` reuses them to rebuild the controllers with the same props.
+   */
+  controllerProps?: ControllersPropsMap;
+}
