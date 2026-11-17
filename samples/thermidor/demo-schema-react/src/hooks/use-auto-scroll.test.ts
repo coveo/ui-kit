@@ -51,8 +51,8 @@ function setup({clientHeight = 800, turns = {'turn-1': 100} as Record<string, nu
     current: new Map(Object.entries(turns).map(([id, top]) => [id, createElement(top)])),
   };
   const containerRef = {current: container};
-  const render = (latestTurnId: string | null) =>
-    renderHook(({turns}) => useAutoScroll({containerRef, turnRefs, turns}), {
+  const render = (latestTurnId: string | null, startAtEnd?: boolean) =>
+    renderHook(({turns}) => useAutoScroll({containerRef, turnRefs, turns, startAtEnd}), {
       initialProps: {turns: thread(latestTurnId)},
     });
   const turn = (id: string) => turnRefs.current.get(id)!;
@@ -66,6 +66,17 @@ describe('useAutoScroll', () => {
     render('turn-1');
 
     expect(container.scrollTo).toHaveBeenCalledWith({top: 80, behavior: 'smooth'});
+  });
+
+  it('scrolls to the end at once when it starts at the end, then to each new turn', () => {
+    const {container, render} = setup({turns: {'turn-1': 100, 'turn-2': 900}});
+    Object.defineProperty(container, 'scrollHeight', {value: 2000});
+
+    const {rerender} = render('turn-1', true);
+    expect(container.scrollTo).toHaveBeenLastCalledWith({top: 2000});
+
+    rerender({turns: thread('turn-2')});
+    expect(container.scrollTo).toHaveBeenLastCalledWith({top: 880, behavior: 'smooth'});
   });
 
   it('makes the latest turn tall enough for its start to reach the top', () => {

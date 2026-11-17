@@ -22,12 +22,17 @@ export function TopBar({drawerId, drawerOpen, onToggleDrawer, drawerToggleRef}: 
         onClick={onToggleDrawer}
       >
         <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
-          <path
-            d="M4 6h16M4 12h16M4 18h16"
+          <rect
+            x="3"
+            y="4"
+            width="18"
+            height="16"
+            rx="3"
+            fill="none"
             stroke="currentColor"
             strokeWidth="1.8"
-            strokeLinecap="round"
           />
+          <path d="M9 4v16" stroke="currentColor" strokeWidth="1.8" />
         </svg>
       </button>
       <CartButton />

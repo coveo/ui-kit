@@ -1,5 +1,5 @@
 import type {Turn} from '@coveo/thermidor';
-import {useRef} from 'react';
+import {useRef, useState} from 'react';
 import {useAutoScroll} from '../../hooks/use-auto-scroll.js';
 import {SessionSearchBox} from '../SessionSearchBox/SessionSearchBox.js';
 import {ConversationThread} from './ConversationThread.js';
@@ -26,7 +26,9 @@ export function ConversationPage({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const turnRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
-  useAutoScroll({containerRef, turnRefs, turns});
+  // A page that opens on a finished turn shows a restored conversation, from its end.
+  const [restored] = useState(() => turns.at(-1)?.status !== 'streaming');
+  useAutoScroll({containerRef, turnRefs, turns, startAtEnd: restored});
 
   return (
     <section className={styles.page}>
