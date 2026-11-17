@@ -68,6 +68,18 @@ describe('hydratedRecommendationStaticStateFactory', () => {
     ]);
   });
 
+  it('should not hand the controller snapshots to the build when the static state has no controller props', async () => {
+    const mockSolutionTypeBuild = vi.fn().mockResolvedValue(mockBuildResult);
+    vi.mocked(buildFactory).mockReturnValue(vi.fn().mockReturnValue(mockSolutionTypeBuild));
+
+    await hydratedRecommendationStaticStateFactory(
+      createControllerDefinitions(),
+      createEngineOptions()
+    )(staticState);
+
+    expect(mockSolutionTypeBuild.mock.calls[0][0]).not.toHaveProperty('controllers');
+  });
+
   it('should call buildFactory with correct parameters', async () => {
     const mockSolutionTypeBuild = vi.fn().mockResolvedValue(mockBuildResult);
     const controllerDefinitions = createControllerDefinitions();
