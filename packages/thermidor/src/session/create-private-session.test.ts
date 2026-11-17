@@ -374,6 +374,32 @@ describe('createPrivateSession', () => {
       expect(requests()[1]).toMatchObject({conversationSessionId: SESSION_ID});
     });
 
+    it.each([
+      ['drops', 'no response', undefined, 'session-1'],
+      ['keeps', 'a 503', 503, SESSION_ID],
+    ])(
+      '%s the id before retrying an initialize that got %s',
+      async (_verb, _label, status, retriedId) => {
+        vi.useFakeTimers({toFake: ['setTimeout', 'clearTimeout', 'Date']});
+        try {
+          callMock.mockImplementationOnce(
+            async () => ({success: false, error: 'Unavailable', status, transient: {}}) as never
+          );
+          answerWithTokenFor(retriedId);
+          const session = createPrivateSession(config({sessionId: SESSION_ID, initialize: true}));
+          await vi.advanceTimersByTimeAsync(1000);
+
+          expect(requests()[0]).toMatchObject({conversationSessionId: SESSION_ID});
+          expect(requests()[1].conversationSessionId).toBe(
+            retriedId === SESSION_ID ? SESSION_ID : undefined
+          );
+          expect(session.sessionId).toBe(retriedId);
+        } finally {
+          vi.useRealTimers();
+        }
+      }
+    );
+
     it('drops the id when the endpoint answers the first prompt with a 403', async () => {
       refuseNextWith(403);
       const session = createPrivateSession(config({sessionId: SESSION_ID}));

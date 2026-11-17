@@ -20,7 +20,7 @@ A second entry point, `@coveo/thermidor/private` (`src/private.ts`), is **for in
 graph TB
     subgraph "Public surface (src/index.ts)"
         CS["createSession(config)"]
-        SESSION["Session&lt;TContracts&gt;<br/>contracts · turns · initialization · surfaces · a2uiMessages · state · actionError · request<br/>subscribe · getSnapshot · dispatchAction<br/>cancel · retry · serialize"]
+        SESSION["Session&lt;TContracts&gt;<br/>contracts · turns · initialization · surfaces · a2uiMessages · state · actionError · request<br/>subscribe · getSnapshot · dispatchAction<br/>cancel · retry · retryInitialization · serialize"]
     end
 
     subgraph "Internal (not exported)"
@@ -61,7 +61,7 @@ src/
 ├── session/
 │   ├── create-session.ts          # createSession factory + shared runtime (dispatch/cancel/retry)
 │   ├── create-private-session.ts  # createPrivateSession: optional ids, client-chosen sessionId
-│   ├── request-retry.ts           # Bounded retry of 409 conflicts and of transient rejections
+│   ├── request-retry.ts           # Bounded retry of 409 conflicts and of transient initialize rejections
 │   ├── types.ts                   # Turn / TurnInput / TurnResponse domain model (ADR-010 model annex)
 │   ├── store.ts                   # Plain observable store + subscribe/notify
 │   ├── fold.ts                    # Pure fold + surface derivation (ADR-015 interim)
@@ -99,11 +99,13 @@ The runtime owns the initialize / dispatch / cancel / retry orchestration and th
 - **`cancel()`** — stops consuming the in-flight stream. A streaming initialization, or a streaming turn, opened by a prompt or by an action, keeps the partial `response` already folded and is marked `error` with `reason: 'cancelled'` (message `'Cancelled'`); an action that streams into a complete turn leaves it as it was. `request` stays set until the stopped request has unwound, so a dispatch made right after `cancel()` is withheld. A no-op when nothing is in flight.
 - **`retry(turnId)`** — re-submits the original input of the last turn, only when it is `error`: its prompt, or the action that opened it, re-sent from the surface it was dispatched from without resolving it against the active turn. Withheld like any dispatch while a request is in flight; any other `turnId` (unknown, non-error, or an earlier turn, whose answer would land before later turns' surfaces) is a no-op.
 
-Prompts and actions reach the endpoint one at a time, through `sendRequest` in `create-session.ts`, except the concurrent actions below: the Gateway processes a single request per session, and each response is a whole-node snapshot, so overlapping streams would let the last to arrive win over a newer action. A dispatch made while a request is in flight is withheld rather than queued or preempted: the integrator holds it back until the session is free, reading `request`.
+Prompts and actions reach the endpoint one at a time, through `sendRequest` in `create-session.ts`, except the concurrent actions below: the Gateway processes a single request per session, and each response is a whole-node snapshot, so overlapping streams would let the last to arrive win over a newer action. A dispatch made while a request is in flight is withheld rather than queued or preempted: the integrator holds it back until the session is free, reading `request`. The exception is an automatic `initialize` being retried (below), which the dispatch cancels before it goes ahead.
 
-The session publishes its request state in its store: `request` is the request being sent (`{kind: 'initialize'}`, `{kind: 'prompt', turnId}` or `{kind: 'action', component, name, surfaceId, sourceComponentId, turnId?}`, with no `turnId` when it streams into the initialization), or `undefined` when idle. `sendRequest` publishes it before its first `await`, so it is set as soon as the dispatch returns. Each `dispatchAction` promise resolves once its own request ends, whatever its outcome, and at once when the dispatch is withheld, which is what an optimistic update needs to end.
+The session publishes its request state in its store: `request` is the request being sent (`{kind: 'initialize'}`, `{kind: 'prompt', turnId}` or `{kind: 'action', component, name, surfaceId, sourceComponentId, turnId?}`, with no `turnId` when it streams into the initialization), or `undefined` when idle. `sendRequest` publishes it before its first `await`, so it is set as soon as the dispatch returns, unless it first waits for a preempted `initialize` to unwind. Each `dispatchAction` promise resolves once its own request ends, whatever its outcome, and at once when the dispatch is withheld, which is what an optimistic update needs to end.
 
 Every request, prompt or action, is sent through a bounded retry loop (`callWithRetry` in `src/session/request-retry.ts`, called from `executeStream`): while the Gateway answers `409` with the `errorCode` `AGENT:ACTION_IN_FLIGHT` (parsed in `src/internal/api/protocol/error-handling.ts`), the request is rebuilt and resent after a doubling backoff, for up to 30 s in total (the time spent on each rejected request included), each wait capped at 4 s and the last one cut to what is left. The budget covers an aborted agent run winding down on the Gateway, which can't cancel it upstream yet (KIT-6261). A request sent the moment `RUN_FINISHED` arrives can get a 409 too, because the Gateway commits the turn a few milliseconds later; the first retry absorbs it. The retrying request stays the one in flight, so nothing touches the turn. When the budget runs out, a prompt fails its turn; an action sets the session-level `actionError` and its dispatch ends. The wait is abortable, so `cancel()` ends it like a stream; an abort during a resent request is handled the same way, since the client reports it as a failed call rather than throwing it. `executeStream` returns a request rejected before streaming to its caller, so the prompt path fails its turn while the action path sets `actionError` (cleared when the next action or prompt is sent).
+
+The same loop retries the automatic `initialize` when the client flags a rejection as `transient` (a network error, `429`, `502`, `503` or `504`; see `readTransientFailure`): up to 3 attempts within 5 s, with a jittered doubling backoff from 500 ms that waits at least a `429`'s `Retry-After`, and no retry whose wait doesn't fit the budget. Before a retry, a client-chosen session id the failed attempt may have reserved is dropped. From the first retry until the endpoint answers, a prompt or action preempts it (`initializeRetrying`). `retryInitialization()` re-sends a failed `initialize` without these retries ([ADR-018, as amended](./internal/adr/ADR-018-session-scoped-surfaces-and-initialize.md)).
 
 ### The concurrent lane
 

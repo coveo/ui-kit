@@ -34,6 +34,7 @@ const callMock = vi.fn<
         success: false;
         error: string;
         conflict?: Record<string, never>;
+        transient?: {retryAfterMs?: number};
       }
   >
 >();
@@ -2355,6 +2356,240 @@ describe('createSession lifecycle', () => {
 
       expect(callMock).toHaveBeenCalledTimes(2);
       expect(session.turns[0].status).toBe('complete');
+    });
+
+    describe('retrying a failed initialize', () => {
+      const transientError = 'Server error: The Coveo platform is experiencing issues.';
+
+      function queueTransient(): void {
+        callMock.mockImplementationOnce(async () => ({
+          success: false,
+          error: transientError,
+          transient: {},
+        }));
+      }
+
+      function finishShell(stream: ControllableStream): void {
+        stream.emit({
+          type: 'RUN_STARTED',
+          conversationSessionId: 'gateway-session',
+          conversationToken: 'gateway-token',
+        });
+        stream.emit(shellSurface);
+        stream.emit({type: 'RUN_FINISHED'});
+        stream.close();
+      }
+
+      const sentActionName = (call: number) =>
+        (callMock.mock.calls[call][0] as {action: {name: string} | null}).action?.name;
+
+      const dispatchPrompt = (session: ReturnType<typeof createSession>) =>
+        session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+
+      beforeEach(() => {
+        vi.useFakeTimers({toFake: ['setTimeout', 'clearTimeout', 'Date']});
+        // No jitter: transient retries wait exactly 500, then 1000 ms.
+        vi.spyOn(Math, 'random').mockReturnValue(0.5);
+      });
+
+      afterEach(() => {
+        vi.useRealTimers();
+        vi.restoreAllMocks();
+      });
+
+      /** Creates a session whose automatic `initialize` fails for good. */
+      async function failedSession() {
+        callMock.mockImplementationOnce(async () => ({success: false, error: 'Unknown action'}));
+        const session = createSession(shellConfig);
+        await vi.advanceTimersByTimeAsync(0);
+        expect(session.initialization?.status).toBe('error');
+        return session;
+      }
+
+      it('retries a transient rejection of the automatic initialize after a backoff', async () => {
+        queueTransient();
+        const stream = queueStream();
+        const session = createSession(shellConfig);
+
+        await vi.advanceTimersByTimeAsync(499);
+        expect(callMock).toHaveBeenCalledTimes(1);
+        expect(session.initialization).toEqual({activities: [], status: 'streaming'});
+
+        await vi.advanceTimersByTimeAsync(1);
+        expect(sentActionName(1)).toBe('initialize');
+        finishShell(stream);
+        await vi.advanceTimersByTimeAsync(0);
+        expect(session.initialization?.status).toBe('complete');
+        expect(session.surfaces.map((surface) => surface.surfaceId)).toEqual([SHELL_ID]);
+      });
+
+      it('records the last error after 3 attempts', async () => {
+        queueTransient();
+        queueTransient();
+        queueTransient();
+        const session = createSession(shellConfig);
+
+        await vi.advanceTimersByTimeAsync(10_000);
+
+        expect(callMock).toHaveBeenCalledTimes(3);
+        expect(session.initialization).toMatchObject({status: 'error', error: transientError});
+        expect(session.request).toBeUndefined();
+      });
+
+      it('does not retry once the stream has started', async () => {
+        const stream = queueStream();
+        const session = createSession(shellConfig);
+        await stream.opened;
+
+        stream.emit({type: 'RUN_STARTED'});
+        stream.error(new Error('connection reset'));
+        await vi.advanceTimersByTimeAsync(10_000);
+
+        expect(session.initialization?.status).toBe('error');
+        expect(callMock).toHaveBeenCalledTimes(1);
+      });
+
+      it('stops retrying when cancelled during the wait', async () => {
+        queueTransient();
+        const session = createSession(shellConfig);
+        await vi.advanceTimersByTimeAsync(100);
+
+        session.cancel();
+        await vi.advanceTimersByTimeAsync(10_000);
+
+        expect(callMock).toHaveBeenCalledTimes(1);
+        expect(session.initialization).toMatchObject({status: 'error', error: 'Cancelled'});
+      });
+
+      it.each([
+        ['during the wait', 100, () => {}],
+        ['during the retried attempt', 500, () => queueAbortableCall()],
+      ])('stops retrying and sends a prompt dispatched %s', async (_label, at, queueRetry) => {
+        queueTransient();
+        queueRetry();
+        const session = createSession(shellConfig);
+        await vi.advanceTimersByTimeAsync(at);
+
+        const stream = queueStream();
+        const turn = dispatchPrompt(session);
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(session.initialization).toMatchObject({status: 'error', error: 'Cancelled'});
+        expect(session.request).toMatchObject({kind: 'prompt'});
+        stream.emit({type: 'RUN_FINISHED'});
+        stream.close();
+        await turn;
+        await vi.advanceTimersByTimeAsync(10_000);
+        expect(session.turns[0].status).toBe('complete');
+        expect(callMock).toHaveBeenCalledTimes(at === 100 ? 2 : 3);
+      });
+
+      it.each([
+        ['during the first attempt', () => queueAbortableCall()],
+        [
+          'once the retried initialize streams',
+          () => {
+            queueTransient();
+            queueStream().emit({type: 'RUN_STARTED', conversationToken: 'gateway-token'});
+          },
+        ],
+      ])('withholds a prompt dispatched %s', async (_label, queueInitialize) => {
+        queueInitialize();
+        const session = createSession(shellConfig);
+        await vi.advanceTimersByTimeAsync(500);
+        const calls = callMock.mock.calls.length;
+
+        await dispatchPrompt(session);
+
+        expect(session.request).toEqual({kind: 'initialize'});
+        expect(session.initialization?.status).toBe('streaming');
+        expect(session.turns).toEqual([]);
+        expect(callMock).toHaveBeenCalledTimes(calls);
+      });
+
+      it('retryInitialization sends initialize again from a fresh streaming run, without retrying it', async () => {
+        const session = await failedSession();
+        const stream = queueStream();
+
+        session.retryInitialization();
+
+        expect(session.initialization).toEqual({activities: [], status: 'streaming'});
+        expect(session.request).toEqual({kind: 'initialize'});
+        expect(sentActionName(1)).toBe('initialize');
+        finishShell(stream);
+        await vi.advanceTimersByTimeAsync(0);
+        expect(session.initialization?.status).toBe('complete');
+        expect(session.surfaces.map((surface) => surface.surfaceId)).toEqual([SHELL_ID]);
+
+        const again = await failedSession();
+        queueTransient();
+        again.retryInitialization();
+        await vi.advanceTimersByTimeAsync(10_000);
+        expect(again.initialization).toMatchObject({status: 'error', error: transientError});
+      });
+
+      it.each<[string, () => Promise<ReturnType<typeof createSession>>]>([
+        [
+          'without an initialization',
+          async () => {
+            const session = createSession(baseConfig);
+            await vi.advanceTimersByTimeAsync(0);
+            return session;
+          },
+        ],
+        [
+          'while the initialization streams',
+          async () => {
+            queueStream();
+            const session = createSession(shellConfig);
+            await vi.advanceTimersByTimeAsync(0);
+            return session;
+          },
+        ],
+        [
+          'once the initialization is complete',
+          async () => {
+            const stream = queueStream();
+            const session = createSession(shellConfig);
+            await vi.advanceTimersByTimeAsync(0);
+            finishShell(stream);
+            await vi.advanceTimersByTimeAsync(0);
+            return session;
+          },
+        ],
+        [
+          'while another request is in flight',
+          async () => {
+            const session = await failedSession();
+            queueStream();
+            void dispatchPrompt(session);
+            return session;
+          },
+        ],
+        [
+          'once the session has a token',
+          async () => {
+            const stream = queueStream();
+            const session = createSession(shellConfig);
+            await vi.advanceTimersByTimeAsync(0);
+            stream.emit({type: 'RUN_STARTED', conversationToken: 'gateway-token'});
+            stream.emit({type: 'RUN_ERROR', message: 'Agent failed'});
+            stream.close();
+            await vi.advanceTimersByTimeAsync(0);
+            return session;
+          },
+        ],
+      ])('retryInitialization does nothing %s', async (_label, setUp) => {
+        const session = await setUp();
+        const {initialization, request} = session;
+        const calls = callMock.mock.calls.length;
+
+        session.retryInitialization();
+
+        expect(session.initialization).toBe(initialization);
+        expect(session.request).toBe(request);
+        expect(callMock).toHaveBeenCalledTimes(calls);
+      });
     });
 
     it('keeps the initialization cancelled when cancelled while awaiting data', async () => {
