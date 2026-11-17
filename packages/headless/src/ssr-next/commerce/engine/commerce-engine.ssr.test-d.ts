@@ -10,6 +10,7 @@ import type {ControllerDefinitionsMap} from '../types/controller-definitions.js'
 import type {InferHydratedState, InferStaticState} from '../types/controller-inference.js';
 import type {CommerceStaticState} from '../types/fetch-static-state.js';
 import type {CommerceHydratedState} from '../types/hydrate-static-state.js';
+import type {CommerceEngineDefinition} from '../types/engine.js';
 import {defineCommerceEngine} from './commerce-engine.ssr.js';
 
 const controllers = {
@@ -95,6 +96,18 @@ describe('defineCommerceEngine', () => {
     expectTypeOf<
       InferStaticState<typeof recommendationEngineDefinition>['controllers']['popularViewed']
     >().not.toHaveProperty('productId');
+  });
+
+  it('should let code that is generic over the solution type reach cart and context', () => {
+    function readUniversalControllers<TSolutionType extends SolutionType>(
+      staticState: InferStaticState<CommerceEngineDefinition<{}, TSolutionType>>,
+      hydratedState: InferHydratedState<CommerceEngineDefinition<{}, TSolutionType>>
+    ) {
+      expectTypeOf(staticState.controllers.cart).toHaveProperty('state');
+      expectTypeOf(hydratedState.controllers.cart).toHaveProperty('empty');
+      expectTypeOf(hydratedState.controllers.context).toHaveProperty('state');
+    }
+    expectTypeOf(readUniversalControllers).toBeFunction();
   });
 
   it('should hydrate the controllers of the page as live controllers', () => {

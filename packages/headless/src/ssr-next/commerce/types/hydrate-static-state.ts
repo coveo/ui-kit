@@ -1,13 +1,10 @@
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import type {SolutionType} from './controller-constants.js';
-import type {
-  BakedInControllerDefinitions,
-  BakedInControllers,
-  ControllerDefinitionsMap,
-} from './controller-definitions.js';
+import type {BakedInControllers, ControllerDefinitionsMap} from './controller-definitions.js';
 import type {
   AvailableControllerNames,
+  BakedInControllerNames,
   InferControllerFromDefinition,
 } from './controller-inference.js';
 
@@ -32,8 +29,6 @@ export interface CommerceHydratedState<
       TControllers[K & keyof TControllers]
     >;
   } & {
-    [
-      K in AvailableControllerNames<BakedInControllerDefinitions, TSolutionType>
-    ]: BakedInControllers[K];
+    [K in BakedInControllerNames<TSolutionType>]: BakedInControllers[K];
   };
 }

@@ -112,11 +112,13 @@ export interface CommerceEngineDefinition<
    *
    * @example
    * ```typescript
-   * // Client-side hydration
-   * const result = await engineDefinition.hydrateStaticState(staticState);
+   * // In the browser, with `productList: defineProductList()` and `pagination: definePagination()`
+   * // in the engine definition
+   * const {engine, controllers} = await listingEngineDefinition.hydrateStaticState(staticState);
    *
    * // Controllers are now interactive
-   * result.controllers.productListing.sort({ criterion: 'price' });
+   * controllers.productList.state.products;
+   * controllers.pagination.nextPage();
    * ```
    */
   hydrateStaticState: (
