@@ -83,10 +83,10 @@ level. Option D below.
   a microtask so that a listener subscribed in the same task sees it start. On the wire it is
   `action: {name: 'initialize', context: {}}`: it has an envelope type of its own, without
   `surfaceId` and `sourceComponentId`, which stay required for every other action.
-- **At most once.** A session created with its keys (`sessionId` and `sessionToken`), or restored
-  with a token, sends it carrying them: the Agent Gateway resumes that session and rebuilds its
-  shell, or starts a new one with new keys, which the session adopts.
-  [Amended](#amendment-restoring-a-session-through-initialize) for restored sessions.
+- **At most once.** A session created with its keys (`sessionId` and `sessionToken`) sends it
+  carrying them: the Agent Gateway resumes that session and rebuilds its shell, or starts a new one
+  with new keys, which the session adopts. For a restored session, see
+  [the amendment](#amendment-restoring-a-session-through-initialize).
 - **An ordinary request.** It goes through the one-request rule and the conflict retry, and it
   adopts the session id and token from its run, like a prompt. While it is in flight,
   `session.request` is `{kind: 'initialize'}`, so an application can draw its disabled search box
@@ -228,16 +228,21 @@ shell and its search box stayed disabled. The Agent Gateway now resumes a sessio
 - **Resume.** A session restored with a `sessionToken` sends `initialize` with its keys, at most
   once, unless created with `initialize: false`. Without a token there is no session to resume,
   and it sends none, as before.
-- **The new shell replaces the old.** The resuming run replaces the restored initialization, so
-  the restored shell leaves `session.surfaces` and the new one is live.
+- **The new shell replaces the old.** The resume answers with a new shell id, as the Agent Gateway
+  and the mock converse service do: the session's activity log puts the initialization first, so a
+  reused id would let the restored turns' operations win. The restored shell stays until the
+  resume's first activity, so a resume that fails or is cancelled before it leaves the old shell in
+  place. Then the run's activities replace the restored initialization's, and the old shell's state
+  is dropped and a `deleteSurface` for it reaches `a2uiMessages`.
 - **Restored turns are read-only.** The transcript is redrawn from the serialized activities, but
   its surfaces are snapshots of an earlier page. A surface whose latest `createSurface` came from a
   restored turn is listed with `readOnly: true`, and `dispatchAction` and `retry` refuse its
   actions without a request. The restored initialization's surfaces stay live: without a resume,
   they are still the session's shell.
 - **Fallback.** When the resuming `initialize` answers with another `conversationSessionId`, the
-  session adopts the new keys and drops the restored turns, their state and `actionError`, in one
-  change that subscribers see. The new shell stays.
+  session adopts the new keys and drops the restored turns and shell, their state and
+  `actionError`, in one change that subscribers see, and `a2uiMessages` gets a `deleteSurface` for
+  each dropped surface. The new shell stays.
 
 ## Considered Options
 

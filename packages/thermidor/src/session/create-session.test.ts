@@ -2239,7 +2239,7 @@ describe('createSession lifecycle', () => {
         return {session, changes};
       }
 
-      it('resumes a session that has a token through initialize, at most once, with its keys', async () => {
+      it('resumes a session that has a token through initialize, at most once, with a live new shell', async () => {
         const {session} = await resumed(await serializedConversation(), {
           conversationSessionId: 'gateway-session',
           conversationToken: 'gateway-token',
@@ -2263,17 +2263,12 @@ describe('createSession lifecycle', () => {
           },
         ]);
         expect(session.turns[0].response.surfaces[0].readOnly).toBe(true);
-      });
+        expect(session.a2uiMessages).toContainEqual({
+          version: 'v0.9',
+          deleteSurface: {surfaceId: SHELL_ID},
+        });
+        expect(session.state).not.toHaveProperty(SHELL_ID);
 
-      it("refuses the actions of restored surfaces without a request, and sends the new shell's", async () => {
-        const serialized = await serializedConversation();
-        const restored = createSession({...baseConfig, sessionToRestore: serialized});
-
-        await restored.dispatchAction(answerSelectPage);
-        expect(callMock).not.toHaveBeenCalled();
-        expect(restored.surfaces.map((surface) => surface.readOnly)).toEqual([undefined, true]);
-
-        const {session} = await resumed(serialized, {conversationToken: 'gateway-token'});
         callMock.mockReset();
         await session.dispatchAction(answerSelectPage);
         expect(callMock).not.toHaveBeenCalled();
@@ -2290,6 +2285,41 @@ describe('createSession lifecycle', () => {
         });
       });
 
+      it.each([
+        [
+          'fails',
+          () => {
+            callMock.mockImplementationOnce(async () => ({success: false, error: 'Unavailable'}));
+          },
+        ],
+        [
+          'is cancelled',
+          () => {
+            queueStream();
+          },
+        ],
+      ])(
+        'keeps the restored shell when the resume %s before it sends anything',
+        async (_, answer) => {
+          const serialized = await serializedConversation();
+          answer();
+          const session = createSession({...shellConfig, sessionToRestore: serialized});
+          await vi.waitFor(() => expect(callMock).toHaveBeenCalledTimes(1));
+          session.cancel();
+          await vi.waitFor(() => expect(session.request).toBeUndefined());
+
+          expect(session.initialization?.status).toBe('error');
+          expect(session.surfaces[0]).toEqual({
+            surfaceId: SHELL_ID,
+            rootComponentType: 'CommerceSearch',
+            isLoading: false,
+          });
+          expect(session.serialize().initialization?.activities).toEqual(
+            serialized.initialization?.activities
+          );
+        }
+      );
+
       it('drops the restored transcript when initialize answers with another session', async () => {
         const {session, changes} = await resumed(await serializedConversation(), {
           conversationSessionId: 'other-session',
@@ -2302,20 +2332,54 @@ describe('createSession lifecycle', () => {
         expect(session.turns).toEqual([]);
         expect(session.surfaces.map((surface) => surface.surfaceId)).toEqual([NEW_SHELL_ID]);
         expect(session.surfaces[0].readOnly).toBeUndefined();
+        for (const surfaceId of [SHELL_ID, ANSWER_ID]) {
+          expect(session.a2uiMessages).toContainEqual({
+            version: 'v0.9',
+            deleteSurface: {surfaceId},
+          });
+        }
         expect(session.serialize()).toMatchObject({turns: [], sessionId: 'other-session'});
         expect(session.serialize().activeTurnId).toBeUndefined();
         expect(session.serialize().state).toBeUndefined();
       });
 
-      it('never sends initialize for a restored session with initialize: false', async () => {
+      it('never sends initialize with initialize: false, and refuses the actions of restored turns', async () => {
         const restored = createSession({
           ...baseConfig,
           sessionToRestore: await serializedConversation(),
         });
         await flush();
+        await restored.dispatchAction(answerSelectPage);
 
         expect(callMock).not.toHaveBeenCalled();
         expect(restored.initialization?.status).toBe('complete');
+        expect(restored.surfaces.map((surface) => surface.readOnly)).toEqual([undefined, true]);
+      });
+
+      it('sends nothing when retrying a failed restored turn opened from a restored surface', async () => {
+        const serialized = await serializedConversation();
+        serialized.turns.push({
+          id: 'failed-turn',
+          input: {
+            action: {
+              component: 'Pagination',
+              name: 'selectPage',
+              surfaceId: ANSWER_ID,
+              sourceComponentId: 'answer-pagination',
+              context: {page: 2},
+            },
+          },
+          status: 'error',
+          error: 'Agent failed',
+          response: {activities: []},
+        });
+        const restored = createSession({...baseConfig, sessionToRestore: serialized});
+
+        restored.retry('failed-turn');
+        await flush();
+
+        expect(callMock).not.toHaveBeenCalled();
+        expect(restored.turns[1].status).toBe('error');
       });
 
       it('never sends initialize for a restored session without a token', async () => {
