@@ -1,4 +1,4 @@
-import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
+import {cleanup, fireEvent, render, screen, waitFor, within} from '@testing-library/react';
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import {AppShell} from './AppShell.js';
 import {SessionProvider, type DemoSession} from '../context/session.js';
@@ -114,10 +114,15 @@ describe('AppShell with the session shell', () => {
     await screen.findByLabelText('A2-UI surface answer-1');
   });
 
-  it("keeps a restored conversation's blocks read-only, and its search box usable", async () => {
+  it("keeps a restored conversation's earlier blocks read-only, its last one and its search box live", async () => {
     const local = memoryStorage();
     const tab = memoryStorage();
     const storage = createConversationStorage({local: () => local, session: () => tab});
+    let answers = 0;
+    const answerEachPrompt: ConverseHandler = (request, signal) =>
+      typeof request.message === 'string'
+        ? sseResponse(answerRun(`answer-${++answers}`))
+        : answerShell(request, signal);
     const renderTab = (handler: ConverseHandler) => {
       const test = createTestSessionFactory(handler);
       let session: DemoSession | undefined;
@@ -131,27 +136,39 @@ describe('AppShell with the session shell', () => {
       );
       return {actions: test.actions, session: () => session!};
     };
-    renderTab(answerPrompts);
-    const textarea = await findSearchBox();
-    fireEvent.change(textarea, {target: {value: 'kayaks'}});
-    fireEvent.keyDown(textarea, {key: 'Enter', code: 'Enter'});
-    await screen.findByLabelText('A2-UI surface answer-1');
-    await waitFor(() => expect(storage.list()).toHaveLength(1));
+    const chipOf = (surfaceId: string) =>
+      within(screen.getByLabelText(`A2-UI surface ${surfaceId}`)).getByRole('button', {
+        name: 'Show me kayaks',
+      });
+    renderTab(answerEachPrompt);
+    for (const [prompt, surfaceId] of [
+      ['kayaks', 'answer-1'],
+      ['canoes', 'answer-2'],
+    ]) {
+      const textarea = await findSearchBox();
+      fireEvent.change(textarea, {target: {value: prompt}});
+      fireEvent.keyDown(textarea, {key: 'Enter', code: 'Enter'});
+      await screen.findByLabelText(`A2-UI surface ${surfaceId}`);
+    }
+    await waitFor(() => expect(storage.load(storage.list()[0].id)?.turns).toHaveLength(2));
     cleanup();
 
     let resume = () => {};
     const {actions, session} = renderTab((request, signal) =>
       request.action?.name === 'initialize'
         ? new Promise((resolve) => (resume = () => resolve(sseResponse(shellRun('shell-2')))))
-        : answerPrompts(request, signal)
+        : answerEachPrompt(request, signal)
     );
 
-    expect(await screen.findByText('Restored results. Search again to refine.')).toBeDefined();
-    expect(screen.getByRole('button', {name: 'Show me kayaks'}).matches(':disabled')).toBe(true);
+    const notes = await screen.findAllByText('Restored results. Search again to refine.');
+    expect(notes).toHaveLength(1);
+    expect(notes[0].closest('fieldset')?.contains(chipOf('answer-1'))).toBe(true);
     // The restored shell stays usable while the session resumes, then the resumed one replaces it.
     expect((await findSearchBox()).disabled).toBe(false);
     resume();
     await waitFor(() => expect(session().getSnapshot().request).toBeUndefined());
+    expect(chipOf('answer-1').matches(':disabled')).toBe(true);
+    expect(chipOf('answer-2').matches(':disabled')).toBe(false);
     fireEvent.change(await findSearchBox(), {target: {value: 'paddles'}});
     await waitFor(() =>
       expect(actions('fetchSuggestions').at(-1)).toMatchObject({
