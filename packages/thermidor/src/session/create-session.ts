@@ -47,8 +47,10 @@ import {createConcurrentActions} from './concurrent-actions.js';
 import {callWithConflictRetry} from './conflict-retry.js';
 import {
   EMPTY_RENDERER_STREAM,
+  RENDERER_PROTOCOL_VERSION,
   appendToRendererStream,
   convertA2uiMessages,
+  type RendererStream,
 } from './a2ui-v09-projection.js';
 import {createTurn, foldActivity, foldInitialization, SURFACE_ACTIVITY_KIND} from './fold.js';
 import {deriveNodeIdentityRegistry} from './in-transit-validation.js';
@@ -181,8 +183,9 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
    * transcript and continuity keys (`sessionId`/`sessionToken`/`activeTurnId`)
    * so the restored session continues the same backend conversation. The surfaces its turns
    * created are {@link DiscoveredSurface.readOnly | read-only}. When it has a token, its
-   * `initialize` resumes the session with a new, live shell; if the endpoint answers with another
-   * session instead, the restored turns are dropped.
+   * `initialize` resumes the session: the restored shell stays until the endpoint answers with a
+   * new, live shell under a new id. If the endpoint answers with another session instead, the
+   * restored turns are dropped, and `a2uiMessages` deletes their surfaces.
    */
   sessionToRestore?: SerializedSession;
   /**
@@ -541,6 +544,9 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     config.sessionToRestore ? initialState.turns.flatMap((turn) => turn.response.activities) : []
   );
 
+  // While a resume streams, the restored shell stays until the resume's first activity replaces it.
+  let holdsRestoredShell = false;
+
   let surfaceView: SessionSurfaceView | undefined;
   let surfaceViewSource:
     | {turns: readonly Turn[]; initialization?: SessionInitialization; request?: SessionRequest}
@@ -672,19 +678,48 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     }
   }
 
-  /**
-   * The state once the `initialize` that resumes a session is answered by another session: the
-   * turns, and the state of surfaces the new initialization did not create, belong to the old one.
-   */
-  function withoutTranscript(current: SessionStoreState<Turn>): SessionStoreState<Turn> {
-    const kept = deriveNodeIdentityRegistry(current.initialization?.activities ?? []);
+  /** Drops the `dropped` surfaces' state, and deletes them from the renderer stream. */
+  function withoutSurfaces(
+    current: SessionStoreState<Turn>,
+    dropped: (surfaceId: string) => boolean
+  ): SessionStoreState<Turn> {
+    const stream: RendererStream = current.rendererStream ?? EMPTY_RENDERER_STREAM;
+    const deletions = [...stream.liveSurfaceIds]
+      .filter(dropped)
+      .map((surfaceId) => ({version: RENDERER_PROTOCOL_VERSION, deleteSurface: {surfaceId}}));
     return {
       ...current,
+      state: Object.fromEntries(
+        Object.entries(current.state ?? {}).filter(([surfaceId]) => !dropped(surfaceId))
+      ),
+      rendererStream: appendToRendererStream(stream, deletions),
+    };
+  }
+
+  /** Replaces the restored shell, held while the resume streams, with what the resume sends. */
+  function withoutRestoredShell(current: SessionStoreState<Turn>): SessionStoreState<Turn> {
+    if (!holdsRestoredShell || !current.initialization) {
+      return current;
+    }
+    holdsRestoredShell = false;
+    const restoredShell = deriveNodeIdentityRegistry(current.initialization.activities);
+    return {
+      ...withoutSurfaces(current, (surfaceId) => restoredShell.has(surfaceId)),
+      initialization: {...current.initialization, activities: []},
+    };
+  }
+
+  /**
+   * The state once the `initialize` that resumes a session is answered by another session: the
+   * turns, the restored shell, and their surfaces' state and renderer surfaces belong to the old one.
+   */
+  function withoutTranscript(stored: SessionStoreState<Turn>): SessionStoreState<Turn> {
+    const current = withoutRestoredShell(stored);
+    const kept = deriveNodeIdentityRegistry(current.initialization?.activities ?? []);
+    return {
+      ...withoutSurfaces(current, (surfaceId) => !kept.has(surfaceId)),
       turns: [],
       activeTurnId: undefined,
-      state: Object.fromEntries(
-        Object.entries(current.state ?? {}).filter(([surfaceId]) => kept.has(surfaceId))
-      ),
       unrecordedState: undefined,
       actionError: undefined,
     };
@@ -727,10 +762,14 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
    * session's state and appends its messages to the renderer stream, in one change.
    */
   function foldEvent(target: RunTarget, event: NormalizedStreamEvent): void {
-    store.setState((current) => {
+    store.setState((stored) => {
+      const current =
+        target.kind === 'initialization' && event.type === 'ACTIVITY_SNAPSHOT'
+          ? withoutRestoredShell(stored)
+          : stored;
       const next = foldIntoRun(current, target, event);
       if (next === current) {
-        return current;
+        return stored;
       }
       const snapshot = event as unknown as {activityType?: string; content?: unknown};
       const content = snapshot.content as Record<string, unknown> | undefined;
@@ -1069,9 +1108,14 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   /** Its run is recorded as the initialization, never as a turn. */
   function initialize(): Promise<void> {
     return sendRequest({kind: 'initialize'}, async (abortController) => {
+      // A resume that fails or is cancelled before it sends anything leaves the restored shell.
+      const restoredShell = config.sessionToRestore
+        ? (store.getState().initialization?.activities ?? [])
+        : [];
+      holdsRestoredShell = restoredShell.length > 0;
       store.setState((current) => ({
         ...current,
-        initialization: {activities: [], status: 'streaming'},
+        initialization: {activities: restoredShell, status: 'streaming'},
       }));
       const failure = await executeStream(
         INITIALIZATION,
@@ -1268,11 +1312,11 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     return registry.get(surfaceId)?.get(sourceComponentId);
   }
 
-  function isReadOnly(surfaceId: string): boolean {
+  function isReadOnly(surfaceId: string, caller: 'dispatchAction' | 'retry'): boolean {
     if (!readSurfaceView().readOnlySurfaceIds.has(surfaceId)) {
       return false;
     }
-    devWarn(`dispatchAction: surface "${surfaceId}" is a restored, read-only one; nothing sent.`);
+    devWarn(`${caller}: surface "${surfaceId}" is a restored, read-only one; nothing sent.`);
     return true;
   }
 
@@ -1297,7 +1341,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
       );
       return withhold();
     }
-    if (isReadOnly(surfaceId)) {
+    if (isReadOnly(surfaceId, 'dispatchAction')) {
       return withhold();
     }
 
@@ -1359,7 +1403,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
    * any surface of the session, so it is not resolved against the active turn.
    */
   function retryAction(turnId: string, action: TurnAction): void {
-    if (isReadOnly(action.surfaceId)) {
+    if (isReadOnly(action.surfaceId, 'retry')) {
       return;
     }
     const a2uiAction: A2uiAction = {
