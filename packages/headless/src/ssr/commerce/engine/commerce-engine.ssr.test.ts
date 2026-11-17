@@ -204,6 +204,24 @@ describe('Commerce Engine SSR', () => {
       expect(deprecationWarnings('`fetchStaticState.fromBuildResult`')).toHaveLength(0);
     });
 
+    it('does not log a deprecation warning when #hydrateStaticState is called', async () => {
+      const staticState = await standaloneEngineDefinition.fetchStaticState({
+        controllers: {cart: {initialState: {items: []}}},
+      });
+      vi.mocked(buildLogger).mockClear();
+
+      await standaloneEngineDefinition.hydrateStaticState({
+        searchActions: staticState.searchActions,
+        controllers: {cart: {initialState: {items: []}}},
+      });
+
+      expect(
+        warnings().filter(
+          (message) => typeof message === 'string' && message.startsWith('[Deprecated]')
+        )
+      ).toHaveLength(0);
+    });
+
     it('logs a deprecation warning when #fetchStaticState.fromBuildResult is called', async () => {
       const buildResult = await standaloneEngineDefinition.build({
         controllers: {cart: {initialState: {items: []}}},
@@ -211,6 +229,25 @@ describe('Commerce Engine SSR', () => {
       await standaloneEngineDefinition.fetchStaticState.fromBuildResult({buildResult});
 
       expect(deprecationWarnings('`fetchStaticState.fromBuildResult`')).toHaveLength(1);
+    });
+
+    it('logs a deprecation warning once per definition when #hydrateStaticState.fromBuildResult is called', async () => {
+      const staticState = await standaloneEngineDefinition.fetchStaticState({
+        controllers: {cart: {initialState: {items: []}}},
+      });
+      const buildResult = await standaloneEngineDefinition.build({
+        controllers: {cart: {initialState: {items: []}}},
+      });
+      await standaloneEngineDefinition.hydrateStaticState.fromBuildResult({
+        buildResult,
+        searchActions: staticState.searchActions,
+      });
+      await standaloneEngineDefinition.hydrateStaticState.fromBuildResult({
+        buildResult,
+        searchActions: staticState.searchActions,
+      });
+
+      expect(deprecationWarnings('`hydrateStaticState.fromBuildResult`')).toHaveLength(1);
     });
 
     it('logs a deprecation warning when the #extend build option is used', async () => {

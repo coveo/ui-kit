@@ -261,7 +261,7 @@ export function defineSearchEngine<
     setNavigatorContextProvider: deprecate(
       setNavigatorContextProvider,
       '`setNavigatorContextProvider`',
-      'Pass a per-request `navigatorContext` to `fetchStaticState()` and `hydrateStaticState()` instead, or a `navigatorContextProvider` to `defineSearchEngine()`.'
+      'Pass a per-request `navigatorContext` to `fetchStaticState()` and `hydrateStaticState()` instead.'
     ),
     getAccessToken: deprecate(
       getAccessToken,
