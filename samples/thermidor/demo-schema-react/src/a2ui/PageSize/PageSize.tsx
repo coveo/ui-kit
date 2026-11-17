@@ -1,8 +1,9 @@
-import {useId, useOptimistic} from 'react';
+import {useId, useOptimistic, useRef} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {PageSizeAction} from '@coveo/thermidor-schema';
 import {PageSizePropsSchema} from '@coveo/thermidor-schema/zod3';
 import {useGesture} from '../session-request.js';
+import {usePageChangeFocus} from '../use-page-change-focus.js';
 import styles from './PageSize.module.css';
 
 const DEFAULT_PAGE_SIZE_OPTIONS = [12, 24, 48];
@@ -15,6 +16,8 @@ export const PageSize = createReactComponent(
 
     const [pageSize, addOptimisticPageSize] = useOptimistic(props.pageSize);
     const startGesture = useGesture();
+    const container = useRef<HTMLDivElement>(null);
+    const markPageChange = usePageChangeFocus(container, 'PageSize', 'setPageSize');
 
     // The producer's size must stay selectable while another one is held.
     const currentPageSize = typeof pageSize === 'number' ? pageSize : undefined;
@@ -33,13 +36,16 @@ export const PageSize = createReactComponent(
         event: {name: 'setPageSize', context: {pageSize: newSize}},
       };
       startGesture(
-        () => addOptimisticPageSize(newSize),
+        () => {
+          markPageChange();
+          addOptimisticPageSize(newSize);
+        },
         () => context.dispatchAction(setPageSizeAction)
       );
     };
 
     return (
-      <div className={styles.container}>
+      <div ref={container} className={styles.container}>
         <label className={styles.label} htmlFor={selectId}>
           <strong>Products per page:</strong>
         </label>
