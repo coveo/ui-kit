@@ -76,6 +76,34 @@ const WITH_PRODUCTS = [
   },
 ] as unknown as A2uiV09Message[];
 
+/** The same surface showing a product list of one grouped product. */
+const WITH_GROUPED_LIST = [
+  ...surfaceMessages(SURFACE_ID),
+  {
+    version: 'v0.9',
+    updateComponents: {
+      surfaceId: SURFACE_ID,
+      components: [
+        {id: ROOT_COMPONENT_ID, component: 'ProductList', products: {path: '/state/root/products'}},
+      ],
+    },
+  },
+  {
+    version: 'v0.9',
+    updateDataModel: {
+      surfaceId: SURFACE_ID,
+      path: '/state/root/products',
+      value: [
+        {
+          ...WETSUIT,
+          children: [WETSUIT, {...WETSUIT, permanentid: 'wetsuit-blue', ec_name: 'Wetsuit, blue'}],
+          totalNumberOfChildren: 2,
+        },
+      ],
+    },
+  },
+] as unknown as A2uiV09Message[];
+
 const MESSAGES = surfaceMessages(SURFACE_ID);
 
 /** A session whose request in flight locks the surface, or that is idle. */
@@ -174,6 +202,16 @@ describe('TurnSurfaces', () => {
       'https://example.com/wetsuit'
     );
     expect(isDisabled(pageSizeSelect())).toBe(true);
+  });
+
+  it('promotes a child in an earlier turn', async () => {
+    render(<Turn interactive={false} messages={WITH_GROUPED_LIST} />);
+
+    const thumbnail = await screen.findByRole('button', {name: 'Wetsuit, blue'});
+    expect(isDisabled(thumbnail)).toBe(false);
+    fireEvent.click(thumbnail);
+
+    expect(screen.getByRole('heading', {name: 'Wetsuit, blue'})).toBeDefined();
   });
 
   it('keeps an earlier turn readable by assistive technology', async () => {
