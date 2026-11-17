@@ -34,7 +34,7 @@ export interface SearchParameterActionCreators {
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
-   * @deprecated This action will be removed in V4. Use `loadTabSetActions(engine).updateActiveTab` instead.
+   * @deprecated This action will be removed in V4. Use `loadTabSetActions(engine).updateActiveTab` instead. It also resets pagination and deselects the facets hidden on that tab, so dispatch it before restoring them.
    */
   restoreTab(payload: string): PayloadAction<string>;
 }
@@ -63,7 +63,8 @@ export function loadSearchParameterActions(engine: CoreEngine): SearchParameterA
       engine.logger,
       restoreTab,
       '`restoreTab`',
-      'Use `loadTabSetActions(engine).updateActiveTab` instead.'
+
+      'Use `loadTabSetActions(engine).updateActiveTab` instead. It also resets pagination and deselects the facets hidden on that tab, so dispatch it before restoring them.'
     ),
   };
 }

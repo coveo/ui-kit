@@ -20,7 +20,9 @@ describe('#loadSearchParameterActions', () => {
 
       expect(engine.logger.warn).toHaveBeenCalledOnce();
       expect(engine.logger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('Use `loadTabSetActions(engine).updateActiveTab` instead.')
+        expect.stringContaining(
+          'Use `loadTabSetActions(engine).updateActiveTab` instead. It also resets pagination and deselects the facets hidden on that tab, so dispatch it before restoring them.'
+        )
       );
     });
   });

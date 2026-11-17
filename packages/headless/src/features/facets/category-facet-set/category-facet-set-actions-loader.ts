@@ -123,7 +123,7 @@ export function loadCategoryFacetSetActions(engine: SearchEngine): CategoryFacet
       registerCategoryFacet,
       'The `activeTab` option of `registerCategoryFacet`',
       'Omit it, since Headless reads the active tab from the engine state.',
-      (payload) => payload.activeTab !== undefined
+      (payload) => payload?.activeTab !== undefined
     ),
     toggleSelectCategoryFacetValue,
     updateCategoryFacetNumberOfValues,

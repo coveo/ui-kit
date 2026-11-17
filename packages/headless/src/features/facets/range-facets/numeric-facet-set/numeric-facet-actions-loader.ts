@@ -107,7 +107,7 @@ export function loadNumericFacetSetActions(engine: CoreEngine): NumericFacetSetA
       registerNumericFacet,
       'The `activeTab` option of `registerNumericFacet`',
       'Omit it, since Headless reads the active tab from the engine state.',
-      (payload) => payload.activeTab !== undefined
+      (payload) => payload?.activeTab !== undefined
     ),
     toggleSelectNumericFacetValue,
     toggleExcludeNumericFacetValue,

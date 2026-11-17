@@ -147,7 +147,7 @@ export function loadFacetSetActions(engine: SearchEngine): FacetSetActionCreator
       registerFacet,
       'The `activeTab` option of `registerFacet`',
       'Omit it, since Headless reads the active tab from the engine state.',
-      (payload) => payload.activeTab !== undefined
+      (payload) => payload?.activeTab !== undefined
     ),
     toggleSelectFacetValue,
     toggleExcludeFacetValue,

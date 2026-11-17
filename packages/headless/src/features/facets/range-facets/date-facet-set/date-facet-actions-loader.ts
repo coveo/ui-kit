@@ -107,7 +107,7 @@ export function loadDateFacetSetActions(engine: CoreEngine): DateFacetSetActionC
       registerDateFacet,
       'The `activeTab` option of `registerDateFacet`',
       'Omit it, since Headless reads the active tab from the engine state.',
-      (payload) => payload.activeTab !== undefined
+      (payload) => payload?.activeTab !== undefined
     ),
     toggleSelectDateFacetValue,
     toggleExcludeDateFacetValue,

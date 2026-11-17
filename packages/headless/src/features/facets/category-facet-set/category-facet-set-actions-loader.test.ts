@@ -17,6 +17,15 @@ describe('#loadCategoryFacetSetActions', () => {
       expect(engine.logger.warn).not.toHaveBeenCalled();
     });
 
+    it('does not throw nor log a deprecation warning when the payload is missing', () => {
+      const engine = buildMockSearchEngine(createMockState());
+      const actions = loadCategoryFacetSetActions(engine);
+
+      expect(() => actions.registerCategoryFacet(undefined as unknown as Payload)).not.toThrow();
+      expect(() => actions.registerCategoryFacet(null as unknown as Payload)).not.toThrow();
+      expect(engine.logger.warn).not.toHaveBeenCalled();
+    });
+
     it('logs a deprecation warning once per engine when the payload has an #activeTab', () => {
       const engine = buildMockSearchEngine(createMockState());
       const actions = loadCategoryFacetSetActions(engine);
