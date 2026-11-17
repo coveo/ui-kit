@@ -2,8 +2,6 @@ import {useCallback, useEffect, useRef} from 'react';
 import type {Turn} from '@coveo/thermidor';
 
 const MARGIN_TOP = 20;
-const END_SETTLED_FRAMES = 10;
-const END_MAX_FRAMES = 120;
 
 interface UseAutoScrollOptions {
   containerRef: React.RefObject<HTMLDivElement | null>;
@@ -20,31 +18,27 @@ function turnOffset(container: HTMLElement, turn: HTMLElement): number {
   );
 }
 
+const USER_SCROLL_EVENTS = ['wheel', 'touchstart', 'pointerdown', 'keydown'] as const;
+
 /**
- * Scrolls `container` to its end on each frame until its height settles, as restored blocks grow
- * while they render, or until the shopper scrolls. Returns what stops it.
+ * Keeps `container` scrolled to its end while its content grows, as restored blocks do while they
+ * render, until the shopper scrolls, presses or types in it. Returns what stops it.
  */
 function followEnd(container: HTMLElement): () => void {
-  let frame = 0;
-  let height = -1;
-  let settledFrames = 0;
-  let frames = 0;
-  const step = () => {
-    container.scrollTo({top: container.scrollHeight});
-    settledFrames = container.scrollHeight === height ? settledFrames + 1 : 0;
-    height = container.scrollHeight;
-    if (settledFrames < END_SETTLED_FRAMES && ++frames < END_MAX_FRAMES) {
-      frame = requestAnimationFrame(step);
-    }
+  let stopped = false;
+  const toEnd = () => {
+    if (!stopped) container.scrollTo({top: container.scrollHeight});
   };
+  const frame = requestAnimationFrame(toEnd);
+  const observer = new ResizeObserver(toEnd);
+  for (const child of container.children) observer.observe(child);
   const stop = () => {
+    stopped = true;
     cancelAnimationFrame(frame);
-    container.removeEventListener('wheel', stop);
-    container.removeEventListener('touchstart', stop);
+    observer.disconnect();
+    for (const type of USER_SCROLL_EVENTS) container.removeEventListener(type, stop);
   };
-  container.addEventListener('wheel', stop);
-  container.addEventListener('touchstart', stop);
-  frame = requestAnimationFrame(step);
+  for (const type of USER_SCROLL_EVENTS) container.addEventListener(type, stop);
   return stop;
 }
 

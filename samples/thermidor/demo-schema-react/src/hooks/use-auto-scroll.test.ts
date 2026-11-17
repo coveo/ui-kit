@@ -79,32 +79,25 @@ describe('useAutoScroll', () => {
     expect(container.scrollTo).toHaveBeenLastCalledWith({top: 880, behavior: 'smooth'});
   });
 
-  it('follows the end while the restored content grows, until the shopper scrolls', () => {
-    const frames = new Map<number, () => void>();
-    let nextFrame = 0;
-    vi.stubGlobal('requestAnimationFrame', (callback: () => void) => {
-      frames.set(++nextFrame, callback);
-      return nextFrame;
-    });
-    vi.stubGlobal('cancelAnimationFrame', (frame: number) => frames.delete(frame));
-    const runFrame = () => {
-      const [[frame, callback]] = frames;
-      frames.delete(frame);
-      callback();
-    };
-    const {container, render} = setup();
-    let height = 1000;
-    Object.defineProperty(container, 'scrollHeight', {get: () => height});
+  it.each(['wheel', 'touchstart', 'pointerdown', 'keydown'])(
+    'follows the end while the restored content grows, until a %s',
+    (type) => {
+      const {container, render} = setup();
+      container.append(document.createElement('div'));
+      let height = 1000;
+      Object.defineProperty(container, 'scrollHeight', {get: () => height});
 
-    render('turn-1', true);
-    runFrame();
-    height = 1500;
-    runFrame();
-    expect(container.scrollTo).toHaveBeenLastCalledWith({top: 1500});
+      render('turn-1', true);
+      height = 1500;
+      resizeCallbacks.forEach((callback) => callback());
+      expect(container.scrollTo).toHaveBeenLastCalledWith({top: 1500});
 
-    container.dispatchEvent(new Event('wheel'));
-    expect(frames.size).toBe(0);
-  });
+      container.dispatchEvent(new Event(type));
+      height = 2000;
+      resizeCallbacks.forEach((callback) => callback());
+      expect(container.scrollTo).toHaveBeenLastCalledWith({top: 1500});
+    }
+  );
 
   it('makes the latest turn tall enough for its start to reach the top', () => {
     const {turn, render} = setup({clientHeight: 500});
