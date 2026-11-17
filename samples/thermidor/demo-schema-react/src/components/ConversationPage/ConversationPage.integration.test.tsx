@@ -6,18 +6,12 @@ import {makeFollowUpTurn, makeSurfaces, makeTurn} from '../../test/turn-fixtures
 import {findSearchBox, renderWithSession} from '../../test/session.js';
 
 // The blocks are drawn by the A2-UI renderer; the page only decides where each turn's blocks go
-// and whether they are interactive.
+// and whether they belong to the latest turn.
 vi.mock('../../a2ui/surfaces.js', async (importOriginal) => ({
   ...(await importOriginal<typeof import('../../a2ui/surfaces.js')>()),
-  TurnSurfaces: ({
-    surfaces,
-    interactive,
-  }: {
-    surfaces: {surfaceId: string}[];
-    interactive: boolean;
-  }) =>
+  TurnSurfaces: ({surfaces, latest}: {surfaces: {surfaceId: string}[]; latest: boolean}) =>
     surfaces.length === 0 ? null : (
-      <div data-testid="turn-surfaces" data-interactive={String(interactive)}>
+      <div data-testid="turn-surfaces" data-latest={String(latest)}>
         {surfaces.map((surface) => surface.surfaceId).join(',')}
       </div>
     ),
@@ -117,7 +111,7 @@ describe('ConversationPage integration', () => {
       renderPage({turns});
 
       expect(
-        screen.getAllByTestId('turn-surfaces').map((block) => block.dataset['interactive'])
+        screen.getAllByTestId('turn-surfaces').map((block) => block.dataset['latest'])
       ).toEqual(['false', 'true']);
     });
 

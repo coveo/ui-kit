@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react';
+import {useContext, useEffect, useRef, useState} from 'react';
 import type {CommerceSearchAction, RestoreStatePayload} from '@coveo/thermidor-schema';
 import {
   useActionError,
@@ -6,6 +6,7 @@ import {
   useSessionBusy,
   useSurfaceActionInFlight,
 } from '../session-request.js';
+import {RestoredSurfacesContext} from '../surface-controls.js';
 import {buildRestoreSnapshot} from './restore-snapshot.js';
 
 /** The part of a renderer component context that the search history reads. */
@@ -47,11 +48,13 @@ function snapshotOf(context: SearchSurfaceContext): RestoreStatePayload | undefi
 /**
  * Keeps the browser history in step with a commerce-search surface: each search the surface
  * settles on becomes a history entry, and going back or forward to one of its entries restores
- * that search with `restoreState`.
+ * that search with `restoreState`. A restored surface, which the session refuses every action of,
+ * keeps no history.
  */
 export function useSearchHistory(context: SearchSurfaceContext): void {
+  const restored = useContext(RestoredSurfacesContext);
   // A context built from a bare data model has no surface, so it keeps no history.
-  const surfaceId = context.dataContext.surface?.id ?? '';
+  const surfaceId = restored ? '' : (context.dataContext.surface?.id ?? '');
   const busy = useSessionBusy();
   // The surface may hold its state before it mounts, so its first render counts as a change.
   const [stateVersion, setStateVersion] = useState(1);

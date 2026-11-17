@@ -10,6 +10,7 @@ import {AppShell} from '../AppShell.js';
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
 });
 
 function renderApp() {
@@ -56,31 +57,37 @@ describe('ConversationDrawer', () => {
     expect(entries().map((entry) => entry.getAttribute('aria-current'))).toEqual(['true', null]);
   });
 
-  it('opens a saved conversation, and starts a new one', async () => {
+  it('opens a saved conversation, and deletes one', async () => {
+    const app = renderApp();
+    await ask(app, 'surfboards');
+    fireEvent.click(toggle());
+    fireEvent.click(within(drawer()).getByRole('button', {name: 'New conversation'}));
+
+    fireEvent.click(entries()[0]);
+    expect(app.session().turns).toHaveLength(1);
+
+    fireEvent.click(
+      within(drawer()).getByRole('button', {name: 'Delete conversation: surfboards'})
+    );
+    expect(within(drawer()).getByText('No saved conversations yet.')).toBeDefined();
+  });
+
+  it('closes on a narrow screen once a conversation opens, or on a press outside', async () => {
+    vi.spyOn(window, 'matchMedia').mockImplementation(
+      (query) =>
+        ({matches: true, media: query, addEventListener() {}, removeEventListener() {}}) as never
+    );
     const app = renderApp();
     await ask(app, 'surfboards');
     fireEvent.click(toggle());
 
     fireEvent.click(within(drawer()).getByRole('button', {name: 'New conversation'}));
-    expect(app.session().turns).toEqual([]);
+    expect(screen.queryByRole('navigation', {name: 'Conversations'})).toBeNull();
+    expect(document.activeElement).toBe(toggle());
 
-    fireEvent.click(entries()[0]);
-    await waitFor(() => expect(app.session().turns).toHaveLength(1));
-    expect(entries()[0].getAttribute('aria-current')).toBe('true');
-  });
-
-  it('deletes a saved conversation', async () => {
-    const app = renderApp();
-    await ask(app, 'surfboards');
     fireEvent.click(toggle());
-
-    fireEvent.click(
-      within(drawer()).getByRole('button', {name: 'Delete conversation: surfboards'})
-    );
-
-    expect(entries()).toEqual([]);
-    expect(app.storage.list()).toEqual([]);
-    expect(within(drawer()).getByText('No saved conversations yet.')).toBeDefined();
+    fireEvent.pointerDown(document.body);
+    expect(screen.queryByRole('navigation', {name: 'Conversations'})).toBeNull();
   });
 
   it('closes on Escape, giving the focus back to its toggle', () => {

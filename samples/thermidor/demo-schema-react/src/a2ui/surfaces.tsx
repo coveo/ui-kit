@@ -14,7 +14,7 @@ import type {A2uiV09Message, DiscoveredSurface} from '@coveo/thermidor';
 import {turnSurfacesTarget} from './results-focus.js';
 import {A2UISkeleton} from './Skeleton/Skeleton.js';
 import {useActionError, useSurfaceLocked} from './session-request.js';
-import {EarlierTurnContext} from './surface-controls.js';
+import {EarlierTurnContext, RestoredSurfacesContext} from './surface-controls.js';
 import styles from './surfaces.module.css';
 
 /** The control a pointer press lands on, through its label when the press is on one. */
@@ -81,7 +81,7 @@ interface TurnSurfacesProps {
    * on the surface are disabled (see `actsOnSurface`), while their products can still be opened and
    * added to the cart.
    */
-  interactive: boolean;
+  latest: boolean;
   /** Whether the turn these surfaces belong to is still streaming. */
   isStreaming: boolean;
 }
@@ -91,7 +91,7 @@ interface TurnSurfacesProps {
  * component type, in the place its content will take. Surfaces never scroll the page: the
  * conversation keeps the turn they belong to in view.
  */
-export function TurnSurfaces({surfaces, interactive: latest, isStreaming}: TurnSurfacesProps) {
+export function TurnSurfaces({surfaces, latest, isStreaming}: TurnSurfacesProps) {
   const restored = surfaces.some((surface) => surface.readOnly);
   const interactive = latest && !restored;
   const surfaceIds = useMemo(() => surfaces.map((surface) => surface.surfaceId), [surfaces]);
@@ -147,22 +147,24 @@ export function TurnSurfaces({surfaces, interactive: latest, isStreaming}: TurnS
         </legend>
       )}
       <EarlierTurnContext.Provider value={!interactive}>
-        {surfaces.map(({surfaceId, rootComponentType, isLoading}) => {
-          return (
-            <section
-              className="catalog-surface"
-              aria-label={`A2-UI surface ${surfaceId}`}
-              key={surfaceId}
-            >
-              {isLoading ? (
-                <A2UISkeleton componentType={rootComponentType} />
-              ) : (
-                <A2UIRenderer surfaceId={surfaceId} />
-              )}
-              <ActionErrorNote surfaceId={surfaceId} />
-            </section>
-          );
-        })}
+        <RestoredSurfacesContext.Provider value={restored}>
+          {surfaces.map(({surfaceId, rootComponentType, isLoading}) => {
+            return (
+              <section
+                className="catalog-surface"
+                aria-label={`A2-UI surface ${surfaceId}`}
+                key={surfaceId}
+              >
+                {isLoading ? (
+                  <A2UISkeleton componentType={rootComponentType} />
+                ) : (
+                  <A2UIRenderer surfaceId={surfaceId} />
+                )}
+                <ActionErrorNote surfaceId={surfaceId} />
+              </section>
+            );
+          })}
+        </RestoredSurfacesContext.Provider>
       </EarlierTurnContext.Provider>
     </fieldset>
   );

@@ -1,7 +1,7 @@
-import {fireEvent, render, screen, waitFor} from '@testing-library/react';
+import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import {AppShell} from './AppShell.js';
-import {SessionProvider} from '../context/session.js';
+import {SessionProvider, type DemoSession} from '../context/session.js';
 import {createConversationStorage} from '../conversations/conversation-storage.js';
 import {memoryStorage} from '../test/memory-storage.js';
 import {
@@ -9,6 +9,7 @@ import {
   createTestSession,
   createTestSessionFactory,
   findSearchBox,
+  shellRun,
   sseResponse,
   SHELL_SURFACE_ID,
   type ConverseHandler,
@@ -113,31 +114,50 @@ describe('AppShell with the session shell', () => {
     await screen.findByLabelText('A2-UI surface answer-1');
   });
 
-  it("keeps a restored conversation's blocks read-only, and its search box usable once resumed", async () => {
+  it("keeps a restored conversation's blocks read-only, and its search box usable", async () => {
     const local = memoryStorage();
     const tab = memoryStorage();
     const storage = createConversationStorage({local: () => local, session: () => tab});
-    const renderTab = () =>
+    const renderTab = (handler: ConverseHandler) => {
+      const test = createTestSessionFactory(handler);
+      let session: DemoSession | undefined;
       render(
         <SessionProvider
-          createSession={createTestSessionFactory(answerPrompts).create}
+          createSession={(saved) => (session = test.create(saved))}
           storage={storage}
         >
           <AppShell />
         </SessionProvider>
       );
-    const first = renderTab();
+      return {actions: test.actions, session: () => session!};
+    };
+    renderTab(answerPrompts);
     const textarea = await findSearchBox();
     fireEvent.change(textarea, {target: {value: 'kayaks'}});
     fireEvent.keyDown(textarea, {key: 'Enter', code: 'Enter'});
     await screen.findByLabelText('A2-UI surface answer-1');
     await waitFor(() => expect(storage.list()).toHaveLength(1));
-    first.unmount();
+    cleanup();
 
-    renderTab();
+    let resume = () => {};
+    const {actions, session} = renderTab((request, signal) =>
+      request.action?.name === 'initialize'
+        ? new Promise((resolve) => (resume = () => resolve(sseResponse(shellRun('shell-2')))))
+        : answerPrompts(request, signal)
+    );
 
     expect(await screen.findByText('Restored results. Search again to refine.')).toBeDefined();
     expect(screen.getByRole('button', {name: 'Show me kayaks'}).matches(':disabled')).toBe(true);
+    // The restored shell stays usable while the session resumes, then the resumed one replaces it.
     expect((await findSearchBox()).disabled).toBe(false);
+    resume();
+    await waitFor(() => expect(session().getSnapshot().request).toBeUndefined());
+    fireEvent.change(await findSearchBox(), {target: {value: 'paddles'}});
+    await waitFor(() =>
+      expect(actions('fetchSuggestions').at(-1)).toMatchObject({
+        surfaceId: 'shell-2',
+        context: {query: 'paddles'},
+      })
+    );
   });
 });

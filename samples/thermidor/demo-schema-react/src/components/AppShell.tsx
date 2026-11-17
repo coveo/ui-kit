@@ -24,6 +24,12 @@ export function AppShell() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const drawerId = useId();
   const drawerToggleRef = useRef<HTMLButtonElement>(null);
+  const closeDrawer = useCallback((returnFocus: boolean) => {
+    setDrawerOpen(false);
+    if (returnFocus) {
+      drawerToggleRef.current?.focus();
+    }
+  }, []);
 
   const {turns, a2uiMessages, request} = useSyncExternalStore(
     session.subscribe,
@@ -57,10 +63,8 @@ export function AppShell() {
               {drawerOpen && (
                 <ConversationDrawer
                   id={drawerId}
-                  onClose={() => {
-                    setDrawerOpen(false);
-                    drawerToggleRef.current?.focus();
-                  }}
+                  toggleRef={drawerToggleRef}
+                  onClose={closeDrawer}
                 />
               )}
               {/* Keyed by conversation, so another conversation starts with a fresh page. */}
