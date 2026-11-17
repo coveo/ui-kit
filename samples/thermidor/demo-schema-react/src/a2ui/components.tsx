@@ -29,6 +29,7 @@ import {SessionShell} from './SessionShell/SessionShell.js';
 import {SearchBox} from './SearchBox/SearchBox.js';
 import {QuerySuggestions} from './QuerySuggestions/QuerySuggestions.js';
 import {InstantProducts} from './InstantProducts/InstantProducts.js';
+import {actsOnSurface} from './surface-controls.js';
 
 export interface ThermidorCatalogOptions {
   comparisonTable?: ComparisonTableOptions;
@@ -38,26 +39,26 @@ export interface ThermidorCatalogOptions {
 export function createThermidorCatalog(options: ThermidorCatalogOptions = {}) {
   return new Catalog(THERMIDOR_CATALOG_ID, [
     ProductCarousel,
-    NextActionsBar,
+    actsOnSurface(NextActionsBar),
     BundleDisplay,
     createComparisonTable(options.comparisonTable),
     ProductList,
     ProductSummary,
     createProductResearchCard(options.productResearchCard),
-    Pagination,
-    Sort,
-    RegularFacet,
-    NumericFacet,
-    CategoryFacet,
+    actsOnSurface(Pagination),
+    actsOnSurface(Sort),
+    actsOnSurface(RegularFacet),
+    actsOnSurface(NumericFacet),
+    actsOnSurface(CategoryFacet),
     FacetManager,
     CommerceSearch,
     LayoutStack,
-    QuerySummary,
-    PageSize,
-    Breadbox,
+    actsOnSurface(QuerySummary),
+    actsOnSurface(PageSize),
+    actsOnSurface(Breadbox),
     SessionShell,
     SearchBox,
-    QuerySuggestions,
+    actsOnSurface(QuerySuggestions),
     InstantProducts,
   ]);
 }
