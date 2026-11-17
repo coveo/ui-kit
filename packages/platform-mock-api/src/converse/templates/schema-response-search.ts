@@ -265,6 +265,8 @@ interface ProductSeed {
   rating: number;
   children?: [ChildSeed, ...ChildSeed[]];
   totalNumberOfChildren?: number;
+  // Leaves `ec_thumbnails` empty across the group, as the catalog sends them.
+  withoutThumbnails?: true;
 }
 
 // Another product of a seed's group, without imagery when it has no `image`.
@@ -536,6 +538,7 @@ const PRODUCT_SEEDS: ProductSeed[] = [
     price: 49.99,
     color: 'Red',
     rating: 4.1,
+    withoutThumbnails: true,
     children: [
       {color: 'Yellow', image: `${SHOPIFY_CDN}/5401e9d0fb34_bottom_right.webp?v=1766163669`},
       {
@@ -734,7 +737,7 @@ const products: WaterSportsProduct[] = PRODUCT_SEEDS.map((seed, index) => {
     ec_name: seed.name,
     ec_brand: seed.brand,
     ec_category: categoryFor(...seed.leaf),
-    ec_thumbnails: [image],
+    ec_thumbnails: seed.withoutThumbnails ? [] : [image],
     ec_images: [image],
     ec_price: seed.price,
     ec_in_stock: true,
@@ -759,7 +762,7 @@ const products: WaterSportsProduct[] = PRODUCT_SEEDS.map((seed, index) => {
       ...product,
       ec_color: child.color,
       ec_price: child.price ?? seed.price,
-      ec_thumbnails: images,
+      ec_thumbnails: seed.withoutThumbnails ? [] : images,
       ec_images: images,
       clickUri: `${product.clickUri}?variant=${variantId}`,
       permanentid: `gid://shopify/ProductVariant/${variantId}`,
