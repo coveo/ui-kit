@@ -1,6 +1,6 @@
 {
   "name": "@coveo/thermidor",
-  "version": "0.0.3",
+  "version": "0.9.0",
   "description": "Experimental package for a unified, framework-agnostic headless engine for search and conversational experiences",
   "license": "Apache-2.0",
   "repository": {
@@ -20,6 +20,11 @@
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
+    "./private": {
+      "types": "./dist/private.d.ts",
+      "import": "./dist/private.js",
+      "default": "./dist/private.js"
+    },
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -31,22 +36,26 @@
     "clean": "node ../../utils/ci/rm-rf.mjs dist",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:dts": "api-extractor run --local",
-    "test:dts:ci": "api-extractor run"
+    "test:dts": "api-extractor run --local && api-extractor run --local --config api-extractor.private.json",
+    "test:dts:ci": "api-extractor run && api-extractor run --config api-extractor.private.json",
+    "size": "node ../../scripts/size-limit.mjs run"
   },
   "dependencies": {
-    "@ag-ui/core": "0.0.57",
-    "@coveo/thermidor-schema": "catalog:",
-    "@reduxjs/toolkit": "catalog:",
-    "zod": "catalog:"
+    "@ag-ui/core": "0.0.59"
   },
   "devDependencies": {
-    "@microsoft/api-extractor": "7.58.12",
-    "fast-check": "4.9.0",
+    "@microsoft/api-extractor": "7.60.0",
+    "@size-limit/preset-small-lib": "catalog:",
+    "fast-check": "4.10.2",
     "publint": "catalog:",
-    "tsdown": "0.22.14",
+    "size-limit": "catalog:",
+    "tsdown": "0.23.2",
     "typescript": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "zod": "3.25.76 || ^4"
   },
   "engines": {
     "node": "^22.11.0 || ^24.11.0"

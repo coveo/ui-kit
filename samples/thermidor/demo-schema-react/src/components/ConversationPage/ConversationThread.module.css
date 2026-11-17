@@ -14,3 +14,7 @@
 .agentContent {
   width: 100%;
 }
+
+.followUp {
+  margin-top: var(--space-5);
+}

@@ -41,8 +41,9 @@ describe('atomic-generated-answer-thread-item', () => {
           ) ?? null,
         contentState:
           element.shadowRoot?.querySelector(
-            'div[id^="atomic-generated-answer-thread-item-content-"] > div[aria-hidden]'
+            'div[id^="atomic-generated-answer-thread-item-content-"][aria-hidden]'
           ) ?? null,
+        timelineColumn: element.shadowRoot?.querySelector('div[aria-hidden="true"]') ?? null,
       }),
     };
   };
@@ -99,6 +100,26 @@ describe('atomic-generated-answer-thread-item', () => {
     expect(contentRegion).toHaveAttribute('id');
     expect(titleButton).toHaveAttribute('aria-controls', contentRegion.id);
     expect(contentState).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  it('should point aria-controls at the element that is hidden when collapsed', async () => {
+    const {locators} = await renderComponent({
+      disableCollapse: false,
+      isExpanded: false,
+    });
+
+    const titleButton = locators().titleButton as HTMLButtonElement;
+    const controlled = locators().contentRegion as HTMLElement;
+
+    expect(titleButton.getAttribute('aria-controls')).toBe(controlled.id);
+    expect(controlled).toHaveAttribute('hidden');
+  });
+
+  it('should hide the decorative timeline column from assistive technology', async () => {
+    const {locators} = await renderComponent();
+
+    expect(locators().timelineColumn).toHaveAttribute('aria-hidden', 'true');
+    expect(locators().timelineColumn).toContainElement(locators().timelineDot as HTMLElement);
   });
 
   it('should render a title span when not collapsible', async () => {

@@ -1,0 +1,19 @@
+.bar {
+  position: relative;
+  /* Above the suggestions dropdown, so the cart panel paints over it. */
+  z-index: 20;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-end;
+  height: var(--header-height);
+  padding: 0 var(--space-6);
+  background: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border);
+}
+
+@media (max-width: 639px) {
+  .bar {
+    padding: 0 var(--space-4);
+  }
+}

@@ -1,0 +1,13 @@
+[
+  {
+    "name": "@coveo/atomic - loader (initial)",
+    "path": "dist/esm/loader.js",
+    "entry": "loader",
+    "limit": "4.7 kB"
+  },
+  {
+    "name": "@coveo/atomic - loader (incl. all lazy components)",
+    "path": "dist/esm/loader.js",
+    "limit": "690 kB"
+  }
+]

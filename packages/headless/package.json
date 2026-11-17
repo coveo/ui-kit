@@ -1,6 +1,6 @@
 {
   "name": "@coveo/headless",
-  "version": "3.55.4",
+  "version": "3.58.1",
   "description": "A headless library for building search experiences on the Coveo platform",
   "homepage": "https://docs.coveo.com/en/headless/latest/",
   "license": "Apache-2.0",
@@ -95,7 +95,8 @@
     "build:typedoc:recommendation": "typedoc --json ./temp/recommendation.json --tsconfig tsconfig.typedoc.json --options typedoc-configs/recommendation.typedoc.json",
     "build:typedoc:ssr": "typedoc --json ./temp/ssr.json --tsconfig tsconfig.typedoc.json --options typedoc-configs/ssr.typedoc.json",
     "build:typedoc:ssr-commerce": "typedoc --json ./temp/ssr-commerce.json --tsconfig tsconfig.typedoc.json --options typedoc-configs/ssr-commerce.typedoc.json",
-    "serve:typedoc": "live-server ./docs"
+    "serve:typedoc": "live-server ./docs",
+    "size": "node ../../scripts/size-limit.mjs run"
   },
   "dependencies": {
     "@ag-ui/client": "catalog:",
@@ -107,21 +108,23 @@
     "coveo.analytics": "workspace:*",
     "dayjs": "catalog:",
     "exponential-backoff": "catalog:",
-    "fast-equals": "6.0.0",
+    "fast-equals": "6.0.3",
     "headers-polyfill": "5.0.1",
     "navigator.sendbeacon": "0.0.20",
     "pino": "10.3.1",
     "redux-thunk": "3.1.0",
-    "reselect": "5.2.0"
+    "reselect": "5.3.0"
   },
   "devDependencies": {
     "@coveo/documentation": "workspace:*",
+    "@size-limit/preset-small-lib": "catalog:",
     "esbuild-plugin-alias": "0.2.1",
     "esbuild-plugin-umd-wrapper": "catalog:",
     "jsdom": "catalog:",
     "live-server": "catalog:",
     "node-fetch": "catalog:",
     "publint": "catalog:",
+    "size-limit": "catalog:",
     "typedoc": "catalog:",
     "vitest": "catalog:"
   },

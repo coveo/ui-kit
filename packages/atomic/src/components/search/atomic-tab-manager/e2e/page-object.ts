@@ -38,7 +38,7 @@ export class TabManagerPageObject extends BasePageObject {
   }
 
   get generatedAnswer() {
-    return this.page.getByText('Generated answer', {exact: true});
+    return this.page.getByText('AI-generated answer', {exact: true});
   }
 
   get sortDropdown() {

@@ -59,7 +59,7 @@ export const getAnalyticsContext = async (request: Request): Promise<CoveoAnalyt
     visitorIdCookieValue = await coveo_visitorId.parse(request.headers.get('Cookie'));
   }
 
-  // When `shouldCapture(request)` evaluates to `true`, the `visitorIdCookieValue` will be defined unless the user has
+  // When `shouldCapture(request)` evaluates to `true`, the `visitorIdCookieValue` will be defined unless the user has
   // deleted the `coveo_visitorId` cookie but not the `coveo_capture` cookie. This is the only case where generating a
   // new `clientId` on the server is useful, as otherwise the server-side request would have to be made with
   // `capture: false` due to the lack of a `clientId`.

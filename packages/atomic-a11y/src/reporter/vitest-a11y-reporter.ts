@@ -1,7 +1,14 @@
 import {mkdir, writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import type {AxeResults, Result as AxeRuleResult} from 'axe-core';
-import type {Reporter, SerializedError, TestCase, TestModule, TestRunEndReason} from 'vitest/node';
+import type {
+  Reporter,
+  SerializedError,
+  TestCase,
+  TestModule,
+  TestRunEndReason,
+  Vitest,
+} from 'vitest/node';
 
 import {getCriteriaForRule, getIncompleteMessage, isAxeResults} from './axe-integration.js';
 import {buildA11yReport} from './report-builder.js';
@@ -14,7 +21,6 @@ import {
   type StorybookInteractiveReport,
   type StorybookTaskMeta,
 } from './reporter-utils.js';
-import {resolveShardInfo, type ShardInfo} from './shard-resolution.js';
 import {extractComponentName, normalizePath} from './storybook-extraction.js';
 
 const REPORTER_NAME = 'VitestA11yReporter';
@@ -80,9 +86,9 @@ interface ViolationRecord {
  *
  * ## Output
  *
- * - `a11y-report.json` — written when running without the `--shard` CLI flag.
- * - `a11y-report.shard-N.json` — written instead when running with
- *   the `--shard` CLI flag (the base file is skipped to avoid incomplete data).
+ * - `a11y-report.json` — always written.
+ * - `a11y-report.shard-N.json` — also written when Vitest runs shard N, whether
+ *   the shard comes from the `--shard` CLI flag or the `test.shard` config option.
  *
  * @example
  * ```ts
@@ -99,7 +105,7 @@ interface ViolationRecord {
 export class VitestA11yReporter implements Reporter {
   private readonly componentResults = new Map<string, ComponentAccumulator>();
   private readonly outputFile: string;
-  private readonly shardInfo: ShardInfo | null;
+  private shardIndex: number | null = null;
   private readonly packageMetadata: PackageMetadata;
   private readonly failOnViolations: boolean;
   private readonly violations: ViolationRecord[] = [];
@@ -107,10 +113,17 @@ export class VitestA11yReporter implements Reporter {
 
   public constructor(options: A11yReporterOptions) {
     this.outputFile = options.outputFile;
-    this.shardInfo = resolveShardInfo();
     this.packageMetadata = readPackageMetadata(options.packageJsonPath);
     this.failOnViolations = options.failOnViolations ?? true;
     this.resetRunState();
+  }
+
+  /**
+   * Reads the shard from Vitest's resolved config, which is not available
+   * yet when the reporter is constructed in the config file.
+   */
+  public onInit(vitest: Vitest): void {
+    this.shardIndex = vitest.config.shard?.index ?? null;
   }
 
   /**
@@ -400,14 +413,14 @@ export class VitestA11yReporter implements Reporter {
   }
 
   private getOutputPaths(): string[] {
-    if (!this.shardInfo) {
+    if (this.shardIndex === null) {
       return [this.outputFile];
     }
 
     const dir = path.dirname(this.outputFile);
     const ext = path.extname(this.outputFile);
     const base = path.basename(this.outputFile, ext);
-    const shardOutputPath = path.resolve(dir, `${base}.shard-${this.shardInfo.index}${ext}`);
+    const shardOutputPath = path.resolve(dir, `${base}.shard-${this.shardIndex}${ext}`);
 
     return [this.outputFile, shardOutputPath];
   }

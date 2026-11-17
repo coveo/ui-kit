@@ -689,7 +689,7 @@
     <name>quantic_Slide</name>
   </customLabels>
   <customLabels>
-    <label>Réponse générée</label>
+    <label>Réponse générée par l'IA</label>
     <name>quantic_GeneratedAnswerForYou</name>
   </customLabels>
   <customLabels>
@@ -757,7 +757,7 @@
     <name>quantic_GeneratedAnswerIsHidden</name>
   </customLabels>
   <customLabels>
-    <label>Réponse générée: {{0}}</label>
+    <label>Réponse générée par l'IA : {{0}}</label>
     <name>quantic_AnswerGenerated</name>
   </customLabels>
   <customLabels>
@@ -773,8 +773,12 @@
     <name>quantic_GeneratedAnswerOff</name>
   </customLabels>
   <customLabels>
-    <label>Le contenu généré peut contenir des erreurs. Vérifiez les informations importantes.</label>
+    <label>Le contenu généré par l'IA peut contenir des erreurs. Vérifiez les informations importantes.</label>
     <name>quantic_RGADisclaimer</name>
+  </customLabels>
+  <customLabels>
+    <label>Le contenu généré par l'IA peut contenir des erreurs. Vérifiez les informations importantes.</label>
+    <name>quantic_RGADisclaimerAnnouncement</name>
   </customLabels>
   <customLabels>
     <label>Voir plus</label>
@@ -791,6 +795,10 @@
   <customLabels>
     <label>Champ de recherche avec suggestions. Des suggestions pourraient être disponibles sous ce champ. Pour envoyer, appuyez sur Entrée.</label>
     <name>quantic_SearchFieldWithSuggestions</name>
+  </customLabels>
+  <customLabels>
+    <label>Recherche...</label>
+    <name>quantic_SearchBoxPlaceholder</name>
   </customLabels>
   <customLabels>
     <label>{{0}} suggestion de recherche a été trouvée, pour naviguer utilisez les flèches haut et bas.</label>
@@ -963,5 +971,21 @@
   <customLabels>
     <label>Je n'aime pas</label>
     <name>quantic_Dislike</name>
+  </customLabels>
+    <customLabels>
+    <label>Charger plus de résultats</label>
+    <name>quantic_LoadMoreResults</name>
+  </customLabels>
+  <customLabels>
+    <label>Affichage de {{0}} résultat sur {{1}}</label>
+    <name>quantic_ShowingResultsOfLoadMore</name>
+  </customLabels>
+  <customLabels>
+    <label>Affichage de {{0}} résultats sur {{1}}</label>
+    <name>quantic_ShowingResultsOfLoadMore_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>Tous les résultats ont été chargés.</label>
+    <name>quantic_AllResultsLoaded</name>
   </customLabels>
 </Translations>

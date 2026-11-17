@@ -1,0 +1,82 @@
+.container {
+  position: relative;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  border-radius: 999px;
+  padding: var(--space-2) var(--space-4);
+  font: inherit;
+  cursor: pointer;
+}
+
+.count {
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: var(--font-size-xs);
+  line-height: 20px;
+  text-align: center;
+}
+
+.panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + var(--space-2));
+  width: min(360px, calc(100vw - 32px));
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-md);
+  padding: var(--space-4);
+  z-index: 20;
+}
+
+.empty {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: var(--space-2);
+  align-items: center;
+  font-size: var(--font-size-sm);
+}
+
+.quantity {
+  display: inline-flex;
+  gap: var(--space-1);
+  align-items: center;
+}
+
+.quantity button,
+.remove {
+  border: 1px solid var(--color-border);
+  background: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font: inherit;
+  padding: 0 var(--space-2);
+}
+
+.total {
+  margin: var(--space-3) 0 0;
+  font-weight: 600;
+  text-align: right;
+}

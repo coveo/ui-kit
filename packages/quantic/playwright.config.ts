@@ -1,13 +1,19 @@
 import {defineConfig, devices} from '@playwright/test';
+import {loadScratchOrgEnvironment} from './playwright/scratch-org-environment';
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-import dotenv from 'dotenv';
-import path from 'path';
-dotenv.config({path: path.resolve(__dirname, '.env/Quantic__LWS_enabled.env')});
-dotenv.config({path: path.resolve(__dirname, '.env/Quantic__LWS_disabled.env')});
+const {lwsEnabledUrl, lwsDisabledUrl} = loadScratchOrgEnvironment(__dirname);
+
+function shardFromEnv() {
+  const shard = process.env.TEST_SHARD;
+  if (!shard) {
+    return null;
+  }
+  const match = /^(\d+)\/(\d+)$/.exec(shard);
+  if (!match) {
+    throw new Error(`TEST_SHARD must be <current>/<total>, got "${shard}"`);
+  }
+  return {current: Number(match[1]), total: Number(match[2])};
+}
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -15,6 +21,8 @@ dotenv.config({path: path.resolve(__dirname, '.env/Quantic__LWS_disabled.env')})
 export default defineConfig({
   testDir: './force-app',
   testMatch: '*.e2e.ts',
+  shard: shardFromEnv(),
+  globalSetup: './playwright/global-setup.ts',
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -24,7 +32,9 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 4 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: process.env.CI ? [['list'], ['blob']] : [['html'], ['list']],
+  reporter: process.env.CI
+    ? [['list'], ['blob'], ['../../utils/ci/playwright-record-reporter.mjs']]
+    : [['html'], ['list']],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
@@ -41,14 +51,14 @@ export default defineConfig({
       name: 'LWS-enabled',
       use: {
         ...devices['Desktop Chrome'],
-        baseURL: process.env.Quantic__LWS_enabled_URL,
+        baseURL: lwsEnabledUrl,
       },
     },
     {
       name: 'LWS-disabled',
       use: {
         ...devices['Desktop Chrome'],
-        baseURL: process.env.Quantic__LWS_disabled_URL,
+        baseURL: lwsDisabledUrl,
       },
     },
   ],

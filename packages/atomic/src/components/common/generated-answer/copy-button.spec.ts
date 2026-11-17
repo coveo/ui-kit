@@ -113,4 +113,16 @@ describe('#renderCopyButton', () => {
 
     expect(icon).toBeInTheDocument();
   });
+
+  it('should name the button with aria-label rather than relying on title alone', async () => {
+    const element = await renderComponent({title: 'Copy answer'});
+
+    expect(locators(element).button).toHaveAttribute('aria-label', 'Copy answer');
+  });
+
+  it('should hide the decorative icon from assistive technology', async () => {
+    const element = await renderComponent();
+
+    expect(locators(element).icon).toHaveAttribute('aria-hidden', 'true');
+  });
 });

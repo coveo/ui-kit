@@ -119,6 +119,17 @@ describe('withTailwindStyles decorator', () => {
     });
   });
 
+  it('should adopt the same global stylesheet in every component type', async () => {
+    const element = await fixture(html`<test-tailwind-element></test-tailwind-element>`);
+    const otherElement = await fixture(
+      html`<test-tailwind-element-no-styles></test-tailwind-element-no-styles>`
+    );
+    const [globalStylesheet] = element.shadowRoot!.adoptedStyleSheets;
+
+    expect(globalStylesheet).toBeInstanceOf(CSSStyleSheet);
+    expect(otherElement.shadowRoot!.adoptedStyleSheets[0]).toBe(globalStylesheet);
+  });
+
   it('should adopt Tailwind properties stylesheet on document', async () => {
     await fixture(html`<test-tailwind-element></test-tailwind-element>`);
 

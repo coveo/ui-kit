@@ -208,6 +208,9 @@ function markComponentImportsAsSideEffectful(
   configType: 'DEVELOPMENT' | 'PRODUCTION' | undefined
 ): Plugin {
   const absolutePathToRoot = resolve(__dirname, '..');
+  // CDN builds load the components from the CDN's atomic.esm.js (see preview.ts), so their imports
+  // are dropped. Chromatic and the Playwright e2e build bundle the components from source instead.
+  const dropComponentImports = configType === 'PRODUCTION' && !isChromatic && !isPlaywright;
   return {
     name: 'mark-components-as-side-effectful',
     enforce: 'pre',
@@ -220,8 +223,7 @@ function markComponentImportsAsSideEffectful(
         if (filePathRelativeToRoot.match(/^src\/components\/\w*\/([\w-]*)\/\1(\.js)?$/)) {
           const resolution = await this.resolve(id, source, options);
 
-          if (configType === 'PRODUCTION' && !isChromatic) {
-            // Drop component imports for CDN builds by resolving to virtual empty module
+          if (dropComponentImports) {
             return {
               id: `\0virtual-empty:${resolution!.id}`,
               moduleSideEffects: false,
@@ -234,8 +236,7 @@ function markComponentImportsAsSideEffectful(
       return null;
     },
     load(id) {
-      if (configType === 'PRODUCTION' && !isChromatic && id.startsWith('\0virtual-empty:')) {
-        // Return empty exports for stubbed components
+      if (dropComponentImports && id.startsWith('\0virtual-empty:')) {
         return 'export default {};';
       }
       return null;

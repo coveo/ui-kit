@@ -32,17 +32,14 @@ export const loader = async ({params, request, url}: Route.LoaderArgs) => {
   const {deserialize} = buildParameterSerializer();
   const parameters = deserialize(url.searchParams);
 
-  const listingEngineDefinition = await getEngineDefinition(
-    navigatorContext,
-    request,
-    SolutionType.listing
-  );
+  const listingEngineDefinition = await getEngineDefinition(request, SolutionType.listing);
 
   const baseFetchStaticStateConfiguration = await getBaseFetchStaticStateConfiguration(
     `/browse/promotions/${params.listingId}`
   );
 
   const listingStaticState = await listingEngineDefinition.fetchStaticState({
+    navigatorContext,
     controllers: {
       ...baseFetchStaticStateConfiguration.controllers,
       parameterManager: {
@@ -54,12 +51,12 @@ export const loader = async ({params, request, url}: Route.LoaderArgs) => {
   });
 
   const recommendationEngineDefinition = await getEngineDefinition(
-    navigatorContext,
     request,
     SolutionType.recommendation
   );
 
   const recsStaticState = await recommendationEngineDefinition.fetchStaticState({
+    navigatorContext,
     controllers: {
       ...baseFetchStaticStateConfiguration.controllers,
       popularViewedRecs: {enabled: true},

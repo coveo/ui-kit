@@ -62,9 +62,10 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  render: () => html`<div id="code-root">
-    <atomic-commerce-facets></atomic-commerce-facets>
-  </div>`,
+  render: () =>
+    html`<div id="code-root">
+      <atomic-commerce-facets></atomic-commerce-facets>
+    </div>`,
   play: async (context) => {
     await play(context);
     await hideFacetTypesHook('atomic-commerce-category-facet', context);

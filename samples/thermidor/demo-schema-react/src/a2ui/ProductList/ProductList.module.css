@@ -4,6 +4,12 @@
   gap: var(--space-4);
 }
 
+.grid:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 4px;
+  border-radius: var(--radius-lg);
+}
+
 @media (min-width: 640px) {
   .grid {
     grid-template-columns: repeat(2, 1fr);
@@ -55,12 +61,20 @@
 }
 
 .imageWrapper {
+  position: relative;
   aspect-ratio: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--space-3);
   overflow: hidden;
+}
+
+.badges {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  right: var(--space-2);
 }
 
 .image {
@@ -79,6 +93,7 @@
 }
 
 .content {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
@@ -127,4 +142,9 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
   text-decoration: line-through;
+}
+
+.actions {
+  display: flex;
+  padding: 0 var(--space-4) var(--space-4);
 }

@@ -56,6 +56,7 @@ describe('atomic-pager', () => {
     pagerState,
     searchStatusState,
     isAppLoaded = true,
+    containerWidth,
   }: {
     props?: Partial<{
       numberOfPages: number;
@@ -65,6 +66,7 @@ describe('atomic-pager', () => {
     pagerState?: Partial<PagerState>;
     searchStatusState?: Partial<SearchStatusState>;
     isAppLoaded?: boolean;
+    containerWidth?: number;
   } = {}) => {
     vi.mocked(buildPager).mockReturnValue(buildFakePager({state: {maxPage: 5, ...pagerState}}));
     vi.mocked(buildSearchStatus).mockReturnValue(
@@ -77,11 +79,13 @@ describe('atomic-pager', () => {
 
     const {element} = await renderInAtomicSearchInterface<AtomicPager>({
       template: html`
-        <atomic-pager
-          number-of-pages=${ifDefined(props.numberOfPages)}
-          previous-button-icon=${ifDefined(props.previousButtonIcon)}
-          next-button-icon=${ifDefined(props.nextButtonIcon)}
-        ></atomic-pager>
+        <div style=${ifDefined(containerWidth ? `width: ${containerWidth}px` : undefined)}>
+          <atomic-pager
+            number-of-pages=${ifDefined(props.numberOfPages)}
+            previous-button-icon=${ifDefined(props.previousButtonIcon)}
+            next-button-icon=${ifDefined(props.nextButtonIcon)}
+          ></atomic-pager>
+        </div>
       `,
       selector: 'atomic-pager',
       bindings: (bindings) => {
@@ -585,6 +589,22 @@ describe('atomic-pager', () => {
     await expect.element(locators.page1).toHaveAttribute('aria-label', 'Page 1');
     await expect.element(locators.previous).toHaveAttribute('aria-label', 'Previous');
     await expect.element(locators.next).toHaveAttribute('aria-label', 'Next');
+  });
+
+  it('should display fewer page buttons on a single row when they do not fit in the available width', async () => {
+    const element = await renderPager({
+      pagerState: {currentPage: 5, maxPage: 10},
+      containerWidth: 272,
+    });
+
+    await expect.element(locators.page3).not.toBeInTheDocument();
+    await expect.element(locators.page4).toBeInTheDocument();
+    await expect.element(locators.page5).toHaveAttribute('aria-current', 'page');
+    await expect.element(locators.page6).toBeInTheDocument();
+    const buttonTops = Array.from(element.shadowRoot!.querySelectorAll('button')).map(
+      (button) => button.getBoundingClientRect().top
+    );
+    expect(new Set(buttonTops).size).toBe(1);
   });
 
   it('should use keyed directive for page buttons', async () => {

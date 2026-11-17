@@ -145,7 +145,7 @@ interface BaseSubControllerProps<S extends SummaryState> {
   errorSelector: (state: CommerceEngineState) => CommerceAPIErrorStatusResponse | null;
   pageSelector: (state: CommerceEngineState) => number;
   perPageSelector: (state: CommerceEngineState) => number;
-  totalEntriesSelector: (state: CommerceEngineState) => number;
+  totalProductsSelector: (state: CommerceEngineState) => number;
   fetchProductsActionCreator: FetchProductsActionCreator;
   fetchMoreProductsActionCreator: FetchProductsActionCreator;
   enrichSummary?: (state: CommerceEngineState) => Partial<S>;
@@ -319,7 +319,7 @@ export function buildBaseSubControllers<S extends SummaryState>(
     slotId,
     pageSelector,
     perPageSelector,
-    totalEntriesSelector,
+    totalProductsSelector,
     enrichSummary,
   } = subControllerProps;
   return {
@@ -349,7 +349,7 @@ export function buildBaseSubControllers<S extends SummaryState>(
           numberOfProductsSelector,
           pageSelector,
           perPageSelector,
-          totalEntriesSelector,
+          totalProductsSelector,
           enrichSummary,
         },
       });

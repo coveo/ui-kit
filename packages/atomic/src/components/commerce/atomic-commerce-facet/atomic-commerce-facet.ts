@@ -342,6 +342,7 @@ export class AtomicCommerceFacet
 
   private initAriaLive() {
     announceFacetSearchResultsWithAriaLive(
+      this,
       this.facet,
       this.displayName,
       (msg) => {

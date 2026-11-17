@@ -18,7 +18,6 @@
     "**/.deployment.config/**/*",
     "**/packages/atomic-legacy/**/*.tsx",
     "**/packages/atomic/**/*.d.ts",
-    "**/packages/atomic/stencil-proxy/**/*",
     "**/packages/documentation/**/assets/**/*",
     "**/packages/headless/**/coveo.analytics/**/*",
     "**/samples/headless/rga-angular/**/*.html",

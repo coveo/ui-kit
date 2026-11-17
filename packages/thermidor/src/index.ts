@@ -1,76 +1,79 @@
-export {Engine, getSampleEngineConfiguration} from '@/src/internal/engine/index.js';
-export type {EngineOptions} from '@/src/internal/engine/index.js';
-export type {Unsubscribe} from '@/src/internal/engine/index.js';
-export type {NavigatorContext, NavigatorContextProvider} from '@/src/internal/utils/index.js';
-export type {ConfigurationState} from '@/src/internal/features/configuration/index.js';
-export type {
-  CartItem,
-  SetCartItemsPayload,
-  UpdateItemQuantityPayload,
-} from '@/src/internal/features/cart/index.js';
-export type {Product} from '@/src/internal/features/product-list/index.js';
-export * from './public/actions/index.js';
-export * from './public/controllers/index.js';
+/**
+ * `@coveo/thermidor` public surface.
+ *
+ * The package exposes exactly the session-client surface: the `createSession`
+ * factory, the `Session` handle, the `Turn` / `TurnResponse` domain model, the
+ * session configuration, and the versioned serialization shape.
+ *
+ * Outbound actions reach the core through the single consumer-facing entry
+ * point {@link Session.dispatchAction}, wired directly as the renderer's
+ * `onAction` handler; the action-payload validation happens internally, so the
+ * consumer never runs Zod and writes no adapter glue.
+ *
+ * The entry is intentionally free of state-library concepts (no store, slice,
+ * selector, thunk, or reducer) and free of raw transport DTO shapes
+ * (`CommerceRequestModel`, `A2uiAction`, etc.).
+ */
 
-export {buildGenerativeInterface} from './public/interfaces/generative.js';
-export {buildGenerativeUnifiedInterface} from './public/interfaces/generative-unified.js';
-export {buildSearchInterface} from './public/interfaces/search.js';
-export {buildCommerceInterface} from './public/interfaces/commerce.js';
+// ── Session factory + handle ────────────────────────────────────────────────
+export {createSession} from '@/src/session/create-session.js';
 export type {
-  BuildGenerativeInterfaceOptions,
-  GenerativeInterface,
-} from './public/interfaces/generative.js';
+  Session,
+  SessionConfig,
+  SessionSnapshot,
+  A2uiClientMessage,
+  SubmitPromptAction,
+} from '@/src/session/create-session.js';
+
+// ── Injected-contract type (the runtime's decoupling seam) ───────────────────
 export type {
-  BuildGenerativeUnifiedInterfaceOptions,
-  GenerativeUnifiedInterface,
-} from './public/interfaces/generative-unified.js';
-export type {BuildSearchInterfaceOptions, SearchInterface} from './public/interfaces/search.js';
+  ContractsSchema,
+  ComponentContractSchema,
+  ComponentActionNames,
+  ParsableSchema,
+  SafeParseResult,
+  ParseIssue,
+} from '@/src/session/contracts.js';
+
+// ── Client-owned context config types ───────────────────────────────────────
 export type {
-  BuildCommerceInterfaceOptions,
-  CommerceInterface,
-} from './public/interfaces/commerce.js';
+  NavigatorContext,
+  NavigatorContextProvider,
+  CommerceContext,
+  CommerceCartItem,
+  CommerceContextProvider,
+} from '@/src/internal/context/index.js';
+
+// ── Domain / view types ─────────────────────────────────────────────────────
 export type {
-  Facades,
-  InferInterfaceType,
-  InterfaceHandle,
-  InterfaceRegistry,
-  InterfaceType,
-  InterfaceTypeMap,
-  Supports,
-} from '@/src/internal/utils/index.js';
-export type {
-  A2UISurface,
+  Turn,
+  TurnInput,
+  TurnAction,
+  TurnResponse,
+  TurnStatus,
+  TurnAgent,
+  A2uiState,
+  A2uiV09Message,
   Activity,
   AgentMessage,
-  AgentResponse,
-  HydratedUseCase,
-  ReasoningMessageStep,
   ReasoningStep,
-  RoutedInterface,
-  RoutedUseCase,
-  SerializableRoutedInterface,
-  StateTurn,
-  ToolCallStatus,
+  ReasoningMessageStep,
   ToolCallStep,
-  Turn,
-  TurnStatus,
-  UseCaseInterfaceMap,
-} from '@/src/internal/features/generative/index.js';
+  ToolCallStatus,
+  DiscoveredSurface,
+  SessionInitialization,
+  SessionRequest,
+  InitializeRequest,
+  PromptRequest,
+  ActionRequest,
+  ActionError,
+} from '@/src/session/types.js';
+
+// ── Serialization ───────────────────────────────────────────────────────────
 export type {
-  SortByRelevance,
-  SortByDate,
-  SortByField,
-  SortByQRE,
-  SortByNoSort,
-  SearchSortCriterion,
-  CommerceSortCriterion,
-  SortCriterionFor,
-  SortDirection,
-} from './public/sort-types.js';
-export type {
-  A2uiAction,
-  SelectPageContext,
-  SetPageSizeContext,
-  SetSortContext,
-  SortField,
-} from '@/src/internal/api/unified/index.js';
+  SerializedSession,
+  SerializedTurn,
+  SerializedTurnResponse,
+  SerializedTurnAgent,
+  SerializedInitialization,
+} from '@/src/session/serialize.js';

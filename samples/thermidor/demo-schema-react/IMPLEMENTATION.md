@@ -1,194 +1,186 @@
 # Implementation Details
 
-Technical decisions, workarounds, conformity validation, and known limitations for `demo-schema-react`.
+Technical decisions, workarounds, and known limitations for `demo-schema-react`.
 
-## v1.0 → v0.9 adapter (`surfaces.tsx`)
+## State and validation model
 
-The backend and mock API emit A2-UI messages in **v1.0** format (`createSurface` with `components[].props`). However, `@copilotkit/a2ui-renderer` (v1.61) only understands the **v0.9** format (`createSurface` + `updateComponents` with props flattened on component nodes).
+This sample implements the inline component-state model recorded in [ADR-012](https://github.com/coveo-platform/thermidor-schema/blob/beta/docs/ADR-012-inline-component-state-a2-ui-data-model.md) of `@coveo/thermidor-schema` (which supersedes ADR-002's AG-UI state transport). Component state travels inline through the A2-UI data model via `/state/<id>` `updateDataModel` operations, and node props resolve from it through A2-UI Data_Binding objects `{ "path": <JSON Pointer> }`. Four points define the model:
 
-The `convertV1ToV09` function in `src/a2ui/surfaces.tsx` bridges this gap by converting each v1.0 message into equivalent v0.9 messages before passing them to the renderer's `processMessages`.
+- **Validation runs inside `@coveo/thermidor`.** The sample injects the contract once (`ComponentContractsSchema`, passed as `contracts` to `createSession` in `src/context/session.tsx`) and never calls a validator itself. The session validates outbound action payloads before it sends them, and inbound `updateDataModel` ops before it applies them to `session.state`. The renderer is fed from `session.a2uiMessages` instead, which is not filtered; see [Known limitations](#inbound-component-state-reaches-the-renderer-without-validation).
+- **Display text comes from the agent; prices and counts are formatted locally.** Labels, headings, and summaries are rendered as the agent wrote them. Prices are formatted by `formatPrice` (`$12.34`) and result counts by `toLocaleString()`.
+- **A2-UI is the only supported source of component state.** The sample obtains component state solely through A2-UI (the `/state` data-model bindings); component state obtained through any non-A2-UI source is unsupported.
+- **Intentional divergence from A2-UI bidirectional input binding.** The sample deliberately does not use A2-UI standard bidirectional input components. In-progress user input (for example a facet search box being typed) is held in the sample's local React state and is never written to the shared A2-UI data model, and component actions are dispatched over the non-bidirectional HTTP Action_Channel.
 
-### Conversion rules
+## v1.0 → v0.9 downgrade (owned by `@coveo/thermidor`)
 
-| v1.0 message                              | v0.9 output                                                                                     |
-| ----------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `createSurface` with `components[].props` | `createSurface` (surface lifecycle) + `updateComponents` (props flattened onto component nodes) |
-| `updateDataModel`                         | Same shape, version changed to `v0.9`                                                           |
-| `updateComponents`                        | Same shape, version changed to `v0.9`                                                           |
-| `deleteSurface`                           | Same shape, version changed to `v0.9`                                                           |
+Agent Gateway emits A2-UI **v1.0** exclusively. Every available renderer consumes **v0.9**:
+`@copilotkit/a2ui-renderer` builds its `MessageProcessor` from `@a2ui/web_core/v0_9`, and
+`@a2ui/web_core@0.9.0` publishes no `v1_0` subpath.
 
-The key transformation: v1.0 puts component props in `components[].props` (with `componentId` and `componentType`), while v0.9 expects them flattened directly on the component node. The adapter spreads `props` onto the node.
+**The sample does not perform this conversion.** `@coveo/thermidor` converts the stream to
+v0.9 and exposes it for the whole session as `session.a2uiMessages`, which the sample feeds
+to one renderer through `ThermidorA2UIStream` (see
+[Rendering every turn on one page](#rendering-every-turn-on-one-page)). Consumers write no
+version-aware code of their own.
 
-### When `@copilotkit/a2ui-renderer` supports v1.0
+The conversion, its rationale, and its retirement condition live in the package:
+`packages/thermidor/src/session/a2ui-v09-projection.ts`, recorded as interim debt in the
+ADR-015 addendum. In short: splitting v1.0's single `createSurface` into `createSurface` +
+`updateComponents` is the only load-bearing transformation, because the v0.9
+`processCreateSurfaceMessage` reads only `{ surfaceId, catalogId, theme, sendDataModel }` and
+silently discards inline `components[]`. Flat v1.0 nodes are forwarded byte-for-byte, so every
+`{ "path": ... }` binding and composition link survives; `updateDataModel` and `deleteSurface`
+pass through.
 
-Once the renderer natively handles v1.0 messages:
+## Flat component nodes (`id`/`component`)
 
-1. Delete the `convertV1ToV09` function in `src/a2ui/surfaces.tsx`
-2. Pass v1.0 messages directly to `processMessages` without conversion
-3. Verify that `processMessages` passes `components[].props` (including `componentId` and `componentType`) to catalog renderers correctly
-4. Everything else (catalog definitions, renderers, `useRemoteController`, `StateSnapshot` handling) remains unchanged
-
-## Dual identity on component nodes (`id`/`component` vs `componentId`/`componentType`)
-
-Every emitted A2-UI node carries what looks like duplicated identity:
+Every emitted A2-UI node follows the A2-UI v1.0 flat adjacency-list shape
+([ADR-013](https://github.com/coveo-platform/thermidor-schema/blob/beta/docs/ADR-013-flat-adjacency-list-node-conformance.md)):
+a single identity pair, with presentation props, Data_Binding objects, and composition links at
+the top level. There is no `props` wrapper.
 
 ```jsonc
 {
-  "id": "facet-manager-2", // A2-UI node id (adjacency-list / mount key)
-  "component": "FacetManager", // A2-UI component type (PascalCase, catalog renderer key)
-  "props": {
-    "componentId": "facet-manager-2", // thermidor component id (AG-UI state key)
-    "componentType": "facet-manager", // thermidor component type (kebab-case, contract discriminant)
-  },
+  "id": "facet-brand-2", // A2-UI node id (adjacency-list / mount key)
+  "component": "RegularFacet", // A2-UI component type (catalog renderer key + contract discriminant)
+  "values": {"path": "/state/facet-brand-2/values"}, // Data_Binding into the surface's data model
 }
 ```
 
-By value these are two equivalent pairs (`id` === `props.componentId`, and `component` is the PascalCase spelling of `props.componentType`). The duplication is **not** an artifact of the adjacency-list work (spec 1) or the commerce-search composition (spec 2) — both pairs predate them: `componentId`/`componentType` were added to the base component contract in #8319 and the dual-carrier node shape in #8333, both on `main`. Specs 1/2 only extended the existing shape to new components.
+`id` drives the adjacency-list tree (the renderer mounts by id) and `component` (PascalCase) selects the catalog renderer. `@coveo/thermidor` resolves the contract from the `component` discriminant directly, so no second identity is needed. The earlier `props.componentId` / `props.componentType` pair, which existed only to join an AG-UI state slice to its node, was removed with the AG-UI state transport, and the base component contract now rejects a node carrying either.
 
-It is **intentional and not reducible from the sample**, because each pair belongs to a different protocol layer, and neither layer can read the other's fields:
+Renderers read resolved values from `props` (the renderer resolves each `{ "path": ... }` binding against the surface's data model) and never hydrate by identity.
 
-- `id` / `component` are the **A2-UI protocol** (`@copilotkit/a2ui-renderer`). `id` drives the adjacency-list tree (the renderer mounts by id); `component` (PascalCase) resolves the catalog renderer. This vocabulary is owned by the external renderer.
-- `componentId` / `componentType` are the **thermidor contract**. `componentId` is the AG-UI state key — the SDK reads `state.components[componentId]` (`selectRemoteControllerState`) and dispatches actions as `{componentId, componentType, action, payload}`. `componentType` (kebab-case) is the discriminant the SDK resolves contracts by (`findComponentContract` → `ComponentContractsSchema.options.find(c => c.shape.componentType.value === t)`). This vocabulary is the contract with the Coveo backend.
+## Catalog and Zod version
 
-Collapsing the two into a single `id`/`component` pair is therefore **out of scope** and undesirable: it would require the SDK to resolve contracts and key AG-UI state by the renderer's PascalCase names, a breaking change to the public `@coveo/thermidor-schema` contract (`base/component.schema.json`), and a matching change on the backend that emits the AG-UI state and routes actions. The convention that `id === componentId` (and that `component` mirrors `componentType`) is the deliberate bridge between the two planes, kept 1:1 so correlation is trivial.
+`@copilotkit/a2ui-renderer` is built against **Zod 3**. The sample therefore pins `zod@3` and imports every runtime schema from the Zod 3 projection, `@coveo/thermidor-schema/zod3`: the per-component `*PropsSchema`, `ComponentContractsSchema`, and `THERMIDOR_CATALOG_ID`. Types come from either entry point: some files import them from the package root (`Product`, `SortAction`), while the facets and the breadbox import theirs (`RegularFacetAction`, `RegularFacetProps`, `BreadboxFacet`, …) from `@coveo/thermidor-schema/zod3`.
 
-If the write-time repetition in the mock templates ever becomes a maintenance concern, the safe lever is a producer-side node builder (fill both pairs from one source of truth) — never a change to the contracts or the emitted shape.
+Each catalog component is declared with the renderer's `createReactComponent({name, schema}, render)`, where `name` is the node's `component` and `schema` its `*PropsSchema`. `createThermidorCatalog()` (`src/a2ui/components.tsx`) registers them as `new Catalog(THERMIDOR_CATALOG_ID, components)`. No type casts or bridge helpers are needed.
 
-## Skeleton detection (⚠️ needs clarification)
+When the renderer moves to Zod 4, switch every `@coveo/thermidor-schema/zod3` import, schemas and types alike, to the package root and drop the `zod@3` pin.
 
-Skeletons are shown during streaming to indicate which components are loading. The current implementation supports **two detection sources**, but only one is actively used:
+## Rendering every turn on one page
 
-| Source                        | Trigger                                                                                     | Origin             | Status         |
-| ----------------------------- | ------------------------------------------------------------------------------------------- | ------------------ | -------------- |
-| `store_render_plan` tool call | Reasoning step with `name: "store_render_plan"` and `args.route` mapped to a component type | Mock API templates | ✅ Active      |
-| `skeleton-` surfaceId prefix  | Backend sends a surface with `surfaceId.startsWith("skeleton-")`                            | PoC (PR #8088)     | ⚠️ Speculative |
-| `isLoading` prop              | Backend sends a surface with `componentProps.isLoading === true`                            | PoC (PR #8088)     | ⚠️ Speculative |
+The conversation is a single feed: every turn keeps its blocks on the page, and a search, a facet selection, and a question to the agent all stay in place.
 
-**Open questions:**
+- **One renderer stream for the session.** Surfaces live in the session (`@coveo/thermidor` ADR-018): a surface lives from its `createSurface` until its `deleteSurface`, whichever turn carries them. `AppShell` feeds `session.a2uiMessages`, which only grows, to one renderer; `ThermidorA2UIStream` feeds it only the messages it has not seen. Each turn's `response.surfaces` lists the live surfaces it created, so the page draws them under that turn. A producer mints a new surface id for each surface it creates; the mock does so for every prompt.
+- **Only the latest turn is interactive.** The session resolves an action's component across every live surface, so earlier blocks could take actions. The sample still keeps them read-only: `TurnSurfaces` wraps every turn but the latest in a disabled `fieldset`, so earlier blocks stay readable, selected facets included, but cannot be used.
+- **Follow-ups are turns.** Agent Gateway announces the `NextActionsBar` actions (`selectAction`, `selectSearchOption`) as turn-opening with the bar, so `@coveo/thermidor` answers each one in a new turn whose `input.action` records it, and the sample declares nothing. A turn here is a gesture of the shopper in the conversation, whoever answers it: the gateway answers a search option itself, without the agent, and does not count it as a turn. `ConversationThread` draws the chip's text as the shopper's message, and no separator before such a turn, so it reads as a continuation of the answer it follows. The follow-up's turn becomes the latest one, so the blocks it was sent from become read-only, as after a prompt.
 
-- Neither `skeleton-` prefix nor `isLoading` prop are documented in ADR-001 or ADR-002. Should we standardize one of these as the official skeleton contract?
-- The real backend does not currently emit skeleton surfaces. When it does, which mechanism will it use?
-- Should `store_render_plan` tool calls remain the primary skeleton trigger, or should the backend own skeleton lifecycle via explicit surface messages?
+## Loading placeholders (✅ data-model driven)
 
-The speculative sources are kept to stay aligned with `demo-react` but may be removed if the backend standardizes on a different mechanism.
+While a turn streams, a skeleton marks each block that is still loading. A2-UI defines no skeleton: a loading placeholder is an ordinary surface whose **data model** declares `isLoading: true`, and it follows the A2-UI surface lifecycle. The sample infers nothing from `surfaceId`s, which the spec treats as opaque, nor from reasoning steps.
 
-## Zod version mismatch
+| Question                   | Answer                                                                                         |
+| -------------------------- | ---------------------------------------------------------------------------------------------- |
+| **Whether** to show one    | The surface's data model has `isLoading: true`                                                 |
+| **Which** skeleton to show | The root node's `component` (`ProductCarousel`, `NextActionsBar`, …), mapped by `A2UISkeleton` |
+| **When** it ends           | The agent deletes the surface (`deleteSurface`), or writes `isLoading: false`                  |
+| **While** it is drawn      | Its turn streams                                                                               |
 
-`@coveo/thermidor-schema` and this sample use **Zod 4**, but `@copilotkit/a2ui-renderer` types are built against **Zod 3**. The `ZodObject` generics are structurally incompatible at the type level (`$strip` vs `UnknownKeysParam`) even though they are runtime-compatible.
+### What the agent emits
 
-This is handled via two bridge helpers in `components.tsx` (same pattern as `convertV1ToV09`):
+In Thermidor mode, the agent announces a block with a placeholder (a bare root with no bindings), then streams the content in a snapshot that **replaces the placeholder's activity in place** (same `messageId`, `replace: true`), so the block keeps its position:
 
-- `asCatalogDefinitions(definitions)` — validates the input is `Record<string, {props: ZodObject<any>}>`, then casts to `CatalogDefinitions`
-- `asCatalogRenderers(renderers)` — validates the input is `Record<string, React.FC<any>>`, then casts to `CatalogRenderers`
+```
+// placeholder
+createSurface: {
+  surfaceId: "<opaque>",
+  components: [{ id: "root", component: "ProductCarousel" }],
+  dataModel: { isLoading: true }
+}
 
-### When `@copilotkit/a2ui-renderer` upgrades to Zod 4
+// content, in the same activity
+deleteSurface: { surfaceId: "<placeholder id>" }
+createSurface: { surfaceId: "<content id>", components: [...] }
+```
 
-1. Delete `asCatalogDefinitions` and `asCatalogRenderers` from `components.tsx`
-2. Pass definitions and renderers directly to `createCatalog` without wrappers
-3. Remove `import type {z} from 'zod'` (no longer needed for the bridge type constraint)
+A placeholder the agent abandons is deleted the same way. The mock templates emit this shape, with placeholder ids derived from each template's `runId`. Each one announces its main block (`ProductCarousel`, `BundleDisplay`, `ComparisonTable`, `ProductResearchCard`) right after routing, before the content streams; the `NextActionsBar` placeholder comes only after the main block's content and state, shortly before the actions themselves.
 
-## Action state transport (full snapshot)
+### How the sample draws it
 
-When a decomposed commerce control (sort, pagination, page size) dispatches an action, `UnifiedConverseController.dispatchAction` POSTs the action to the Converse API. The backend then streams back an updated AG-UI `STATE_SNAPSHOT` for the surface's components.
+- `@coveo/thermidor` derives `response.surfaces` from the stream: each `DiscoveredSurface` carries `rootComponentType` and `isLoading`, and a deleted surface leaves the list. A loading placeholder is listed only while its turn streams: one the agent never deletes (a cancelled run, an error, a restored session) leaves the list once the turn ends.
+- `TurnSurfaces` takes the turn's `response.surfaces` and draws `A2UISkeleton` for a loading surface in the place its content takes, and the `A2UIRenderer` otherwise. The sample holds no placeholder rule of its own.
 
-- The current implementation always applies the **full** `STATE_SNAPSHOT`: the backend re-sends the complete component state, which replaces the prior state on each action.
-- Per ADR-002, AG-UI also defines `STATE_DELTA` (RFC 6902 JSON Patch) for incremental updates layered on top of a snapshot baseline. Thermidor currently handles only `STATE_SNAPSHOT`; supporting `STATE_DELTA` is a future transport optimization and is intentionally out of scope here.
-- Full-snapshot transport is functionally complete on its own. Deltas would only reduce payload size for high-frequency updates, not change behaviour.
-- **Single-surface addressing constraint:** `dispatchAction` resolves its target `surfaceId` via `deriveCommerceSurfaceId`, which returns the **first** `commerceSearch` surface found in the active turn's activities. This assumes a turn renders at most one decomposed commerce surface (true for the current demo). If a turn ever emits multiple commerce surfaces, actions from the second onward would be silently routed to the first — supporting multiple commerce surfaces per turn would require threading the originating `surfaceId` from the dispatching component rather than deriving it from the turn.
+## Action dispatch and inline state transport
 
-## Conformity validation
+A catalog component sends an action with the renderer's `context.dispatchAction(action)`. The renderer surfaces it as an A2-UI client-to-server message through the `onAction` handler of `A2UIProvider`, which `AppShell` wires to its own `handleAction`:
 
-This implementation has been validated against the following references:
+- The session sends one request at a time, withholds a dispatch made while another request is in flight, and exposes the one in flight (`request` in `session.getSnapshot()`), with the component and the action it sends. `src/a2ui/session-request.tsx` turns it into the sample's lock rule (`isBlocking`): every request locks the active surface except the facet search actions (`search`, `clearSearch`, `showMoreSearchResults` of `RegularFacet` and `CategoryFacet`) and the search box's `fetchSuggestions` (`QuerySuggestions`), which it lists in `NON_BLOCKING_ACTIONS`, typed by `ComponentActionNames`. Typing in a facet search or in the search box keeps the surface usable. The lock is the sample's choice, next to what it does with a gesture made while the session is busy. `useGesture` drops a gesture while any request is in flight, a facet search included, and reads `request` synchronously, so a double click never sends twice, even before the lock renders. A facet search that fires during a request waits until the session is free, sending the latest query.
+- A failed action that does not open a turn never fails one: `actionError` in `session.getSnapshot()` names it, and `TurnSurfaces` shows its message in an alert under the block it came from (matched on `surfaceId`), until the next action or prompt. A failed `fetchSuggestions`, listed in `SILENT_FAILURES`, is not shown: the search box just shows no completions.
+- While the surface is locked, `TurnSurfaces` disables the active turn's `fieldset` and sets `aria-busy`. The whole surface dims and ignores the pointer, only after 150 ms so a fast reply never flashes it; the turn that streams is disabled without dimming, so its content arrives at full strength. Focus returns to the control the shopper used once the surface unlocks, without scrolling. The prompt input is disabled by the same rule.
+- `NextActionsBar` actions (`selectAction`, `selectSearchOption`) open a [turn of their own](#rendering-every-turn-on-one-page): Agent Gateway announces them as turn-opening with the bar, so the sample declares nothing.
 
-- **ADR-001** — Hierarchical controller-based schema ([thermidor-schema/docs/ADR-001](https://github.com/coveo-platform/thermidor-schema/blob/main/docs/ADR-001-hierarchical-controller-schema.md))
-- **ADR-002** — AG-UI for controller state transport, A2-UI for surface composition ([thermidor-schema/docs/ADR-002](https://github.com/coveo-platform/thermidor-schema/blob/main/docs/ADR-002-agui-controller-state-transport.md))
-- **thermidor-schema PR #17** — Controller schema pattern reference ([coveo-platform/thermidor-schema#17](https://github.com/coveo-platform/thermidor-schema/pull/17))
-- **ui-kit PR #8088** — PoC sample `schema-contract-react` ([coveo/ui-kit#8088](https://github.com/coveo/ui-kit/pull/8088))
+A prompt is sent with `session.dispatchAction({name: 'submitPrompt', payload: {prompt}})`, which opens a new turn.
 
-### Schema conformity
+For a component action, `@coveo/thermidor`:
 
-| Check                                                                                                                                                                     | Status |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| Component schemas follow the base component pattern (`$id`, `allOf` → base/component, `componentType` const, `state` → `$defs`, `actions`, `additionalProperties: false`) | ✅     |
-| `componentType` is a stable const string discriminator                                                                                                                    | ✅     |
-| `component-contracts.schema.json` discriminated union includes all 9 variants                                                                                             | ✅     |
-| Definition schemas have `additionalProperties: false`                                                                                                                     | ✅     |
-| Actions reference `base/action.schema.json` via `allOf`                                                                                                                   | ✅     |
-| Read-only components have empty `actions` object                                                                                                                          | ✅     |
-| Zod generation is up to date (`pnpm run generate --check` passes)                                                                                                         | ✅     |
-| Ajv/Zod cross-validation tests pass (47 tests)                                                                                                                            | ✅     |
+- recovers the dispatching component from the session's live surfaces, validates the action payload against the component's generated Zod action schema, and POSTs it over the non-bidirectional HTTP Action_Channel. It is a plain request, not A2-UI bidirectional data binding;
+- never rejects: a message with no `userAction`, an unresolved component, or a payload that fails validation is withheld with a dev-only warning and nothing is sent.
 
-### ADR conformity
+The producer replies by writing updated component state inline through the A2-UI data model as `/state/<id>` `updateDataModel` operations:
 
-| ADR principle                                                         | Implementation                                                                     |
-| --------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| Component state is backend-owned, immutable on the frontend           | State delivered via AG-UI `StateSnapshot`, never mutated locally                   |
-| `componentType` is the stable discriminator                           | Used in `ComponentContractsSchema` discriminated union and `findComponentContract` |
-| AG-UI `StateSnapshot` transports component state                      | `setStateSnapshot` stores in `agentResponse.state.components`                      |
-| A2-UI transports component identity (`componentId` + `componentType`) | Via `createSurface` → `components[].props.{componentId, componentType}`            |
-| Frontend correlates component identity with state by `componentId`    | `selectRemoteControllerState(state, componentId)`                                  |
-| Actions are dispatched via the remote controller, not via callbacks   | `controller.dispatch('selectAction', {...})`                                       |
+- A whole-component op targets the component's state root (`/state/<id>`); a partial op targets a sub-path beneath it and updates only the addressed fields (the incremental semantics of the A2-UI data model). The renderer owns the data model and re-resolves the affected `{ "path": ... }` bindings.
+- `@coveo/thermidor` validates each inbound op in transit (a whole-component op against the `*State` schema, a partial op against the sub-schema at its path) before applying it to `session.state`. The renderer stream is not filtered by that validation; see [Known limitations](#inbound-component-state-reaches-the-renderer-without-validation).
 
-### PoC pattern conformity (PR #8088)
+## Optimistic updates
 
-| Pattern                                                                    | Implementation                                                                                                        |
-| -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `useRemoteController(stateSource, props.componentId, props.componentType)` | Used in catalog renderers (ProductCarousel, BundleDisplay, ComparisonTable, ProductList, Pagination, Sort, SearchBox) |
-| `controller.state` is automatically typed from the `componentType` literal | Via `typeof SCHEMA_ID` → TypeScript infers the correct state type                                                     |
-| `controller.dispatch('action', payload)` without casts                     | Used in `CatalogNextActionsBar`                                                                                       |
-| `useSyncExternalStore` for reactive subscription                           | Added in `controllers.tsx`                                                                                            |
-| `StateSnapshot` contains state directly under componentId (not wrapped)    | `{components: {'bundle-root': {tiers: [...]}}}`                                                                       |
+Search controls show the shopper's choice right away instead of waiting for the producer's reply:
+
+- Each control shows the value its gesture expects with React's `useOptimistic`. `useGesture` (`src/a2ui/session-request.tsx`) runs the gesture in a transition that applies the optimistic value and awaits the renderer's dispatch. The renderer returns the promise of its `onAction`, `session.dispatchAction`, which settles once the session has answered the gesture, whatever the outcome, and at once for a withheld one, so the optimistic value shows until then and gives way to the producer's. Sort, pagination and page size do it in their component; the facets and the breadbox go through a `use-optimistic-*.ts` hook next to their component, which computes the expected value. A gesture sent while the surface is locked is dropped before it changes anything.
+- The surface lock dims the results while a gesture is in flight, so the product list and the query summary never read as current while a control already shows the new choice.
+- Facet search keeps the typed text in local state (`use-optimistic-facet-search.ts`) rather than as an optimistic hold, and sends one search once typing pauses (200 ms). A keystroke that never reaches the producer leaves the field untouched, and the field is never written to the shared data model.
+- The Breadbox moves focus after a removal once the surface unlocks: a locked surface's buttons are disabled and can't take focus.
+
+## Related decisions
+
+`@coveo/thermidor-schema` ([repository](https://github.com/coveo-platform/thermidor-schema/tree/beta/docs)):
+
+- **ADR-012** — Inline component state through the A2-UI data model; supersedes ADR-002 (AG-UI controller state transport).
+- **ADR-013** — Flat A2-UI v1.0 adjacency-list node.
+- **ADR-007** — A2-UI adjacency-list composition.
+
+`@coveo/thermidor` (`packages/thermidor/docs/internal/adr/`):
+
+- **ADR-015** — Surface derivation (`response.surfaces`), with addenda for the v0.9 renderer projection and for loading placeholders.
+- **ADR-016** — Inline-state consumption: renderers read resolved props, and `session.dispatchAction` is the single dispatch entry point (the remote controller was removed).
+
+How the sample follows them:
+
+| Principle                                                          | Implementation                                                                                            |
+| ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| Server-owned component state, not mutated locally by the renderer  | Server writes `/state/<id>` `updateDataModel` ops; the renderer owns the data model and resolves bindings |
+| Component state is transported inline through the A2-UI data model | `/state/<id>` `updateDataModel` ops resolved into the renderer's data model (no AG-UI `StateSnapshot`)    |
+| A node carries a single identity (`id` + `component`)              | Flat nodes in `createSurface.components[]`, with `{ "path": ... }` bindings at the top level              |
+| Renderers read resolved state from `props` (no identity join)      | Each `createReactComponent` renderer reads `props`; there is no `componentId` correlation                 |
+| Containers mount their children by name or ordered list            | `CommerceSearch` mounts `sidebarChild` / `mainChild`; `LayoutStack` and `FacetManager` mount `children`   |
+| Actions go through the session's single dispatch path              | `context.dispatchAction` → `onAction` → session → validated payload → HTTP Action_Channel                 |
 
 ## Known limitations / Next steps
 
-### In-flight interaction behavior (open question)
+### Inbound component state reaches the renderer without validation
 
-`isLoading` is intentionally not part of the current contract. The frontend still needs guidance for interactions while an action request is in flight—for example, whether to disable controls, queue subsequent actions, ignore them, or show a pending state. Define this behavior before adding loading state support.
+`@coveo/thermidor` validates inbound `updateDataModel` ops only on their way into `session.state`, and the sample never reads `session.state`. `session.a2uiMessages` is derived from the raw activities, so the renderer receives:
+
+- every `updateDataModel` op, conforming or not;
+- the state seeded inline by `createSurface.dataModel` (keys such as `/state/<nodeId>`), which the projection turns into `updateDataModel` ops and which `session.state` never reads at all.
+
+Non-conforming component state from the producer therefore still changes what the sample renders. Closing this gap belongs in `@coveo/thermidor`, not in the sample, and must cover both paths: filtering only the projected `updateDataModel` ops would still let the `createSurface.dataModel` seed through.
 
 ### Dynamic composition updates not exercised (facet reorder / add / remove)
 
-Composition is emitted **once** in the initial `createSurface` and never changed afterwards. Action responses only re-emit a `StateSnapshot` (per-component data), so the set and order of facets are fixed for the surface's lifetime: the facet-manager node's `children` (`['facet-brand-2', 'facet-price-2', 'facet-category-2']`) is a static constant, and its AG-UI state is `{}`. No mock scenario reorders facets, adds one, or removes one.
+Composition is emitted **once** in the initial `createSurface` and never changed afterwards. Action responses only re-emit `/state/<id>` `updateDataModel` ops (per-component data), so the set and order of facets are fixed for the surface's lifetime: the facet-manager node's `children` (`['facet-brand-2', 'facet-price-2', 'facet-category-2']`) is a static constant. No mock scenario reorders facets, adds one, or removes one.
 
 A real backend can reorder facets (relevance-driven) or add/remove them dynamically. Before that is supported, note the following:
 
-- **The bridge's `updateComponents` handling is incomplete.** In `convertV1ToV09` (`surfaces.tsx`), the `createSurface` branch applies the root-id remap (`remapId`) **and** flattens `components[].props` onto each node, but the `updateComponents` branch is a bare passthrough — it does neither. A dynamic `updateComponents` whose nodes carry `props` would reach the renderer without `componentId`/`componentType`/`direction` flattened. Making `updateComponents` symmetric with `createSurface` (remap + prop flatten) is the prerequisite for any dynamic composition update.
-- **Reorder / add are supported by the protocol; remove is not, directly.** A2UI v0.9 defines `updateComponents` as _adding to or updating_ components in a surface (adjacency list via `children`); reordering the facet-manager `children` and adding a new facet node fit that contract, and `FacetManagerRenderer` already re-renders from `readChildIds(props)`. There is no component-removal primitive: dropping a facet means emitting a `children` list without its id (the orphaned node lingers in the surface) or recreating the surface via `deleteSurface` + `createSurface`.
+- **`updateComponents` is a bare pass-through.** In the projection (`packages/thermidor/src/session/a2ui-v09-projection.ts`), `createSurface` splits into `createSurface` + `updateComponents`, while an inbound `updateComponents` is forwarded as-is. Under the flat v1.0 node model that is correct, but it has never been exercised by a real dynamic composition update, so treat it as unverified rather than known-good.
+- **Reorder / add are supported by the protocol; remove is not, directly.** A2UI v0.9 defines `updateComponents` as _adding to or updating_ components in a surface (adjacency list via `children`); reordering the facet-manager `children` and adding a new facet node fit that contract, and `FacetManager` already re-renders from its resolved `children` list. There is no component-removal primitive: dropping a facet means emitting a `children` list without its id (the orphaned node lingers in the surface) or recreating the surface via `deleteSurface` + `createSurface`.
 
-This is out of scope for the static switchover; capture it before wiring dynamic facet composition.
+Capture this before wiring dynamic facet composition.
 
 ### Temporary workarounds (to remove when upstream dependencies evolve)
 
-| Item                    | Description                                                                                                                            | Remove when                                                |
-| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| **v1.0 → v0.9 adapter** | The `convertV1ToV09` shim in `surfaces.tsx` can be deleted once the renderer supports v1.0 natively.                                   | `@copilotkit/a2ui-renderer` supports v1.0 MessageProcessor |
-| **Zod 4 type casts**    | `asCatalogDefinitions` / `asCatalogRenderers` bridge helpers in `components.tsx` due to Zod version mismatch.                          | `@copilotkit/a2ui-renderer` upgrades to Zod 4              |
-| **Skeleton detection**  | Three detection mechanisms coexist (see section above). Only `store_render_plan` tool calls are active; the other two are speculative. | Backend team standardizes skeleton contract                |
-
-### Consumer DX improvements (simplify what the consumer must implement)
-
-| Item                                                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Owner                |
-| ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| **Extract surface parsing into thermidor**            | `src/a2ui/types.ts` contains raw A2-UI surface parsing logic (with `as unknown as` casts) that should live in `@coveo/thermidor` rather than in the sample. Consumers should not need to parse surfaces manually — the lib should expose typed utilities.                                                                                                                                                                                                                                                                                                                                      | `packages/thermidor` |
-| **Provide a high-level surface extraction utility**   | The consumer must replicate the logic in `src/a2ui/surfaces.tsx` (`getA2UIMessages`): filter activities by kind, handle per-activity-id replacement, and extract A2-UI operations. A framework-agnostic utility (e.g. `extractA2UISurfaces(activities)`) exported by thermidor would encapsulate this. The React rendering component (`ThermidorA2UISurfaces`) would remain in the consumer application.                                                                                                                                                                                       | `packages/thermidor` |
-| **Extract surface-derivation helpers into thermidor** | `findSurface` / `findCommerceSurfaceId` (scan a turn's activities for the first A2-UI `createSurface` and return its `surfaceType` / `surfaceId`) live in `src/hooks/use-navigation.ts`. The same scan is currently duplicated privately inside `UnifiedConverseController.dispatchAction` to resolve the target `surfaceId`. A framework-agnostic utility (e.g. `findSurface(activities)` / `findCommerceSurfaceId(activities)`) exported by thermidor would remove this duplication; the consumer's navigation logic (`deriveTransitionAction`, `useNavigation`) would remain in the sample. | `packages/thermidor` |
-| **Export skeleton detection logic**                   | The consumer must parse reasoning steps, map `store_render_plan` routes to component types, and manage skeleton/real-surface subtraction. A framework-agnostic utility (e.g. `computeSkeletons(reasoningSteps, surfaces)`) exported by thermidor would encapsulate this. The React hook wrapper would remain in the consumer application.                                                                                                                                                                                                                                                      | `packages/thermidor` |
-| **Simplify component subscription ergonomics**        | The consumer still mounts a `StateSourceProvider` and calls `useRemoteController(stateSource, componentId, componentType)`. The hand-written `stateSource` adapter object is no longer needed — the `UnifiedConverseController` satisfies `RemoteControllerSource` directly and is passed straight to `StateSourceProvider`. The React context/hook layer would remain in the consumer application.                                                                                                                                                                                            | `packages/thermidor` |
-| **Friendlier type aliases for consumers**             | The exported types `RemoteController`, `RemoteControllerSource`, `RemoteControllerStateForSchema` carry internal naming. Exporting consumer-facing aliases like `ComponentController<T>`, `ComponentControllerSource`, and `ComponentState<T>` would improve discoverability and readability in consumer code without breaking existing imports.                                                                                                                                                                                                                                               | `packages/thermidor` |
-| **Inline nested state in BundleDisplay contract**     | `BundleDisplay` currently reads other components' state (product-list slots) via `selectRemoteControllerState` + an unsafe `as ProductListState` cast. This cross-component state access is a workaround. The backend should inline product data directly in the BundleDisplay state (e.g. `tiers[].slots[].products[]` instead of `tiers[].slots[].surfaceRef`), making each component fully self-contained. This eliminates the need for any typed helper or cross-component access pattern on the frontend.                                                                                 | Backend              |
-
-### Nice-to-have (non-blocking improvements)
-
-| Item                                                                                              | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Unified search rendering via A2-UI**                                                            | SearchResultsPage (product grid, facets, sort, pagination) uses a separate RoutedInterface/Headless path. Evaluate with backend whether routed search could emit A2-UI surfaces with controllers instead, unifying the rendering pipeline. Key challenges: high-frequency bidirectional interactions (facet clicks → re-fetch), latency via converse stream vs direct API, large state volume. The `dispatchAction` wiring this depended on now exists, so it is no longer a prerequisite.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| **Replace navigation state machine with React Router**                                            | AppShell uses a manual reducer (`useNavigation`) and conditional rendering (`view === "search"`) for routing. Migrating to React Router would simplify JSX readability (each route has its own component, no conditionals), give free browser back-button support, and make the sample more representative of a real consumer integration. It would not significantly reduce the navigation logic complexity (effects that observe turns and trigger transitions, persisted RoutedInterface refs), but improves ergonomics for anyone reading the sample as an integration example.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| **`@coveo/thermidor-react` package**                                                              | The `useRemoteController` hook is currently copy-pasted into each React consumer. Extracting it into a dedicated `@coveo/thermidor-react` package (or a `@coveo/thermidor/react` subpath export) would eliminate this boilerplate and ensure consumers get bug fixes and performance improvements automatically. `@coveo/thermidor` itself remains framework-agnostic.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `packages/thermidor` |
-| **Cleaner generated schema names in `@coveo/thermidor-schema`**                                   | `packages/thermidor-schema/src/generated/schemas.ts` contains quicktype-invented names for anonymous sub-schemas — adjective-prefixed disambiguating names (`PurpleSearch`, `FluffySearch`, `PurpleRegularFacetSearchResult`), generic `*Class` suffixes (`PayloadClass`, `SubmitQueryClass`, `ToggleExcludeClass`), and array-item names (`ProductElement`). These are cosmetic and **internal only** — none is re-exported from `src/index.ts`, so no consumer sees them and the public API and validation behavior are unaffected. quicktype fabricates these names when a sub-schema has no `title`; giving the anonymous sub-schemas (inline `payload` objects, `items` element objects, etc.) an explicit `title` in the source `schema/**/*.json` documents makes quicktype emit that name instead. Pre-existing (not introduced by the adjacency-list work); worth a dedicated regeneration pass rather than mixing into a feature diff.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| **Reduce per-schema duplication of the composition triad view and `additionalProperties: false`** | Two things are repeated across all 15 component documents under `schema/components/**`, both forced by limitations of JSON Schema `allOf`, not by choice. (1) Each document co-locates a `#/$defs/Triad` view re-declaring the member's `componentType`/`state`/`actions`/`children`/`child` without the base `allOf`, combined into `ComponentContractsTriad` (the identity-free value shape for the `composition-snapshot` map, so Ajv and the Zod projection agree) — because JSON Schema cannot strip a `required` inherited through `allOf`. (2) Each document re-declares `additionalProperties: false` at its own root — because `additionalProperties` is **not** `allOf`-aware: it only sees the same object's own `properties`, so a single declaration on the base would neither close the members nor even accept the member-declared `componentType`/`state`/`actions`. Here `additionalProperties: false` also does double duty: it is the keyword that makes quicktype project the clean identity-free triad rather than re-flattening the base identity fields into the generated `*Schema`. **The cleaner solution is `unevaluatedProperties: false`**, which _is_ `allOf`-aware and could be declared **once on the base** to close every member without per-document repetition. It was **not rejected because it's a bad idea** — it's the better modeling primitive here. Track #1 deferred it purely to keep the additive change quiet: switching the keyword on all 14 existing documents changes their long-standing contract keyword, invalidates the `facet-schemas.test.ts` assertions that each document has `additionalProperties === false`, and needs a verification that quicktype still projects the identity-free triad under `unevaluatedProperties` (the projection guarantee `additionalProperties: false` currently provides). Worth adopting in a dedicated pass: move to `unevaluatedProperties: false` on the base, drop the per-document `additionalProperties: false`, confirm the Zod projection stays identity-free, and update the structural tests. Internal only — `ComponentContractsTriad` is not re-exported. |
-
-### Resolved
-
-| Item                                                     | Description                                                                                                                                                                                                                                                                                                                                                      |
-| -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Generate component props schemas in thermidor-schema** | ✅ The Zod generation script now produces component props schemas (`ProductCarouselPropsSchema`, `NextActionsBarPropsSchema`, etc.) from `schema/components/*.json`. Consumers import them directly — no more hand-written boilerplate in `components.tsx`.                                                                                                      |
-| **Wire remote controller action dispatch**               | ✅ `UnifiedConverseController` now exposes `dispatchAction(action: RemoteControllerAction)`, which builds the A2uiAction envelope and POSTs it to the Converse API on the active turn. Sort, pagination, page-size, and next-actions dispatch end-to-end; the backend responds with an updated `StateSnapshot`. Remote controller actions are no longer a no-op. |
+| Item                      | Description                                                                                                    | Remove when                                                         |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| **v1.0 → v0.9 downgrade** | Owned by `@coveo/thermidor` (`session.a2uiMessages`); see the ADR-015 addendum.                                | `@a2ui/web_core` ships a `v1_0` subpath AND the renderer imports it |
+| **Zod 3 projection**      | The sample pins `zod@3` and imports runtime schemas from `@coveo/thermidor-schema/zod3` to match the renderer. | `@copilotkit/a2ui-renderer` upgrades to Zod 4                       |

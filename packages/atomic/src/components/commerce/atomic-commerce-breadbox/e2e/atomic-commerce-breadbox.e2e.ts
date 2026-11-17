@@ -152,7 +152,7 @@ test.describe('atomic-commerce-breadbox', () => {
           (await breadbox
             .getFacetValue('category')
             .first()
-            .locator('li span')
+            .locator('li [part="value-label"]')
             .first()
             .textContent()) +
           ' / ' +

@@ -1,5 +1,5 @@
 # Development container for pnpm-based monorepo
-FROM node:krypton-bookworm@sha256:be23f54a88d34e8824c741b19b91064094f92c1c97b194144bfc8b50d67258e2
+FROM node:krypton-bookworm@sha256:9d266751ca3d7fdbe651c878ffd5ad0a42fed49a18c283509267c97f025b7496
 
 # Install essential packages
 RUN apt-get update && apt-get install -y \
@@ -9,9 +9,9 @@ RUN apt-get update && apt-get install -y \
 # Enable corepack globally
 RUN corepack enable
 
-# Configure pnpm home and path
+# Configure pnpm home and path, including pnpm 11's global bin directory
 ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
+ENV PATH="$PNPM_HOME/bin:$PNPM_HOME:$PATH"
 
 # Configure pnpm to use the mounted store directory
 ENV PNPM_STORE_PATH="/pnpm/store"
@@ -29,7 +29,7 @@ RUN mkdir -p /pnpm/store && chown -R node:node /pnpm
 USER node
 
 # Pre-install pnpm as the node user so it's ready to use
-RUN corepack prepare pnpm@11.24.0 --activate
+RUN corepack prepare pnpm@11.28.10 --activate
 
 # Install turbo globally so it's available in terminal
 RUN pnpm add -g turbo@2.5.5

@@ -1,87 +1,70 @@
-import {render, screen, fireEvent} from '@testing-library/react';
-import {describe, it, expect, vi} from 'vitest';
+import {fireEvent, screen} from '@testing-library/react';
+import {afterEach, describe, it, expect, vi} from 'vitest';
 import type {Turn} from '@coveo/thermidor';
 import {ConversationPage} from './ConversationPage.js';
+import {makeFollowUpTurn, makeSurfaces, makeTurn} from '../../test/turn-fixtures.js';
+import {findSearchBox, renderWithSession} from '../../test/session.js';
+
+// The blocks are drawn by the A2-UI renderer; the page only decides where each turn's blocks go
+// and whether they are interactive.
+vi.mock('../../a2ui/surfaces.js', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../../a2ui/surfaces.js')>()),
+  TurnSurfaces: ({
+    surfaces,
+    interactive,
+  }: {
+    surfaces: {surfaceId: string}[];
+    interactive: boolean;
+  }) =>
+    surfaces.length === 0 ? null : (
+      <div data-testid="turn-surfaces" data-interactive={String(interactive)}>
+        {surfaces.map((surface) => surface.surfaceId).join(',')}
+      </div>
+    ),
+}));
 
 function renderPage(overrides: Partial<Parameters<typeof ConversationPage>[0]> = {}) {
   const defaultProps = {
     onSubmit: vi.fn(),
     isStreaming: false,
     turns: [] as Turn[],
-    onBackToSearch: vi.fn(),
-    canGoBackToSearch: false,
-    products: [],
-    onProductsChange: vi.fn(),
   };
 
   return {
     props: {...defaultProps, ...overrides},
-    ...render(<ConversationPage {...defaultProps} {...overrides} />),
+    ...renderWithSession(<ConversationPage {...defaultProps} {...overrides} />),
   };
 }
 
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
+
 describe('ConversationPage integration', () => {
   describe('multi-turn conversation rendering', () => {
-    it('renders a mix of agent turns, routed turns, and error turns', () => {
+    it('renders a mix of agent turns, search turns, and error turns', () => {
       const turns: Turn[] = [
-        {
+        makeTurn({
           id: 'turn-1',
           prompt: 'Find me running shoes',
-          status: 'complete',
-          agentResponse: {
-            state: {},
-            activities: [],
-            messages: [{content: 'Here are some running shoes.', role: 'assistant'}],
-            surfaces: [],
-            reasoningSteps: [{type: 'reasoning', content: 'Looking up running shoes'}],
+          response: {
+            agent: {
+              messages: [{content: 'Here are some running shoes.', role: 'assistant'}],
+              reasoningSteps: [{type: 'reasoning', content: 'Looking up running shoes'}],
+            },
           },
-        },
-        {
+        }),
+        makeTurn({
           id: 'turn-2',
           prompt: 'Show me results',
-          status: 'complete',
-          routedInterface: undefined,
-          agentResponse: {
-            messages: [],
-            surfaces: [],
-            activities: [
-              {
-                id: 'activity-search',
-                kind: 'a2ui-surface',
-                replace: true,
-                payload: {
-                  messages: [
-                    {
-                      createSurface: {
-                        surfaceId: 's1',
-                        rootId: 'commerce-search-s1',
-                        components: [
-                          {
-                            id: 'commerce-search-s1',
-                            component: 'CommerceSearch',
-                            props: {
-                              componentId: 'commerce-search-s1',
-                              componentType: 'commerce-search',
-                            },
-                            children: [],
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-            state: {},
-            reasoningSteps: [],
-          },
-        },
-        {
+          response: {surfaces: makeSurfaces('ui-search-2')},
+        }),
+        makeTurn({
           id: 'turn-3',
           prompt: 'What about hiking boots?',
           status: 'error',
           error: 'Service unavailable',
-        },
+        }),
       ];
 
       renderPage({turns});
@@ -90,38 +73,130 @@ describe('ConversationPage integration', () => {
       expect(screen.getByText('Here are some running shoes.')).toBeDefined();
 
       expect(screen.getByText('Show me results')).toBeDefined();
-      expect(screen.getByText('Search results updated.')).toBeDefined();
+      expect(screen.getByTestId('turn-surfaces').textContent).toBe('ui-search-2');
 
       expect(screen.getByText('What about hiking boots?')).toBeDefined();
       expect(screen.getByText('Service unavailable')).toBeDefined();
     });
 
+    it('draws an agent answer and the search block its option opened in the same turn', () => {
+      const turns: Turn[] = [
+        makeTurn({
+          id: 'turn-1',
+          prompt: 'Recommend waterproof trail shoes',
+          response: {
+            surfaces: makeSurfaces('agent-answer-1', 'ui-search-1'),
+            agent: {
+              messages: [{content: 'Here are a few directions.', role: 'assistant'}],
+              reasoningSteps: [],
+            },
+          },
+        }),
+      ];
+
+      renderPage({turns});
+
+      expect(screen.getByText('Here are a few directions.')).toBeDefined();
+      expect(screen.getByTestId('turn-surfaces').textContent).toBe('agent-answer-1,ui-search-1');
+    });
+
+    it('keeps only the latest turn interactive', () => {
+      const turns: Turn[] = [
+        makeTurn({
+          id: 'turn-1',
+          prompt: 'kayaks',
+          response: {surfaces: makeSurfaces('ui-search-1')},
+        }),
+        makeTurn({
+          id: 'turn-2',
+          prompt: 'which are best for rivers?',
+          response: {surfaces: makeSurfaces('agent-answer-2')},
+        }),
+      ];
+
+      renderPage({turns});
+
+      expect(
+        screen.getAllByTestId('turn-surfaces').map((block) => block.dataset['interactive'])
+      ).toEqual(['false', 'true']);
+    });
+
+    it('draws a follow-up as its own turn after the answer it follows', () => {
+      const turns: Turn[] = [
+        makeTurn({
+          id: 'turn-1',
+          prompt: 'boating safety',
+          response: {
+            surfaces: makeSurfaces('agent-a-1'),
+            agent: {
+              messages: [{content: 'Here is the safety gear.', role: 'assistant'}],
+              reasoningSteps: [],
+            },
+          },
+        }),
+        makeFollowUpTurn({
+          id: 'turn-2',
+          text: 'Show more Mustang Survival life jackets',
+          response: {
+            surfaces: makeSurfaces('agent-b-2'),
+            agent: {
+              messages: [{content: 'Here are more Mustang Survival jackets.', role: 'assistant'}],
+              reasoningSteps: [],
+            },
+          },
+        }),
+      ];
+
+      const {container} = renderPage({turns});
+
+      const order = [
+        'Here is the safety gear.',
+        'agent-a-1',
+        'Show more Mustang Survival life jackets',
+        'Here are more Mustang Survival jackets.',
+        'agent-b-2',
+      ].map((text) => container.textContent!.indexOf(text));
+      expect(order.every((position) => position >= 0)).toBe(true);
+      expect([...order].sort((x, y) => x - y)).toEqual(order);
+      expect(container.querySelectorAll('hr')).toHaveLength(0);
+    });
+
+    it('shows the reasoning indicator while a follow-up streams', () => {
+      const turns: Turn[] = [
+        makeTurn({
+          id: 'turn-1',
+          prompt: 'boating safety',
+          response: {
+            agent: {
+              messages: [{content: 'Here is the safety gear.', role: 'assistant'}],
+              reasoningSteps: [],
+            },
+          },
+        }),
+        makeFollowUpTurn({id: 'turn-2', text: 'Show more', status: 'streaming'}),
+      ];
+
+      renderPage({turns, isStreaming: true});
+
+      expect(screen.getByText('Working')).toBeDefined();
+    });
+
     it('renders separators between turns but not after the last turn', () => {
       const turns: Turn[] = [
-        {
+        makeTurn({
           id: 'turn-1',
           prompt: 'First question',
-          status: 'complete',
-          agentResponse: {
-            state: {},
-            activities: [],
-            messages: [{content: 'First answer', role: 'assistant'}],
-            surfaces: [],
-            reasoningSteps: [],
+          response: {
+            agent: {messages: [{content: 'First answer', role: 'assistant'}], reasoningSteps: []},
           },
-        },
-        {
+        }),
+        makeTurn({
           id: 'turn-2',
           prompt: 'Second question',
-          status: 'complete',
-          agentResponse: {
-            state: {},
-            activities: [],
-            messages: [{content: 'Second answer', role: 'assistant'}],
-            surfaces: [],
-            reasoningSteps: [],
+          response: {
+            agent: {messages: [{content: 'Second answer', role: 'assistant'}], reasoningSteps: []},
           },
-        },
+        }),
       ];
 
       const {container} = renderPage({turns});
@@ -132,76 +207,46 @@ describe('ConversationPage integration', () => {
   });
 
   describe('streaming state', () => {
-    it('disables prompt input and shows thinking dots when streaming with no response yet', () => {
+    it('holds the prompt and shows thinking dots when streaming with no response yet', async () => {
       const turns: Turn[] = [
-        {
-          id: 'turn-1',
-          prompt: 'Tell me about shoes',
-          status: 'streaming',
-        },
+        makeTurn({id: 'turn-1', prompt: 'Tell me about shoes', status: 'streaming'}),
       ];
 
       renderPage({turns, isStreaming: true});
 
-      const textarea = screen.getByLabelText('Prompt') as HTMLTextAreaElement;
-      expect(textarea.disabled).toBe(true);
+      fireEvent.change(await findSearchBox(), {target: {value: 'And boots?'}});
+      expect((screen.getByLabelText('Submit') as HTMLButtonElement).disabled).toBe(true);
 
       expect(screen.getByText(/Working/)).toBeDefined();
     });
 
     it('shows thinking block with reasoning steps during streaming', () => {
       const turns: Turn[] = [
-        {
+        makeTurn({
           id: 'turn-1',
           prompt: 'Compare these products',
           status: 'streaming',
-          agentResponse: {
-            state: {},
-            activities: [],
-            messages: [],
-            surfaces: [],
-            reasoningSteps: [
-              {type: 'reasoning', content: 'Analyzing products...'},
-              {
-                type: 'tool-call',
-                id: 'tc-1',
-                name: 'product_search',
-                args: '{"query":"shoes"}',
-                status: 'calling',
-              },
-            ],
+          response: {
+            agent: {
+              messages: [],
+              reasoningSteps: [
+                {type: 'reasoning', content: 'Analyzing products...'},
+                {
+                  type: 'tool-call',
+                  id: 'tc-1',
+                  name: 'product_search',
+                  args: '{"query":"shoes"}',
+                  status: 'calling',
+                },
+              ],
+            },
           },
-        },
+        }),
       ];
 
       renderPage({turns, isStreaming: true});
 
       expect(screen.getByText(/Calling tool:/)).toBeDefined();
-    });
-  });
-
-  describe('Back to search results visibility', () => {
-    it('shows "Back to search results" when canGoBackToSearch is true', () => {
-      const turns: Turn[] = [{id: 'turn-1', prompt: 'Hello', status: 'complete'}];
-
-      renderPage({turns, canGoBackToSearch: true});
-      expect(screen.getByRole('button', {name: /Back to search results/})).toBeDefined();
-    });
-
-    it('hides "Back to search results" when canGoBackToSearch is false', () => {
-      const turns: Turn[] = [{id: 'turn-1', prompt: 'Hello', status: 'complete'}];
-
-      renderPage({turns, canGoBackToSearch: false});
-      expect(screen.queryByRole('button', {name: /Back to search results/})).toBeNull();
-    });
-
-    it('calls onBackToSearch when the button is clicked', () => {
-      const onBackToSearch = vi.fn();
-      const turns: Turn[] = [{id: 'turn-1', prompt: 'Hello', status: 'complete'}];
-
-      renderPage({turns, canGoBackToSearch: true, onBackToSearch});
-      fireEvent.click(screen.getByRole('button', {name: /Back to search results/}));
-      expect(onBackToSearch).toHaveBeenCalledTimes(1);
     });
   });
 });

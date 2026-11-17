@@ -1,0 +1,31 @@
+.inspector {
+  box-sizing: border-box;
+  width: calc(100% - 2 * var(--space-4));
+  max-width: 1100px;
+  margin: var(--space-4) auto;
+  overflow: auto;
+  background: var(--color-neutral-dark);
+  color: var(--color-on-neutral-dark);
+  border-radius: 10px;
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+}
+
+.inspector summary {
+  cursor: pointer;
+  padding: var(--space-1) 0;
+}
+
+.table {
+  width: 100%;
+  margin: var(--space-2) 0;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 2px var(--space-3) 2px 0;
+  white-space: nowrap;
+}

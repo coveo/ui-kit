@@ -104,6 +104,11 @@ analyticsModeTest.forEach((analytics) => {
           }
         );
 
+        // The mocked stream ends at once, so start waiting before submitting or the event can go out first.
+        const firstFollowUpStreamEndPromise =
+          generatedAnswer.waitForFollowUpStreamEndAnalytics(
+            agentData.followUpAnswers[0].answerId
+          );
         await testAgent.step(
           'FIRST FOLLOW-UP: should send the follow-up request with the correct conversationId and conversationToken',
           async () => {
@@ -127,11 +132,7 @@ analyticsModeTest.forEach((analytics) => {
         await testAgent.step(
           'should send stream end analytics with the right answerId for the follow-up',
           async () => {
-            const followUpStreamEndPromise =
-              generatedAnswer.waitForFollowUpStreamEndAnalytics(
-                agentData.followUpAnswers[0].answerId
-              );
-            await followUpStreamEndPromise;
+            await firstFollowUpStreamEndPromise;
           }
         );
 
@@ -148,6 +149,10 @@ analyticsModeTest.forEach((analytics) => {
           }
         );
 
+        const secondFollowUpStreamEndPromise =
+          generatedAnswer.waitForFollowUpStreamEndAnalytics(
+            agentData.followUpAnswers[1].answerId
+          );
         await testAgent.step(
           'SECOND FOLLOW-UP: should send the second follow-up request with the correct conversationId and conversationToken',
           async () => {
@@ -173,11 +178,7 @@ analyticsModeTest.forEach((analytics) => {
         await testAgent.step(
           'should send stream end analytics with the right answerId for the second follow-up',
           async () => {
-            const followUpStreamEndPromise =
-              generatedAnswer.waitForFollowUpStreamEndAnalytics(
-                agentData.followUpAnswers[1].answerId
-              );
-            await followUpStreamEndPromise;
+            await secondFollowUpStreamEndPromise;
           }
         );
 

@@ -15,6 +15,9 @@ type GeneratedAnswer = GeneratedAnswerBase & {
   expanded?: boolean;
 };
 
+// Scoped to the host's shadow root, so a stable value stays unique across answers.
+const GENERATED_CONTENT_ID = 'generated-answer-content';
+
 export interface RenderAnswerContentProps {
   i18n: i18n;
   generatedAnswer: GeneratedAnswer;
@@ -62,6 +65,7 @@ export const renderAnswerContent: FunctionalComponent<RenderAnswerContentProps> 
                 answer,
                 answerContentFormat,
                 isStreaming: !!isStreaming,
+                id: collapsible ? GENERATED_CONTENT_ID : undefined,
               },
             })(html`
               ${renderSourceCitations({
@@ -95,6 +99,7 @@ export const renderAnswerContent: FunctionalComponent<RenderAnswerContentProps> 
                           i18n,
                           onClick: onClickShowButton,
                           isCollapsed: !expanded,
+                          controlsId: GENERATED_CONTENT_ID,
                         },
                       })
                     : nothing

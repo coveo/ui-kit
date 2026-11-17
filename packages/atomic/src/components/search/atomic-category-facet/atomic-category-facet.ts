@@ -21,17 +21,19 @@ import {css, html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {map} from 'lit/directives/map.js';
 import {when} from 'lit/directives/when.js';
+import {renderCategoryFacetActiveValue} from '@/src/components/common/facets/category-facet/active-value';
 import {renderCategoryFacetAllCategoryButton} from '@/src/components/common/facets/category-facet/all-categories-button';
 import {renderCategoryFacetChildrenAsTreeContainer} from '@/src/components/common/facets/category-facet/children-as-tree-container';
 import {renderCategoryFacetParentAsTreeContainer} from '@/src/components/common/facets/category-facet/parent-as-tree-container';
 import {renderCategoryFacetParentButton} from '@/src/components/common/facets/category-facet/parent-button';
-import {renderCategoryFacetParentValueLink} from '@/src/components/common/facets/category-facet/parent-value-link';
 import {renderCategoryFacetSearchResultsContainer} from '@/src/components/common/facets/category-facet/search-results-container';
 import {renderCategoryFacetSearchValue} from '@/src/components/common/facets/category-facet/search-value';
+import {renderCategoryFacetSelectedValue} from '@/src/components/common/facets/category-facet/selected-value';
 import {renderCategoryFacetTreeValueContainer} from '@/src/components/common/facets/category-facet/value-as-tree-container';
 import {renderCategoryFacetValueLink} from '@/src/components/common/facets/category-facet/value-link';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
 import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.css';
+import {FacetVisibilityController} from '@/src/components/common/facets/facet-visibility-controller';
 import type {FacetInfo} from '@/src/components/common/facets/facet-common-store';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
@@ -64,6 +66,8 @@ import {mapProperty} from '@/src/utils/props-utils';
 /**
  * The `atomic-category-facet` component displays a facet of values in a browsable, hierarchical fashion.
  *
+ * @cssState hidden - Applied when the facet is hidden.
+ *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
  *
@@ -82,12 +86,17 @@ import {mapProperty} from '@/src/utils/props-utils';
  * @part search-result-path - The search result path.
  * @part search-highlight - The highlighted query inside the facet values.
  *
+ * @part selected-value - The row displaying the currently selected value and the button that clears the facet.
+ * @part selected-value-pill - The pill displaying the currently selected value.
+ * @part selected-value-clear-button - The button that clears the facet, displayed next to the selected value.
+ * @part selected-value-clear-button-icon - The icon of the button that clears the facet.
+ *
  * @part parents - The container surrounding the whole hierarchy of values.
  * @part sub-parents - The container surrounding a sub-hierarchy of values.
  * @part values - The container surrounding either the children of the active value or the values at the base.
- * @part all-categories-button - The "View all" button displayed first within the parents.
+ * @part all-categories-button - The "All Categories" button displayed first within the parents.
  * @part parent-button - The clickable parent button displayed first within sub-parents.
- * @part active-parent - The clickable active parent displayed first within the last sub-parents.
+ * @part active-parent - The currently selected value, displayed last within the parents. Not interactive.
  * @part value-link - The clickable value displayed first within values.
  * @part back-arrow - The back arrow displayed before the clickable parents.
  * @part value-label - The facet value label within a value button.
@@ -339,9 +348,19 @@ export class AtomicCategoryFacet extends LitElement implements InitializableComp
 
   private facetSearchAriaMessage = new AriaLiveRegionController(this, 'facet-search');
 
+  private get facetInfo(): FacetInfo {
+    return {
+      label: () => this.bindings.i18n.t(this.label),
+      facetId: this.facetId!,
+      element: this,
+      isHidden: () => this.isHidden,
+    };
+  }
+
   constructor() {
     super();
 
+    new FacetVisibilityController(this, () => !!this.facet && this.facetInfo.isHidden());
     new ValidatePropsController(
       this,
       () => ({
@@ -388,6 +407,7 @@ export class AtomicCategoryFacet extends LitElement implements InitializableComp
     this.facetId = this.facet.state.facetId;
 
     announceFacetSearchResultsWithAriaLive(
+      this,
       this.facet,
       this.label,
       (msg) => {
@@ -396,17 +416,10 @@ export class AtomicCategoryFacet extends LitElement implements InitializableComp
       this.bindings.i18n
     );
 
-    const facetInfo: FacetInfo = {
-      label: () => this.bindings.i18n.t(this.label),
-      facetId: this.facetId!,
-      element: this,
-      isHidden: () => this.isHidden,
-    };
-
-    this.bindings.store.registerFacet('categoryFacets', facetInfo);
+    this.bindings.store.registerFacet('categoryFacets', this.facetInfo);
 
     initializePopover(this, {
-      ...facetInfo,
+      ...this.facetInfo,
       hasValues: () => !!this.facet.state.valuesAsTrees.length,
       numberOfActiveValues: () => (this.facetState.hasActiveValues ? 1 : 0),
     });
@@ -525,6 +538,26 @@ export class AtomicCategoryFacet extends LitElement implements InitializableComp
     });
   }
 
+  private renderSelectedValue() {
+    const activeValue = this.facetState.selectedValueAncestry.at(-1);
+
+    if (!activeValue) {
+      return nothing;
+    }
+
+    return renderCategoryFacetSelectedValue({
+      props: {
+        displayValue: getFieldValueCaption(this.field, activeValue.value, this.bindings.i18n),
+        label: this.label,
+        i18n: this.bindings.i18n,
+        onClearFilters: () => {
+          this.focusTargets.activeValueFocus.focusAfterSearch();
+          this.facet.deselectAll();
+        },
+      },
+    });
+  }
+
   private renderValuesTree(valuesAsTrees: CategoryFacetValue[], isRoot: boolean): TemplateResult {
     if (!this.hasParents) {
       return this.renderChildren();
@@ -582,16 +615,12 @@ export class AtomicCategoryFacet extends LitElement implements InitializableComp
     );
 
     return html`
-      ${renderCategoryFacetParentValueLink({
+      ${renderCategoryFacetActiveValue({
         props: {
           displayValue: activeParentDisplayValue,
           numberOfResults: activeParent.numberOfResults,
           i18n: this.bindings.i18n,
           isLeafValue: activeParent.isLeafValue,
-          onClick: () => {
-            this.focusTargets.activeValueFocus.focusAfterSearch();
-            this.facet.deselectAll();
-          },
           searchQuery: this.facetState.facetSearch.query,
           setRef: (el) => {
             this.focusTargets.activeValueFocus.setTarget(el as HTMLElement);
@@ -618,7 +647,6 @@ export class AtomicCategoryFacet extends LitElement implements InitializableComp
           this.focusTargets.activeValueFocus.focusAfterSearch();
           this.facet.toggleSelect(facetValue);
         },
-        isParent: false,
         isSelected,
         searchQuery: this.facetState.facetSearch.query,
         isLeafValue: facetValue.isLeafValue,
@@ -743,7 +771,7 @@ export class AtomicCategoryFacet extends LitElement implements InitializableComp
       ${when(
         !this.isCollapsed,
         () => html`
-          ${this.renderSearchInput()}
+          ${this.renderSearchInput()} ${this.renderSelectedValue()}
           ${when(
             shouldDisplaySearchResults(facetSearch),
             () => html`

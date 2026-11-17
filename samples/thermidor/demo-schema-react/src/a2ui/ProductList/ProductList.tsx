@@ -1,6 +1,10 @@
-import {useRemoteController} from '../controllers.js';
-import {useStateSource} from '../state-source-context.js';
-import type {Product, ProductListProps} from '@coveo/thermidor-schema';
+import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {useContext} from 'react';
+import type {Product} from '@coveo/thermidor-schema';
+import {ProductListPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {ProductCardActionsContext} from '../ProductCard/product-card-actions.js';
+import {ProductBadges} from '../ProductBadges/ProductBadges.js';
+import {resultsFocusTarget} from '../results-focus.js';
 import styles from './ProductList.module.css';
 
 function formatPrice(value: number): string {
@@ -15,38 +19,18 @@ function resolveProductImage(product: Product): string | null {
   return null;
 }
 
-export function ProductListRenderer({props}: {props: ProductListProps}) {
-  const stateSource = useStateSource();
-  const controller = useRemoteController(stateSource, props.componentId, props.componentType);
-  const products = controller.state?.products ?? [];
-
-  if (!controller.state) {
-    return (
-      <div className={styles.loading} aria-label="Loading product list">
-        Loading products…
-      </div>
-    );
-  }
-
-  if (products.length === 0) {
-    return null;
-  }
-
-  return (
-    <section>
-      <div className={styles.grid} role="list" aria-label="Product list">
-        {products.map((product: Product) => (
-          <ProductCard key={product.permanentid} product={product} />
-        ))}
-      </div>
-    </section>
-  );
-}
-
 function ProductCard({product}: {product: Product}) {
   const imageUrl = resolveProductImage(product);
   const {ec_name: name, ec_brand: brand, ec_price: price, ec_promo_price: promoPrice} = product;
   const hasPromo = promoPrice !== undefined && price !== undefined && promoPrice < price;
+  const renderActions = useContext(ProductCardActionsContext);
+  const actions = renderActions?.({
+    productId: product.permanentid,
+    name: name ?? product.permanentid,
+    price: hasPromo ? promoPrice : price,
+    imageUrl: imageUrl ?? undefined,
+    clickUri: product.clickUri,
+  });
 
   return (
     <article className={styles.card} role="listitem">
@@ -56,6 +40,9 @@ function ProductCard({product}: {product: Product}) {
         ) : (
           <div className={styles.imagePlaceholder} aria-label="No image available" />
         )}
+        <div className={styles.badges}>
+          <ProductBadges placements={product.badgePlacements} />
+        </div>
       </div>
       <div className={styles.content}>
         {brand && <span className={styles.brand}>{brand}</span>}
@@ -75,6 +62,46 @@ function ProductCard({product}: {product: Product}) {
           )}
         </div>
       </div>
+      {actions != null && <div className={styles.actions}>{actions}</div>}
     </article>
   );
 }
+
+/**
+ * A2-UI component for the `product-list`. The generic binder resolves `products` from
+ * `ProductListPropsSchema`; a grid of product cards for decomposed commerce search surfaces.
+ * Presentational — no surface actions; cards render `ProductCardActionsContext` actions.
+ * `products === undefined` (bindings not yet resolved) renders a loading state; an empty list
+ * renders nothing.
+ *
+ * While a gesture is in flight, an optimistic control already shows the new choice (page 3) while
+ * this grid still holds the previous results (page 2); the surface lock dims the grid meanwhile.
+ */
+export const ProductList = createReactComponent(
+  {name: 'ProductList', schema: ProductListPropsSchema},
+  ({props}) => {
+    const products = props.products;
+
+    if (products === undefined) {
+      return (
+        <div className={styles.loading} aria-label="Loading product list">
+          Loading products…
+        </div>
+      );
+    }
+
+    if (products.length === 0) {
+      return null;
+    }
+
+    return (
+      <section>
+        <div className={styles.grid} role="list" aria-label="Product list" {...resultsFocusTarget}>
+          {products.map((product) => (
+            <ProductCard key={product.permanentid} product={product} />
+          ))}
+        </div>
+      </section>
+    );
+  }
+);

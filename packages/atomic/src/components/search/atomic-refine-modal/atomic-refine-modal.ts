@@ -236,8 +236,12 @@ export class AtomicRefineModal extends LitElement implements InitializableCompon
 
     collapseFacetsAfter(visibleFacetsClone, this.collapseFacetsAfter);
 
-    divSlot.append(...visibleFacetsClone);
-    divSlot.append(...invisibleFacetsClone);
+    const clonesByFacet = new Map<BaseFacetElement, BaseFacetElement>();
+    visibleFacets.forEach((facet, index) => clonesByFacet.set(facet, visibleFacetsClone[index]));
+    invisibleFacets.forEach((facet, index) =>
+      clonesByFacet.set(facet, invisibleFacetsClone[index])
+    );
+    divSlot.append(...sortedFacets.map((facet) => clonesByFacet.get(facet)!));
 
     const generator = this.makeAutomaticFacetGenerator();
     if (generator) {

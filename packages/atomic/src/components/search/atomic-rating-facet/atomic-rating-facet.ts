@@ -25,6 +25,7 @@ import atomicRatingStyles from '@/src/components/common/atomic-rating/atomic-rat
 import {renderRating} from '@/src/components/common/atomic-rating/rating';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
 import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.css';
+import {FacetVisibilityController} from '@/src/components/common/facets/facet-visibility-controller';
 import type {FacetInfo} from '@/src/components/common/facets/facet-common-store';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
@@ -52,6 +53,8 @@ import Star from '../../../images/star.svg';
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
  * An `atomic-rating-facet` displays a facet of the results for the current query as ratings.
  * It only supports numeric fields.
+ *
+ * @cssState hidden - Applied when the facet is hidden.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -287,8 +290,18 @@ export class AtomicRatingFacet extends LitElement implements InitializableCompon
     return this.headerFocus;
   }
 
+  private get facetInfo(): FacetInfo {
+    return {
+      label: () => this.bindings.i18n.t(this.label),
+      facetId: this.facetId!,
+      element: this,
+      isHidden: () => this.isHidden,
+    };
+  }
+
   constructor() {
     super();
+    new FacetVisibilityController(this, () => !!this.facet && this.facetInfo.isHidden());
     new ValidatePropsController(
       this,
       () => ({
@@ -355,20 +368,14 @@ export class AtomicRatingFacet extends LitElement implements InitializableCompon
     };
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    const facetInfo: FacetInfo = {
-      label: () => this.bindings.i18n.t(this.label),
-      facetId: this.facetId!,
-      element: this,
-      isHidden: () => this.isHidden,
-    };
     this.bindings.store.registerFacet('numericFacets', {
-      ...facetInfo,
+      ...this.facetInfo,
       format: (value) => this.formatFacetValue(value),
       // @ts-expect-error -- Because of Stencil VNode dependencies.
       content: (value) => this.ratingContent(value),
     });
     initializePopover(this, {
-      ...facetInfo,
+      ...this.facetInfo,
       hasValues: () => !!this.valuesToRender.length,
       numberOfActiveValues: () => this.numberOfSelectedValues,
     });

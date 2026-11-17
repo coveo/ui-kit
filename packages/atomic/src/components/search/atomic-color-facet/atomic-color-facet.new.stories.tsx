@@ -57,13 +57,14 @@ const {events, argTypes} = getStorybookHelpers('atomic-color-facet', {
   excludeCategories: ['methods'],
 });
 
-const {template} = getStorybookHelpers('atomic-color-facet', {
+const {args, template} = getStorybookHelpers('atomic-color-facet', {
   excludeCategories: ['methods', 'cssParts'],
 });
 
 const meta: Meta = {
   component: 'atomic-color-facet',
   title: 'Search/Facet (Color)',
+  args,
   id: 'atomic-color-facet',
   render: (args) => template(args),
   decorators: [decorator],

@@ -261,26 +261,6 @@ export const NoSuggestions: Story = {
 };
 ```
 
-## Testing Loading States
-
-Use delays or pending promises for loading states:
-
-```typescript
-export const Loading: Story = {
-  beforeEach: () => {
-    // Note: MSW doesn't directly support delays, but you can use
-    // component-level loading props or test during initialization
-  },
-  play: async (context) => {
-    // Test during loading phase
-    await context.step('Check loading state', async () => {
-      const component = context.canvasElement.querySelector('atomic-component');
-      // Assertions for loading state
-    });
-  },
-};
-```
-
 ## Complex Facet Mocking
 
 ### Category Facet

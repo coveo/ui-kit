@@ -24,7 +24,10 @@ import {renderAnswerContent} from '@/src/components/common/generated-answer/rend
 import {renderCardHeader} from '@/src/components/common/generated-answer/render-card-header';
 import {renderCitations} from '@/src/components/common/generated-answer/render-citations';
 import {renderCustomNoAnswerMessage} from '@/src/components/common/generated-answer/render-custom-no-answer-message';
-import {renderDisclaimer} from '@/src/components/common/generated-answer/render-disclaimer';
+import {
+  DISCLAIMER_ID,
+  renderDisclaimer,
+} from '@/src/components/common/generated-answer/render-disclaimer';
 import {renderFeedbackAndCopyButtons} from '@/src/components/common/generated-answer/render-feedback-and-copy-buttons';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
@@ -294,6 +297,7 @@ export class AtomicGeneratedAnswer extends LitElement implements InitializableCo
 
   private ariaMessage = new AriaLiveRegionController(this, 'generated-answer', false, true);
   private ariaErrorMessage = new AriaLiveRegionController(this, 'generated-answer-error', true);
+  private ariaCopyMessage = new AriaLiveRegionController(this, 'generated-answer-copy', true);
 
   constructor() {
     super();
@@ -449,6 +453,7 @@ export class AtomicGeneratedAnswer extends LitElement implements InitializableCo
           class=${contentClasses}
           part="container"
           aria-label=${this.bindings.i18n.t('generated-answer-title')}
+          aria-describedby=${this.isAnswerVisible ? DISCLAIMER_ID : nothing}
         >
           <div part="generated-content">
             ${this.renderCardHeaderWrapper()}
@@ -463,6 +468,8 @@ export class AtomicGeneratedAnswer extends LitElement implements InitializableCo
                       'generated-answer-content-background': this.areFollowUpsEnabled,
                       'agent-scrollable': this.areFollowUpsEnabled,
                     })}
+                    tabindex=${this.areFollowUpsEnabled ? '0' : nothing}
+                    aria-describedby=${this.areFollowUpsEnabled ? DISCLAIMER_ID : nothing}
                   >
                     <article>${this.renderAnswerContent()}</article>
                   </div>
@@ -499,6 +506,10 @@ export class AtomicGeneratedAnswer extends LitElement implements InitializableCo
       this.controller.writeStoredData(this.controller.data);
     }
 
+    if (!this.shouldAnnounceAnswerStatus) {
+      return;
+    }
+
     const status = this.controller.getGeneratedAnswerStatus();
     if (this.controller.isStatusAssertive()) {
       this.ariaMessage.message = '';
@@ -508,6 +519,13 @@ export class AtomicGeneratedAnswer extends LitElement implements InitializableCo
       this.ariaMessage.message = status;
     }
   };
+
+  private get shouldAnnounceAnswerStatus() {
+    // In conversational mode each turn is rendered by atomic-generated-answer-content, which
+    // announces its own state. Announcing here as well would repeat the first answer and still
+    // leave every follow-up silent, since this state only ever describes the first answer.
+    return !this.areFollowUpsEnabled;
+  }
 
   private get hasNoAnswerGenerated() {
     return this.controller.hasNoAnswerGenerated;
@@ -542,12 +560,14 @@ export class AtomicGeneratedAnswer extends LitElement implements InitializableCo
       answer,
       () => {
         this.copied = true;
+        this.ariaCopyMessage.message = this.bindings.i18n.t('generated-answer-copied');
         setTimeout(() => {
           this.copied = false;
         }, 2000);
       },
       () => {
         this.copyError = true;
+        this.ariaCopyMessage.message = this.bindings.i18n.t('failed-to-copy-generated-answer');
         setTimeout(() => {
           this.copyError = false;
         }, 2000);

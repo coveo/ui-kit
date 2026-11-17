@@ -317,8 +317,10 @@ describe('atomic-insight-timeframe-facet', () => {
 
   describe('#render', () => {
     it('should render the facet', async () => {
-      const {facet} = await setupElement();
+      const {element, facet} = await setupElement();
       await expect.element(facet).toBeInTheDocument();
+      expect(element.matches(':state(hidden)')).toBe(false);
+      expect(getComputedStyle(element).display).not.toBe('none');
     });
 
     it('should render facet values', async () => {
@@ -365,9 +367,11 @@ describe('atomic-insight-timeframe-facet', () => {
         firstSearchExecuted: false,
       });
 
-      const {placeholder, facet} = await setupElement();
+      const {element, placeholder, facet} = await setupElement();
       expect(placeholder).not.toBeNull();
       expect(facet).not.toBeInTheDocument();
+      expect(element.matches(':state(hidden)')).toBe(false);
+      expect(getComputedStyle(element).display).not.toBe('none');
     });
 
     it('should not render facet when there is an error', async () => {
@@ -376,22 +380,56 @@ describe('atomic-insight-timeframe-facet', () => {
         hasError: true,
       });
 
-      const {facet} = await setupElement();
+      const {element, facet} = await setupElement();
       expect(facet).not.toBeInTheDocument();
+      expect(element.matches(':state(hidden)')).toBe(true);
+      expect(getComputedStyle(element).display).toBe('none');
     });
 
     it('should not render facet when no values are available', async () => {
       mockedDateFacet = createMockDateFacet({state: {values: []}});
 
-      const {facet} = await setupElement();
+      const {element, facet} = await setupElement();
       expect(facet).not.toBeInTheDocument();
+      expect(element.matches(':state(hidden)')).toBe(true);
+      expect(getComputedStyle(element).display).toBe('none');
     });
 
     it('should not render facet when disabled', async () => {
       mockedDateFacet = createMockDateFacet({state: {enabled: false}});
 
-      const {facet} = await setupElement();
+      const {element, facet} = await setupElement();
       expect(facet).not.toBeInTheDocument();
+      expect(element.matches(':state(hidden)')).toBe(true);
+      expect(getComputedStyle(element).display).toBe('none');
+    });
+
+    it('should become visible when values become available', async () => {
+      const values: ReturnType<typeof buildMockDateFacetValue>[] = [];
+      let notifySearchStatusChange!: () => void;
+      let searchStatusState = buildFakeSearchStatus({firstSearchExecuted: true}).state;
+      mockedDateFacet = createMockDateFacet({state: {values}});
+      mockedSearchStatus = {
+        get state() {
+          return searchStatusState;
+        },
+        subscribe: vi.fn((callback: () => void) => {
+          notifySearchStatusChange = callback;
+          callback();
+          return vi.fn();
+        }),
+      } as SearchStatus;
+
+      const {element} = await setupElement();
+      expect(element.matches(':state(hidden)')).toBe(true);
+
+      values.push(buildMockDateFacetValue());
+      searchStatusState = {...searchStatusState, isLoading: true};
+      notifySearchStatusChange();
+      await element.updateComplete;
+
+      expect(element.matches(':state(hidden)')).toBe(false);
+      expect(getComputedStyle(element).display).not.toBe('none');
     });
 
     it('should not render values when numberOfResults is 0 and state is idle', async () => {

@@ -21,6 +21,9 @@ export class FixtureFakeAtomicSearchBoxSuggestions
   @property({type: Number, attribute: 'suggestion-count'})
   suggestionCount = 3;
 
+  @property({type: String})
+  panel: 'left' | 'right' = 'left';
+
   connectedCallback() {
     super.connectedCallback();
     dispatchSearchBoxSuggestionsEvent<SearchBox, Bindings>(
@@ -36,6 +39,7 @@ export class FixtureFakeAtomicSearchBoxSuggestions
   initialize(): SearchBoxSuggestions {
     return {
       position: 0,
+      panel: this.panel,
       renderItems: () => this.renderItems(),
     };
   }

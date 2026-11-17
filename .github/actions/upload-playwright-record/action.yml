@@ -1,0 +1,38 @@
+name: 'Upload Playwright record'
+description: >-
+  Uploads, then clears, the record that utils/ci/playwright-record-reporter.mjs saved for the
+  weekly flaky test report. The artifact takes the record's name, which holds the counts. Use it
+  after each Playwright run, so a job that runs Playwright twice uploads two records.
+runs:
+  using: composite
+  steps:
+    # The record only feeds a report, so a problem here must never fail the e2e job.
+    - name: Find the Playwright record
+      id: record
+      continue-on-error: true
+      shell: bash
+      run: |
+        shopt -s nullglob
+        records=(.playwright-records/*.json)
+        if (( ${#records[@]} > 0 )); then
+          echo "name=$(basename "${records[0]}" .json)" >> "$GITHUB_OUTPUT"
+          echo "path=${records[0]}" >> "$GITHUB_OUTPUT"
+        fi
+    # Nothing to upload when Turbo replayed the e2e task from its cache: no test ran.
+    - name: Upload the Playwright record
+      if: steps.record.outputs.path != ''
+      continue-on-error: true
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+      with:
+        name: ${{ steps.record.outputs.name }}
+        path: ${{ steps.record.outputs.path }}
+        include-hidden-files: true
+        # The weekly report reads the past 14 days, and the repository keeps artifacts 15 days at most.
+        retention-days: 15
+    - name: Clear the uploaded record
+      if: steps.record.outputs.path != ''
+      continue-on-error: true
+      shell: bash
+      run: rm -f -- "$RECORD"
+      env:
+        RECORD: ${{ steps.record.outputs.path }}

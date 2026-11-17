@@ -1,4 +1,4 @@
-@import '../../../global/global.css';
+@reference '../../../global/global.css';
 @import '../../common/search-box/search-box.css';
 
 [part~='instant-results-item'] {

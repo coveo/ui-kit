@@ -27,7 +27,7 @@ npm install @coveo/headless@{{packageVersion}}
 >
 > We recommend pinning your `@coveo/headless` dependency to a specific version to avoid unexpected changes.
 
-Headless requires Node.js version 20.
+Headless requires Node.js 20 (20.9.0 or later), 22 (22.11.0 or later), or 24 (24.11.0 or later).
 
 > [!NOTE]
 >

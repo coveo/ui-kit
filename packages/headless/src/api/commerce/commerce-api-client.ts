@@ -14,6 +14,7 @@ import type {
   CommerceAPIErrorResponse,
   CommerceAPIErrorStatusResponse,
 } from './commerce-api-error-response.js';
+import type {IgnorePathsParam} from './commerce-api-params.js';
 import {getRequestOptions} from './common/request.js';
 import type {CommerceSuccessResponse} from './common/response.js';
 import type {
@@ -44,7 +45,7 @@ import type {SearchCommerceSuccessResponse} from './search/response.js';
 
 export interface CommerceFacetSearchAPIClient {
   facetSearch(
-    req: CommerceFacetSearchRequest,
+    req: CommerceFacetSearchRequest & Partial<IgnorePathsParam>,
     facetSearchOrigin: string
   ): Promise<CommerceAPIResponse<SpecificFacetSearchResponse>>;
 }
@@ -140,7 +141,7 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
   }
 
   async facetSearch(
-    req: CommerceFacetSearchRequest,
+    req: CommerceFacetSearchRequest & Partial<IgnorePathsParam>,
     type: FacetSearchType
   ): Promise<CommerceAPIResponse<SpecificFacetSearchResponse>> {
     const requestOptions = getRequestOptions(req, 'facet');
@@ -153,6 +154,7 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
         facetQuery: req?.facetQuery,
         query: req?.query,
         numberOfValues: req?.numberOfValues,
+        ...(!!req?.ignorePaths?.length && {ignorePaths: req.ignorePaths}),
       },
       ...this.options,
     });

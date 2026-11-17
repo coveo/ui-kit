@@ -1,4 +1,12 @@
-import type {Locator, Page} from '@playwright/test';
+import type {Locator, Page, Response} from '@playwright/test';
+import {insightSearchRequestRegex} from '../../../../../../playwright/utils/requests';
+
+export type SearchRequestBody = {
+  q?: string;
+  tab?: string;
+  firstResult?: number;
+  facets?: Array<{currentValues: Array<{value: string; state: string}>}>;
+};
 
 export class InsightPanelObject {
   constructor(public page: Page) {
@@ -88,5 +96,21 @@ export class InsightPanelObject {
 
   async clickOnClearFiltersButton(): Promise<void> {
     await this.clearFiltersButton.click();
+  }
+
+  /**
+   * The platform can throttle searches with a 429, which Headless retries with the same request.
+   * Waiting for the first search response can therefore resolve on the throttled response of the
+   * step's search, or on the retried search of a previous step.
+   */
+  async waitForSuccessfulSearchResponse(
+    predicate: (body: SearchRequestBody) => boolean
+  ): Promise<Response> {
+    return this.page.waitForResponse(
+      (response) =>
+        insightSearchRequestRegex.test(response.url()) &&
+        response.ok() &&
+        predicate(response.request().postDataJSON() ?? {})
+    );
   }
 }

@@ -8,41 +8,16 @@
  */
 
 // ============================================================================
-// AG-UI standard events (re-exported)
-// ============================================================================
-
-export type {
-  RunStartedEvent,
-  RunFinishedEvent,
-  RunErrorEvent,
-  TextMessageStartEvent,
-  TextMessageContentEvent,
-  TextMessageEndEvent,
-  ReasoningMessageStartEvent,
-  ReasoningMessageContentEvent,
-  ReasoningMessageEndEvent,
-  ToolCallStartEvent,
-  ToolCallArgsEvent,
-  ToolCallEndEvent,
-  ToolCallResultEvent,
-  StateSnapshotEvent,
-  ActivitySnapshotEvent,
-  CustomEvent,
-} from '@ag-ui/core';
-
-export {EventType} from '@ag-ui/core';
-
-// ============================================================================
 // Turn lifecycle (Coveo converse wire format — no AG-UI equivalent)
 // ============================================================================
 
-export type TurnStartedEvent = {
+type TurnStartedEvent = {
   type: 'turn_started';
   conversationSessionId?: string;
   conversationToken?: string;
 };
 
-export type TurnCompleteEvent = {
+type TurnCompleteEvent = {
   type: 'turn_complete';
   conversationSessionId?: string;
   conversationToken?: string;
@@ -52,11 +27,11 @@ export type TurnCompleteEvent = {
 // Routed interface events (Coveo converse wire format — no AG-UI equivalent)
 // ============================================================================
 
-export type CommerceSearchApiResponseEvent = {
+type CommerceSearchApiResponseEvent = {
   type: 'commerce_search_api_response';
 } & Record<string, unknown>;
 
-export type SearchApiResponseEvent = {
+type SearchApiResponseEvent = {
   type: 'search_api_response';
 } & Record<string, unknown>;
 
@@ -64,50 +39,11 @@ export type SearchApiResponseEvent = {
 // Structured snapshot events (A2UI — Coveo-specific payload shape)
 // ============================================================================
 
-export type A2UIComponent = {
-  id: string;
-  component: string;
-} & Record<string, unknown>;
-
-export type A2UIOperation =
-  | {
-      createSurface: {
-        surfaceId: string;
-        surfaceType?: string;
-        catalogId?: string;
-        components?: A2UIComponent[];
-        dataModel?: Record<string, unknown>;
-      };
-    }
-  | {
-      updateComponents: {
-        surfaceId: string;
-        components: A2UIComponent[];
-      };
-    }
-  | {
-      updateDataModel: {
-        surfaceId: string;
-        path?: string;
-        value: unknown;
-      };
-    }
-  | {
-      deleteSurface: {
-        surfaceId: string;
-      };
-    }
-  | {actionResponse: {actionId: string; response: unknown}};
-
-export type A2UIMessage =
-  | ({version: 'v1.0'} & Exclude<A2UIOperation, {actionResponse: unknown}>)
-  | {version: 'v1.0'; actionId: string; actionResponse: unknown};
-
 // ============================================================================
 // Unknown fallback (events not recognized by AG-UI or Coveo extensions)
 // ============================================================================
 
-export type UnknownEvent = {
+type UnknownEvent = {
   type: 'UNKNOWN';
   event: string;
   payload: unknown;

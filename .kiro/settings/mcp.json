@@ -3,6 +3,18 @@
     "storybook": {
       "url": "http://localhost:4400/mcp",
       "disabled": true
+    },
+    "salesforce-lbc": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@salesforce/mcp@0.30.15",
+        "--tools",
+        "guide_lbc_usage,explore_lbc_components",
+        "--orgs",
+        "DEFAULT_TARGET_ORG",
+        "--no-telemetry"
+      ]
     }
   }
 }

@@ -8,7 +8,7 @@ import {
 } from '../utils/requests';
 import {AnalyticsMode} from '../utils/analyticsMode';
 
-const exampleTrackingId = 'quantic_e2e_tracking_id';
+export const exampleTrackingId = 'quantic_e2e_tracking_id';
 
 export class AnalyticsObject {
   constructor(

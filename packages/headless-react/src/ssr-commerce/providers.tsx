@@ -51,6 +51,7 @@ export function buildProviderWithDefinition<
   return function WrappedProvider({
     staticState,
     navigatorContext,
+    accessToken,
     children,
   }: PropsWithChildren<{
     staticState: EngineStaticState<
@@ -58,14 +59,27 @@ export function buildProviderWithDefinition<
       InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>
     >;
     /**
-     * @deprecated will be removed in the next major release. The navigator context provider can now be set when fetching the static state
+     * The navigator context you passed to `fetchStaticState()`.
+     *
+     * @deprecated This prop will be removed in the next major version.
      */
     navigatorContext: NavigatorContext;
+    /**
+     * The per-request access token the static state was fetched with.
+     *
+     * Pass the same token you passed to `fetchStaticState()` so the hydrated engine keeps querying
+     * with the same permissions for facets, pagination, and every request issued after hydration.
+     * When omitted, the engine definition's configured access token is used.
+     *
+     * To rotate an expiring token on the running engine, configure `renewAccessToken` on the engine
+     * configuration. Changing this prop after hydration does not update the engine, so use the
+     * renewal callback to avoid rebuilding and losing interaction state.
+     */
+    accessToken?: string;
   }>) {
     const [hydratedState, setHydratedState] = useState<
       InferHydratedState<typeof definition> | undefined
     >(undefined);
-    definition.setNavigatorContextProvider(() => navigatorContext);
 
     useEffect(() => {
       const {searchActions, controllers} = staticState;
@@ -123,7 +137,12 @@ export function buildProviderWithDefinition<
 
       const args: HydrateStaticStateOptions<UnknownAction> & ControllerPropsMap = {
         searchActions,
+        navigatorContext,
       };
+
+      if (accessToken !== undefined) {
+        args.accessToken = accessToken;
+      }
 
       if (hydrateArguments) {
         args.controllers = hydrateArguments;

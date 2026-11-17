@@ -2,6 +2,7 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
+import {waitForAnimations} from 'storybook/preview-api';
 import {expect} from 'storybook/test';
 import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
 import {MockCommerceApi} from '@coveo/platform-mock-api/commerce';
@@ -78,7 +79,7 @@ const meta: Meta = {
   },
   play: async (context) => {
     await play(context);
-    const {canvasElement, canvas, step, userEvent} = context;
+    const {abortSignal, canvasElement, canvas, step, userEvent} = context;
     const refineToggleElement = within(
       canvasElement.querySelector('atomic-commerce-refine-toggle')!
     );
@@ -91,8 +92,9 @@ const meta: Meta = {
         await canvas.findByShadowText('Relevance', {exact: false}, {timeout: 10e3})
       ).toBeVisible();
     });
-    // It's tough to wait exactly for the modal to be visible because of animations. Thus, we add a small delay here.
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    // Storybook freezes animations before the a11y checks, but not inside shadow roots: wait for the
+    // modal and button ripple animations to end so that axe doesn't evaluate them mid-flight.
+    await waitForAnimations(abortSignal);
   },
 };
 

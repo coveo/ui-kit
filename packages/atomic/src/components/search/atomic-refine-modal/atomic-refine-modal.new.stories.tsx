@@ -2,6 +2,7 @@ import type {Decorator, Meta, StoryObj as Story} from '@storybook/web-components
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
+import {waitForAnimations} from 'storybook/preview-api';
 import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
 import {MockSearchApi} from '@coveo/platform-mock-api/search';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -48,7 +49,7 @@ const meta: Meta = {
   argTypes,
   play: async (context) => {
     await play(context);
-    const {canvasElement, step, userEvent} = context;
+    const {abortSignal, canvasElement, step, userEvent} = context;
     const refineToggleElement = within(canvasElement.querySelector('atomic-refine-toggle')!);
     const refineToggleButton = await refineToggleElement.findByShadowRole('button', {
       name: 'Sort & Filter',
@@ -60,8 +61,9 @@ const meta: Meta = {
     await step('Open refine modal', async () => {
       await userEvent.click(refineToggleButton);
     });
-    // It's tough to wait exactly for the modal to be visible because of animations. Thus, we add a small delay here.
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    // Storybook freezes animations before the a11y checks, but not inside shadow roots: wait for the
+    // modal and button ripple animations to end so that axe doesn't evaluate them mid-flight.
+    await waitForAnimations(abortSignal);
   },
 };
 

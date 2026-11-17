@@ -31,7 +31,7 @@ searchApiHarness.searchEndpoint.mock((response) => ({
 
 const TEMPLATE_EXAMPLE = `<template>
   <atomic-result-section-visual>
-    <atomic-result-image field="ytthumbnailurl" fallback="https://picsum.photos/seed/picsum/350"></atomic-result-image>
+    <atomic-result-image field="ytthumbnailurl" fallback="/images/thumbnail-350.svg"></atomic-result-image>
   </atomic-result-section-visual>
   <atomic-result-section-badges>
     <atomic-field-condition must-match-sourcetype="YouTube">
@@ -105,6 +105,14 @@ const meta: Meta = {
   },
   argTypes: {
     ...argTypes,
+    'if-defined': {
+      ...argTypes['if-defined'],
+      control: false,
+    },
+    'if-not-defined': {
+      ...argTypes['if-not-defined'],
+      control: false,
+    },
     'must-match': {
       ...argTypes['must-match'],
       control: false,

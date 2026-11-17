@@ -32,7 +32,7 @@ export default class QuanticResultPrintableUri extends LightningElement {
    */
   @api maxNumberOfParts = 5;
   /**
-   * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).
+   * Where to display the linked URL, as the name for a browsing context (a tab, window, or `<iframe>`).
    * The following keywords have special meanings for where to load the URL:
    *   - `_self`: the current browsing context. (Default)
    *   - `_blank`: usually a new tab, but users can configure their browsers to open a new window instead.

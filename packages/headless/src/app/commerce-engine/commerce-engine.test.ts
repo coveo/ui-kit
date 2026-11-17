@@ -130,4 +130,19 @@ describe('buildCommerceEngine', () => {
 
     expect(thunkRelay).toBe(engine.relay);
   });
+
+  it('#disableAnalytics turns analytics off', () => {
+    engine.disableAnalytics();
+
+    expect(engine[stateKey].configuration.analytics.enabled).toBe(false);
+  });
+
+  it('#enableAnalytics turns analytics on', () => {
+    options.configuration.analytics.enabled = false;
+    initEngine();
+
+    engine.enableAnalytics();
+
+    expect(engine[stateKey].configuration.analytics.enabled).toBe(true);
+  });
 });

@@ -83,10 +83,12 @@ describe('i18n', () => {
 
   describe('#init18n', () => {
     it('should call i18n.init with correct options, without registering the backend', async () => {
+      const initialized = createInstance();
+      await initialized.init({resources: {}});
       const use = vi.fn().mockReturnThis();
       const init = vi.fn();
       const atomicInterface = {
-        i18n: {use, init},
+        i18n: {use, init, services: initialized.services},
         logLevel: 'debug',
         language: 'en',
         languageAssetsPath: '/foo',
@@ -206,6 +208,75 @@ describe('i18n', () => {
       );
 
       expect(i18n.getResourceBundle('fr', 'translation')).toEqual({greeting: 'Bonjour'});
+    });
+
+    const loadTranslationsFor = async (language: string) => {
+      const fetchMock = vi.fn((url: string) =>
+        Promise.resolve({
+          status: 200,
+          json: () => Promise.resolve({search: url.split('/').pop()}),
+        })
+      );
+      vi.stubGlobal('fetch', fetchMock);
+
+      const i18n = createInstance();
+      await i18n.init({lng: language, fallbackLng: 'en', resources: {}});
+
+      await loadTranslations(
+        {i18n, languageAssetsPath: '/lang'} as unknown as BaseAtomicInterface<AnyEngineType>,
+        language
+      );
+
+      return {i18n, fetchMock};
+    };
+
+    it('should store the translations of a language without a region under its code as is', async () => {
+      const {i18n} = await loadTranslationsFor('FR');
+
+      expect(i18n.hasResourceBundle('FR', 'translation')).toBe(true);
+    });
+
+    it('should load the base language when the region is separated by an underscore', async () => {
+      const {i18n, fetchMock} = await loadTranslationsFor('fr_CA');
+
+      expect(fetchMock).toHaveBeenCalledOnce();
+      expect(i18n.getResourceBundle('fr', 'translation')).toEqual({search: 'fr.json'});
+      expect(i18n.t('search')).toBe('fr.json');
+    });
+
+    it('should load the base language when the language is not a valid locale', async () => {
+      const {i18n, fetchMock} = await loadTranslationsFor('fr-');
+
+      expect(fetchMock).toHaveBeenCalledOnce();
+      expect(i18n.getResourceBundle('fr', 'translation')).toEqual({search: 'fr.json'});
+    });
+
+    describe('when Atomic has translations for the region', () => {
+      it('should load the regional translations along with those of the base language', async () => {
+        const {i18n, fetchMock} = await loadTranslationsFor('pt-BR');
+
+        expect(fetchMock).toHaveBeenCalledTimes(2);
+        expect(i18n.getResourceBundle('pt-BR', 'translation')).toEqual({search: 'pt-BR.json'});
+        expect(i18n.getResourceBundle('pt', 'translation')).toEqual({search: 'pt.json'});
+        expect(i18n.t('search')).toBe('pt-BR.json');
+      });
+
+      it('should load the regional translations regardless of the case of the region', async () => {
+        const {i18n} = await loadTranslationsFor('pt-br');
+
+        expect(i18n.getResourceBundle('pt-BR', 'translation')).toEqual({search: 'pt-BR.json'});
+        expect(i18n.t('search')).toBe('pt-BR.json');
+      });
+    });
+
+    describe('when Atomic has no translations for the region', () => {
+      it('should only load the translations of the base language', async () => {
+        const {i18n, fetchMock} = await loadTranslationsFor('fr-CA');
+
+        expect(fetchMock).toHaveBeenCalledOnce();
+        expect(i18n.getResourceBundle('fr', 'translation')).toEqual({search: 'fr.json'});
+        expect(i18n.t('search')).toBe('fr.json');
+      });
     });
   });
 });

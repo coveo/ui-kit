@@ -15,6 +15,7 @@ import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderAnswerContent} from '@/src/components/common/generated-answer/render-answer-content';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import {buildFakeGeneratedAnswer} from '@/vitest-utils/testing-helpers/fixtures/headless/search/generated-answer-controller';
@@ -648,6 +649,31 @@ describe('atomic-generated-answer', () => {
     expect(disclaimer).toBeInTheDocument();
   });
 
+  it('should describe the answer container with the disclaimer when answer is visible', async () => {
+    const {container} = await renderGeneratedAnswer({
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Test answer',
+        isStreaming: false,
+      },
+    });
+    expect(container).toHaveAttribute('aria-describedby', 'generated-answer-disclaimer');
+    expect(container.getRootNode()).toBeInstanceOf(ShadowRoot);
+    expect(
+      (container.getRootNode() as ShadowRoot).getElementById('generated-answer-disclaimer')?.tagName
+    ).toBe('SMALL');
+  });
+
+  it('should not describe the answer container with the disclaimer when answer is hidden', async () => {
+    const {container} = await renderGeneratedAnswer({
+      generatedAnswerState: {
+        isVisible: false,
+        answer: 'Test answer',
+      },
+    });
+    expect(container).not.toHaveAttribute('aria-describedby');
+  });
+
   it('should not render disclaimer when answer is hidden', async () => {
     const {disclaimer} = await renderGeneratedAnswer({
       generatedAnswerState: {
@@ -1043,6 +1069,57 @@ describe('atomic-generated-answer', () => {
   });
 
   describe('follow up capability', () => {
+    it('should not announce the top-level answer status when follow-ups are enabled', async () => {
+      const messageSetterSpy = vi.spyOn(AriaLiveRegionController.prototype, 'message', 'set');
+      const {element} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({isEnabled: true}),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      messageSetterSpy.mockClear();
+      element.onGeneratedAnswerStateUpdate();
+
+      expect(messageSetterSpy).not.toHaveBeenCalled();
+    });
+
+    it('should announce the top-level answer status when follow-ups are disabled', async () => {
+      const messageSetterSpy = vi.spyOn(AriaLiveRegionController.prototype, 'message', 'set');
+      const {element} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({isEnabled: false}),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      messageSetterSpy.mockClear();
+      element.onGeneratedAnswerStateUpdate();
+
+      expect(messageSetterSpy).toHaveBeenCalled();
+    });
+
+    it('should make the scrollable content container keyboard focusable', async () => {
+      const {scrollableContainer} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({isEnabled: true}),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(scrollableContainer).toHaveAttribute('tabindex', '0');
+    });
+
+    it('should not make the content container focusable when follow-ups are disabled', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({isEnabled: false}),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      const contentContainer = element.shadowRoot?.querySelector(
+        '[part="generated-content"] .pt-6'
+      );
+      expect(contentContainer).not.toHaveAttribute('tabindex');
+    });
+
     it('should render a scrollable content container when agentId is provided', async () => {
       const {scrollableContainer} = await renderGeneratedAnswer({
         props: {agentId: 'agent-123'},
@@ -1153,6 +1230,20 @@ describe('atomic-generated-answer', () => {
       };
       expect(threadComponent.generatedAnswers).toBeDefined();
       expect(threadComponent.generatedAnswers).toHaveLength(2);
+    });
+
+    it('should describe the scrollable conversation with the disclaimer when follow ups are enabled', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState(),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      const scrollableContainer = element.shadowRoot?.querySelector('.agent-scrollable');
+      expect(scrollableContainer).toHaveAttribute(
+        'aria-describedby',
+        'generated-answer-disclaimer'
+      );
     });
 
     it('should export generated-answer parts from generated answers thread', async () => {

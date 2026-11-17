@@ -94,12 +94,57 @@ describe('fetchStaticStateFactory', () => {
     expect(engineSpy.mock.calls[0][0]).toStrictEqual(definition);
   });
 
-  it('should return the navigator context ', async () => {
-    // @ts-expect-error: do not care about baked-in controller initial state
-    const factory = fetchStaticStateFactory(definition, mockEngineOptions);
-    await factory(SolutionType.listing)({
-      navigatorContext: mockNavigatorContext,
-      context: mockContext,
+  describe('build config round-trip', () => {
+    // The static state carries the build config back to the caller so that passing it straight to
+    // hydrateStaticState() reapplies the same navigator context and access token on the client.
+    // Hydration depends on this, so the returned shape must keep these fields.
+    it('should return the navigator context alongside the static state', async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
+      const factory = fetchStaticStateFactory(definition, mockEngineOptions);
+
+      const staticState = await factory(SolutionType.listing)({
+        navigatorContext: mockNavigatorContext,
+        context: mockContext,
+      });
+
+      expect(staticState.navigatorContext).toBe(mockNavigatorContext);
+    });
+
+    it('should return the per-request access token alongside the static state', async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
+      const factory = fetchStaticStateFactory(definition, mockEngineOptions);
+
+      const staticState = await factory(SolutionType.listing)({
+        navigatorContext: mockNavigatorContext,
+        context: mockContext,
+        accessToken: 'per-request-token',
+      });
+
+      expect(staticState.accessToken).toBe('per-request-token');
+    });
+
+    it('should omit the access token when none was provided', async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
+      const factory = fetchStaticStateFactory(definition, mockEngineOptions);
+
+      const staticState = await factory(SolutionType.listing)({
+        navigatorContext: mockNavigatorContext,
+        context: mockContext,
+      });
+
+      expect(staticState.accessToken).toBeUndefined();
+    });
+
+    it('should return the context alongside the static state', async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
+      const factory = fetchStaticStateFactory(definition, mockEngineOptions);
+
+      const staticState = await factory(SolutionType.listing)({
+        navigatorContext: mockNavigatorContext,
+        context: mockContext,
+      });
+
+      expect(staticState.context).toBe(mockContext);
     });
   });
 

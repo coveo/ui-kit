@@ -56,3 +56,20 @@ export function makeDefinedConditions<TCondition>(
 
   return conditions;
 }
+
+export interface FieldConditionProps {
+  ifDefined?: string;
+  ifNotDefined?: string;
+  mustMatch: Record<string, string[]>;
+  mustNotMatch: Record<string, string[]>;
+}
+
+export function makeFieldConditions<TCondition>(
+  {ifDefined, ifNotDefined, mustMatch, mustNotMatch}: FieldConditionProps,
+  helpers: TemplateHelpers<TCondition>
+): TCondition[] {
+  return [
+    ...makeDefinedConditions(ifDefined, ifNotDefined, helpers),
+    ...makeMatchConditions(mustMatch, mustNotMatch, helpers),
+  ];
+}

@@ -312,6 +312,43 @@ describe('atomic-insight-smart-snippet', () => {
     });
   });
 
+  describe('source interactions', () => {
+    const renderComponentWithSource = () =>
+      renderComponent({
+        controllerState: {
+          answerFound: true,
+          source: {
+            title: 'Test Document',
+            uri: 'https://example.com/doc',
+            clickUri: 'https://example.com/doc',
+            uniqueId: 'unique-id',
+          } as unknown as InsightSmartSnippetState['source'],
+        },
+      });
+
+    it.each([
+      ['selectSource', 'select-source'],
+      ['beginDelayedSelectSource', 'begin-delayed-select-source'],
+      ['cancelPendingSelectSource', 'cancel-pending-select-source'],
+    ] as const)('should call #%s once when the source dispatches %s', async (method, event) => {
+      const {source} = await renderComponentWithSource();
+
+      source?.dispatchEvent(new CustomEvent(event));
+
+      expect(mockSmartSnippet[method]).toHaveBeenCalledOnce();
+    });
+
+    it('should call #selectSource once when the source link is clicked', async () => {
+      const {source} = await renderComponentWithSource();
+      const sourceLink = source?.querySelector<HTMLAnchorElement>('a[part="source-url"]');
+      sourceLink?.addEventListener('click', (event) => event.preventDefault());
+
+      sourceLink?.click();
+
+      expect(mockSmartSnippet.selectSource).toHaveBeenCalledOnce();
+    });
+  });
+
   describe('feedback modal', () => {
     it('should create modal when dislike is clicked and open on explain why click', async () => {
       const {element, dislikeButton, explainWhyButton} = await renderComponent({

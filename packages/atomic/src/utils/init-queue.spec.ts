@@ -69,4 +69,45 @@ describe('init-queue', () => {
     markParentAsReady(parent);
     expect(spy).toHaveBeenCalledWith(expect.objectContaining({type: 'initialize'}));
   });
+
+  describe('when an older Atomic version created the namespace with Maps', () => {
+    let namespace: Window['initQueueNamespace'];
+
+    beforeEach(() => {
+      namespace = window.initQueueNamespace;
+    });
+
+    afterEach(() => {
+      window.initQueueNamespace = namespace;
+    });
+
+    it('should convert the maps to WeakMaps and keep their entries', () => {
+      const readyParent = document.createElement('div');
+      window.initQueueNamespace = {
+        eventQueueMap: new Map<Element, {event: InitializeEvent; element: Element}[]>([
+          [parent, [{event, element: child}]],
+        ]),
+        parentReadyMap: new Map<Element, boolean>([[readyParent, true]]),
+      };
+
+      expect(isParentReady(readyParent)).toBe(true);
+      expect(window.initQueueNamespace.eventQueueMap).toBeInstanceOf(WeakMap);
+      expect(window.initQueueNamespace.parentReadyMap).toBeInstanceOf(WeakMap);
+      expect(window.initQueueNamespace.eventQueueMap.has(parent)).toBe(true);
+    });
+
+    it('should dispatch the events that the older version queued', () => {
+      const spy = vi.spyOn(child, 'dispatchEvent');
+      window.initQueueNamespace = {
+        eventQueueMap: new Map<Element, {event: InitializeEvent; element: Element}[]>([
+          [parent, [{event, element: child}]],
+        ]),
+        parentReadyMap: new Map<Element, boolean>(),
+      };
+
+      markParentAsReady(parent);
+
+      expect(spy).toHaveBeenCalledWith(event);
+    });
+  });
 });

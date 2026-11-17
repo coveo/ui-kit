@@ -1255,10 +1255,10 @@
   </labels>
   <labels>
     <fullName>quantic_GeneratedAnswerForYou</fullName>
-    <value>Generated answer</value>
+    <value>AI-generated answer</value>
     <language>en_US</language>
     <protected>false</protected>
-    <shortDescription>Generated answer</shortDescription>
+    <shortDescription>AI-generated answer</shortDescription>
   </labels>
   <labels>
     <fullName>quantic_ThisAnswerWasNotHelpful</fullName>
@@ -1374,10 +1374,10 @@
   </labels>
   <labels>
     <fullName>quantic_AnswerGenerated</fullName>
-    <value>Answer generated: {{0}}</value>
+    <value>AI-generated answer: {{0}}</value>
     <language>en_US</language>
     <protected>false</protected>
-    <shortDescription>Answer generated: example answer</shortDescription>
+    <shortDescription>AI-generated answer: example answer</shortDescription>
   </labels>
   <labels>
     <fullName>quantic_GeneratingAnswer</fullName>
@@ -1402,10 +1402,17 @@
   </labels>
   <labels>
     <fullName>quantic_RGADisclaimer</fullName>
-    <value>Generated content may contain errors. Verify important information.</value>
+    <value>AI-generated content may contain errors. Verify important information.</value>
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Generated answer disclaimer</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_RGADisclaimerAnnouncement</fullName>
+    <value>AI-generated content may contain errors. Verify important information.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Generated answer disclaimer announced to screen readers</shortDescription>
   </labels>
   <labels>
     <fullName>quantic_GeneratedAnswerShowMore</fullName>
@@ -1434,6 +1441,13 @@
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Search field with suggestions.</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_SearchBoxPlaceholder</fullName>
+    <value>Search...</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Search box placeholder</shortDescription>
   </labels>
   <labels>
     <fullName>quantic_SuggestionFound</fullName>
@@ -1749,5 +1763,33 @@
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Dislike</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_LoadMoreResults</fullName>
+    <value>Load more results</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Load more results</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ShowingResultsOfLoadMore</fullName>
+    <value>Showing {{0}} of {{1}} result</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>ex: Showing 10 of 123 result</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ShowingResultsOfLoadMore_plural</fullName>
+    <value>Showing {{0}} of {{1}} results</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>ex: Showing 10 of 123 results</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_AllResultsLoaded</fullName>
+    <value>All results have been loaded.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>All results have been loaded.</shortDescription>
   </labels>
 </CustomLabels>

@@ -1,3 +1,7 @@
+import {execFileSync} from 'node:child_process';
+import {createRequire} from 'node:module';
+import {join} from 'node:path';
+
 const splitLines = (value = '') =>
   value
     .split('\n')
@@ -68,6 +72,19 @@ const parseJsonInput = (varName) => {
   return value;
 };
 
+// The affected tasks come from the merge commit, while some jobs check out the
+// pull request branch, which may lack packages or tasks added to the base
+// branch since. Turbo fails on any task ID it can't find in the checkout.
+const getCheckoutTaskIds = (taskNames) => {
+  const turbo = createRequire(join(process.cwd(), 'package.json')).resolve('turbo');
+  const output = execFileSync(
+    process.execPath,
+    [turbo, 'run', ...taskNames, '--dry=json', '--no-update-notifier'],
+    {encoding: 'utf8', maxBuffer: 100 * 1024 * 1024, stdio: ['ignore', 'pipe', 'pipe']}
+  );
+  return new Set(JSON.parse(output).tasks.map(({taskId}) => taskId));
+};
+
 const parseInputs = () => ({
   requestedTasks: new Set(splitLines(process.env.TASKS || 'build')),
   matchesPackage: parsePackages(process.env.PACKAGES),
@@ -76,11 +93,30 @@ const parseInputs = () => ({
 
 const resolveTasks = () => {
   const {requestedTasks, matchesPackage, affectedTasks} = parseInputs();
-
-  return affectedTasks.filter((taskId) => {
+  const candidates = affectedTasks.filter((taskId) => {
     const [project, task] = taskId.split('#');
     return requestedTasks.has(task) && matchesPackage(project);
   });
+
+  if (candidates.length === 0) {
+    return [];
+  }
+
+  const taskNames = [...new Set(candidates.map((taskId) => taskId.split('#')[1]))];
+  const checkoutTaskIds = getCheckoutTaskIds(taskNames);
+  const tasks = [];
+
+  for (const taskId of candidates) {
+    if (checkoutTaskIds.has(taskId)) {
+      tasks.push(taskId);
+    } else {
+      console.error(
+        `::warning title=Skipped affected task::${taskId} is not in this checkout, so it was not run.`
+      );
+    }
+  }
+
+  return tasks;
 };
 
 const tasks = resolveTasks();

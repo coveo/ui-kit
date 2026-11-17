@@ -6,6 +6,7 @@
 .header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: var(--space-1) var(--space-3);
 }
 
@@ -13,4 +14,17 @@
   font-size: var(--font-size-xs);
   font-weight: 500;
   color: var(--color-text-muted);
+}
+
+.headerAction {
+  padding: 0 var(--space-1);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.headerAction:hover,
+.headerAction[aria-selected='true'] {
+  color: var(--color-text-primary);
+  text-decoration: underline;
 }

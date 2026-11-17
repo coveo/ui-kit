@@ -3,7 +3,6 @@
   grid-template-rows: 1fr;
   grid-template-columns: minmax(220px, 280px) 1fr;
   column-gap: var(--space-5);
-  min-height: 100vh;
   border-top: 1px solid var(--color-border);
   margin-top: var(--space-2);
 }

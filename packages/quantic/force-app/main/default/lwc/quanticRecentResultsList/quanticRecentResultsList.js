@@ -51,7 +51,7 @@ export default class QuanticRecentResultsList extends LightningElement {
    */
   @api label = this.labels.recentResultsLabel;
   /**
-   * Where to display the linked URLs, as the name for a browsing context (a tab, window, or <iframe>).
+   * Where to display the linked URLs, as the name for a browsing context (a tab, window, or `<iframe>`).
    * The following keywords have special meanings for where to load the URL:
    *   - `_self`: the current browsing context. (Default)
    *   - `_blank`: usually a new tab, but users can configure their browsers to open a new window instead.
@@ -82,6 +82,10 @@ export default class QuanticRecentResultsList extends LightningElement {
   }
   /** @type {boolean} */
   _isCollapsed = false;
+
+  get isExpanded() {
+    return !this.isCollapsed;
+  }
 
   /** @type {RecentResultsState} */
   @track state;
@@ -143,6 +147,10 @@ export default class QuanticRecentResultsList extends LightningElement {
 
   get hasResults() {
     return !!this.results.length;
+  }
+
+  get hasNoResults() {
+    return !this.hasResults;
   }
 
   get localStorageKey() {

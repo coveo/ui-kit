@@ -1,4 +1,5 @@
 import type {CoreEngine, CoreEngineNext} from '../../../app/engine.js';
+import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import type {ControllersMap, ControllersPropsMap} from './controllers.js';
 import type {
   EngineDefinitionBuildResult,
@@ -14,6 +15,10 @@ interface BuildOptions<TEngineOptions> {
    * @deprecated This option will be removed in the next major version.
    */
   extend?: OptionsExtender<TEngineOptions>;
+  /**
+   * A per-request navigator context applied to this call only, without mutating the shared definition.
+   */
+  navigatorContext?: NavigatorContext;
 }
 
 /**

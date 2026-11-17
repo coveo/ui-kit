@@ -24,6 +24,6 @@ test.describe('atomic-commerce-refine-modal', () => {
   test('should be able to select a facet', async ({page}) => {
     await page.getByLabel('Expand the Brand facet').click();
     await page.getByTitle('Nautica').click();
-    await page.getByLabel('Clear 1 filter for the Brand facet').waitFor();
+    await page.getByLabel('Clear filter for the Brand facet').waitFor();
   });
 });

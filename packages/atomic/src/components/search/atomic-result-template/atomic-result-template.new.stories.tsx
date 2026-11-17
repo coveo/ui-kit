@@ -3,7 +3,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {MockSearchApi} from '@coveo/platform-mock-api/search';
+import {MockSearchApi, searchResponses} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {parameters as searchBoxParameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -35,7 +35,7 @@ const searchApiHarness = new MockSearchApi();
 
 const TEMPLATE_EXAMPLE = `<template>
   <atomic-result-section-visual>
-    <atomic-result-image field="ytthumbnailurl" fallback="https://picsum.photos/seed/picsum/350"></atomic-result-image>
+    <atomic-result-image field="ytthumbnailurl" fallback="/images/thumbnail-350.svg"></atomic-result-image>
   </atomic-result-section-visual>
   <atomic-result-section-badges>
     <atomic-field-condition must-match-sourcetype="YouTube">
@@ -105,7 +105,7 @@ const FOLDED_TEMPLATE_EXAMPLE = `<template>
     }
   </style>
   <atomic-result-section-visual>
-    <atomic-result-image field="ytthumbnailurl" fallback="https://picsum.photos/seed/picsum/350" class="thumbnail"></atomic-result-image>
+    <atomic-result-image field="ytthumbnailurl" fallback="/images/thumbnail-350.svg" class="thumbnail"></atomic-result-image>
   </atomic-result-section-visual>
   <atomic-result-section-title>
     <atomic-result-link></atomic-result-link>
@@ -149,7 +149,7 @@ const FOLDED_TEMPLATE_EXAMPLE = `<template>
             }
           </style>
           <atomic-result-section-visual>
-            <atomic-result-image field="ytthumbnailurl" fallback="https://picsum.photos/seed/child/200" class="child-thumbnail"></atomic-result-image>
+            <atomic-result-image field="ytthumbnailurl" fallback="/images/thumbnail-200.svg" class="child-thumbnail"></atomic-result-image>
           </atomic-result-section-visual>
           <atomic-result-section-title>
             <atomic-result-link></atomic-result-link>
@@ -209,6 +209,14 @@ const meta: Meta = {
   },
   argTypes: {
     ...argTypes,
+    'if-defined': {
+      ...argTypes['if-defined'],
+      control: false,
+    },
+    'if-not-defined': {
+      ...argTypes['if-not-defined'],
+      control: false,
+    },
     'must-match': {
       ...argTypes['must-match'],
       control: false,
@@ -334,4 +342,45 @@ export const InASearchBoxInstantResults: Story = {
         ?.focus();
     });
   },
+};
+
+export const WithDefinedConditions: Story = {
+  name: 'With if-defined and if-not-defined',
+  decorators: [
+    (story) => html`
+      <atomic-result-list display="list" density="normal" image-size="icon">
+        ${story()}
+      </atomic-result-list>
+    `,
+    searchInterfaceDecorator,
+  ],
+  render: () => html`
+    <atomic-result-template if-defined="language">
+      <template>
+        <atomic-result-section-badges>
+          <atomic-result-badge label="Language defined"></atomic-result-badge>
+        </atomic-result-section-badges>
+        <atomic-result-section-title>
+          <atomic-result-link></atomic-result-link>
+        </atomic-result-section-title>
+      </template>
+    </atomic-result-template>
+    <atomic-result-template if-not-defined="language">
+      <template>
+        <atomic-result-section-badges>
+          <atomic-result-badge label="Language not defined"></atomic-result-badge>
+        </atomic-result-section-badges>
+        <atomic-result-section-title>
+          <atomic-result-link></atomic-result-link>
+        </atomic-result-section-title>
+      </template>
+    </atomic-result-template>
+  `,
+  beforeEach: () => {
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
+      ...response,
+      results: searchResponses.richResponse.results,
+    }));
+  },
+  play: initializeSearchInterface,
 };

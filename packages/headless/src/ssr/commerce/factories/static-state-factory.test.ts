@@ -1,6 +1,5 @@
 import type {Mock, MockInstance} from 'vitest';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
-import type {LoggerOptions} from '../../../app/logger.js';
 import {
   buildProductListing,
   type ProductListing,
@@ -12,7 +11,6 @@ import {
   buildMockSearchController,
 } from '../../../test/mock-controller.js';
 import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
-import * as augmentModule from '../../common/augment-preprocess-request.js';
 import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
 import {SolutionType} from '../types/controller-constants.js';
@@ -80,31 +78,6 @@ describe('fetchStaticStateFactory', () => {
     const factory = fetchStaticStateFactory(definition, mockEngineOptions);
     await factory(SolutionType.listing)();
     expect(engineSpy.mock.calls[0][0]).toStrictEqual(definition);
-  });
-
-  it('should call augmentPreprocessRequestWithForwardedFor when fetchStaticState is invoked', async () => {
-    const spy = vi.spyOn(augmentModule, 'augmentPreprocessRequestWithForwardedFor');
-
-    const mockNavigatorContextProvider = vi.fn();
-    const mockPreprocessRequest = vi.fn(async (req) => req);
-    const options = {
-      configuration: {
-        ...getSampleCommerceEngineConfiguration(),
-        preprocessRequest: mockPreprocessRequest,
-      },
-      navigatorContextProvider: mockNavigatorContextProvider,
-      loggerOptions: {level: 'warn'} as LoggerOptions,
-    };
-
-    const factory = fetchStaticStateFactory(definition, options);
-    await factory(SolutionType.listing)();
-    expect(spy).toHaveBeenCalledWith({
-      loggerOptions: {level: 'warn'},
-      navigatorContextProvider: mockNavigatorContextProvider,
-      preprocessRequest: mockPreprocessRequest,
-    });
-
-    spy.mockRestore();
   });
 
   describe('when solution type is listing', () => {

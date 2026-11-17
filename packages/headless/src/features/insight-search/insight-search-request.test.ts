@@ -12,8 +12,10 @@ import {buildMockTabSlice} from '../../test/mock-tab-state.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {type CollectionId, getFoldingInitialState} from '../folding/folding-state.js';
 import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants.js';
+import {buildMockResult} from '../../test/mock-result.js';
 import {
   buildInsightBaseRequest,
+  buildInsightFetchMoreResultsRequest,
   buildInsightLoadCollectionRequest,
   buildInsightSearchRequest,
 } from './insight-search-request.js';
@@ -226,6 +228,19 @@ describe('insight search request', () => {
       expect(params.childField).toBe(state.folding.fields.parent);
       expect(params.parentField).toBe(state.folding.fields.child);
       expect(params.filterFieldRange).toBe(state.folding.filterFieldRange);
+    });
+  });
+
+  describe('when using buildInsightFetchMoreResultsRequest', () => {
+    it('#buildInsightFetchMoreResultsRequest sets #firstResult to the sum of the state #firstResult and the number of already loaded #results', async () => {
+      state.pagination.firstResult = 0;
+      state.pagination.numberOfResults = 5;
+      state.search.results = Array.from({length: 10})
+        .fill(null)
+        .map(() => buildMockResult());
+
+      const params = (await buildInsightFetchMoreResultsRequest(state)).request;
+      expect(params.firstResult).toBe(10);
     });
   });
 

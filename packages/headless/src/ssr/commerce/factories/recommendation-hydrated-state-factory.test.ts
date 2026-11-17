@@ -49,7 +49,9 @@ describe('hydratedRecommendationStaticStateFactory', () => {
 
     await factory({searchActions: mockSearchActions, controllers: {}});
 
-    expect(buildFactory).toHaveBeenCalledWith(controllerDefinitions, options);
+    expect(buildFactory).toHaveBeenCalledWith(controllerDefinitions, options, {
+      engineOutlivesRequest: true,
+    });
     expect(mockRecommendationState).toHaveBeenCalledWith(SolutionType.recommendation);
   });
 

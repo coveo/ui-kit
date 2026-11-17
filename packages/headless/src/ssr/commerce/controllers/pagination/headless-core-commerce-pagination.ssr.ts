@@ -26,7 +26,9 @@ export type {
  * Defines a `Pagination` controller instance.
  * @group Definers
  *
- * @param props - The configurable `Pagination` properties.
+ * @param props - The configurable `Pagination` properties. The `listing` and `search` options are
+ * deprecated and will be removed in the next major version: omit them to build the controller for
+ * both search and product listing pages.
  * @returns The `Pagination` controller definition.
  */
 export function definePagination<TOptions extends ControllerDefinitionOption | undefined>(

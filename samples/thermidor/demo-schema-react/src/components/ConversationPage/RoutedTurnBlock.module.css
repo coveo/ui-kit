@@ -1,9 +1,0 @@
-.container {
-  padding: var(--space-3) 0;
-}
-
-.message {
-  font-size: var(--font-size-base);
-  color: var(--color-text-secondary);
-  font-style: italic;
-}

@@ -34,6 +34,7 @@ import {renderNumericFacetValue} from '@/src/components/common/facets/numeric-fa
 import {renderNumericFacetValuesGroup} from '@/src/components/common/facets/numeric-facet/values-container';
 import numericFacetCommonStyles from '@/src/components/common/facets/numeric-facet-common.tw.css';
 import {initializePopover} from '@/src/components/common/facets/popover/popover-type';
+import {FacetVisibilityController} from '@/src/components/common/facets/facet-visibility-controller';
 import {
   defaultNumberFormatter,
   type NumberFormatter,
@@ -55,6 +56,8 @@ import '@/src/components/common/atomic-numeric-range/atomic-numeric-range';
 /**
  * The `atomic-insight-numeric-facet` component displays a facet of the results for the current query as numeric ranges.
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria.
+ *
+ * @cssState hidden - Applied when the facet is hidden.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -231,8 +234,18 @@ export class AtomicInsightNumericFacet
   private unsubscribeFacetForInput?: () => void;
   private unsubscribeFilter?: () => void;
 
+  private get facetInfo(): FacetInfo {
+    return {
+      label: () => this.bindings.i18n.t(this.label),
+      facetId: this.facetId!,
+      element: this,
+      isHidden: () => this.isHidden,
+    };
+  }
+
   constructor() {
     super();
+    new FacetVisibilityController(this, () => !!this.searchStatus && this.facetInfo.isHidden());
     new ValidatePropsController(
       this,
       () => ({
@@ -429,15 +442,8 @@ export class AtomicInsightNumericFacet
   }
 
   private registerFacetToStore() {
-    const facetInfo: FacetInfo = {
-      label: () => this.bindings.i18n.t(this.label),
-      facetId: this.facetId!,
-      element: this,
-      isHidden: () => this.isHidden,
-    };
-
     this.bindings.store.registerFacet('numericFacets', {
-      ...facetInfo,
+      ...this.facetInfo,
       format: (value) =>
         formatHumanReadable({
           facetValue: value,
@@ -450,7 +456,7 @@ export class AtomicInsightNumericFacet
     });
 
     initializePopover(this, {
-      ...facetInfo,
+      ...this.facetInfo,
       hasValues: () => this.hasValues,
       numberOfActiveValues: () => this.numberOfSelectedValues,
     });

@@ -1,5 +1,6 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {CoreEngine, CoreEngineNext} from '../../../app/engine.js';
+import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import type {ControllersMap, ControllersPropsMap} from './controllers.js';
 import type {
   EngineDefinitionBuildResult,
@@ -14,6 +15,15 @@ interface HydrateStaticStateOptions<TSearchAction> {
    * The new property will accept an array of actions instead of a single action to support multiple search operations (e.g. search and recommendation).
    */
   searchAction: TSearchAction;
+  /**
+   * The navigator context to use for this `hydrateStaticState()` call only.
+   *
+   * When provided, it is applied to this call's engine without mutating the shared definition.
+   * Pass the same navigator context that was used to fetch the static state so the hydrated engine
+   * reports the same client ID and keeps the analytics session continuous. When omitted, the provider
+   * set with `setNavigatorContextProvider` is used.
+   */
+  navigatorContext?: NavigatorContext;
 }
 
 export interface HydratedState<
@@ -45,7 +55,8 @@ export type HydrateStaticState<
   fromBuildResult: FromBuildResult<
     TEngine,
     TControllers,
-    HydrateStaticStateOptions<TSearchAction>,
+    // `fromBuildResult` reuses an engine that is already built, so a navigator context would have no effect.
+    Omit<HydrateStaticStateOptions<TSearchAction>, 'navigatorContext'>,
     HydratedState<TEngine, TControllers>
   >;
 };

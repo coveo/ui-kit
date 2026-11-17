@@ -4,6 +4,8 @@ import {createElement} from 'lwc';
 import QuanticGeneratedAnswer from 'c/quanticGeneratedAnswer';
 import FeedbackModalQna from 'c/quanticFeedbackModalQna';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
+import * as mockQuanticUtils from 'c/quanticUtils';
+import rgaDisclaimerAnnouncementLabel from '@salesforce/label/c.quantic_RGADisclaimerAnnouncement';
 
 let mockAnswerHeight = 250;
 let mockedConsoleWarn;
@@ -524,7 +526,7 @@ describe('c-quantic-generated-answer', () => {
         );
       });
 
-      it('should not display the generated answer disclaimer in the footer', async () => {
+      it('should display the generated answer disclaimer as small print', async () => {
         const element = createTestComponent();
         await flushPromises();
 
@@ -532,7 +534,8 @@ describe('c-quantic-generated-answer', () => {
           selectors.generatedAnswerDisclaimer
         );
 
-        expect(generatedAnswerDisclaimer).toBeNull();
+        expect(generatedAnswerDisclaimer).not.toBeNull();
+        expect(generatedAnswerDisclaimer.tagName).toBe('SMALL');
       });
     });
 
@@ -568,6 +571,34 @@ describe('c-quantic-generated-answer', () => {
 
         expect(generatedAnswerCard).not.toBeNull();
         expect(generatedAnswerBadge).not.toBeNull();
+      });
+
+      describe('the screen reader announcement', () => {
+        const exampleAnswerGeneratedMessage = `AI-generated answer: ${exampleAnswer}`;
+
+        beforeEach(() => {
+          mockQuanticUtils.I18nUtils.format.mockReturnValue(
+            exampleAnswerGeneratedMessage
+          );
+        });
+
+        afterEach(() => {
+          mockQuanticUtils.I18nUtils.format.mockReset();
+        });
+
+        const getDispatchedMessages = () =>
+          mockQuanticUtils.AriaLiveRegion.mock.results.flatMap(({value}) =>
+            value.dispatchMessage.mock.calls.map(([message]) => message)
+          );
+
+        it('should announce the generated answer followed by the disclaimer announcement label', async () => {
+          createTestComponent();
+          await flushPromises();
+
+          expect(getDispatchedMessages()).toContain(
+            `${exampleAnswerGeneratedMessage} ${rgaDisclaimerAnnouncementLabel}`
+          );
+        });
       });
 
       describe('when the property withToggle is set to true', () => {

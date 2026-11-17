@@ -1,9 +1,17 @@
 import {
+  RENDERER_ROOT_ID,
+  bindStateFields,
   buildConversationResponse,
   buildValidatedSurface,
+  statePath,
   type A2uiComponentNode,
 } from './shared.js';
-import {ActivitySnapshot, StateSnapshot, type ConverseEvent} from '../events.js';
+import {
+  ActivitySnapshot,
+  UpdateDataModelActivity,
+  type ConverseEvent,
+  type UpdateDataModelOp,
+} from '../events.js';
 
 const runId = 'b41e5d90-2f8c-4c1e-9b7a-3d6f0a1c8e42';
 
@@ -219,7 +227,6 @@ interface WaterSportsProduct {
   ec_thumbnails: string[];
   ec_images: string[];
   ec_price: number;
-  ec_promo_price: number;
   ec_in_stock: boolean;
   ec_item_group_id: string;
   ec_rating: number;
@@ -227,7 +234,23 @@ interface WaterSportsProduct {
   clickUri: string;
   permanentid: string;
   children: never[];
+  badgePlacements?: BadgePlacement[];
 }
+
+interface BadgePlacement {
+  placementId: string;
+  badges: {text: string; backgroundColor?: string; textColor?: string; iconUrl?: string}[];
+}
+
+const BADGES_BY_PRODUCT_INDEX: Record<number, BadgePlacement['badges']> = {
+  0: [{text: 'Bestseller!', backgroundColor: '#B42318', textColor: '#FFFFFF'}],
+  2: [{text: 'New', backgroundColor: '#1D4ED8', textColor: '#FFFFFF'}],
+  4: [
+    {text: 'Bestseller!', backgroundColor: '#B42318', textColor: '#FFFFFF'},
+    {text: 'Eco-friendly', backgroundColor: '#DCFCE7', textColor: '#166534'},
+  ],
+  7: [{text: 'Staff pick'}],
+};
 
 // Compact product definitions expanded into full product objects below. Brands are spread so
 // every candidate brand owns at least one product and several appear across multiple leaves.
@@ -639,7 +662,6 @@ const products: WaterSportsProduct[] = PRODUCT_SEEDS.map((seed, index) => {
     ec_thumbnails: [image],
     ec_images: [image],
     ec_price: seed.price,
-    ec_promo_price: seed.price,
     ec_in_stock: true,
     ec_item_group_id: String(id),
     ec_rating: seed.rating,
@@ -647,34 +669,177 @@ const products: WaterSportsProduct[] = PRODUCT_SEEDS.map((seed, index) => {
     clickUri: `https://barca-sports.myshopify.com/products/ws_${index}`,
     permanentid: `gid://shopify/ProductVariant/${50680000000000 + index}`,
     children: [],
+    ...(BADGES_BY_PRODUCT_INDEX[index] && {
+      badgePlacements: [
+        {placementId: 'badge-placement-id', badges: BADGES_BY_PRODUCT_INDEX[index]},
+      ],
+    }),
   };
 });
 
-const sortOptions = {
-  relevance: {sortCriteria: 'relevance', fields: [] as {field: string; direction: string}[]},
-  price_asc: {
-    sortCriteria: 'price_asc',
-    fields: [{field: 'ec_price', direction: 'ascending'}],
-  },
-  price_desc: {
-    sortCriteria: 'price_desc',
-    fields: [{field: 'ec_price', direction: 'descending'}],
-  },
-} as const;
+const MAX_INSTANT_PRODUCTS = 4;
 
-const availableSorts = [sortOptions.relevance, sortOptions.price_asc, sortOptions.price_desc];
+// A plural's trailing "s" is dropped so "wetsuits" and "life jackets" find their products.
+function queryTerms(query: string): string[] {
+  return query
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter((term) => term.length > 0)
+    .map((term) => (term.length > 3 && term.endsWith('s') ? term.slice(0, -1) : term));
+}
+
+const ROOT_PREFIX = `${ROOT_CHAIN.join('|')}|`;
+
+function matchesTerms(text: string, terms: string[]): boolean {
+  const lowered = text.toLowerCase();
+  return terms.every((term) => lowered.includes(term));
+}
+
+// Products whose name, brand or category below the shared root holds every term of the query, in
+// catalog order.
+function instantProductsFor(query: string): WaterSportsProduct[] {
+  const terms = queryTerms(query);
+  if (terms.length === 0) {
+    return [];
+  }
+  return products
+    .filter((product) => {
+      const leafPath = (product.ec_category.at(-1) ?? '').replace(ROOT_PREFIX, '');
+      return matchesTerms(`${product.ec_name} ${product.ec_brand} ${leafPath}`, terms);
+    })
+    .slice(0, MAX_INSTANT_PRODUCTS);
+}
+
+// Unlike instant products, a search also matches the shared root categories, so "water sports"
+// finds the whole catalog.
+function searchProductsFor(query: string): WaterSportsProduct[] {
+  const terms = queryTerms(query);
+  return products.filter((product) =>
+    matchesTerms(
+      `${product.ec_name} ${product.ec_brand} ${product.ec_category.at(-1) ?? ''}`,
+      terms
+    )
+  );
+}
+
+interface SortField {
+  field: 'ec_price';
+  direction: 'asc' | 'desc';
+  displayName: string;
+}
+
+type SortCriterion = {sortCriteria: 'relevance'} | {sortCriteria: 'fields'; fields: SortField[]};
+
+// The sorts Agent Gateway sends, as the Commerce API returns them: relevance carries no fields, and
+// each field sort is named by the Commerce API's displayName on its field.
+const RELEVANCE_SORT: SortCriterion = {sortCriteria: 'relevance'};
+
+const availableSorts: SortCriterion[] = [
+  RELEVANCE_SORT,
+  {
+    sortCriteria: 'fields',
+    fields: [{field: 'ec_price', direction: 'asc', displayName: 'Price (Low to High)'}],
+  },
+  {
+    sortCriteria: 'fields',
+    fields: [{field: 'ec_price', direction: 'desc', displayName: 'Price (High to Low)'}],
+  },
+];
+
+interface RequestedSortField {
+  field: string;
+  direction: unknown;
+}
+
+function requestedSortFields(fields: unknown): RequestedSortField[] {
+  return (Array.isArray(fields) ? fields : []).filter(
+    (field): field is RequestedSortField => typeof field?.field === 'string'
+  );
+}
+
+function sameSortFields(sort: SortCriterion, fields: RequestedSortField[]): boolean {
+  if (sort.sortCriteria !== 'fields' || fields.length !== sort.fields.length) {
+    return false;
+  }
+  return sort.fields.every(
+    (sortField, index) =>
+      fields[index].field === sortField.field && fields[index].direction === sortField.direction
+  );
+}
+
+// Like the gateway, a field sort is identified by its fields (field and direction), never by a
+// name. The gateway forwards any other fields to the Commerce API; the mock only sorts on its
+// available sorts and applies relevance for the rest. `undefined` is a sort the gateway rejects
+// (see sortActionRejection).
+function resolveSort(sort: unknown): SortCriterion | undefined {
+  const {sortCriteria, fields} = (sort ?? {}) as Record<string, unknown>;
+  if (sortCriteria === 'relevance') {
+    return RELEVANCE_SORT;
+  }
+  const requested = requestedSortFields(fields);
+  if (sortCriteria !== 'fields' || requested.length === 0) {
+    return undefined;
+  }
+  return availableSorts.find((available) => sameSortFields(available, requested)) ?? RELEVANCE_SORT;
+}
+
+interface ActionRejection {
+  errorCode: 'INVALID_JSON' | 'AGENT:ACTION_NOT_APPLICABLE';
+  message: string;
+}
+
+/**
+ * How the gateway rejects a sort action before the stream starts, or `undefined` when it accepts
+ * it. A sort with another `sortCriteria`, or none, does not deserialize (`INVALID_JSON`).
+ * `selectSort` without a sort, the old flat payload included, and a field sort that names no field
+ * do not apply (`AGENT:ACTION_NOT_APPLICABLE`). A `restoreState` without a sort, the old
+ * `sortCriteria` key included, restores the default sort.
+ */
+function sortActionRejection(action: {
+  name: string;
+  context: Record<string, unknown>;
+}): ActionRejection | undefined {
+  const {name, context} = action;
+  if (name !== 'selectSort' && name !== 'restoreState') {
+    return undefined;
+  }
+  const sort = context.sort;
+  if (sort === undefined || sort === null) {
+    return name === 'selectSort'
+      ? {errorCode: 'AGENT:ACTION_NOT_APPLICABLE', message: 'selectSort requires a sort'}
+      : undefined;
+  }
+  const {sortCriteria} = (typeof sort === 'object' ? sort : {}) as Record<string, unknown>;
+  if (sortCriteria !== 'relevance' && sortCriteria !== 'fields') {
+    return {errorCode: 'INVALID_JSON', message: `${name} has a sort with an unknown sortCriteria`};
+  }
+  if (!resolveSort(sort)) {
+    return {
+      errorCode: 'AGENT:ACTION_NOT_APPLICABLE',
+      message: `${name} has a field sort without a field`,
+    };
+  }
+  return undefined;
+}
 
 interface PriceRange {
   start: number;
   end: number;
 }
 
+interface QueryCorrection {
+  originalQuery: string;
+  cause: 'correction' | 'trigger';
+  canOverride: boolean;
+}
+
 interface SearchViewState {
+  query: string;
+  correction: QueryCorrection | null;
   page: number;
   pageSize: number;
-  sortCriteria: string;
+  sort: SortCriterion;
   selectedBrands: string[];
-  excludedBrands: string[];
   // A single active range covers both a listed range selection and a custom range;
   // the two are mutually exclusive.
   selectedPriceRange: PriceRange | null;
@@ -691,11 +856,12 @@ interface SearchViewState {
 }
 
 const DEFAULT_VIEW: SearchViewState = {
+  query: 'Water Sports',
+  correction: null,
   page: 0,
   pageSize: DEFAULT_PAGE_SIZE,
-  sortCriteria: 'relevance',
+  sort: RELEVANCE_SORT,
   selectedBrands: [],
-  excludedBrands: [],
   selectedPriceRange: null,
   selectedCategoryPath: [],
   facetSearchQueries: {},
@@ -704,11 +870,13 @@ const DEFAULT_VIEW: SearchViewState = {
   categoryFacetDisplayCount: CATEGORY_FACET_DISPLAY_LIMIT,
 };
 
-// This mock keeps an in-memory view for the single decomposed search surface so it behaves
-// like a real (stateful) backend: dimensions not carried by an incoming action are preserved
-// rather than reset to defaults. This is a global, single-surface state, which is acceptable
-// for a local demo mock (no concurrent surfaces or per-session isolation needed).
+// This mock keeps an in-memory view of the decomposed search surface so it behaves like a real
+// (stateful) backend: dimensions not carried by an incoming action are preserved rather than reset
+// to defaults. Each prompt mints its own surface id, so an action on a surface reads and writes the
+// view kept for that id, and a surface no action has touched yet starts from the defaults.
+// `currentView` is the view being computed; an action without a surface id shares one view.
 let currentView: SearchViewState = {...DEFAULT_VIEW};
+const viewsBySurfaceId = new Map<string, SearchViewState>();
 
 const FACET_COMPONENT_IDS = {
   regular: 'facet-brand-2',
@@ -716,22 +884,34 @@ const FACET_COMPONENT_IDS = {
   category: 'facet-category-2',
 } as const;
 
-function sortProducts(input: WaterSportsProduct[], sortCriteria: string): WaterSportsProduct[] {
-  if (sortCriteria === 'price_asc') {
-    return [...input].sort((a, b) => a.ec_price - b.ec_price);
+const FACET_FIELDS = {
+  regular: {field: 'ec_brand', displayName: 'Brand'},
+  numeric: {field: 'ec_price', displayName: 'Price'},
+  category: {field: 'ec_category', displayName: 'Category'},
+} as const;
+
+const BREADBOX_ID = 'breadbox-2';
+
+const QUERY_SUMMARY_ID = 'query-summary-2';
+
+// Relevance preserves the original catalog order; a field sort orders by each field in turn.
+function sortProducts(input: WaterSportsProduct[], sort: SortCriterion): WaterSportsProduct[] {
+  if (sort.sortCriteria === 'relevance') {
+    return input;
   }
-  if (sortCriteria === 'price_desc') {
-    return [...input].sort((a, b) => b.ec_price - a.ec_price);
-  }
-  // 'relevance' (and any unknown criteria) preserves the original catalog order.
-  return [...input];
+  return [...input].sort((a, b) => {
+    for (const {field, direction} of sort.fields) {
+      const difference = a[field] - b[field];
+      if (difference !== 0) {
+        return direction === 'asc' ? difference : -difference;
+      }
+    }
+    return 0;
+  });
 }
 
 function filterProducts(view: SearchViewState): WaterSportsProduct[] {
-  return products.filter((p) => {
-    if (view.excludedBrands.includes(p.ec_brand)) {
-      return false;
-    }
+  return searchProductsFor(view.query).filter((p) => {
     if (view.selectedBrands.length > 0 && !view.selectedBrands.includes(p.ec_brand)) {
       return false;
     }
@@ -769,7 +949,7 @@ function deriveRegularFacetSearch(view: SearchViewState, componentId: string) {
   const page = view.facetSearchPages[componentId] ?? 0;
   const needle = query.toLowerCase();
   // Count without this facet's own brand selection so search results mirror the value list.
-  const brandCountBase = filterProducts({...view, selectedBrands: [], excludedBrands: []});
+  const brandCountBase = filterProducts({...view, selectedBrands: []});
   const matches = BRAND_CANDIDATES.filter((brand) => brand.toLowerCase().includes(needle))
     .map((brand) => ({
       value: brand,
@@ -784,39 +964,34 @@ function deriveRegularFacetValues(view: SearchViewState, componentId: string) {
   // Facet counts reflect the result set as if this facet's own selections were not applied,
   // so selecting one brand never zeroes out the sibling brand counts. Other facets still
   // constrain the counts.
-  const brandCountBase = filterProducts({...view, selectedBrands: [], excludedBrands: []});
-  const isActive = (brand: string) =>
-    view.selectedBrands.includes(brand) || view.excludedBrands.includes(brand);
+  const brandCountBase = filterProducts({...view, selectedBrands: []});
+  const isSelected = (brand: string) => view.selectedBrands.includes(brand);
   const countFor = (brand: string) => brandCountBase.filter((p) => p.ec_brand === brand).length;
-  // Eligible values are those with results plus any active value (kept so it can be
+  // Eligible values are those with results plus any selected value (kept so it can be
   // deselected). The display window and the show-more/less controls are computed against this
   // set — not the full static candidate list — so a facet never shows fewer than the initial
   // increment of available values, and the controls only appear when they are meaningful.
-  const eligibleBrands = BRAND_CANDIDATES.filter((brand) => countFor(brand) > 0 || isActive(brand));
+  const eligibleBrands = BRAND_CANDIDATES.filter(
+    (brand) => countFor(brand) > 0 || isSelected(brand)
+  );
   const displayCount = Math.min(view.regularFacetDisplayCount, eligibleBrands.length);
   const displayedPage = eligibleBrands.slice(0, displayCount);
-  // Active values that aren't part of the displayed page (selected/excluded through search)
-  // are pinned to the top of the list so the user sees their selection.
+  // Selected values that aren't part of the displayed page (selected through search) are pinned
+  // to the top of the list so the user sees their selection.
   const pinnedBrands = eligibleBrands.filter(
-    (brand) => isActive(brand) && !displayedPage.includes(brand)
+    (brand) => isSelected(brand) && !displayedPage.includes(brand)
   );
   const displayedBrands = [...pinnedBrands, ...displayedPage];
-  const values = displayedBrands.map((brand) => {
-    const numberOfResults = countFor(brand);
-    let state: 'idle' | 'selected' | 'excluded' = 'idle';
-    if (view.selectedBrands.includes(brand)) {
-      state = 'selected';
-    } else if (view.excludedBrands.includes(brand)) {
-      state = 'excluded';
-    }
-    return {value: brand, numberOfResults, state};
-  });
+  const values = displayedBrands.map((brand) => ({
+    value: brand,
+    numberOfResults: countFor(brand),
+    state: isSelected(brand) ? 'selected' : 'idle',
+  }));
 
   return {
-    field: 'ec_brand',
-    displayName: 'Brand',
+    ...FACET_FIELDS.regular,
     values,
-    hasActiveValues: view.selectedBrands.length > 0 || view.excludedBrands.length > 0,
+    hasActiveValues: view.selectedBrands.length > 0,
     canShowMoreValues: displayCount < eligibleBrands.length,
     canShowLessValues: displayCount > REGULAR_FACET_DISPLAY_LIMIT,
     facetSearch: deriveRegularFacetSearch(view, componentId),
@@ -871,8 +1046,7 @@ function deriveNumericFacetValues(view: SearchViewState) {
       : undefined;
 
   return {
-    field: 'ec_price',
-    displayName: 'Price',
+    ...FACET_FIELDS.numeric,
     values,
     customRange,
     domain,
@@ -996,8 +1170,7 @@ function deriveCategoryFacetValues(view: SearchViewState, componentId: string) {
   const children = sortedChildren.slice(0, displayCount);
 
   return {
-    field: 'ec_category',
-    displayName: 'Category',
+    ...FACET_FIELDS.category,
     values: {ancestry, selected, children},
     canShowMoreValues: sortedChildren.length > displayCount,
     // Gate on the actual displayed count (bounded by the available children), so a cross-facet
@@ -1007,31 +1180,66 @@ function deriveCategoryFacetValues(view: SearchViewState, componentId: string) {
   };
 }
 
+// Lists the active facets in the facet-manager order, from the same view the facets derive from.
+function deriveBreadboxState(view: SearchViewState) {
+  const facets: Record<string, unknown>[] = [];
+
+  const selectedBrands = BRAND_CANDIDATES.filter((brand) => view.selectedBrands.includes(brand));
+  if (selectedBrands.length > 0) {
+    facets.push({
+      facetId: FACET_COMPONENT_IDS.regular,
+      ...FACET_FIELDS.regular,
+      type: 'regular',
+      values: selectedBrands.map((brand) => ({value: brand, state: 'selected'})),
+    });
+  }
+
+  if (view.selectedPriceRange) {
+    const {start, end} = view.selectedPriceRange;
+    facets.push({
+      facetId: FACET_COMPONENT_IDS.numeric,
+      ...FACET_FIELDS.numeric,
+      type: 'numericalRange',
+      values: [{start, end}],
+    });
+  }
+
+  if (view.selectedCategoryPath.length > 0) {
+    facets.push({
+      facetId: FACET_COMPONENT_IDS.category,
+      ...FACET_FIELDS.category,
+      type: 'hierarchical',
+      path: view.selectedCategoryPath,
+    });
+  }
+
+  return {facets};
+}
+
 function computeComponentsState(view: SearchViewState): Record<string, unknown> {
-  const {pageSize, sortCriteria} = view;
+  const {pageSize, sort: appliedSort} = view;
   const filteredProducts = filterProducts(view);
-  const sortedProducts = sortProducts(filteredProducts, sortCriteria);
+  const sortedProducts = sortProducts(filteredProducts, appliedSort);
   const totalEntries = sortedProducts.length;
   const totalPages = Math.max(1, Math.ceil(totalEntries / pageSize));
   const page = Math.min(Math.max(view.page, 0), totalPages - 1);
   const start = page * pageSize;
   const pageProducts = sortedProducts.slice(start, start + pageSize);
-  const appliedSort =
-    sortOptions[sortCriteria as keyof typeof sortOptions] ?? sortOptions.relevance;
 
   // The query-summary owns its own backend-computed aggregate (query + result window) so it does
   // not read the search-box, pagination, and product-list state. Indices are 1-based; on an empty
   // result set the window collapses to 0-0 and the renderer shows the no-results/empty state.
-  const query = 'Water Sports';
+  const {query} = view;
   const firstIndex = totalEntries === 0 ? 0 : start + 1;
   const lastIndex = totalEntries === 0 ? 0 : start + pageProducts.length;
 
   return {
-    'query-summary-2': {
+    [QUERY_SUMMARY_ID]: {
       query,
       firstIndex,
       lastIndex,
       totalEntries,
+      ...(view.correction ? {correction: view.correction} : {}),
     },
     'product-list-2': {
       products: pageProducts,
@@ -1054,12 +1262,67 @@ function computeComponentsState(view: SearchViewState): Record<string, unknown> 
     'facet-brand-2': deriveRegularFacetValues(view, FACET_COMPONENT_IDS.regular),
     'facet-price-2': deriveNumericFacetValues(view),
     'facet-category-2': deriveCategoryFacetValues(view, FACET_COMPONENT_IDS.category),
-    // Facet ordering lives on the facet-manager node's `children` (A2-UI plane), not here.
-    'facet-manager-2': {},
+    [BREADBOX_ID]: deriveBreadboxState(view),
+    // FacetManager has NO Component_State: facet ordering lives on its `children` (A2-UI
+    // composition plane), so it emits no `/state` op.
   };
 }
 
-const COMMERCE_SEARCH_ROOT_ID = 'commerce-search-2';
+// The set of state field names each stateful node binds and re-emits. These mirror the keys of
+// each entry `computeComponentsState` produces, so a node's `{ path }` bindings resolve to the
+// fields of the whole-component value written at `statePath(id)`.
+const STATE_FIELDS_BY_NODE: Record<string, readonly string[]> = {
+  [QUERY_SUMMARY_ID]: ['query', 'firstIndex', 'lastIndex', 'totalEntries', 'correction'],
+  'product-list-2': ['products'],
+  'pagination-2': ['page', 'pageSize', 'totalEntries', 'totalPages'],
+  'page-size-2': ['pageSize'],
+  'sort-2': ['appliedSort', 'availableSorts'],
+  'facet-brand-2': [
+    'field',
+    'displayName',
+    'values',
+    'hasActiveValues',
+    'canShowMoreValues',
+    'canShowLessValues',
+    'facetSearch',
+  ],
+  'facet-price-2': [
+    'field',
+    'displayName',
+    'values',
+    'customRange',
+    'domain',
+    'hasActiveValues',
+    'canShowMoreValues',
+    'canShowLessValues',
+  ],
+  'facet-category-2': [
+    'field',
+    'displayName',
+    'values',
+    'canShowMoreValues',
+    'canShowLessValues',
+    'facetSearch',
+  ],
+  [BREADBOX_ID]: ['facets'],
+};
+
+// Builds the whole-component `/state/<id>` updateDataModel ops for the surface from a view's
+// computed component state: each `(nodeId, stateObject)` entry becomes one op writing the whole
+// state object at `statePath(nodeId)`. Nodes with no state produce no op.
+function buildStateOps(view: SearchViewState): UpdateDataModelOp[] {
+  const components = computeComponentsState(view);
+  return Object.entries(components).map(([nodeId, value]) => ({
+    surfaceId: SEARCH_SURFACE_ID,
+    path: statePath(nodeId),
+    value,
+  }));
+}
+
+// The A2-UI canonical surface root: exactly one node carries `id: "root"` and mounts under the
+// implicit `Surface` container. The CommerceSearch surface root owns no Component_State, so this
+// id never appears in a `/state/<id>` binding.
+const COMMERCE_SEARCH_ROOT_ID = RENDERER_ROOT_ID;
 
 // Facet ids in emission order; the facet-manager node's `children` expresses facet ordering.
 const FACET_NODE_IDS = ['facet-brand-2', 'facet-price-2', 'facet-category-2'];
@@ -1069,115 +1332,125 @@ const FACET_NODE_IDS = ['facet-brand-2', 'facet-price-2', 'facet-category-2'];
 // layout lives on the A2-UI composition plane rather than being hardcoded in the root renderer.
 const ROOT_CHILD_IDS = ['search-sidebar', 'search-main'];
 
-// The main column stacks a top row (summary + sort), the product grid, and a bottom row
-// (pagination + page size), top to bottom.
-const MAIN_CHILD_IDS = ['search-top', 'product-list-2', 'search-bottom'];
+// The main column stacks the breadbox, a top row (summary + sort), the product grid, and a bottom
+// row (pagination + page size), top to bottom. As in the Atomic commerce layout, the breadbox gets
+// a full-width row above the summary and sort.
+const MAIN_CHILD_IDS = [BREADBOX_ID, 'search-top', 'product-list-2', 'search-bottom'];
 
 // The top row places the query summary on the left and the sort selector on the right.
-const TOP_ROW_CHILD_IDS = ['query-summary-2', 'sort-2'];
+const TOP_ROW_CHILD_IDS = [QUERY_SUMMARY_ID, 'sort-2'];
 
 // The bottom row places pagination on the left and the page-size selector on the right.
 const BOTTOM_ROW_CHILD_IDS = ['pagination-2', 'page-size-2'];
 
-// One node per mount target. The two-column layout is composed from generic layout-stack nodes
-// (search-sidebar/search-main and the top/bottom rows), keeping placement on the A2-UI plane.
-// The search box is intentionally absent: the surface's query input is the app-level search bar
-// above this surface, so the two-column layout starts at the query-summary row. Each node's
-// `componentId` equals its own `id` so AG-UI state (keyed by componentId) correlates to the
-// node; layout-stack nodes carry their `direction` as a presentation node prop and have no
-// AG-UI state entry.
+const SEARCH_SURFACE_ID = 'ui-commerce-water-sports';
+
+// One node per mount target. Each node carries a SINGLE identity (top-level `id` + `component`);
+// Following the A2-UI v1.0 flat node shape, each node carries its presentation values,
+// `{ path }` state bindings, and static composition links directly at the top level (no `props`
+// wrapper). The two-column layout is composed from generic layout-stack nodes
+// (search-sidebar/search-main and the top/bottom rows), keeping placement on the A2-UI plane. The
+// search box is intentionally absent: the surface's query input is the app-level search bar above
+// this surface, so the two-column layout starts at the query-summary row.
+//
+// Composition follows the A2-UI convention: the heterogeneous CommerceSearch container uses named
+// `sidebarChild`/`mainChild` ComponentId slots (matching CommerceSearchPropsSchema); homogeneous
+// ordered lists (LayoutStack, FacetManager) use a top-level `children` ChildList array (matching
+// LayoutStackPropsSchema / FacetManagerPropsSchema). Layout-stack nodes carry their `direction`
+// presentation prop and have no Component_State; FacetManager has no state either (ordering lives
+// on `children`). Every stateful node spreads its state-bound props onto the node top level as
+// `{ path: "/state/<id>/<field>" }` Data_Binding objects via `bindStateFields`.
 const SEARCH_SURFACE_NODES: A2uiComponentNode[] = [
   {
     id: COMMERCE_SEARCH_ROOT_ID,
     component: 'CommerceSearch',
-    props: {componentId: COMMERCE_SEARCH_ROOT_ID, componentType: 'commerce-search'},
-    children: ROOT_CHILD_IDS,
+    sidebarChild: ROOT_CHILD_IDS[0],
+    mainChild: ROOT_CHILD_IDS[1],
   },
   {
     id: 'search-sidebar',
     component: 'LayoutStack',
-    props: {componentId: 'search-sidebar', componentType: 'layout-stack', direction: 'column'},
+    direction: 'column',
     children: ['facet-manager-2'],
   },
   {
     id: 'search-main',
     component: 'LayoutStack',
-    props: {componentId: 'search-main', componentType: 'layout-stack', direction: 'column'},
+    direction: 'column',
     children: MAIN_CHILD_IDS,
   },
   {
     id: 'search-top',
     component: 'LayoutStack',
-    props: {componentId: 'search-top', componentType: 'layout-stack', direction: 'row'},
+    direction: 'row',
     children: TOP_ROW_CHILD_IDS,
   },
   {
     id: 'search-bottom',
     component: 'LayoutStack',
-    props: {componentId: 'search-bottom', componentType: 'layout-stack', direction: 'row'},
+    direction: 'row',
     children: BOTTOM_ROW_CHILD_IDS,
   },
   {
     id: 'facet-manager-2',
     component: 'FacetManager',
-    props: {componentId: 'facet-manager-2', componentType: 'facet-manager'},
     children: FACET_NODE_IDS,
   },
   {
     id: 'facet-brand-2',
     component: 'RegularFacet',
-    props: {componentId: 'facet-brand-2', componentType: 'regular-facet'},
+    ...bindStateFields('facet-brand-2', STATE_FIELDS_BY_NODE['facet-brand-2']),
   },
   {
     id: 'facet-price-2',
     component: 'NumericFacet',
-    props: {componentId: 'facet-price-2', componentType: 'numeric-facet'},
+    ...bindStateFields('facet-price-2', STATE_FIELDS_BY_NODE['facet-price-2']),
   },
   {
     id: 'facet-category-2',
     component: 'CategoryFacet',
-    props: {componentId: 'facet-category-2', componentType: 'category-facet'},
+    ...bindStateFields('facet-category-2', STATE_FIELDS_BY_NODE['facet-category-2']),
   },
   {
-    id: 'query-summary-2',
+    id: BREADBOX_ID,
+    component: 'Breadbox',
+    ...bindStateFields(BREADBOX_ID, STATE_FIELDS_BY_NODE[BREADBOX_ID]),
+  },
+  {
+    id: QUERY_SUMMARY_ID,
     component: 'QuerySummary',
-    props: {componentId: 'query-summary-2', componentType: 'query-summary'},
+    ...bindStateFields(QUERY_SUMMARY_ID, STATE_FIELDS_BY_NODE[QUERY_SUMMARY_ID]),
   },
   {
     id: 'sort-2',
     component: 'Sort',
-    props: {componentId: 'sort-2', componentType: 'sort'},
+    ...bindStateFields('sort-2', STATE_FIELDS_BY_NODE['sort-2']),
   },
   {
     id: 'pagination-2',
     component: 'Pagination',
-    props: {componentId: 'pagination-2', componentType: 'pagination'},
+    ...bindStateFields('pagination-2', STATE_FIELDS_BY_NODE['pagination-2']),
   },
   {
     id: 'page-size-2',
     component: 'PageSize',
-    props: {componentId: 'page-size-2', componentType: 'page-size'},
+    ...bindStateFields('page-size-2', STATE_FIELDS_BY_NODE['page-size-2']),
   },
   {
     id: 'product-list-2',
     component: 'ProductList',
-    props: {componentId: 'product-list-2', componentType: 'product-list'},
+    ...bindStateFields('product-list-2', STATE_FIELDS_BY_NODE['product-list-2']),
   },
 ];
 
-// Validates that the declared root and every referenced child resolve to an emitted node,
-// then assembles the createSurface. A missing root or child throws an error naming the missing
-// node so no partial tree is ever emitted.
-function buildValidatedSearchSurface(
-  rootId: string,
-  nodes: A2uiComponentNode[]
-): Record<string, unknown> {
+// Validates that the canonical `root` node and every referenced child resolve to an emitted node,
+// then assembles the A2-UI v1.0 createSurface. A missing root or child throws an error naming the
+// missing node so no partial tree is ever emitted.
+function buildValidatedSearchSurface(nodes: A2uiComponentNode[]): Record<string, unknown> {
   return buildValidatedSurface({
     templateName: 'Mock_Search_Template',
-    surfaceId: 'ui-commerce-water-sports',
-    rootId,
+    surfaceId: SEARCH_SURFACE_ID,
     nodes,
-    extra: {surfaceProperties: {placement: 'main'}},
   });
 }
 
@@ -1189,23 +1462,34 @@ const surfaceActivitySnapshot: ConverseEvent = ActivitySnapshot({
     messages: [
       {
         version: 'v1.0',
-        createSurface: buildValidatedSearchSurface(COMMERCE_SEARCH_ROOT_ID, SEARCH_SURFACE_NODES),
+        createSurface: buildValidatedSearchSurface(SEARCH_SURFACE_NODES),
       },
     ],
   },
 });
 
-// A new "water sports" search resets the surface, so the initial events are built on demand:
+// A new search resets the surface, so the initial events are built on demand:
 // each call resets the in-memory view to defaults and recomputes the initial state snapshot.
-function buildWaterSportsInitialEvents(): ConverseEvent[] {
-  currentView = {...DEFAULT_VIEW};
-  const initialStateSnapshot: ConverseEvent = StateSnapshot({
-    components: computeComponentsState(currentView),
+// Registering the view under the minted surface id keeps the correction on that surface's first action.
+function buildWaterSportsInitialEvents(
+  correction: QueryCorrection | null = null,
+  mintSurfaceId?: (surfaceId: string) => string,
+  query = DEFAULT_VIEW.query
+): ConverseEvent[] {
+  currentView = {...DEFAULT_VIEW, query, correction};
+  if (mintSurfaceId) {
+    viewsBySurfaceId.set(mintSurfaceId(SEARCH_SURFACE_ID), currentView);
+  }
+  // Component_State is transported inline as `/state/<id>` updateDataModel ops on an
+  // `a2ui-surface` activity, replacing the removed component STATE_SNAPSHOT.
+  const initialStateActivity: ConverseEvent = UpdateDataModelActivity({
+    messageId: 'activity-commerce-water-sports-state',
+    ops: buildStateOps(currentView),
   });
 
   return buildConversationResponse({
     runId,
-    middleEvents: [surfaceActivitySnapshot, {...initialStateSnapshot, delayMs: 50}],
+    middleEvents: [surfaceActivitySnapshot, {...initialStateActivity, delayMs: 50}],
     includeInitialStateSnapshot: false,
     includeFinalStateSnapshot: false,
   });
@@ -1275,20 +1559,7 @@ function deriveRegularFacetState(
   switch (action.name) {
     case 'toggleSelect': {
       const selectedBrands = toggleInList(currentView.selectedBrands, value);
-      const excludedBrands = currentView.excludedBrands.filter((brand) => brand !== value);
-      currentView = clearFacetSearch(
-        {...currentView, selectedBrands, excludedBrands, page: 0},
-        sourceComponentId
-      );
-      break;
-    }
-    case 'toggleExclude': {
-      const excludedBrands = toggleInList(currentView.excludedBrands, value);
-      const selectedBrands = currentView.selectedBrands.filter((brand) => brand !== value);
-      currentView = clearFacetSearch(
-        {...currentView, selectedBrands, excludedBrands, page: 0},
-        sourceComponentId
-      );
+      currentView = clearFacetSearch({...currentView, selectedBrands, page: 0}, sourceComponentId);
       break;
     }
     case 'toggleSingleSelect': {
@@ -1298,21 +1569,6 @@ function deriveRegularFacetState(
         {
           ...currentView,
           selectedBrands: isSoleSelected ? [] : [value],
-          excludedBrands: [],
-          page: 0,
-        },
-        sourceComponentId
-      );
-      break;
-    }
-    case 'toggleSingleExclude': {
-      const isSoleExcluded =
-        currentView.excludedBrands.length === 1 && currentView.excludedBrands[0] === value;
-      currentView = clearFacetSearch(
-        {
-          ...currentView,
-          excludedBrands: isSoleExcluded ? [] : [value],
-          selectedBrands: [],
           page: 0,
         },
         sourceComponentId
@@ -1321,7 +1577,7 @@ function deriveRegularFacetState(
     }
     case 'clearAllActiveValues':
       currentView = clearFacetSearch(
-        {...currentView, selectedBrands: [], excludedBrands: [], page: 0},
+        {...currentView, selectedBrands: [], page: 0},
         sourceComponentId
       );
       break;
@@ -1440,8 +1696,94 @@ function deriveCategoryFacetState(
   }
 }
 
+function deselectBreadboxValue(context: Record<string, unknown>): void {
+  switch (context.facetId) {
+    case FACET_COMPONENT_IDS.regular: {
+      const value = String(context.value ?? '');
+      currentView = {
+        ...currentView,
+        selectedBrands: currentView.selectedBrands.filter((brand) => brand !== value),
+        page: 0,
+      };
+      break;
+    }
+    case FACET_COMPONENT_IDS.numeric: {
+      const range: PriceRange = {start: Number(context.start), end: Number(context.end)};
+      if (currentView.selectedPriceRange && rangesEqual(currentView.selectedPriceRange, range)) {
+        currentView = {...currentView, selectedPriceRange: null, page: 0};
+      }
+      break;
+    }
+    case FACET_COMPONENT_IDS.category:
+      currentView = {
+        ...currentView,
+        selectedCategoryPath: [],
+        categoryFacetDisplayCount: CATEGORY_FACET_DISPLAY_LIMIT,
+        page: 0,
+      };
+      break;
+    default:
+      break;
+  }
+}
+
+function deriveBreadboxViewState(action: {name: string; context: Record<string, unknown>}): void {
+  switch (action.name) {
+    case 'deselect':
+      deselectBreadboxValue(action.context);
+      break;
+    case 'clearAll':
+      currentView = {
+        ...currentView,
+        selectedBrands: [],
+        selectedPriceRange: null,
+        selectedCategoryPath: [],
+        categoryFacetDisplayCount: CATEGORY_FACET_DISPLAY_LIMIT,
+        page: 0,
+      };
+      break;
+    default:
+      break;
+  }
+}
+
+function deriveQuerySummaryViewState(action: {name: string}): void {
+  const correction = currentView.correction;
+  if (action.name === 'overrideCorrection' && correction?.canOverride) {
+    currentView = {...DEFAULT_VIEW, query: correction.originalQuery};
+  }
+}
+
+interface FacetRestore {
+  facetId: string;
+  values?: string[];
+  numericRanges?: PriceRange[];
+  path?: string[];
+}
+
+// Like the gateway, a restore replaces the whole view with the snapshot instead of merging into it.
+function restoreView(context: Record<string, unknown>): SearchViewState {
+  const facets = (Array.isArray(context.facets) ? context.facets : []) as FacetRestore[];
+  const restored = (field: string) => facets.find((facet) => facet.facetId === field);
+  // The mock's price facet holds a single selected range, so later ranges are dropped.
+  const range = restored(FACET_FIELDS.numeric.field)?.numericRanges?.[0];
+  return {
+    ...DEFAULT_VIEW,
+    query: String(context.query ?? DEFAULT_VIEW.query),
+    page: Number(context.page) || 0,
+    pageSize: Number(context.pageSize) || DEFAULT_VIEW.pageSize,
+    sort: resolveSort(context.sort) ?? RELEVANCE_SORT,
+    selectedBrands: (restored(FACET_FIELDS.regular.field)?.values ?? []).map(String),
+    selectedPriceRange: range ? {start: Number(range.start), end: Number(range.end)} : null,
+    selectedCategoryPath: (restored(FACET_FIELDS.category.field)?.path ?? []).map(String),
+  };
+}
+
 function deriveNonFacetState(action: {name: string; context: Record<string, unknown>}): void {
   switch (action.name) {
+    case 'restoreState':
+      currentView = restoreView(action.context);
+      break;
     case 'selectPage':
       currentView = {...currentView, page: Number(action.context.page) || 0};
       break;
@@ -1456,7 +1798,7 @@ function deriveNonFacetState(action: {name: string; context: Record<string, unkn
       // changing sort resets to the first page
       currentView = {
         ...currentView,
-        sortCriteria: String(action.context.sortCriteria ?? currentView.sortCriteria),
+        sort: resolveSort(action.context.sort) ?? currentView.sort,
         page: 0,
       };
       break;
@@ -1487,6 +1829,12 @@ function deriveViewState(
     case FACET_COMPONENT_IDS.category:
       deriveCategoryFacetState(action, FACET_COMPONENT_IDS.category);
       break;
+    case BREADBOX_ID:
+      deriveBreadboxViewState(action);
+      break;
+    case QUERY_SUMMARY_ID:
+      deriveQuerySummaryViewState(action);
+      break;
     default:
       deriveNonFacetState(action);
       break;
@@ -1499,21 +1847,87 @@ function buildWaterSportsActionEvents(
     name: string;
     context: Record<string, unknown>;
   },
-  sourceComponentId?: string
+  sourceComponentId?: string,
+  surfaceId?: string
 ): ConverseEvent[] {
+  if (surfaceId !== undefined) {
+    currentView = viewsBySurfaceId.get(surfaceId) ?? {...DEFAULT_VIEW};
+  }
   const view = deriveViewState(action, sourceComponentId);
-  const stateSnapshot: ConverseEvent = StateSnapshot({
-    components: computeComponentsState(view),
+  if (surfaceId !== undefined) {
+    viewsBySurfaceId.set(surfaceId, view);
+  }
+  // Re-emit the changed Component_State as whole-component `/state/<id>` updateDataModel ops on an
+  // `a2ui-surface` activity. Only server-owned `/state/*` paths are ever written.
+  const stateActivity: ConverseEvent = UpdateDataModelActivity({
+    messageId: 'activity-commerce-water-sports-state',
+    ops: buildStateOps(view),
   });
 
-  // Action responses update the existing surface: only the STATE_SNAPSHOT changes, so we
-  // intentionally omit the ACTIVITY_SNAPSHOT/createSurface that the initial response emits.
+  // Action responses update the existing surface: only the state ops change, so we intentionally
+  // omit the createSurface activity that the initial response emits.
   return buildConversationResponse({
     runId,
-    middleEvents: [stateSnapshot],
+    middleEvents: [stateActivity],
     includeInitialStateSnapshot: false,
     includeFinalStateSnapshot: false,
   });
 }
 
-export {buildWaterSportsInitialEvents, buildWaterSportsActionEvents};
+const FACET_RERUN_ACTIONS = new Set([
+  'toggleSelect',
+  'toggleExclude',
+  'toggleSingleSelect',
+  'toggleSingleExclude',
+  'clearAllActiveValues',
+  'showMoreValues',
+  'showLessValues',
+  'applyCustomRange',
+  'selectPath',
+  'clearSelectedPath',
+]);
+
+const BREADBOX_RERUN_ACTIONS = new Set(['deselect', 'clearAll']);
+
+const SURFACE_RERUN_ACTIONS = new Set(['restoreState', 'selectPage', 'setPageSize', 'selectSort']);
+
+// Whether the action re-runs the surface's search, read before the action changes the view.
+function rerunsSearch(
+  action: {name: string},
+  sourceComponentId: string | undefined,
+  surfaceId: string
+): boolean {
+  switch (sourceComponentId) {
+    case FACET_COMPONENT_IDS.regular:
+    case FACET_COMPONENT_IDS.numeric:
+    case FACET_COMPONENT_IDS.category:
+      return FACET_RERUN_ACTIONS.has(action.name);
+    case BREADBOX_ID:
+      return BREADBOX_RERUN_ACTIONS.has(action.name);
+    case QUERY_SUMMARY_ID:
+      return (
+        action.name === 'overrideCorrection' &&
+        viewsBySurfaceId.get(surfaceId)?.correction?.canOverride === true
+      );
+    default:
+      return SURFACE_RERUN_ACTIONS.has(action.name);
+  }
+}
+
+// The query the surface's last search ran, after a correction or a rewrite, when it returned
+// products.
+function productSearchQuery(surfaceId: string): string | null {
+  const view = viewsBySurfaceId.get(surfaceId);
+  return view && filterProducts(view).length > 0 ? view.query : null;
+}
+
+export {
+  SEARCH_SURFACE_ID,
+  buildWaterSportsInitialEvents,
+  buildWaterSportsActionEvents,
+  instantProductsFor,
+  productSearchQuery,
+  searchProductsFor,
+  rerunsSearch,
+  sortActionRejection,
+};

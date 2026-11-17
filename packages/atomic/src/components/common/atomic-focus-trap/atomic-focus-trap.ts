@@ -46,6 +46,7 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
   @property({type: Object}) scope: Element = document.body;
 
   private readonly hiddenElements: Element[] = [];
+  private readonly inertElements: Element[] = [];
 
   connectedCallback() {
     super.connectedCallback();
@@ -70,6 +71,11 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
     }
     element.setAttribute('aria-hidden', 'true');
     this.hiddenElements.push(element);
+    // Hidden elements must not keep focusable descendants (aria-hidden-focus).
+    if (!element.hasAttribute('inert')) {
+      element.setAttribute('inert', '');
+      this.inertElements.push(element);
+    }
   }
 
   private showAll() {
@@ -77,6 +83,11 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
     while (el) {
       el.removeAttribute('aria-hidden');
       el = this.hiddenElements.pop();
+    }
+    let inertElement: Element | undefined = this.inertElements.pop();
+    while (inertElement) {
+      inertElement.removeAttribute('inert');
+      inertElement = this.inertElements.pop();
     }
   }
 
@@ -124,6 +135,10 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
     this.showSelf();
     if (!isInitialLoad) {
       await defer();
+      // The trap may have been deactivated while waiting, which already restored the siblings.
+      if (!this.active) {
+        return;
+      }
       getFirstFocusableDescendant(this)?.focus();
     }
     this.hideSiblingsRecursively(this);

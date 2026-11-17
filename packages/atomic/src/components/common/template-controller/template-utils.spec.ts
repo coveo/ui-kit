@@ -1,5 +1,10 @@
 import {afterEach, beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
-import {makeDefinedConditions, makeMatchConditions, type TemplateHelpers} from './template-utils';
+import {
+  makeDefinedConditions,
+  makeFieldConditions,
+  makeMatchConditions,
+  type TemplateHelpers,
+} from './template-utils';
 
 vi.mock('@/src/components/common/layout/sections', {spy: true});
 vi.mock('@/src/components/common/layout/item-layout-sections', {spy: true});
@@ -174,6 +179,42 @@ describe('template-utils', () => {
       expect(conditions).toEqual([]);
       expect(vi.mocked(mockHelpers.fieldsMustBeDefined)).not.toHaveBeenCalled();
       expect(vi.mocked(mockHelpers.fieldsMustNotBeDefined)).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('makeFieldConditions', () => {
+    const definedCondition = () => true;
+    const notDefinedCondition = () => true;
+    const matchCondition = () => true;
+    const notMatchCondition = () => true;
+    const helpers: TemplateHelpers<() => boolean> = {
+      fieldsMustBeDefined: () => definedCondition,
+      fieldsMustNotBeDefined: () => notDefinedCondition,
+      fieldMustMatch: () => matchCondition,
+      fieldMustNotMatch: () => notMatchCondition,
+    };
+
+    it('returns the defined conditions followed by the match conditions', () => {
+      const conditions = makeFieldConditions(
+        {
+          ifDefined: 'author',
+          ifNotDefined: 'thumbnail',
+          mustMatch: {filetype: ['pdf']},
+          mustNotMatch: {source: ['spam']},
+        },
+        helpers
+      );
+
+      expect(conditions).toEqual([
+        definedCondition,
+        notDefinedCondition,
+        matchCondition,
+        notMatchCondition,
+      ]);
+    });
+
+    it('returns an empty array when no attribute is set', () => {
+      expect(makeFieldConditions({mustMatch: {}, mustNotMatch: {}}, helpers)).toEqual([]);
     });
   });
 });

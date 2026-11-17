@@ -22,7 +22,7 @@ export interface CartDefinition extends UniversalControllerDefinitionWithProps<
 > {}
 
 /**
- * @deprecated In the future, the context controller will be included by default in the engine definition. You will no longer need to define it manually
+ * @deprecated In the future, the cart controller will be included by default in the engine definition. You will no longer need to define it manually
  * Defines a `Cart` controller instance.
  * @group Definers
  *

@@ -51,6 +51,7 @@
         "$TURBO_ROOT$/.github/actions/post-scratch-org-links-on-pr/**",
         "$TURBO_ROOT$/.github/actions/setup/**",
         "$TURBO_ROOT$/.github/actions/setup-sfdx/**",
+        "$TURBO_ROOT$/.github/actions/upload-playwright-record/**",
         "$TURBO_ROOT$/.github/workflows/ci.yml",
         "$TURBO_ROOT$/.github/workflows/e2e-quantic.yml"
       ],
@@ -61,7 +62,8 @@
       "dependsOn": ["@coveo/platform-mock-api#build"],
       "inputs": ["$TURBO_DEFAULT$"],
       "outputs": ["playwright-report/**", "blob-report/**", "test-results/**"],
-      "cache": false
+      "cache": false,
+      "env": ["TEST_SHARD"]
     },
     "validate:types": {
       "dependsOn": ["build"],
@@ -73,7 +75,7 @@
     "lint:check:eslint": {
       "inputs": [
         "package.json",
-        "force-app/main/default/.eslintrc.json",
+        "eslint.config.js",
         "force-app/main/default/lwc/**",
         "force-app/playgroundComponents/main/lwc/**"
       ],
@@ -97,7 +99,7 @@
     "lint:fix:eslint": {
       "inputs": [
         "package.json",
-        "force-app/main/default/.eslintrc.json",
+        "eslint.config.js",
         "force-app/main/default/lwc/**",
         "force-app/playgroundComponents/main/lwc/**"
       ],

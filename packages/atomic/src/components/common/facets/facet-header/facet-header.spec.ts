@@ -56,6 +56,22 @@ describe('#renderFacetHeader', () => {
       .toHaveAttribute('aria-label', 'Clear 3 filters for the Test Facet facet');
   });
 
+  it.each([
+    {numberOfActiveValues: 1, visibleText: 'Clear filter'},
+    {numberOfActiveValues: 3, visibleText: 'Clear 3 filters'},
+  ])(
+    'renders a clear button whose accessible name starts with its visible text when there are $numberOfActiveValues active values',
+    async ({numberOfActiveValues, visibleText}) => {
+      await renderComponent({numberOfActiveValues});
+      const clearButton = page.getByRole('button', {name: visibleText});
+
+      await expect.element(clearButton).toHaveTextContent(visibleText);
+      expect(clearButton.element().getAttribute('aria-label')).toMatch(
+        new RegExp(`^${visibleText}\\b`)
+      );
+    }
+  );
+
   it('renders the label button with the correct aria label attribute', async () => {
     await renderComponent();
     await expect.element(locators.collapseButton).toBeInTheDocument();

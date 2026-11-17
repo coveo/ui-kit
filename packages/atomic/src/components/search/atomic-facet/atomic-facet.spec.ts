@@ -201,9 +201,11 @@ describe('atomic-facet', () => {
         })
       );
 
-      const {locators} = await setupElement();
+      const {element, locators} = await setupElement();
 
       expect(locators.facet).not.toBeInTheDocument();
+      expect(element.matches(':state(hidden)')).toBe(true);
+      expect(getComputedStyle(element).display).toBe('none');
     });
 
     it('should not display facet is disabled', async () => {
@@ -780,8 +782,9 @@ describe('atomic-facet', () => {
           isLoading: false,
         })
       );
-      const {locators} = await setupElement();
+      const {element, locators} = await setupElement();
       await expect(locators.placeholder).toBeInTheDocument();
+      expect(getComputedStyle(element).display).not.toBe('none');
     });
 
     it('should not render placeholder when first search has been executed', async () => {
@@ -1141,34 +1144,46 @@ describe('atomic-facet', () => {
 
   describe('accessibility', () => {
     it('should announce facet search values to screen readers when there are search results', async () => {
-      vi.mocked(buildFacet).mockReturnValue(
-        buildFakeFacet({
-          implementation: {
-            // @ts-expect-error: ignoring other methods
-            facetSearch: {
-              select: vi.fn(),
-            },
+      const listeners: (() => void)[] = [];
+      const facet = buildFakeFacet({
+        implementation: {
+          // @ts-expect-error: ignoring other methods
+          facetSearch: {
+            select: vi.fn(),
           },
-          state: {
-            facetSearch: {
-              moreValuesAvailable: true,
-              isLoading: false,
-              query: 'ele',
-              values: [
-                {
-                  displayValue: 'sd',
-                  rawValue: 'sd',
-                  count: 1,
-                },
-              ],
-            },
+          subscribe: vi.fn((listener: () => void) => {
+            listeners.push(listener);
+            listener();
+            return vi.fn();
+          }),
+        },
+        state: {
+          facetSearch: {
+            moreValuesAvailable: false,
+            isLoading: true,
+            query: 'ele',
+            values: [],
           },
-        })
-      );
+        },
+      });
+      vi.mocked(buildFacet).mockReturnValue(facet);
 
       const setMessageSpy = vi.spyOn(AriaLiveRegionController.prototype, 'message', 'set');
-      const {locators} = await setupElement();
-      await userEvent.click(locators.valueLabel[0]);
+      await setupElement();
+      facet.state.facetSearch = {
+        moreValuesAvailable: true,
+        isLoading: false,
+        query: 'ele',
+        values: [
+          {
+            displayValue: 'sd',
+            rawValue: 'sd',
+            count: 1,
+          },
+        ],
+      };
+      listeners.forEach((listener) => listener());
+
       expect(setMessageSpy).toHaveBeenCalledWith('1 value found in the Test Field facet');
     });
   });

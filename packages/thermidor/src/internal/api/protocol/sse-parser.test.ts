@@ -51,6 +51,25 @@ describe('parseSSEEvent', () => {
     });
   });
 
+  it('preserves Gateway session metadata on RUN_STARTED events', () => {
+    const result = parseSSEEvent({
+      event: 'RUN_STARTED',
+      data: JSON.stringify({
+        type: 'RUN_STARTED',
+        threadId: 'gateway-session-123',
+        runId: 'gateway-run-123',
+        conversationSessionId: 'gateway-session-123',
+        conversationToken: 'gateway-token-abc',
+      }),
+    });
+
+    expect(result).toMatchObject({
+      type: 'RUN_STARTED',
+      conversationSessionId: 'gateway-session-123',
+      conversationToken: 'gateway-token-abc',
+    });
+  });
+
   it('handles CUSTOM event type', () => {
     const result = parseSSEEvent({
       event: 'message',

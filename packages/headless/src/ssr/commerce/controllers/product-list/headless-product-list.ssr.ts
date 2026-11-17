@@ -38,7 +38,9 @@ interface ProductListOptions {
  * Defines a `ProductList` controller instance.
  * @group Definers
  *
- * @param options - The configurable `ProductList` controller options.
+ * @param options - The configurable `ProductList` controller options. The `listing` and `search`
+ * options are deprecated and will be removed in the next major version: omit them to build the
+ * controller for both search and product listing pages.
  * @returns The `ProductList` controller definition.
  */
 export function defineProductList<TOptions extends ControllerDefinitionOption | undefined>(

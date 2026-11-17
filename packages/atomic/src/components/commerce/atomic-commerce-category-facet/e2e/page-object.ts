@@ -35,6 +35,22 @@ export class CategoryFacetPageObject extends AnyFacetPageObject<'atomic-commerce
     return this.hydrated.getByRole('button', {name: 'All Categories'});
   }
 
+  get activeParent() {
+    return this.hydrated.locator('[part~="active-parent"]');
+  }
+
+  get selectedValue() {
+    return this.hydrated.locator('[part="selected-value"]');
+  }
+
+  get selectedValuePill() {
+    return this.hydrated.locator('[part="selected-value-pill"]');
+  }
+
+  get selectedValueClearButton() {
+    return this.hydrated.locator('[part="selected-value-clear-button"]');
+  }
+
   getFacetValue(value: string) {
     return this.hydrated.getByLabel(`Inclusion filter on ${value};`);
   }

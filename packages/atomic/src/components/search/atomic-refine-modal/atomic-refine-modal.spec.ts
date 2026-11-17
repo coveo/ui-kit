@@ -22,6 +22,7 @@ import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import {page, userEvent} from 'vitest/browser';
+import {fixtureWrapper} from '@/vitest-utils/testing-helpers/fixture-wrapper';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeBreadcrumbManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/breadcrumb-manager';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
@@ -419,6 +420,49 @@ describe('atomic-refine-modal', () => {
       const {facetSlot} = await renderRefineModal();
 
       expect(facetSlot).toBeInTheDocument();
+    });
+
+    it('should preserve facet order when a facet is initially hidden', async () => {
+      const facets = ['parent', 'dependent', 'unrelated'].map((facetId) => {
+        const facet = Object.assign(document.createElement('div'), {
+          facetId,
+          isCollapsed: false,
+        });
+        facet.setAttribute('facet-id', facetId);
+        return facet;
+      });
+      // Detached nodes have an implementation-specific document order.
+      fixtureWrapper(document.createElement('div')).append(...facets);
+      const {element} = await renderRefineModal({isOpen: false});
+      element.bindings.store.getFacetElements = () => facets;
+      element.bindings.store.getAllFacets = () => ({
+        parent: {
+          facetId: 'parent',
+          label: () => 'Parent',
+          element: facets[0],
+          isHidden: () => false,
+        },
+        dependent: {
+          facetId: 'dependent',
+          label: () => 'Dependent',
+          element: facets[1],
+          isHidden: () => true,
+        },
+        unrelated: {
+          facetId: 'unrelated',
+          label: () => 'Unrelated',
+          element: facets[2],
+          isHidden: () => false,
+        },
+      });
+
+      element.isOpen = true;
+      await element.updateComplete;
+
+      const clonedFacetIds = Array.from(
+        element.querySelector('div[slot="facets"]')?.children ?? []
+      ).map((facet) => (facet as HTMLElement).getAttribute('facet-id'));
+      expect(clonedFacetIds).toEqual(['parent', 'dependent', 'unrelated']);
     });
 
     it('should render filter clear all button when hasBreadcrumbs is true', async () => {

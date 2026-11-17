@@ -1,4 +1,5 @@
 /* eslint-disable no-import-assign */
+import searchBoxPlaceholderLabel from '@salesforce/label/c.quantic_SearchBoxPlaceholder';
 import QuanticSearchBox from 'c/quanticSearchBox';
 // @ts-ignore
 import {cleanup, flushPromises, buildCreateTestComponent} from 'c/testUtils';
@@ -313,6 +314,41 @@ describe('c-quantic-search-box', () => {
       expect(searchBoxInput.maxNumberOfSuggestions).toBe(
         defaultOptions.numberOfSuggestions
       );
+    });
+
+    describe.each([null, undefined])(
+      'when the placeholder property receives the value %p',
+      (emptyPlaceholder) => {
+        it('should pass the default placeholder label to the searchbox input', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            placeholder: emptyPlaceholder,
+          });
+          await flushPromises();
+
+          const searchBoxInput = element.shadowRoot.querySelector(
+            selectors.searchBoxInput
+          );
+
+          expect(searchBoxInput.placeholder).toBe(searchBoxPlaceholderLabel);
+        });
+      }
+    );
+
+    describe('when the placeholder property receives an empty string', () => {
+      it('should pass an empty placeholder to the searchbox input', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          placeholder: '',
+        });
+        await flushPromises();
+
+        const searchBoxInput = element.shadowRoot.querySelector(
+          selectors.searchBoxInput
+        );
+
+        expect(searchBoxInput.placeholder).toBe('');
+      });
     });
 
     describe('event handling', () => {

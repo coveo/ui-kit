@@ -1,3 +1,66 @@
+## 3.11.34
+
+### Patch Changes
+
+- Updated dependencies [[`7793aa1`](https://github.com/coveo/ui-kit/commit/7793aa1b669cdd3dd1e73bdfd7c0aa5c00939b6f)]:
+  - @coveo/atomic@3.65.1
+
+## 3.11.33
+
+### Patch Changes
+
+- Updated dependencies [[`3a8212f`](https://github.com/coveo/ui-kit/commit/3a8212f171173452b75851690ee0d75e0e86b241), [`82fb20a`](https://github.com/coveo/ui-kit/commit/82fb20a7d4791eee9ff6ad777ef983944f60e977), [`c9e0875`](https://github.com/coveo/ui-kit/commit/c9e0875715d98a283b19d43f702d3cb7f2dffb6b), [`d044d55`](https://github.com/coveo/ui-kit/commit/d044d557a63a5083502e77f1394c1d0b0cc9a4d1)]:
+  - @coveo/atomic@3.65.0
+
+## 3.11.32
+
+### Patch Changes
+
+- Updated dependencies [[`7f23cd5`](https://github.com/coveo/ui-kit/commit/7f23cd57f55cf95690a79b229822b06073932cf5), [`f44a1be`](https://github.com/coveo/ui-kit/commit/f44a1be8e5c1f48aa035cc1c0dd71bb016be5bfd)]:
+  - @coveo/atomic@3.64.1
+
+## 3.11.31
+
+### Patch Changes
+
+- Updated dependencies [[`963cf29`](https://github.com/coveo/ui-kit/commit/963cf291ccafe2540f84cc7517bc913b9f729534), [`de44173`](https://github.com/coveo/ui-kit/commit/de44173b789641667316a0b61fdf950c0f7b9c7b), [`abe2ba6`](https://github.com/coveo/ui-kit/commit/abe2ba647d91c03fafe680f899ae2c95fa9da071), [`2e5778e`](https://github.com/coveo/ui-kit/commit/2e5778e3633f8b4da495c7f00b9b692a728aa6cd), [`12a1c1d`](https://github.com/coveo/ui-kit/commit/12a1c1d752525f35e257ec7463239ace5f782bbd), [`0becccd`](https://github.com/coveo/ui-kit/commit/0becccd543fa9c6d2f1da75e0b1ffb3f2ab983d3), [`8302f5e`](https://github.com/coveo/ui-kit/commit/8302f5e71b34bceb47d63a3f927d6a508fcb7681), [`c9eaa17`](https://github.com/coveo/ui-kit/commit/c9eaa17313f48c9141a8a9779fee718908f93694), [`c402e28`](https://github.com/coveo/ui-kit/commit/c402e28ed0a1698c051687fbcaad359136d950a1), [`0e14b23`](https://github.com/coveo/ui-kit/commit/0e14b23c4f2bde3ac65b09ebbd7860de6d529c44), [`5cfce3d`](https://github.com/coveo/ui-kit/commit/5cfce3dc91eb9ccd7c1e1886c692ffda494bd403), [`6cb90bb`](https://github.com/coveo/ui-kit/commit/6cb90bb9fb2923ae6149897cee7279b89ae9fe3d)]:
+  - @coveo/atomic@3.64.0
+
+## 3.11.30
+
+### Patch Changes
+
+- Updated dependencies [[`e9e18a0`](https://github.com/coveo/ui-kit/commit/e9e18a058514f4d4fb91838a4a82ff507026ad0c), [`0a0513b`](https://github.com/coveo/ui-kit/commit/0a0513b18af91573e512c21f83080f6f9bb4238f), [`289a799`](https://github.com/coveo/ui-kit/commit/289a7999ef3b6e80d414a7a420147b041d8b127b), [`f2da474`](https://github.com/coveo/ui-kit/commit/f2da474307e14aa3637f2eeb9f2f4178f7558dcb), [`fd8290e`](https://github.com/coveo/ui-kit/commit/fd8290ec41cde88dab9fae4207c62fc37946cdf3), [`d7e02f0`](https://github.com/coveo/ui-kit/commit/d7e02f0c6470e8c9997a36a22fe3524cb3410ba4)]:
+  - @coveo/atomic@3.63.0
+
+## 3.11.29
+
+### Patch Changes
+
+- Updated dependencies [[`8f80c6c`](https://github.com/coveo/ui-kit/commit/8f80c6cf0cea42e6a3c7c2d6601c6d70d68f7948)]:
+  - @coveo/atomic@3.62.0
+
+## 3.11.28
+
+### Patch Changes
+
+- Updated dependencies [[`bd72c3d`](https://github.com/coveo/ui-kit/commit/bd72c3da937e89ff56e48bd372e4def491df647c), [`1e3bb2c`](https://github.com/coveo/ui-kit/commit/1e3bb2cf9cc872ea6048a00a1f0afd98d89c3868), [`979d6e7`](https://github.com/coveo/ui-kit/commit/979d6e7d283375aadf74cfb01cb21381da6cf031), [`e06bfe4`](https://github.com/coveo/ui-kit/commit/e06bfe46fdc76de9a3ae52ece377d1d21ff4ecd5)]:
+  - @coveo/atomic@3.61.5
+
+## 3.11.27
+
+### Patch Changes
+
+- Updated dependencies [[`333623e`](https://github.com/coveo/ui-kit/commit/333623e941868ef7b220f2d32efab8113aa4b369), [`0912501`](https://github.com/coveo/ui-kit/commit/0912501c34bb3fa388b87fc8d1eb4cbe6eda73b0)]:
+  - @coveo/atomic@3.61.4
+
+## 3.11.26
+
+### Patch Changes
+
+- Updated dependencies [[`ac815e3`](https://github.com/coveo/ui-kit/commit/ac815e3d8f89abfcc01b82ffb4377cf805cdbcd7)]:
+  - @coveo/atomic@3.61.3
+
 ## 3.11.25
 
 ### Patch Changes
@@ -500,7 +563,7 @@
 ## 3.3.3
 
 - chore: ensure atomic-angular component file is stable (#4866) ([a1dc782](https://github.com/coveo/ui-kit/commits/a1dc782)), closes [#4866](https://github.com/coveo/ui-kit/issues/4866)
-- refactor(atomic): replace @stencil/store with in-house implementation (#4814) ([cc9cd0f](https://github.com/coveo/ui-kit/commits/cc9cd0f)), closes [#4814](https://github.com/coveo/ui-kit/issues/4814) [/github.com/coveo/ui-kit/pull/4814#discussion_r1901058283](https://github.com//github.com/coveo/ui-kit/pull/4814/issues/discussion_r1901058283)
+- refactor(atomic): replace @stencil/store with in-house implementation (#4814) ([cc9cd0f](https://github.com/coveo/ui-kit/commits/cc9cd0f)), closes [#4814](https://github.com/coveo/ui-kit/issues/4814) [github.com/coveo/ui-kit/pull/4814#discussion_r1901058283](https://github.com/coveo/ui-kit/pull/4814#discussion_r1901058283)
 
 ## 3.3.0
 
@@ -889,7 +952,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
-- recommendations error component ([#2787](https://github.com/coveo/ui-kit/issues/2787)) ([2d88e87](https://github.com/coveo/ui-kit/commit/2d88e8743970a4585fac807986420bc2c90b89ea))
+- recommendations error component (#2787) ([2d88e87](https://github.com/coveo/ui-kit/commit/2d88e8743970a4585fac807986420bc2c90b89ea))
 
 ## [2.3.41](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@2.3.40...@coveo/atomic-angular@2.3.41) (2023-03-15)
 

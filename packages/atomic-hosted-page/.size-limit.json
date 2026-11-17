@@ -1,0 +1,8 @@
+[
+  {
+    "name": "@coveo/atomic-hosted-page - CDN",
+    "path": "cdn/**/*.js",
+    "rolldown": false,
+    "limit": "9.3 kB"
+  }
+]

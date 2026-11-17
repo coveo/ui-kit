@@ -188,18 +188,3 @@ const meta: Meta = {
   decorators: [widthDecorator, decorator],
 };
 ```
-
-};
-
-export default meta;
-
-export const Default: Story = {
-args: {
-field: 'color',
-label: 'Color',
-},
-};
-
-```
-
-```

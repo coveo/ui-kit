@@ -5,7 +5,6 @@ import {
   type CommerceEngineOptions,
 } from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
-import {loadConfigurationActions} from '../../../features/commerce/configuration/configuration-actions-loader.js';
 import {
   createWaitForActionMiddleware,
   createWaitForActionMiddlewareForRecommendation,
@@ -31,7 +30,7 @@ import {augmentCommerceEngineOptions} from '../utils/engine-wiring.js';
  */
 export interface SSRCommerceEngine extends CommerceEngine {
   /**
-   * Waits for the request to be completed and returns a promise that resolves to an `Action`.
+   * Returns one promise per request that this engine waits for, each resolving to the action that completes the request.
    */
   waitForRequestCompletedAction(): Promise<Action>[];
 }
@@ -124,8 +123,9 @@ export const buildFactory =
 
     const enabledRecommendationControllers =
       buildOptions && 'recommendations' in buildOptions
-        ? (buildOptions as RecommendationBuildConfig<TControllerDefinitions>)?.recommendations
-            .length
+        ? new Set(
+            (buildOptions as RecommendationBuildConfig<TControllerDefinitions>)?.recommendations
+          ).size
         : 0;
 
     const engineOptions: CommerceEngineOptions = augmentCommerceEngineOptions(
@@ -138,19 +138,6 @@ export const buildFactory =
       engineOptions,
       enabledRecommendationControllers
     );
-
-    const updateEngineConfiguration = (accessToken: string) => {
-      const {updateBasicConfiguration} = loadConfigurationActions(engine);
-      engine.dispatch(
-        updateBasicConfiguration({
-          accessToken,
-        })
-      );
-    };
-
-    if (options.onAccessTokenUpdate) {
-      options.onAccessTokenUpdate(updateEngineConfiguration);
-    }
 
     const controllers = buildControllerDefinitions({
       definitionsMap: controllerDefinitions ?? {},

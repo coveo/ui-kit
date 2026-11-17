@@ -111,6 +111,43 @@ test.describe('atomic-search-box', () => {
     });
   });
 
+  test.describe('with clear-recent-button-position=bottom and recent queries', () => {
+    test.beforeEach(async ({searchBox, page}) => {
+      await searchBox.load({
+        args: {suggestionTimeout: 5000, clearRecentButtonPosition: 'bottom'},
+        story: 'rich-search-box',
+      });
+      await searchBox.searchInput.waitFor({state: 'visible'});
+      await searchBox.searchInput.click();
+      await searchBox.searchInput.fill('shoe');
+      await searchBox.searchInput.press('Enter');
+      await searchBox.clearButton.waitFor({state: 'visible'});
+      await searchBox.searchInput.fill('');
+      await page.waitForLoadState('networkidle');
+    });
+
+    test('should activate the first recent query when pressing the Down arrow key', async ({
+      searchBox,
+    }) => {
+      await expect(searchBox.recentQueries({index: 1})).toBeVisible();
+      await searchBox.searchInput.press('ArrowDown');
+      await expect(searchBox.recentQueries({index: 1})).toHaveAttribute(
+        'part',
+        /active-suggestion/
+      );
+    });
+
+    test('should activate a suggestion when pressing the Down arrow key after the recent queries are replaced', async ({
+      searchBox,
+    }) => {
+      await searchBox.searchInput.fill('a');
+      await expect(searchBox.searchSuggestions().first()).toBeVisible();
+      await expect(searchBox.recentQueries().first()).not.toBeVisible();
+      await searchBox.searchInput.press('ArrowDown');
+      await expect(searchBox.component.locator('[part~="active-suggestion"]')).toHaveCount(1);
+    });
+  });
+
   test.describe('with disable-search=true and minimum-query-length=1', () => {
     test.beforeEach(async ({searchBox}) => {
       await searchBox.load({

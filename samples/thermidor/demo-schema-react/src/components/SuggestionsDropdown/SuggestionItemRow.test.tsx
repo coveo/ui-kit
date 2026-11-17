@@ -57,6 +57,42 @@ describe('SuggestionItemRow', () => {
     expect(onSelect).toHaveBeenCalledOnce();
   });
 
+  it('bolds what follows the text it completes, when it starts the label', () => {
+    const row = (completes: string) => (
+      <SuggestionItemRow {...baseProps} item={{id: 'r1', label: 'hiking boots', completes}} />
+    );
+    const bold = () => screen.getByRole('option').querySelector('strong')?.textContent;
+    const {rerender} = render(row('Hi'));
+    expect(screen.getByRole('option').textContent).toBe('hiking boots');
+    expect(bold()).toBe('king boots');
+
+    rerender(row(''));
+    expect(bold()).toBeUndefined();
+    rerender(row('bo'));
+    expect(bold()).toBeUndefined();
+  });
+
+  it('draws a named remove button outside the option and the tab order', () => {
+    const onRemove = vi.fn();
+    const onSelect = vi.fn();
+    render(
+      <SuggestionItemRow
+        {...baseProps}
+        onSelect={onSelect}
+        onRemove={onRemove}
+        removeLabel="Remove Surfboards from recent searches"
+      />
+    );
+    const button = screen.getByRole('button', {name: 'Remove Surfboards from recent searches'});
+
+    expect(screen.getByRole('option').contains(button)).toBe(false);
+    expect(button.tabIndex).toBe(-1);
+    fireEvent.mouseDown(button);
+    fireEvent.click(button);
+    expect(onRemove).toHaveBeenCalledOnce();
+    expect(onSelect).not.toHaveBeenCalled();
+  });
+
   it('has role="option"', () => {
     render(<SuggestionItemRow {...baseProps} />);
     expect(screen.getByRole('option')).toBeDefined();

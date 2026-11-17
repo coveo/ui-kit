@@ -1,32 +1,61 @@
+import type {CommerceCartItem} from '@/src/internal/context/commerce-context.js';
+
 // ─── Commerce agent input ──────────────────────────────────────────────────
 
-export interface CommerceRequestModel {
-  trackingId: string;
+/** The request keys the session builds itself on every request. */
+export type ClientOwnedRequestFields = {
   language: string;
   country: string;
   currency: string;
   clientId?: string;
   message: string | null;
-  action: A2uiAction | null;
+  action: A2uiAction | InitializeAction | null;
   conversationSessionId?: string;
   conversationToken?: string;
   context: CommerceRequestContext;
-  pinnedProducts: string[];
-}
+  /**
+   * Present only when the consumer supplies a `commerceContextProvider`.
+   * Omitted entirely under the "absent" encoding so the router can distinguish
+   * "no commerce context" from a present-but-empty context.
+   */
+  pinnedProducts?: string[];
+};
 
-export interface CommerceRequestContext {
+/** The locale every request carries, read from the navigator context. */
+export type RequestLocale = Pick<ClientOwnedRequestFields, 'language' | 'country' | 'currency'>;
+
+/**
+ * The fields that scope every request of a session. The public `createSession` sends
+ * both ids; the private `createPrivateSession` sends whichever ids are set.
+ */
+export type RequestScopeFields = {
+  agentConfigurationId?: string;
+  trackingId?: string;
+};
+
+/** The request of the public `createSession`. */
+export type CommerceRequestModel = ClientOwnedRequestFields & {
+  agentConfigurationId: string;
+  trackingId: string;
+};
+
+/** Any converse request, from the public or the private entry point. */
+export type ConverseRequestModel = ClientOwnedRequestFields & RequestScopeFields;
+
+interface CommerceRequestContext {
   view: {url: string | null; referrer: string | null};
   user: Record<string, unknown>;
   cart: CommerceCartItem[];
-  source: string[];
-  custom: Record<string, unknown>;
-}
-
-export interface CommerceCartItem {
-  productId: string;
-  name: string;
-  price: number;
-  quantity: number;
+  /**
+   * Present only under the "present" commerce-context encoding; omitted under
+   * the "absent" encoding.
+   */
+  source?: string[];
+  /**
+   * Present only under the "present" commerce-context encoding; omitted under
+   * the "absent" encoding.
+   */
+  custom?: Record<string, unknown>;
 }
 
 // ─── Action envelope ───────────────────────────────────────────────────────
@@ -36,143 +65,12 @@ export interface A2uiAction<TContext = unknown> {
   name: string;
   sourceComponentId: string;
   timestamp: string;
-  actionId: string | null;
-  wantResponse: boolean;
   context: TContext;
 }
 
-// ─── Search action contexts ────────────────────────────────────────────────
-
-export interface ExecuteSearchContext {
-  query: string;
-  display?: string | null;
-  pinnedProducts?: string[];
-}
-
-export interface ToggleFacetContext {
-  facetId: string;
-  value: string;
-}
-
-export interface ToggleExcludeFacetContext {
-  facetId: string;
-  value: string;
-}
-
-export interface DeselectAllFacetsContext {
-  facetId: string;
-}
-
-export interface ToggleNumericFacetContext {
-  facetId: string;
-  start: number;
-  end: number;
-  endInclusive: boolean;
-}
-
-export interface SetNumericFacetRangeContext {
-  facetId: string;
-  start: number;
-  end: number;
-  endInclusive: boolean;
-}
-
-export interface SelectPageContext {
-  page: number;
-}
-
-export interface SetPageSizeContext {
-  pageSize: number;
-}
-
-export interface SetSortContext {
-  sortCriteria: string;
-  fields?: SortField[];
-}
-
-export interface SortField {
-  field: string;
-  direction: string;
-}
-
-export interface FetchMoreContext {}
-
-export interface RestoreStateContext {
-  query?: string;
-  facets?: FacetRestore[];
-  page: number;
-  pageSize: number;
-  sortCriteria?: string;
-  pinnedProducts?: string[];
-}
-
-export interface FacetRestore {
-  facetId: string;
-  values: string[];
-  numericRanges: NumericRange[];
-}
-
-export interface NumericRange {
-  start: number;
-  end: number;
-  endInclusive: boolean;
-}
-
-export interface OverrideCorrectionContext {
-  originalQuery: string;
-}
-
-export interface SelectProductsContext {
-  productIds: string[];
-}
-
-// ─── Suggestion action contexts ────────────────────────────────────────────
-
-export interface FetchSuggestionsContext {
-  query: string;
-}
-
-export interface FacetSearchContext {
-  facetId: string;
-  query: string;
-}
-
-// ─── Analytics action contexts ─────────────────────────────────────────────
-
-export interface CartActionContext {
-  productId: string;
-  name?: string;
-  price?: number;
-  quantity: number;
-  action: 'add' | 'remove';
-}
-
-export interface ProductClickContext {
-  productId: string;
-  name?: string;
-  price?: number;
-  position: number;
-}
-
-export interface ProductViewContext {
-  productId: string;
-  name?: string;
-  price?: number;
-}
-
-export interface PurchaseContext {
-  products: PurchaseProduct[];
-  transaction: Transaction;
-}
-
-export interface PurchaseProduct {
-  productId: string;
-  name?: string;
-  price?: number;
-  quantity: number;
-}
-
-export interface Transaction {
-  id: string;
-  revenue: number;
+/** Opens the session. No component exists yet, so it names no surface or source component. */
+export interface InitializeAction {
+  name: 'initialize';
+  timestamp: string;
+  context: Record<string, never>;
 }

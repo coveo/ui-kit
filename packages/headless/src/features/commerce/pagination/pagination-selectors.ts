@@ -11,6 +11,9 @@ export const perPageRecommendationSelector = (
 export const totalEntriesPrincipalSelector = (state: Partial<CommercePaginationSection>) =>
   state.commercePagination?.principal.totalEntries || 0;
 
+export const totalProductsPrincipalSelector = (state: Partial<CommercePaginationSection>) =>
+  state.commercePagination?.principal.totalProducts ?? totalEntriesPrincipalSelector(state);
+
 export const totalEntriesRecommendationSelector = (
   state: Partial<CommercePaginationSection>,
   slotId: string

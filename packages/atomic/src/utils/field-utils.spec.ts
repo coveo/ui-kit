@@ -1,3 +1,4 @@
+import {createInstance} from 'i18next';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {getFieldCaptions, getFieldValueCaption} from './field-utils';
@@ -20,6 +21,35 @@ describe('field-utils', () => {
     it('returns an empty object if no resource bundle exists', () => {
       const result = getFieldCaptions('author', i18n);
       expect(result).toEqual({});
+    });
+
+    it('returns an empty object if i18next is not initialized', () => {
+      expect(getFieldCaptions('author', createInstance())).toEqual({});
+    });
+
+    describe('when the language has a region', () => {
+      beforeEach(async () => {
+        await i18n.changeLanguage('en-CA');
+        i18n.addResourceBundle('en', 'caption-author', {'BBC News': 'The BBC', CBC: 'CBC'});
+      });
+
+      it('should include the captions of the base language', () => {
+        expect(getFieldCaptions('author', i18n)).toEqual({'BBC News': 'The BBC', CBC: 'CBC'});
+      });
+
+      it('should prefer the captions of the regional language', () => {
+        i18n.addResourceBundle('en-CA', 'caption-author', {CBC: 'The CBC'});
+
+        expect(getFieldCaptions('author', i18n)).toEqual({'BBC News': 'The BBC', CBC: 'The CBC'});
+      });
+    });
+
+    it('should include the captions of the fallback language', async () => {
+      const frenchI18n = createInstance();
+      await frenchI18n.init({lng: 'fr', fallbackLng: 'en', resources: {}});
+      frenchI18n.addResourceBundle('en', 'caption-author', {'BBC News': 'The BBC'});
+
+      expect(getFieldCaptions('author', frenchI18n)).toEqual({'BBC News': 'The BBC'});
     });
   });
 

@@ -24,6 +24,7 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
 import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.css';
+import {FacetVisibilityController} from '@/src/components/common/facets/facet-visibility-controller';
 import {renderFacetPlaceholder} from '@/src/components/common/facets/facet-placeholder/facet-placeholder';
 import {TimeframeFacetCommon} from '@/src/components/common/facets/timeframe-facet-common';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
@@ -41,6 +42,8 @@ import {mapProperty} from '@/src/utils/props-utils';
 
 /**
  * The `atomic-timeframe-facet` component displays a facet of results for the current query as date intervals.
+ *
+ * @cssState hidden - Applied when the facet is hidden.
  *
  * @slot default - The atomic-timeframe components defining the timeframes to display.
  *
@@ -242,6 +245,7 @@ export class AtomicTimeframeFacet extends LitElement implements InitializableCom
   constructor() {
     super();
 
+    new FacetVisibilityController(this, () => this.isHidden);
     new ValidatePropsController(
       this,
       () => ({
@@ -254,6 +258,14 @@ export class AtomicTimeframeFacet extends LitElement implements InitializableCom
       AtomicTimeframeFacet.propsSchema,
       false
     );
+  }
+
+  private get isHidden() {
+    if (!this.timeframeFacetCommon || !this.searchStatusState) {
+      return false;
+    }
+
+    return this.timeframeFacetCommon.isHostHidden(this.searchStatusState);
   }
 
   private get focusTarget(): FocusTargetController {

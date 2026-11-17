@@ -175,6 +175,49 @@ describe('buildFactory', () => {
     );
   });
 
+  describe('per-request access token', () => {
+    it('should build the engine with the per-request access token when provided', async () => {
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+
+      await factory(SolutionType.listing)({
+        ...mockBuildOptions,
+        accessToken: 'per-request-token',
+      } as ListingBuildConfig);
+
+      expect(mockBuildCommerceEngine.mock.calls[0][0].configuration.accessToken).toBe(
+        'per-request-token'
+      );
+    });
+
+    it('should isolate the token across concurrent builds', async () => {
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+      const build = factory(SolutionType.listing);
+
+      await Promise.all([
+        build({...mockBuildOptions, accessToken: 'token-A'} as ListingBuildConfig),
+        build({...mockBuildOptions, accessToken: 'token-B'} as ListingBuildConfig),
+      ]);
+
+      const tokensUsed = mockBuildCommerceEngine.mock.calls.map(
+        (call) => call[0].configuration.accessToken
+      );
+      expect(tokensUsed).toContain('token-A');
+      expect(tokensUsed).toContain('token-B');
+    });
+
+    it('should not mutate the shared definition configuration', async () => {
+      const definitionToken = mockEngineOptions.configuration.accessToken;
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+
+      await factory(SolutionType.listing)({
+        ...mockBuildOptions,
+        accessToken: 'per-request-token',
+      } as ListingBuildConfig);
+
+      expect(mockEngineOptions.configuration.accessToken).toBe(definitionToken);
+    });
+  });
+
   describe('when building for standalone', () => {
     const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
     const build = factory(SolutionType.standalone);

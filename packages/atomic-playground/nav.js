@@ -1,5 +1,6 @@
 const pages = [
   {href: '/', label: 'Search'},
+  {href: '/search-box-double-list.html', label: 'Search box double list'},
   {href: '/genqa.html', label: 'Gen Q&A'},
   {href: '/insight.html', label: 'Insight Panel'},
   {href: '/custom-components.html', label: 'Custom components'},

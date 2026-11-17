@@ -151,15 +151,27 @@ describe('atomic-category-facet', () => {
       get activeParent() {
         return element.shadowRoot?.querySelector('[part~=active-parent]');
       },
+      get selectedValue() {
+        return element.shadowRoot?.querySelector('[part="selected-value"]');
+      },
+      get selectedValuePill() {
+        return element.shadowRoot?.querySelector('[part="selected-value-pill"]');
+      },
+      get selectedValueClearButton() {
+        return element.shadowRoot?.querySelector<HTMLButtonElement>(
+          '[part="selected-value-clear-button"]'
+        );
+      },
     };
   };
 
   describe('when first search has not been executed', () => {
     it('should render placeholder', async () => {
-      const {placeholder} = await renderCategoryFacet(undefined, {
+      const {element, placeholder} = await renderCategoryFacet(undefined, {
         searchStatusState: {firstSearchExecuted: false},
       });
       expect(placeholder).toBeInTheDocument();
+      expect(getComputedStyle(element).display).not.toBe('none');
     });
 
     it('should not render facet container', async () => {
@@ -245,10 +257,12 @@ describe('atomic-category-facet', () => {
   });
 
   it('should not render facet when there are no values', async () => {
-    const {facet} = await renderCategoryFacet(undefined, {
+    const {element, facet} = await renderCategoryFacet(undefined, {
       facetState: {valuesAsTrees: []},
     });
     expect(facet).not.toBeInTheDocument();
+    expect(element.matches(':state(hidden)')).toBe(true);
+    expect(getComputedStyle(element).display).toBe('none');
   });
 
   describe('when facet has selected value ancestry', () => {
@@ -293,6 +307,48 @@ describe('atomic-category-facet', () => {
       });
       expect(parents).toBeInTheDocument();
     });
+
+    it('should render the active value as non-interactive', async () => {
+      const {activeParent} = await renderCategoryFacet(undefined, {
+        facetState: {
+          selectedValueAncestry: selectedAncestry,
+          hasActiveValues: true,
+        },
+      });
+
+      expect(activeParent?.tagName).toBe('SPAN');
+      expect(activeParent).toHaveAttribute('aria-current', 'true');
+    });
+
+    it('should render the selected value in a pill', async () => {
+      const {selectedValuePill} = await renderCategoryFacet(undefined, {
+        facetState: {
+          selectedValueAncestry: selectedAncestry,
+          hasActiveValues: true,
+        },
+      });
+
+      expect(selectedValuePill).toHaveTextContent('Electronics');
+    });
+
+    it('should deselect all when the clear button next to the pill is clicked', async () => {
+      const {element, selectedValueClearButton} = await renderCategoryFacet(undefined, {
+        facetState: {
+          selectedValueAncestry: selectedAncestry,
+          hasActiveValues: true,
+        },
+      });
+
+      selectedValueClearButton?.click();
+
+      expect(element.facet.deselectAll).toHaveBeenCalledOnce();
+    });
+  });
+
+  it('should not render the selected value pill when no value is selected', async () => {
+    const {selectedValue} = await renderCategoryFacet();
+
+    expect(selectedValue).not.toBeInTheDocument();
   });
 
   describe('#initialize', () => {

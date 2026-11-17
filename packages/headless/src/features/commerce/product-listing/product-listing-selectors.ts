@@ -1,5 +1,6 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
+import {ResultType} from '../../../api/commerce/common/result.js';
 import type {
   CommerceEngine,
   CommerceEngineState,
@@ -24,6 +25,16 @@ export const requestIdSelector = (state: CommerceEngineState) => state.productLi
 
 export const numberOfProductsSelector = (state: Partial<ProductListingSection>) =>
   state.productListing?.results.length || state.productListing?.products.length || 0;
+
+export const numberOfProductsExcludingSpotlightsSelector = (
+  state: Partial<ProductListingSection>
+) => {
+  const results = state.productListing?.results ?? [];
+  if (results.length === 0) {
+    return state.productListing?.products.length ?? 0;
+  }
+  return results.filter((result) => result.resultType !== ResultType.SPOTLIGHT).length;
+};
 
 export const moreProductsAvailableSelector = createSelector(
   (state: Partial<CommercePaginationSection & ProductListingSection>) => ({

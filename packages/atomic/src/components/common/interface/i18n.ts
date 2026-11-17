@@ -47,19 +47,36 @@ export function i18nBackendOptions(
 }
 
 /**
- * Loads Atomic's own translations for `language` into the interface's i18next instance.
+ * Loads Atomic's own translations for `language` into the interface's i18next instance: the
+ * regional translations when Atomic has them (`pt-BR`), and those of the base language (`pt`).
+ * The languages are resolved by i18next itself, so that each bundle is stored under a code that
+ * `t()` looks up (`pt-br` resolves to `pt-BR` and `pt`, `pt_BR` to `pt_BR` and `pt`).
  *
- * The bundle is added with `deep: true, overwrite: false` so that strings the consumer has
- * already registered are preserved. Atomic's strings are defaults; an application that
- * customizes them should win, regardless of whether it registered its values before or after
- * this load resolves.
+ * Each bundle is added with `deep: true, overwrite: false` so that strings the consumer has
+ * already registered for the same language are preserved. Atomic's strings are defaults; an
+ * application that customizes them should win, regardless of whether it registered its values
+ * before or after this load resolves. Because i18next resolves the regional language first,
+ * customizations for a regional interface belong under its regional code (`pt-BR`).
  */
-export function loadTranslations(
+export async function loadTranslations(
   atomicInterface: BaseAtomicInterface<AnyEngineType>,
   language: string
 ) {
+  const {languageUtils} = atomicInterface.i18n.services;
+  const languages: string[] = languageUtils.toResolveHierarchy(
+    languageUtils.formatLanguageCode(language),
+    false
+  );
+
+  await Promise.all(
+    languages
+      .filter(isI18nLocaleAvailable)
+      .map((lng) => loadTranslationBundle(atomicInterface, lng))
+  );
+}
+
+function loadTranslationBundle(atomicInterface: BaseAtomicInterface<AnyEngineType>, lng: string) {
   const {i18n} = atomicInterface;
-  const lng = language.split('-')[0];
 
   return new Promise<void>((resolve) => {
     new Backend(i18n.services, i18nBackendOptions(atomicInterface)).read(

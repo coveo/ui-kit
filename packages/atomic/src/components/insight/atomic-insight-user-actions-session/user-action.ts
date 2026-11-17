@@ -9,6 +9,7 @@ import DocumentIcon from '../../../images/document.svg';
 import PointIcon from '../../../images/point.svg';
 import QuickviewIcon from '../../../images/quickview.svg';
 import SearchIcon from '../../../images/search.svg';
+import '@/src/components/common/atomic-icon/atomic-icon.js';
 
 const icons = {
   SEARCH: SearchIcon,

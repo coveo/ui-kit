@@ -89,10 +89,11 @@ export function buildCommonLayout(
   };
 
   const horizontalFacets = () => {
+    const horizontalFacetsSelector = `${layoutSelector} ${sectionSelector('horizontal-facets')}`;
+
     return `${mediaQuerySelector} {
-      ${layoutSelector} ${sectionSelector(
-        'horizontal-facets'
-      )} > atomic-popover:not(.atomic-hidden) {
+      ${horizontalFacetsSelector} > atomic-popover:not(.atomic-hidden),
+      ${horizontalFacetsSelector} > atomic-facet-manager > atomic-popover:not(.atomic-hidden) {
         display: block;
       }
     }`;

@@ -1,3 +1,4 @@
+import {Schema, StringValue} from '@coveo/bueno';
 import {
   buildSearchBox,
   buildStandaloneSearchBox,
@@ -8,10 +9,13 @@ import {
   type StandaloneSearchBox,
   type StandaloneSearchBoxState,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, css, html, LitElement} from 'lit';
+import {type CSSResultGroup, css, html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {createRef, type RefOrCallback, ref} from 'lit/directives/ref.js';
+import {when} from 'lit/directives/when.js';
+import {renderButton} from '@/src/components/common/button';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -82,10 +86,11 @@ import '@coveo/atomic-legacy/atomic-suggestion-renderer';
  * @part recent-query-icon - The icon of a suggestion from the `atomic-commerce-search-box-recent-queries` component.
  * @part recent-query-text - The text of a suggestion from the `atomic-commerce-search-box-recent-queries` component.
  * @part recent-query-text-highlight - The highlighted portion of the text of a suggestion from the `atomic-commerce-search-box-recent-queries` component.
- * @part recent-query-title-item - The clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
- * @part recent-query-title-content - The contents of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
- * @part recent-query-title - The "recent searches" text of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
- * @part recent-query-clear - The "clear" text of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
+ * @part recent-query-title-item - The clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component, when `clear-recent-button-position` is `top`.
+ * @part recent-query-title-content - The contents of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component, when `clear-recent-button-position` is `top`.
+ * @part recent-query-title - The "recent searches" title above the recent queries from the `atomic-commerce-search-box-recent-queries` component.
+ * @part recent-query-clear - The "clear" text of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component, when `clear-recent-button-position` is `top`.
+ * @part recent-query-clear-button - The button below suggestions to clear the recent queries from the `atomic-commerce-search-box-recent-queries` component, when `clear-recent-button-position` is `bottom`.
  *
  * @part instant-results-item - An instant product rendered by an `atomic-commerce-search-box-instant-products` component.
  * @part instant-results-show-all - The clickable suggestion to show all items for the current instant product search rendered by an `atomic-commerce-search-box-instant-products` component.
@@ -100,6 +105,10 @@ export class AtomicCommerceSearchBox
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
+  private static readonly propsSchema = new Schema({
+    clearRecentButtonPosition: new StringValue({constrainTo: ['top', 'bottom']}),
+  });
+
   static shadowRootOptions = {
     ...LitElement.shadowRootOptions,
     delegatesFocus: true,
@@ -116,6 +125,12 @@ export class AtomicCommerceSearchBox
   private searchBoxState!: SearchBoxState | StandaloneSearchBoxState;
 
   private textAreaRef = createRef<HTMLTextAreaElement>();
+  private setLeftPanel = (el: HTMLElement | undefined) => {
+    this.suggestionManager.leftPanel = el;
+  };
+  private setRightPanel = (el: HTMLElement | undefined) => {
+    this.suggestionManager.rightPanel = el;
+  };
   private searchBoxSuggestionEventsQueue: CustomEvent<
     SearchBoxSuggestionsEvent<SearchBox | StandaloneSearchBox>
   >[] = [];
@@ -196,6 +211,28 @@ export class AtomicCommerceSearchBox
     converter: booleanConverter,
   })
   public clearFilters = true;
+
+  // TODO - (v4) KIT-4365: Remove and always render the clear recent queries button.
+  /**
+   * The position of the option to clear the recent queries.
+   *
+   * - `top`: The option is the first suggestion, next to the "Recent searches" title.
+   * - `bottom`: The option is a button below the suggestions, so the arrow keys only navigate through the suggestions and the button is reached with the Tab key.
+   *
+   * In the next major version of Atomic (v4), `bottom` will become the default behavior. To adopt it ahead of time, set this property to `bottom`.
+   */
+  @property({type: String, attribute: 'clear-recent-button-position', reflect: true})
+  public clearRecentButtonPosition: 'top' | 'bottom' = 'top';
+
+  constructor() {
+    super();
+
+    new ValidatePropsController(
+      this,
+      () => ({clearRecentButtonPosition: this.clearRecentButtonPosition}),
+      AtomicCommerceSearchBox.propsSchema
+    );
+  }
 
   connectedCallback() {
     super.connectedCallback();
@@ -473,7 +510,9 @@ export class AtomicCommerceSearchBox
         }
         break;
       case 'Tab':
-        this.suggestionManager.clearSuggestions();
+        if (this.clearRecentButtonPosition !== 'bottom' || !this.clearRecentQueriesElement) {
+          this.suggestionManager.clearSuggestions();
+        }
         break;
       default:
         if (this.suggestionManager.keyboardActiveDescendant) {
@@ -559,6 +598,60 @@ export class AtomicCommerceSearchBox
     })}`;
   }
 
+  private get clearRecentQueriesElement() {
+    const {leftSuggestionElements, rightSuggestionElements} = this.suggestionManager;
+    // Same rule as `hideIfLast` in the list: no recent query follows the option when it's last.
+    return [leftSuggestionElements, rightSuggestionElements]
+      .flatMap((elements) => elements.slice(0, -1))
+      .find((element) => element.key === 'recent-query-clear');
+  }
+
+  private renderRecentQueriesTitle() {
+    return html`<div
+      part="recent-query-title"
+      class="text-neutral-dark flex min-h-10 items-center px-4 font-bold"
+      @mousedown=${(e: MouseEvent) => e.preventDefault()}
+    >
+      ${this.bindings.i18n.t('recent-searches')}
+    </div>`;
+  }
+
+  private renderClearRecentQueriesButton(element: SearchBoxSuggestionElement) {
+    const deselectSuggestion = () => {
+      this.suggestionManager.updateKeyboardActiveDescendant();
+      this.suggestionManager.updateActiveDescendant();
+    };
+
+    return html`<div
+      class="border-neutral flex border-t"
+      @mousedown=${(e: MouseEvent) => e.preventDefault()}
+      @mouseenter=${deselectSuggestion}
+      @focusin=${deselectSuggestion}
+      @keydown=${(e: KeyboardEvent) => {
+        if (e.key !== 'Escape') {
+          return;
+        }
+        this.textAreaRef.value?.focus();
+        this.isExpanded = false;
+        this.suggestionManager.clearSuggestions();
+      }}
+    >
+      ${renderButton({
+        props: {
+          style: 'text-primary',
+          text: this.bindings.i18n.t('clear-recent-searches'),
+          part: 'recent-query-clear-button',
+          class:
+            'focus-visible:ring-ring-primary flex min-h-12 w-full items-center justify-center rounded-none px-4 focus-visible:ring-2 focus-visible:ring-inset',
+          onClick: (e) => {
+            element.onSelect?.(e!);
+            this.textAreaRef.value?.focus();
+          },
+        },
+      })(nothing)}
+    </div>`;
+  }
+
   private renderSuggestions() {
     const part = `suggestions-wrapper ${
       this.suggestionManager.isDoubleList ? 'suggestions-double-list' : 'suggestions-single-list'
@@ -569,6 +662,7 @@ export class AtomicCommerceSearchBox
 
     const classes = {
       'bg-background border-neutral absolute top-full left-0 z-10 flex w-full rounded-md border': true,
+      'overflow-hidden': this.clearRecentButtonPosition === 'bottom',
       hidden: !isVisible,
     };
 
@@ -587,17 +681,13 @@ export class AtomicCommerceSearchBox
       ${this.renderPanel(
         'left',
         this.suggestionManager.leftSuggestionElements,
-        (el) => {
-          this.suggestionManager.leftPanel = el;
-        },
+        this.setLeftPanel,
         () => this.suggestionManager.leftPanel
       )}
       ${this.renderPanel(
         'right',
         this.suggestionManager.rightSuggestionElements,
-        (el) => {
-          this.suggestionManager.rightPanel = el;
-        },
+        this.setRightPanel,
         () => this.suggestionManager.rightPanel
       )}
     </div>`;
@@ -609,13 +699,39 @@ export class AtomicCommerceSearchBox
     setRef: (el: HTMLElement | undefined) => void,
     getRef: () => HTMLElement | undefined
   ) {
-    if (!elements.length) {
+    let listElements = elements;
+    let isListNested = false;
+    let recentQueriesTitle: TemplateResult | undefined;
+    let clearRecentQueriesButton: TemplateResult | undefined;
+
+    switch (this.clearRecentButtonPosition) {
+      case 'bottom': {
+        // The suggestion manager navigates through the children of the panel it holds,
+        // so the suggestions get their own list, with the title and the button outside of it.
+        isListNested = true;
+        const clearElement = this.clearRecentQueriesElement;
+        if (clearElement && elements.includes(clearElement)) {
+          listElements = elements.filter((element) => element !== clearElement);
+          clearRecentQueriesButton = this.renderClearRecentQueriesButton(clearElement);
+          if (elements[0] === clearElement) {
+            recentQueriesTitle = this.renderRecentQueriesTitle();
+          }
+        }
+        break;
+      }
+    }
+
+    if (!listElements.length) {
       return null;
     }
 
+    const suggestions = listElements.map((suggestion, index) =>
+      this.renderSuggestion(suggestion, index, listElements.length - 1, side)
+    );
+
     return html`<div
       part="suggestions suggestions-${side}"
-      ${ref(setRef as RefOrCallback<Element>)}
+      ${ref((isListNested ? undefined : setRef) as RefOrCallback<Element>)}
       class="flex grow basis-1/2 flex-col"
       @mousedown=${(e: MouseEvent) => {
         if (e.target === getRef()) {
@@ -623,9 +739,16 @@ export class AtomicCommerceSearchBox
         }
       }}
     >
-      ${elements.map((suggestion, index) =>
-        this.renderSuggestion(suggestion, index, elements.length - 1, side)
+      ${recentQueriesTitle}
+      ${when(
+        isListNested,
+        () =>
+          html`<div class="flex grow flex-col" ${ref(setRef as RefOrCallback<Element>)}>
+            ${suggestions}
+          </div>`,
+        () => suggestions
       )}
+      ${clearRecentQueriesButton}
     </div>`;
   }
 

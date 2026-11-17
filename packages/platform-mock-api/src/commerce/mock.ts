@@ -11,6 +11,7 @@ import {
   richResponse as baseSearchResponse,
   type CommerceSearchResponse,
 } from './search-response.js';
+import {commerceSortTransformer} from './sort-transformer.js';
 
 const baseFacetSearchResponse: FacetSearchResponse = {
   values: [],
@@ -30,7 +31,10 @@ export class MockCommerceApi implements MockApi {
       'POST',
       `${basePath}/rest/organizations/:orgId/commerce/v2/search`,
       baseSearchResponse
-    ).addRequestTransformer<CommerceSearchResponse>(commerceEnableResultsTransformer);
+    ).addRequestTransformer<CommerceSearchResponse>(
+      commerceEnableResultsTransformer,
+      commerceSortTransformer
+    );
 
     this.recommendationEndpoint = new EndpointHarness(
       'POST',
@@ -51,7 +55,7 @@ export class MockCommerceApi implements MockApi {
       'POST',
       `${basePath}/rest/organizations/:orgId/commerce/v2/listing`,
       baseListingResponse
-    ).addRequestTransformer(commerceEnableResultsTransformer);
+    ).addRequestTransformer(commerceEnableResultsTransformer, commerceSortTransformer);
 
     this.facetSearchEndpoint = new EndpointHarness<FacetSearchResponse>(
       'POST',

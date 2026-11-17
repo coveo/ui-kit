@@ -4,6 +4,7 @@
 
 - **Node.js**: Version pinned in `.nvmrc` (use `nvm use` or the devcontainer)
 - **pnpm**: Pinned in `package.json` `packageManager` field. Run `corepack enable` to activate it
+- **Windows**: The repo tracks symlinks (e.g. `.claude/skills`, `.kiro/skills`, `docs/adr/ADR-template.md` in packages). Enable Developer Mode and clone with `git clone -c core.symlinks=true <REPOSITORY_URL>`. For an existing clone, run `git config core.symlinks true` then `git checkout -- .` (discards uncommitted changes)
 
 ## Commands
 
@@ -12,6 +13,12 @@
 - **Check for linting errors across the monorepo**: `pnpm run lint:check`
 - **Fix linting errors across the monorepo**: `pnpm run lint:fix`
 - **Add a changeset**: `pnpm changeset`
+
+**Linting and formatting**:
+
+- Always lint and format by running the `lint:check` / `lint:fix` package scripts (or the root scripts above) rather than invoking a linter or formatter binary directly. The scripts route each package to its correct tool.
+- Everywhere except `packages/quantic`, linting uses **oxlint** and formatting uses **oxfmt**.
+- In `packages/quantic`, linting uses **ESLint** and formatting uses **Prettier** (see `packages/quantic/AGENTS.md`).
 
 ## Packages
 
@@ -64,7 +71,7 @@
 
 ## Boundaries
 
-**You must ALWAYS**:
+**Always**:
 
 - Discover available Agent Skills under `.agents/skills` when beginning a new session
 - Add a changeset file when modifying source code of any public package
@@ -72,14 +79,15 @@
 
 ---
 
-**You must ASK BEFORE**:
+**Ask before**:
 
 - Adding a new dependency in the monorepo
 - Introducing a potentially breaking change
 
 ---
 
-**You must NEVER**:
+**Never**:
 
 - Commit unencrypted API keys, secrets, or Personally Identifiable Information (PII)
 - Write inline comments that restate what the code is doing
+- Use Biome to lint or format anything in this repository. Biome was removed in favor of oxlint/oxfmt (and ESLint/Prettier in `packages/quantic`)

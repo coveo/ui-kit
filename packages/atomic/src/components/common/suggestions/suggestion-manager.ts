@@ -20,7 +20,7 @@ interface SearchBoxSuggestions {
    */
   position: number;
   /**
-   * Whether the suggestions should be listed in the right or left panel. By default, the suggestions are listed in the right panel.
+   * Whether the suggestions should be listed in the right or left panel. By default, the suggestions are listed in the left panel.
    */
   panel?: 'left' | 'right';
   /**
@@ -166,12 +166,14 @@ export class SuggestionManager<SearchBoxController> {
         ? this.previousActiveDescendantElement!
         : (panel.firstElementChild as HTMLElement);
       this.updateDescendants(newValue.id);
+      this.updateKeyboardActiveDescendant(newValue.id);
     }
   }
 
   public clearSuggestions() {
     this.clearSuggestionElements();
     this.updateActiveDescendant();
+    this.updateKeyboardActiveDescendant();
   }
 
   public async focusNextValue() {
@@ -243,6 +245,7 @@ export class SuggestionManager<SearchBoxController> {
 
   private async executeQuerySuggestion() {
     this.updateActiveDescendant();
+    this.updateKeyboardActiveDescendant();
     const settled = await Promise.allSettled(
       this.suggestions.map((suggestion) =>
         promiseTimeout(

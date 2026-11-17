@@ -3,6 +3,7 @@ import {restoreProductListingParameters} from '../../product-listing-parameters/
 import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions.js';
 import {
   clearAllCoreFacets,
+  deleteAllCoreFacets,
   deselectAllValuesInCoreFacet,
 } from '../core-facet/core-facet-actions.js';
 import {manualNumericFacetReducer} from './manual-numeric-facet-slice.js';
@@ -86,7 +87,10 @@ describe('manualNumericFacetSlice', () => {
     expect(finalState).toEqual({'some-facet': {manualRange: someManualRange}});
   });
 
-  it('should clear all manual ranges when #clearAllCoreFacets is dispatched', () => {
+  it.each([
+    {action: clearAllCoreFacets, name: 'clearAllCoreFacets'},
+    {action: deleteAllCoreFacets, name: 'deleteAllCoreFacets'},
+  ])('should clear all manual ranges when "$name" is dispatched', ({action}) => {
     const state = buildMockCommerceState({
       manualNumericFacetSet: {
         'some-facet': {
@@ -98,7 +102,7 @@ describe('manualNumericFacetSlice', () => {
       },
     });
 
-    const finalState = manualNumericFacetReducer(state.manualNumericFacetSet, clearAllCoreFacets());
+    const finalState = manualNumericFacetReducer(state.manualNumericFacetSet, action());
 
     expect(finalState).toEqual({
       'some-facet': {manualRange: undefined},

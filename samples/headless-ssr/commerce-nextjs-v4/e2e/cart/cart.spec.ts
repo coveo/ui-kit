@@ -1,33 +1,40 @@
+import type {BrowserContext} from '@playwright/test';
 import {expect, test} from './cart.fixture';
 
 test.describe('default', () => {
+  const seededItems = [
+    {
+      name: 'Waxique Epoxy Wax',
+      price: 33,
+      productId: 'SP03973_00001',
+      quantity: 1,
+    },
+    {
+      name: 'Khaki Bottle',
+      price: 16,
+      productId: 'SP03929_00012',
+      quantity: 2,
+    },
+    {
+      name: 'Waxum Wax Package',
+      price: 27,
+      productId: 'SP03972_00001',
+      quantity: 1,
+    },
+  ];
   const cartCookie = [
     {
       name: 'headless-cart',
-      value: JSON.stringify([
-        {
-          name: 'Waxique Epoxy Wax',
-          price: 33,
-          productId: 'SP03973_00001',
-          quantity: 1,
-        },
-        {
-          name: 'Khaki Bottle',
-          price: 16,
-          productId: 'SP03929_00012',
-          quantity: 2,
-        },
-        {
-          name: 'Waxum Wax Package',
-          price: 27,
-          productId: 'SP03972_00001',
-          quantity: 1,
-        },
-      ]),
+      value: JSON.stringify(seededItems),
       path: '/',
       domain: 'localhost',
     },
   ];
+
+  async function cartItemsInCookie(context: BrowserContext) {
+    const cookie = (await context.cookies()).find(({name}) => name === 'headless-cart');
+    return cookie ? (JSON.parse(decodeURIComponent(cookie.value)) as unknown[]).length : 0;
+  }
 
   test.beforeEach(async ({page, context}) => {
     await context.addCookies(cartCookie);
@@ -44,10 +51,13 @@ test.describe('default', () => {
   });
 
   test.describe('when adding a new item to the cart', () => {
-    test.beforeEach(async ({page, cart}) => {
+    test.beforeEach(async ({page, cart, context}) => {
       await page.goto('/toys');
 
       await cart.addToCartButton.first().click();
+      // The click writes the cart to the cookie through a server action, and the cart page reads the
+      // cookie, so leaving the listing before the write lands shows the cart as it was.
+      await expect.poll(() => cartItemsInCookie(context)).toBe(seededItems.length + 1);
     });
 
     test('should add the item to the cart', async ({cart, page}) => {
@@ -55,7 +65,7 @@ test.describe('default', () => {
 
       const cartItemsCount = await cart.items.count();
 
-      expect(cartItemsCount).toBe(3);
+      expect(cartItemsCount).toBe(seededItems.length + 1);
     });
   });
 

@@ -95,12 +95,26 @@ function isPseudoFacet(el: Element): el is BaseFacetElement {
   return 'facetId' in el;
 }
 
-export function getFacetsInChildren(parent: HTMLElement): BaseFacetElement[] {
-  const facets = Array.from(parent.children).filter((child) =>
-    isPseudoFacet(child)
-  ) as BaseFacetElement[];
+function isPopover(element: Element) {
+  return element.tagName === 'ATOMIC-POPOVER';
+}
 
-  return facets;
+export function isFacetNestedInPopover(facet: BaseFacetElement) {
+  return !!facet.parentElement && isPopover(facet.parentElement);
+}
+
+export function getFacetElementToReorder(facet: BaseFacetElement): HTMLElement {
+  return isFacetNestedInPopover(facet) ? facet.parentElement! : facet;
+}
+
+export function getFacetsInChildren(parent: HTMLElement): BaseFacetElement[] {
+  return Array.from(parent.children).flatMap((child) => {
+    if (isPseudoFacet(child)) {
+      return [child];
+    }
+
+    return isPopover(child) ? Array.from(child.children).filter(isPseudoFacet) : [];
+  });
 }
 export function getAutomaticFacetGenerator(
   parent: HTMLElement

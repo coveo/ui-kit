@@ -2,7 +2,8 @@ import '@/src/themes/coveo.css';
 import type {Preview} from '@storybook/web-components-vite';
 import {setCustomElementsManifest} from '@storybook/web-components-vite';
 import {setStorybookHelpersConfig} from '@wc-toolkit/storybook-helpers';
-import {initialize, mswLoader} from 'msw-storybook-addon';
+import {setupWorker} from 'msw/browser';
+import {mswLoader} from 'msw-storybook-addon/csf3';
 import {within} from 'shadow-dom-testing-library';
 import {create} from 'storybook/theming';
 import customElements from '../custom-elements.json';
@@ -11,17 +12,23 @@ import isChromatic from 'chromatic/isChromatic';
 
 // For CDN builds, we want to use the "true" lib hosted on our CDN instead of bundling it through
 // This allow us to have a more realistic test environment.
-if (!isChromatic() && import.meta.env.PROD) {
+// The Playwright e2e build bundles the components like Chromatic does, so it skips this import.
+const isPlaywrightBuild = import.meta.env.STORYBOOK_INVOKED_BY === 'playwright';
+if (!isChromatic() && import.meta.env.PROD && !isPlaywrightBuild) {
   const url = new URL(import.meta.url);
   url.pathname = `${url.pathname.split('/storybook/')[0]}/atomic.esm.js`;
   import(url.href);
 }
 
-initialize({
-  quiet: true,
-  onUnhandledRequest: 'bypass',
-  serviceWorker: {url: './mockServiceWorker.js'},
-});
+const startWorker = async () => {
+  const worker = setupWorker();
+  await worker.start({
+    quiet: true,
+    onUnhandledRequest: 'bypass',
+    serviceWorker: {url: './mockServiceWorker.js'},
+  });
+  return worker;
+};
 
 setCustomElementsManifest(customElements);
 
@@ -31,7 +38,7 @@ setStorybookHelpersConfig({
 });
 
 const preview: Preview = {
-  loaders: [mswLoader],
+  loaders: [mswLoader(startWorker)],
   parameters: {
     options: {
       storySort: {

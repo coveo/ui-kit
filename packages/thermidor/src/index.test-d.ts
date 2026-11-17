@@ -1,0 +1,267 @@
+/**
+ * Public-surface type test for the `@coveo/thermidor` package entry.
+ *
+ * Guards public API independence: the public exports stay free of state-library
+ * concepts and form the compile-time surface acceptance gate.
+ *
+ * POSITIVE assertions (below) confirm the intended session-client surface is
+ * exported and usable. NEGATIVE assertions use `@ts-expect-error` on imports of
+ * names that MUST NOT be reachable from the entry: each `@ts-expect-error`'d
+ * import of a non-exported name only compiles because the name is absent from
+ * the public surface, so it fails the typecheck the moment that name leaks into
+ * the entry.
+ */
+import {expectTypeOf, test} from 'vitest';
+import {z} from 'zod/v4';
+import {createSession} from '@/src/index.js';
+import type {
+  A2uiState,
+  A2uiV09Message,
+  ActionError,
+  DiscoveredSurface,
+  ComponentContractSchema,
+  ComponentActionNames,
+  ContractsSchema,
+  InitializeRequest,
+  NavigatorContext,
+  NavigatorContextProvider,
+  SessionInitialization,
+  SessionRequest,
+  SerializedInitialization,
+  SerializedSession,
+  Session,
+  SessionConfig,
+  SessionSnapshot,
+  SubmitPromptAction,
+  Turn,
+  TurnAction,
+  TurnResponse,
+} from '@/src/index.js';
+
+// ── POSITIVE: the session-client surface is exported ────────────────────────
+test('exposes the createSession session-client surface', () => {
+  // `createSession` is exported as a callable value.
+  expectTypeOf(createSession).toBeFunction();
+
+  // Key domain / config / serialization types are importable and usable as
+  // types from the package entry. `Session<TContracts>` and
+  // `SessionConfig<TContracts>` are generic over the INJECTED contract (with a
+  // default), so the bare `Session` / `SessionConfig` remain usable as types.
+  expectTypeOf<Session>().not.toBeAny();
+  expectTypeOf<Turn>().not.toBeAny();
+  expectTypeOf<TurnResponse>().not.toBeAny();
+  expectTypeOf<SessionConfig>().not.toBeAny();
+  expectTypeOf<SerializedSession>().not.toBeAny();
+});
+
+// ── POSITIVE: the session exposes its request state ────────────────────────
+test('exposes the request in flight on Session', () => {
+  expectTypeOf<Session['request']>().toEqualTypeOf<SessionRequest | undefined>();
+  expectTypeOf<SessionRequest['kind']>().toEqualTypeOf<'initialize' | 'prompt' | 'action'>();
+});
+
+// ── POSITIVE: the session exposes its surfaces, renderer stream and state ──
+test('exposes session-scoped surfaces, renderer stream and state on Session', () => {
+  expectTypeOf<Session['surfaces']>().toEqualTypeOf<readonly DiscoveredSurface[]>();
+  expectTypeOf<Session['a2uiMessages']>().toEqualTypeOf<readonly A2uiV09Message[]>();
+  expectTypeOf<Session['state']>().toEqualTypeOf<A2uiState>();
+  expectTypeOf<TurnResponse>().not.toHaveProperty('a2uiMessages');
+  expectTypeOf<TurnResponse>().not.toHaveProperty('state');
+});
+
+// ── POSITIVE: a session names its configured agent and tracking id, and its navigator context the locale ──
+test('requires the agent configuration and tracking id, and a navigator context with a locale', () => {
+  expectTypeOf<SessionConfig['agentConfigurationId']>().toEqualTypeOf<string>();
+  expectTypeOf<SessionConfig['trackingId']>().toEqualTypeOf<string>();
+  expectTypeOf<
+    SessionConfig['navigatorContextProvider']
+  >().toEqualTypeOf<NavigatorContextProvider>();
+  expectTypeOf<NavigatorContext['language']>().toEqualTypeOf<string>();
+  expectTypeOf<NavigatorContext['country']>().toEqualTypeOf<string>();
+  expectTypeOf<NavigatorContext['currency']>().toEqualTypeOf<string>();
+  expectTypeOf<SessionConfig>().not.toHaveProperty('language');
+  expectTypeOf<SessionConfig>().not.toHaveProperty('country');
+  expectTypeOf<SessionConfig>().not.toHaveProperty('currency');
+});
+
+// ── POSITIVE: the session opens itself with initialize, recorded as its initialization ──
+test('exposes the initialization of the session', () => {
+  expectTypeOf<SessionConfig['initialize']>().toEqualTypeOf<boolean | undefined>();
+  expectTypeOf<Session['initialization']>().toEqualTypeOf<SessionInitialization | undefined>();
+  expectTypeOf<SessionSnapshot['initialization']>().toEqualTypeOf<
+    SessionInitialization | undefined
+  >();
+  expectTypeOf<Extract<SessionRequest, {kind: 'initialize'}>>().toEqualTypeOf<InitializeRequest>();
+  expectTypeOf<Extract<SessionRequest, {kind: 'action'}>['turnId']>().toEqualTypeOf<
+    string | undefined
+  >();
+  expectTypeOf<SerializedSession['initialization']>().toEqualTypeOf<
+    SerializedInitialization | undefined
+  >();
+});
+
+// ── POSITIVE: the session exposes one snapshot of its state ────────────────
+test('exposes a snapshot of the session state for framework stores', () => {
+  expectTypeOf<Session['getSnapshot']>().toEqualTypeOf<() => SessionSnapshot>();
+  expectTypeOf<SessionSnapshot['turns']>().toEqualTypeOf<readonly Turn[]>();
+  expectTypeOf<SessionSnapshot['surfaces']>().toEqualTypeOf<readonly DiscoveredSurface[]>();
+  expectTypeOf<SessionSnapshot['state']>().toEqualTypeOf<A2uiState>();
+  expectTypeOf<SessionSnapshot['a2uiMessages']>().toEqualTypeOf<readonly A2uiV09Message[]>();
+  expectTypeOf<SessionSnapshot['request']>().toEqualTypeOf<SessionRequest | undefined>();
+  expectTypeOf<SessionSnapshot['actionError']>().toEqualTypeOf<ActionError | undefined>();
+  expectTypeOf<Turn['input']['action']>().toEqualTypeOf<TurnAction | undefined>();
+  expectTypeOf<TurnAction['component']>().toEqualTypeOf<string>();
+});
+
+// ── POSITIVE: the injected-contract seam is exported ────────────────────────
+test('exposes the injected ContractsSchema / ComponentContractSchema seam', () => {
+  // The runtime is decoupled from any concrete contract package: the structural
+  // contract type it accepts through `createSession({ contracts })` is part of
+  // the public surface so consumers can type their injected contract.
+  expectTypeOf<ContractsSchema>().not.toBeAny();
+  expectTypeOf<ComponentContractSchema>().not.toBeAny();
+});
+
+// ── POSITIVE: an action request names its component, typed lists key on it ──
+test('names the dispatching component, and types action lists by the contracts', () => {
+  expectTypeOf<Extract<SessionRequest, {kind: 'action'}>['component']>().toEqualTypeOf<string>();
+
+  const contracts = z.discriminatedUnion('component', [
+    z.strictObject({
+      component: z.literal('NextActionsBar'),
+      actions: z
+        .strictObject({selectAction: z.strictObject({payload: z.strictObject({})})})
+        .optional(),
+    }),
+    z.strictObject({
+      component: z.literal('RegularFacet'),
+      actions: z.strictObject({search: z.strictObject({payload: z.strictObject({})})}).optional(),
+    }),
+  ]);
+
+  expectTypeOf<ComponentActionNames<typeof contracts>>().toEqualTypeOf<{
+    readonly NextActionsBar?: readonly 'selectAction'[];
+    readonly RegularFacet?: readonly 'search'[];
+  }>();
+  expectTypeOf<SessionConfig>().not.toHaveProperty('turnOpeningActions');
+});
+
+// ── POSITIVE: `dispatchAction` is the single action-dispatch entry point ─────
+test('exposes Session.dispatchAction assignable to the renderer onAction shape', () => {
+  // `dispatchAction` exists on `Session` as a function accepting the standard
+  // A2-UI client message.
+  expectTypeOf<Session>().toHaveProperty('dispatchAction');
+
+  // It is assignable to the renderer's `OnActionCallback` shape with no
+  // adapter: `(message: A2UIClientEventMessage) => void | Promise<void>`.
+  type OnActionCallback = (message: {
+    userAction?: {
+      name: string;
+      surfaceId: string;
+      sourceComponentId?: string;
+      context?: Record<string, unknown>;
+      timestamp?: string;
+      dataContextPath?: string;
+    };
+  }) => void | Promise<void>;
+
+  expectTypeOf<Session['dispatchAction']>().toMatchTypeOf<OnActionCallback>();
+});
+
+// ── POSITIVE: prompts are submitted through `dispatchAction` ────────────────
+test('accepts a submitPrompt action on Session.dispatchAction', () => {
+  expectTypeOf<SubmitPromptAction>().toEqualTypeOf<{
+    name: 'submitPrompt';
+    payload: {prompt: string};
+  }>();
+  expectTypeOf<Session['dispatchAction']>().toBeCallableWith({
+    name: 'submitPrompt',
+    payload: {prompt: 'running shoes'},
+  });
+});
+
+test('exposes Session.actionError as the failed action, or undefined', () => {
+  expectTypeOf<Session['actionError']>().toEqualTypeOf<ActionError | undefined>();
+  expectTypeOf<ActionError>().toEqualTypeOf<{
+    message: string;
+    component: string;
+    name: string;
+    surfaceId: string;
+    sourceComponentId: string;
+  }>();
+});
+
+// ── NEGATIVE: `submitPrompt` replaced `Session.submit` ──────────────────────
+test('does not expose Session.submit', () => {
+  expectTypeOf<Session>().not.toHaveProperty('submit');
+});
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
+// ── NEGATIVE: state-library / engine-era concepts are NOT exported ──────────
+//
+// Each import below names a symbol that exists inside the package but is
+// intentionally kept out of the public entry. The `@ts-expect-error` succeeds
+// only while the name remains absent from `@/src/index.js`.
+
+// Engine / interface / facade era (no engine, interface, or facade surface).
+// @ts-expect-error `Engine` must not be exported from the entry.
+import type {Engine} from '@/src/index.js';
+// @ts-expect-error `buildUnifiedConverseController` must not be exported.
+import {buildUnifiedConverseController} from '@/src/index.js';
+// @ts-expect-error `buildGenerativeUnifiedInterface` must not be exported.
+import {buildGenerativeUnifiedInterface} from '@/src/index.js';
+// @ts-expect-error `AgentResponse` (pre-reshape DTO) must not be exported.
+import type {AgentResponse} from '@/src/index.js';
+
+// Removed RemoteController public API. None of these names may be
+// reachable from the entry.
+// @ts-expect-error `RemoteController` must not be exported.
+import type {RemoteController} from '@/src/index.js';
+// @ts-expect-error `RemoteAction` must not be exported.
+import type {RemoteAction} from '@/src/index.js';
+// @ts-expect-error `RemoteControllerOptions` must not be exported.
+import type {RemoteControllerOptions} from '@/src/index.js';
+// @ts-expect-error `ComponentTypeOf` must not be exported.
+import type {ComponentTypeOf} from '@/src/index.js';
+// @ts-expect-error `ContractFor` must not be exported.
+import type {ContractFor} from '@/src/index.js';
+// @ts-expect-error `StateFor` must not be exported.
+import type {StateFor} from '@/src/index.js';
+// @ts-expect-error `ActionNameFor` must not be exported.
+import type {ActionNameFor} from '@/src/index.js';
+// @ts-expect-error `ActionPayloadFor` must not be exported.
+import type {ActionPayloadFor} from '@/src/index.js';
+// @ts-expect-error `Controller` must not be exported.
+import type {Controller} from '@/src/index.js';
+// @ts-expect-error `Unsubscribe` must not be exported (no retained export uses it).
+import type {Unsubscribe} from '@/src/index.js';
+
+// Internal remote-controller seam (its module is deleted, so these names are
+// definitely absent from the entry).
+// @ts-expect-error `buildRemoteController` (legacy value) must not be exported.
+import {buildRemoteController} from '@/src/index.js';
+// @ts-expect-error `selectRemoteControllerState` must not be exported.
+import {selectRemoteControllerState} from '@/src/index.js';
+// @ts-expect-error `RemoteControllerSource` must not be exported.
+import type {RemoteControllerSource} from '@/src/index.js';
+
+// Redux / state-library concepts (no store, slice, selector, thunk, reducer).
+// @ts-expect-error no store type on the public surface.
+import type {Store} from '@/src/index.js';
+// @ts-expect-error no slice on the public surface.
+import {generativeSlice} from '@/src/index.js';
+// @ts-expect-error no reducer on the public surface.
+import {generativeReducer} from '@/src/index.js';
+// @ts-expect-error no selector on the public surface.
+import {selectGenerativeState} from '@/src/index.js';
+// @ts-expect-error no thunk on the public surface.
+import type {GenerativeThunk} from '@/src/index.js';
+
+/* eslint-enable @typescript-eslint/no-unused-vars */
+
+// The private entry point (`@coveo/thermidor/private`, for internal Coveo use only) stays out of the root entry.
+// @ts-expect-error `createPrivateSession` must not be exported from the root entry.
+import {createPrivateSession} from '@/src/index.js';
+// @ts-expect-error `PrivateSessionConfig` must not be exported from the root entry.
+import type {PrivateSessionConfig} from '@/src/index.js';

@@ -1,410 +1,266 @@
 # Architecture Guide
 
-This document explains how the `@coveo/thermidor` library is structured, why each layer exists, and how they connect. It's written for Coveo engineers — you don't need deep knowledge of the current `@coveo/headless`, but Coveo context (org IDs, access tokens, search API) is assumed.
+This document explains how the `@coveo/thermidor` library is structured, why each part exists, and how they connect. It is written for Coveo engineers; Coveo context (org IDs, access tokens, the unified converse endpoint) is assumed.
 
-## The Core Idea
+The decisions of record are the accepted ADRs [ADR-009](./internal/adr/ADR-009-architecture-decision-charter-v2.md) (charter v2) through [ADR-016](./internal/adr/ADR-016-inline-state-consumption-remove-remote-controller.md). This guide describes the **shipped** architecture; it supersedes the earlier engine/interface/Redux/facade description.
 
-Today's `@coveo/headless` exposes Redux concepts to consumers (action creators, reducers, middleware). `@coveo/thermidor`'s thesis: **wrap Redux behind a library-agnostic abstraction so the state management library becomes a swappable implementation detail.**
+## The core idea
 
-If the abstraction works, you could replace Redux with Zustand in a day — and every controller, action, and API client would keep working unchanged.
+`@coveo/thermidor` is a lean client for a single, stateful, intent-routing **unified converse endpoint**. The server streams its response over AG-UI SSE — conversational messages, reasoning steps, and tool calls, alongside schema-defined A2UI components — and the client renders what the server sends. Thermidor transmits consumer input, folds the streamed result into an observable list of `Turn`s, and validates component state and actions against a consumer-injected contract — nothing more. Component state travels inline through the A2-UI data model (`/state/<id>` `updateDataModel` operations); renderers read it through `{ path }` bindings, and every action goes through the single `session.dispatchAction` entry point ([ADR-016](./internal/adr/ADR-016-inline-state-consumption-remove-remote-controller.md)).
 
-## The Four Layers
+Everything the previous revision described (an `Engine` class, a library-agnostic `interface/` layer, Redux Toolkit slices, per-endpoint facades) has been **removed wholesale** ([ADR-010](./internal/adr/ADR-010-unified-endpoint-session-client.md)). The current package has no engine, no interface layer, no Redux/RTK, and no facades.
+
+## Public surface
+
+The package entry (`src/index.ts`) exports the session-client surface — `createSession`, the `Session` handle, the `Turn` / `TurnResponse` domain model (including `A2uiV09Message` and `DiscoveredSurface`), `SessionConfig`, the injected-contract types (`ContractsSchema`, `ComponentContractSchema`, `ParsableSchema`), the client-owned context types, and the versioned `SerializedSession` shape. It also exports the request types (`SessionRequest`, `InitializeRequest`, `PromptRequest`, `ActionRequest`) and the initialization (`SessionInitialization`, `SerializedInitialization`). It is intentionally free of state-library concepts (no store, slice, selector, thunk, or reducer types) and free of raw transport DTO shapes; `src/index.test-d.ts` fails the typecheck if one leaks into the entry.
+
+A second entry point, `@coveo/thermidor/private` (`src/private.ts`), is **for internal Coveo use only**: not supported for customers, and it may change without notice. It exports `createPrivateSession` and `PrivateSessionConfig`, and re-exports the root entry. The root entry never exports them, and `SessionConfig` keeps its required ids; `src/index.test-d.ts` checks both.
 
 ```mermaid
 graph TB
-    subgraph "What consumers see"
-        direction LR
-        L2["<b>Layer 2: Controllers</b><br/>buildSearchBoxController()<br/>buildResultListController()"]
-        L3["<b>Layer 3: Actions</b><br/>loadSearchBoxActions()<br/>setQuery()"]
+    subgraph "Public surface (src/index.ts)"
+        CS["createSession(config)"]
+        SESSION["Session&lt;TContracts&gt;<br/>contracts · turns · initialization · surfaces · a2uiMessages · state · actionError · request<br/>subscribe · getSnapshot · dispatchAction<br/>cancel · retry · serialize"]
     end
 
-    subgraph "What consumers never touch"
-        L0["<b>Layer 0: Core State</b><br/>Engine class<br/>read() · subscribe() · mutate() · adoptSlice()"]
-        L1["<b>Layer 1: API Client</b><br/>executeSearchAPI()<br/>httpClient · errorHandling"]
+    subgraph "Internal (not exported)"
+        STORE["Observable store<br/>{ turns, activeTurnId,<br/>sessionId, sessionToken,<br/>request }"]
+        FOLD["Pure fold<br/>foldActivity(turn, activity) → turn"]
+        VALID["In-transit validation<br/>action-payload validation"]
+        GATE["Request gate<br/>(one request at a time)"]
+        LANE["Concurrent lane<br/>(announced actions · cache)"]
+        API["Unified endpoint client<br/>request builder · SSE parser"]
     end
 
-    L2 -->|"always: reads & mutates state"| L0
-    L2 -.->|"sometimes: triggers API calls"| L1
-    L3 -->|"mutates state"| L0
-    L1 -->|"reads config, writes results"| L0
+    CS --> SESSION
+    SESSION -->|drives| STORE
+    SESSION -->|folds stream via| FOLD
+    FOLD -->|validates inbound ops| VALID
+    SESSION -->|validates payloads| VALID
+    SESSION -->|sends prompts and actions| GATE
+    GATE -->|POST + stream| API
+    SESSION -->|sends announced actions| LANE
+    LANE -->|POST + stream| API
 
-    style L0 fill:#4a9eff,color:#fff
-    style L1 fill:#6c757d,color:#fff
-    style L2 fill:#28a745,color:#fff
-    style L3 fill:#fd7e14,color:#fff
+    style CS fill:#28a745,color:#fff
+    style SESSION fill:#28a745,color:#fff
+    style STORE fill:#4a9eff,color:#fff
+    style FOLD fill:#4a9eff,color:#fff
+    style VALID fill:#4a9eff,color:#fff
+    style GATE fill:#4a9eff,color:#fff
+    style LANE fill:#4a9eff,color:#fff
+    style API fill:#6c757d,color:#fff
 ```
 
-### Dependency Rules
+## Package structure
 
-| From → To   | Layer 0 |    Layer 1    | Layer 2 | Layer 3 |
-| ----------- | :-----: | :-----------: | :-----: | :-----: |
-| **Layer 0** |    —    |      ❌       |   ❌    |   ❌    |
-| **Layer 1** |   ✅    |       —       |   ❌    |   ❌    |
-| **Layer 2** |   ✅    | ✅ (optional) |    —    |   ❌    |
-| **Layer 3** |   ✅    |      ❌       |   ❌    |    —    |
+```
+src/
+├── index.ts                       # Public surface (ADR-010 / ADR-014 / ADR-016)
+├── private.ts                     # @coveo/thermidor/private, for internal Coveo use only
+├── session/
+│   ├── create-session.ts          # createSession factory + shared runtime (dispatch/cancel/retry)
+│   ├── create-private-session.ts  # createPrivateSession: optional ids
+│   ├── conflict-retry.ts          # Bounded retry of 409 AGENT:ACTION_IN_FLIGHT rejections
+│   ├── types.ts                   # Turn / TurnInput / TurnResponse domain model (ADR-010 model annex)
+│   ├── store.ts                   # Plain observable store + subscribe/notify
+│   ├── fold.ts                    # Pure fold + surface derivation (ADR-015 interim)
+│   ├── a2ui-v09-projection.ts     # A2-UI v1.0 → v0.9 renderer projection (ADR-015 addendum)
+│   ├── turn-opening.ts            # Reads the turn-opening actions the producer announces (ADR-019)
+│   ├── announced-actions.ts       # Reads the concurrent and cached actions the producer announces (ADR-020)
+│   ├── concurrent-actions.ts      # The concurrent lane: latest dispatch per node, aborts, joined misses, unrecorded answers
+│   ├── action-cache.ts            # Bounded, in-memory cache of answers to cached actions
+│   ├── session-state.ts           # The session's validated state, and the unrecorded layer over it
+│   ├── contracts.ts               # Structural type of the injected contracts schema (ADR-014)
+│   ├── in-transit-validation.ts   # Validates inbound updateDataModel ops against *State schemas
+│   ├── resolve-operation.ts       # Maps an op path to a component's whole state or a field beneath it
+│   ├── action-payload-validation.ts # Validates outbound action payloads before the POST
+│   ├── state-path.ts              # /state/<id> JSON Pointer helpers
+│   └── serialize.ts               # Versioned serialize / restore (ADR-011)
+└── internal/
+    ├── api/                       # Unified endpoint client, request builder, SSE parser
+    ├── context/                   # Navigator / commerce context types
+    └── utils/                     # id generation, dev-only warnings
+```
 
-The fundamental rule: **Layer 0 depends on nothing. Everything else depends on Layer 0. There is no horizontal coupling** (except Layer 2's optional use of Layer 1 for API calls).
+## The session factory and runtime
 
----
+`createSession(config)` (`src/session/create-session.ts`) builds a fresh observable store and returns a `Session`. There are no singletons and no module-level mutable state: two sessions created from identical configuration share nothing mutable ([ADR-009](./internal/adr/ADR-009-architecture-decision-charter-v2.md), charter conformance).
 
-## Layer 0: Core State
+Both entry points share one runtime, `createSessionRuntime(config, requestScope)`. `requestScope` holds the fields that scope every request, sent ahead of the keys the session builds itself (`language`, `country`, `currency`, `clientId`, `message`, `action`, `conversationSessionId`, `conversationToken`, `context`, `pinnedProducts`) with `initialize`, prompts, and actions, concurrent and cached ones included. `createSession` checks `agentConfigurationId` and `trackingId` and passes them. `createPrivateSession` passes whichever of its optional `agentConfigurationId` and `trackingId` are set, without validating them: the endpoint does. Both require a `navigatorContextProvider`, and the runtime fails a request whose navigator context has a blank `language`, `country` or `currency`.
 
-**Directory**: `src/internal/`  
-**Visibility**: Internal (not exported to consumers, but used by all other layers)  
-**Responsibility**: Own all application state. Hide Redux completely.
+The runtime owns the initialize / dispatch / cancel / retry orchestration and the SSE-consumption loop that folds each event into the run a request streams into, its run target: a turn, or the initialization:
 
-### The Engine
+- **`initialize`** — unless the session was restored or created with `initialize: false`, `createSession` queues a microtask that sends the `initialize` action (`{name: 'initialize', context: {}}`, with no `surfaceId` or `sourceComponentId`) through `sendRequest`, unless a prompt dispatched in the same task is already in flight. `request` is `{kind: 'initialize'}` meanwhile. Its run is folded into `session.initialization` (`foldInitialization` in `fold.ts`, which keeps only activities and status), never into a turn; it adopts the session keys like a prompt, and a failure is recorded there without a retry beyond the conflict retry ([ADR-018](./internal/adr/ADR-018-session-scoped-surfaces-and-initialize.md)).
 
-The `Engine` class is the single entry point for all state operations:
+- **`dispatchAction(message)`** — the single consumer-facing entry point, wired as the renderer's `onAction`. It never rejects: every refusal is a dev-only warning. A dispatch made while a request is in flight is withheld, unless the producer announced it as concurrent (see [The concurrent lane](#the-concurrent-lane)).
+  - A `submitPrompt` action (`{name: 'submitPrompt', payload: {prompt}}`) needs no active turn. It opens a new `streaming` turn, builds a request (invoking both context providers fresh), POSTs to the endpoint, and folds the streamed response into that turn.
+  - An A2-UI client message is unwrapped to its `userAction`. The runtime recovers the dispatching component's `component` discriminant from the session's node-identity registry (derived from the session's activity log), validates the payload against that component's action schema, and sends the action to its own originating surface. It is withheld when the node resolves to no component, when the payload fails validation, or when it opens no turn and there is neither an active turn nor an initialization to stream into. The action's response streams into the active turn, or into the initialization before the first turn, unless the producer announced the action as opening a turn, in the AG-UI `metadata` of the surface's snapshot (`turnOpeningActions`, read by `src/session/turn-opening.ts`; the fold keeps each activity's `metadata`, and merges a replacing snapshot's onto it by entry): then it opens a new `streaming` turn whose `input.action` records it, even before the first turn, and that turn becomes the active turn ([ADR-019](./internal/adr/ADR-019-turn-opening-actions.md)). An action that does not open a turn only folds its surface snapshots, whichever run created its surface: its run, its text and its failure leave the status and response of the active turn, or of the initialization, as they are, and a failure sets `actionError` (ADR-018, as amended).
+- **`cancel()`** — stops consuming the in-flight stream. A streaming initialization, or a streaming turn, opened by a prompt or by an action, keeps the partial `response` already folded and is marked `error` with the message `'Cancelled'`; an action that streams into a complete turn leaves it as it was. `request` stays set until the stopped request has unwound, so a dispatch made right after `cancel()` is withheld. A no-op when nothing is in flight.
+- **`retry(turnId)`** — re-submits the original input of the last turn, only when it is `error`: its prompt, or the action that opened it, re-sent from the surface it was dispatched from without resolving it against the active turn. Withheld like any dispatch while a request is in flight; any other `turnId` (unknown, non-error, or an earlier turn, whose answer would land before later turns' surfaces) is a no-op.
+
+Prompts and actions reach the endpoint one at a time, through `sendRequest` in `create-session.ts`, except the concurrent actions below: the Gateway processes a single request per session, and each response is a whole-node snapshot, so overlapping streams would let the last to arrive win over a newer action. A dispatch made while a request is in flight is withheld rather than queued or preempted: the integrator holds it back until the session is free, reading `request`.
+
+The session publishes its request state in its store: `request` is the request being sent (`{kind: 'initialize'}`, `{kind: 'prompt', turnId}` or `{kind: 'action', component, name, surfaceId, sourceComponentId, turnId?}`, with no `turnId` when it streams into the initialization), or `undefined` when idle. `sendRequest` publishes it before its first `await`, so it is set as soon as the dispatch returns. Each `dispatchAction` promise resolves once its own request ends, whatever its outcome, and at once when the dispatch is withheld, which is what an optimistic update needs to end.
+
+Every request, prompt or action, is sent through a bounded retry loop (`src/session/conflict-retry.ts`, called from `executeStream`): while the Gateway answers `409` with the `errorCode` `AGENT:ACTION_IN_FLIGHT` (parsed in `src/internal/api/protocol/error-handling.ts`), the request is rebuilt and resent after a doubling backoff, for up to 30 s in total (the time spent on each rejected request included), each wait capped at 4 s and the last one cut to what is left. The budget covers an aborted agent run winding down on the Gateway, which can't cancel it upstream yet (KIT-6261). A request sent the moment `RUN_FINISHED` arrives can get a 409 too, because the Gateway commits the turn a few milliseconds later; the first retry absorbs it. The retrying request stays the one in flight, so nothing touches the turn. When the budget runs out, a prompt fails its turn; an action sets the session-level `actionError` and its dispatch ends. The wait is abortable, so `cancel()` ends it like a stream; an abort during a resent request is handled the same way, since the client reports it as a failed call rather than throwing it. `executeStream` returns a request rejected before streaming to its caller, so the prompt path fails its turn while the action path sets `actionError` (cleared when the next action or prompt is sent).
+
+### The concurrent lane
+
+An action the producer announces as concurrent, in the AG-UI `metadata` of the surface's snapshot (`concurrentActions`, with an optional `cache` policy for the lifetime of its answers, read by `src/session/announced-actions.ts` as `turnOpeningActions` is), skips `sendRequest` ([ADR-020](./internal/adr/ADR-020-cached-and-concurrent-actions.md)). `issueAction` routes it to `issueConcurrentAction` before anything else (an action also announced as turn-opening included, with a dev-only warning), so it never sets `request`, and `cancel()`, `submitPrompt` and `sendRequest` ignore it. It is withheld until the session has its token, and its payload is validated as any action's, before `src/session/concurrent-actions.ts` sends it.
+
+- **Latest wins per source node.** `src/session/concurrent-actions.ts` keeps one lane per `(surfaceId, sourceComponentId, name)` and the cache key of its latest dispatch. A newer dispatch aborts the lane's uncached request in flight. A cached miss is never aborted: it runs to the end and its answer is cached, and a dispatch with the same key joins it. Each surface snapshot of an answer is applied only while its dispatch is the lane's latest, checked before each write; when a snapshot was passed over or another dispatch joined the request, the node may show something else since (A, B, then A while A is in flight, or a recorded write in between), so the whole answer is applied again once its stream ends, if its dispatch is still the latest. An aborted request applies nothing it still delivers.
+- **The cache.** `src/session/action-cache.ts` keys an answer by surface id, source node, action name and payload, serialized with sorted keys. It holds 100 entries per session, drops the least recently used first, reuses an entry while it is younger than the currently announced `ttlMs`, and is never serialized. A hit sends nothing, becomes the lane's latest dispatch and is applied as an answer is. An answer is cached only when its stream ends with a terminal event and no `RUN_ERROR`, and only its messages that `acceptUnrecordedWrites` keeps.
+- **Applied, not recorded.** An answer is folded into no run, and its session keys and `metadata` are not read. `acceptUnrecordedWrites` (`src/session/session-state.ts`) keeps only its `updateDataModel` messages that validate against a node the recorded runs hold, and the same accepted messages reach the renderer stream and the store's `unrecordedState` layer; anything else is dropped with a dev-only warning. `session.state` shows the recorded `state` with the layer on top. Folding a recorded snapshot drops the layer's values at or under each path it writes and the surfaces it creates or deletes, and writes it into a layer value above its path, so `session.state` matches the renderer, which applies the writes in order. `serializeSession` saves the recorded `state` alone, so a restored session has no layer.
+- **Failures are quiet.** The request is sent once, without the conflict retry. A refusal, a `RUN_ERROR`, a stream that ends without a terminal event or a request that cannot be built is a dev-only warning: it sets no `actionError` and changes no run.
+
+The runtime holds the in-flight stream's `AbortController` per session instance — never module-level — so two sessions never contend, and a stream superseded by a newer one never touches the turn.
+
+Cancellation is modeled as a terminal `error` turn (message `'Cancelled'`), not a distinct status. A cancelled turn and a failed turn share every lifecycle property — both are terminal, non-streaming, retryable, and preserve their partial `response` — so no runtime branch distinguishes them, and adding a separate `cancelled` status would only widen `TurnStatus` without changing behavior. Consumers that need to tell a user-initiated stop from a genuine failure should not string-match the message; if that distinction is ever required, prefer a structured discriminator (e.g. an error `reason`) over a new status.
+
+## The observable store
+
+`src/session/store.ts` holds `{ turns, initialization?, activeTurnId?, sessionId?, sessionToken?, state? }`, plus the runtime-only `actionError`, `request`, `unrecordedState` and renderer stream, which are never serialized. It exposes `getState`, an internal setter that notifies on change, and `subscribe(listener) → unsubscribe`. Every registered subscriber is notified exactly once per change. `session.getSnapshot()` gathers the session's `turns`, `initialization`, `surfaces`, `a2uiMessages`, `state`, `request` and `actionError` into one frozen `SessionSnapshot`, and returns the same object until one of them changes, so a change to anything else, such as the session keys, keeps it. This plain store replaces the former RTK slice plus state port ([ADR-010](./internal/adr/ADR-010-unified-endpoint-session-client.md) structure annex); there is no Redux state library anywhere in the package.
+
+## The pure fold
+
+`src/session/fold.ts` exposes `foldActivity(previousTurn, activity) → nextTurn` — the single place a `TurnResponse` is constructed from the stream. It is a pure reduction: folding the same activity sequence twice yields deeply-equal turns.
+
+The fold maps each SSE activity into the active turn's `response`:
+
+- Text-message events accumulate into `response.agent.messages` (the `agent` facet is created lazily, signaling the router invoked an agent).
+- Reasoning and tool-call events accumulate into `response.agent.reasoningSteps`.
+- `ACTIVITY_SNAPSHOT` events append to `response.activities` (a `replace` snapshot merges onto the activity with the same `messageId`) and re-derive the turn's surfaces from its activity list.
+- Terminal events (`RUN_FINISHED` / `turn_complete`, `RUN_ERROR`) set `status` to `complete` or `error`.
+
+## Session-scoped surfaces
+
+Surfaces live in the session, not in the turn that created them ([ADR-018](./internal/adr/ADR-018-session-scoped-surfaces-and-initialize.md)). The session derives them from one ordered activity log (`sessionActivities`), the initialization's activities, then every turn's, in order; since it sends one request at a time, that is the order in which the operations arrived. A surface lives from its `createSurface` until its `deleteSurface`, whichever runs carry them, and a `createSurface` for a live id replaces that surface.
+
+- **Surfaces.** `src/session/session-surfaces.ts` (`deriveSessionSurfaces`) derives `session.surfaces` from the activity log, and narrows each turn's `response.surfaces` to the live surfaces it created. A surface a later run creates again under its live id stays with the turn that first created it, and one the initialization created belongs to no turn. A loading placeholder stays listed only while the run that last created it is `streaming` or the request in flight streams into it, and an action that streams into an earlier run keeps out the placeholders that run had already left behind when it started (`abandonedPlaceholderIds`), so the view is recomputed when the turns, the initialization or the request change.
+- **State.** In the same store change that folds a surface snapshot, `src/session/session-state.ts` (`applyInboundOps`) validates the snapshot's `updateDataModel` ops against the session's node-identity registry and applies the conforming ones to the session's `state`. `session.state` exposes the entries of the live surfaces.
+- **Renderer stream.** In that same change, the snapshot's messages are converted to v0.9 and appended to the session's renderer stream (`appendToRendererStream`), which only grows: a `deleteSurface` precedes a `createSurface` that replaces a live surface, and an operation on a surface that is not live is left out, since a renderer refuses both.
+- **Dispatch.** An action resolves its source component in the session's registry, so any live surface accepts actions. Its run only folds its surface snapshots into the active turn, or into the initialization before the first turn, never its lifecycle events or text, and its failure sets `actionError` (`ActionError`, which identifies the action) without changing any run (ADR-018, as amended).
+
+## The Turn / TurnResponse domain model
+
+`src/session/types.ts` defines the canonical runtime model ([ADR-010](./internal/adr/ADR-010-annex-model.md) model annex):
 
 ```typescript
-class Engine {
-  read<T>(selector: StateSelector<T>): T; // Synchronous state read
-  subscribe<T>(selector, callback): Unsubscribe; // Reactive state observation
-  mutate(mutation: StateMutation): void; // Dispatch a state change
-  adoptSlice(slice: Slice): Promise<void>; // Lazily register a feature slice
+interface Turn {
+  id: string;
+  input: {prompt?: string}; // omitted for a prompt-less action turn
+  response: TurnResponse;
+  status: 'streaming' | 'complete' | 'error';
+  error?: string; // present iff status === 'error'
+}
+
+interface TurnResponse {
+  activities: Activity[]; // raw snapshot log, latest snapshot per messageId, defaults to []
+  surfaces: DiscoveredSurface[]; // the live surfaces this turn created
+  agent?: {messages: AgentMessage[]; reasoningSteps: ReasoningStep[]};
 }
 ```
 
-- `read()` takes a pure function `(state) => T` and returns the result.
-- `subscribe()` takes a selector + callback; only fires when the selected value actually changes (shallow equality).
-- `mutate()` takes a `{ type, payload }` object. This is the library-agnostic equivalent of Redux's `dispatch(action)`.
-- `adoptSlice()` dynamically registers a Redux slice. The store starts empty. See [Slice Adoption](../SLICE_ADOPTION.md).
-
-Internally, the Engine wraps a Redux Toolkit `configureStore`. But its public surface uses only library-agnostic types:
-
-```typescript
-type StateSelector<T> = (state: State) => T;
-interface StateMutation {
-  type: string;
-  payload?: unknown;
-}
-type Unsubscribe = () => void;
-```
-
-No `Draft<T>`, no `PayloadAction`, no `Slice` type in the public API.
-
-### Interface vs Internal
+`activities` is routing-neutral and always present. Only `messages` and `reasoningSteps` are agent-specific; they live under the optional `agent` facet, whose presence signals "the router invoked an agent". Consumers read `turn.input.prompt`, `turn.response.surfaces` (where to draw the turn's blocks) and `turn.response.agent?.*`; the renderer stream and the component state live on the session.
 
-Layer 0 is split into two sub-directories to enforce isolation **by construction**:
-
-```mermaid
-graph LR
-    subgraph "core/"
-        subgraph "interface/ — library-agnostic"
-            E["engine/engine.ts"]
-            SBT["search-box/types.ts"]
-            SBM["search-box/mutate.ts"]
-            SBS["search-box/selectors.ts"]
-            MORE1["...other features"]
-        end
-        subgraph "internal/ — Redux implementation"
-            SBSL["searchBox/slice.ts"]
-            MORE2["...other slices"]
-        end
-    end
-
-    SBM -->|"imports slice to create mutations"| SBSL
-    SBS -->|"imports slice to wrap selectors"| SBSL
-
-    style E fill:#4a9eff,color:#fff
-    style SBSL fill:#dc3545,color:#fff
-```
-
-| Directory         |            Can import Redux?             |           Exported to other layers?           | Contains                                     |
-| ----------------- | :--------------------------------------: | :-------------------------------------------: | -------------------------------------------- |
-| `core/interface/` | **No** (except engine.ts which wraps it) |         **Yes** (via `core/index.ts`)         | Types, selector wrappers, mutation factories |
-| `core/internal/`  |                 **Yes**                  | **No** (except for `adoptSlice` registration) | Redux slices (`createSlice`), reducers       |
-
-**Why the split?** If you can `grep -r "@reduxjs/toolkit" src/internal/interface/` and get zero results (excluding `engine.ts`), you know the abstraction holds. The interface layer's `mutate.ts` and `selectors.ts` files import from `internal/` to wrap Redux-specific implementations, but they only expose library-agnostic types.
-
-### The Pattern Per Feature
-
-Every feature domain (searchBox, results, facets, pagination, configuration) follows the same structure:
-
-```
-interface/{feature}/
-├── types.ts       → Pure TypeScript interfaces (the state shape)
-├── mutate.ts      → Mutation factories: setQuery("foo") → { type, payload }
-└── selectors.ts   → Selector wrappers: query(state) → string
-
-internal/{feature}/
-└── slice.ts       → Redux createSlice() with reducers and selectors
-```
-
-**Mutation factory pattern** — mutations don't directly change state. They create `StateMutation` objects that you then pass to `engine.mutate()`:
-
-```typescript
-// In interface/search-box/mutate.ts
-export const setQuery = (query: string): StateMutation => {
-  return searchBoxSlice.actions.setQuery(query); // Returns { type: 'searchBox/setQuery', payload: 'laptops' }
-};
-
-// Usage
-engine.mutate(searchBoxMutations.setQuery('laptops'));
-```
-
-**Selector wrapper pattern** — selectors from Redux slices are wrapped with narrowed types:
-
-```typescript
-// In interface/search-box/selectors.ts
-type StateWithSearchBoxSlice = {searchBox: SearchBoxState};
-
-export const query = (state: StateWithSearchBoxSlice) => {
-  return searchBoxSlice.selectors.query(state);
-};
-```
-
-The `StateWithSearchBoxSlice` type narrows from the full optional `State` (where `searchBox?` might be undefined) to a guaranteed-present type. This is safe because callers should only read from an adopted slice.
-
-### State Shape
-
-All properties are optional because slices are adopted dynamically:
-
-```typescript
-interface State {
-  searchBox?: SearchBoxState; // { query: string }
-  result?: ResultMapState; // Record<id, { isSelected, isExpanded }>
-  results?: ResultsState; // { results[], isLoading, error }
-  facets?: Record<string, FacetState>; // { id, label, values[], selectedValues[] }
-  pagination?: PaginationState; // { currentPage, pageSize, totalCount }
-  configuration?: ConfigurationState; // { organizationId, accessToken, endpoint? }
-}
-```
-
----
-
-## Layer 1: API Client
-
-**Directory**: `src/api/`  
-**Visibility**: Internal (used by Layer 2 controllers, never exported to consumers)  
-**Responsibility**: HTTP calls to Coveo Platform APIs.
-
-### How It Works
-
-The API client follows the **engine-first pattern**: every function takes an `Engine` as its first argument. It reads configuration (org ID, token, endpoint) from state and writes results back via mutations.
-
-```mermaid
-sequenceDiagram
-    participant C as Controller (L2)
-    participant API as searchAPI (L1)
-    participant HTTP as httpClient (L1)
-    participant E as Engine (L0)
-    participant Coveo as Coveo Platform
+## Validation
 
-    C->>API: executeSearchAPI(engine)
-    API->>E: mutate(setLoading(true))
-    API->>E: read(searchBoxSelectors.query)
-    API->>E: read(paginationSelectors.currentPage)
-    API->>E: read(facetSelectors.all)
-    API->>HTTP: executeHttpRequest(engine, options)
-    HTTP->>E: read(configurationSelectors.organizationId)
-    HTTP->>E: read(configurationSelectors.accessToken)
-    HTTP->>Coveo: POST /rest/search/v2
-    Coveo-->>HTTP: Response
-    HTTP-->>API: HttpResponse<CoveoSearchResponse>
-    API->>E: mutate(setResults(transformedResults))
-    API->>E: mutate(setTotalCount(count))
-    API->>E: mutate(setLoading(false))
-```
+The injected contracts schema is validated against at two boundaries, both inside the core, so a consumer never runs Zod ([ADR-016](./internal/adr/ADR-016-inline-state-consumption-remove-remote-controller.md)):
 
-Key files:
+- **Inbound state** (`src/session/in-transit-validation.ts`) — each `updateDataModel` op is resolved to its component through the node-identity registry and validated in transit: a whole-component op (`/state/<id>`) against the component's `*State` schema, a partial op against the sub-schema at its path. A conforming op is applied to the session's `state`. An op whose path is outside `/state/<id>` of a present component (for example `/isLoading` or `/`) is dropped as `unresolved-path`, and a non-conforming one is dropped too, so the previous value stays. `createSurface.dataModel` is never read into the session's `state`.
+- **Outbound actions** (`src/session/action-payload-validation.ts`) — an action's payload is validated against the component's action schema before the POST; a non-conforming one is withheld.
 
-- **`search/searchAPI.ts`** — The main search function. Reads query/pagination/facets from state, calls the Coveo Search v2 endpoint, transforms the response, and writes results back.
-- **`shared/httpClient.ts`** — Base HTTP utility. Reads configuration from state, builds authenticated requests, handles errors. Returns `HttpResponse<T>` objects (never throws).
-- **`shared/errorHandling.ts`** — Coveo-specific error transformation.
+`session.a2uiMessages` is derived from the raw activities, not from `session.state`, so a renderer fed from it receives every inbound op, including those in-transit validation drops, and the component state seeded by `createSurface.dataModel`, which is never validated (see [Recorded interim debt](#recorded-interim-debt-and-out-of-scope-items)).
 
-### Design Decisions
+## Injected schema, endpoint, and context
 
-- **No exceptions**: `httpClient` returns `{ success, data?, error? }` instead of throwing. Callers check `response.success` and handle errors via state mutations.
-- **State-driven config**: The HTTP client doesn't accept tokens/endpoints as parameters. It reads them from the engine's configuration state. This means API calls are automatically configured once you set up the engine.
-- **`Promise<void>` return type**: `executeSearchAPI()` writes results into state rather than returning them. Consumers observe results via `engine.subscribe()`.
+- **Contracts schema** ([ADR-014](./internal/adr/ADR-014-consumer-supplied-endpoint-and-schema.md)) — `config.contracts` is the sole source for component-state and action-payload validation. The package declares no dependency on any specific schema package; it accepts any Zod discriminated union on `component` through a structural type (`src/session/contracts.ts`) that reads only public Zod API. `zod` is a peer dependency spanning both majors (`3.25.76 || ^4`), so validation runs through the single `zod` instance resolved by the injected schema. A consumer whose renderer is built on Zod 3 injects a Zod 3 schema.
+- **Endpoint** — when `endpoint` is provided the client POSTs to it verbatim (nothing appended); when absent it resolves `https://{orgId}.org.coveo.com` and appends the fixed converse path `/api/preview/organizations/{orgId}/agents/commerce/agui/converse`. A missing/empty org fails before any network call.
+- **Context providers** ([ADR-012](./internal/adr/ADR-012-client-owned-context.md)) — `navigatorContextProvider` (required, and the source of the request's `language`, `country` and `currency`) and `commerceContextProvider` are synchronous and read fresh per request in the request builder. An absent commerce provider sends the structural-empty "absent" encoding (`cart: []`, no `pinnedProducts`/`source`/`custom`); a present-but-empty provider sends `cart: []` distinguishably. Context is never serialized, so a restored session reads today's context from the providers.
 
----
+## Serialization and restoration
 
-## Layer 2: Controllers
+`src/session/serialize.ts` ([ADR-011](./internal/adr/ADR-011-session-serialization.md)) defines a versioned `SerializedSession` (integer `version >= 1`), intentionally distinct from the runtime `Turn` type:
 
-**Directory**: `src/public/controllers/`  
-**Visibility**: **Public** (exported from the package)  
-**Responsibility**: High-level, feature-oriented API for building UIs.
+| Field                                        | Persisted | Scope            |
+| -------------------------------------------- | --------- | ---------------- |
+| `id`, `input`, `status`, `error`             | yes       | all turns        |
+| `initialization` (activities, status, error) | yes       | session-level    |
+| `sessionId`, `sessionToken`, `activeTurnId`  | yes       | session-level    |
+| `response.activities`                        | yes       | all turns        |
+| `response.agent.{messages,reasoningSteps}`   | yes       | turns with agent |
+| `state` (validated data model)               | yes       | session-level    |
+| `response.surfaces`                          | no        | derived          |
+| renderer stream (`a2uiMessages`)             | no        | derived          |
 
-### The Factory Function Pattern
+On restore, the surfaces and the renderer stream are re-derived from the persisted `activities` of the initialization, then of each turn, in order; a turn or initialization persisted mid-stream (`streaming`) is downgraded to `error` (`'Stream was interrupted'`) preserving its partial response; an unsupported `version` is rejected without partially populating a session. `sessionId` / `sessionToken` are used only as continuity keys to continue the same backend conversation.
 
-Controllers are **factory functions** that take an interface handle and return a plain object:
+## Surface derivation (ADR-015 — recorded interim debt)
 
-```typescript
-export const buildSearchBoxController = (options: {interface: Supports<'search'>}) => {
-  const engine = options.interface[ENGINE];
-  const stateId = options.interface[STATE_ID];
+The surfaces are a typed projection of `activities`, so no consumer walks raw activities to discover surfaces. Derivation is confined to a single location in `fold.ts` (`deriveSurfaces`). The core interprets no root component type: a consumer reads `rootComponentType` (for example, to pick a loading placeholder). The raw-activity traversal is recorded interim debt per [ADR-015](./internal/adr/ADR-015-surface-and-route-derivation.md); it persists until server-surfaced typed routing lands (ADR-015 Option C, a separate future ADR). Because `surfaces` is derived (never persisted), dropping it and recomputing from `activities` reproduces a deeply-equal list.
 
-  engine.adoptSlice(getOrCreateSearchBoxSlice(stateId));
+Derivation follows the A2-UI surface lifecycle in stream order: `deleteSurface` removes a surface from the list, and a re-created surface moves to the end. Each `DiscoveredSurface` also carries `isLoading`, read from the surface's effective data model (`createSurface.dataModel`, then any `updateDataModel` at `/`, with no path, or at `/isLoading`), so a consumer can draw a loading placeholder for its `rootComponentType` until the agent deletes the surface or clears the flag.
 
-  const thunk = getInterfaceInternals(options.interface).resolveFacade('search');
+### The v0.9 renderer projection
 
-  return {
-    setQuery({query}) {
-      engine.mutate(actions.setQuery(query));
-    },
-    submit() {
-      return engine.mutate(thunk({engine}));
-    },
-    get state() {
-      return engine.read(controllerState);
-    },
-    subscribe(callback) {
-      return engine.subscribe(controllerState, callback);
-    },
-  };
-};
-```
+Agent Gateway emits A2-UI v1.0, and every available renderer consumes v0.9. `src/session/a2ui-v09-projection.ts` converts each surface snapshot's messages (`convertA2uiMessages`), and `appendToRendererStream` adds them to the session's renderer stream:
 
-The returned object has:
+- it splits each v1.0 `createSurface` into v0.9 `createSurface` + `updateComponents`, forwarding flat nodes byte-for-byte so every `{ path }` binding survives, and drops a `createSurface` without a `catalogId`;
+- it emits one `updateDataModel` per key of the inline `dataModel`, at that key's root JSON Pointer (`isLoading` → `/isLoading`; a key already written as a pointer, such as `/state/<nodeId>`, is kept);
+- it passes `updateDataModel`, `updateComponents` and `deleteSurface` through;
+- the stream follows the surface lifecycle across every run of the session: a `deleteSurface` is inserted before a `createSurface` that re-creates a live surface, since a renderer refuses to create a surface that exists, and an operation on a surface that is not live is dropped.
 
-- **Methods** for user actions (`setQuery`, `submit`)
-- **`get state()`** accessor for reading current state (memoized via `createMemoizedStateSelector`)
-- **`subscribe()`** for reactive updates
+It is the single place that rewrites a message envelope, recorded as a charter exception with a retirement condition in the [ADR-015 addendum](./internal/adr/ADR-015-surface-and-route-derivation.md).
 
-### Interface and Facade Resolution
+## Recorded interim debt and out-of-scope items
 
-Controllers receive an **interface handle** (not a raw engine). The interface carries:
+These are intentionally **not yet implemented**:
 
-- `[ENGINE]` — the underlying engine for state operations
-- `[STATE_ID]` — the scoped identifier for this interface instance
-- `[TYPE]` — discriminant (`'search' | 'commerce' | 'generative'`) for type safety
-- `[FACADE_RESOLVERS]` — a Record of lazy facade resolvers (Symbol-keyed, hidden from consumers)
+- **Interim surface derivation** from raw activities (ADR-015 interim) — see above.
+- **The v0.9 renderer projection** (ADR-015 addendum) — removed in a breaking change once a v1.0-capable renderer exists.
+- **Renderer stream bypasses validation** — `session.a2uiMessages` is projected from raw activities, so inbound ops that in-transit validation drops from `session.state` still reach the renderer, and so does the component state seeded by `createSurface.dataModel`, which is never validated. A fix must cover both: filtering only the projected `updateDataModel` ops still lets the seed through without validation.
+- **Enforced action-payload typing at the renderer boundary** — per-component action typing is applied by convention rather than at the `dispatchAction` boundary ([ADR-016](./internal/adr/ADR-016-inline-state-consumption-remove-remote-controller.md)).
+- **The package rename** — deferred as low-stakes; the package remains `@coveo/thermidor`.
 
-Controllers use `getInterfaceInternals(iface).resolveFacade('search')` to obtain the correct thunk. This works identically for search interfaces and commerce interfaces — the controller is fully decoupled from the concrete implementation.
-
-### What Controllers Do at Initialization
-
-1. **Adopt slices** — `engine.adoptSlice(...)` ensures required slices are in the store
-2. **Resolve facade** — `getInterfaceInternals(iface).resolveFacade('search')` lazily instantiates the needed thunk
-3. **Create memoized selectors** — compose individual selectors into a combined state object
-4. **Return the API object** — a plain object with methods bound to the engine
-
-### Available Controllers
-
-| Controller  | Factory                             | Features                                        |
-| ----------- | ----------------------------------- | ----------------------------------------------- |
-| Search Box  | `buildSearchBoxController(engine)`  | `updateQuery()`, `submit()`, state with `query` |
-| Result List | `buildResultListController(engine)` | `state` with `results[]`, `subscribe()`         |
-
-### Known Deviation: RTK in Layer 2
-
-Controllers currently import `createSelector` from `@reduxjs/toolkit` for memoization. This is a pragmatic shortcut — `createSelector` is actually from [Reselect](https://github.com/reduxjs/reselect), which is a standalone library that doesn't depend on Redux. In a production version, this import would be replaced with a direct Reselect import or a Layer 0-provided memoization utility.
-
----
-
-## Layer 3: Actions
-
-**Directory**: `src/public/actions/`  
-**Visibility**: **Public** (exported from the package)  
-**Responsibility**: Power-user escape hatch for direct state mutation.
-
-### When to Use Actions vs Controllers
-
-| Use Controllers (Layer 2) when...                       | Use Actions (Layer 3) when...                           |
-| ------------------------------------------------------- | ------------------------------------------------------- |
-| Building standard search UI features                    | Building custom controllers or frameworks               |
-| You want orchestrated workflows (query → API → results) | You need fine-grained control over individual mutations |
-| You want reactive state via `subscribe()`               | You're composing state changes in a non-standard way    |
-
-### Two Patterns
-
-**`loadSearchBoxActions(engine)`** — Returns an object of bound mutation functions. Adopts the slice on first call.
-
-```typescript
-const actions = loadSearchBoxActions(engine);
-actions.setQuery('laptops'); // Directly mutates state
-```
-
-**`setQuery(engine)`** — Returns a single curried function for one mutation. Uses a `WeakSet<Engine>` to ensure idempotent slice adoption.
-
-```typescript
-const doSetQuery = setQuery(engine);
-doSetQuery('laptops'); // Directly mutates state
-```
-
-The `WeakSet<Engine>` pattern is worth noting: it tracks which engines have already adopted the searchBox slice, so repeated calls don't re-adopt.
-
----
-
-## How a Search Request Flows End-to-End
-
-Here's the complete lifecycle when a user types a query and submits:
+## How a turn flows end-to-end
 
 ```mermaid
 sequenceDiagram
     participant UI as UI Component
-    participant SBC as SearchBoxController (L2)
-    participant E as Engine (L0)
-    participant API as searchAPI (L1)
-    participant HTTP as httpClient (L1)
-    participant Coveo as Coveo Platform
+    participant S as Session
+    participant Store as Observable store
+    participant Fold as Pure fold
+    participant API as Unified endpoint client
+    participant Coveo as Converse endpoint
 
-    Note over UI,Coveo: 1. User types a query
-    UI->>SBC: controller.updateQuery('laptops')
-    SBC->>E: mutate(setQuery('laptops'))
-    E-->>E: State: { searchBox: { query: 'laptops' } }
-
-    Note over UI,Coveo: 2. User submits the search
-    UI->>SBC: controller.submit()
-    SBC->>API: executeSearchAPI(engine)
-    API->>E: mutate(setLoading(true))
-    API->>E: read(query) → 'laptops'
-    API->>E: read(currentPage) → 1
-    API->>E: read(all facets) → {}
-    API->>HTTP: executeHttpRequest(engine, { path: '/rest/search/v2', ... })
-    HTTP->>E: read(organizationId) → 'myorg'
-    HTTP->>E: read(accessToken) → 'xx-token'
-    HTTP->>Coveo: POST https://platform.cloud.coveo.com/rest/search/v2
-    Coveo-->>HTTP: { results: [...], totalCount: 42 }
-    HTTP-->>API: { success: true, data: { ... } }
-    API->>E: mutate(setResults([...]))
-    API->>E: mutate(setTotalCount(42))
-    API->>E: mutate(setLoading(false))
-
-    Note over UI,Coveo: 3. UI re-renders
-    E-->>SBC: subscriber notified
-    SBC-->>UI: state changed → re-render
+    UI->>S: dispatchAction({ name: 'submitPrompt', payload: { prompt: 'running shoes' } })
+    S->>Store: openTurn(streaming)
+    S->>API: POST request (context read fresh)
+    API->>Coveo: POST .../agui/converse
+    Coveo-->>API: SSE stream
+    loop per activity
+        API-->>S: activity
+        S->>Fold: foldActivity(turn, activity)
+        Fold-->>S: nextTurn (activities / surfaces / agent?)
+        S->>Store: replace active turn, apply validated ops to state, append to renderer stream
+        Store-->>UI: subscriber notified → re-render
+    end
+    Coveo-->>API: RUN_FINISHED
+    S->>Store: turn.status = 'complete'
+    Store-->>UI: subscriber notified → re-render
 ```
 
----
+## Comparison with the previous revision
 
-## Comparison with Current Headless
+For engineers who worked with the earlier engine-based package:
 
-For engineers familiar with the current `@coveo/headless`:
-
-| Concept                    | Current Headless                                             | thermidor                                                               |
-| -------------------------- | ------------------------------------------------------------ | ----------------------------------------------------------------------- |
-| **State library**          | Redux exposed to consumers (actions, reducers, middleware)   | Redux hidden behind `Engine` abstraction                                |
-| **Creating the engine**    | `buildSearchEngine({ configuration })` with Redux middleware | `new Engine()` — empty store, configure via mutations                   |
-| **Dispatching changes**    | `engine.dispatch(updateQuery({ q: 'foo' }))`                 | `engine.mutate(searchBoxMutations.setQuery('foo'))`                     |
-| **Reading state**          | `engine.state.search.query` (direct property access)         | `engine.read(searchBoxSelectors.query)` (selector function)             |
-| **Subscribing**            | `engine.subscribe(() => { /* check everything */ })`         | `engine.subscribe(selector, callback)` — targeted, only fires on change |
-| **Registering features**   | Import reducers, middleware at engine creation               | `engine.adoptSlice(slice)` — lazy, dynamic                              |
-| **Controllers**            | Classes: `new SearchBox(engine, { options })`                | Factory functions: `buildSearchBoxController(engine)`                   |
-| **Direct mutations**       | `engine.dispatch(someAction())` — all actions accessible     | Actions module: `loadSearchBoxActions(engine)` — curated set            |
-| **Redux knowledge needed** | Yes (actions, selectors, thunks, middleware)                 | No (read/subscribe/mutate is the entire API)                            |
-
----
-
-## Adding a New Feature Domain
-
-To add, say, a `sorting` feature, you'd create:
-
-```
-core/internal/sorting/slice.ts          ← Redux createSlice()
-core/interface/sorting/types.ts         ← SortingState interface
-core/interface/sorting/mutate.ts        ← setSortCriteria() → StateMutation
-core/interface/sorting/selectors.ts     ← sortCriteria(state) → string
-```
-
-Then wire it:
-
-1. Add `SortingState` to the `State` interface in `core/interface/types.ts`
-2. Export types/mutations/selectors from `core/index.ts`
-3. Create a controller in `public/controllers/sorting/controller.ts`
-4. (Optional) Create actions in `public/actions/sorting.ts`
-
-The pattern is identical for every feature. No changes to the Engine, no changes to Layer 1.
+| Previous revision                                | Shipped session client                                              |
+| ------------------------------------------------ | ------------------------------------------------------------------- |
+| `Engine` class (`read` / `subscribe` / `mutate`) | Plain observable store + `createSession` runtime                    |
+| `interface/` layer hiding Redux                  | Removed; no state library at all                                    |
+| Redux Toolkit slices + reducers                  | Pure `foldActivity` reduction                                       |
+| Per-endpoint facades / thunks                    | One unified endpoint client                                         |
+| Controllers built from an interface handle       | Resolved props from the A2-UI data model + `session.dispatchAction` |
+| `turn.prompt` / `turn.agentResponse.*`           | `turn.input.prompt` / `turn.response.*` (agent under `agent?`)      |
+| Bundled schema, layered exports                  | Consumer-injected `contracts`, endpoint, and context                |

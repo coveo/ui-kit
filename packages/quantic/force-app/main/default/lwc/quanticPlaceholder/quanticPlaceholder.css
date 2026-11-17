@@ -30,7 +30,7 @@
 }
 
 .placeholder__result-header {
-  height: 36px;
+  height: 24px;
 }
 
 .placeholder__result-image {
@@ -44,11 +44,11 @@
 }
 
 .grey {
-  background-color: var(--slds-g-color-surface-container-1, #E9EAEC);
+  background-color: var(--slds-g-color-neutral-base-90, #e9eaec);
 }
 
 .light-grey {
-  background-color: var(--slds-g-color-surface-2, #F5F5F6);
+  background-color: var(--slds-g-color-neutral-base-95, #f5f5f6);
 }
 
 .placeholder__animation {

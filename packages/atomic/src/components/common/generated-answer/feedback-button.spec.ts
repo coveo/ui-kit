@@ -87,6 +87,18 @@ describe('#renderFeedbackButton', () => {
     expect(button).not.toHaveClass('text-neutral-dark');
   });
 
+  it('should name the button with aria-label rather than relying on title alone', async () => {
+    const button = await renderComponent({title: 'This answer was helpful'});
+
+    expect(button).toHaveAttribute('aria-label', 'This answer was helpful');
+  });
+
+  it('should hide the decorative icon from assistive technology', async () => {
+    const button = await renderComponent({});
+
+    expect(button.querySelector('atomic-icon')).toHaveAttribute('aria-hidden', 'true');
+  });
+
   it('should not keep neutral text class when dislike button is active', async () => {
     const button = await renderComponent({variant: 'dislike', active: true});
 

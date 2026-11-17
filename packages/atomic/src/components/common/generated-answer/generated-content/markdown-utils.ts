@@ -1,5 +1,6 @@
 import {Marked, Renderer} from 'marked';
 import {parseHTML} from '@/src/utils/utils';
+import '@/src/components/common/atomic-generated-answer-inline-link/atomic-generated-answer-inline-link.js';
 
 const toInlinePlainText = (textWithHtml: string): string => {
   const withoutHtmlTags = textWithHtml.replace(/<[^>]*>/g, ' ');
@@ -59,9 +60,9 @@ const customRenderer = {
   },
 
   heading(text: string, level: number) {
-    const plainText = toInlinePlainText(text);
-
-    return `<div part="answer-heading-${level}" aria-label="${plainText}">${text}</div>`;
+    // A generic element cannot be named by aria-label, so the level is exposed through
+    // role/aria-level instead and the accessible name comes from the heading content.
+    return `<div part="answer-heading-${level}" role="heading" aria-level="${level}">${text}</div>`;
   },
 
   html(text: string) {

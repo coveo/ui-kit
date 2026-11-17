@@ -160,6 +160,36 @@ const ActivitySnapshot = (options: {
   },
 });
 
+// A single A2-UI v1.0 `updateDataModel` operation message: writes `value` to the JSON Pointer
+// `path` of surface `surfaceId`'s data model. This is the exact shape Thermidor_Core reads from an
+// `a2ui-surface` activity's `content.messages[]`, replacing the removed component STATE_SNAPSHOT.
+interface UpdateDataModelOp {
+  surfaceId: string;
+  path: string;
+  value: unknown;
+}
+
+const updateDataModelOp = (op: UpdateDataModelOp): {updateDataModel: UpdateDataModelOp} => ({
+  updateDataModel: op,
+});
+
+// Builds an `a2ui-surface` ACTIVITY_SNAPSHOT carrying a list of `updateDataModel` operations as
+// A2-UI v1.0 messages. Component_State is transported inline through these ops rather than through
+// AG-UI STATE_SNAPSHOT events.
+const UpdateDataModelActivity = (options: {
+  messageId: string;
+  ops: UpdateDataModelOp[];
+  replace?: boolean;
+}): ConverseEvent =>
+  ActivitySnapshot({
+    messageId: options.messageId,
+    activityType: 'a2ui-surface',
+    ...(options.replace !== undefined && {replace: options.replace}),
+    content: {
+      messages: options.ops.map((op) => ({version: 'v1.0', ...updateDataModelOp(op)})),
+    },
+  });
+
 const CommerceSearchApiResponse = (options: {content: Record<string, unknown>}): ConverseEvent => ({
   event: 'commerce_search_api_response',
   data: options.content,
@@ -281,6 +311,8 @@ export {
   ToolCallEnd,
   ToolCallResult,
   ActivitySnapshot,
+  UpdateDataModelActivity,
+  updateDataModelOp,
   CommerceSearchApiResponse,
   SearchApiResponse,
   textMessage,
@@ -289,4 +321,4 @@ export {
   buildStreamingResponse,
   encodeSSEEvent,
 };
-export type {ConverseEvent, ConverseEventType, MessageData, TurnStartedData};
+export type {ConverseEvent, ConverseEventType, MessageData, TurnStartedData, UpdateDataModelOp};

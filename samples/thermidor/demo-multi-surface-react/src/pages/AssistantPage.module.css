@@ -1,0 +1,25 @@
+.page {
+  padding-bottom: 0;
+}
+
+.thread {
+  display: flex;
+  flex-direction: column;
+}
+
+.turn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  /* Clears the sticky header when the newest turn is scrolled to the top. */
+  scroll-margin-top: 88px;
+}
+
+.promptBar {
+  position: sticky;
+  bottom: 0;
+  margin-top: var(--space-5);
+  padding: var(--space-3) 0 var(--space-4);
+  background: var(--color-bg-secondary);
+  border-top: 1px solid var(--color-border);
+}

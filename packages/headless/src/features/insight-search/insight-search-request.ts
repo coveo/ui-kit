@@ -128,10 +128,14 @@ export const buildInsightFetchMoreResultsRequest = async (
   state: StateNeededBySearchRequest,
   eventDescription?: EventDescription
 ): Promise<MappedSearchRequest<InsightQueryRequest>> => {
+  // #firstResult is anchored to the last executeSearch/page action and is NOT
+  // updated by fetchMoreResults, so we add the number of results already
+  // accumulated in state.search.results (across any prior fetchMoreResults
+  // calls) to get the correct offset for the next batch.
   const mappedRequest = await buildInsightSearchRequest(state, eventDescription);
   mappedRequest.request = {
     ...mappedRequest.request,
-    firstResult: (state.pagination?.firstResult ?? 0) + (state.pagination?.numberOfResults ?? 0),
+    firstResult: (state.pagination?.firstResult ?? 0) + (state.search?.results.length ?? 0),
   };
   return mappedRequest;
 };

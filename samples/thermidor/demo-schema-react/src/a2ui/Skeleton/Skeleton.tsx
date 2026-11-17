@@ -12,11 +12,30 @@ export function A2UISkeleton({componentType}: A2UISkeletonProps) {
       return <BundleDisplaySkeleton />;
     case 'ComparisonTable':
       return <ComparisonTableSkeleton />;
+    case 'ProductResearchCard':
+      return <ProductResearchCardSkeleton />;
     case 'NextActionsBar':
       return <NextActionsBarSkeleton />;
     default:
       return <GenericSkeleton />;
   }
+}
+
+/** The instant-products grid before its first answer: as many cards as fit beside the suggestions. */
+export function InstantProductsSkeleton() {
+  return (
+    <div className={styles.instantProductsGrid} aria-label="Loading products">
+      {[0, 1, 2, 3].map((i) => (
+        <div key={i} className={styles.carouselCard}>
+          <div className={`${styles.skeleton} ${styles.carouselImage}`} />
+          <div className={styles.carouselCardContent}>
+            <div className={`${styles.skeleton} ${styles.carouselName}`} />
+            <div className={`${styles.skeleton} ${styles.carouselPrice}`} />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 function ProductCarouselSkeleton() {
@@ -86,6 +105,24 @@ function ComparisonTableSkeleton() {
               <div key={col} className={`${styles.skeleton} ${styles.tableValue}`} />
             ))}
           </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ProductResearchCardSkeleton() {
+  return (
+    <div className={styles.researchContainer} aria-label="Loading product research">
+      <div className={styles.researchProduct}>
+        <div className={`${styles.skeleton} ${styles.researchImage}`} />
+        <div className={`${styles.skeleton} ${styles.carouselName}`} />
+        <div className={`${styles.skeleton} ${styles.carouselPrice}`} />
+      </div>
+      <div className={styles.researchContent}>
+        <div className={`${styles.skeleton} ${styles.researchSummary}`} />
+        {[0, 1, 2].map((i) => (
+          <div key={i} className={`${styles.skeleton} ${styles.summaryLine}`} />
         ))}
       </div>
     </div>

@@ -27,6 +27,7 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
 import {shouldDisplayInputForFacetRange} from '@/src/components/common/facets/facet-common';
+import {FacetVisibilityController} from '@/src/components/common/facets/facet-visibility-controller';
 import type {FacetInfo} from '@/src/components/common/facets/facet-common-store';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
@@ -59,6 +60,8 @@ import '@/src/components/common/atomic-numeric-range/atomic-numeric-range';
 /**
  * The `atomic-numeric-facet` component displays a facet of the results for the current query as numeric ranges.
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria.
+ *
+ * @cssState hidden - Applied when the facet is hidden.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -262,8 +265,18 @@ export class AtomicNumericFacet extends LitElement implements InitializableCompo
   private manualRanges: (NumericRangeRequest & {label?: string})[] = [];
   private formatter: NumberFormatter = defaultNumberFormatter;
 
+  private get facetInfo(): FacetInfo {
+    return {
+      label: () => this.bindings.i18n.t(this.label),
+      facetId: this.facetId!,
+      element: this,
+      isHidden: () => this.isHidden,
+    };
+  }
+
   constructor() {
     super();
+    new FacetVisibilityController(this, () => !!this.searchStatus && this.facetInfo.isHidden());
     new ValidatePropsController(
       this,
       () => ({
@@ -492,15 +505,8 @@ export class AtomicNumericFacet extends LitElement implements InitializableCompo
   }
 
   private registerFacetToStore() {
-    const facetInfo: FacetInfo = {
-      label: () => this.bindings.i18n.t(this.label),
-      facetId: this.facetId!,
-      element: this,
-      isHidden: () => this.isHidden,
-    };
-
     this.bindings.store.registerFacet('numericFacets', {
-      ...facetInfo,
+      ...this.facetInfo,
       format: (value) =>
         formatHumanReadable({
           facetValue: value,
@@ -513,7 +519,7 @@ export class AtomicNumericFacet extends LitElement implements InitializableCompo
     });
 
     initializePopover(this, {
-      ...facetInfo,
+      ...this.facetInfo,
       hasValues: () => this.hasValues,
       numberOfActiveValues: () => this.numberOfSelectedValues,
     });

@@ -90,7 +90,10 @@ export interface EngineDefinition<
   >;
 
   /**
-   * @deprecated This method will be removed in a future major version. Navigator context should be provided directly when fetching the static state.
+   * @deprecated This method will be removed in a future major version. It mutates the shared engine
+   * definition, so on a server handling concurrent requests one request can overwrite another
+   * request's navigator context. Provide the navigator context directly when fetching the static
+   * state (`fetchStaticState({navigatorContext})`) so it applies to that request only.
    *
    * Sets the navigator context provider.
    * This provider is essential for retrieving navigation-related data such as referrer, userAgent, location, and clientId, which are crucial for handling both server-side and client-side API requests effectively.
@@ -100,11 +103,27 @@ export interface EngineDefinition<
   setNavigatorContextProvider: (navigatorContextProvider: NavigatorContextProvider) => void;
 
   /**
+   * @deprecated This method will be removed in a future major version. Prefer providing the access token
+   * directly when fetching the static state to avoid relying on the shared definition.
+   *
    * Returns the access token.
    */
   getAccessToken: () => string;
 
   /**
+   * @deprecated This method will be removed in a future major version. It mutates the shared engine
+   * definition, so on a server handling concurrent requests one request can overwrite another
+   * request's token. Provide the access token directly when fetching the static state, and pass the
+   * same token to `hydrateStaticState()`. To rotate the token of an engine that is already running,
+   * configure `renewAccessToken` on the engine configuration.
+   *
+   * @example
+   * ```ts
+   * const staticState = await engineDefinition.fetchStaticState({
+   *   accessToken: perUserSearchToken,
+   * });
+   * ```
+   *
    * Updates the access token.
    * @param accessToken - The access token to update.
    */

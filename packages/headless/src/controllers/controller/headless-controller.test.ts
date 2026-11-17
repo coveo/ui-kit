@@ -77,4 +77,49 @@ describe('Controller', () => {
     expect(firstListener).toHaveBeenCalledTimes(2);
     expect(secondListener).toHaveBeenCalledTimes(2);
   });
+
+  describe('when several listeners are subscribed', () => {
+    let engineUnsubscribe: Mock;
+    let unsubscribeFirst: () => void;
+    let unsubscribeSecond: () => void;
+
+    beforeEach(() => {
+      engineUnsubscribe = vi.fn();
+      (engine.subscribe as Mock).mockReturnValue(engineUnsubscribe);
+      unsubscribeFirst = cmp.subscribe(vi.fn());
+      unsubscribeSecond = cmp.subscribe(vi.fn());
+    });
+
+    it('registers a single handler on the engine', () => {
+      expect(engine.subscribe).toHaveBeenCalledTimes(1);
+    });
+
+    it('keeps the engine handler while a listener remains', () => {
+      unsubscribeFirst();
+
+      expect(engineUnsubscribe).not.toHaveBeenCalled();
+    });
+
+    it('removes the engine handler when the first listener unsubscribes last', () => {
+      unsubscribeSecond();
+      unsubscribeFirst();
+
+      expect(engineUnsubscribe).toHaveBeenCalledTimes(1);
+    });
+
+    it('removes the engine handler when a later listener unsubscribes last', () => {
+      unsubscribeFirst();
+      unsubscribeSecond();
+
+      expect(engineUnsubscribe).toHaveBeenCalledTimes(1);
+    });
+
+    it('registers a new engine handler when subscribing again after every listener unsubscribed', () => {
+      unsubscribeFirst();
+      unsubscribeSecond();
+      cmp.subscribe(vi.fn());
+
+      expect(engine.subscribe).toHaveBeenCalledTimes(2);
+    });
+  });
 });

@@ -1,0 +1,111 @@
+import {describe, expect, it, vi, afterEach} from 'vitest';
+import {PUBLIC_SAMPLE_CONFIGURATION} from './public-sample-configuration.js';
+
+const load = async (env: Record<string, string | undefined>) => {
+  vi.resetModules();
+  vi.stubGlobal('window', {location: {origin: 'http://localhost:5174'}});
+  vi.stubEnv('DEV', false as never);
+  for (const [k, v] of Object.entries(env)) vi.stubEnv(k, v as string);
+  const {getSampleConfiguration} = await import('./env.js');
+  return getSampleConfiguration();
+};
+
+afterEach(() => vi.unstubAllEnvs());
+
+/**
+ * The public sample configuration applies as a bundle, keyed on the organization being
+ * absent. These values are not independent — the token and tracking id belong to
+ * `searchuisamples`, and it exists only in production — so a partial override must not
+ * mix with it.
+ */
+describe('public sample configuration is a bundle', () => {
+  it('applies wholesale with no organization', async () => {
+    const c = await load({});
+    expect(c.organizationId).toBe('searchuisamples');
+    expect(c.agentConfigurationId).toBe(
+      PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_AGENT_CONFIGURATION_ID
+    );
+    expect(c.trackingId).toBe('sports-ui-samples');
+    expect(c).toMatchObject({language: 'en', country: 'US', currency: 'USD'});
+    expect(c.endpoint).toContain('https://searchuisamples.org.coveo.com');
+  });
+
+  it('IGNORES a stray locale', async () => {
+    const c = await load({
+      VITE_COVEO_LANGUAGE: 'fr',
+      VITE_COVEO_COUNTRY: 'CA',
+      VITE_COVEO_CURRENCY: 'CAD',
+    });
+    expect(c).toMatchObject({language: 'en', country: 'US', currency: 'USD'});
+  });
+
+  it('IGNORES a stray platform environment (the reported bug)', async () => {
+    const c = await load({VITE_COVEO_PLATFORM_ENVIRONMENT: 'dev'});
+    expect(c.endpoint).toContain('https://searchuisamples.org.coveo.com');
+    expect(c.endpoint).not.toContain('orgdev');
+  });
+
+  it('IGNORES a stray tracking id', async () => {
+    const c = await load({VITE_COVEO_TRACKING_ID: 'someone-elses'});
+    expect(c.trackingId).toBe('sports-ui-samples');
+  });
+
+  it('IGNORES a stray agent configuration id', async () => {
+    const c = await load({VITE_COVEO_AGENT_CONFIGURATION_ID: 'someone-elses'});
+    expect(c.agentConfigurationId).toBe(
+      PUBLIC_SAMPLE_CONFIGURATION.VITE_COVEO_AGENT_CONFIGURATION_ID
+    );
+  });
+
+  it('IGNORES a stray access token', async () => {
+    const c = await load({VITE_COVEO_ACCESS_TOKEN: 'not-the-public-key'});
+    expect(c.accessToken).toBe('xx564559b1-0045-48e1-953c-3addd1ee4457');
+  });
+
+  it('still honours transport settings without an organization (dev:agent-gateway)', async () => {
+    const c = await load({VITE_COVEO_ENDPOINT: 'http://localhost:8990'});
+    expect(c.endpoint).toBe(
+      'http://localhost:8990/api/preview/organizations/searchuisamples/agents/commerce/agui/converse'
+    );
+  });
+
+  it('opts out entirely once an organization is set', async () => {
+    const c = await load({
+      VITE_COVEO_ORGANIZATION_ID: 'myorg',
+      VITE_COVEO_AGENT_CONFIGURATION_ID: 'my-agent',
+      VITE_COVEO_TRACKING_ID: 'mine',
+      VITE_COVEO_LANGUAGE: 'fr',
+      VITE_COVEO_COUNTRY: 'CA',
+      VITE_COVEO_CURRENCY: 'CAD',
+      VITE_COVEO_PLATFORM_ENVIRONMENT: 'dev',
+    });
+    expect(c.organizationId).toBe('myorg');
+    expect(c.agentConfigurationId).toBe('my-agent');
+    expect(c.trackingId).toBe('mine');
+    expect(c).toMatchObject({language: 'fr', country: 'CA', currency: 'CAD'});
+    expect(c.accessToken).toBe('');
+    expect(c.endpoint).toContain('https://myorg.orgdev.coveo.com');
+  });
+});
+
+describe('an organization of your own', () => {
+  it.each([
+    'VITE_COVEO_AGENT_CONFIGURATION_ID',
+    'VITE_COVEO_TRACKING_ID',
+    'VITE_COVEO_LANGUAGE',
+    'VITE_COVEO_COUNTRY',
+    'VITE_COVEO_CURRENCY',
+  ])('requires %s', async (key) => {
+    await expect(
+      load({
+        VITE_COVEO_ORGANIZATION_ID: 'myorg',
+        VITE_COVEO_AGENT_CONFIGURATION_ID: 'my-agent',
+        VITE_COVEO_TRACKING_ID: 'mine',
+        VITE_COVEO_LANGUAGE: 'en',
+        VITE_COVEO_COUNTRY: 'US',
+        VITE_COVEO_CURRENCY: 'USD',
+        [key]: '',
+      })
+    ).rejects.toThrow(key);
+  });
+});

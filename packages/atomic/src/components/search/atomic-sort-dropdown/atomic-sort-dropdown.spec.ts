@@ -25,11 +25,27 @@ vi.mock('@coveo/headless', {spy: true});
 describe('atomic-sort-dropdown', () => {
   const mockedSortBy = vi.fn();
 
+  const defaultSortOptions = [
+    {
+      criteria: [{by: SortBy.Relevancy}],
+      expression: 'relevancy',
+      tabs: {included: [], excluded: []},
+      label: 'relevance',
+    },
+    {
+      criteria: [{by: SortBy.Date, order: SortOrder.Descending}],
+      expression: 'date descending',
+      tabs: {included: [], excluded: []},
+      label: 'most-recent',
+    },
+  ];
+
   const renderSortDropdown = async ({
     sortState,
     searchStatusState,
     tabManagerState,
     withChildren = true,
+    sortOptions = defaultSortOptions,
     slotContent = `
       <atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression>
       <atomic-sort-expression label="most-recent" expression="date descending"></atomic-sort-expression>
@@ -40,6 +56,7 @@ describe('atomic-sort-dropdown', () => {
     searchStatusState?: Partial<SearchStatusState>;
     tabManagerState?: Partial<TabManagerState>;
     withChildren?: boolean;
+    sortOptions?: (typeof defaultSortOptions)[number][];
     slotContent?: string;
   } = {}) => {
     vi.mocked(buildSort).mockReturnValue(
@@ -70,20 +87,7 @@ describe('atomic-sort-dropdown', () => {
       >`,
       selector: 'atomic-sort-dropdown',
       bindings: (bindings) => {
-        bindings.store.state.sortOptions = [
-          {
-            criteria: [{by: SortBy.Relevancy}],
-            expression: 'relevancy',
-            tabs: {included: [], excluded: []},
-            label: 'relevance',
-          },
-          {
-            criteria: [{by: SortBy.Date, order: SortOrder.Descending}],
-            expression: 'date descending',
-            tabs: {included: [], excluded: []},
-            label: 'most-recent',
-          },
-        ];
+        bindings.store.state.sortOptions = sortOptions;
         return bindings;
       },
     });
@@ -147,7 +151,7 @@ describe('atomic-sort-dropdown', () => {
       expect(element.tabManager).toBe(buildTabManagerMock.mock.results[0].value);
     });
 
-    it('should set error when no sort expressions are provided', async () => {
+    it('should set an error when no sort expressions are provided', async () => {
       const {element} = await renderSortDropdown({withChildren: false});
 
       expect(element.error).toBeDefined();
@@ -208,6 +212,31 @@ describe('atomic-sort-dropdown', () => {
       });
 
       await expect(select).not.toBeInTheDocument();
+    });
+
+    it('should render an error when no sort expressions are provided', async () => {
+      const {element, select} = await renderSortDropdown({
+        withChildren: false,
+        sortOptions: [],
+      });
+
+      await expect(select).not.toBeInTheDocument();
+      expect(element.shadowRoot?.querySelector('atomic-component-error')).toBeInTheDocument();
+    });
+
+    it('should render nothing when all sort expressions are filtered out by the active tab', async () => {
+      const {select, element} = await renderSortDropdown({
+        slotContent: `
+          <atomic-sort-expression label="all-only" expression="relevancy" tabs-included='["All"]'></atomic-sort-expression>
+          <atomic-sort-expression label="other-only" expression="date descending" tabs-included='["Other"]'></atomic-sort-expression>
+        `,
+        tabManagerState: {activeTab: 'NotAllOrOther'},
+      });
+
+      await expect(select).not.toBeInTheDocument();
+      expect(element.error).toBeUndefined();
+      expect(element.shadowRoot?.querySelector('atomic-component-error')).toBeNull();
+      expect(element.shadowRoot?.querySelector('[part="select-parent"]')).toBeNull();
     });
   });
 

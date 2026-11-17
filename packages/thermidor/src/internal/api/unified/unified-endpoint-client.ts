@@ -1,23 +1,23 @@
-import type {CommerceRequestModel} from './unified-endpoint-types.js';
-import {isSuccessResponse, transformError} from '@/src/internal/api/protocol/error-handling.js';
+import type {ConverseRequestModel} from './unified-endpoint-types.js';
+import {
+  isSuccessResponse,
+  readActionInFlightConflict,
+  transformError,
+  type ActionInFlightConflict,
+} from '@/src/internal/api/protocol/error-handling.js';
 import {getOrganizationEndpoint} from '@/src/internal/api/organization-endpoint.js';
+
+const ACTION_IN_FLIGHT_ERROR =
+  'Conflict: Another request is still being processed for this session.';
 
 const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
   return async (
-    agentInput: CommerceRequestModel,
+    agentInput: ConverseRequestModel,
     configuration: UnifiedEndpointClientConfiguration,
     options?: UnifiedEndpointCallOptions
   ): Promise<UnifiedEndpointClientResult> => {
     try {
       const {organizationId, accessToken, endpoint} = configuration;
-
-      if (!organizationId) {
-        return {
-          success: false,
-          error:
-            'Configuration error: Organization ID is not set. Please configure your organization ID.',
-        };
-      }
 
       if (!accessToken) {
         return {
@@ -27,14 +27,28 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
         };
       }
 
-      const organizationEndpoint = getOrganizationEndpoint(organizationId, {
-        endpoint,
-      });
-      const url =
-        organizationEndpoint +
-        '/api/preview/organizations/' +
-        organizationId +
-        '/agents/commerce/agui/converse';
+      // When `endpoint` is provided it is the exact URL to POST to (append
+      // nothing). When absent, derive the org host and append the fixed
+      // converse path — which requires a non-empty org id.
+      let url: string;
+      if (endpoint) {
+        url = endpoint;
+      } else {
+        if (!organizationId) {
+          return {
+            success: false,
+            error:
+              'Configuration error: Organization ID is not set. Please configure your organization ID.',
+          };
+        }
+
+        const organizationEndpoint = getOrganizationEndpoint(organizationId);
+        url =
+          organizationEndpoint +
+          '/api/preview/organizations/' +
+          organizationId +
+          '/agents/commerce/agui/converse';
+      }
 
       const response = await fetch(url, {
         method: 'POST',
@@ -48,10 +62,11 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
       });
 
       if (!isSuccessResponse(response)) {
-        return {
-          success: false,
-          error: transformError(response),
-        };
+        const conflict = await readActionInFlightConflict(response);
+        if (conflict) {
+          return {success: false, error: ACTION_IN_FLIGHT_ERROR, conflict};
+        }
+        return {success: false, error: transformError(response)};
       }
 
       if (!response.body) {
@@ -82,21 +97,21 @@ export const createUnifiedEndpointClient = (): UnifiedEndpointClient => {
   };
 };
 
-export interface UnifiedEndpointClientConfiguration {
+interface UnifiedEndpointClientConfiguration {
   organizationId?: string;
   accessToken?: string;
   endpoint?: string;
 }
 
-export interface UnifiedEndpointCallOptions {
+interface UnifiedEndpointCallOptions {
   signal?: AbortSignal;
 }
 
-export interface UnifiedEndpointResponse {
+interface UnifiedEndpointResponse {
   stream: ReadableStream<Uint8Array>;
 }
 
-export type UnifiedEndpointClientResult =
+type UnifiedEndpointClientResult =
   | {
       success: true;
       data: UnifiedEndpointResponse;
@@ -104,11 +119,12 @@ export type UnifiedEndpointClientResult =
   | {
       success: false;
       error: string;
+      conflict?: ActionInFlightConflict;
     };
 
 export interface UnifiedEndpointClient {
   call: (
-    agentInput: CommerceRequestModel,
+    agentInput: ConverseRequestModel,
     configuration: UnifiedEndpointClientConfiguration,
     options?: UnifiedEndpointCallOptions
   ) => Promise<UnifiedEndpointClientResult>;

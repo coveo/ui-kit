@@ -1,11 +1,9 @@
 import type {Turn} from '@coveo/thermidor';
-import {findCommerceSurfaceId} from '../../hooks/use-navigation.js';
 import {AgentResponseBlock} from './AgentResponseBlock.js';
 import {ErrorTurnBlock} from './ErrorTurnBlock.js';
-import {RoutedTurnBlock} from './RoutedTurnBlock.js';
-import {ThinkingBlock} from './ThinkingBlock.js';
 import {UserPromptBubble} from './UserPromptBubble.js';
 import {TurnSeparator} from './TurnSeparator.js';
+import {TurnSurfaces} from '../../a2ui/surfaces.js';
 import styles from './ConversationThread.module.css';
 
 interface ConversationThreadProps {
@@ -16,49 +14,67 @@ interface ConversationThreadProps {
 export function ConversationThread({turns, turnRefs}: ConversationThreadProps) {
   return (
     <div className={styles.thread}>
-      {turns.map((turn, index) => (
-        <div key={turn.id}>
+      {turns.map((turn, index) => {
+        const prompt = shopperPrompt(turn);
+        const next = turns[index + 1];
+        return (
+          // A turn opened by a chip continues the answer above it: no separator, only space.
           <div
-            className={styles.turnWrapper}
-            role="article"
-            aria-label={`Turn ${index + 1}`}
-            ref={(el) => {
-              if (el) {
-                turnRefs.current.set(turn.id, el);
-              }
-            }}
+            key={turn.id}
+            className={index > 0 && turn.input.action ? styles.followUp : undefined}
           >
-            <UserPromptBubble prompt={turn.prompt} />
-            <div className={styles.agentContent}>{renderTurnContent(turn)}</div>
+            <div
+              className={styles.turnWrapper}
+              role="article"
+              aria-label={`Turn ${index + 1}`}
+              ref={(el) => {
+                if (el) {
+                  turnRefs.current.set(turn.id, el);
+                }
+              }}
+            >
+              {prompt && <UserPromptBubble prompt={prompt} />}
+              <div className={styles.agentContent}>
+                {renderTurnContent(turn, index === turns.length - 1)}
+              </div>
+            </div>
+            {next !== undefined && !next.input.action && <TurnSeparator />}
           </div>
-          {index < turns.length - 1 && <TurnSeparator />}
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
 
-function renderTurnContent(turn: Turn) {
+/**
+ * What the shopper asked: the prompt, or the text of the `NextActionsBar` chip, a follow-up or a
+ * search option, whose action opened the turn.
+ */
+function shopperPrompt({input}: Turn): string | undefined {
+  if (input.prompt !== undefined) {
+    return input.prompt;
+  }
+  const text = (input.action?.context as {text?: unknown} | undefined)?.text;
+  return typeof text === 'string' ? text : undefined;
+}
+
+/**
+ * A turn shows the agent's reasoning and text when an agent answered, then every block the
+ * server produced for it, search blocks included. Only the latest turn's blocks are interactive.
+ */
+function renderTurnContent(turn: Turn, isLatest: boolean) {
   if (turn.status === 'error') {
     return <ErrorTurnBlock error={turn.error} />;
   }
 
-  if (turn.status === 'complete' && findCommerceSurfaceId(turn.agentResponse?.activities)) {
-    return <RoutedTurnBlock />;
-  }
-
-  if (turn.agentResponse) {
-    return (
-      <AgentResponseBlock
-        agentResponse={turn.agentResponse}
-        isStreaming={turn.status === 'streaming'}
+  const isStreaming = turn.status === 'streaming';
+  return (
+    <AgentResponseBlock response={turn.response} isStreaming={isStreaming}>
+      <TurnSurfaces
+        surfaces={turn.response.surfaces}
+        interactive={isLatest}
+        isStreaming={isStreaming}
       />
-    );
-  }
-
-  if (turn.status === 'streaming') {
-    return <ThinkingBlock reasoningSteps={[]} isStreaming={true} />;
-  }
-
-  return null;
+    </AgentResponseBlock>
+  );
 }

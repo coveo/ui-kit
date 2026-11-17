@@ -9,6 +9,7 @@ export const PROMPT_SUGGESTIONS = [
   'surfboard care',
   'boating safety',
   'I like cold-water surfing. Compare wetsuits for it',
+  'Tell me more about the ThermoFlex Winter Wetsuit',
 ];
 
 interface SuggestionPillsProps {

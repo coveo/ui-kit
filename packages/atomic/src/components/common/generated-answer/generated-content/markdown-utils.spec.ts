@@ -1,4 +1,5 @@
 import {describe, expect, it} from 'vitest';
+import {parseHTML} from '@/src/utils/utils';
 import {markdownToPlainText, transformMarkdownToHtml} from './markdown-utils.js';
 
 describe('markdownUtils', () => {
@@ -340,9 +341,22 @@ describe('markdownUtils', () => {
           const html = transformMarkdownToHtml(text);
 
           expect(removeLineBreaks(html)).toBe(
-            `<div part="answer-heading-${heading.level}" aria-label="title">title</div>`
+            `<div part="answer-heading-${heading.level}" role="heading" aria-level="${heading.level}">title</div>`
           );
         });
+
+        it(`should expose ${heading.title} as a level ${heading.level} heading to assistive technology`, () => {
+          const element = parseHTML(transformMarkdownToHtml(`${heading.symbol} title`)).body
+            .firstElementChild;
+
+          expect(element?.getAttribute('role')).toBe('heading');
+          expect(element?.getAttribute('aria-level')).toBe(String(heading.level));
+          expect(element?.textContent).toBe('title');
+        });
+      });
+
+      it('should not name headings with aria-label, keeping inline formatting in the accessible name', () => {
+        expect(transformMarkdownToHtml('# **bold** title')).not.toContain('aria-label');
       });
 
       it('should transform formatted heading', () => {
@@ -351,7 +365,7 @@ describe('markdownUtils', () => {
         const html = transformMarkdownToHtml(text);
 
         expect(removeLineBreaks(html)).toBe(
-          '<div part="answer-heading-1" aria-label="bold emphasized with code title"><strong part="answer-strong">bold</strong> <em part="answer-emphasis">emphasized</em> with <code part="answer-inline-code">code</code> title</div>'
+          '<div part="answer-heading-1" role="heading" aria-level="1"><strong part="answer-strong">bold</strong> <em part="answer-emphasis">emphasized</em> with <code part="answer-inline-code">code</code> title</div>'
         );
       });
 
@@ -361,7 +375,7 @@ describe('markdownUtils', () => {
         const html = transformMarkdownToHtml(text);
 
         expect(removeLineBreaks(html)).toBe(
-          '<div part="answer-heading-1" aria-label="bold emphasized with code title"><em part="answer-emphasis"><strong part="answer-strong">bold</strong> emphasized with <code part="answer-inline-code">code</code></em> title</div>'
+          '<div part="answer-heading-1" role="heading" aria-level="1"><em part="answer-emphasis"><strong part="answer-strong">bold</strong> emphasized with <code part="answer-inline-code">code</code></em> title</div>'
         );
       });
     });

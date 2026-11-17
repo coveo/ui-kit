@@ -202,6 +202,10 @@ export class AtomicSortDropdown extends LitElement implements InitializableCompo
   @errorGuard()
   @bindingGuard()
   render() {
+    if (!this.options.length) {
+      return html`<slot></slot>`;
+    }
+
     const {hasError, hasResults, firstSearchExecuted, isLoading} = this.searchStatusState;
 
     return html`

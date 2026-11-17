@@ -11,7 +11,8 @@ type InitializeEventHandler = (bindings: AnyBindings) => void;
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 
 export interface BaseAtomicInterface<EngineType extends AnyEngineType> {
-  analytics: boolean;
+  analytics: boolean; // TODO - (v4) KIT-4990: Remove.
+  disableAnalytics: boolean;
   i18n: i18n;
   languageAssetsPath: string;
   iconAssetsPath: string;
@@ -73,18 +74,21 @@ export class InterfaceController<EngineType extends AnyEngineType> implements Re
     if (this.host.registerFieldsToInclude) {
       this.host.registerFieldsToInclude();
     }
-    loadDayjsLocale(this.host.language || 'en');
-    await this.i18nPromise;
+    await Promise.all([this.i18nPromise, loadDayjsLocale(this.host.language || 'en')]);
     this.initComponents();
   }
 
+  public get analyticsEnabled() {
+    return this.host.analytics && !this.host.disableAnalytics;
+  }
+
   public onAnalyticsChange() {
-    const {engine, analytics} = this.host;
+    const {engine} = this.host;
     if (!this.engineIsCreated(engine)) {
       return;
     }
 
-    if (!analytics) {
+    if (!this.analyticsEnabled) {
       engine.disableAnalytics();
       return;
     }
@@ -97,8 +101,10 @@ export class InterfaceController<EngineType extends AnyEngineType> implements Re
     const languageWithFallback = language ?? 'en';
     const {i18n} = this.host;
 
-    loadDayjsLocale(languageWithFallback);
-    loadTranslations(this.host, languageWithFallback).then(() => {
+    Promise.all([
+      loadDayjsLocale(languageWithFallback),
+      loadTranslations(this.host, languageWithFallback),
+    ]).then(() => {
       i18n.changeLanguage(language);
     });
   }

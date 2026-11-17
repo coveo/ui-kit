@@ -84,6 +84,18 @@ describe('#renderShowButton', () => {
     });
   });
 
+  it('should reference the collapsible content through aria-controls', async () => {
+    const {button} = await renderComponent({controlsId: 'generated-answer-content'});
+
+    expect(button).toHaveAttribute('aria-controls', 'generated-answer-content');
+  });
+
+  it('should omit aria-controls when no controlled id is provided', async () => {
+    const {button} = await renderComponent();
+
+    expect(button).not.toHaveAttribute('aria-controls');
+  });
+
   it('should call the onClick handler when clicked', async () => {
     const onClick = vi.fn();
     const {button} = await renderComponent({onClick});

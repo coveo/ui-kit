@@ -12,7 +12,6 @@ permissions:
 
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-  TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
   TURBO_SCM_HEAD: ${{ github.sha }}
 
 jobs:
@@ -24,23 +23,64 @@ jobs:
       tasks: ${{ steps.publish.outputs.tasks }}
       projects: ${{ steps.publish.outputs.projects }}
       samples: ${{ steps.publish.outputs.samples }}
+      base-sha: ${{ steps.base.outputs.sha }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
-      # Full history is required to calculate the base-to-head range and publish the minimum depth.
+      # Full history is required to resolve the comparison base, calculate the base-to-head range and publish the minimum depth.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
           fetch-tags: false
           filter: blob:none
 
+      # pull_request.base.sha can lag behind the base branch commit that GitHub's test merge commit is built on.
+      # Comparing against it would count the base branch's newer commits as PR changes, so PRs use the merge commit's first parent.
+      - name: Resolve comparison base
+        id: base
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          MERGE_GROUP_BASE_SHA: ${{ github.event.merge_group.base_sha }}
+        run: |
+          set -euo pipefail
+
+          case "$EVENT_NAME" in
+            pull_request)
+              read -r _ first_parent second_parent extra_parent < <(GIT_NO_LAZY_FETCH=1 git rev-list --parents -n 1 "$TURBO_SCM_HEAD")
+              if [ -n "${second_parent:-}" ] && [ -z "${extra_parent:-}" ]; then
+                base_sha="$first_parent"
+                echo "Using the merge commit's first parent ${base_sha} (pull_request.base.sha is ${PR_BASE_SHA})"
+              else
+                base_sha="$PR_BASE_SHA"
+                echo "::warning::Expected ${TURBO_SCM_HEAD} to be a two-parent test merge commit. Falling back to pull_request.base.sha ${base_sha}."
+              fi
+              ;;
+            merge_group)
+              base_sha="$MERGE_GROUP_BASE_SHA"
+              echo "Using merge group base ${base_sha}"
+              ;;
+            *)
+              echo "::error::Cannot resolve a comparison base for the ${EVENT_NAME} event."
+              exit 1
+              ;;
+          esac
+
+          if [ -z "$base_sha" ]; then
+            echo "::error::The comparison base for the ${EVENT_NAME} event is empty."
+            exit 1
+          fi
+
+          echo "sha=${base_sha}" >> "$GITHUB_OUTPUT"
+
       - uses: ./.github/actions/calculate-affected
         id: publish
         with:
-          base-sha: ${{ env.TURBO_SCM_BASE }}
+          base-sha: ${{ steps.base.outputs.sha }}
           head-sha: ${{ env.TURBO_SCM_HEAD }}
 
   build-windows:
@@ -52,7 +92,7 @@ jobs:
       contents: read
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -76,7 +116,7 @@ jobs:
     environment: PR Artifacts
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -103,7 +143,7 @@ jobs:
       - name: Generate a token
         if: ${{ steps.check-changes.outputs.has_changes == 'true' && github.event_name == 'pull_request' }}
         id: generate-token
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3
         with:
           app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
@@ -124,7 +164,7 @@ jobs:
     environment: PR Artifacts
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -146,7 +186,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -173,7 +213,7 @@ jobs:
     needs: [affected, build]
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -208,11 +248,11 @@ jobs:
       DEPLOYMENT_ENVIRONMENT: CDN
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --user 1001
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -227,9 +267,13 @@ jobs:
           atomic-icon.e2e.ts
           atomic-commerce-text.e2e.ts
           atomic-commerce-query-summary.e2e.ts
+      - uses: ./.github/actions/upload-playwright-record
+        if: ${{ !cancelled() }}
       - name: 'Run Atomic Hosted Page CDN checks'
         if: contains(fromJSON(needs.affected.outputs.tasks), '@coveo/atomic-hosted-page#e2e')
         run: pnpm exec turbo run @coveo/atomic-hosted-page#e2e
+      - uses: ./.github/actions/upload-playwright-record
+        if: ${{ !cancelled() }}
   lint-check:
     name: 'Check with linter'
     # Best effort at short-circuiting
@@ -238,7 +282,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -258,7 +302,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -275,7 +319,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -292,12 +336,12 @@ jobs:
     if: contains(needs.affected.outputs.tasks, '#test"')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --user 1001
     timeout-minutes: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'long-test') && 120 || 15 }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -317,11 +361,11 @@ jobs:
     if: contains(needs.affected.outputs.tasks, '"@coveo/relay#functional-test"')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --user 1001
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -334,7 +378,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -350,7 +394,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -364,6 +408,30 @@ jobs:
         with:
           affected-tasks: ${{ needs.affected.outputs.tasks }}
           tasks: publint
+  size-limit:
+    name: 'Check package size limits'
+    needs: [affected, build]
+    if: contains(needs.affected.outputs.tasks, '#size"')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 1
+          fetch-tags: false
+          filter: blob:none
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/run-affected
+        with:
+          affected-tasks: ${{ needs.affected.outputs.tasks }}
+          tasks: size
+      - name: Write size summary
+        if: ${{ !cancelled() }}
+        run: node ./scripts/size-limit.mjs summary >> "$GITHUB_STEP_SUMMARY"
   typedoc:
     name: 'Build typedoc'
     needs: [affected, build]
@@ -371,7 +439,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -391,7 +459,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -410,7 +478,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -426,7 +494,7 @@ jobs:
           fetch-depth: 0
       - uses: ./.github/actions/setup
       - name: Run Chromatic visual tests
-        uses: chromaui/action@534eebfc19023579541d106f7b61d5ad70ed65c7 # v18.5.0
+        uses: chromaui/action@80379940a37537422d4419aa4c9578673b8bcd34 # v18.13.9
         # Set the CHROMATIC_RENOVATE_ALLOWLIST repository variable to a JSON array of exact branch names.
         # Example: `["renovate/playwright", "renovate/chromatic"]`
         if: >-
@@ -442,7 +510,7 @@ jobs:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           workingDir: packages/atomic
       - name: Skip Chromatic visual tests
-        uses: chromaui/action@534eebfc19023579541d106f7b61d5ad70ed65c7 # v18.5.0
+        uses: chromaui/action@80379940a37537422d4419aa4c9578673b8bcd34 # v18.13.9
         if: >-
           github.event_name == 'merge_group' ||
           (github.event_name == 'pull_request' &&
@@ -459,7 +527,7 @@ jobs:
     if: contains(fromJSON(needs.affected.outputs.tasks), '@coveo/atomic#e2e')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --user 1001
     strategy:
       fail-fast: ${{ github.event_name == 'merge_group' }}
@@ -468,7 +536,7 @@ jobs:
         shardTotal: [12]
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -478,16 +546,25 @@ jobs:
           fetch-tags: false
           filter: blob:none
       - uses: ./.github/actions/setup
+      # The shard goes through TEST_SHARD, which only the test task hashes. Turbo hashes
+      # `turbo run … -- --shard=N/M` into every task of the run, so each shard would rebuild
+      # the upstream packages instead of replaying the Build job's cache.
+      # The shards get equal test time, not equal test counts: see the @flakiness/playwright reporter
+      # in packages/atomic/playwright.config.ts.
       - name: Run Playwright tests
         id: playwright
-        run: pnpm exec turbo run '@coveo/atomic#e2e' -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+        run: pnpm exec turbo run '@coveo/atomic#e2e'
+        env:
+          TEST_SHARD: ${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
         continue-on-error: true
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         if: ${{ !cancelled() }}
         with:
           name: atomic-blob-report-${{ matrix.shardIndex }}
           path: packages/atomic/blob-report
           retention-days: 5
+      - uses: ./.github/actions/upload-playwright-record
+        if: ${{ !cancelled() }}
       - run: |
           if [[ ${STEPS_PLAYWRIGHT_OUTCOME} == 'failure' ]];
             then exit 1;
@@ -504,7 +581,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -527,11 +604,11 @@ jobs:
     if: contains(fromJSON(needs.affected.outputs.tasks), '@coveo/atomic-theming-e2e#e2e')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --user 1001
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -542,7 +619,9 @@ jobs:
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run '@coveo/atomic-theming-e2e#e2e'
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      - uses: ./.github/actions/upload-playwright-record
+        if: ${{ !cancelled() }}
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         if: ${{ !cancelled() }}
         with:
           name: atomic-theming-playwright-report
@@ -554,7 +633,7 @@ jobs:
     if: contains(needs.affected.outputs.tasks, '"@coveo/atomic#test:storybook"')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --user 1001
     strategy:
       fail-fast: ${{ github.event_name == 'merge_group' }}
@@ -563,7 +642,7 @@ jobs:
         shardTotal: [10]
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -574,15 +653,21 @@ jobs:
           filter: blob:none
       - run: git branch main origin/main
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo run test:storybook --filter=@coveo/atomic -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+      # TEST_SHARD instead of `-- --shard`, see the Playwright job.
+      - run: pnpm exec turbo run test:storybook --filter=@coveo/atomic
+        env:
+          TEST_SHARD: ${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - name: 'Upload a11y shard report'
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: a11y-report-shard-${{ matrix.shardIndex }}
           path: packages/atomic/reports/a11y-report.shard-${{ matrix.shardIndex }}.json
           retention-days: 1
           if-no-files-found: warn
+          # A re-run must replace the earlier attempt's report: the merge job downloads
+          # one artifact per name, the one with the highest ID, which is not always the newest.
+          overwrite: true
   merge-storybook-a11y-reports:
     name: 'Merge Storybook a11y reports and validate OpenACR'
     needs: [affected, storybook-atomic]
@@ -594,7 +679,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -605,7 +690,7 @@ jobs:
       - uses: ./.github/actions/setup
       - name: 'Download a11y shard reports'
         continue-on-error: true
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           pattern: a11y-report-shard-*
           path: packages/atomic/reports
@@ -614,12 +699,15 @@ jobs:
         run: pnpm exec turbo run a11y:merge-shards --filter=@coveo/atomic-a11y -- ../atomic/reports/a11y-report.json
       - name: 'Upload merged a11y report'
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: atomic-storybook-a11y-report
           path: packages/atomic/reports/a11y-report.json
           retention-days: 7
           if-no-files-found: warn
+          # Same for a re-run of this job: `a11y:update-openacr --run-id` downloads this report
+          # with `gh run download`, which also keeps the copy with the highest ID.
+          overwrite: true
       - name: 'Check openacr.yaml is up to date'
         run: node scripts/check-openacr-drift.mjs
         working-directory: packages/atomic-a11y
@@ -630,7 +718,7 @@ jobs:
     if: ${{ needs.affected.outputs.samples != '[]' }}
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --user 1001
     strategy:
       fail-fast: false
@@ -638,7 +726,7 @@ jobs:
         sample: ${{ fromJson(needs.affected.outputs.samples) }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -649,9 +737,11 @@ jobs:
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run "${{ matrix.sample }}" # Already filtered by affected
+      - uses: ./.github/actions/upload-playwright-record
+        if: ${{ !cancelled() }}
       - name: Upload Playwright report
         if: failure()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: e2e-report-${{ strategy.job-index }}
           path: samples/**/playwright-report
@@ -663,11 +753,11 @@ jobs:
     if: contains(fromJSON(needs.affected.outputs.tasks), '@coveo/pkg-new-template#e2e')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --user 1001
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -678,7 +768,9 @@ jobs:
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run '@coveo/pkg-new-template#e2e'
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      - uses: ./.github/actions/upload-playwright-record
+        if: ${{ !cancelled() }}
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         if: failure()
         with:
           name: pkg-new-template-playwright-report
@@ -689,11 +781,11 @@ jobs:
     if: contains(fromJSON(needs.affected.outputs.tasks), '@coveo/atomic-hosted-page#e2e')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --user 1001
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -704,7 +796,9 @@ jobs:
           filter: blob:none
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo run '@coveo/atomic-hosted-page#e2e'
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      - uses: ./.github/actions/upload-playwright-record
+        if: ${{ !cancelled() }}
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         if: ${{ !cancelled() }}
         with:
           name: atomic-hosted-page-playwright-report
@@ -732,6 +826,65 @@ jobs:
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
       SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  # A job that calls a reusable workflow waits for all of its jobs. These two Quantic jobs run here so the gates don't wait for them.
+  merge-quantic-playwright-reports:
+    name: 'Merge Quantic Playwright reports'
+    environment: PR Artifacts
+    if: ${{ !cancelled() && needs.e2e-quantic.result != 'skipped' }}
+    needs:
+      - 'e2e-quantic'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 1
+      - uses: ./.github/actions/setup
+      - name: Merge Playwright reports
+        uses: ./.github/actions/merge-playwright-reports
+        with:
+          working-directory: packages/quantic
+          artifact-pattern: quantic-blob-report-*
+          upload-artifact-name: quantic-playwright-report
+  e2e-quantic-cleanup:
+    name: 'Clean up Quantic scratch orgs'
+    if: >-
+      ${{
+        needs.e2e-quantic.result != 'skipped' &&
+        (cancelled() || needs.e2e-quantic.outputs.keep-scratch-orgs != 'true')
+      }}
+    needs:
+      - 'e2e-quantic'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 1
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-sfdx
+      - name: Delete Quantic scratch orgs
+        run: |
+          umask 077
+          printf '%s\n' "$SFDX_AUTH_JWT_KEY" > server.key
+          trap 'rm -f -- server.key' EXIT
+          pnpm exec ts-node scripts/build/delete-org.ts
+        shell: bash
+        working-directory: ./packages/quantic
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+          SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+          SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+          SFDX_AUTH_JWT_KEY_FILE: server.key
+          SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
   publish-preview:
     if: ${{ !cancelled() && contains(needs.affected.outputs.tasks, '#build"') && github.event_name == 'pull_request' && !startsWith(github.head_ref, 'changeset-release/') }}
     needs: [affected, build]
@@ -739,7 +892,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -769,10 +922,11 @@ jobs:
       - 'samples-e2e'
       - 'playwright-pkg-new-template-test'
       - 'publish-preview'
+      - 'changeset-major-guard'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -803,10 +957,11 @@ jobs:
       - 'samples-e2e'
       - 'playwright-pkg-new-template-test'
       - 'changeset-merge-guard'
+      - 'changeset-major-guard'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -828,7 +983,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -849,7 +1004,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
 
@@ -862,3 +1017,35 @@ jobs:
         with:
           base-sha: ${{ github.event.merge_group.base_sha }}
           head-sha: ${{ github.sha }}
+
+  changeset-major-guard:
+    name: 'Changeset major guard'
+    needs: affected
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: ${{ needs.affected.outputs.fetch-depth }}
+          fetch-tags: false
+
+      - name: Install Node
+        uses: step-security/mise-action@6e96d2ffbc65c037f23c78818f2a339d6cf830f7 # v4
+        # Same mise version as the setup action, so the key matches the cache cache-warmup.yml saves.
+        with:
+          version: 2026.9.2
+          install: true
+          cache: true
+          cache_save: false
+
+      - name: Refuse UI-Kit majors that main cannot ship
+        env:
+          BASE_SHA: ${{ needs.affected.outputs.base-sha }}
+          BASE_REF: ${{ github.event.merge_group.base_ref || github.base_ref }}
+          # open from the freeze of main for v4 until the v4 GA (KIT-4387)
+          UI_KIT_MAJOR_WINDOW: closed
+        run: node utils/ci/changeset-major-guard.mjs --base "$BASE_SHA"

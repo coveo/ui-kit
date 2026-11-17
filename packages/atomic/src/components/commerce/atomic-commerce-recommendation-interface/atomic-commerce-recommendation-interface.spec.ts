@@ -49,18 +49,22 @@ describe('atomic-commerce-recommendation-interface', () => {
   const setupElement = async (
     props: {
       analytics?: boolean; // TODO - (v4) KIT-4990: remove.
+      disableAnalytics?: boolean;
       iconAssetsPath?: string;
       language?: string; // TODO - (v4) KIT-4365: remove.
       languageAssetsPath?: string;
+      localizeWithCountry?: boolean;
       scrollContainer?: string;
     } = {}
   ) => {
     const element = (await fixture<AtomicCommerceRecommendationInterface>(
       html`<atomic-commerce-recommendation-interface
         analytics=${ifDefined(props.analytics)}
+        ?disable-analytics=${props.disableAnalytics}
         icon-assets-path=${ifDefined(props.iconAssetsPath)}
         language=${ifDefined(props.language)}
         language-assets-path=${ifDefined(props.languageAssetsPath)}
+        ?localize-with-country=${props.localizeWithCountry}
         scroll-container=${props.scrollContainer || 'atomic-commerce-recommendation-interface'}
       >
       </atomic-commerce-recommendation-interface>`
@@ -324,8 +328,21 @@ describe('atomic-commerce-recommendation-interface', () => {
       expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith('de');
     });
 
+    it('should call InterfaceController.onLanguageChange with the context language and country when #localizeWithCountry is true', async () => {
+      const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
+      vi.mocked(headless.buildContext).mockReturnValue(
+        buildFakeContext({state: {language: 'fr', country: 'CA'}, implementation: {}})
+      );
+      const element = await setupElement({localizeWithCountry: true});
+      const engine = buildFakeCommerceEngine({});
+
+      await element.initializeWithEngine(engine);
+
+      expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith('fr-CA');
+    });
+
     // TODO (KIT-4365): remove this test in v4
-    it('should call InterfaceController.onLanguageChange with no argument when language prop is defined', async () => {
+    it('should call InterfaceController.onLanguageChange with the language prop when it is defined', async () => {
       // We're updating attributes before calling #initializeWithEngine; this would console.error.
       vi.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -344,7 +361,7 @@ describe('atomic-commerce-recommendation-interface', () => {
       await element.initializeWithEngine(engine);
 
       expect(element.language).toBe('fr');
-      expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith();
+      expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith('fr');
     });
   });
 
@@ -416,6 +433,26 @@ describe('atomic-commerce-recommendation-interface', () => {
         expect(onLanguageChangeSpy).not.toHaveBeenCalled();
       });
 
+      describe('when #localizeWithCountry is true', () => {
+        beforeEach(async () => {
+          element.localizeWithCountry = true;
+          await element.updateComplete;
+          onLanguageChangeSpy.mockClear();
+        });
+
+        it('should call InterfaceController.onLanguageChange with the language and the country', () => {
+          element.updateLocale('fr', 'CA');
+
+          expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith('fr-CA');
+        });
+
+        it('should call InterfaceController.onLanguageChange with the context language when only the country is provided', () => {
+          element.updateLocale(undefined, 'CA');
+
+          expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith('en-CA');
+        });
+      });
+
       it('should dispatch a setContext action with the new language when it is defined and different from the language value in the context', async () => {
         element.updateLocale('fr');
 
@@ -478,6 +515,22 @@ describe('atomic-commerce-recommendation-interface', () => {
     expect(onAnalyticsChangeSpy).toHaveBeenCalledOnce();
 
     element.analytics = true;
+    await element.updateComplete;
+
+    expect(onAnalyticsChangeSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it('should call InterfaceController.onAnalyticsChange when the disable-analytics attribute changes', async () => {
+    const element = await setupElement();
+    await element.initializeWithEngine(buildFakeCommerceEngine({}));
+    const onAnalyticsChangeSpy = vi.spyOn(InterfaceController.prototype, 'onAnalyticsChange');
+
+    element.toggleAttribute('disable-analytics', true);
+    await element.updateComplete;
+
+    expect(onAnalyticsChangeSpy).toHaveBeenCalledOnce();
+
+    element.toggleAttribute('disable-analytics', false);
     await element.updateComplete;
 
     expect(onAnalyticsChangeSpy).toHaveBeenCalledTimes(2);
@@ -547,7 +600,7 @@ describe('atomic-commerce-recommendation-interface', () => {
         );
       });
 
-      it('should call InterfaceController.onLanguageChange with no argument', async () => {
+      it('should call InterfaceController.onLanguageChange with the new language', async () => {
         const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
         const element = await setupElement({language: 'en'});
         const engine = buildFakeCommerceEngine();
@@ -558,8 +611,32 @@ describe('atomic-commerce-recommendation-interface', () => {
         element.language = 'fr';
         await element.updateComplete;
 
-        expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith();
+        expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith('fr');
       });
+    });
+  });
+
+  describe('when the localize-with-country attribute changes', () => {
+    it('should do nothing when the context is not defined', async () => {
+      const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
+      const element = await setupElement();
+
+      element.localizeWithCountry = true;
+      await element.updateComplete;
+
+      expect(onLanguageChangeSpy).not.toHaveBeenCalled();
+    });
+
+    it('should call InterfaceController.onLanguageChange with the context language and country', async () => {
+      const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
+      const element = await setupElement();
+      await element.initializeWithEngine(buildFakeCommerceEngine({}));
+      onLanguageChangeSpy.mockClear();
+
+      element.localizeWithCountry = true;
+      await element.updateComplete;
+
+      expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith('en-US');
     });
   });
 

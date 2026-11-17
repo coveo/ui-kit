@@ -44,19 +44,13 @@ Rather than prebuilt UI components, it provides an extendable set of reducers an
 If you want to use Coveo to power your own UI component library, then you should definitely consider using Headless.
 It’s the easiest and least error-prone approach to developing and maintaining your Coveo-powered UI component library.
 
-The following interactive code sample uses Coveo Headless alongside the [Material-UI React framework](https://material-ui.com/) to create a simple search page.
-
-<iframe src="https://stackblitz.com/github/coveo/headless-documentation-material-ui-react-codesandbox/tree/version-{{packageVersion}}/?embed=1&view=split&file=src%2FApp.tsx&ctl=1"
-    style="width:100%; height:1024px; border:0; border-radius: 4px; overflow:hidden;"
-    title="coveo-headless-demo-v{{packageVersion}}"
-    allow=""
-    sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-    credentialless
-></iframe>
+To see Headless in action, check out the [Headless React sample](https://github.com/coveo/ui-kit/tree/main/samples/headless/search-react), a simple search page built with Headless and React.
 
 ## Where Do I Start?
 
 If you're new to Headless, check out the [Getting Started](./getting-started/getting-started-search.html) guides to install the library and verify a minimal setup for your use case.
+
+To create a starter Headless project, use the [`npm create @coveo/ui`](https://docs.coveo.com/en/q8qh2338/) command line tool.
 
 Once you're up and running, see the [Usage](./usage/index.html) section to learn about engines, controllers, and state management.
 

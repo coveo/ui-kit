@@ -48,12 +48,13 @@ export const renderFeedbackButton: FunctionalComponent<FeedbackButtonProps> = ({
   return html`<button
     type="button"
     title=${props.title}
+    aria-label=${props.title}
     part="feedback-button"
     class=${classNames}
     aria-pressed=${props.active ? 'true' : 'false'}
     @mousedown=${(e: MouseEvent) => createRipple(e, {color: rippleColor})}
     @click=${props.onClick}
   >
-    <atomic-icon class=${iconClassNames} .icon=${Thumbs}></atomic-icon>
+    <atomic-icon class=${iconClassNames} .icon=${Thumbs} aria-hidden="true"></atomic-icon>
   </button>`;
 };

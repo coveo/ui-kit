@@ -1,3 +1,76 @@
+## 2.10.5
+
+### Patch Changes
+
+- Updated dependencies [[`8a12041`](https://github.com/coveo/ui-kit/commit/8a12041619d0ebbabfc9f017a7e959291d5911a1)]:
+  - @coveo/headless@3.58.1
+
+## 2.10.4
+
+### Patch Changes
+
+- [#8705](https://github.com/coveo/ui-kit/pull/8705) [`e056c30`](https://github.com/coveo/ui-kit/commit/e056c302347d5a0cc1cbbd98d9463a577a74871f) - Pass the `navigatorContext` prop of the `@coveo/headless-react/ssr-commerce` providers to `hydrateStaticState()` instead of setting it on the shared engine definition. Rendering a provider on the server no longer leaves that request's navigator context on the definition for later requests.
+
+- [#8702](https://github.com/coveo/ui-kit/pull/8702) [`a292905`](https://github.com/coveo/ui-kit/commit/a2929053c49aa386ad4a2b0a8399ea1796bfefe8) - Fix three misleading deprecation notices on the SSR commerce sub-packages. `FetchStaticStateOptions` no longer points to `BuildConfig`, which `@coveo/headless/ssr-commerce` doesn't export. `defineCart` now names the cart controller. The `navigatorContext` prop of the `@coveo/headless-react/ssr-commerce` providers no longer says to set the navigator context when fetching the static state.
+
+- Updated dependencies [[`5d3b308`](https://github.com/coveo/ui-kit/commit/5d3b308072ac7b92324e50acb68e34088ce05f18), [`8af7566`](https://github.com/coveo/ui-kit/commit/8af7566cac333724f18d96d4a7d27ac09f415d5f), [`a873e42`](https://github.com/coveo/ui-kit/commit/a873e42c94519da6e7545b4f63b8c1973b30b2ec), [`0a95379`](https://github.com/coveo/ui-kit/commit/0a953790155e0411965e315e6232d1a46e8e5084), [`480c745`](https://github.com/coveo/ui-kit/commit/480c745440f52308eaf97f139d0220939d809525), [`a292905`](https://github.com/coveo/ui-kit/commit/a2929053c49aa386ad4a2b0a8399ea1796bfefe8), [`2f1cde8`](https://github.com/coveo/ui-kit/commit/2f1cde8075b46addfa1d9ae4489227022829920f)]:
+  - @coveo/headless@3.58.0
+
+## 2.10.3
+
+### Patch Changes
+
+- Updated dependencies [[`ef62433`](https://github.com/coveo/ui-kit/commit/ef62433af99d60c4aac4edf94c273ceba9108e96)]:
+  - @coveo/headless@3.57.3
+
+## 2.10.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @coveo/headless@3.57.2
+
+## 2.10.1
+
+### Patch Changes
+
+- Updated dependencies [[`cf041b2`](https://github.com/coveo/ui-kit/commit/cf041b24270e676226781613a705d98042b4d728), [`3c4e3d2`](https://github.com/coveo/ui-kit/commit/3c4e3d2567eb327d3a79caf2e10b915a5a2a6a46)]:
+  - @coveo/headless@3.57.1
+
+## 2.10.0
+
+### Minor Changes
+
+- [#8506](https://github.com/coveo/ui-kit/pull/8506) [`4f82bb4`](https://github.com/coveo/ui-kit/commit/4f82bb4f0d26c87c02494156109709e68905ad5f) - `@coveo/headless-react/ssr-commerce`: the provider returned by `buildProviderWithDefinition` now
+  accepts an optional `accessToken` prop, forwarded to `hydrateStaticState()`.
+
+  Pass the same token you passed to `fetchStaticState()` on the server so the hydrated engine keeps
+  querying with the same permissions for facets, pagination, and every request issued after hydration.
+  When omitted, the engine definition's configured access token is used, so this is backward compatible.
+
+  Previously the provider built the hydration arguments internally, so React consumers had no way to
+  supply a per-request token and the client engine silently fell back to the definition's token.
+
+  To rotate an expiring token on the running engine, configure `renewAccessToken` on the engine
+  configuration rather than changing the prop, which would rebuild the engine and lose its interaction
+  state.
+
+  `@coveo/headless-react/ssr-commerce-next` needs no change: its provider forwards the whole static
+  state, and `fetchStaticState()` returns the per-request token as part of it, so the token already
+  reaches the hydrated engine automatically. Added tests to keep that path from regressing.
+
+### Patch Changes
+
+- Updated dependencies [[`3ed8932`](https://github.com/coveo/ui-kit/commit/3ed89324378ac78465eccd7c377dc304e5fd8dcf), [`a01e1f3`](https://github.com/coveo/ui-kit/commit/a01e1f3e38255bbc42ebaf0604977f5576d6bb74), [`9e88f88`](https://github.com/coveo/ui-kit/commit/9e88f885cf4f126f405d4248073544cedbd0f404), [`c3d3669`](https://github.com/coveo/ui-kit/commit/c3d36693a342c9467b4e65e3f1773b894821f7a8)]:
+  - @coveo/headless@3.57.0
+
+## 2.9.33
+
+### Patch Changes
+
+- Updated dependencies [[`818bdf0`](https://github.com/coveo/ui-kit/commit/818bdf001edfdafa887ea49c0880f3cb2ce7e9ce), [`01434bc`](https://github.com/coveo/ui-kit/commit/01434bcbd3ee4e6545fa874bb0f0f5e4d0b46ef8), [`e8c6ee4`](https://github.com/coveo/ui-kit/commit/e8c6ee4a5080953a2497664acf807dcf02102620), [`fa2e9de`](https://github.com/coveo/ui-kit/commit/fa2e9de00d868bb4c10215fffcfa09c4acf7d2af)]:
+  - @coveo/headless@3.56.0
+
 ## 2.9.32
 
 ### Patch Changes
@@ -322,7 +395,7 @@
 - chore(deps): update vitest (#5188) ([749ab46](https://github.com/coveo/ui-kit/commits/749ab46)), closes [#5188](https://github.com/coveo/ui-kit/issues/5188)
 - chore(react19): allow react19 w/ `@coveo/headless-react`, bump to 19 everywhereish. (#5171) ([823974d](https://github.com/coveo/ui-kit/commits/823974d)), closes [#5171](https://github.com/coveo/ui-kit/issues/5171)
 - docs(headless-react): address broken typedoc links (#5124) ([4cc3445](https://github.com/coveo/ui-kit/commits/4cc3445)), closes [#5124](https://github.com/coveo/ui-kit/issues/5124)
-- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [/github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com//github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json/issues/L48)
+- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48)
 
 ## 2.4.21
 
@@ -350,7 +423,7 @@
 
 ## 2.4.15
 
-- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [/github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com//github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json/issues/L48)
+- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48)
 - Fix the tables dark theme issue for Headless Typedoc (#5077) ([cc7d962](https://github.com/coveo/ui-kit/commits/cc7d962)), closes [#5077](https://github.com/coveo/ui-kit/issues/5077)
 
 ## 2.4.14
@@ -462,7 +535,7 @@
 
 ## 2.0.1
 
-- chore(headless,atomic): add type "module" to atomic, atomic-react and headless (#4442) ([21896c3](https://github.com/coveo/ui-kit/commits/21896c3)), closes [#4442](https://github.com/coveo/ui-kit/issues/4442) [/github.com/coveo/ui-kit/pull/4449/files#diff-75f80b97846615f5b074710648b8191f74aa4f00fd1536c45bc344b284ca8e87](https://github.com//github.com/coveo/ui-kit/pull/4449/files/issues/diff-75f80b97846615f5b074710648b8191f74aa4f00fd1536c45bc344b284ca8e87)
+- chore(headless,atomic): add type "module" to atomic, atomic-react and headless (#4442) ([21896c3](https://github.com/coveo/ui-kit/commits/21896c3)), closes [#4442](https://github.com/coveo/ui-kit/issues/4442) [github.com/coveo/ui-kit/pull/4449/files#diff-75f80b97846615f5b074710648b8191f74aa4f00fd1536c45bc344b284ca8e87](https://github.com/coveo/ui-kit/pull/4449/files#diff-75f80b97846615f5b074710648b8191f74aa4f00fd1536c45bc344b284ca8e87)
 
 ## 2.0.0
 

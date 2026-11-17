@@ -50,7 +50,7 @@
     "lint": "prettier --check . && eslint ."
   },
   "dependencies": {
-    "@coveo/platform-client": "69.6.0",
+    "@coveo/platform-client": "69.8.0",
     "abortcontroller-polyfill": "catalog:",
     "https-proxy-agent": "9.1.0",
     "isomorphic-fetch": "3.0.0",

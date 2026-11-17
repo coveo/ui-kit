@@ -1,35 +1,47 @@
-import {afterEach, describe, expect, it} from 'vitest';
+import {mkdtemp, readdir, rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import path from 'node:path';
+import {afterEach, beforeEach, describe, expect, it} from 'vitest';
+import type {Vitest} from 'vitest/node';
 
-import {resolveShardInfo} from '../src/reporter/shard-resolution.js';
+import {VitestA11yReporter} from '../src/reporter/vitest-a11y-reporter.js';
 
-const originalArgv = [...process.argv];
+const vitestWithShard = (shard?: {index: number; count: number}) =>
+  ({config: {shard}}) as unknown as Vitest;
 
-function withArgv(argv: string[]): void {
-  process.argv = argv;
-}
+describe('VitestA11yReporter — shard resolution', () => {
+  let tmpDir: string;
+  let outputFile: string;
+  let packageJsonPath: string;
 
-afterEach(() => {
-  process.argv = [...originalArgv];
-});
-
-describe('resolveShardInfo', () => {
-  it('returns shard info for a valid --shard value', () => {
-    withArgv(['node', 'vitest', '--shard=2/4']);
-
-    expect(resolveShardInfo()).toEqual({index: 2, total: 4});
+  beforeEach(async () => {
+    tmpDir = await mkdtemp(path.join(tmpdir(), 'a11y-reporter-shard-'));
+    outputFile = path.join(tmpDir, 'a11y-report.json');
+    packageJsonPath = path.resolve(__dirname, '..', '..', 'atomic', 'package.json');
   });
 
-  it('returns null for invalid shard indices', () => {
-    for (const shard of ['0/4', '5/4']) {
-      withArgv(['node', 'vitest', '--shard', shard]);
-
-      expect(resolveShardInfo()).toBeNull();
-    }
+  afterEach(async () => {
+    await rm(tmpDir, {recursive: true, force: true});
   });
 
-  it('returns null for invalid shard totals', () => {
-    withArgv(['node', 'vitest', '--shard=1/0']);
+  it('writes a shard report next to the base report when Vitest runs a shard', async () => {
+    const reporter = new VitestA11yReporter({outputFile, packageJsonPath});
 
-    expect(resolveShardInfo()).toBeNull();
+    reporter.onInit(vitestWithShard({index: 2, count: 4}));
+    await reporter.onTestRunEnd([], [], 'passed');
+
+    expect((await readdir(tmpDir)).sort()).toEqual([
+      'a11y-report.json',
+      'a11y-report.shard-2.json',
+    ]);
+  });
+
+  it('writes only the base report when Vitest does not run a shard', async () => {
+    const reporter = new VitestA11yReporter({outputFile, packageJsonPath});
+
+    reporter.onInit(vitestWithShard());
+    await reporter.onTestRunEnd([], [], 'passed');
+
+    expect(await readdir(tmpDir)).toEqual(['a11y-report.json']);
   });
 });

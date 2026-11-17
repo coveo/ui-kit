@@ -25,9 +25,12 @@ runs:
   steps:
     - name: Install calculation tooling
       uses: step-security/mise-action@6e96d2ffbc65c037f23c78818f2a339d6cf830f7 # v4
+      # Same mise version as the setup action, so the key matches the cache cache-warmup.yml saves.
       with:
+        version: 2026.9.2
         install: true
         cache: true
+        cache_save: false
 
     - name: Calculate Git fetch depth
       id: git

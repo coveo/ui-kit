@@ -27,6 +27,7 @@
     "source_docs/result-templates.md",
     "source_docs/server-side-rendering.md",
     "source_docs/ssr-extend-engine-definitons.md",
+    "source_docs/ssr-manage-access-tokens.md",
     "source_docs/ssr-implement-search-parameter-support.md",
     "source_docs/ssr-send-context.md",
     "source_docs/ssr-usage.md",

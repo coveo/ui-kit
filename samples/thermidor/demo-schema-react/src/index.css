@@ -38,6 +38,7 @@
   --color-success: #10b981;
   --color-processing: #f59e0b;
   --color-error: #ef4444;
+  --color-error-text: #b91c1c;
   --color-shadow: rgba(0, 0, 0, 0.08);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
 
@@ -62,7 +63,7 @@
   --radius-lg: 12px;
 
   /* Layout */
-  --header-height: 84px;
+  --header-height: 64px;
 
   /* Breakpoints (aligned with @coveo/atomic) */
   --breakpoint-sm: 640px;
@@ -94,12 +95,16 @@ body {
 }
 
 .view-shell {
+  display: flex;
+  flex-direction: column;
   height: 100%;
 }
 
 .view-panel {
   display: none;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .view-panel--active {

@@ -23,6 +23,7 @@ export const renderCopyButton: FunctionalComponent<CopyButtonProps> = ({props}) 
   return renderButton({
     props: {
       title: props.title,
+      ariaLabel: props.title,
       part: 'copy-button',
       style: 'text-transparent',
       class: classes.join(' '),
@@ -30,7 +31,7 @@ export const renderCopyButton: FunctionalComponent<CopyButtonProps> = ({props}) 
     },
   })(html`
     <div class="icon-container text-neutral-dark">
-      <atomic-icon class="w-5" .icon=${CopyIcon}></atomic-icon>
+      <atomic-icon class="w-5" .icon=${CopyIcon} aria-hidden="true"></atomic-icon>
     </div>
   `);
 };

@@ -1,0 +1,8 @@
+[
+  {
+    "name": "coveo.analytics - coveoua.browser.js",
+    "path": "dist/coveoua.browser.js",
+    "rolldown": false,
+    "limit": "21 kB"
+  }
+]

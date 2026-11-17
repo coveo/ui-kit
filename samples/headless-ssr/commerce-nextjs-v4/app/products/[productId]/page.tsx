@@ -50,11 +50,13 @@ export default async function ProductDescriptionPage({
     },
   });
 
+  // The product ID seeds the "viewed together" slot with the product being viewed.
   const recsStaticState = await recommendationEngineDefinition.fetchStaticState({
     cart: {items},
     context,
     navigatorContext: navigatorContext.marshal,
     recommendations: ['viewedTogether'],
+    productId,
   });
 
   const resolvedSearchParams = await searchParams;

@@ -11,6 +11,10 @@ const styles = css`
     }
   }
 
+  :host(:state(hidden)) {
+    display: none;
+  }
+
   :host(.popover-nested) {
     @apply min-w-2xs;
 

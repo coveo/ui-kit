@@ -130,14 +130,62 @@ describe('atomic-insight-facet', () => {
     return {element, locators};
   };
 
-  describe('when the facet has not been initialized', () => {
-    it('should render a placeholder', async () => {
+  describe('#render', () => {
+    it('should render the placeholder before the first search', async () => {
       vi.mocked(buildInsightSearchStatus).mockReturnValue(
         buildFakeSearchStatus({firstSearchExecuted: false})
       );
-      const {locators} = await setupElement();
 
+      const {element, locators} = await setupElement();
       expect(locators.placeholder).toBeTruthy();
+      expect(element.matches(':state(hidden)')).toBe(false);
+      expect(getComputedStyle(element).display).not.toBe('none');
+    });
+
+    it('should hide an empty facet host before the first search', async () => {
+      vi.mocked(buildInsightFacet).mockReturnValue(buildFakeFacet({state: {values: []}}));
+      vi.mocked(buildInsightSearchStatus).mockReturnValue(
+        buildFakeSearchStatus({firstSearchExecuted: false})
+      );
+
+      const {element, locators} = await setupElement();
+      expect(locators.placeholder).toBeTruthy();
+      expect(element.matches(':state(hidden)')).toBe(true);
+      expect(getComputedStyle(element).display).toBe('none');
+    });
+
+    it('should hide the host when no values are available after the first search', async () => {
+      vi.mocked(buildInsightFacet).mockReturnValue(buildFakeFacet({state: {values: []}}));
+
+      const {element, locators} = await setupElement();
+      expect(locators.facet).toBeNull();
+      expect(element.matches(':state(hidden)')).toBe(true);
+      expect(getComputedStyle(element).display).toBe('none');
+    });
+
+    it('should hide the host when the facet is disabled', async () => {
+      vi.mocked(buildInsightFacet).mockReturnValue(buildFakeFacet({state: {enabled: false}}));
+
+      const {element, locators} = await setupElement();
+      expect(locators.facet).toBeNull();
+      expect(element.matches(':state(hidden)')).toBe(true);
+      expect(getComputedStyle(element).display).toBe('none');
+    });
+
+    it('should not render the facet when there is an error', async () => {
+      vi.mocked(buildInsightSearchStatus).mockReturnValue(
+        buildFakeSearchStatus({firstSearchExecuted: true, hasError: true})
+      );
+
+      const {locators} = await setupElement();
+      expect(locators.facet).toBeNull();
+    });
+
+    it('should keep the host visible when values are available', async () => {
+      const {element, locators} = await setupElement();
+      expect(locators.facet).not.toBeNull();
+      expect(element.matches(':state(hidden)')).toBe(false);
+      expect(getComputedStyle(element).display).not.toBe('none');
     });
   });
 

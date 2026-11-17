@@ -1,67 +1,71 @@
-import {describe, it, expect, vi, beforeEach, type Mock} from 'vitest';
-import type {ReactNode} from 'react';
-import {render, screen} from '@testing-library/react';
-import type {LayoutStackProps} from '@coveo/thermidor-schema';
-import {LayoutStackRenderer} from './LayoutStack.js';
+import {describe, it, expect, afterEach} from 'vitest';
+import {screen, cleanup, waitFor} from '@testing-library/react';
+import {mountSurface} from '../mount-surface.harness.js';
 
-const baseProps: LayoutStackProps = {
-  componentId: 'search-main',
-  componentType: 'layout-stack',
-};
+/**
+ * LayoutStack is a `createReactComponent` container driven by the generic binder. It mounts its
+ * ordered `children` id list via `buildChild` and reads its `direction` presentation prop. Mounted
+ * root end-to-end, it asserts the observable effects: the declared child nodes render in declared
+ * order, and `data-direction` reflects the resolved `direction`. Children are QuerySummary leaves
+ * whose query text encodes their id, so DOM order is assertable.
+ */
 
-// The renderer receives its ordered child ids and its `direction` on the resolved props
-// (spread from the A2-UI node), neither of which the schema type surfaces.
-function withProps(childIds: string[], direction?: string): LayoutStackProps {
-  return {...baseProps, children: childIds, ...(direction ? {direction} : {})} as LayoutStackProps;
+afterEach(() => cleanup());
+
+function summaryChild(id: string): Record<string, unknown> {
+  return {id, component: 'QuerySummary', query: id, firstIndex: 1, lastIndex: 12, totalEntries: 43};
 }
 
-let mountFn: Mock<(id: string) => ReactNode>;
+function mountLayout(childIds: string[], direction?: 'column' | 'row') {
+  return mountSurface({
+    component: {
+      component: 'LayoutStack',
+      children: childIds,
+      ...(direction ? {direction} : {}),
+    },
+    children: childIds.map((id) => summaryChild(id)),
+  });
+}
 
-beforeEach(() => {
-  mountFn = vi.fn<(id: string) => ReactNode>();
-});
+// The <strong>query</strong> text nodes carry the child ids; read them in DOM order.
+function mountedChildIds(container: HTMLElement): string[] {
+  return Array.from(container.querySelectorAll('[data-testid="layout-stack"] p strong'))
+    .map((node) => node.textContent)
+    .filter((text): text is string => text !== null && text.startsWith('child-'));
+}
 
-describe('LayoutStackRenderer', () => {
-  it('renders a stable empty container with no children', () => {
-    mountFn.mockReturnValue(null);
-    render(<LayoutStackRenderer props={withProps([])} children={mountFn} />);
+describe('LayoutStack', () => {
+  it('renders a stable empty container with no children', async () => {
+    mountLayout([]);
 
-    expect(screen.getByTestId('search-main')).toBeDefined();
-    expect(mountFn).not.toHaveBeenCalled();
+    await waitFor(() => expect(screen.getByTestId('layout-stack')).toBeDefined());
+    expect(screen.getByTestId('layout-stack').querySelectorAll('p').length).toBe(0);
   });
 
-  it('mounts each declared child exactly once, in declared order', () => {
-    const childIds = ['query-summary-2', 'product-list-2', 'pagination-2'];
-    mountFn.mockImplementation((id: string) => <span data-testid={`child-${id}`}>{id}</span>);
+  it('mounts each declared child exactly once, in declared order', async () => {
+    const childIds = ['child-query-summary-2', 'child-product-list-2', 'child-pagination-2'];
+    const {container} = mountLayout(childIds);
 
-    render(<LayoutStackRenderer props={withProps(childIds)} children={mountFn} />);
-
-    expect(mountFn.mock.calls.map((call) => call[0])).toEqual(childIds);
-    const renderedOrder = screen
-      .getAllByTestId(/^child-/)
-      .map((node) => node.getAttribute('data-testid'));
-    expect(renderedOrder).toEqual(childIds.map((id) => `child-${id}`));
+    await waitFor(() => expect(screen.getByTestId('layout-stack')).toBeDefined());
+    await waitFor(() => expect(mountedChildIds(container)).toEqual(childIds));
   });
 
-  it('defaults to column direction when direction is absent', () => {
-    render(<LayoutStackRenderer props={withProps([])} children={mountFn} />);
-    expect(screen.getByTestId('search-main').getAttribute('data-direction')).toBe('column');
+  it('defaults to column direction when direction is absent', async () => {
+    mountLayout([]);
+    await waitFor(() => expect(screen.getByTestId('layout-stack')).toBeDefined());
+    expect(screen.getByTestId('layout-stack').getAttribute('data-direction')).toBe('column');
   });
 
-  it('applies row direction when declared', () => {
-    render(<LayoutStackRenderer props={withProps([], 'row')} children={mountFn} />);
-    expect(screen.getByTestId('search-main').getAttribute('data-direction')).toBe('row');
+  it('applies row direction when declared', async () => {
+    mountLayout([], 'row');
+    await waitFor(() => expect(screen.getByTestId('layout-stack')).toBeDefined());
+    expect(screen.getByTestId('layout-stack').getAttribute('data-direction')).toBe('row');
   });
 
-  it('falls back to column for an unknown direction value', () => {
-    render(<LayoutStackRenderer props={withProps([], 'diagonal')} children={mountFn} />);
-    expect(screen.getByTestId('search-main').getAttribute('data-direction')).toBe('column');
-  });
-
-  it('mounts solely from renderer inputs, not AG-UI state', () => {
-    const childIds = ['facet-manager-2'];
-    mountFn.mockImplementation((id: string) => <span data-testid={`child-${id}`}>{id}</span>);
-    render(<LayoutStackRenderer props={withProps(childIds)} children={mountFn} />);
-    expect(mountFn.mock.calls.map((call) => call[0])).toEqual(childIds);
+  it('mounts solely from the resolved props composition', async () => {
+    const childIds = ['child-facet-manager-2'];
+    const {container} = mountLayout(childIds);
+    await waitFor(() => expect(screen.getByTestId('layout-stack')).toBeDefined());
+    await waitFor(() => expect(mountedChildIds(container)).toEqual(childIds));
   });
 });
