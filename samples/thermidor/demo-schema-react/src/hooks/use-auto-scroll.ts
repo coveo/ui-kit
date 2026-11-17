@@ -2,6 +2,8 @@ import {useCallback, useEffect, useRef} from 'react';
 import type {Turn} from '@coveo/thermidor';
 
 const MARGIN_TOP = 20;
+const END_SETTLED_FRAMES = 10;
+const END_MAX_FRAMES = 120;
 
 interface UseAutoScrollOptions {
   containerRef: React.RefObject<HTMLDivElement | null>;
@@ -16,6 +18,34 @@ function turnOffset(container: HTMLElement, turn: HTMLElement): number {
   return (
     turn.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop
   );
+}
+
+/**
+ * Scrolls `container` to its end on each frame until its height settles, as restored blocks grow
+ * while they render, or until the shopper scrolls. Returns what stops it.
+ */
+function followEnd(container: HTMLElement): () => void {
+  let frame = 0;
+  let height = -1;
+  let settledFrames = 0;
+  let frames = 0;
+  const step = () => {
+    container.scrollTo({top: container.scrollHeight});
+    settledFrames = container.scrollHeight === height ? settledFrames + 1 : 0;
+    height = container.scrollHeight;
+    if (settledFrames < END_SETTLED_FRAMES && ++frames < END_MAX_FRAMES) {
+      frame = requestAnimationFrame(step);
+    }
+  };
+  const stop = () => {
+    cancelAnimationFrame(frame);
+    container.removeEventListener('wheel', stop);
+    container.removeEventListener('touchstart', stop);
+  };
+  container.addEventListener('wheel', stop);
+  container.addEventListener('touchstart', stop);
+  frame = requestAnimationFrame(step);
+  return stop;
 }
 
 /**
@@ -55,17 +85,19 @@ export function useAutoScroll({
 
     const toEnd = atEnd.current;
     atEnd.current = false;
-    const frame = requestAnimationFrame(() => {
-      const container = containerRef.current;
-      if (!container || !turn) return;
-      container.scrollTo(
-        toEnd
-          ? {top: container.scrollHeight}
-          : {top: turnOffset(container, turn) - MARGIN_TOP, behavior: 'smooth'}
-      );
-    });
+    const container = containerRef.current;
+    let stop: () => void;
+    if (toEnd && container) {
+      stop = followEnd(container);
+    } else {
+      const frame = requestAnimationFrame(() => {
+        if (!container || !turn) return;
+        container.scrollTo({top: turnOffset(container, turn) - MARGIN_TOP, behavior: 'smooth'});
+      });
+      stop = () => cancelAnimationFrame(frame);
+    }
     return () => {
-      cancelAnimationFrame(frame);
+      stop();
       if (turn) turn.style.minHeight = '';
     };
   }, [latestTurnId, containerRef, turnRefs, fitLatestTurn]);
