@@ -42,6 +42,7 @@ export interface Conversations {
   start(): void;
   open(id: string): void;
   remove(id: string): void;
+  rename(id: string, title: string): void;
 }
 
 interface Current {
@@ -117,6 +118,10 @@ export function SessionProvider({
         } else {
           setList(storage.list());
         }
+      },
+      rename: (id, title) => {
+        storage.rename(id, title);
+        setList(storage.list());
       },
     };
   }, [list, current, storage, create]);

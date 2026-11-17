@@ -44,6 +44,12 @@ const entries = () =>
     .queryAllByRole('listitem')
     .map((item) => within(item).getAllByRole('button')[0]);
 
+/** Opens the menu of the conversation titled `title`, and returns its `item`. */
+function menuItem(title: string, item: string) {
+  fireEvent.click(within(drawer()).getByRole('button', {name: `Options for ${title}`}));
+  return screen.getByRole('menuitem', {name: item});
+}
+
 describe('ConversationDrawer', () => {
   it('opens from the top bar, listing the saved conversations newest first', async () => {
     const app = renderApp();
@@ -57,7 +63,7 @@ describe('ConversationDrawer', () => {
     expect(entries().map((entry) => entry.getAttribute('aria-current'))).toEqual(['true', null]);
   });
 
-  it('opens a saved conversation, and deletes one', async () => {
+  it('opens a saved conversation, and deletes one from its menu', async () => {
     const app = renderApp();
     await ask(app, 'surfboards');
     fireEvent.click(toggle());
@@ -66,10 +72,54 @@ describe('ConversationDrawer', () => {
     fireEvent.click(entries()[0]);
     expect(app.session().turns).toHaveLength(1);
 
-    fireEvent.click(
-      within(drawer()).getByRole('button', {name: 'Delete conversation: surfboards'})
-    );
+    fireEvent.click(menuItem('surfboards', 'Delete'));
     expect(within(drawer()).getByText('No saved conversations yet.')).toBeDefined();
+  });
+
+  it('closes the menu on Escape, giving the focus back to its button, or on a press outside', async () => {
+    const app = renderApp();
+    await ask(app, 'surfboards');
+    fireEvent.click(toggle());
+    const options = within(drawer()).getByRole('button', {name: 'Options for surfboards'});
+
+    fireEvent.click(options);
+    fireEvent.keyDown(screen.getByRole('menuitem', {name: 'Rename'}), {key: 'Escape'});
+    expect(screen.queryByRole('menu')).toBeNull();
+    expect(document.activeElement).toBe(options);
+    expect(drawer()).toBeDefined();
+
+    fireEvent.click(options);
+    fireEvent.pointerDown(document.body);
+    expect(screen.queryByRole('menu')).toBeNull();
+  });
+
+  it('renames a conversation in place, keeping the new title through later saves', async () => {
+    const app = renderApp();
+    await ask(app, 'surfboards');
+    fireEvent.click(toggle());
+
+    fireEvent.click(menuItem('surfboards', 'Rename'));
+    const input = screen.getByRole('textbox', {name: 'Conversation title'});
+    fireEvent.change(input, {target: {value: 'Board shopping'}});
+    fireEvent.keyDown(input, {key: 'Enter'});
+    await ask(app, 'wetsuits');
+
+    expect(entries().map((entry) => entry.textContent)).toEqual(['Board shopping']);
+    expect(app.storage.list().map(({title}) => title)).toEqual(['Board shopping']);
+  });
+
+  it('cancels a rename on Escape, leaving the drawer open', async () => {
+    const app = renderApp();
+    await ask(app, 'surfboards');
+    fireEvent.click(toggle());
+
+    fireEvent.click(menuItem('surfboards', 'Rename'));
+    const input = screen.getByRole('textbox', {name: 'Conversation title'});
+    fireEvent.change(input, {target: {value: 'Board shopping'}});
+    fireEvent.keyDown(input, {key: 'Escape'});
+
+    expect(entries().map((entry) => entry.textContent)).toEqual(['surfboards']);
+    expect(app.storage.list().map(({title}) => title)).toEqual(['surfboards']);
   });
 
   it('closes on a narrow screen once a conversation opens, or on a press outside', async () => {

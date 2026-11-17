@@ -15,10 +15,12 @@ export interface ConversationStorage {
   load(id: string): SerializedSession | undefined;
   /**
    * Saves the conversation, then drops the oldest ones past the cap, or to make room. A
-   * conversation that does not fit even alone is not saved, and the others are kept.
+   * conversation that does not fit even alone is not saved, and the others are kept. A saved
+   * conversation keeps its title, `title` naming a new one.
    */
   save(id: string, title: string, session: SerializedSession): void;
   remove(id: string): void;
+  rename(id: string, title: string): void;
   /** The conversation this tab shows, which a reload resumes. */
   currentId(): string | undefined;
   setCurrentId(id: string): void;
@@ -76,7 +78,12 @@ export function createConversationStorage({
     save(id, title, serialized) {
       const key = ENTRY_PREFIX + id;
       const previous = read(local, key);
-      let index = [{id, title, updatedAt: now()}, ...list().filter((entry) => entry.id !== id)];
+      const saved = list();
+      const kept = saved.find((entry) => entry.id === id)?.title ?? title;
+      let index = [
+        {id, title: kept, updatedAt: now()},
+        ...saved.filter((entry) => entry.id !== id),
+      ];
       for (const stale of index.slice(max)) {
         index = drop(index, stale.id);
       }
@@ -109,6 +116,10 @@ export function createConversationStorage({
     },
     remove(id) {
       const index = drop(list(), id);
+      attempt(() => writeIndex(index));
+    },
+    rename(id, title) {
+      const index = list().map((entry) => (entry.id === id ? {...entry, title} : entry));
       attempt(() => writeIndex(index));
     },
     currentId: () => read(session, CURRENT_KEY) ?? undefined,

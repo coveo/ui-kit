@@ -1,7 +1,8 @@
 import {useEffect, useRef, type RefObject} from 'react';
 import {useConversations} from '../../context/session.js';
 import {useMediaQuery} from '../../hooks/use-media-query.js';
-import {CloseIcon} from '../../a2ui/icons/index.js';
+import {ConversationRow} from './ConversationRow.js';
+import {ComposeIcon} from './drawer-icons.js';
 import styles from './ConversationDrawer.module.css';
 
 interface ConversationDrawerProps {
@@ -13,11 +14,11 @@ interface ConversationDrawerProps {
 }
 
 /**
- * Lists the saved conversations, newest first, to open or delete one, and starts a new one. On a
- * narrow screen it slides over the page, and closes once a conversation opens or on a press outside.
+ * Lists the saved conversations, newest first, to open, rename or delete one, and starts a new one.
+ * On a narrow screen it slides over the page, and closes once a conversation opens or on a press outside.
  */
 export function ConversationDrawer({id, toggleRef, onClose}: ConversationDrawerProps) {
-  const {list, currentId, start, open, remove} = useConversations();
+  const {list, currentId, start, open, remove, rename} = useConversations();
   const overlay = useMediaQuery('(max-width: 767px)');
   const drawerRef = useRef<HTMLElement>(null);
 
@@ -56,6 +57,7 @@ export function ConversationDrawer({id, toggleRef, onClose}: ConversationDrawerP
       }}
     >
       <button type="button" className={styles.start} onClick={() => pick(start)}>
+        <ComposeIcon />
         New conversation
       </button>
       {list.length === 0 ? (
@@ -63,23 +65,14 @@ export function ConversationDrawer({id, toggleRef, onClose}: ConversationDrawerP
       ) : (
         <ul className={styles.list}>
           {list.map(({id, title}) => (
-            <li key={id} className={styles.item}>
-              <button
-                type="button"
-                className={styles.open}
-                aria-current={id === currentId ? 'true' : undefined}
-                onClick={() => pick(() => open(id))}
-              >
-                {title}
-              </button>
-              <button
-                type="button"
-                className={styles.remove}
-                aria-label={`Delete conversation: ${title}`}
-                onClick={() => remove(id)}
-              >
-                <CloseIcon />
-              </button>
+            <li key={id}>
+              <ConversationRow
+                title={title}
+                current={id === currentId}
+                onOpen={() => pick(() => open(id))}
+                onRename={(renamed) => rename(id, renamed)}
+                onDelete={() => remove(id)}
+              />
             </li>
           ))}
         </ul>

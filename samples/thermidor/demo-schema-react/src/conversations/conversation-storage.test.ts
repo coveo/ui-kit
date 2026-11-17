@@ -72,6 +72,20 @@ describe('createConversationStorage', () => {
     expect(storage.load('c')).toBeUndefined();
   });
 
+  it('renames a conversation, which keeps its title when saved again', () => {
+    const {storage} = setup();
+    storage.save('a', 'surfboards', serialized());
+    storage.save('b', 'wetsuits', serialized());
+
+    storage.rename('a', 'Board shopping');
+    storage.save('a', 'surfboards', serialized('a2'));
+
+    expect(storage.list().map(({id, title}) => [id, title])).toEqual([
+      ['a', 'Board shopping'],
+      ['b', 'wetsuits'],
+    ]);
+  });
+
   it('removes a conversation', () => {
     const {storage} = setup();
     storage.save('a', 'a', serialized());
