@@ -1,11 +1,17 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {callWithRetry} from './request-retry.js';
 
-type Result = {success: true} | {success: false; conflict?: object};
+type Result =
+  | {success: true}
+  | {success: false; conflict?: object; transient?: {retryAfterMs?: number}};
 
 const success: Result = {success: true};
 const failure: Result = {success: false};
 const conflict = (): Result => ({success: false, conflict: {}});
+const transient = (retryAfterMs?: number): Result => ({
+  success: false,
+  transient: retryAfterMs === undefined ? {} : {retryAfterMs},
+});
 
 describe('callWithRetry', () => {
   let attempt: ReturnType<typeof vi.fn<() => Promise<Result>>>;
@@ -119,5 +125,84 @@ describe('callWithRetry', () => {
       name: 'AbortError',
     });
     expect(attempt).toHaveBeenCalledTimes(1);
+  });
+
+  describe('with transient retries', () => {
+    let onRetry: ReturnType<typeof vi.fn<() => void>>;
+    const call = () => callWithRetry(attempt, controller.signal, {transient: {onRetry}});
+
+    beforeEach(() => {
+      onRetry = vi.fn<() => void>();
+    });
+
+    it.each([
+      [
+        'a transient failure without the option',
+        transient(),
+        () => callWithRetry(attempt, controller.signal),
+      ],
+      ['a failure that is not transient', failure, call],
+    ])('does not retry %s', async (_label, failed, run) => {
+      respondWith(failed);
+
+      await expect(run()).resolves.toBe(failed);
+      expect(attempt).toHaveBeenCalledTimes(1);
+      expect(onRetry).not.toHaveBeenCalled();
+    });
+
+    it('retries after 500 ms, then 1 s, calling onRetry before each wait, for 3 attempts at most', async () => {
+      const failures = [transient(), transient(), transient(), transient()];
+      respondWith(...failures);
+
+      const result = call();
+
+      expect(await attemptsAfter(0, 499, 1, 999, 1, 10_000)).toEqual([1, 1, 2, 2, 3, 3]);
+      await expect(result).resolves.toBe(failures[2]);
+      expect(onRetry).toHaveBeenCalledTimes(2);
+    });
+
+    it.each([
+      ['longer than the backoff, waits for it', 2000, 1999],
+      ['shorter than the backoff, keeps the backoff', 100, 499],
+    ])('with a Retry-After %s', async (_label, retryAfterMs, waited) => {
+      respondWith(transient(retryAfterMs), success);
+
+      const result = call();
+
+      expect(await attemptsAfter(waited, 1)).toEqual([1, 2]);
+      await expect(result).resolves.toBe(success);
+    });
+
+    it('gives up when Retry-After asks for more than what is left of 5 s', async () => {
+      const failed = transient(6000);
+      respondWith(failed, success);
+
+      await expect(call()).resolves.toBe(failed);
+      expect(attempt).toHaveBeenCalledTimes(1);
+    });
+
+    it('counts the time spent on each attempt against the budget', async () => {
+      attempt.mockImplementation(
+        () => new Promise((resolve) => setTimeout(() => resolve(transient()), 4000))
+      );
+
+      const result = call();
+      await vi.advanceTimersByTimeAsync(20_000);
+
+      await expect(result).resolves.toMatchObject({success: false});
+      // The second attempt starts at 4.5 s; its next wait would end past 5 s.
+      expect(attempt).toHaveBeenCalledTimes(2);
+    });
+
+    it('keeps the conflict backoff and budget alongside transient retries', async () => {
+      respondWith(conflict(), transient(), conflict(), success);
+
+      const result = call();
+
+      // Conflict waits 250 ms, the transient failure 500 ms, then the second conflict 500 ms.
+      expect(await attemptsAfter(0, 250, 500, 500)).toEqual([1, 2, 3, 4]);
+      await expect(result).resolves.toBe(success);
+      expect(onRetry).toHaveBeenCalledTimes(1);
+    });
   });
 });

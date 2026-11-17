@@ -61,7 +61,7 @@ src/
 ├── session/
 │   ├── create-session.ts          # createSession factory + shared runtime (dispatch/cancel/retry)
 │   ├── create-private-session.ts  # createPrivateSession: optional ids, client-chosen sessionId
-│   ├── request-retry.ts           # Bounded retry of 409 conflicts and, on request, of transient rejections
+│   ├── request-retry.ts           # Bounded retry of 409 conflicts and of transient rejections
 │   ├── types.ts                   # Turn / TurnInput / TurnResponse domain model (ADR-010 model annex)
 │   ├── store.ts                   # Plain observable store + subscribe/notify
 │   ├── fold.ts                    # Pure fold + surface derivation (ADR-015 interim)
