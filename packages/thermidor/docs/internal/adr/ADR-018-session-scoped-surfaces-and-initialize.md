@@ -83,7 +83,9 @@ level. Option D below.
   a microtask so that a listener subscribed in the same task sees it start. On the wire it is
   `action: {name: 'initialize', context: {}}`: it has an envelope type of its own, without
   `surfaceId` and `sourceComponentId`, which stay required for every other action.
-- **Never twice.** A restored session does not send it, nor does one that already has a token.
+- **Never twice.** A restored session does not send it. A session created with its keys
+  (`sessionId` and `sessionToken`) does, carrying them: the Agent Gateway resumes that session and
+  rebuilds its shell, or starts a new one with new keys, which the session adopts.
 - **An ordinary request.** It goes through the one-request rule and the conflict retry, and it
   adopts the session id and token from its run, like a prompt. While it is in flight,
   `session.request` is `{kind: 'initialize'}`, so an application can draw its disabled search box
@@ -192,7 +194,7 @@ unsupported version already is.
   initialization, the session-level fields, the narrowed `TurnResponse` and serialized format
   version 2.
 - **Restore through `initialize`:** recovering a session's surfaces from the producer rather than
-  from the serialized blob is a separate decision. Until then, a session with a token never sends
+  from the serialized blob is a separate decision. Until then, a restored session never sends
   `initialize`.
 - **First paint and concurrent suggestions:** if the EAP shows that the disabled box or the waiting
   suggestions hurt, revisit Option A or a queue in the producer.

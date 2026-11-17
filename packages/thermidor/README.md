@@ -62,6 +62,8 @@ The session opens itself: `createSession` sends an `initialize` action a microta
 
 Its run is recorded as `session.initialization` (`activities`, `status`, `error`), never as a turn. A failed `initialize` is not retried: `initialization.status` becomes `'error'`, and the first prompt still opens the session. `cancel()` stops it like any request. A restored session never sends it, and neither does a session created with `initialize: false`, for tests or for a server that creates a session while rendering.
 
+To continue a session later, store `session.sessionId` and `session.sessionToken`, and pass them back to `createSession` as `sessionId` and `sessionToken`. Its `initialize` (or, with `initialize: false`, its first prompt or action) carries them, so the shopper keeps the conversation and its context. If the session expired, the endpoint starts a new one, and `session.sessionId` and `session.sessionToken` return its keys. A `sessionId` alone, a UUID, opens a new session under that id.
+
 ## Dispatching actions
 
 `session.dispatchAction` is the single consumer-facing action entry point. It accepts two kinds of message.
