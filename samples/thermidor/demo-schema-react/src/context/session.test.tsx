@@ -278,4 +278,71 @@ describe('SessionProvider conversations', () => {
     expect(conversations().list.map(({title}) => title)).toEqual(['wetsuits', 'surfboards']);
     expect(tab.load(original)?.turns.map(({input}) => input.prompt)).toEqual(['surfboards']);
   });
+
+  it('keeps saving a resumed conversation under its id when a prompt answers with new keys', async () => {
+    const tab = browser().tab();
+    const first = renderConversations(tab);
+    await ask(first.session(), 'surfboards');
+    const original = first.conversations().currentId;
+    first.view.unmount();
+
+    const newKeys = {conversationSessionId: 'session-2', conversationToken: 'token-2'};
+    const {session, conversations, requests} = renderConversations(tab, (request, signal) =>
+      typeof request.message === 'string'
+        ? sseResponse(
+            run([]).map((event) => ('threadId' in event ? {...event, ...newKeys} : event))
+          )
+        : answerShell(request, signal)
+    );
+    await waitFor(() => expect(requests.at(-1)?.action?.name).toBe('initialize'));
+    await ask(session(), 'wetsuits');
+    await ask(session(), 'boots');
+
+    expect(conversations().currentId).toBe(original);
+    expect(tab.list().map(({id}) => id)).toEqual([original]);
+    expect(tab.load(original)?.turns.map(({input}) => input.prompt)).toEqual([
+      'surfboards',
+      'wetsuits',
+      'boots',
+    ]);
+  });
+
+  it('drops the current conversation from the list when its save is gone', () => {
+    const shared = browser();
+    const tab = shared.tab();
+    tab.save('gone', 'surfboards', {version: 4, turns: []});
+    tab.setCurrentId('gone');
+    shared.local.setItem('demo-conversation:gone', '{not json');
+
+    const {conversations} = renderConversations(tab);
+
+    expect(conversations().currentId).not.toBe('gone');
+    expect(tab.list()).toEqual([]);
+  });
+
+  it('saves the turn a swap stops', async () => {
+    const tab = browser().tab();
+    const {session, conversations} = renderConversations(tab, (request, signal) =>
+      request.message === 'wetsuits'
+        ? new Promise<Response>((_resolve, reject) =>
+            signal?.addEventListener('abort', () =>
+              reject(new DOMException('The request was aborted.', 'AbortError'))
+            )
+          )
+        : answerShell(request, signal)
+    );
+    await ask(session(), 'surfboards');
+    const original = conversations().currentId;
+    void session().dispatchAction({name: 'submitPrompt', payload: {prompt: 'wetsuits'}});
+    await waitFor(() => expect(session().getSnapshot().request?.kind).toBe('prompt'));
+
+    act(() => conversations().start());
+
+    await waitFor(() =>
+      expect(tab.load(original)?.turns.map(({input}) => input.prompt)).toEqual([
+        'surfboards',
+        'wetsuits',
+      ])
+    );
+  });
 });

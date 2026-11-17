@@ -13,7 +13,10 @@ export interface ConversationStorage {
   /** The saved conversations, newest first. */
   list(): readonly ConversationSummary[];
   load(id: string): SerializedSession | undefined;
-  /** Saves the conversation, then drops the oldest ones past the cap, or to make room. */
+  /**
+   * Saves the conversation, then drops the oldest ones past the cap, or to make room. A
+   * conversation that does not fit even alone is not saved, and the others are kept.
+   */
   save(id: string, title: string, session: SerializedSession): void;
   remove(id: string): void;
   /** The conversation this tab shows, which a reload resumes. */
@@ -71,23 +74,36 @@ export function createConversationStorage({
       return raw ? attempt(() => JSON.parse(raw) as SerializedSession) : undefined;
     },
     save(id, title, serialized) {
+      const key = ENTRY_PREFIX + id;
+      const previous = read(local, key);
       let index = [{id, title, updatedAt: now()}, ...list().filter((entry) => entry.id !== id)];
       for (const stale of index.slice(max)) {
         index = drop(index, stale.id);
       }
       const value = JSON.stringify(serialized);
+      const evicted: [string, string][] = [];
       for (;;) {
         try {
-          local().setItem(ENTRY_PREFIX + id, value);
+          local().setItem(key, value);
           writeIndex(index);
           return;
         } catch (error) {
           const oldest = index.findLast((entry) => entry.id !== id);
-          if (!isQuotaError(error) || !oldest) {
-            attempt(() => writeIndex(drop(index, id)));
-            return;
+          if (isQuotaError(error) && oldest) {
+            const oldestKey = ENTRY_PREFIX + oldest.id;
+            const oldestValue = read(local, oldestKey);
+            if (oldestValue) {
+              evicted.push([oldestKey, oldestValue]);
+            }
+            index = drop(index, oldest.id);
+            continue;
           }
-          index = drop(index, oldest.id);
+          // It does not fit even alone: everything goes back as it was, its previous save included.
+          attempt(() => (previous ? local().setItem(key, previous) : local().removeItem(key)));
+          for (const [evictedKey, evictedValue] of evicted) {
+            attempt(() => local().setItem(evictedKey, evictedValue));
+          }
+          return;
         }
       }
     },
