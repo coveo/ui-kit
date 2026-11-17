@@ -3,20 +3,20 @@
     onmouseleave={hideTooltip}>
     <button data-testid="quick-view-button" aria-hidden={isQuickviewOpen} class={buttonClass} onclick={openQuickview}
       title={buttonTitle} disabled={hasNoPreview} aria-label={buttonAriaLabelValue}>
-      <template if:true={hasButtonLabel}> {previewButtonLabel} </template>
-      <template if:true={hasIcon}>
+      <template lwc:if={hasButtonLabel}> {previewButtonLabel} </template>
+      <template lwc:if={hasIcon}>
         <lightning-icon size="x-small" icon-name={previewButtonIcon} alternative-text={buttonLabel}
           class={buttonIconClass}>
         </lightning-icon>
       </template>
     </button>
-    <template if:true={tooltip}>
+    <template lwc:if={tooltip}>
       <c-quantic-tooltip>
         <div slot="content">{tooltip}</div>
       </c-quantic-tooltip>
     </template>
   </div>
-  <template if:true={isQuickviewOpen}>
+  <template lwc:if={isQuickviewOpen}>
     <section onclick={closeQuickview} role="dialog" tabindex="-1" aria-labelledby="quickview-modal-heading"
       aria-modal="true" aria-describedby="quickview__content-container"
       class="slds-modal slds-modal_medium slds-fade-in-open">
@@ -46,7 +46,7 @@
         <c-quantic-quickview-content id="quickview__content-container" class="quickview__content-container slds-wrap"
           result={result} content-url={contentURL}
           onquantic__loadingstatechange={handleLoadingStateChange}></c-quantic-quickview-content>
-        <template if:false={isLoading}>
+        <template lwc:if={showFooter}>
           <footer onclick={stopPropagation} class="slds-modal__footer quickview-modal__footer slds-p-top_none slds-p-bottom_none">
             <slot name="footer"></slot>
           </footer>
