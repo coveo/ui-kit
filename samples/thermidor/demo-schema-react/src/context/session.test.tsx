@@ -1,10 +1,25 @@
-import {render, waitFor} from '@testing-library/react';
+import {act, render, waitFor} from '@testing-library/react';
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import type {Cart, CartLine} from '../cart/cart-api.js';
 import {CartProvider} from '../cart/CartProvider.js';
 import {createCartStore, EMPTY_CART, type CartClient} from '../cart/cart-store.js';
-import {answerShell} from '../test/session.js';
-import {SessionProvider, useSession, type DemoSession} from './session.js';
+import {createConversationStorage} from '../conversations/conversation-storage.js';
+import {memoryStorage} from '../test/memory-storage.js';
+import {
+  answerShell,
+  createTestSessionFactory,
+  run,
+  shellRun,
+  sseResponse,
+  type ConverseHandler,
+} from '../test/session.js';
+import {
+  SessionProvider,
+  useConversations,
+  useSession,
+  type Conversations,
+  type DemoSession,
+} from './session.js';
 
 interface RequestBody {
   action: {name: string} | null;
@@ -67,6 +82,8 @@ function renderSession(client: CartClient) {
 describe('SessionProvider', () => {
   afterEach(() => {
     vi.unstubAllGlobals();
+    localStorage.clear();
+    sessionStorage.clear();
   });
 
   it("sends the cart's items with every request, in context.cart", async () => {
@@ -120,5 +137,145 @@ describe('SessionProvider', () => {
     expect(() => render(<SessionProvider />)).toThrow(
       'SessionProvider must be used within a CartProvider, or be given a session'
     );
+  });
+});
+
+/** A browser whose tabs share `localStorage` and each have their own `sessionStorage`. */
+function browser() {
+  const local = memoryStorage();
+  return {
+    local,
+    tab: () => {
+      const session = memoryStorage();
+      return createConversationStorage({local: () => local, session: () => session});
+    },
+  };
+}
+
+function renderConversations(
+  storage: ReturnType<ReturnType<typeof browser>['tab']>,
+  handler: ConverseHandler = answerShell
+) {
+  const {create, requests} = createTestSessionFactory(handler);
+  let session: DemoSession | undefined;
+  let conversations: Conversations | undefined;
+  function Probe() {
+    session = useSession();
+    conversations = useConversations();
+    return null;
+  }
+  const view = render(
+    <SessionProvider createSession={create} storage={storage}>
+      <Probe />
+    </SessionProvider>
+  );
+  return {view, requests, session: () => session!, conversations: () => conversations!};
+}
+
+async function ask(session: DemoSession, prompt: string) {
+  await act(() => session.dispatchAction({name: 'submitPrompt', payload: {prompt}}));
+}
+
+describe('SessionProvider conversations', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('saves the conversation once a turn completes, titled by its first prompt', async () => {
+    const tab = browser().tab();
+    const {session, conversations} = renderConversations(tab);
+
+    await ask(session(), 'surfboards');
+    await ask(session(), 'wetsuits');
+
+    expect(conversations().list).toEqual([
+      {id: conversations().currentId, title: 'surfboards', updatedAt: expect.any(Number)},
+    ]);
+    expect(tab.load(conversations().currentId)?.turns).toHaveLength(2);
+  });
+
+  it('resumes the current conversation on reload', async () => {
+    const tab = browser().tab();
+    const first = renderConversations(tab);
+    await ask(first.session(), 'surfboards');
+    const id = first.conversations().currentId;
+    first.view.unmount();
+
+    const reloaded = renderConversations(tab);
+
+    expect(reloaded.conversations().currentId).toBe(id);
+    expect(reloaded.session().turns.map(({input}) => input.prompt)).toEqual(['surfboards']);
+    await waitFor(() =>
+      expect(reloaded.requests.at(-1)).toMatchObject({
+        action: {name: 'initialize'},
+        conversationSessionId: 'session-1',
+      })
+    );
+  });
+
+  it('starts a new conversation in a new tab, keeping the saved ones', async () => {
+    const shared = browser();
+    const first = renderConversations(shared.tab());
+    await ask(first.session(), 'surfboards');
+    first.view.unmount();
+
+    const fresh = renderConversations(shared.tab());
+
+    expect(fresh.session().turns).toEqual([]);
+    expect(fresh.conversations().list.map(({title}) => title)).toEqual(['surfboards']);
+  });
+
+  it('starts a new conversation, and drops the current one, when it cannot be restored', () => {
+    const tab = browser().tab();
+    tab.save('broken', 'surfboards', {version: 999, turns: []});
+    tab.setCurrentId('broken');
+
+    const {session, conversations} = renderConversations(tab);
+
+    expect(session().turns).toEqual([]);
+    expect(conversations().currentId).not.toBe('broken');
+    expect(tab.list()).toEqual([]);
+  });
+
+  it('switches between new and saved conversations, and removes them', async () => {
+    const tab = browser().tab();
+    const {session, conversations} = renderConversations(tab);
+    await ask(session(), 'surfboards');
+    const saved = conversations().currentId;
+
+    act(() => conversations().start());
+    expect(session().turns).toEqual([]);
+    expect(conversations().currentId).not.toBe(saved);
+
+    act(() => conversations().open(saved));
+    expect(conversations().currentId).toBe(saved);
+    expect(session().turns).toHaveLength(1);
+
+    act(() => conversations().remove(saved));
+    expect(conversations().list).toEqual([]);
+    expect(conversations().currentId).not.toBe(saved);
+    expect(session().turns).toEqual([]);
+  });
+
+  it('saves a resumed conversation the server replaced as a new one', async () => {
+    const tab = browser().tab();
+    const first = renderConversations(tab);
+    await ask(first.session(), 'surfboards');
+    const original = first.conversations().currentId;
+    first.view.unmount();
+
+    const replacedKeys = {conversationSessionId: 'session-2', conversationToken: 'token-2'};
+    const replaced = (events: object[]) =>
+      sseResponse(
+        events.map((event) => ('threadId' in event ? {...event, ...replacedKeys} : event))
+      );
+    const {session, conversations} = renderConversations(tab, (request) =>
+      replaced(request.action?.name === 'initialize' ? shellRun() : run([]))
+    );
+    await waitFor(() => expect(conversations().currentId).not.toBe(original));
+    await ask(session(), 'wetsuits');
+
+    expect(conversations().list.map(({title}) => title)).toEqual(['wetsuits', 'surfboards']);
+    expect(tab.load(original)?.turns.map(({input}) => input.prompt)).toEqual(['surfboards']);
   });
 });
