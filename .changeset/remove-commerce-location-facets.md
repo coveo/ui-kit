@@ -4,16 +4,16 @@
 
 Removing sunsetted experimental feature: commerce location facets
 
-Location facets were released behind a platform feature flag and were never adopted. The feature and its flags are being retired, so all support is removed from `@coveo/headless`.
+Commerce location facets were an experimental feature behind a platform feature flag, and the feature is now retired. The `FacetGenerator` no longer creates location facet controllers, `lf-*` URL parameters are no longer restored, and facets of an unsupported type such as `location` are dropped from commerce responses.
+
+`loadLocationFacetActions`, `LocationFacetActionCreators`, `ToggleSelectLocationFacetValuePayload`, `LocationFacet`, `LocationFacetState`, `LocationFacetValue` and `LocationFacetValueRequest` are still exported, so code that imports them keeps compiling. They are deprecated, have no effect, and will be removed in the next major version. Remove them from your code.
 
 **Semantically Breaking changes in `@coveo/headless`:**
 
-- Removed the location facet controller and its actions: `buildCommerceLocationFacet`, `loadLocationFacetActions`, `LocationFacetActionCreators`, `toggleSelectLocationFacetValue`, and `ToggleSelectLocationFacetValuePayload`.
-- Removed the location facet types: `LocationFacet`, `LocationFacetState`, `LocationFacetOptions`, `LocationFacetValue`, `LocationFacetValueRequest`, `LocationFacetRequest`, and `LocationFacetResponse`.
-- Removed `'location'` from the `FacetType` union. A facet response with `type: 'location'`, or with any other unsupported type, is now dropped when the response is processed, so it no longer appears in the facet state, the facet order, the `FacetGenerator`, or the breadcrumbs.
-- Removed the `lf` key from the `Parameters` type and the `lf-*` URL search parameter. A URL that still contains `lf-*` parameters is now ignored instead of restoring location facet selections.
+- Removed `'location'` from the `FacetType` union. Code that compares a facet type with `'location'` no longer compiles.
+- Removed the `lf` key from the `Parameters` type. Code that builds `Parameters` with an `lf` key no longer compiles.
 
-The user location context API is **not** removed. `Context.setLocation`, `UserLocation`, and `SetLocationPayload` are unchanged, and `context.user.latitude` and `context.user.longitude` are still sent on commerce requests. Only the facet built on top of that data is removed.
+The user location context API is **not** removed. `Context.setLocation`, `UserLocation`, and `SetLocationPayload` are unchanged, and `context.user.latitude` and `context.user.longitude` are still sent on commerce requests.
 
 > [!NOTE]
 > While the change is semantically breaking from a pure JavaScript/TypeScript API perspective, we decided that the removal of the API of a defunct *experimental* feature falls within the realm of acceptable breaking changes within a major.

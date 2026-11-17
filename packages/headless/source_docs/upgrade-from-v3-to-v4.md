@@ -419,7 +419,13 @@ The flag applies to every request of the matching solution type, so `state.resul
 
 <!-- TODO: KIT-6388 -->
 
-Removals outside server-side rendering will be listed here.
+### Commerce
+
+Commerce location facets were a retired experimental feature. A v3 patch already removed their runtime, the `'location'` member of the `FacetType` union and the `lf` key of the `Parameters` type. Version 4 removes the deprecated members that remained.
+
+| Removed                                                                                                                                                                                         | Replacement                                                                                                                                              |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `loadLocationFacetActions`, `LocationFacetActionCreators`, `ToggleSelectLocationFacetValuePayload`, `LocationFacet`, `LocationFacetState`, `LocationFacetValue` and `LocationFacetValueRequest` | None: commerce location facets were a retired experimental feature, and these members have no effect since v3 <!-- decided 2026-11-17, not yet built --> |
 
 ### Server-side rendering
 
