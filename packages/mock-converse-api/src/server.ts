@@ -36,6 +36,21 @@ const stringField = (record: Record<string, unknown> | undefined, field: string)
 
 const sessionsInFlight = new Map<string, symbol>();
 
+// The token each session was given, by session id.
+const tokensBySession = new Map<string, string>();
+
+// As Agent Gateway does, initialize resumes a session whose keys match, opens a new session under a
+// client-chosen id sent without a token, and opens a new session with fresh keys otherwise.
+const initializedSessionKeys = (sessionId?: string, sessionToken?: string) => {
+  if (sessionId && sessionToken && tokensBySession.get(sessionId) === sessionToken) {
+    return {conversationSessionId: sessionId, conversationToken: sessionToken};
+  }
+  return {
+    conversationSessionId: sessionId && !sessionToken ? sessionId : randomUUID(),
+    conversationToken: randomUUID(),
+  };
+};
+
 const actionInFlightResponse = () =>
   HttpResponse.json(
     {
@@ -176,21 +191,17 @@ const handleSchemaConversePost = async ({request}: {request: Request}) => {
   const sessionId = stringField(bodyRecord, 'conversationSessionId');
   const sessionToken = stringField(bodyRecord, 'conversationToken');
 
-  if (schemaAction && converseSchemaResponses.isInitialize(schemaAction) && sessionToken) {
-    return withCors(
-      HttpResponse.json(
-        {
-          error: 'initialize opens a session: send it without a session token',
-        },
-        {status: 400}
-      )
-    );
+  const initializes =
+    schemaAction !== undefined && converseSchemaResponses.isInitialize(schemaAction);
+  const session = initializes
+    ? initializedSessionKeys(sessionId, sessionToken)
+    : {
+        conversationSessionId: sessionId ?? randomUUID(),
+        conversationToken: sessionToken ?? randomUUID(),
+      };
+  if (initializes || !tokensBySession.has(session.conversationSessionId)) {
+    tokensBySession.set(session.conversationSessionId, session.conversationToken);
   }
-
-  const session = {
-    conversationSessionId: sessionId ?? randomUUID(),
-    conversationToken: sessionToken ?? randomUUID(),
-  };
 
   // Agent Gateway answers a concurrent action beside the turn: it neither waits for nor takes the
   // session's turn slot.
@@ -198,7 +209,7 @@ const handleSchemaConversePost = async ({request}: {request: Request}) => {
     return withCors(converseSchemaResponses.buildSchemaActionResponse(schemaAction, session));
   }
 
-  if (sessionId && sessionsInFlight.has(sessionId)) {
+  if (sessionsInFlight.has(session.conversationSessionId)) {
     return withCors(actionInFlightResponse());
   }
 

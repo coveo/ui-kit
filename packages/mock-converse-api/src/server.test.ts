@@ -348,8 +348,12 @@ describe('createMockConverseServer', () => {
           .map((op) => [`${op.surfaceId} ${op.path}`, op.value])
       );
 
-    const initialize = async () => {
-      const res = await postSchema({message: null, action: {name: 'initialize', context: {}}});
+    const initialize = async (keys: Record<string, string> = {}) => {
+      const res = await postSchema({
+        message: null,
+        ...keys,
+        action: {name: 'initialize', context: {}},
+      });
       return parseEvents(res.body);
     };
 
@@ -375,20 +379,56 @@ describe('createMockConverseServer', () => {
       expect(createdSurfaceIds(second)[0]).not.toBe(createdSurfaceIds(first)[0]);
     });
 
-    it('refuses initialize with a session token', async () => {
-      await startServer();
-      const res = await postSchema({
-        message: null,
-        conversationSessionId: 'session-1',
-        conversationToken: 'token-1',
-        action: {name: 'initialize', context: {}},
-      });
+    const shellRecentQueries = (events: SseEvent[]) => {
+      const [createSurface] = surfaceMessages(events).map(
+        (message) =>
+          message.createSurface as {
+            dataModel: {state: Record<string, {recentQueries: string[]}>};
+          }
+      );
+      return createSurface.dataModel.state['query-suggestions'].recentQueries;
+    };
 
-      expect(res.statusCode).toBe(400);
-      expect(res.headers['access-control-allow-origin']).toBe('*');
-      expect(JSON.parse(res.body)).toEqual({
-        error: 'initialize opens a session: send it without a session token',
+    it('resumes a session whose keys match, with its recent queries in a new shell', async () => {
+      await startServer();
+      const opened = await initialize();
+      const keys = sessionKeys(opened);
+      await postSchema({message: 'water sports', ...keys});
+
+      const resumed = await initialize(keys);
+
+      expect(sessionKeys(resumed)).toEqual(keys);
+      expect(createdSurfaceIds(resumed)[0]).not.toBe(createdSurfaceIds(opened)[0]);
+      expect(shellRecentQueries(resumed)).toEqual(['water sports']);
+    });
+
+    type Keys = ReturnType<typeof sessionKeys>;
+    it.each<[string, (keys: Keys) => Keys]>([
+      ['an unknown session id', () => ({conversationSessionId: 'unknown', conversationToken: 't'})],
+      ['a wrong token', (keys) => ({...keys, conversationToken: 'wrong'})],
+    ])('opens a new session with fresh keys on initialize with %s', async (_, keysToSend) => {
+      await startServer();
+      const keys = sessionKeys(await initialize());
+      await postSchema({message: 'water sports', ...keys});
+      const sent = keysToSend(keys);
+
+      const fallback = await initialize(sent);
+
+      expect(sessionKeys(fallback).conversationSessionId).not.toBe(sent.conversationSessionId);
+      expect(sessionKeys(fallback).conversationSessionId).not.toBe(keys.conversationSessionId);
+      expect(sessionKeys(fallback).conversationToken).not.toBe(sent.conversationToken);
+      expect(shellRecentQueries(fallback)).toEqual([]);
+    });
+
+    it('opens a new session under a client-chosen session id sent without a token', async () => {
+      await startServer();
+      const opened = await initialize({conversationSessionId: 'client-session'});
+
+      expect(sessionKeys(opened)).toEqual({
+        conversationSessionId: 'client-session',
+        conversationToken: expect.any(String),
       });
+      expect(shellRecentQueries(opened)).toEqual([]);
     });
 
     it("answers fetchSuggestions on the shell's surface, keeping the session", async () => {

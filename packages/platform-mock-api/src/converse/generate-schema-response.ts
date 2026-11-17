@@ -347,7 +347,13 @@ function buildSchemaActionResponse(action: SchemaAction, session: SessionKeys) {
     shellSurfaceIdsBySession.set(session.conversationSessionId, shellSurfaceId);
     return buildStreamingResponse(
       withSessionKeys(
-        withShellAnnouncements(buildSessionShellEvents(shellSurfaceId), shellSurfaceId),
+        withShellAnnouncements(
+          buildSessionShellEvents(
+            shellSurfaceId,
+            recentQueriesBySession.get(session.conversationSessionId)
+          ),
+          shellSurfaceId
+        ),
         session
       ),
       {delayBetweenMessages: DEFAULT_DELAY_MS}
