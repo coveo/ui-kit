@@ -1,5 +1,5 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {callWithConflictRetry} from './conflict-retry.js';
+import {callWithRetry} from './request-retry.js';
 
 type Result = {success: true} | {success: false; conflict?: object};
 
@@ -7,7 +7,7 @@ const success: Result = {success: true};
 const failure: Result = {success: false};
 const conflict = (): Result => ({success: false, conflict: {}});
 
-describe('callWithConflictRetry', () => {
+describe('callWithRetry', () => {
   let attempt: ReturnType<typeof vi.fn<() => Promise<Result>>>;
   let controller: AbortController;
 
@@ -42,21 +42,21 @@ describe('callWithConflictRetry', () => {
   it('returns a success without retrying', async () => {
     respondWith(success);
 
-    await expect(callWithConflictRetry(attempt, controller.signal)).resolves.toBe(success);
+    await expect(callWithRetry(attempt, controller.signal)).resolves.toBe(success);
     expect(attempt).toHaveBeenCalledTimes(1);
   });
 
   it('returns a failure that is not a conflict without retrying', async () => {
     respondWith(failure);
 
-    await expect(callWithConflictRetry(attempt, controller.signal)).resolves.toBe(failure);
+    await expect(callWithRetry(attempt, controller.signal)).resolves.toBe(failure);
     expect(attempt).toHaveBeenCalledTimes(1);
   });
 
   it('doubles the wait from 250 ms and caps it at 4 s', async () => {
     respondWith(conflict(), conflict(), conflict(), conflict(), conflict(), conflict(), success);
 
-    const result = callWithConflictRetry(attempt, controller.signal);
+    const result = callWithRetry(attempt, controller.signal);
 
     expect(await attemptsAfter(0, 249, 1, 500, 1000, 2000, 3999, 1, 4000)).toEqual([
       1, 1, 2, 3, 4, 5, 5, 6, 7,
@@ -68,7 +68,7 @@ describe('callWithConflictRetry', () => {
     vi.mocked(Math.random).mockReturnValue(0);
     respondWith(conflict(), success);
 
-    const result = callWithConflictRetry(attempt, controller.signal);
+    const result = callWithRetry(attempt, controller.signal);
 
     expect(await attemptsAfter(199, 1)).toEqual([1, 2]);
     await expect(result).resolves.toBe(success);
@@ -79,7 +79,7 @@ describe('callWithConflictRetry', () => {
     const conflicts = Array.from({length: 12}, () => conflict());
     respondWith(...conflicts);
 
-    const result = callWithConflictRetry(attempt, controller.signal);
+    const result = callWithRetry(attempt, controller.signal);
 
     expect(await attemptsAfter(27_750, 2249, 1, 30_000)).toEqual([11, 11, 12, 12]);
     await expect(result).resolves.toBe(conflicts[11]);
@@ -90,7 +90,7 @@ describe('callWithConflictRetry', () => {
       () => new Promise((resolve) => setTimeout(() => resolve(conflict()), 2000))
     );
 
-    const result = callWithConflictRetry(attempt, controller.signal);
+    const result = callWithRetry(attempt, controller.signal);
     await vi.advanceTimersByTimeAsync(60_000);
 
     await expect(result).resolves.toMatchObject({success: false});
@@ -101,7 +101,7 @@ describe('callWithConflictRetry', () => {
   it('rejects with an AbortError, without another attempt, when aborted during a wait', async () => {
     respondWith(conflict());
 
-    const result = callWithConflictRetry(attempt, controller.signal);
+    const result = callWithRetry(attempt, controller.signal);
     const settled = expect(result).rejects.toMatchObject({name: 'AbortError'});
     await vi.advanceTimersByTimeAsync(100);
     controller.abort();
@@ -115,7 +115,7 @@ describe('callWithConflictRetry', () => {
     controller.abort();
     respondWith(conflict());
 
-    await expect(callWithConflictRetry(attempt, controller.signal)).rejects.toMatchObject({
+    await expect(callWithRetry(attempt, controller.signal)).rejects.toMatchObject({
       name: 'AbortError',
     });
     expect(attempt).toHaveBeenCalledTimes(1);

@@ -16,7 +16,7 @@ interface AttemptResult {
  * included) runs out, and resolves with the last result. Rejects with an `AbortError` when
  * `signal` aborts during a wait.
  */
-export async function callWithConflictRetry<TResult extends AttemptResult>(
+export async function callWithRetry<TResult extends AttemptResult>(
   attempt: () => Promise<TResult>,
   signal: AbortSignal
 ): Promise<TResult> {
