@@ -5,6 +5,8 @@ import {defineProductList} from '../controllers/product-list/headless-product-li
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
 import type {InferHydratedState, InferStaticState} from '../types/controller-inference.js';
+import type {SolutionType} from '../types/controller-constants.js';
+import type {CommerceEngineDefinition} from '../types/engine.js';
 import {defineCommerceEngine} from './commerce-engine.ssr.js';
 
 // Types the customer relies on for IntelliSense: everything below is inferred from the controllers
@@ -88,6 +90,18 @@ describe('defineCommerceEngine', () => {
     expectTypeOf<
       InferStaticState<typeof recommendationEngineDefinition>['controllers']['popularViewed']
     >().not.toHaveProperty('productId');
+  });
+
+  it('should let code that is generic over the solution type reach cart and context', () => {
+    function readUniversalControllers<TSolutionType extends SolutionType>(
+      staticState: InferStaticState<CommerceEngineDefinition<{}, TSolutionType>>,
+      hydratedState: InferHydratedState<CommerceEngineDefinition<{}, TSolutionType>>
+    ) {
+      expectTypeOf(staticState.controllers.cart).toHaveProperty('state');
+      expectTypeOf(hydratedState.controllers.cart).toHaveProperty('empty');
+      expectTypeOf(hydratedState.controllers.context).toHaveProperty('state');
+    }
+    expectTypeOf(readUniversalControllers).toBeFunction();
   });
 
   it('should hydrate the controllers of the page as live controllers', () => {
