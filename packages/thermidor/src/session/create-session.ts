@@ -181,8 +181,9 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
    * A previously-serialized session to restore at construction. When provided,
    * the store is seeded from the serialized session, reproducing the persisted
    * transcript and continuity keys (`sessionId`/`sessionToken`/`activeTurnId`)
-   * so the restored session continues the same backend conversation. The surfaces its turns
-   * created are {@link DiscoveredSurface.readOnly | read-only}. When it has a token, its
+   * so the restored session continues the same backend conversation. The surfaces its earlier
+   * turns created are {@link DiscoveredSurface.readOnly | read-only}; the last turn's stay live.
+   * When it has a token, its
    * `initialize` resumes the session: the restored shell stays until the endpoint answers with a
    * new, live shell under a new id. If the endpoint answers with another session instead, the
    * restored turns are dropped, and `a2uiMessages` deletes their surfaces.
@@ -539,9 +540,11 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
       };
 
   const store: SessionStore<Turn> = createSessionStore<Turn>(initialState);
-  // The restored initialization holds the shell, which stays live until a resume replaces it.
+  // The restored shell and the last restored turn stay live: the gateway keeps their state.
   const restoredActivities: ReadonlySet<Activity> = new Set(
-    config.sessionToRestore ? initialState.turns.flatMap((turn) => turn.response.activities) : []
+    config.sessionToRestore
+      ? initialState.turns.slice(0, -1).flatMap((turn) => turn.response.activities)
+      : []
   );
 
   // While a resume streams, the restored shell stays until the resume's first activity replaces it.

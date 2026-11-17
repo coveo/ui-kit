@@ -5,7 +5,7 @@ import styles from './surfaces.module.css';
 /** Whether the surfaces drawn below belong to an earlier turn, whose actions the session ignores. */
 export const EarlierTurnContext = createContext(false);
 
-/** Whether the surfaces drawn below were restored, which the session refuses every action of. */
+/** Whether the surfaces drawn below are `readOnly`: restored, and refusing every action. */
 export const RestoredSurfacesContext = createContext(false);
 
 function SurfaceControls({children}: {children: ReactNode}) {

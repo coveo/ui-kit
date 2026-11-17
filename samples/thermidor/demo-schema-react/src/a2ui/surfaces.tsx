@@ -77,9 +77,9 @@ interface TurnSurfacesProps {
   surfaces: readonly DiscoveredSurface[];
   /**
    * Whether these surfaces belong to the latest turn. The sample keeps the surfaces of earlier
-   * turns read-only, as the session keeps those of a restored conversation: their controls that act
-   * on the surface are disabled (see `actsOnSurface`), while their products can still be opened and
-   * added to the cart.
+   * turns read-only, as the session keeps those of a restored conversation's earlier turns: their
+   * controls that act on the surface are disabled (see `actsOnSurface`), while their products can
+   * still be opened and added to the cart.
    */
   latest: boolean;
   /** Whether the turn these surfaces belong to is still streaming. */

@@ -48,7 +48,7 @@ function snapshotOf(context: SearchSurfaceContext): RestoreStatePayload | undefi
 /**
  * Keeps the browser history in step with a commerce-search surface: each search the surface
  * settles on becomes a history entry, and going back or forward to one of its entries restores
- * that search with `restoreState`. A restored surface, which the session refuses every action of,
+ * that search with `restoreState`. A `readOnly` surface, which the session refuses every action of,
  * keeps no history.
  */
 export function useSearchHistory(context: SearchSurfaceContext): void {
