@@ -1,6 +1,6 @@
 <template>
   <div class="slds-is-relative slds-show_inline result-action_container result-action_white-container" onmouseenter={showTooltip} onmouseleave={hideTooltip}>
-    <template if:true={loading}>
+    <template lwc:if={loading}>
       <button class={loadingClasses} aria-label={displayedLabel}>
         <div class="slds-spinner_container slds-var-m-around_xx-small">
           <div role="status" class="slds-spinner slds-spinner_xx-small">
@@ -10,12 +10,12 @@
         </div>
       </button>
     </template>
-    <template if:false={loading}>
+    <template lwc:else>
       <lightning-button-icon-stateful data-testid="result-action-button" onclick={handleClick} aria-label={displayedLabel} variant="border-filled"
         class={resultActionOrderClasses} icon-name={displayedIcon} selected={_selected}>
       </lightning-button-icon-stateful>
     </template>
-    <template if:true={displayedLabel}>
+    <template lwc:if={displayedLabel}>
       <c-quantic-tooltip>
         <div slot="content">{displayedLabel}</div>
       </c-quantic-tooltip>

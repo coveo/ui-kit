@@ -739,8 +739,9 @@ export const Default: Story = {
                             font-weight: bold;
                             color: var(--atomic-on-background);
                             margin-left: 0.25rem;
-                          }</style
-                        ><atomic-insight-result-action-bar>
+                          }
+                        </style>
+                        <atomic-insight-result-action-bar>
                           <atomic-insight-result-attach-to-case-action></atomic-insight-result-attach-to-case-action>
                           <atomic-insight-result-action
                             action="copyToClipboard"
