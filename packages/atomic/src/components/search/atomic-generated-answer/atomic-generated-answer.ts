@@ -207,7 +207,7 @@ export class AtomicGeneratedAnswer extends LitElement implements InitializableCo
   /**
    * A list of fields to include with the citations used to generate the answer.
    *
-   * Set this property as a stringified JSON array, for example:
+   * In JavaScript, set the property to an array of strings. In HTML, set the attribute to a stringified JSON array, for example:
    * ```html
    *  <atomic-generated-answer fields-to-include-in-citations='["fieldA", "fieldB"]'></atomic-generated-answer>
    * ```
@@ -217,7 +217,7 @@ export class AtomicGeneratedAnswer extends LitElement implements InitializableCo
     attribute: 'fields-to-include-in-citations',
     converter: AtomicGeneratedAnswer.fieldsToIncludeInCitationsConverter,
   })
-  fieldsToIncludeInCitations?: string;
+  fieldsToIncludeInCitations?: string[] | string;
 
   /**
    * Whether to disable citation anchoring.

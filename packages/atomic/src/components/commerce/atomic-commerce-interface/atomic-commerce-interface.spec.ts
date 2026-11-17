@@ -1374,4 +1374,35 @@ describe('atomic-commerce-interface', () => {
       expect(within(element).queryByShadowText('test-element')).toBeTruthy();
     });
   });
+
+  describe('deprecation warnings', () => {
+    const deprecationWarnings = (engine: {logger: {warn: unknown}}) =>
+      vi
+        .mocked(engine.logger.warn as (message: string) => void)
+        .mock.calls.filter(([message]) => String(message).startsWith('[Deprecated]'));
+
+    it('should log one deprecation warning when reflect-state-in-url is set', async () => {
+      const element = await setupElement({reflectStateInUrl: false});
+      const engine = buildFakeCommerceEngine();
+      await element.initializeWithEngine(engine);
+      await element.updateComplete;
+
+      expect(deprecationWarnings(engine)).toEqual([
+        [
+          expect.stringContaining(
+            '[Deprecated] The `reflect-state-in-url` property of `atomic-commerce-interface` is deprecated'
+          ),
+        ],
+      ]);
+    });
+
+    it('should not log a deprecation warning when reflect-state-in-url is not set', async () => {
+      const element = await setupElement();
+      const engine = buildFakeCommerceEngine();
+      await element.initializeWithEngine(engine);
+      await element.updateComplete;
+
+      expect(deprecationWarnings(engine)).toEqual([]);
+    });
+  });
 });

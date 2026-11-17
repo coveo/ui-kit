@@ -134,7 +134,7 @@ export class AtomicInsightGeneratedAnswer
   /**
    * A list of fields to include with the citations used to generate the answer.
    *
-   * Set this property as a stringified JSON array, for example:
+   * In JavaScript, set the property to an array of strings. In HTML, set the attribute to a stringified JSON array, for example:
    * ```html
    *  <atomic-insight-generated-answer fields-to-include-in-citations='["fieldA", "fieldB"]'></atomic-insight-generated-answer>
    * ```
@@ -144,7 +144,7 @@ export class AtomicInsightGeneratedAnswer
     attribute: 'fields-to-include-in-citations',
     converter: AtomicInsightGeneratedAnswer.fieldsToIncludeInCitationsConverter,
   })
-  fieldsToIncludeInCitations?: string;
+  fieldsToIncludeInCitations?: string[] | string;
 
   /**
    * Whether to disable citation anchoring.

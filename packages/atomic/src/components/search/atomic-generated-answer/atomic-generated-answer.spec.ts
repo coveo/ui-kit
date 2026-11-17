@@ -1444,6 +1444,18 @@ describe('atomic-generated-answer', () => {
           expect.stringContaining('[Deprecated]')
         );
       });
+
+      it('should not log a deprecation warning when the property is set to an array of strings', async () => {
+        const engine = buildFakeSearchEngine();
+        const {element} = await renderGeneratedAnswer({engine});
+
+        element.fieldsToIncludeInCitations = ['author', 'date'];
+        await element.updateComplete;
+
+        expect(engine.logger.warn).not.toHaveBeenCalledWith(
+          expect.stringContaining('[Deprecated]')
+        );
+      });
     });
 
     // TODO V4 (KIT-5306): Remove legacy comma-separated string support and update tests
