@@ -6,10 +6,10 @@ import {
   SolutionType,
   type CommerceEngine as SSRCommerceEngine,
 } from '@coveo/headless/ssr-commerce-next';
-import {cleanup, render, screen} from '@testing-library/react';
+import {act, cleanup, render, screen} from '@testing-library/react';
 import React, {type Context, createContext} from 'react';
 import {afterEach, describe, expect, test, vi} from 'vitest';
-import {buildStateProvider} from './common.js';
+import {buildControllerHooks, buildStateProvider} from './common.js';
 import type {ContextState, StateProviderProps} from './types.js';
 
 type MockDefinitions = ControllerDefinitionsMap<Controller>;
@@ -160,6 +160,105 @@ describe('SSR Commerce Common functions', () => {
         controllers: mockControllers,
         solutionType: mockSolutionType,
       });
+    });
+  });
+
+  describe('buildControllerHooks', () => {
+    const definitions = {
+      searchBox: {build: vi.fn(), listing: true, search: true, standalone: true},
+    } as unknown as MockDefinitions;
+    const {useSearchBox} = buildControllerHooks(mockSingletonContext, definitions) as unknown as {
+      useSearchBox: () => {state: {value: string}; methods?: {updateText: () => unknown}};
+    };
+    const StateProvider = buildStateProvider(mockSingletonContext, mockSolutionType);
+    let latestMethods: {updateText: () => unknown} | undefined;
+
+    function SearchBoxValue() {
+      const {state, methods} = useSearchBox();
+      latestMethods = methods;
+      return <div data-testid="search-box-value">{state.value}</div>;
+    }
+
+    function buildLiveSearchBox() {
+      let state = {value: 'live'};
+      const listeners = new Set<() => void>();
+      const controller = {
+        get state() {
+          return state;
+        },
+        subscribe: vi.fn((listener: () => void) => {
+          listeners.add(listener);
+          return () => listeners.delete(listener);
+        }),
+        updateText: vi.fn(function (this: unknown) {
+          return this;
+        }),
+      };
+      const setState = (next: {value: string}) => {
+        state = next;
+        listeners.forEach((listener) => listener());
+      };
+      return {controller, setState};
+    }
+
+    test('should read the static state and expose no methods before hydration', () => {
+      render(
+        <StateProvider controllers={mockStaticControllers}>
+          <SearchBoxValue />
+        </StateProvider>
+      );
+
+      expect(screen.getByTestId('search-box-value').textContent).toBe('test');
+      expect(latestMethods).toBeUndefined();
+    });
+
+    test('should subscribe to the live controller and bind its methods once hydrated', () => {
+      const {controller} = buildLiveSearchBox();
+      render(
+        <StateProvider
+          engine={mockEngine}
+          controllers={{searchBox: controller} as unknown as MockControllers}
+        >
+          <SearchBoxValue />
+        </StateProvider>
+      );
+
+      expect(screen.getByTestId('search-box-value').textContent).toBe('live');
+      expect(controller.subscribe).toHaveBeenCalledTimes(1);
+      expect(latestMethods?.updateText()).toBe(controller);
+    });
+
+    test('should re-render when the live controller notifies a change', () => {
+      const {controller, setState} = buildLiveSearchBox();
+      render(
+        <StateProvider
+          engine={mockEngine}
+          controllers={{searchBox: controller} as unknown as MockControllers}
+        >
+          <SearchBoxValue />
+        </StateProvider>
+      );
+
+      act(() => setState({value: 'changed'}));
+
+      expect(screen.getByTestId('search-box-value').textContent).toBe('changed');
+    });
+
+    test('should not subscribe again when the parent of the provider re-renders', () => {
+      const {controller} = buildLiveSearchBox();
+      const controllers = {searchBox: controller} as unknown as MockControllers;
+      const tree = () => (
+        <StateProvider engine={mockEngine} controllers={controllers}>
+          <SearchBoxValue />
+        </StateProvider>
+      );
+      const {rerender} = render(tree());
+      const firstMethods = latestMethods;
+
+      rerender(tree());
+
+      expect(controller.subscribe).toHaveBeenCalledTimes(1);
+      expect(latestMethods).toBe(firstMethods);
     });
   });
 });

@@ -37,9 +37,9 @@ export interface EngineStaticState<TControllerStates extends ControllerStaticSta
  *
  * @example
  * ```typescript
- * const searchEngineDefinition = defineSearchEngine({
- *   configuration: { organizationId: 'myorg', accessToken: 'token' },
- *   controllers: { searchBox: defineSearchBox() }
+ * const {searchEngineDefinition} = defineSearchEngine({
+ *   configuration: {organizationId: 'myorg', accessToken: 'token'},
+ *   controllers: {searchBox: defineSearchBox()},
  * });
  *
  * type StaticState = InferStaticState<typeof searchEngineDefinition>;
@@ -64,9 +64,9 @@ export type InferStaticState<
  *
  * @example
  * ```typescript
- * const searchEngineDefinition = defineSearchEngine({
- *   configuration: { organizationId: 'myorg', accessToken: 'token' },
- *   controllers: { searchBox: defineSearchBox() }
+ * const {searchEngineDefinition} = defineSearchEngine({
+ *   configuration: {organizationId: 'myorg', accessToken: 'token'},
+ *   controllers: {searchBox: defineSearchBox()},
  * });
  *
  * type HydratedState = InferHydratedState<typeof searchEngineDefinition>;

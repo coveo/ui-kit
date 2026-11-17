@@ -69,7 +69,7 @@ export interface ControllerDefinitionsMap<TController extends Controller> {
   [customName: string]: ControllerDefinition<TController>;
 }
 
-export type BakedInControllerDefinitions = {
+type BakedInControllerDefinitions = {
   parameterManager: ParameterManagerDefinition;
   context: ContextDefinition;
   cart: CartDefinition;
