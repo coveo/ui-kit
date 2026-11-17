@@ -3,13 +3,10 @@ import type {ControllerStaticState, ControllersPropsMap} from '../../common/type
 import type {EngineStaticState} from '../../common/types/engine.js';
 import type {BuildConfig} from './build.js';
 import type {SolutionType} from './controller-constants.js';
-import type {
-  BakedInControllerDefinitions,
-  BakedInControllers,
-  ControllerDefinitionsMap,
-} from './controller-definitions.js';
+import type {BakedInControllers, ControllerDefinitionsMap} from './controller-definitions.js';
 import type {
   AvailableControllerNames,
+  BakedInControllerNames,
   InferControllerFromDefinition,
 } from './controller-inference.js';
 
@@ -36,9 +33,9 @@ export type CommerceStaticState<
       InferControllerFromDefinition<TControllers[K & keyof TControllers]>['state']
     >;
   } & {
-    [
-      K in AvailableControllerNames<BakedInControllerDefinitions, TSolutionType>
-    ]: ControllerStaticState<BakedInControllers[K]['state']>;
+    [K in BakedInControllerNames<TSolutionType>]: ControllerStaticState<
+      BakedInControllers[K]['state']
+    >;
   }
 > &
   BuildConfig<TControllers, TSolutionType> & {

@@ -37,6 +37,16 @@ export type InferControllerFromDefinition<TDefinition extends ControllerDefiniti
 /**
  * The names of the controller definitions that are available to the solution type.
  */
+/**
+ * The names of the baked-in controllers built for the solution type: `cart` and `context` always, and
+ * `parameterManager` for search and listing. The universal names are known even while the solution
+ * type is a type parameter.
+ */
+export type BakedInControllerNames<TSolutionType extends SolutionType> =
+  | 'cart'
+  | 'context'
+  | (TSolutionType extends SolutionType.search | SolutionType.listing ? 'parameterManager' : never);
+
 export type AvailableControllerNames<TDefinitions, TSolutionType extends SolutionType> = {
   [K in keyof TDefinitions]: HasKey<TDefinitions[K], TSolutionType> extends never ? never : K;
 }[keyof TDefinitions];
