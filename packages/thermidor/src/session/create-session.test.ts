@@ -2208,6 +2208,14 @@ describe('createSession lifecycle', () => {
         },
       };
 
+      const LATEST_ANSWER_ID = 'answer-2';
+
+      const latestAnswerSurface = JSON.parse(
+        JSON.stringify(answerSurface)
+          .replaceAll(ANSWER_ID, LATEST_ANSWER_ID)
+          .replace('answer-activity', 'latest-answer-activity')
+      ) as typeof answerSurface;
+
       const answerSelectPage = {
         userAction: {
           name: 'selectPage',
@@ -2220,6 +2228,7 @@ describe('createSession lifecycle', () => {
       async function serializedConversation() {
         const session = await initializedSession();
         await completePrompt(session, 'first', [answerSurface]);
+        await completePrompt(session, 'latest', [latestAnswerSurface]);
         callMock.mockReset();
         return session.serialize();
       }
@@ -2252,7 +2261,7 @@ describe('createSession lifecycle', () => {
           conversationSessionId: 'gateway-session',
           conversationToken: 'gateway-token',
         });
-        expect(session.turns.map((turn) => turn.input.prompt)).toEqual(['first']);
+        expect(session.turns.map((turn) => turn.input.prompt)).toEqual(['first', 'latest']);
         expect(session.surfaces).toEqual([
           {surfaceId: NEW_SHELL_ID, rootComponentType: 'CommerceSearch', isLoading: false},
           {
@@ -2261,8 +2270,10 @@ describe('createSession lifecycle', () => {
             isLoading: false,
             readOnly: true,
           },
+          {surfaceId: LATEST_ANSWER_ID, rootComponentType: 'CommerceSearch', isLoading: false},
         ]);
         expect(session.turns[0].response.surfaces[0].readOnly).toBe(true);
+        expect(session.turns[1].response.surfaces[0].readOnly).toBeUndefined();
         expect(session.a2uiMessages).toContainEqual({
           version: 'v0.9',
           deleteSurface: {surfaceId: SHELL_ID},
@@ -2272,17 +2283,21 @@ describe('createSession lifecycle', () => {
         callMock.mockReset();
         await session.dispatchAction(answerSelectPage);
         expect(callMock).not.toHaveBeenCalled();
-        const stream = queueStream();
-        const sent = session.dispatchAction({
-          userAction: {...shellSelectPage(2).userAction, surfaceId: NEW_SHELL_ID},
-        });
-        await stream.opened;
-        stream.emit({type: 'RUN_FINISHED'});
-        stream.close();
-        await sent;
-        expect(callMock.mock.calls[0][0]).toMatchObject({
-          action: {name: 'selectPage', surfaceId: NEW_SHELL_ID},
-        });
+        for (const userAction of [
+          {...shellSelectPage(2).userAction, surfaceId: NEW_SHELL_ID},
+          {...answerSelectPage.userAction, surfaceId: LATEST_ANSWER_ID},
+        ]) {
+          callMock.mockReset();
+          const stream = queueStream();
+          const sent = session.dispatchAction({userAction});
+          await stream.opened;
+          stream.emit({type: 'RUN_FINISHED'});
+          stream.close();
+          await sent;
+          expect(callMock.mock.calls[0][0]).toMatchObject({
+            action: {name: 'selectPage', surfaceId: userAction.surfaceId},
+          });
+        }
       });
 
       it.each([
@@ -2332,7 +2347,7 @@ describe('createSession lifecycle', () => {
         expect(session.turns).toEqual([]);
         expect(session.surfaces.map((surface) => surface.surfaceId)).toEqual([NEW_SHELL_ID]);
         expect(session.surfaces[0].readOnly).toBeUndefined();
-        for (const surfaceId of [SHELL_ID, ANSWER_ID]) {
+        for (const surfaceId of [SHELL_ID, ANSWER_ID, LATEST_ANSWER_ID]) {
           expect(session.a2uiMessages).toContainEqual({
             version: 'v0.9',
             deleteSurface: {surfaceId},
@@ -2353,7 +2368,11 @@ describe('createSession lifecycle', () => {
 
         expect(callMock).not.toHaveBeenCalled();
         expect(restored.initialization?.status).toBe('complete');
-        expect(restored.surfaces.map((surface) => surface.readOnly)).toEqual([undefined, true]);
+        expect(restored.surfaces.map((surface) => surface.readOnly)).toEqual([
+          undefined,
+          true,
+          undefined,
+        ]);
       });
 
       it('sends nothing when retrying a failed restored turn opened from a restored surface', async () => {
@@ -2379,7 +2398,7 @@ describe('createSession lifecycle', () => {
         await flush();
 
         expect(callMock).not.toHaveBeenCalled();
-        expect(restored.turns[1].status).toBe('error');
+        expect(restored.turns.at(-1)?.status).toBe('error');
       });
 
       it('never sends initialize for a restored session without a token', async () => {
