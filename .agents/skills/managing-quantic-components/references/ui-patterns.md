@@ -103,8 +103,6 @@ Use `lwc:if` / `lwc:elseif` / `lwc:else` for top-level conditional branches:
 </template>
 ```
 
-> ⚠️ Legacy `if:true` / `if:false` directives exist in older components but must **not** be used in new code.
-
 ### Template expression restrictions
 
 LWC template expressions have strict limitations that differ from other frameworks:

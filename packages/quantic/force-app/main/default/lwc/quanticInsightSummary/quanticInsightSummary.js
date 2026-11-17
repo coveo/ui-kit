@@ -70,6 +70,10 @@ export default class QuanticInsightPanelSummary extends LightningElement {
     this.unsubscribeQuerySummary?.();
   }
 
+  get hasNoError() {
+    return !this.hasError;
+  }
+
   /**
    * Updates summary visibility.
    * @returns {void}

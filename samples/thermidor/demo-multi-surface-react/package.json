@@ -13,11 +13,12 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@copilotkit/a2ui-renderer": "1.80.0",
+    "@copilotkit/a2ui-renderer": "1.85.0",
     "@coveo/thermidor": "workspace:*",
     "@coveo/thermidor-schema": "catalog:",
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "zod": "3.25.76"
   },
   "devDependencies": {
     "@testing-library/react": "catalog:",
