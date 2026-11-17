@@ -37,10 +37,10 @@
     "clean": "node ../../utils/ci/rm-rf.mjs dist"
   },
   "dependencies": {
-    "@clack/prompts": "1.8.1",
-    "@sentry/node": "10.74.0",
-    "commander": "15.0.0",
-    "pacote": "22.0.0"
+    "@clack/prompts": "1.9.0",
+    "@sentry/node": "10.78.0",
+    "commander": "15.1.0",
+    "pacote": "22.0.1"
   },
   "devDependencies": {
     "@types/node": "catalog:",
