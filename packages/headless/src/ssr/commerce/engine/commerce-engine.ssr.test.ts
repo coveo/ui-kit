@@ -205,21 +205,21 @@ describe('Commerce Engine SSR', () => {
     });
 
     it('does not log a deprecation warning when #hydrateStaticState is called', async () => {
+      const allDeprecationWarnings = () =>
+        warnings().filter(
+          (message) => typeof message === 'string' && message.startsWith('[Deprecated]')
+        );
       const staticState = await standaloneEngineDefinition.fetchStaticState({
         controllers: {cart: {initialState: {items: []}}},
       });
-      vi.mocked(buildLogger).mockClear();
+      const warningsBeforeHydration = allDeprecationWarnings();
 
       await standaloneEngineDefinition.hydrateStaticState({
         searchActions: staticState.searchActions,
         controllers: {cart: {initialState: {items: []}}},
       });
 
-      expect(
-        warnings().filter(
-          (message) => typeof message === 'string' && message.startsWith('[Deprecated]')
-        )
-      ).toHaveLength(0);
+      expect(allDeprecationWarnings()).toEqual(warningsBeforeHydration);
     });
 
     it('logs a deprecation warning when #fetchStaticState.fromBuildResult is called', async () => {
