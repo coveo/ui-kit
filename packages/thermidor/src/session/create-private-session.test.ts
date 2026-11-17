@@ -333,6 +333,87 @@ describe('createPrivateSession', () => {
       expect(session.sessionId).toBe('session-1');
     });
 
+    function refuseNextWith(status: number): void {
+      callMock.mockImplementationOnce(
+        async () =>
+          ({
+            success: false,
+            error: `HTTP ${status}`,
+            status,
+          }) as never
+      );
+    }
+
+    it.each([429, 503, 400, 409])(
+      'keeps the id when the endpoint refuses the first prompt with a %i, so the retry sends it again',
+      async (status) => {
+        refuseNextWith(status);
+        answerWithTokenFor(SESSION_ID);
+        const session = createPrivateSession(config({sessionId: SESSION_ID}));
+        await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+
+        expect(session.sessionId).toBe(SESSION_ID);
+        session.retry(session.turns[0].id);
+        await flush();
+
+        expect(requests().at(-1)).toMatchObject({conversationSessionId: SESSION_ID});
+        expect(session.sessionId).toBe(SESSION_ID);
+      }
+    );
+
+    it('keeps the id when the endpoint refuses initialize, so the next request sends it again', async () => {
+      refuseNextWith(429);
+      answerWithTokenFor(SESSION_ID);
+      const session = createPrivateSession(config({sessionId: SESSION_ID, initialize: true}));
+      await flush();
+
+      expect(session.initialization?.status).toBe('error');
+      expect(session.sessionId).toBe(SESSION_ID);
+      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+
+      expect(requests()[1]).toMatchObject({conversationSessionId: SESSION_ID});
+    });
+
+    it('drops the id when the endpoint answers the first prompt with a 403', async () => {
+      refuseNextWith(403);
+      const session = createPrivateSession(config({sessionId: SESSION_ID}));
+
+      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+
+      expect(session.sessionId).toBeUndefined();
+    });
+
+    it('drops the id when the first prompt gets no response', async () => {
+      callMock.mockImplementationOnce(
+        async () =>
+          ({
+            success: false,
+            error: 'Network error',
+          }) as never
+      );
+      const session = createPrivateSession(config({sessionId: SESSION_ID}));
+
+      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+
+      expect(session.sessionId).toBeUndefined();
+    });
+
+    it('keeps the id when the first prompt is never sent', async () => {
+      callMock.mockImplementationOnce(
+        async () =>
+          ({
+            success: false,
+            error: 'Configuration error',
+            unsent: true,
+          }) as never
+      );
+      const session = createPrivateSession(config({sessionId: SESSION_ID}));
+
+      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+
+      expect(session.sessionId).toBe(SESSION_ID);
+    });
+
     it('throws when a sessionToRestore is passed too', () => {
       const serialized = createPrivateSession(config()).serialize();
 

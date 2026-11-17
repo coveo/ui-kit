@@ -41,6 +41,7 @@ describe('UnifiedEndpointClient', () => {
       throw new Error('Expected unified endpoint call to fail');
     }
     expect(response.error).toContain('Access token is not set');
+    expect(response.unsent).toBe(true);
     expect(mockedFetch).not.toHaveBeenCalled();
   });
 
@@ -194,6 +195,7 @@ describe('UnifiedEndpointClient', () => {
       throw new Error('Expected unified endpoint call to fail');
     }
     expect(response.error).toContain('Organization ID is not set');
+    expect(response.unsent).toBe(true);
     expect(mockedFetch).not.toHaveBeenCalled();
   });
 
@@ -208,6 +210,7 @@ describe('UnifiedEndpointClient', () => {
       throw new Error('Expected unified endpoint call to fail');
     }
     expect(response.error).toContain('Organization ID is not set');
+    expect(response.unsent).toBe(true);
     expect(mockedFetch).not.toHaveBeenCalled();
   });
 
@@ -273,6 +276,8 @@ describe('UnifiedEndpointClient', () => {
     }
 
     expect(response.error).toContain('Authentication failed');
+    expect(response.status).toBe(401);
+    expect(response.unsent).toBeUndefined();
   });
 
   describe('409 Conflict', () => {
@@ -307,6 +312,7 @@ describe('UnifiedEndpointClient', () => {
         'Conflict: Another request is still being processed for this session.'
       );
       expect(result.conflict).toEqual({inFlightSequence: 7});
+      expect(result.status).toBe(409);
     });
 
     it('reads a conflict without an in-flight sequence', async () => {

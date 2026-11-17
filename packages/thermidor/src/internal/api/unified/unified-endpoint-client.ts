@@ -22,6 +22,7 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
       if (!accessToken) {
         return {
           success: false,
+          unsent: true,
           error:
             'Configuration error: Access token is not set. Please configure your access token.',
         };
@@ -37,6 +38,7 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
         if (!organizationId) {
           return {
             success: false,
+            unsent: true,
             error:
               'Configuration error: Organization ID is not set. Please configure your organization ID.',
           };
@@ -64,9 +66,9 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
       if (!isSuccessResponse(response)) {
         const conflict = await readActionInFlightConflict(response);
         if (conflict) {
-          return {success: false, error: ACTION_IN_FLIGHT_ERROR, conflict};
+          return {success: false, error: ACTION_IN_FLIGHT_ERROR, conflict, status: response.status};
         }
-        return {success: false, error: transformError(response)};
+        return {success: false, error: transformError(response), status: response.status};
       }
 
       if (!response.body) {
@@ -120,6 +122,10 @@ type UnifiedEndpointClientResult =
       success: false;
       error: string;
       conflict?: ActionInFlightConflict;
+      /** The HTTP status, when the endpoint answered with an error. */
+      status?: number;
+      /** Set when the request was never sent, such as for a configuration error. */
+      unsent?: true;
     };
 
 export interface UnifiedEndpointClient {

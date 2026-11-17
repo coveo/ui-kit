@@ -472,8 +472,9 @@ export interface SessionRuntime<TContracts extends ContractsSchema = ContractsSc
 /**
  * The session runtime both entry points share. `requestScope` holds the fields sent with
  * every request besides the ones the session builds itself. `initialSessionId` is the first
- * conversation session id the requests carry. The session drops it if a request ends before
- * the endpoint sends a token, as it does `unconfirmedSessionId`, which defaults to it.
+ * conversation session id the requests carry. The session drops it if a request that may have
+ * reserved it ends before the endpoint sends a token, as it does `unconfirmedSessionId`, which
+ * defaults to it.
  */
 export function createSessionRuntime<TContracts extends ContractsSchema>(
   config: SessionRuntimeConfig<TContracts>,
@@ -555,6 +556,8 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   // The currently in-flight stream's abort controller, or null when idle. Held
   // per session instance — never module-level — so two sessions never contend.
   let activeAbortController: AbortController | null = null;
+  // Whether the request in flight reached the endpoint in a way that may have reserved its id.
+  let requestMayHaveReservedSessionId = false;
 
   // One request at a time: the endpoint handles a single request per session, and each response
   // is a whole-node snapshot, so overlapping streams would let the last to ARRIVE win over a newer
@@ -572,6 +575,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     const abortController = new AbortController();
     activeAbortController = abortController;
     requestAbandoned = abandoned && {request, ids: abandoned};
+    requestMayHaveReservedSessionId = false;
     store.setState((current) => ({...current, request}));
     if (!abortController.signal.aborted) {
       try {
@@ -593,10 +597,24 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   // The endpoint refuses an id it holds a token for when the request has none, so drop ours and let it assign one.
   function holdsUnconfirmedSessionId(state: SessionStoreState<Turn>): boolean {
     return (
+      requestMayHaveReservedSessionId &&
       unconfirmedSessionId !== undefined &&
       state.sessionToken === undefined &&
       state.sessionId === unconfirmedSessionId
     );
+  }
+
+  // The endpoint stores a token for a new id only once it admits the request, and revokes it when
+  // it answers with an error, so only a 403 (id taken) or an unknown outcome may leave one behind.
+  function mayHaveReservedSessionId(attempt: {
+    success: boolean;
+    status?: number;
+    unsent?: true;
+  }): boolean {
+    if (attempt.success) {
+      return true;
+    }
+    return attempt.status === undefined ? !attempt.unsent : attempt.status === 403;
   }
 
   /** A dispatch refused before it was sent settles at once. */
@@ -876,19 +894,21 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   ): Promise<RequestFailure | undefined> {
     try {
       // Rebuilt on every attempt, so context providers and session keys are read fresh.
-      const result = await callWithConflictRetry(
-        () =>
-          client.call(
-            buildRequest(),
-            {
-              organizationId: config.organizationId,
-              accessToken: config.accessToken,
-              endpoint: config.endpoint,
-            },
-            {signal: abortController.signal}
-          ),
-        abortController.signal
-      );
+      const result = await callWithConflictRetry(async () => {
+        const attempt = await client.call(
+          buildRequest(),
+          {
+            organizationId: config.organizationId,
+            accessToken: config.accessToken,
+            endpoint: config.endpoint,
+          },
+          {signal: abortController.signal}
+        );
+        if (mayHaveReservedSessionId(attempt)) {
+          requestMayHaveReservedSessionId = true;
+        }
+        return attempt;
+      }, abortController.signal);
 
       if (!result.success) {
         // The client reports an abort as a failed call rather than throwing it.

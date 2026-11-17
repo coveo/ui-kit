@@ -22,7 +22,9 @@ export interface PrivateSessionConfig<
    * The conversation session id the session opens with, so the caller knows it before the first request.
    * It must be a UUID. It is sent as `conversationSessionId` from the first request.
    * If the first request ends before the endpoint sends a token, the session drops the id and the
-   * endpoint assigns one. It can't be combined with `sessionToRestore`.
+   * endpoint assigns one. It keeps the id when the endpoint refuses the request with an error
+   * status other than 403, or when the request is never sent. It can't be combined with
+   * `sessionToRestore`.
    */
   sessionId?: string;
 }
