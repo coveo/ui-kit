@@ -58,14 +58,18 @@ describe('createConversationStorage', () => {
     expect(storage.load('a')).toBeUndefined();
   });
 
-  it('drops a conversation that does not fit on its own', () => {
-    const {storage} = setup({quota: 300});
+  it('keeps every conversation, and its previous save, when it does not fit even alone', () => {
+    const {storage} = setup({quota: 400});
     storage.save('a', 'a', serialized('x'.repeat(100)));
+    storage.save('b', 'b', serialized('b'));
 
     storage.save('b', 'b', serialized('x'.repeat(500)));
+    storage.save('c', 'c', serialized('x'.repeat(500)));
 
-    expect(ids(storage)).toEqual([]);
-    expect(storage.load('b')).toBeUndefined();
+    expect(ids(storage)).toEqual(['b', 'a']);
+    expect(storage.load('a')).toEqual(serialized('x'.repeat(100)));
+    expect(storage.load('b')).toEqual(serialized('b'));
+    expect(storage.load('c')).toBeUndefined();
   });
 
   it('removes a conversation', () => {

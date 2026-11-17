@@ -3,6 +3,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type PropsWithChildren,
 } from 'react';
@@ -79,9 +80,18 @@ export function SessionProvider({
   );
   const [list, setList] = useState(storage.list);
 
+  const currentRef = useRef(current);
+  currentRef.current = current;
   useEffect(
-    () => persist(storage, current, setCurrent, () => setList(storage.list())),
-    [storage, current]
+    () =>
+      persist(
+        storage,
+        current.session,
+        currentRef.current.id,
+        (id) => setCurrent((previous) => ({...previous, id})),
+        () => setList(storage.list())
+      ),
+    [storage, current.session]
   );
 
   const conversations = useMemo<Conversations>(() => {
@@ -157,38 +167,61 @@ function openCurrent(storage: ConversationStorage, create: SessionFactory): Curr
     try {
       return {id, session: create(saved)};
     } catch {
-      storage.remove(id);
+      // Dropped below.
     }
+  }
+  if (id !== undefined) {
+    storage.remove(id);
   }
   return startWith(storage, create());
 }
 
 /**
- * Saves the conversation each time a request that updates it ends. When the session answers under
- * another id, as when the conversation it resumed had expired, it becomes a new conversation, so
- * the saved one keeps its transcript.
+ * Saves the conversation each time a request that updates it ends. When the session drops the
+ * transcript it resumed, because the endpoint answered with another session, it becomes a new
+ * conversation, so the saved one keeps its transcript. Once the session is swapped out, it is still
+ * saved when the request it was sending ends.
  */
 function persist(
   storage: ConversationStorage,
-  {id, session}: Current,
-  setCurrent: (current: Current) => void,
+  session: DemoSession,
+  initialId: string,
+  onNewId: (id: string) => void,
   onSaved: () => void
 ) {
-  const boundSessionId = session.sessionId;
-  let saving = false;
-  return session.subscribe(() => {
-    const {sessionId} = session;
-    if (boundSessionId !== undefined && sessionId !== undefined && sessionId !== boundSessionId) {
-      setCurrent(startWith(storage, session));
-      return;
-    }
+  let id = initialId;
+  let boundSessionId = session.sessionId;
+  let saving = savesAfter(session.getSnapshot().request);
+  let swappedOut = false;
+  const unsubscribe = session.subscribe(() => {
     const {request, turns} = session.getSnapshot();
+    if (session.sessionId !== boundSessionId) {
+      if (boundSessionId !== undefined && turns.length === 0 && !swappedOut) {
+        id = startWith(storage, session).id;
+        onNewId(id);
+      }
+      boundSessionId = session.sessionId;
+    }
     if (saving && !request && turns.length > 0) {
       storage.save(id, titleOf(turns[0].input), session.serialize());
       onSaved();
     }
-    saving = isBlocking(request) && request?.kind !== 'initialize';
+    saving = savesAfter(request);
+    if (swappedOut && !request) {
+      unsubscribe();
+    }
   });
+  return () => {
+    if (session.getSnapshot().request) {
+      swappedOut = true;
+    } else {
+      unsubscribe();
+    }
+  };
+}
+
+function savesAfter(request: DemoSession['request']) {
+  return isBlocking(request) && request?.kind !== 'initialize';
 }
 
 function titleOf({prompt, action}: DemoSession['turns'][number]['input']): string {
