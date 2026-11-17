@@ -2508,6 +2508,12 @@ describe('createSession session keys', () => {
       );
     });
 
+    it.each(['', ' '])('throws when the sessionToken is blank (%j)', (sessionToken) => {
+      expect(() => createSession(config({sessionId: SESSION_ID, sessionToken}))).toThrow(
+        'non-blank sessionToken'
+      );
+    });
+
     it('throws when a sessionToRestore is passed with a sessionId', () => {
       const serialized = createSession(config()).serialize();
 
@@ -2711,11 +2717,12 @@ describe('createSession session keys', () => {
   describe('with a sessionId and a sessionToken', () => {
     const keys = {sessionId: SESSION_ID, sessionToken: SESSION_TOKEN};
 
-    it('exposes both keys right after creation, before any request', () => {
+    it('exposes and serializes both keys right after creation, before any request', () => {
       const session = createSession(config(keys));
 
       expect(session.sessionId).toBe(SESSION_ID);
       expect(session.sessionToken).toBe(SESSION_TOKEN);
+      expect(session.serialize()).toMatchObject(keys);
       expect(callMock).not.toHaveBeenCalled();
     });
 
@@ -2750,14 +2757,40 @@ describe('createSession session keys', () => {
       expect(session.sessionId).toBe(SESSION_ID);
     });
 
-    it('keeps the id when the first request gets no response', async () => {
-      failNextWith({error: 'Network error'});
+    it('sends no initialize after a prompt dispatched in the same task', async () => {
+      answerWithKeys(SESSION_ID, SESSION_TOKEN);
+      const session = createSession(config({...keys, initialize: true}));
+
+      await session.dispatchAction(PROMPT);
+      await flush();
+
+      expect(sent()).toHaveLength(1);
+      expect(sent()[0]).toMatchObject({action: null, conversationToken: SESSION_TOKEN});
+      expect(session.initialization).toBeUndefined();
+    });
+
+    it.each([
+      ['a 403', {error: 'HTTP 403', status: 403}],
+      ['no response', {error: 'Network error'}],
+    ])('keeps both keys when the first request gets %s', async (_, failure) => {
+      failNextWith(failure);
       const session = createSession(config(keys));
 
       await session.dispatchAction(PROMPT);
 
       expect(session.sessionId).toBe(SESSION_ID);
       expect(session.sessionToken).toBe(SESSION_TOKEN);
+    });
+
+    it('drops the old token when the endpoint sends a new id without one', async () => {
+      const newId = '7c9e6679-7425-40de-944b-e07fc1f90ae7';
+      answerWith({type: 'RUN_STARTED', conversationSessionId: newId}, {type: 'RUN_FINISHED'});
+      const session = createSession(config(keys));
+
+      await session.dispatchAction(PROMPT);
+
+      expect(session.sessionId).toBe(newId);
+      expect(session.sessionToken).toBeUndefined();
     });
 
     it('adopts the new keys the endpoint answers with, and sends them next', async () => {

@@ -493,6 +493,9 @@ function validateSessionKeys({sessionId, sessionToken, sessionToRestore}: Sessio
   if (sessionId !== undefined && !UUID.test(sessionId)) {
     throw new Error('A session requires its sessionId to be a UUID.');
   }
+  if (sessionToken !== undefined && !sessionToken.trim()) {
+    throw new Error('A session requires a non-blank sessionToken.');
+  }
   if (sessionToken !== undefined && sessionId === undefined) {
     throw new Error('A session requires a sessionId with its sessionToken.');
   }
@@ -515,8 +518,8 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   validateSessionKeys(config);
   // An id without a token may not be the endpoint's: the session drops it if a request that may
   // have reserved it ends before the endpoint sends a token.
-  const keys = config.sessionToRestore ?? config;
-  const unconfirmedSessionId = keys.sessionToken === undefined ? keys.sessionId : undefined;
+  const seed = config.sessionToRestore ?? config;
+  const unconfirmedSessionId = seed.sessionToken === undefined ? seed.sessionId : undefined;
   const initialState: SessionStoreState<Turn> = config.sessionToRestore
     ? restoreSession(config.sessionToRestore)
     : {
@@ -862,11 +865,18 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
 
         const keys = readSessionKeys(event);
         if (keys) {
-          store.setState((current) => ({
-            ...current,
-            sessionId: keys.sessionId ?? current.sessionId,
-            sessionToken: keys.sessionToken ?? current.sessionToken,
-          }));
+          // A new id is a new session: the old token is not its token.
+          store.setState((current) => {
+            const sessionId = keys.sessionId ?? current.sessionId;
+            return {
+              ...current,
+              sessionId,
+              sessionToken:
+                sessionId === current.sessionId
+                  ? (keys.sessionToken ?? current.sessionToken)
+                  : keys.sessionToken,
+            };
+          });
         }
 
         // The run an action streams into keeps its own status and response (ADR-018).

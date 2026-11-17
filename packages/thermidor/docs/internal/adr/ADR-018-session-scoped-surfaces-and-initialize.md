@@ -83,7 +83,7 @@ level. Option D below.
   a microtask so that a listener subscribed in the same task sees it start. On the wire it is
   `action: {name: 'initialize', context: {}}`: it has an envelope type of its own, without
   `surfaceId` and `sourceComponentId`, which stay required for every other action.
-- **Never twice.** A restored session does not send it. A session created with its keys
+- **At most once.** A restored session does not send it. A session created with its keys
   (`sessionId` and `sessionToken`) does, carrying them: the Agent Gateway resumes that session and
   rebuilds its shell, or starts a new one with new keys, which the session adopts.
 - **An ordinary request.** It goes through the one-request rule and the conflict retry, and it
