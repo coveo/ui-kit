@@ -182,11 +182,11 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
    * the store is seeded from the serialized session, reproducing the persisted
    * transcript and continuity keys (`sessionId`/`sessionToken`/`activeTurnId`)
    * so the restored session continues the same backend conversation. The surfaces its earlier
-   * turns created are {@link DiscoveredSurface.readOnly | read-only}; the last turn's stay live.
-   * When it has a token, its
-   * `initialize` resumes the session: the restored shell stays until the endpoint answers with a
-   * new, live shell under a new id. If the endpoint answers with another session instead, the
-   * restored turns are dropped, and `a2uiMessages` deletes their surfaces.
+   * turns created are {@link DiscoveredSurface.readOnly | read-only}; the last turn's stay live,
+   * and so does its retry. When it has a token, its `initialize` resumes the session: the restored
+   * shell stays until the endpoint answers with a new, live shell under a new id. If the endpoint
+   * answers with another session instead, the restored turns are dropped, and `a2uiMessages`
+   * deletes their surfaces.
    */
   sessionToRestore?: SerializedSession;
   /**
@@ -546,6 +546,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
       ? initialState.turns.slice(0, -1).flatMap((turn) => turn.response.activities)
       : []
   );
+  const lastRestoredTurnId = config.sessionToRestore ? initialState.turns.at(-1)?.id : undefined;
 
   // While a resume streams, the restored shell stays until the resume's first activity replaces it.
   let holdsRestoredShell = false;
@@ -1406,7 +1407,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
    * any surface of the session, so it is not resolved against the active turn.
    */
   function retryAction(turnId: string, action: TurnAction): void {
-    if (isReadOnly(action.surfaceId, 'retry')) {
+    if (turnId !== lastRestoredTurnId && isReadOnly(action.surfaceId, 'retry')) {
       return;
     }
     const a2uiAction: A2uiAction = {
