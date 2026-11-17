@@ -1,6 +1,9 @@
-import {useEffect, useId, useRef, useState, type KeyboardEvent} from 'react';
+import {useEffect, useId, useRef, useState, type FocusEvent} from 'react';
 import {KebabIcon, PencilIcon, TrashIcon} from './drawer-icons.js';
 import styles from './ConversationDrawer.module.css';
+
+/** The room the menu needs below its row, or it opens upward. */
+const MENU_HEIGHT = 100;
 
 interface ConversationRowProps {
   title: string;
@@ -11,8 +14,8 @@ interface ConversationRowProps {
 }
 
 /**
- * A saved conversation: its title opens it, and its menu renames it in place or deletes it. While
- * renaming, Enter saves and Escape cancels.
+ * A saved conversation: its title opens it, and its menu renames it in place or deletes it. A
+ * rename is saved on Enter or once the field loses focus, and Escape cancels it.
  */
 export function ConversationRow({
   title,
@@ -21,41 +24,54 @@ export function ConversationRow({
   onRename,
   onDelete,
 }: ConversationRowProps) {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menu, setMenu] = useState<'below' | 'above'>();
   const [renaming, setRenaming] = useState(false);
   const rowRef = useRef<HTMLDivElement>(null);
   const kebabRef = useRef<HTMLButtonElement>(null);
+  const focusKebab = useRef(false);
+  // Enter and Escape end the rename before the field blurs, which must not end it again.
+  const renameEnded = useRef(false);
   const menuId = useId();
 
   useEffect(() => {
-    if (!menuOpen) return;
+    if (!menu) return;
     const onPointerDown = ({target}: PointerEvent) => {
       if (target instanceof Node && !rowRef.current?.contains(target)) {
-        setMenuOpen(false);
+        setMenu(undefined);
       }
     };
     document.addEventListener('pointerdown', onPointerDown, true);
     return () => document.removeEventListener('pointerdown', onPointerDown, true);
-  }, [menuOpen]);
+  }, [menu]);
 
-  const closeMenu = () => {
-    setMenuOpen(false);
-    kebabRef.current?.focus();
-  };
+  // The kebab is back only once the rename field is gone.
+  useEffect(() => {
+    if (!renaming && focusKebab.current) {
+      focusKebab.current = false;
+      kebabRef.current?.focus();
+    }
+  }, [renaming]);
 
-  const finishRename = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      const renamed = event.currentTarget.value.trim();
-      if (renamed && renamed !== title) {
-        onRename(renamed);
-      }
-    } else if (event.key !== 'Escape') {
+  const toggleMenu = () => {
+    if (menu) {
+      setMenu(undefined);
       return;
     }
-    // Escape cancels the rename only, leaving the drawer open.
-    event.stopPropagation();
+    const row = rowRef.current?.getBoundingClientRect();
+    const drawer = rowRef.current?.closest('nav')?.getBoundingClientRect();
+    const roomBelow = row && drawer ? drawer.bottom - row.bottom : Infinity;
+    setMenu(roomBelow < MENU_HEIGHT ? 'above' : 'below');
+  };
+
+  const endRename = (renamed: string | undefined, returnFocus: boolean) => {
+    if (renameEnded.current) return;
+    renameEnded.current = true;
+    const trimmed = renamed?.trim();
+    if (trimmed && trimmed !== title) {
+      onRename(trimmed);
+    }
+    focusKebab.current = returnFocus;
     setRenaming(false);
-    kebabRef.current?.focus();
   };
 
   if (renaming) {
@@ -68,8 +84,16 @@ export function ConversationRow({
           // oxlint-disable-next-line jsx-a11y/no-autofocus -- the rename the shopper just asked for
           autoFocus
           onFocus={(event) => event.currentTarget.select()}
-          onKeyDown={finishRename}
-          onBlur={() => setRenaming(false)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === 'Escape') {
+              // Escape cancels the rename only, leaving the drawer open, and Enter must not reach
+              // the menu button that gets the focus back.
+              event.stopPropagation();
+              event.preventDefault();
+              endRename(event.key === 'Enter' ? event.currentTarget.value : undefined, true);
+            }
+          }}
+          onBlur={(event) => endRename(event.currentTarget.value, false)}
         />
       </div>
     );
@@ -80,9 +104,16 @@ export function ConversationRow({
       ref={rowRef}
       className={styles.row}
       onKeyDown={(event) => {
-        if (menuOpen && event.key === 'Escape') {
+        if (menu && event.key === 'Escape') {
           event.stopPropagation();
-          closeMenu();
+          setMenu(undefined);
+          kebabRef.current?.focus();
+        }
+      }}
+      onBlur={(event: FocusEvent) => {
+        const next = event.relatedTarget;
+        if (menu && next instanceof Node && !rowRef.current?.contains(next)) {
+          setMenu(undefined);
         }
       }}
     >
@@ -99,30 +130,34 @@ export function ConversationRow({
         type="button"
         className={styles.kebab}
         aria-label={`Options for ${title}`}
-        aria-haspopup="menu"
-        aria-expanded={menuOpen}
-        aria-controls={menuOpen ? menuId : undefined}
-        onClick={() => setMenuOpen((open) => !open)}
+        aria-expanded={menu !== undefined}
+        aria-controls={menu ? menuId : undefined}
+        onClick={toggleMenu}
       >
         <KebabIcon />
       </button>
-      {menuOpen && (
-        <div id={menuId} role="menu" className={styles.menu} aria-label={`Options for ${title}`}>
+      {menu && (
+        <div
+          id={menuId}
+          role="group"
+          aria-label={`Options for ${title}`}
+          className={[styles.menu, menu === 'above' && styles.menuAbove].filter(Boolean).join(' ')}
+        >
           <button
             type="button"
-            role="menuitem"
             className={styles.menuItem}
-            // oxlint-disable-next-line jsx-a11y/no-autofocus -- a menu focuses its first item
+            // oxlint-disable-next-line jsx-a11y/no-autofocus -- the options the shopper just opened
             autoFocus
             onClick={() => {
-              setMenuOpen(false);
+              setMenu(undefined);
+              renameEnded.current = false;
               setRenaming(true);
             }}
           >
             <PencilIcon />
             Rename
           </button>
-          <button type="button" role="menuitem" className={styles.menuItem} onClick={onDelete}>
+          <button type="button" className={styles.menuItem} onClick={onDelete}>
             <TrashIcon />
             Delete
           </button>

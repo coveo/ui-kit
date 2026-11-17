@@ -49,7 +49,7 @@
   text-align: left;
 }
 
-:is(.start, .kebab, .menuItem):is(:hover, :focus-visible),
+:is(.start, .menuItem):is(:hover, :focus-visible),
 .row:hover .open,
 .open:focus-visible,
 .open[aria-current='true'] {
@@ -114,6 +114,11 @@
   }
 }
 
+.kebab:is(:hover, :focus-visible, [aria-expanded='true']) {
+  color: var(--color-text-primary);
+  background: var(--color-border);
+}
+
 .menu {
   position: absolute;
   top: 100%;
@@ -126,6 +131,16 @@
   background: var(--color-surface);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
+}
+
+.menuAbove {
+  top: auto;
+  bottom: 100%;
+}
+
+.menuAbove {
+  top: auto;
+  bottom: 100%;
 }
 
 .menuItem {
