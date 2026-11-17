@@ -210,6 +210,20 @@ describe('EngineDefinition', () => {
     expectTypeOf(listingEngineDefinition).toExtend<
       EngineDefinition<ListingStaticState, ListingHydratedState, ListingFetchOptions>
     >();
+    expectTypeOf(searchEngineDefinition).toExtend<
+      EngineDefinition<
+        InferStaticState<typeof searchEngineDefinition>,
+        InferHydratedState<typeof searchEngineDefinition>,
+        Parameters<typeof searchEngineDefinition.fetchStaticState>[0]
+      >
+    >();
+    expectTypeOf(standaloneEngineDefinition).toExtend<
+      EngineDefinition<
+        InferStaticState<typeof standaloneEngineDefinition>,
+        InferHydratedState<typeof standaloneEngineDefinition>,
+        Parameters<typeof standaloneEngineDefinition.fetchStaticState>[0]
+      >
+    >();
     expectTypeOf(recommendationEngineDefinition).toExtend<
       EngineDefinition<
         InferStaticState<typeof recommendationEngineDefinition>,
