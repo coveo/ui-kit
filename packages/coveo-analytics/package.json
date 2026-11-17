@@ -42,7 +42,7 @@
     "uuid": "catalog:"
   },
   "devDependencies": {
-    "@rollup/plugin-alias": "6.0.0",
+    "@rollup/plugin-alias": "6.0.1",
     "@rollup/plugin-commonjs": "catalog:",
     "@rollup/plugin-json": "catalog:",
     "@rollup/plugin-node-resolve": "catalog:",
@@ -54,7 +54,7 @@
     "fetch-mock": "12.6.0",
     "jsdom": "catalog:",
     "publint": "catalog:",
-    "react-native-get-random-values": "2.0.0",
+    "react-native-get-random-values": "2.1.0",
     "rollup": "catalog:",
     "rollup-plugin-copy": "3.5.0",
     "rollup-plugin-serve": "3.0.0",

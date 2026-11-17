@@ -102,6 +102,10 @@ export default class QuanticQueryError extends LightningElement {
     this.errorAriaMessage.dispatchMessage(this.errorTitle);
   }
 
+  get showMoreInfoButton() {
+    return !this.showMoreInfo;
+  }
+
   get errorTitle() {
     return errorMap[this.type]?.title || genericError.title;
   }

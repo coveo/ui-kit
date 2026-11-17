@@ -121,6 +121,10 @@ export default class QuanticDateFacet extends LightningElement {
   /** @type {boolean} */
   _isCollapsed = false;
 
+  get isExpanded() {
+    return !this.isCollapsed;
+  }
+
   static attributes = [
     'facetId',
     'field',

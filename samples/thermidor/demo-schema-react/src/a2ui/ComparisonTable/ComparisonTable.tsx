@@ -1,6 +1,8 @@
+import {useContext} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {ComparisonAttribute, ComparisonProduct} from '@coveo/thermidor-schema';
 import {ComparisonTablePropsSchema} from '@coveo/thermidor-schema/zod3';
+import {ProductCardActionsContext} from '../ProductCard/product-card-actions.js';
 import {
   DEFAULT_MAX_LINKS,
   RelatedDocumentList,
@@ -25,12 +27,38 @@ function formatPrice(price: number): string {
   return `$${price.toFixed(2)}`;
 }
 
+function ComparisonProductHeader({product}: {product: ComparisonProduct}) {
+  const renderActions = useContext(ProductCardActionsContext);
+  const actions = renderActions?.({
+    productId: product.productId,
+    name: product.name,
+    price: product.price,
+    imageUrl: product.imageUrl,
+  });
+
+  return (
+    <div className={styles.productCell} role="columnheader">
+      {product.imageUrl && (
+        <img
+          className={styles.productImage}
+          src={product.imageUrl}
+          alt={product.name}
+          loading="lazy"
+        />
+      )}
+      <span className={styles.productName}>{product.name}</span>
+      {actions != null && <div className={styles.productActions}>{actions}</div>}
+    </div>
+  );
+}
+
 /**
  * A2-UI component for the `comparison-table`. The generic binder resolves the heading, AI summary,
  * compared products, and attribute descriptors directly from `ComparisonTablePropsSchema` (bound to
  * the A2-UI data model) and renders the aligned comparison grid: a header row with each product's
  * image and name, a price row, one row per attribute (excluding `brand`), and an Additional
- * information row with each product's related documents, omitted when none has any. Read-only: the
+ * information row with each product's related documents, omitted when none has any. Each header
+ * cell renders the `ProductCardActionsContext` actions for its product. No surface actions: the
  * framing, products, and attributes are owned by the backend and delivered through the component's
  * `{ path }` bindings.
  */
@@ -65,17 +93,7 @@ const renderComparisonTable =
                   Product
                 </div>
                 {products.map((product: ComparisonProduct) => (
-                  <div key={product.productId} className={styles.productCell} role="columnheader">
-                    {product.imageUrl && (
-                      <img
-                        className={styles.productImage}
-                        src={product.imageUrl}
-                        alt={product.name}
-                        loading="lazy"
-                      />
-                    )}
-                    <span className={styles.productName}>{product.name}</span>
-                  </div>
+                  <ComparisonProductHeader key={product.productId} product={product} />
                 ))}
               </div>
               <div className={styles.row} role="row" style={{gridTemplateColumns}}>
