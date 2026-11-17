@@ -61,6 +61,12 @@
   outline-offset: -2px;
 }
 
+.drawer [aria-disabled='true']:is(.start, .open, .menuItem) {
+  color: var(--color-text-muted);
+  background: none;
+  cursor: not-allowed;
+}
+
 .empty {
   margin: 0;
   padding: 0 var(--space-3);

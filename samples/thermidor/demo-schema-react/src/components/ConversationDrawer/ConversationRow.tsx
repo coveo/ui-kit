@@ -8,6 +8,10 @@ const MENU_HEIGHT = 100;
 interface ConversationRowProps {
   title: string;
   current: boolean;
+  /** Why the conversation cannot be opened now, if it cannot. */
+  openBlockedBy?: string;
+  /** Why the conversation cannot be deleted now, if it cannot. */
+  deleteBlockedBy?: string;
   onOpen: () => void;
   onRename: (title: string) => void;
   onDelete: () => void;
@@ -20,6 +24,8 @@ interface ConversationRowProps {
 export function ConversationRow({
   title,
   current,
+  openBlockedBy,
+  deleteBlockedBy,
   onOpen,
   onRename,
   onDelete,
@@ -121,7 +127,9 @@ export function ConversationRow({
         type="button"
         className={styles.open}
         aria-current={current ? 'true' : undefined}
-        onClick={onOpen}
+        aria-disabled={openBlockedBy ? true : undefined}
+        title={openBlockedBy}
+        onClick={() => !openBlockedBy && onOpen()}
       >
         {title}
       </button>
@@ -157,7 +165,13 @@ export function ConversationRow({
             <PencilIcon />
             Rename
           </button>
-          <button type="button" className={styles.menuItem} onClick={onDelete}>
+          <button
+            type="button"
+            className={styles.menuItem}
+            aria-disabled={deleteBlockedBy ? true : undefined}
+            title={deleteBlockedBy}
+            onClick={() => !deleteBlockedBy && onDelete()}
+          >
             <TrashIcon />
             Delete
           </button>

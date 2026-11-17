@@ -1,9 +1,13 @@
-import {useEffect, useRef, type RefObject} from 'react';
-import {useConversations} from '../../context/session.js';
+import {useEffect, useRef, useSyncExternalStore, type RefObject} from 'react';
+import {useConversations, useSession} from '../../context/session.js';
+import {isBlocking} from '../../a2ui/session-request.js';
 import {useMediaQuery} from '../../hooks/use-media-query.js';
 import {ConversationRow} from './ConversationRow.js';
 import {ComposeIcon} from './drawer-icons.js';
 import styles from './ConversationDrawer.module.css';
+
+/** Why the drawer cannot swap the conversation while it runs, which would cancel its answer. */
+const WAIT_FOR_ANSWER = 'Wait for the answer to finish';
 
 interface ConversationDrawerProps {
   id: string;
@@ -17,9 +21,18 @@ interface ConversationDrawerProps {
  * Lists the saved conversations, newest first, to open, rename or delete one, and starts a new one.
  * On a narrow screen it slides over the page, and closes once a conversation opens or on a press
  * outside. Deleting a conversation moves the focus to the next one, or to "New conversation".
+ * While the current conversation is answering, the drawer does not swap it out: starting, opening
+ * another and deleting the current one wait.
  */
 export function ConversationDrawer({id, toggleRef, onClose}: ConversationDrawerProps) {
   const {list, currentId, start, open, remove, rename} = useConversations();
+  const session = useSession();
+  const running = useSyncExternalStore(
+    session.subscribe,
+    () => isBlocking(session.getSnapshot().request),
+    () => false
+  );
+  const waitReason = running ? WAIT_FOR_ANSWER : undefined;
   const overlay = useMediaQuery('(max-width: 767px)');
   const drawerRef = useRef<HTMLElement>(null);
   const startRef = useRef<HTMLButtonElement>(null);
@@ -67,7 +80,14 @@ export function ConversationDrawer({id, toggleRef, onClose}: ConversationDrawerP
         }
       }}
     >
-      <button ref={startRef} type="button" className={styles.start} onClick={() => pick(start)}>
+      <button
+        ref={startRef}
+        type="button"
+        className={styles.start}
+        aria-disabled={running || undefined}
+        title={waitReason}
+        onClick={() => !running && pick(start)}
+      >
         <ComposeIcon />
         New conversation
       </button>
@@ -80,6 +100,8 @@ export function ConversationDrawer({id, toggleRef, onClose}: ConversationDrawerP
               <ConversationRow
                 title={title}
                 current={id === currentId}
+                openBlockedBy={id === currentId ? undefined : waitReason}
+                deleteBlockedBy={id === currentId ? waitReason : undefined}
                 onOpen={() => pick(() => open(id))}
                 onRename={(renamed) => rename(id, renamed)}
                 onDelete={() => {

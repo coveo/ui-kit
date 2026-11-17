@@ -5,7 +5,13 @@ import {SessionProvider, useSession, type DemoSession} from '../../context/sessi
 import {createConversationStorage} from '../../conversations/conversation-storage.js';
 import {createFakeCartStore} from '../../test/fake-cart-store.js';
 import {memoryStorage} from '../../test/memory-storage.js';
-import {createTestSessionFactory} from '../../test/session.js';
+import {
+  answerShell,
+  createTestSessionFactory,
+  sseResponse,
+  run,
+  type ConverseHandler,
+} from '../../test/session.js';
 import {AppShell} from '../AppShell.js';
 
 afterEach(() => {
@@ -13,7 +19,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-function renderApp() {
+function renderApp(handler?: ConverseHandler) {
   const local = memoryStorage();
   const tab = memoryStorage();
   const storage = createConversationStorage({local: () => local, session: () => tab});
@@ -24,7 +30,7 @@ function renderApp() {
   }
   render(
     <CartProvider store={createFakeCartStore()}>
-      <SessionProvider createSession={createTestSessionFactory().create} storage={storage}>
+      <SessionProvider createSession={createTestSessionFactory(handler).create} storage={storage}>
         <Probe />
         <AppShell />
       </SessionProvider>
@@ -191,5 +197,36 @@ describe('ConversationDrawer', () => {
 
     expect(screen.queryByRole('navigation', {name: 'Conversations'})).toBeNull();
     expect(document.activeElement).toBe(toggle());
+  });
+
+  it('keeps the running conversation while it answers, renaming and deleting the others', async () => {
+    let finish = () => {};
+    const app = renderApp((request, signal) =>
+      request.message === 'boots'
+        ? new Promise((resolve) => (finish = () => resolve(sseResponse(run([])))))
+        : answerShell(request, signal)
+    );
+    await ask(app, 'surfboards');
+    fireEvent.click(toggle());
+    fireEvent.click(within(drawer()).getByRole('button', {name: 'New conversation'}));
+    await ask(app, 'wetsuits');
+    void app.session().dispatchAction({name: 'submitPrompt', payload: {prompt: 'boots'}});
+    const newConversation = within(drawer()).getByRole('button', {name: 'New conversation'});
+    await waitFor(() => expect(newConversation.getAttribute('aria-disabled')).toBe('true'));
+
+    expect(newConversation.title).toBe('Wait for the answer to finish');
+    expect(entries().map((entry) => entry.getAttribute('aria-disabled'))).toEqual([null, 'true']);
+    fireEvent.click(newConversation);
+    fireEvent.click(entries()[1]);
+    expect(app.session().turns.map(({input}) => input.prompt)).toEqual(['wetsuits', 'boots']);
+    expect(menuItem('wetsuits', 'Delete').getAttribute('aria-disabled')).toBe('true');
+    fireEvent.keyDown(document.activeElement!, {key: 'Escape'});
+
+    rename('surfboards', 'Board shopping', pressEnter);
+    fireEvent.click(menuItem('Board shopping', 'Delete'));
+    expect(entries().map((entry) => entry.textContent)).toEqual(['wetsuits']);
+
+    await act(async () => finish());
+    await waitFor(() => expect(newConversation.getAttribute('aria-disabled')).toBeNull());
   });
 });
