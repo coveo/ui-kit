@@ -48,6 +48,13 @@ export interface DiscoveredSurface {
    * into its turn does not bring it back.
    */
   isLoading: boolean;
+  /**
+   * `true` on a surface a restored turn created (`sessionToRestore`): a snapshot of an earlier
+   * page that takes no action. `dispatchAction` refuses its actions without a request, so a
+   * consumer draws it without its controls. Absent on every other surface, such as the restored
+   * shell or the new one the resuming `initialize` answers with, or one a later run creates again.
+   */
+  readOnly?: true;
 }
 
 /**

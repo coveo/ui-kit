@@ -83,9 +83,10 @@ level. Option D below.
   a microtask so that a listener subscribed in the same task sees it start. On the wire it is
   `action: {name: 'initialize', context: {}}`: it has an envelope type of its own, without
   `surfaceId` and `sourceComponentId`, which stay required for every other action.
-- **At most once.** A restored session does not send it. A session created with its keys
-  (`sessionId` and `sessionToken`) does, carrying them: the Agent Gateway resumes that session and
-  rebuilds its shell, or starts a new one with new keys, which the session adopts.
+- **At most once.** A session created with its keys (`sessionId` and `sessionToken`), or restored
+  with a token, sends it carrying them: the Agent Gateway resumes that session and rebuilds its
+  shell, or starts a new one with new keys, which the session adopts.
+  [Amended](#amendment-restoring-a-session-through-initialize) for restored sessions.
 - **An ordinary request.** It goes through the one-request rule and the conflict retry, and it
   adopts the session id and token from its run, like a prompt. While it is in flight,
   `session.request` is `{kind: 'initialize'}`, so an application can draw its disabled search box
@@ -193,9 +194,8 @@ unsupported version already is.
 - **One changeset** (`'@coveo/thermidor': minor`, marked **Breaking:**) covers automatic
   initialization, the session-level fields, the narrowed `TurnResponse` and serialized format
   version 2.
-- **Restore through `initialize`:** recovering a session's surfaces from the producer rather than
-  from the serialized blob is a separate decision. Until then, a restored session never sends
-  `initialize`.
+- **Restore through `initialize`:** decided in
+  [the amendment below](#amendment-restoring-a-session-through-initialize).
 - **First paint and concurrent suggestions:** if the EAP shows that the disabled box or the waiting
   suggestions hurt, revisit Option A or a queue in the producer.
 - **Surface retention:** a long session accumulates live surfaces until the producer deletes them.
@@ -218,6 +218,26 @@ replaced the turn's own error.
 - **`actionError`.** It identifies the action (`ActionError`: `message`, `component`, `name`,
   `surfaceId`, `sourceComponentId`), so a consumer shows the failure next to the block it came from, and tells a
   failed suggestion from a failed page change.
+
+## Amendment: restoring a session through `initialize`
+
+Accepted on 2026-11-17 (KIT-6651). A restored session never sent `initialize`, so it had no live
+shell and its search box stayed disabled. The Agent Gateway now resumes a session from its keys on
+`initialize`, with a new shell, or starts a new session when the keys name none.
+
+- **Resume.** A session restored with a `sessionToken` sends `initialize` with its keys, at most
+  once, unless created with `initialize: false`. Without a token there is no session to resume,
+  and it sends none, as before.
+- **The new shell replaces the old.** The resuming run replaces the restored initialization, so
+  the restored shell leaves `session.surfaces` and the new one is live.
+- **Restored turns are read-only.** The transcript is redrawn from the serialized activities, but
+  its surfaces are snapshots of an earlier page. A surface whose latest `createSurface` came from a
+  restored turn is listed with `readOnly: true`, and `dispatchAction` and `retry` refuse its
+  actions without a request. The restored initialization's surfaces stay live: without a resume,
+  they are still the session's shell.
+- **Fallback.** When the resuming `initialize` answers with another `conversationSessionId`, the
+  session adopts the new keys and drops the restored turns, their state and `actionError`, in one
+  change that subscribers see. The new shell stays.
 
 ## Considered Options
 

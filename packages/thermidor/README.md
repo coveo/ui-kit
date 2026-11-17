@@ -60,7 +60,7 @@ The concrete `contracts` type pinned at the `createSession` call site threads un
 
 The session opens itself: `createSession` sends an `initialize` action a microtask after it returns, so a listener subscribed in the same task sees it start. It carries no surface or source component, since no component exists yet. While it is in flight, `session.request` is `{kind: 'initialize'}`. It goes through the [one-request rule](#one-request-at-a-time) and the conflict retry, and adopts the session id and token from its run, like a prompt. The producer answers with the session's shell, such as its search box, as an ordinary surface.
 
-Its run is recorded as `session.initialization` (`activities`, `status`, `error`), never as a turn. A failed `initialize` is not retried: `initialization.status` becomes `'error'`, and the first prompt still opens the session. `cancel()` stops it like any request. A restored session never sends it, and neither does a session created with `initialize: false`, for tests or for a server that creates a session while rendering.
+Its run is recorded as `session.initialization` (`activities`, `status`, `error`), never as a turn. A failed `initialize` is not retried: `initialization.status` becomes `'error'`, and the first prompt still opens the session. `cancel()` stops it like any request. A session created with `initialize: false` never sends it, for tests or for a server that creates a session while rendering, and neither does a restored session without a token.
 
 To continue a session later, store `session.sessionId` and `session.sessionToken`, and pass them back to `createSession` as `sessionId` and `sessionToken`. Its `initialize` (or, with `initialize: false`, its first prompt or action) carries them, so the shopper keeps the conversation and its context. If the session expired, the endpoint starts a new one, and `session.sessionId` and `session.sessionToken` return its keys. A `sessionId` alone, a UUID, opens a new session under that id.
 
@@ -187,6 +187,8 @@ Each `DiscoveredSurface` carries `surfaceId`, `rootComponentType`, and `isLoadin
 ## Serialization
 
 `session.serialize()` produces a versioned `SerializedSession` (integer `version >= 1`), distinct from the runtime `Turn` type. Pass it back as `sessionToRestore` in `createSession` to continue a conversation. The initialization, the turns and the session's recorded `state` are persisted, without the answers to concurrent actions; the surfaces and the renderer stream are never persisted (they are re-derived from the initialization's and the turns' `activities` on restore); a turn or initialization persisted mid-stream is downgraded to `error` with `'Stream was interrupted'`, preserving what it holds.
+
+A session restored with a token sends `initialize` with its keys to resume the session: its shell is replaced by the new one the endpoint answers with. The surfaces of the restored turns are snapshots of the earlier page: they are listed with `readOnly: true`, and `dispatchAction` refuses their actions without sending anything, so draw them without their controls. If the session expired, the endpoint answers with a new session: the session adopts its keys and drops the restored turns, and subscribers see the empty transcript with the new shell.
 
 ## Recorded interim debt and out-of-scope items
 

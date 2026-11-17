@@ -75,6 +75,7 @@ import type {
   A2uiState,
   A2uiV09Message,
   ActionError,
+  Activity,
   DiscoveredSurface,
   SessionInitialization,
   SessionRequest,
@@ -178,7 +179,10 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
    * A previously-serialized session to restore at construction. When provided,
    * the store is seeded from the serialized session, reproducing the persisted
    * transcript and continuity keys (`sessionId`/`sessionToken`/`activeTurnId`)
-   * so the restored session continues the same backend conversation.
+   * so the restored session continues the same backend conversation. The surfaces its turns
+   * created are {@link DiscoveredSurface.readOnly | read-only}. When it has a token, its
+   * `initialize` resumes the session with a new, live shell; if the endpoint answers with another
+   * session instead, the restored turns are dropped.
    */
   sessionToRestore?: SerializedSession;
   /**
@@ -198,9 +202,9 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
   /**
    * Whether the session opens itself with an `initialize` action, sent a microtask after
    * {@link createSession} returns so that a listener subscribed in the same task sees it start.
-   * Defaults to `true`. A restored session never sends it. Pass `false` for tests, or for a
-   * server that creates a session while rendering; the session keys then go out with the first
-   * prompt or action.
+   * Defaults to `true`. A restored session sends it only when it has a token. Pass `false` for
+   * tests, or for a server that creates a session while rendering; the session keys then go out
+   * with the first prompt or action.
    */
   initialize?: boolean;
 }
@@ -532,6 +536,10 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
       };
 
   const store: SessionStore<Turn> = createSessionStore<Turn>(initialState);
+  // The restored initialization holds the shell, which stays live until a resume replaces it.
+  const restoredActivities: ReadonlySet<Activity> = new Set(
+    config.sessionToRestore ? initialState.turns.flatMap((turn) => turn.response.activities) : []
+  );
 
   let surfaceView: SessionSurfaceView | undefined;
   let surfaceViewSource:
@@ -552,7 +560,8 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
       surfaceView = deriveSessionSurfaces(
         {turns, initialization},
         request && requestTarget(request),
-        abandoned
+        abandoned,
+        restoredActivities
       );
       surfaceViewSource = {turns, initialization, request};
     }
@@ -661,6 +670,24 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     if (store.getState().actionError !== actionError) {
       store.setState((current) => ({...current, actionError}));
     }
+  }
+
+  /**
+   * The state once the `initialize` that resumes a session is answered by another session: the
+   * turns, and the state of surfaces the new initialization did not create, belong to the old one.
+   */
+  function withoutTranscript(current: SessionStoreState<Turn>): SessionStoreState<Turn> {
+    const kept = deriveNodeIdentityRegistry(current.initialization?.activities ?? []);
+    return {
+      ...current,
+      turns: [],
+      activeTurnId: undefined,
+      state: Object.fromEntries(
+        Object.entries(current.state ?? {}).filter(([surfaceId]) => kept.has(surfaceId))
+      ),
+      unrecordedState: undefined,
+      actionError: undefined,
+    };
   }
 
   function replaceTurn(turnId: string, update: (turn: Turn) => Turn): void {
@@ -868,8 +895,13 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
           // A new id is a new session: the old token is not its token.
           store.setState((current) => {
             const sessionId = keys.sessionId ?? current.sessionId;
+            const resumedAnotherSession =
+              target.kind === 'initialization' &&
+              !action &&
+              current.sessionToken !== undefined &&
+              sessionId !== current.sessionId;
             return {
-              ...current,
+              ...(resumedAnotherSession ? withoutTranscript(current) : current),
               sessionId,
               sessionToken:
                 sessionId === current.sessionId
@@ -1236,6 +1268,14 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     return registry.get(surfaceId)?.get(sourceComponentId);
   }
 
+  function isReadOnly(surfaceId: string): boolean {
+    if (!readSurfaceView().readOnlySurfaceIds.has(surfaceId)) {
+      return false;
+    }
+    devWarn(`dispatchAction: surface "${surfaceId}" is a restored, read-only one; nothing sent.`);
+    return true;
+  }
+
   /** Every refusal settles at once, so no caller is left waiting. */
   function issue(message: A2uiClientMessage): Promise<void> {
     const userAction = message.userAction;
@@ -1255,6 +1295,9 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
       devWarn(
         `dispatchAction: node "${sourceComponentId}" on surface "${surfaceId}" resolves to no component; nothing sent.`
       );
+      return withhold();
+    }
+    if (isReadOnly(surfaceId)) {
       return withhold();
     }
 
@@ -1316,6 +1359,9 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
    * any surface of the session, so it is not resolved against the active turn.
    */
   function retryAction(turnId: string, action: TurnAction): void {
+    if (isReadOnly(action.surfaceId)) {
+      return;
+    }
     const a2uiAction: A2uiAction = {
       surfaceId: action.surfaceId,
       name: action.name,
@@ -1384,7 +1430,11 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     return snapshot;
   }
 
-  if (config.initialize !== false && !config.sessionToRestore) {
+  // A restored session without a token has no session to resume.
+  if (
+    config.initialize !== false &&
+    (!config.sessionToRestore || config.sessionToRestore.sessionToken !== undefined)
+  ) {
     queueMicrotask(() => {
       // A prompt dispatched in the same task already opens the session.
       if (!store.getState().request) {
