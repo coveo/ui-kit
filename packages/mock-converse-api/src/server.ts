@@ -40,16 +40,22 @@ const sessionsInFlight = new Map<string, symbol>();
 const tokensBySession = new Map<string, string>();
 
 // As Agent Gateway does, initialize resumes a session whose keys match, opens a new session under a
-// client-chosen id sent without a token, and opens a new session with fresh keys otherwise.
+// new client-chosen id sent without a token, refuses an existing one, and opens a new session with
+// fresh keys otherwise.
 const initializedSessionKeys = (sessionId?: string, sessionToken?: string) => {
   if (sessionId && sessionToken && tokensBySession.get(sessionId) === sessionToken) {
     return {conversationSessionId: sessionId, conversationToken: sessionToken};
   }
-  return {
-    conversationSessionId: sessionId && !sessionToken ? sessionId : randomUUID(),
-    conversationToken: randomUUID(),
-  };
+  if (sessionId && !sessionToken) {
+    return tokensBySession.has(sessionId)
+      ? undefined
+      : {conversationSessionId: sessionId, conversationToken: randomUUID()};
+  }
+  return {conversationSessionId: randomUUID(), conversationToken: randomUUID()};
 };
+
+const invalidConversationTokenResponse = () =>
+  HttpResponse.json({message: 'Invalid conversation token.'}, {status: 403});
 
 const actionInFlightResponse = () =>
   HttpResponse.json(
@@ -199,6 +205,9 @@ const handleSchemaConversePost = async ({request}: {request: Request}) => {
         conversationSessionId: sessionId ?? randomUUID(),
         conversationToken: sessionToken ?? randomUUID(),
       };
+  if (!session) {
+    return withCors(invalidConversationTokenResponse());
+  }
   if (initializes || !tokensBySession.has(session.conversationSessionId)) {
     tokensBySession.set(session.conversationSessionId, session.conversationToken);
   }

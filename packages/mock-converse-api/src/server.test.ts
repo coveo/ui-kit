@@ -1,5 +1,6 @@
 import {describe, it, expect, afterEach} from 'vitest';
 import http from 'node:http';
+import {randomUUID} from 'node:crypto';
 import {createMockConverseServer} from './server.js';
 
 function makeRequest(
@@ -389,46 +390,73 @@ describe('createMockConverseServer', () => {
       return createSurface.dataModel.state['query-suggestions'].recentQueries;
     };
 
-    it('resumes a session whose keys match, with its recent queries in a new shell', async () => {
-      await startServer();
+    const openSessionWithRecentQuery = async () => {
       const opened = await initialize();
       const keys = sessionKeys(opened);
       await postSchema({message: 'water sports', ...keys});
+      return {opened, keys};
+    };
+
+    it('resumes a session whose keys match, with its recent queries in a new shell', async () => {
+      await startServer();
+      const {opened, keys} = await openSessionWithRecentQuery();
 
       const resumed = await initialize(keys);
+      const prompted = parseEvents((await postSchema({message: 'life jackets', ...keys})).body);
 
       expect(sessionKeys(resumed)).toEqual(keys);
       expect(createdSurfaceIds(resumed)[0]).not.toBe(createdSurfaceIds(opened)[0]);
       expect(shellRecentQueries(resumed)).toEqual(['water sports']);
+      expect(sessionKeys(prompted)).toEqual(keys);
+      expect(shellRecentQueries(await initialize(keys))).toEqual(['life jackets', 'water sports']);
     });
 
     type Keys = ReturnType<typeof sessionKeys>;
     it.each<[string, (keys: Keys) => Keys]>([
-      ['an unknown session id', () => ({conversationSessionId: 'unknown', conversationToken: 't'})],
-      ['a wrong token', (keys) => ({...keys, conversationToken: 'wrong'})],
+      [
+        'an unknown session id',
+        () => ({conversationSessionId: randomUUID(), conversationToken: randomUUID()}),
+      ],
+      ['a wrong token', (keys) => ({...keys, conversationToken: randomUUID()})],
     ])('opens a new session with fresh keys on initialize with %s', async (_, keysToSend) => {
       await startServer();
-      const keys = sessionKeys(await initialize());
-      await postSchema({message: 'water sports', ...keys});
+      const {keys} = await openSessionWithRecentQuery();
       const sent = keysToSend(keys);
 
       const fallback = await initialize(sent);
 
       expect(sessionKeys(fallback).conversationSessionId).not.toBe(sent.conversationSessionId);
-      expect(sessionKeys(fallback).conversationSessionId).not.toBe(keys.conversationSessionId);
-      expect(sessionKeys(fallback).conversationToken).not.toBe(sent.conversationToken);
       expect(shellRecentQueries(fallback)).toEqual([]);
+      expect(sessionKeys(await initialize(keys))).toEqual(keys);
     });
 
-    it('opens a new session under a client-chosen session id sent without a token', async () => {
+    it('opens a new session under a new client-chosen session id sent without a token', async () => {
       await startServer();
-      const opened = await initialize({conversationSessionId: 'client-session'});
+      const conversationSessionId = randomUUID();
+
+      const opened = await initialize({conversationSessionId});
 
       expect(sessionKeys(opened)).toEqual({
-        conversationSessionId: 'client-session',
+        conversationSessionId,
         conversationToken: expect.any(String),
       });
       expect(shellRecentQueries(opened)).toEqual([]);
+    });
+
+    it("refuses initialize with an existing session's id and no token", async () => {
+      await startServer();
+      const {keys} = await openSessionWithRecentQuery();
+
+      const res = await postSchema({
+        message: null,
+        conversationSessionId: keys.conversationSessionId,
+        action: {name: 'initialize', context: {}},
+      });
+
+      expect(res.statusCode).toBe(403);
+      expect(res.headers['access-control-allow-origin']).toBe('*');
+      expect(JSON.parse(res.body)).toEqual({message: 'Invalid conversation token.'});
+      expect(sessionKeys(await initialize(keys))).toEqual(keys);
     });
 
     it("answers fetchSuggestions on the shell's surface, keeping the session", async () => {

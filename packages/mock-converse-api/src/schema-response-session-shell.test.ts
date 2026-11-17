@@ -424,6 +424,27 @@ describe('recent queries', () => {
     expect(await session.recentQueries()).toEqual(['water sports', 'life jackets']);
   });
 
+  it("fills a new shell of the session with the session's recent queries", async () => {
+    const session = await openSession();
+    await session.prompt('life jackets');
+    await session.prompt('water sports');
+
+    const [message] = surfaceMessages(
+      await readEvents(
+        converseSchemaResponses.buildSchemaActionResponse(
+          {name: 'initialize', context: {}},
+          session.keys
+        )
+      )
+    );
+
+    expect(
+      (message.createSurface as {dataModel: {state: Record<string, unknown>}}).dataModel.state[
+        'query-suggestions'
+      ]
+    ).toEqual({query: '', recentQueries: ['water sports', 'life jackets'], completions: []});
+  });
+
   it('records a restored search under its query', async () => {
     const session = await openSession();
     const surfaceId = await searchSurface(session);
