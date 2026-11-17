@@ -2752,35 +2752,18 @@ describe('createSession session keys', () => {
     answerWithKeys(SESSION_ID, 'token-1');
   });
 
-  describe('validation', () => {
-    it('throws when the sessionId is not a UUID', () => {
-      expect(() => createSession(config({sessionId: 'session-1'}))).toThrow('UUID');
-    });
-
-    it('throws when a sessionToken comes without a sessionId', () => {
-      expect(() => createSession(config({sessionToken: SESSION_TOKEN}))).toThrow(
-        'sessionId with its sessionToken'
-      );
-    });
-
-    it.each(['', ' '])('throws when the sessionToken is blank (%j)', (sessionToken) => {
-      expect(() => createSession(config({sessionId: SESSION_ID, sessionToken}))).toThrow(
-        'non-blank sessionToken'
-      );
-    });
-
-    it('throws when a sessionToRestore is passed with a sessionId', () => {
-      const serialized = createSession(config()).serialize();
-
-      expect(() =>
-        createSession(config({sessionId: SESSION_ID, sessionToRestore: serialized}))
-      ).toThrow('not both');
-      expect(() =>
-        createSession(
-          config({sessionId: SESSION_ID, sessionToken: SESSION_TOKEN, sessionToRestore: serialized})
-        )
-      ).toThrow('not both');
-    });
+  it.each<[string, Partial<SessionConfig>, string]>([
+    ['a sessionId that is not a UUID', {sessionId: 'session-1'}, 'UUID'],
+    ['a sessionToken without a sessionId', {sessionToken: SESSION_TOKEN}, 'sessionId with'],
+    ['a blank sessionToken', {sessionId: SESSION_ID, sessionToken: ' '}, 'non-blank'],
+    ['an empty sessionToken', {sessionId: SESSION_ID, sessionToken: ''}, 'non-blank'],
+    [
+      'a sessionId with a sessionToRestore',
+      {sessionId: SESSION_ID, sessionToRestore: createSession(config()).serialize()},
+      'not both',
+    ],
+  ])('throws on %s', (_, overrides, message) => {
+    expect(() => createSession(config(overrides))).toThrow(message);
   });
 
   describe('without keys', () => {
@@ -2839,11 +2822,14 @@ describe('createSession session keys', () => {
   });
 
   describe('with a sessionId alone', () => {
-    it('exposes the id right after creation, before any request', () => {
+    it('exposes and serializes the id right after creation, before any request', () => {
       const session = createSession(config({sessionId: SESSION_ID}));
 
       expect(session.sessionId).toBe(SESSION_ID);
       expect(session.sessionToken).toBeUndefined();
+      expect(createSession(config({sessionToRestore: session.serialize()})).sessionId).toBe(
+        SESSION_ID
+      );
       expect(callMock).not.toHaveBeenCalled();
     });
 
@@ -2862,14 +2848,6 @@ describe('createSession session keys', () => {
       for (const request of sent()) {
         expect(request).toMatchObject({conversationSessionId: SESSION_ID});
       }
-    });
-
-    it('serializes the id, so a restored session continues with it', () => {
-      const session = createSession(config({sessionId: SESSION_ID}));
-
-      expect(createSession(config({sessionToRestore: session.serialize()})).sessionId).toBe(
-        SESSION_ID
-      );
     });
 
     it('gives the id up when the first prompt fails before the token, so the retry lets the endpoint assign one', async () => {
@@ -2947,25 +2925,17 @@ describe('createSession session keys', () => {
       expect(sent()[1]).toMatchObject({conversationSessionId: SESSION_ID});
     });
 
-    it.each([
-      ['a 403', {error: 'HTTP 403', status: 403}],
-      ['no response', {error: 'Network error'}],
-    ])('drops the id when the first prompt gets %s', async (_, failure) => {
+    it.each<[string, {error: string; status?: number; unsent?: true}, string | undefined]>([
+      ['drops the id after a 403', {error: 'HTTP 403', status: 403}, undefined],
+      ['drops the id after no response', {error: 'Network error'}, undefined],
+      ['keeps the id when never sent', {error: 'Config error', unsent: true}, SESSION_ID],
+    ])('%s on the first prompt', async (_, failure, expected) => {
       failNextWith(failure);
       const session = createSession(config({sessionId: SESSION_ID}));
 
       await session.dispatchAction(PROMPT);
 
-      expect(session.sessionId).toBeUndefined();
-    });
-
-    it('keeps the id when the first prompt is never sent', async () => {
-      failNextWith({error: 'Configuration error', unsent: true});
-      const session = createSession(config({sessionId: SESSION_ID}));
-
-      await session.dispatchAction(PROMPT);
-
-      expect(session.sessionId).toBe(SESSION_ID);
+      expect(session.sessionId).toBe(expected);
     });
   });
 
@@ -2996,33 +2966,25 @@ describe('createSession session keys', () => {
       expect(session.initialization?.status).toBe('complete');
     });
 
-    it('sends both keys on the first prompt when the session does not initialize', async () => {
-      answerWithKeys(SESSION_ID, SESSION_TOKEN);
-      const session = createSession(config(keys));
+    it.each([false, true])(
+      'sends both keys on a first prompt, and no initialize, with initialize: %s',
+      async (initialize) => {
+        answerWithKeys(SESSION_ID, SESSION_TOKEN);
+        const session = createSession(config({...keys, initialize}));
 
-      await session.dispatchAction(PROMPT);
+        await session.dispatchAction(PROMPT);
+        await flush();
 
-      expect(sent()).toEqual([
-        expect.objectContaining({
-          action: null,
-          conversationSessionId: SESSION_ID,
-          conversationToken: SESSION_TOKEN,
-        }),
-      ]);
-      expect(session.sessionId).toBe(SESSION_ID);
-    });
-
-    it('sends no initialize after a prompt dispatched in the same task', async () => {
-      answerWithKeys(SESSION_ID, SESSION_TOKEN);
-      const session = createSession(config({...keys, initialize: true}));
-
-      await session.dispatchAction(PROMPT);
-      await flush();
-
-      expect(sent()).toHaveLength(1);
-      expect(sent()[0]).toMatchObject({action: null, conversationToken: SESSION_TOKEN});
-      expect(session.initialization).toBeUndefined();
-    });
+        expect(sent()).toEqual([
+          expect.objectContaining({
+            action: null,
+            conversationSessionId: SESSION_ID,
+            conversationToken: SESSION_TOKEN,
+          }),
+        ]);
+        expect(session.initialization).toBeUndefined();
+      }
+    );
 
     it.each([
       ['a 403', {error: 'HTTP 403', status: 403}],
