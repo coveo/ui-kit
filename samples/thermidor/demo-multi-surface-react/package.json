@@ -17,7 +17,8 @@
     "@coveo/thermidor": "workspace:*",
     "@coveo/thermidor-schema": "catalog:",
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "zod": "3.25.76"
   },
   "devDependencies": {
     "@testing-library/react": "catalog:",

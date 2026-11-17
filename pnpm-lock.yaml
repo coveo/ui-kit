@@ -2346,19 +2346,22 @@ importers:
     dependencies:
       '@copilotkit/a2ui-renderer':
         specifier: 1.85.0
-        version: 1.85.0(@ag-ui/core@1.0.2(zod@4.6.7))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        version: 1.85.0(@ag-ui/core@1.0.2(zod@3.25.76))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@coveo/thermidor':
         specifier: workspace:*
         version: link:../../../packages/thermidor
       '@coveo/thermidor-schema':
         specifier: 'catalog:'
-        version: 1.0.0-beta.45(zod@4.6.7)
+        version: 1.0.0-beta.45(zod@3.25.76)
       react:
         specifier: 19.3.1
         version: 19.3.1
       react-dom:
         specifier: 19.3.1
         version: 19.3.1(react@19.3.1)
+      zod:
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@testing-library/react':
         specifier: 'catalog:'
@@ -17090,10 +17093,6 @@ snapshots:
     optionalDependencies:
       zod: 3.25.76
 
-  '@ag-ui/core@1.0.2(zod@4.6.7)':
-    optionalDependencies:
-      zod: 4.6.7
-
   '@ag-ui/encoder@0.0.59':
     dependencies:
       '@ag-ui/core': 0.0.59
@@ -18829,20 +18828,6 @@ snapshots:
       - '@ag-ui/core'
       - encoding
 
-  '@copilotkit/a2ui-renderer@1.85.0(@ag-ui/core@1.0.2(zod@4.6.7))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
-    dependencies:
-      '@a2ui/web_core': 0.15.0
-      '@copilotkit/shared': 1.85.0(@ag-ui/core@1.0.2(zod@4.6.7))
-      clsx: 2.1.1
-      zod: 3.25.76
-      zod-to-json-schema: 3.25.2(zod@3.25.76)
-    optionalDependencies:
-      react: 19.3.1
-      react-dom: 19.3.1(react@19.3.1)
-    transitivePeerDependencies:
-      - '@ag-ui/core'
-      - encoding
-
   '@copilotkit/license-verifier@0.5.0': {}
 
   '@copilotkit/shared@1.85.0(@ag-ui/core@1.0.2(zod@3.25.76))':
@@ -18850,24 +18835,6 @@ snapshots:
       '@ag-ui/a2ui-middleware': 0.0.10(@ag-ui/client@1.0.2)(rxjs@7.8.1)
       '@ag-ui/client': 1.0.2
       '@ag-ui/core': 1.0.2(zod@3.25.76)
-      '@copilotkit/license-verifier': 0.5.0
-      '@segment/analytics-node': 2.3.0
-      '@standard-schema/spec': 1.1.0
-      clarinet: 0.12.6
-      graphql: 16.15.0
-      partial-json: 0.1.7
-      rxjs: 7.8.1
-      uuid: 11.1.1
-      zod: 3.25.76
-      zod-to-json-schema: 3.25.2(zod@3.25.76)
-    transitivePeerDependencies:
-      - encoding
-
-  '@copilotkit/shared@1.85.0(@ag-ui/core@1.0.2(zod@4.6.7))':
-    dependencies:
-      '@ag-ui/a2ui-middleware': 0.0.10(@ag-ui/client@1.0.2)(rxjs@7.8.1)
-      '@ag-ui/client': 1.0.2
-      '@ag-ui/core': 1.0.2(zod@4.6.7)
       '@copilotkit/license-verifier': 0.5.0
       '@segment/analytics-node': 2.3.0
       '@standard-schema/spec': 1.1.0
@@ -18911,10 +18878,6 @@ snapshots:
   '@coveo/thermidor-schema@1.0.0-beta.45(zod@3.25.76)':
     dependencies:
       zod: 3.25.76
-
-  '@coveo/thermidor-schema@1.0.0-beta.45(zod@4.6.7)':
-    dependencies:
-      zod: 4.6.7
 
   '@cspell/cspell-bundled-dicts@10.4.1':
     dependencies:
