@@ -143,6 +143,20 @@ describe('atomic-result-html', () => {
         expect(sanitizeValue === '' || sanitizeValue === null).toBe(true);
       });
 
+      it('should ignore the sanitize attribute when it is set to "false"', () => {
+        const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+        const element = document.createElement('atomic-result-html') as AtomicResultHtml;
+
+        element.setAttribute('sanitize', 'false');
+
+        expect(element.sanitize).toBe(true);
+        expect(consoleWarn).toHaveBeenCalledWith(
+          expect.stringContaining(
+            'The `"false"` value is ignored. Use the `disable-sanitization` attribute instead.'
+          )
+        );
+      });
+
       it('should sanitize by default', async () => {
         const {element} = await renderResultHtml({
           props: {field: 'custom_html_field'},

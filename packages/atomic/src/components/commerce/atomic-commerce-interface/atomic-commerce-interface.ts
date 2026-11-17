@@ -37,7 +37,7 @@ import {
   InterfaceController,
 } from '@/src/components/common/interface/interface-controller';
 import {MobileBreakpointController} from '@/src/components/common/layout/mobile-breakpoint-controller';
-import {booleanConverter, createBooleanConverter} from '@/src/converters/boolean-converter';
+import {createBooleanConverter} from '@/src/converters/boolean-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
@@ -202,7 +202,7 @@ export class AtomicCommerceInterface
     type: Boolean,
     attribute: 'reflect-state-in-url',
     reflect: true,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-state-reflection-in-url'),
   })
   reflectStateInUrl = true;
 

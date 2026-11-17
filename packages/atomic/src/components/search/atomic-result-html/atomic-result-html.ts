@@ -47,7 +47,7 @@ export class AtomicResultHtml
   @property({
     type: Boolean,
     reflect: true,
-    converter: createBooleanConverter('disable-sanitization'),
+    converter: createBooleanConverter('disable-sanitization', {ignoreFalse: true}),
   })
   sanitize = true;
 

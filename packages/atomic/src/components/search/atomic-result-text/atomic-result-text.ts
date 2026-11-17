@@ -8,7 +8,7 @@ import {renderItemTextHighlighted} from '@/src/components/common/item-text/item-
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {createBooleanConverter} from '@/src/converters/boolean-converter';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -50,7 +50,7 @@ export class AtomicResultText
     type: Boolean,
     attribute: 'should-highlight',
     reflect: true,
-    converter: booleanConverter,
+    converter: createBooleanConverter('no-highlight'),
   })
   public shouldHighlight = true;
 

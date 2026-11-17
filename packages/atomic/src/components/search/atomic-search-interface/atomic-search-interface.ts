@@ -32,7 +32,7 @@ import {
   firstSearchExecutedSelector,
   noResultsSelector,
 } from '@/src/components/search/atomic-search-layout/search-layout';
-import {booleanConverter, createBooleanConverter} from '@/src/converters/boolean-converter';
+import {createBooleanConverter} from '@/src/converters/boolean-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
@@ -214,7 +214,7 @@ export class AtomicSearchInterface
     type: Boolean,
     attribute: 'reflect-state-in-url',
     reflect: true,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-state-reflection-in-url'),
   })
   reflectStateInUrl = true;
 
@@ -265,7 +265,7 @@ export class AtomicSearchInterface
     type: Boolean,
     attribute: 'enable-relevance-inspector',
     reflect: true,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-relevance-inspector'),
   })
   public enableRelevanceInspector = true;
 

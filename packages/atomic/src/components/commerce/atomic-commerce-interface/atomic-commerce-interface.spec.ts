@@ -1404,5 +1404,17 @@ describe('atomic-commerce-interface', () => {
 
       expect(deprecationWarnings(engine)).toEqual([]);
     });
+
+    it('should point to disable-state-reflection-in-url when reflect-state-in-url is set to "false"', async () => {
+      const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      await setupElement({reflectStateInUrl: false});
+
+      expect(consoleWarn).toHaveBeenCalledWith(
+        expect.stringContaining('Use the `disable-state-reflection-in-url` attribute instead.')
+      );
+      expect(consoleWarn).not.toHaveBeenCalledWith(
+        expect.stringContaining('omit the attribute instead')
+      );
+    });
   });
 });

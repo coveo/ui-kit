@@ -5,7 +5,7 @@ import {when} from 'lit/directives/when.js';
 import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/context/product-context-controller';
 import {renderItemTextFallback} from '@/src/components/common/item-text/item-text-fallback';
 import {renderItemTextHighlighted} from '@/src/components/common/item-text/item-text-highlighted';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {createBooleanConverter} from '@/src/converters/boolean-converter';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -41,7 +41,7 @@ export class AtomicProductText
     type: Boolean,
     attribute: 'should-highlight',
     reflect: true,
-    converter: booleanConverter,
+    converter: createBooleanConverter('no-highlight'),
   })
   public shouldHighlight = true;
 
