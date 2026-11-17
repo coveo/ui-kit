@@ -843,6 +843,8 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
           fail(getErrorMessage(error));
         }
       },
+    }).catch(() => {
+      // `onError` settled it, so a connection dropped after the terminal event keeps its outcome.
     });
   }
 

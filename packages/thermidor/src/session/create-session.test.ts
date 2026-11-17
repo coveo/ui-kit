@@ -96,6 +96,8 @@ interface ControllableStream {
   emit(activity: Record<string, unknown>): void;
   /** Closes the stream, ending the turn's consumption. */
   close(): void;
+  /** Errors the stream, as a dropped connection would. */
+  error(reason: unknown): void;
   /** Resolves once the endpoint client's `call` has been invoked and the reader is attached. */
   readonly opened: Promise<void>;
 }
@@ -138,6 +140,9 @@ function createControllableStream(): ControllableStream {
       } catch {
         // Already closed (e.g. after a cancel); ignore.
       }
+    },
+    error(reason) {
+      controller.error(reason);
     },
     opened,
   };
@@ -1562,7 +1567,8 @@ describe('createSession lifecycle', () => {
   describe('why a turn errored', () => {
     async function settledPrompt(
       session: ReturnType<typeof createSession>,
-      events: Record<string, unknown>[]
+      events: Record<string, unknown>[],
+      dropConnection = false
     ) {
       const stream = queueStream();
       const submit = session.dispatchAction({
@@ -1573,9 +1579,14 @@ describe('createSession lifecycle', () => {
       for (const event of events) {
         stream.emit(event);
       }
-      stream.close();
+      if (dropConnection) {
+        await vi.waitFor(() => expect(session.turns.at(-1)?.status).not.toBe('streaming'));
+        stream.error(new TypeError('network error'));
+      } else {
+        stream.close();
+      }
       await submit;
-      return session.turns[0];
+      return session.turns.at(-1)!;
     }
 
     it('fails the turn with the code of a RUN_ERROR', async () => {
@@ -1583,15 +1594,33 @@ describe('createSession lifecycle', () => {
 
       const turn = await settledPrompt(session, [
         {type: 'RUN_STARTED'},
-        {type: 'RUN_ERROR', message: 'The agent is busy.', code: 'AGENT:AGENT_BUSY'},
+        {type: 'RUN_ERROR', message: 'Timed out', code: 'AGENT:UPSTREAM_TIMEOUT'},
       ]);
 
       expect(turn).toMatchObject({
         status: 'error',
-        error: 'The agent is busy.',
+        error: 'Timed out',
         reason: 'failed',
-        errorCode: 'AGENT:AGENT_BUSY',
+        errorCode: 'AGENT:UPSTREAM_TIMEOUT',
       });
+    });
+
+    it('keeps the outcome of a terminal event when the connection drops after it', async () => {
+      const session = createSession(baseConfig);
+
+      const failed = await settledPrompt(
+        session,
+        [{type: 'RUN_ERROR', message: 'Timed out', code: 'AGENT:UPSTREAM_TIMEOUT'}],
+        true
+      );
+      expect(failed).toMatchObject({
+        status: 'error',
+        error: 'Timed out',
+        errorCode: 'AGENT:UPSTREAM_TIMEOUT',
+      });
+
+      const completed = await settledPrompt(session, [{type: 'RUN_FINISHED'}], true);
+      expect(completed.status).toBe('complete');
     });
 
     it('fails the turn when the stream ends without a terminal event', async () => {
