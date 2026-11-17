@@ -5,12 +5,12 @@ import styles from './ProductChildren.module.css';
 /** How many child thumbnails a product shows; the others are counted. */
 const VISIBLE_CHILDREN = 5;
 
-/** The thumbnail of a child without an image, or whose image is not a web or data image URL. */
+/** The thumbnail of a child without a thumbnail or image, or whose first one is not a web or data image URL. */
 export const FALLBACK_THUMBNAIL =
   'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50"%3E%3Crect width="50" height="50" fill="none" stroke="gray"%3E%3C/rect%3E%3C/svg%3E';
 
 function thumbnailOf(child: ProductChild): string {
-  const url = child.ec_thumbnails?.[0];
+  const url = child.ec_thumbnails?.[0] ?? child.ec_images?.[0];
   return url && /^(https?:|data:image\/)/i.test(url) ? url : FALLBACK_THUMBNAIL;
 }
 

@@ -58,19 +58,21 @@ describe('ProductChildren', () => {
     expect(screen.queryByRole('group', {name: 'Available in:'})).toBeNull();
   });
 
-  it('shows a fallback for a child without a web image or name', () => {
+  it('shows the image of a child without a thumbnail, or a fallback without a web image or name', () => {
     render(
       <Slot
         product={group([
           child('a'),
-          child('b', {ec_thumbnails: []}),
+          child('b', {ec_thumbnails: [], ec_images: ['https://example.com/b-image.png']}),
           child('c', {ec_thumbnails: ['javascript:alert(1)'], ec_name: undefined}),
+          child('d', {ec_thumbnails: []}),
         ])}
       />
     );
 
     expect(screen.getAllByRole('img').map((image) => image.getAttribute('src'))).toEqual([
       'https://example.com/a.png',
+      'https://example.com/b-image.png',
       FALLBACK_THUMBNAIL,
       FALLBACK_THUMBNAIL,
     ]);
