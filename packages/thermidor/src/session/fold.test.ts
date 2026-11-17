@@ -40,8 +40,8 @@ describe('fold Turn/TurnResponse shape', () => {
     it('sets status "error" and an error message on a RUN_ERROR sequence', () => {
       const turn = foldActivities(createTurn('t1', {prompt: 'hi'}), [runError]);
 
-      expect(turn.status).toBe('error');
-      expect(turn.error).toBe('boom');
+      expect(turn).toMatchObject({status: 'error', error: 'boom', reason: 'failed'});
+      expect(turn).not.toHaveProperty('errorCode');
     });
 
     it('marks a RUN_ERROR failed and keeps its code', () => {
@@ -55,13 +55,6 @@ describe('fold Turn/TurnResponse shape', () => {
         reason: 'failed',
         errorCode: 'AGENT:AGENT_BUSY',
       });
-    });
-
-    it('omits errorCode when the RUN_ERROR has no code', () => {
-      const turn = foldActivities(createTurn('t1', {prompt: 'hi'}), [runError]);
-
-      expect(turn.reason).toBe('failed');
-      expect(turn).not.toHaveProperty('errorCode');
     });
 
     it('carries reason and errorCode into the initialization', () => {

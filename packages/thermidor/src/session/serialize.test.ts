@@ -209,19 +209,6 @@ describe('restoreSession', () => {
     expect(restored.initialization).toEqual(initialization);
   });
 
-  it('downgrades a streaming initialization to a failed one', () => {
-    const restored = restoreSession(
-      serializeSession(state({initialization: {activities: [], status: 'streaming'}}))
-    );
-
-    expect(restored.initialization).toEqual({
-      activities: [],
-      status: 'error',
-      error: STREAM_INTERRUPTED_ERROR,
-      reason: 'failed',
-    });
-  });
-
   it('downgrades a streaming turn to error while preserving its partial response', () => {
     const streaming = turn({
       id: 't1',

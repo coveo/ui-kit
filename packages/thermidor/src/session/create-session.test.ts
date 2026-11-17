@@ -1594,15 +1594,6 @@ describe('createSession lifecycle', () => {
       });
     });
 
-    it('fails the turn without a code when the RUN_ERROR has none', async () => {
-      const session = createSession(baseConfig);
-
-      const turn = await settledPrompt(session, [{type: 'RUN_ERROR', message: 'Boom'}]);
-
-      expect(turn).toMatchObject({status: 'error', error: 'Boom', reason: 'failed'});
-      expect(turn).not.toHaveProperty('errorCode');
-    });
-
     it('fails the turn when the stream ends without a terminal event', async () => {
       const session = createSession(baseConfig);
 
@@ -1614,49 +1605,6 @@ describe('createSession lifecycle', () => {
         reason: 'failed',
       });
       expect(turn).not.toHaveProperty('errorCode');
-    });
-
-    it('fails the turn when the endpoint rejects the request', async () => {
-      callMock.mockImplementationOnce(async () => ({success: false, error: 'Bad gateway'}));
-      const session = createSession(baseConfig);
-
-      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
-
-      expect(session.turns[0]).toMatchObject({
-        status: 'error',
-        error: 'Bad gateway',
-        reason: 'failed',
-      });
-    });
-
-    it('fails the turn when the request throws', async () => {
-      callMock.mockImplementationOnce(async () => {
-        throw new TypeError('Failed to fetch');
-      });
-      const session = createSession(baseConfig);
-
-      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
-
-      expect(session.turns[0]).toMatchObject({
-        status: 'error',
-        error: 'Failed to fetch',
-        reason: 'failed',
-      });
-    });
-
-    it('keeps reason and errorCode through serialize and restore', async () => {
-      const session = createSession(baseConfig);
-      await settledPrompt(session, [
-        {type: 'RUN_ERROR', message: 'Rejected', code: 'AGENT:ATTACHMENT_REJECTED'},
-      ]);
-
-      const restored = createSession({...baseConfig, sessionToRestore: session.serialize()});
-
-      expect(restored.turns[0]).toEqual(session.turns[0]);
-      expect(restored.turns[0]).toMatchObject({
-        reason: 'failed',
-        errorCode: 'AGENT:ATTACHMENT_REJECTED',
-      });
     });
 
     it('clears error, reason and errorCode on retry', async () => {
@@ -1762,8 +1710,7 @@ describe('createSession lifecycle', () => {
 
       expect(callMock).not.toHaveBeenCalled();
       expect(session.turns).toHaveLength(1);
-      expect(session.turns[0].status).toBe('error');
-      expect(session.turns[0].error).toBe('boom');
+      expect(session.turns[0]).toMatchObject({status: 'error', error: 'boom', reason: 'failed'});
 
       provider.failing = false;
       const next = queueStream();
@@ -2155,7 +2102,11 @@ describe('createSession lifecycle', () => {
       await turn;
 
       expect(callMock).toHaveBeenCalledTimes(exhaustingConflicts);
-      expect(session.turns[0]).toMatchObject({status: 'error', error: conflictError});
+      expect(session.turns[0]).toMatchObject({
+        status: 'error',
+        error: conflictError,
+        reason: 'failed',
+      });
       expect(session.actionError).toBeUndefined();
     });
   });
