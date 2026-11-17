@@ -156,8 +156,10 @@ export function createConcurrentActions({
     return acceptUnrecordedWrites(messages, sessionActivities(store.getState()), config.contracts);
   }
 
+  // A cache hit, or an answer applied again, reuses its messages, so each apply delivers copies:
+  // a renderer can then tell a write from a render by identity.
   function apply(messages: readonly unknown[]): void {
-    const accepted = accept(messages);
+    const accepted = accept(structuredClone(messages));
     if (accepted.messages.length < messages.length) {
       devWarn(
         'dispatchAction: a concurrent answer may only update the data model of known nodes; the rest is dropped.'
