@@ -1,0 +1,105 @@
+.drawer {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: var(--space-3);
+  width: 280px;
+  padding: var(--space-4);
+  overflow-y: auto;
+  background: var(--color-bg-secondary);
+  border-right: 1px solid var(--color-border);
+}
+
+@media (max-width: 767px) {
+  .drawer {
+    position: absolute;
+    inset: 0 auto 0 0;
+    /* Above the pinned search box and its suggestions. */
+    z-index: 15;
+    max-width: 85vw;
+    box-shadow: var(--shadow-md);
+    animation: slideIn 200ms ease-out;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+.start,
+.open,
+.remove {
+  font: inherit;
+  color: var(--color-text-primary);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.start {
+  padding: var(--space-2) var(--space-3);
+  font-weight: 600;
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+.start:hover,
+.open:hover,
+.remove:hover {
+  background: var(--color-surface-hover);
+}
+
+:is(.start, .open, .remove):focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 1px;
+}
+
+.empty {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.open {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-2) var(--space-3);
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.open[aria-current='true'] {
+  font-weight: 600;
+  background: var(--color-surface);
+  border-color: var(--color-border-active);
+}
+
+.remove {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: var(--color-text-muted);
+}

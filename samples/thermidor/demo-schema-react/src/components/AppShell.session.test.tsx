@@ -2,9 +2,12 @@ import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import {AppShell} from './AppShell.js';
 import {SessionProvider} from '../context/session.js';
+import {createConversationStorage} from '../conversations/conversation-storage.js';
+import {memoryStorage} from '../test/memory-storage.js';
 import {
   answerShell,
   createTestSession,
+  createTestSessionFactory,
   findSearchBox,
   sseResponse,
   SHELL_SURFACE_ID,
@@ -108,5 +111,33 @@ describe('AppShell with the session shell', () => {
 
     await waitFor(() => expect(requests.at(-1)?.message).toBe('kayaks'));
     await screen.findByLabelText('A2-UI surface answer-1');
+  });
+
+  it("keeps a restored conversation's blocks read-only, and its search box usable once resumed", async () => {
+    const local = memoryStorage();
+    const tab = memoryStorage();
+    const storage = createConversationStorage({local: () => local, session: () => tab});
+    const renderTab = () =>
+      render(
+        <SessionProvider
+          createSession={createTestSessionFactory(answerPrompts).create}
+          storage={storage}
+        >
+          <AppShell />
+        </SessionProvider>
+      );
+    const first = renderTab();
+    const textarea = await findSearchBox();
+    fireEvent.change(textarea, {target: {value: 'kayaks'}});
+    fireEvent.keyDown(textarea, {key: 'Enter', code: 'Enter'});
+    await screen.findByLabelText('A2-UI surface answer-1');
+    await waitFor(() => expect(storage.list()).toHaveLength(1));
+    first.unmount();
+
+    renderTab();
+
+    expect(await screen.findByText('Restored results. Search again to refine.')).toBeDefined();
+    expect(screen.getByRole('button', {name: 'Show me kayaks'}).matches(':disabled')).toBe(true);
+    expect((await findSearchBox()).disabled).toBe(false);
   });
 });

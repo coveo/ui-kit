@@ -11,7 +11,10 @@ let capturedOnAction: ((message: unknown) => unknown) | undefined;
 
 // The session's request chain is faked, so every dispatch reaches the spy one at a time.
 let mockSession: Session;
-vi.mock('../context/session.js', () => ({useSession: () => mockSession}));
+vi.mock('../context/session.js', () => ({
+  useSession: () => mockSession,
+  useConversations: () => ({currentId: 'conversation-1'}),
+}));
 
 async function createMockSession(): Promise<Session> {
   const {createFakeSessionRequests} = await import('../test/fake-session-requests.js');

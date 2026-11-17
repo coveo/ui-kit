@@ -76,9 +76,10 @@ interface TurnSurfacesProps {
    */
   surfaces: readonly DiscoveredSurface[];
   /**
-   * Whether these surfaces belong to the latest turn. The session only sends actions for the
-   * surfaces of its active turn, so an earlier turn disables the controls that act on its surfaces
-   * (see `actsOnSurface`), while its products can still be opened and added to the cart.
+   * Whether these surfaces belong to the latest turn. The sample keeps the surfaces of earlier
+   * turns read-only, as the session keeps those of a restored conversation: their controls that act
+   * on the surface are disabled (see `actsOnSurface`), while their products can still be opened and
+   * added to the cart.
    */
   interactive: boolean;
   /** Whether the turn these surfaces belong to is still streaming. */
@@ -90,7 +91,9 @@ interface TurnSurfacesProps {
  * component type, in the place its content will take. Surfaces never scroll the page: the
  * conversation keeps the turn they belong to in view.
  */
-export function TurnSurfaces({surfaces, interactive, isStreaming}: TurnSurfacesProps) {
+export function TurnSurfaces({surfaces, interactive: latest, isStreaming}: TurnSurfacesProps) {
+  const restored = surfaces.some((surface) => surface.readOnly);
+  const interactive = latest && !restored;
   const surfaceIds = useMemo(() => surfaces.map((surface) => surface.surfaceId), [surfaces]);
   const locked = useSurfaceLocked() && interactive;
   // The turn that streams is disabled without dimming, so its content arrives at full strength.
@@ -138,7 +141,9 @@ export function TurnSurfaces({surfaces, interactive, isStreaming}: TurnSurfacesP
     >
       {!interactive && (
         <legend className={styles.readOnlyNote}>
-          Earlier results. Ask a follow-up or search again to refine.
+          {restored
+            ? 'Restored results. Search again to refine.'
+            : 'Earlier results. Ask a follow-up or search again to refine.'}
         </legend>
       )}
       <EarlierTurnContext.Provider value={!interactive}>

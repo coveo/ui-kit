@@ -9,7 +9,7 @@ import {PromptInput} from '../PromptInput/PromptInput.js';
 
 /**
  * The search box of the session shell, the surface the producer creates when the session opens.
- * While the session opens, a disabled input of the same shape stands in its place, so the page does
+ * While the session opens or resumes, a disabled input of the same shape stands in its place, so the page does
  * not shift; once it has opened without a shell, or failed to, a plain input without suggestions
  * does.
  */
@@ -20,8 +20,9 @@ export function SessionSearchBox(options: SearchBoxOptions) {
     session.getSnapshot,
     session.getSnapshot
   );
+  // A restored shell is read-only until the resumed session sends its own.
   const shellId = surfaces.find(
-    ({rootComponentType}) => rootComponentType === 'SessionShell'
+    ({rootComponentType, readOnly}) => rootComponentType === 'SessionShell' && !readOnly
   )?.surfaceId;
   const initializing = initialization?.status === 'streaming';
 
