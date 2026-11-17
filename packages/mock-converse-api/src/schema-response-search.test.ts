@@ -349,6 +349,15 @@ describe('schema-response-search product groups', () => {
       [],
     ]);
   });
+
+  it('leaves the thumbnails of one group empty, as the catalog sends them', () => {
+    const [safeFloat] = lifeJackets;
+    const children = safeFloat.children as Array<Record<string, unknown>>;
+    expect([safeFloat, ...children].map(({ec_thumbnails}) => ec_thumbnails)).toEqual(
+      Array(children.length + 1).fill([])
+    );
+    expect(products[0].ec_thumbnails).toEqual(products[0].ec_images);
+  });
 });
 
 describe('schema-response-search action-driven recomputation', () => {
