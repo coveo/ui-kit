@@ -438,7 +438,7 @@ export function createSession<TContracts extends ContractsSchema>(
 ): Session<TContracts> {
   requireNonBlank(config, ['agentConfigurationId', 'trackingId'], 'createSession');
   const {agentConfigurationId, trackingId} = config;
-  return createSessionRuntime(config, {agentConfigurationId, trackingId});
+  return createSessionRuntime(config, {agentConfigurationId, trackingId}).session;
 }
 
 function requireNonBlank<T extends object>(
@@ -463,14 +463,23 @@ function readLocale(navigatorContext: NavigatorContext): RequestLocale {
   };
 }
 
+/** A session, with a reader for the conversation session id its requests carry. */
+export interface SessionRuntime<TContracts extends ContractsSchema = ContractsSchema> {
+  session: Session<TContracts>;
+  readSessionId(): string | undefined;
+}
+
 /**
  * The session runtime both entry points share. `requestScope` holds the fields sent with
- * every request besides the ones the session builds itself.
+ * every request besides the ones the session builds itself. `initialSessionId` is the first
+ * conversation session id the requests carry. The session drops it if a request ends before
+ * the endpoint sends a token.
  */
 export function createSessionRuntime<TContracts extends ContractsSchema>(
   config: SessionRuntimeConfig<TContracts>,
-  requestScope: Readonly<RequestScopeFields>
-): Session<TContracts> {
+  requestScope: Readonly<RequestScopeFields>,
+  initialSessionId?: string
+): SessionRuntime<TContracts> {
   if (typeof config.navigatorContextProvider !== 'function') {
     throw new Error('A session requires a navigatorContextProvider.');
   }
@@ -479,7 +488,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     : {
         turns: [],
         activeTurnId: undefined,
-        sessionId: undefined,
+        sessionId: initialSessionId,
         sessionToken: undefined,
         state: {},
         rendererStream: EMPTY_RENDERER_STREAM,
@@ -573,7 +582,20 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     if (activeAbortController === abortController) {
       activeAbortController = null;
     }
-    store.setState((current) => ({...current, request: undefined}));
+    store.setState((current) => ({
+      ...current,
+      request: undefined,
+      ...(holdsUnconfirmedInitialSessionId(current) && {sessionId: undefined}),
+    }));
+  }
+
+  // The endpoint refuses an id it holds a token for when the request has none, so drop ours and let it assign one.
+  function holdsUnconfirmedInitialSessionId(state: SessionStoreState<Turn>): boolean {
+    return (
+      initialSessionId !== undefined &&
+      state.sessionToken === undefined &&
+      state.sessionId === initialSessionId
+    );
   }
 
   /** A dispatch refused before it was sent settles at once. */
@@ -1309,7 +1331,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     });
   }
 
-  return {
+  const session: Session<TContracts> = {
     contracts: config.contracts,
     get turns() {
       return readSurfaceView().turns;
@@ -1341,4 +1363,5 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     retry,
     serialize,
   };
+  return {session, readSessionId: () => store.getState().sessionId};
 }
