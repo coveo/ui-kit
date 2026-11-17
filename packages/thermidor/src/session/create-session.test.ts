@@ -2375,10 +2375,10 @@ describe('createSession lifecycle', () => {
         ]);
       });
 
-      it('sends nothing when retrying a failed restored turn opened from a restored surface', async () => {
+      it('retries a failed last restored turn, but not an earlier one opened from a read-only surface', async () => {
         const serialized = await serializedConversation();
-        serialized.turns.push({
-          id: 'failed-turn',
+        const failedTurn = (id: string) => ({
+          id,
           input: {
             action: {
               component: 'Pagination',
@@ -2388,17 +2388,51 @@ describe('createSession lifecycle', () => {
               context: {page: 2},
             },
           },
-          status: 'error',
+          status: 'error' as const,
           error: 'Agent failed',
           response: {activities: []},
         });
+        serialized.turns.splice(1, 0, failedTurn('earlier-failed-turn'));
+        serialized.turns.push(failedTurn('last-failed-turn'));
         const restored = createSession({...baseConfig, sessionToRestore: serialized});
 
-        restored.retry('failed-turn');
+        restored.retry('earlier-failed-turn');
         await flush();
-
         expect(callMock).not.toHaveBeenCalled();
-        expect(restored.turns.at(-1)?.status).toBe('error');
+
+        const stream = queueStream();
+        restored.retry('last-failed-turn');
+        await stream.opened;
+        stream.emit({type: 'RUN_FINISHED'});
+        stream.close();
+        await vi.waitFor(() => expect(restored.request).toBeUndefined());
+
+        expect(callMock).toHaveBeenCalledTimes(1);
+        expect(callMock.mock.calls[0][0]).toMatchObject({
+          action: {name: 'selectPage', surfaceId: ANSWER_ID},
+        });
+        expect(restored.turns.at(-1)?.status).toBe('complete');
+      });
+
+      it('keeps the last restored turn live after a new turn', async () => {
+        const restored = createSession({
+          ...baseConfig,
+          sessionToRestore: await serializedConversation(),
+        });
+        const newAnswerSurface = JSON.parse(
+          JSON.stringify(answerSurface)
+            .replaceAll(ANSWER_ID, 'answer-3')
+            .replace('answer-activity', 'new-answer-activity')
+        ) as typeof answerSurface;
+
+        await completePrompt(restored, 'next', [newAnswerSurface]);
+
+        expect(restored.surfaces.map(({surfaceId, readOnly}) => [surfaceId, readOnly])).toEqual([
+          [SHELL_ID, undefined],
+          [ANSWER_ID, true],
+          [LATEST_ANSWER_ID, undefined],
+          ['answer-3', undefined],
+        ]);
       });
 
       it('never sends initialize for a restored session without a token', async () => {
