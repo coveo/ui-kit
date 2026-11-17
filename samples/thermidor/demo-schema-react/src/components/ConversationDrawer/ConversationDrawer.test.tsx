@@ -10,6 +10,7 @@ import {
   createTestSessionFactory,
   sseResponse,
   run,
+  shellRun,
   type ConverseHandler,
 } from '../../test/session.js';
 import {AppShell} from '../AppShell.js';
@@ -42,6 +43,8 @@ function renderApp(handler?: ConverseHandler) {
 async function ask({session}: ReturnType<typeof renderApp>, prompt: string) {
   await act(() => session().dispatchAction({name: 'submitPrompt', payload: {prompt}}));
 }
+
+const NOT_READY = 'Available once the conversation is ready';
 
 const toggle = () => screen.getByRole('button', {name: 'Conversations'});
 const drawer = () => screen.getByRole('navigation', {name: 'Conversations'});
@@ -214,7 +217,7 @@ describe('ConversationDrawer', () => {
     const newConversation = within(drawer()).getByRole('button', {name: 'New conversation'});
     await waitFor(() => expect(newConversation.getAttribute('aria-disabled')).toBe('true'));
 
-    expect(newConversation.title).toBe('Wait for the answer to finish');
+    expect(screen.getByText(NOT_READY).id).toBe(newConversation.getAttribute('aria-describedby'));
     expect(entries().map((entry) => entry.getAttribute('aria-disabled'))).toEqual([null, 'true']);
     fireEvent.click(newConversation);
     fireEvent.click(entries()[1]);
@@ -228,5 +231,50 @@ describe('ConversationDrawer', () => {
 
     await act(async () => finish());
     await waitFor(() => expect(newConversation.getAttribute('aria-disabled')).toBeNull());
+    expect(screen.queryByText(NOT_READY)).toBeNull();
+  });
+
+  it('waits while the session opens', async () => {
+    let open = () => {};
+    renderApp((request, signal) =>
+      request.action?.name === 'initialize'
+        ? new Promise((resolve) => (open = () => resolve(sseResponse(shellRun()))))
+        : answerShell(request, signal)
+    );
+    fireEvent.click(toggle());
+    const newConversation = within(drawer()).getByRole('button', {name: 'New conversation'});
+    await waitFor(() => expect(newConversation.getAttribute('aria-disabled')).toBe('true'));
+    expect(screen.getByText(NOT_READY)).toBeDefined();
+
+    await act(async () => open());
+
+    await waitFor(() => expect(newConversation.getAttribute('aria-disabled')).toBeNull());
+  });
+
+  it.each([
+    ['fails', (app: ReturnType<typeof renderApp>, fail: () => void) => fail()],
+    ['is cancelled', (app: ReturnType<typeof renderApp>) => app.session().cancel()],
+  ])('is ready again once the request %s', async (_name, end) => {
+    let fail = () => {};
+    const app = renderApp((request, signal) =>
+      request.message === 'boots'
+        ? new Promise((resolve, reject) => {
+            fail = () => resolve(new Response('Unavailable', {status: 503}));
+            signal?.addEventListener('abort', () =>
+              reject(new DOMException('The request was aborted.', 'AbortError'))
+            );
+          })
+        : answerShell(request, signal)
+    );
+    await ask(app, 'surfboards');
+    fireEvent.click(toggle());
+    void app.session().dispatchAction({name: 'submitPrompt', payload: {prompt: 'boots'}});
+    const newConversation = within(drawer()).getByRole('button', {name: 'New conversation'});
+    await waitFor(() => expect(newConversation.getAttribute('aria-disabled')).toBe('true'));
+
+    act(() => end(app, fail));
+
+    await waitFor(() => expect(newConversation.getAttribute('aria-disabled')).toBeNull());
+    expect(screen.queryByText(NOT_READY)).toBeNull();
   });
 });

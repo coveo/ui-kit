@@ -67,6 +67,13 @@
   cursor: not-allowed;
 }
 
+.notReady {
+  margin: calc(-1 * var(--space-2)) 0 0;
+  padding: 0 var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
 .empty {
   margin: 0;
   padding: 0 var(--space-3);

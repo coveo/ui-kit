@@ -1,4 +1,4 @@
-import {useEffect, useRef, useSyncExternalStore, type RefObject} from 'react';
+import {useEffect, useId, useRef, useSyncExternalStore, type RefObject} from 'react';
 import {useConversations, useSession} from '../../context/session.js';
 import {isBlocking} from '../../a2ui/session-request.js';
 import {useMediaQuery} from '../../hooks/use-media-query.js';
@@ -6,8 +6,8 @@ import {ConversationRow} from './ConversationRow.js';
 import {ComposeIcon} from './drawer-icons.js';
 import styles from './ConversationDrawer.module.css';
 
-/** Why the drawer cannot swap the conversation while it runs, which would cancel its answer. */
-const WAIT_FOR_ANSWER = 'Wait for the answer to finish';
+/** Why the drawer cannot swap the conversation while it sends a request, which would cancel it. */
+const NOT_READY = 'Available once the conversation is ready';
 
 interface ConversationDrawerProps {
   id: string;
@@ -21,8 +21,8 @@ interface ConversationDrawerProps {
  * Lists the saved conversations, newest first, to open, rename or delete one, and starts a new one.
  * On a narrow screen it slides over the page, and closes once a conversation opens or on a press
  * outside. Deleting a conversation moves the focus to the next one, or to "New conversation".
- * While the current conversation is answering, the drawer does not swap it out: starting, opening
- * another and deleting the current one wait.
+ * While the current conversation sends a request, the drawer does not swap it out: starting,
+ * opening another and deleting the current one wait, with a line that says why.
  */
 export function ConversationDrawer({id, toggleRef, onClose}: ConversationDrawerProps) {
   const {list, currentId, start, open, remove, rename} = useConversations();
@@ -32,7 +32,8 @@ export function ConversationDrawer({id, toggleRef, onClose}: ConversationDrawerP
     () => isBlocking(session.getSnapshot().request),
     () => false
   );
-  const waitReason = running ? WAIT_FOR_ANSWER : undefined;
+  const reasonId = useId();
+  const blockedBy = running ? reasonId : undefined;
   const overlay = useMediaQuery('(max-width: 767px)');
   const drawerRef = useRef<HTMLElement>(null);
   const startRef = useRef<HTMLButtonElement>(null);
@@ -85,12 +86,17 @@ export function ConversationDrawer({id, toggleRef, onClose}: ConversationDrawerP
         type="button"
         className={styles.start}
         aria-disabled={running || undefined}
-        title={waitReason}
+        aria-describedby={blockedBy}
         onClick={() => !running && pick(start)}
       >
         <ComposeIcon />
         New conversation
       </button>
+      {running && (
+        <p id={reasonId} className={styles.notReady}>
+          {NOT_READY}
+        </p>
+      )}
       {list.length === 0 ? (
         <p className={styles.empty}>No saved conversations yet.</p>
       ) : (
@@ -100,8 +106,8 @@ export function ConversationDrawer({id, toggleRef, onClose}: ConversationDrawerP
               <ConversationRow
                 title={title}
                 current={id === currentId}
-                openBlockedBy={id === currentId ? undefined : waitReason}
-                deleteBlockedBy={id === currentId ? waitReason : undefined}
+                openBlockedBy={id === currentId ? undefined : blockedBy}
+                deleteBlockedBy={id === currentId ? blockedBy : undefined}
                 onOpen={() => pick(() => open(id))}
                 onRename={(renamed) => rename(id, renamed)}
                 onDelete={() => {
