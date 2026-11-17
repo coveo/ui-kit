@@ -41,6 +41,7 @@ export interface PrivateSession<
    * From creation, it is the configured {@link PrivateSessionConfig.sessionId} or the restored id.
    * Otherwise it is `undefined` until the endpoint sends one, and then it is that id.
    * If the session drops the configured id, it is `undefined` again until the endpoint sends one.
+   * It also drops a restored id that has no token, the same way.
    */
   readonly sessionId: string | undefined;
 }
@@ -87,7 +88,15 @@ export function createPrivateSession<TContracts extends ContractsSchema>(
       requestScope[key] = config[key];
     }
   }
-  const {session, readSessionId} = createSessionRuntime(config, requestScope, config.sessionId);
+  const restored = config.sessionToRestore;
+  const unconfirmedSessionId =
+    config.sessionId ?? (restored?.sessionToken === undefined ? restored?.sessionId : undefined);
+  const {session, readSessionId} = createSessionRuntime(
+    config,
+    requestScope,
+    config.sessionId,
+    unconfirmedSessionId
+  );
   return Object.defineProperty(session, 'sessionId', {
     get: readSessionId,
     enumerable: true,

@@ -317,6 +317,22 @@ describe('createPrivateSession', () => {
       });
     });
 
+    it('drops the id when restored during the first request, before the token', async () => {
+      const serialized = createPrivateSession(config({sessionId: SESSION_ID})).serialize();
+      answerWith({type: 'RUN_ERROR', message: 'Agent failed'});
+      const session = createPrivateSession(config({sessionToRestore: serialized}));
+      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'find shoes'}});
+
+      expect(session.sessionId).toBeUndefined();
+      answerWithTokenFor('session-1');
+      session.retry(session.turns[0].id);
+      await flush();
+
+      expect(requests()[0]).toMatchObject({conversationSessionId: SESSION_ID});
+      expect(requests()[1].conversationSessionId).toBeUndefined();
+      expect(session.sessionId).toBe('session-1');
+    });
+
     it('throws when a sessionToRestore is passed too', () => {
       const serialized = createPrivateSession(config()).serialize();
 
@@ -343,7 +359,7 @@ describe('createPrivateSession', () => {
       expect(session.sessionId).toBe('session-1');
     });
 
-    it('keeps a restored id when a request fails without a token', async () => {
+    it('keeps a restored id that has a token when a request fails', async () => {
       answerWith({type: 'RUN_ERROR', message: 'Agent failed'});
       const session = createPrivateSession(
         config({
@@ -351,6 +367,7 @@ describe('createPrivateSession', () => {
             version: SERIALIZED_SESSION_VERSION,
             turns: [],
             sessionId: 'session-1',
+            sessionToken: 'token-1',
           },
         })
       );

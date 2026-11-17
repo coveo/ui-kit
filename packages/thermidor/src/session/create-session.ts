@@ -473,12 +473,13 @@ export interface SessionRuntime<TContracts extends ContractsSchema = ContractsSc
  * The session runtime both entry points share. `requestScope` holds the fields sent with
  * every request besides the ones the session builds itself. `initialSessionId` is the first
  * conversation session id the requests carry. The session drops it if a request ends before
- * the endpoint sends a token.
+ * the endpoint sends a token, as it does `unconfirmedSessionId`, which defaults to it.
  */
 export function createSessionRuntime<TContracts extends ContractsSchema>(
   config: SessionRuntimeConfig<TContracts>,
   requestScope: Readonly<RequestScopeFields>,
-  initialSessionId?: string
+  initialSessionId?: string,
+  unconfirmedSessionId = initialSessionId
 ): SessionRuntime<TContracts> {
   if (typeof config.navigatorContextProvider !== 'function') {
     throw new Error('A session requires a navigatorContextProvider.');
@@ -585,16 +586,16 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     store.setState((current) => ({
       ...current,
       request: undefined,
-      ...(holdsUnconfirmedInitialSessionId(current) && {sessionId: undefined}),
+      ...(holdsUnconfirmedSessionId(current) && {sessionId: undefined}),
     }));
   }
 
   // The endpoint refuses an id it holds a token for when the request has none, so drop ours and let it assign one.
-  function holdsUnconfirmedInitialSessionId(state: SessionStoreState<Turn>): boolean {
+  function holdsUnconfirmedSessionId(state: SessionStoreState<Turn>): boolean {
     return (
-      initialSessionId !== undefined &&
+      unconfirmedSessionId !== undefined &&
       state.sessionToken === undefined &&
-      state.sessionId === initialSessionId
+      state.sessionId === unconfirmedSessionId
     );
   }
 
