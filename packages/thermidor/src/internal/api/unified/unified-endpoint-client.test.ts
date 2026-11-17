@@ -351,6 +351,72 @@ describe('UnifiedEndpointClient', () => {
     expect(response).toEqual({
       success: false,
       error: 'network down',
+      transient: {},
+    });
+  });
+
+  it.each([
+    [
+      'a request it cannot build',
+      () =>
+        client.call({...request, custom: {big: 1n}} as never, {
+          organizationId: 'test-org-id',
+          accessToken: 'test-token',
+        }),
+    ],
+    [
+      'an aborted fetch',
+      () => {
+        mockedFetch.mockRejectedValue(new DOMException('The operation was aborted.', 'AbortError'));
+        return client.call(request, {organizationId: 'test-org-id', accessToken: 'test-token'});
+      },
+    ],
+  ])('does not report %s as transient', async (_label, call) => {
+    const response = await call();
+
+    expect(response).toMatchObject({success: false});
+    expect(response).not.toHaveProperty('transient');
+  });
+
+  describe('transient failures', () => {
+    const callFailing = async (response: Response) => {
+      mockedFetch.mockResolvedValue(response);
+      const result = await client.call(request, {
+        organizationId: 'test-org-id',
+        accessToken: 'test-token',
+      });
+      if (result.success) {
+        throw new Error('Expected unified endpoint call to fail');
+      }
+      return result;
+    };
+
+    it.each([
+      [502, {}],
+      [503, {}],
+      [504, {}],
+      [400, undefined],
+      [401, undefined],
+      [403, undefined],
+      [404, undefined],
+      [409, undefined],
+      [500, undefined],
+    ])('reads a %i as transient: %o', async (status, transient) => {
+      const result = await callFailing(new Response(null, {status}));
+
+      expect(result.transient).toEqual(transient);
+    });
+
+    it.each([
+      ['in seconds', '3', {retryAfterMs: 3000}],
+      ['as a past HTTP date', 'Wed, 21 Oct 2015 07:28:00 GMT', {retryAfterMs: 0}],
+      ['missing', undefined, {}],
+      ['unreadable', 'soon', {}],
+    ])('reads a 429 with its Retry-After %s', async (_label, retryAfter, transient) => {
+      const headers: Record<string, string> = retryAfter ? {'Retry-After': retryAfter} : {};
+      const result = await callFailing(new Response(null, {status: 429, headers}));
+
+      expect(result.transient).toEqual(transient);
     });
   });
 

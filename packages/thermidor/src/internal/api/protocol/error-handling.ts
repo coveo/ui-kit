@@ -114,3 +114,36 @@ export async function readActionInFlightConflict(
   }
   return conflict;
 }
+
+const TRANSIENT_STATUSES = new Set([429, 502, 503, 504]);
+
+/** A failure worth retrying shortly: the request never reached a handler that answered it. */
+export interface TransientFailure {
+  /** How long a `429` asks the client to wait, from its `Retry-After` header. */
+  retryAfterMs?: number;
+}
+
+/** Reads a `429`, `502`, `503` or `504` as transient; any other status is not. */
+export function readTransientFailure(response: Response): TransientFailure | undefined {
+  if (!TRANSIENT_STATUSES.has(response.status)) {
+    return undefined;
+  }
+  if (response.status !== 429) {
+    return {};
+  }
+  const retryAfterMs = readRetryAfter(response.headers.get('Retry-After'));
+  return retryAfterMs === undefined ? {} : {retryAfterMs};
+}
+
+// `Retry-After` is either delay-seconds or an HTTP date (RFC 9110, section 10.2.3).
+function readRetryAfter(header: string | null): number | undefined {
+  const value = header?.trim();
+  if (!value) {
+    return undefined;
+  }
+  if (/^\d+$/.test(value)) {
+    return Number(value) * 1000;
+  }
+  const date = Date.parse(value);
+  return Number.isNaN(date) ? undefined : Math.max(0, date - Date.now());
+}

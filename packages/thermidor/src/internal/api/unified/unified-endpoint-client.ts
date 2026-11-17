@@ -2,8 +2,10 @@ import type {ConverseRequestModel} from './unified-endpoint-types.js';
 import {
   isSuccessResponse,
   readActionInFlightConflict,
+  readTransientFailure,
   transformError,
   type ActionInFlightConflict,
+  type TransientFailure,
 } from '@/src/internal/api/protocol/error-handling.js';
 import {getOrganizationEndpoint} from '@/src/internal/api/organization-endpoint.js';
 
@@ -52,7 +54,7 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
           '/agents/commerce/agui/converse';
       }
 
-      const response = await fetch(url, {
+      const init: RequestInit = {
         method: 'POST',
         signal: options?.signal,
         body: JSON.stringify(agentInput),
@@ -61,14 +63,27 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
           Accept: 'text/event-stream',
           Authorization: `Bearer ${accessToken}`,
         },
-      });
+      };
+      let response: Response;
+      try {
+        response = await fetch(url, init);
+      } catch (error) {
+        // What `fetch` throws, short of an abort, means the request never got an answer.
+        if (isAbortError(error)) {
+          return {success: false, error: transformError(error)};
+        }
+        return {success: false, error: transformError(error), transient: {}};
+      }
 
       if (!isSuccessResponse(response)) {
         const conflict = await readActionInFlightConflict(response);
         if (conflict) {
           return {success: false, error: ACTION_IN_FLIGHT_ERROR, conflict, status: response.status};
         }
-        return {success: false, error: transformError(response), status: response.status};
+        const transient = readTransientFailure(response);
+        return transient
+          ? {success: false, error: transformError(response), status: response.status, transient}
+          : {success: false, error: transformError(response), status: response.status};
       }
 
       if (!response.body) {
@@ -85,13 +100,14 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
         },
       };
     } catch (error) {
-      return {
-        success: false,
-        error: transformError(error),
-      };
+      return {success: false, error: transformError(error)};
     }
   };
 };
+
+function isAbortError(error: unknown): boolean {
+  return (error instanceof Error || error instanceof DOMException) && error.name === 'AbortError';
+}
 
 export const createUnifiedEndpointClient = (): UnifiedEndpointClient => {
   return {
@@ -126,6 +142,8 @@ type UnifiedEndpointClientResult =
       status?: number;
       /** Set when the request was never sent, such as for a configuration error. */
       unsent?: true;
+      /** Set for a network error, a `429`, `502`, `503` or `504`. */
+      transient?: TransientFailure;
     };
 
 export interface UnifiedEndpointClient {
