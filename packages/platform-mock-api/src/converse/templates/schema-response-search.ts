@@ -12,6 +12,7 @@ import {
   type ConverseEvent,
   type UpdateDataModelOp,
 } from '../events.js';
+import {groupChildren} from './product-groups.js';
 
 const runId = 'b41e5d90-2f8c-4c1e-9b7a-3d6f0a1c8e42';
 
@@ -233,8 +234,9 @@ interface WaterSportsProduct {
   ec_color: string;
   clickUri: string;
   permanentid: string;
-  children: never[];
   badgePlacements?: BadgePlacement[];
+  children?: Omit<WaterSportsProduct, 'children' | 'totalNumberOfChildren'>[];
+  totalNumberOfChildren?: number;
 }
 
 interface BadgePlacement {
@@ -261,7 +263,20 @@ interface ProductSeed {
   price: number;
   color: string;
   rating: number;
+  children?: [ChildSeed, ...ChildSeed[]];
+  totalNumberOfChildren?: number;
+  // Leaves `ec_thumbnails` empty across the group, as the catalog sends them.
+  withoutThumbnails?: true;
 }
+
+// Another product of a seed's group, without imagery when it has no `image`.
+interface ChildSeed {
+  color: string;
+  image?: string;
+  price?: number;
+}
+
+const WETSUITS = 'https://images.barca.group/Sports/v2/Accessories/Wetsuits';
 
 const PRODUCT_SEEDS: ProductSeed[] = [
   // Wetsuits & Drysuits (6)
@@ -272,6 +287,17 @@ const PRODUCT_SEEDS: ProductSeed[] = [
     price: 99.99,
     color: 'Black',
     rating: 4.4,
+    children: [
+      {
+        color: 'Blue',
+        image: `${WETSUITS}/Partial%20Suits/RCWETS_4051_BL/74f7ae510724_top_left.webp`,
+      },
+      {
+        color: 'Red',
+        image: `${WETSUITS}/Partial%20Suits/RCWETS_61D4_RD/ca5670819eed_top_right.webp`,
+        price: 94.99,
+      },
+    ],
   },
   {
     name: 'EcoWave Performance Wetsuit',
@@ -280,6 +306,27 @@ const PRODUCT_SEEDS: ProductSeed[] = [
     price: 199.99,
     color: 'Yellow',
     rating: 3.0,
+    children: [
+      {
+        color: 'Black',
+        image: `${WETSUITS}/Full%20Suit/ONWETF_7384_BK/307e94463bde_bottom_right.webp`,
+      },
+      {
+        color: 'Blue',
+        image: `${WETSUITS}/Full%20Suit/ONWETF_7384_BL/4e298f8cbccd_bottom_right.webp`,
+      },
+      {
+        color: 'Green',
+        image: `${WETSUITS}/Full%20Suit/QSWETF_3425_GN/e5dc09b7f487_bottom_right.webp`,
+        price: 189.99,
+      },
+      {color: 'Gray', image: `${WETSUITS}/Full%20Suit/QSWETF_3425_GY/818c85f28435_top_left.webp`},
+      {
+        color: 'Red',
+        image: `${WETSUITS}/Full%20Suit/ONWETF_7384_RD/8d486fbcd37e_bottom_right.webp`,
+      },
+    ],
+    totalNumberOfChildren: 9,
   },
   {
     name: 'ArcticShield Full Drysuit',
@@ -322,6 +369,15 @@ const PRODUCT_SEEDS: ProductSeed[] = [
     price: 449.99,
     color: 'White',
     rating: 4.5,
+    children: [
+      {
+        color: 'Yellow',
+        image:
+          'https://images.barca.group/Sports/mj/Skis%20%26%20Boards/Surfboards/51_Yellow/bfaf52ec9579_top_left.webp',
+        price: 469.99,
+      },
+    ],
+    totalNumberOfChildren: 4,
   },
   {
     name: 'GlideMax Longboard Surfboard',
@@ -415,6 +471,14 @@ const PRODUCT_SEEDS: ProductSeed[] = [
     price: 549.99,
     color: 'Yellow',
     rating: 4.5,
+    children: [
+      {
+        color: 'Red',
+        image:
+          'https://images.barca.group/Sports/v2/Canoes%20%26%20Kayaks/Kayaks/Sports%20Kayaks/EPKP_74A2_RD/f99e85ecc236_top_right.webp',
+      },
+      {color: 'Green'},
+    ],
   },
   {
     name: 'LakeGlide Touring Kayak',
@@ -474,6 +538,20 @@ const PRODUCT_SEEDS: ProductSeed[] = [
     price: 49.99,
     color: 'Red',
     rating: 4.1,
+    withoutThumbnails: true,
+    children: [
+      {color: 'Yellow', image: `${SHOPIFY_CDN}/5401e9d0fb34_bottom_right.webp?v=1766163669`},
+      {
+        color: 'Blue',
+        image: `${SHOPIFY_CDN}/e6051cd90e8c_bottom_right_446cd525-4bbf-4ec4-98a3-e59f82170137.webp?v=1766163676`,
+      },
+      {
+        color: 'Orange',
+        image: `${SHOPIFY_CDN}/b74ccfcba057_bottom_right_dd4460ed-0e5b-4d62-825b-9c1907021194.webp?v=1766163707`,
+        price: 54.99,
+      },
+    ],
+    totalNumberOfChildren: 6,
   },
   {
     name: 'AquaGuard Kids Life Jacket',
@@ -654,12 +732,12 @@ function imageForLeaf(leaf: string[]): string {
 const products: WaterSportsProduct[] = PRODUCT_SEEDS.map((seed, index) => {
   const image = imageForLeaf(seed.leaf);
   const id = 9950000000000 + index;
-  return {
+  const product: WaterSportsProduct = {
     additionalFields: {},
     ec_name: seed.name,
     ec_brand: seed.brand,
     ec_category: categoryFor(...seed.leaf),
-    ec_thumbnails: [image],
+    ec_thumbnails: seed.withoutThumbnails ? [] : [image],
     ec_images: [image],
     ec_price: seed.price,
     ec_in_stock: true,
@@ -668,13 +746,29 @@ const products: WaterSportsProduct[] = PRODUCT_SEEDS.map((seed, index) => {
     ec_color: seed.color,
     clickUri: `https://barca-sports.myshopify.com/products/ws_${index}`,
     permanentid: `gid://shopify/ProductVariant/${50680000000000 + index}`,
-    children: [],
     ...(BADGES_BY_PRODUCT_INDEX[index] && {
       badgePlacements: [
         {placementId: 'badge-placement-id', badges: BADGES_BY_PRODUCT_INDEX[index]},
       ],
     }),
   };
+  if (!seed.children) {
+    return product;
+  }
+  const [first, ...rest] = seed.children.map((child, childIndex): WaterSportsProduct => {
+    const images = child.image ? [child.image] : [];
+    const variantId = 50690000000000 + index * 10 + childIndex + 1;
+    return {
+      ...product,
+      ec_color: child.color,
+      ec_price: child.price ?? seed.price,
+      ec_thumbnails: seed.withoutThumbnails ? [] : images,
+      ec_images: images,
+      clickUri: `${product.clickUri}?variant=${variantId}`,
+      permanentid: `gid://shopify/ProductVariant/${variantId}`,
+    };
+  });
+  return groupChildren(product, [first, ...rest], seed.totalNumberOfChildren);
 });
 
 const MAX_INSTANT_PRODUCTS = 4;
