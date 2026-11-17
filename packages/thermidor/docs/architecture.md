@@ -121,7 +121,7 @@ Cancellation is modeled as a terminal `error` turn, not a distinct status. A can
 - `'cancelled'` — `cancel()` stopped it while it streamed (`cancelRun`). `error` stays `'Cancelled'`.
 - `'failed'` — anything else: a `RUN_ERROR` (folded in `src/session/fold.ts`), a request the endpoint rejected, a network error, a request that could not be built, a stream that ended without a terminal event (all through `failRun`), or a run restored while it was streaming (`'Stream was interrupted'`).
 
-A `RUN_ERROR` also keeps the Gateway's `code` as `errorCode` (an `AGENT:<ID>` string such as `AGENT:UPSTREAM_TIMEOUT`), on the turn or the initialization it fails, or on `actionError` when it fails an action that does not own its turn. The Gateway's messages end with a documentation URL, so consumers choose their text from `reason` and `errorCode` rather than showing `error` as is; the codes it marks as client errors (`AGENT:AGENT_BUSY`, `AGENT:PENDING_INTERRUPTS`, `AGENT:ATTACHMENT_REJECTED`) are the ones a retry does not fix. A stop never reaches the wire, so `reason` is session state only. `retry` rebuilds the turn, which drops `error`, `reason` and `errorCode`.
+A `RUN_ERROR` also keeps the Gateway's `code` as `errorCode` (an `AGENT:<ID>` string such as `AGENT:UPSTREAM_TIMEOUT`), on the turn or the initialization it fails, or on `actionError` when it fails an action that does not own its turn. The Gateway's messages end with a documentation URL, so consumers choose their text from `reason` and `errorCode` rather than showing `error` as is. A stop never reaches the wire, so `reason` is session state only. `retry` rebuilds the turn, which drops `error`, `reason` and `errorCode`.
 
 ## The observable store
 

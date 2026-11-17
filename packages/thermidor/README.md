@@ -150,7 +150,7 @@ interface Turn {
   status: 'streaming' | 'complete' | 'error';
   error?: string; // present iff status === 'error'
   reason?: 'cancelled' | 'failed'; // present iff status === 'error'
-  errorCode?: string; // the gateway's RUN_ERROR code, e.g. 'AGENT:AGENT_BUSY', when it sent one
+  errorCode?: string; // the gateway's RUN_ERROR code, e.g. 'AGENT:UPSTREAM_TIMEOUT', when it sent one
 }
 
 interface TurnResponse {
@@ -164,15 +164,9 @@ interface TurnResponse {
 
 ### Stopped and failed turns
 
-An errored turn, and an errored `session.initialization`, says why in `reason`: `'cancelled'` when `session.cancel()` stopped it, `'failed'` otherwise (a `RUN_ERROR`, a rejected or broken request, a stream that ended early, or a run restored while it was streaming). A `RUN_ERROR` also keeps the gateway's `errorCode`. Pick the text from these rather than showing `error`, whose gateway messages end with a documentation URL:
+An errored turn, and an errored `session.initialization`, says why in `reason`: `'cancelled'` when `session.cancel()` stopped it, `'failed'` otherwise (a `RUN_ERROR`, a rejected or broken request, a stream that ended early, or a run restored while it was streaming). A `RUN_ERROR` also keeps the gateway's `errorCode`, such as `AGENT:INTERNAL_ERROR`, `AGENT:UPSTREAM_TIMEOUT`, `AGENT:RESPONSE_SIZE_EXCEEDED` or `AGENT:INCOMPLETE_AGENT_RESPONSE`. Pick the text from these rather than showing `error`, whose gateway messages end with a documentation URL:
 
 ```tsx
-const CLIENT_ERRORS = new Set([
-  'AGENT:AGENT_BUSY',
-  'AGENT:PENDING_INTERRUPTS',
-  'AGENT:ATTACHMENT_REJECTED',
-]);
-
 function TurnError({turn, session}: {turn: Turn; session: Session}) {
   if (turn.status !== 'error') {
     return null;
@@ -183,7 +177,7 @@ function TurnError({turn, session}: {turn: Turn; session: Session}) {
   return (
     <p>
       Something went wrong.
-      {!CLIENT_ERRORS.has(turn.errorCode ?? '') && (
+      {turn.errorCode !== 'AGENT:RESPONSE_SIZE_EXCEEDED' && (
         <button onClick={() => session.retry(turn.id)}>Try again</button>
       )}
     </p>

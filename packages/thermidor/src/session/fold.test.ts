@@ -46,14 +46,14 @@ describe('fold Turn/TurnResponse shape', () => {
 
     it('marks a RUN_ERROR failed and keeps its code', () => {
       const turn = foldActivities(createTurn('t1', {prompt: 'hi'}), [
-        activity({type: 'RUN_ERROR', message: 'busy', code: 'AGENT:AGENT_BUSY'}),
+        activity({type: 'RUN_ERROR', message: 'busy', code: 'AGENT:UPSTREAM_TIMEOUT'}),
       ]);
 
       expect(turn).toMatchObject({
         status: 'error',
         error: 'busy',
         reason: 'failed',
-        errorCode: 'AGENT:AGENT_BUSY',
+        errorCode: 'AGENT:UPSTREAM_TIMEOUT',
       });
     });
 

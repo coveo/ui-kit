@@ -188,7 +188,7 @@ describe('restoreSession', () => {
       status: 'error',
       error: 'busy',
       reason: 'failed',
-      errorCode: 'AGENT:AGENT_BUSY',
+      errorCode: 'AGENT:UPSTREAM_TIMEOUT',
     });
     const cancelled = turn({id: 't2', status: 'error', error: 'Cancelled', reason: 'cancelled'});
     const initialization = {
@@ -202,7 +202,10 @@ describe('restoreSession', () => {
     const serialized = serializeSession(state({turns: [failed, cancelled], initialization}));
     const restored = restoreSession(serialized);
 
-    expect(serialized.turns[0]).toMatchObject({reason: 'failed', errorCode: 'AGENT:AGENT_BUSY'});
+    expect(serialized.turns[0]).toMatchObject({
+      reason: 'failed',
+      errorCode: 'AGENT:UPSTREAM_TIMEOUT',
+    });
     expect(serialized.turns[1]).toMatchObject({reason: 'cancelled'});
     expect(serialized.turns[1]).not.toHaveProperty('errorCode');
     expect(restored.turns).toEqual([failed, cancelled]);

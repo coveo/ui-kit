@@ -300,7 +300,7 @@ export interface SessionInitialization {
   /** Why it ended in `'error'`. Present when `status === 'error'`, absent otherwise. */
   reason?: TurnErrorReason;
   /**
-   * The code of the gateway's `RUN_ERROR`, such as `'AGENT:AGENT_BUSY'`. Present only when
+   * The code of the gateway's `RUN_ERROR`, such as `'AGENT:UPSTREAM_TIMEOUT'`. Present only when
    * `reason === 'failed'` and the gateway sent one.
    */
   errorCode?: string;
@@ -319,7 +319,7 @@ export interface Turn {
   /** Why it ended in `'error'`. Present when `status === 'error'`, absent otherwise. */
   reason?: TurnErrorReason;
   /**
-   * The code of the gateway's `RUN_ERROR`, such as `'AGENT:AGENT_BUSY'`. Present only when
+   * The code of the gateway's `RUN_ERROR`, such as `'AGENT:UPSTREAM_TIMEOUT'`. Present only when
    * `reason === 'failed'` and the gateway sent one.
    */
   errorCode?: string;
