@@ -148,7 +148,7 @@ export function withSolutionTypeOptionsWarning<TDefinition extends object>(
 
   return withDeprecatedDefinitionWarning(
     definition,
-    `The \`listing\` and \`search\` options of \`${definer}\``,
+    `Passing \`listing\` or \`search\` to \`${definer}\``,
     'Omit them to build the controller for both search and product listing pages.'
   );
 }

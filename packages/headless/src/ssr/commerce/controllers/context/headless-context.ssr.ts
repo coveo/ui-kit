@@ -10,7 +10,6 @@ import {
 } from '../../../../controllers/commerce/context/headless-context.js';
 import {MissingControllerProps} from '../../../common/errors.js';
 import type {UniversalControllerDefinitionWithProps} from '../../types/controller-definitions.js';
-import {withDeprecatedDefinitionWarning} from '../../controller-utils.js';
 import {createControllerWithKind, Kind} from '../../types/kind.js';
 
 export type {
@@ -36,7 +35,7 @@ export interface ContextDefinition extends UniversalControllerDefinitionWithProp
  * @returns The `Context` controller definition.
  */
 export function defineContext(): ContextDefinition {
-  const definition: ContextDefinition = {
+  return {
     listing: true,
     search: true,
     standalone: true,
@@ -49,9 +48,4 @@ export function defineContext(): ContextDefinition {
       return createControllerWithKind(controller, Kind.Context);
     },
   };
-  return withDeprecatedDefinitionWarning(
-    definition,
-    '`defineContext`',
-    'In v4, every commerce engine definition includes the `context` controller, so remove this definition when you upgrade.'
-  );
 }

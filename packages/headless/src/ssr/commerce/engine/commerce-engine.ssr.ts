@@ -30,8 +30,8 @@ export interface CommerceEngineDefinition<
 /**
  * Initializes a Commerce engine definition in SSR with given controllers definitions and commerce engine config.
  * @param options - The commerce engine definition
- * @returns Three utility functions to fetch the initial state of the engine in SSR, hydrate the state in CSR,
- *  and a build function that can be used for edge cases requiring more control.
+ * @returns An engine definition for each kind of page, whose `fetchStaticState` fetches the initial state of the engine
+ *  on the server and whose `hydrateStaticState` hydrates that state in the browser.
  *
  * @group Engine
  */

@@ -279,18 +279,23 @@ describe('Commerce Engine SSR', () => {
       expect(deprecationWarnings('`setAccessToken`')).toHaveLength(1);
     });
 
-    it('logs a deprecation warning once when the engines build #defineCart and #defineParameterManager controllers', async () => {
+    it('does not log a deprecation warning for the #defineCart and #defineParameterManager definitions', async () => {
+      await searchEngineDefinition.build({controllers: {cart: {initialState: {items: []}}}});
+
+      expect(deprecationWarnings('`defineCart`')).toHaveLength(0);
+      expect(deprecationWarnings('`defineParameterManager`')).toHaveLength(0);
+    });
+
+    it('logs a deprecation warning once when a definer receives the #listing or #search option', async () => {
       await searchEngineDefinition.build({controllers: {cart: {initialState: {items: []}}}});
       await searchEngineDefinition.build({controllers: {cart: {initialState: {items: []}}}});
 
-      expect(deprecationWarnings('`defineCart`')).toHaveLength(1);
-      expect(deprecationWarnings('`defineParameterManager`')).toHaveLength(1);
       expect(
-        deprecationWarnings('The `listing` and `search` options of `defineParameterManager`')
+        deprecationWarnings('Passing `listing` or `search` to `defineParameterManager`')
       ).toHaveLength(1);
-      expect(
-        deprecationWarnings('The `listing` and `search` options of `defineSummary`')
-      ).toHaveLength(0);
+      expect(deprecationWarnings('Passing `listing` or `search` to `defineSummary`')).toHaveLength(
+        0
+      );
     });
   });
 });

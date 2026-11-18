@@ -19,7 +19,6 @@ import type {CommerceSearchParameters} from '../../../../features/commerce/searc
 import {sortReducer as commerceSort} from '../../../../features/commerce/sort/sort-slice.js';
 import {
   ensureAtLeastOneSolutionType,
-  withDeprecatedDefinitionWarning,
   withSolutionTypeOptionsWarning,
 } from '../../../../ssr/commerce/controller-utils.js';
 import {loadReducerError} from '../../../../utils/errors.js';
@@ -85,11 +84,7 @@ export function defineParameterManager<TOptions extends ControllerDefinitionOpti
     TOptions,
     SSRParameterManagerProps<MappedParameterTypes<TOptions>>
   >;
-  return withDeprecatedDefinitionWarning(
-    withSolutionTypeOptionsWarning(definition, 'defineParameterManager', options),
-    '`defineParameterManager`',
-    'In v4, every commerce engine definition includes the `parameterManager` controller, so remove this definition when you upgrade.'
-  );
+  return withSolutionTypeOptionsWarning(definition, 'defineParameterManager', options);
 }
 
 export interface SSRParameterManagerProps<T extends Parameters> extends Omit<
