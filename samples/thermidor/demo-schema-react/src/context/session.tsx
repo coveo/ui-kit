@@ -79,6 +79,8 @@ export function SessionProvider({
     initialSession ? startWith(storage, initialSession) : openCurrent(storage, create)
   );
   const [list, setList] = useState(storage.list);
+  // A conversation removed while its request runs is not saved again when the request ends.
+  const [removed] = useState(() => new Set<string>());
 
   const currentRef = useRef(current);
   currentRef.current = current;
@@ -88,10 +90,11 @@ export function SessionProvider({
         storage,
         current.session,
         currentRef.current.id,
+        removed,
         (id) => setCurrent((previous) => ({...previous, id})),
         () => setList(storage.list())
       ),
-    [storage, current.session]
+    [storage, removed, current.session]
   );
 
   const conversations = useMemo<Conversations>(() => {
@@ -111,6 +114,7 @@ export function SessionProvider({
         }
       },
       remove: (id) => {
+        removed.add(id);
         storage.remove(id);
         if (id === current.id) {
           swap(() => startWith(storage, create()));
@@ -119,7 +123,7 @@ export function SessionProvider({
         }
       },
     };
-  }, [list, current, storage, create]);
+  }, [list, current, storage, create, removed]);
 
   return (
     <ConversationsContext.Provider value={conversations}>
@@ -187,6 +191,7 @@ function persist(
   storage: ConversationStorage,
   session: DemoSession,
   initialId: string,
+  removed: ReadonlySet<string>,
   onNewId: (id: string) => void,
   onSaved: () => void
 ) {
@@ -211,7 +216,7 @@ function persist(
       storage.start(id, titleOf(turns[0].input));
       onSaved();
     }
-    if (saving && !request && turns.length > 0) {
+    if (saving && !request && turns.length > 0 && !removed.has(id)) {
       storage.save(id, titleOf(turns[0].input), session.serialize());
       onSaved();
     }

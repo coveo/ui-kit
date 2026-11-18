@@ -59,7 +59,7 @@ describe('createConversationStorage', () => {
   });
 
   it('keeps every conversation, and its previous save, when it does not fit even alone', () => {
-    const {storage} = setup({quota: 400});
+    const {storage} = setup({quota: 400, max: 2});
     storage.save('a', 'a', serialized('x'.repeat(100)));
     storage.save('b', 'b', serialized('b'));
 
