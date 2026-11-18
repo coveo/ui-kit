@@ -82,8 +82,8 @@ test.describe('atomic-commerce-search-box-instant-products', () => {
     });
 
     test('should update the instant product aria label', async ({instantProduct}) => {
-      await expect(instantProduct.instantProducts.first()).toBeVisible();
-      const products = await instantProduct.instantProducts.all();
+      await expect(instantProduct.instantProductItems.first()).toBeVisible();
+      const products = await instantProduct.instantProductItems.all();
       expect(products.length).toBeGreaterThan(0);
       for (const product of products) {
         await expect(product).toHaveAttribute(
