@@ -241,29 +241,33 @@ describe('atomic-smart-snippet', () => {
       });
     });
 
-    // TODO: Enable when feedback button selectors are fixed
-    it.skip('should show thank you message after liking', async () => {
-      mockedSmartSnippet.state.liked = false;
+    it('should show thank you message after liking', async () => {
+      const likeSpy = vi.spyOn(mockedSmartSnippet, 'like').mockImplementation(() => {
+        mockedSmartSnippet.state.liked = true;
+      });
       const {element, getParts} = await renderAtomicSmartSnippet();
+      expect(getParts().feedbackThankYou).not.toBeInTheDocument();
 
       getParts().feedbackLikeButton?.click();
-      mockedSmartSnippet.state.liked = true;
       element.requestUpdate();
       await element.updateComplete;
 
+      expect(likeSpy).toHaveBeenCalledOnce();
       expect(getParts().feedbackThankYou).toBeInTheDocument();
     });
 
-    // TODO: Enable when feedback button selectors are fixed
-    it.skip('should show thank you message after disliking', async () => {
-      mockedSmartSnippet.state.disliked = false;
+    it('should show thank you message after disliking', async () => {
+      const dislikeSpy = vi.spyOn(mockedSmartSnippet, 'dislike').mockImplementation(() => {
+        mockedSmartSnippet.state.disliked = true;
+      });
       const {element, getParts} = await renderAtomicSmartSnippet();
+      expect(getParts().feedbackThankYou).not.toBeInTheDocument();
 
       getParts().feedbackDislikeButton?.click();
-      mockedSmartSnippet.state.disliked = true;
       element.requestUpdate();
       await element.updateComplete;
 
+      expect(dislikeSpy).toHaveBeenCalledOnce();
       expect(getParts().feedbackThankYou).toBeInTheDocument();
     });
 
