@@ -35,6 +35,9 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
  * A facet is a list of values for a certain field occurring in the products.
  * An `atomic-commerce-timeframe-facet` displays a facet of the products for the current query as date intervals.
  *
+ * @deprecated The Commerce API removes date range facets in June 2027, with no replacement, and Headless
+ * deprecates `DateFacet`. This component will be removed in the next major version of Atomic.
+ *
  * @part facet - The wrapper for the entire facet.
  * @part label-button - The header button to expand/collapse the facet.
  * @part label-button-icon - The expand/collapse icon in the header.
