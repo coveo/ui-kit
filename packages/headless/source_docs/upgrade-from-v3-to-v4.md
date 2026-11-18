@@ -123,18 +123,30 @@ const staticState = await fetchStaticState({
 **Headless Version 4**
 
 ```ts
-// proxy.ts: read or mint the client ID, store it in the `coveo_visitorId` cookie
-// (`CLIENT_ID_COOKIE_NAME`) and forward it with the page URL as request headers
-const clientId = request.cookies.get('coveo_visitorId')?.value ?? crypto.randomUUID();
+// proxy.ts: forward the page URL as a request header and, only for a visitor who agreed to analytics,
+// the client ID of the `coveo_visitorId` cookie (`CLIENT_ID_COOKIE_NAME`). Mint one when it is missing
+// or not a valid UUID, and store it. `hasAnalyticsConsent()` stands for your consent tool.
 const requestHeaders = new Headers(request.headers);
-requestHeaders.set('x-coveo-client-id', clientId);
 requestHeaders.set('x-href', request.nextUrl.href);
-const response = NextResponse.next({request: {headers: requestHeaders}});
-response.cookies.set('coveo_visitorId', clientId, {
+requestHeaders.delete('x-coveo-client-id');
+const response = () => NextResponse.next({request: {headers: requestHeaders}});
+
+if (!hasAnalyticsConsent(request)) {
+  return response();
+}
+
+const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const cookieClientId = request.cookies.get('coveo_visitorId')?.value;
+const clientId =
+  cookieClientId && uuidPattern.test(cookieClientId) ? cookieClientId : crypto.randomUUID();
+requestHeaders.set('x-coveo-client-id', clientId);
+const trackedResponse = response();
+trackedResponse.cookies.set('coveo_visitorId', clientId, {
   maxAge: 60 * 60 * 24 * 365,
   path: '/',
   sameSite: 'lax',
 });
+return trackedResponse;
 
 // app/search/page.tsx
 import {buildNavigatorContext} from '@coveo/headless/ssr';
@@ -154,9 +166,12 @@ const staticState = await searchEngineDefinition.fetchStaticState({
 });
 ```
 
-`buildNavigatorContext()` reads the referrer, the user agent and the `x-forwarded-for` header. When no valid client ID is given, it leaves the client ID empty, and the requests are sent without analytics capture.
+`buildNavigatorContext()` reads the referrer, the user agent and the `x-forwarded-for` header.
+The client ID decides whether the visitor is tracked: when none, or an invalid one, is given, the navigator context has an empty client ID, and the engine built for that request sends no analytics, on the server and in the browser after hydration.
+Create and store a client ID only for visitors you can track under the privacy laws that apply to your site, for example once they have agreed in your cookie banner (see [Data tracking](https://docs.coveo.com/en/3348/)).
 It works with any server framework: pass the request headers as they come (a `Headers` instance, or a plain object such as Express's `req.headers`) and, outside Next.js, pass the request URL as `location` directly instead of forwarding it in an `x-href` header.
-Store the client ID in the `coveo_visitorId` cookie (exported as `CLIENT_ID_COOKIE_NAME`): your server reads the cookie on each request and sets it on the response, and the browser reports the same visitor after hydration. <!-- client ID cookie: not yet built -->
+Keep such a visitor across requests where the response can still set cookies, as the proxy above does: read the `coveo_visitorId` cookie (exported as `CLIENT_ID_COOKIE_NAME`), store a new client ID when it is missing, and pass it on. The browser then reports the same visitor after hydration.
+Coveo's browser libraries store that cookie on the parent domain, so on a site that spans subdomains, set the cookie's `domain` to it: every subdomain then reads the same client ID.
 The static state carries the navigator context to `hydrateStaticState()`, without `forwardedFor`, so you set it once per request.
 
 #### Page inputs

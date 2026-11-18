@@ -1,6 +1,7 @@
 import type {CommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
 import {buildLogger, type LoggerOptions} from '../../../app/logger.js';
 import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
+import {isTrackedRequest} from '../../common/tracked-request.js';
 import type {CommonBuildConfig} from '../types/build.js';
 import type {
   CommerceControllerDefinitionsMap,
@@ -34,6 +35,11 @@ export function augmentCommerceEngineOptions<
       ...engineOptions.configuration,
       ...(buildConfig.accessToken !== undefined && {
         accessToken: buildConfig.accessToken,
+      }),
+      // A visitor without a client ID is not tracked: the engine built for the request, and the one
+      // hydrated from its static state in the browser, send no analytics.
+      ...(!isTrackedRequest(buildConfig.navigatorContext) && {
+        analytics: {...engineOptions.configuration.analytics, enabled: false},
       }),
       preprocessRequest: augmentPreprocessRequestWithForwardedFor({
         preprocessRequest: engineOptions.configuration.preprocessRequest,

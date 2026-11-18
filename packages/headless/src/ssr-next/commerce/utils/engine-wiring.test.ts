@@ -124,6 +124,62 @@ describe('#augmentCommerceEngineOptions', () => {
     });
   });
 
+  describe('analytics', () => {
+    it('should leave the analytics configuration as defined for a visitor with a client ID', () => {
+      const engineOptions = augmentCommerceEngineOptions(sampleCommerceConfig, {
+        navigatorContext: createNavigatorContext(),
+        context: buildMockCommerceContext(),
+      });
+
+      expect(engineOptions.configuration.analytics).toBe(
+        sampleCommerceConfig.configuration.analytics
+      );
+    });
+
+    it('should turn analytics off for a visitor without a client ID', () => {
+      const engineOptions = augmentCommerceEngineOptions(sampleCommerceConfig, {
+        navigatorContext: createNavigatorContext({clientId: ''}),
+        context: buildMockCommerceContext(),
+      });
+
+      expect(engineOptions.configuration.analytics).toEqual({
+        ...sampleCommerceConfig.configuration.analytics,
+        enabled: false,
+      });
+    });
+
+    it('should turn analytics off when capture is off, even with a client ID', () => {
+      const engineOptions = augmentCommerceEngineOptions(sampleCommerceConfig, {
+        navigatorContext: createNavigatorContext({capture: false}),
+        context: buildMockCommerceContext(),
+      });
+
+      expect(engineOptions.configuration.analytics?.enabled).toBe(false);
+    });
+
+    it('should turn analytics off when no navigator context is provided', () => {
+      const buildConfigWithout: BuildConfigWithout = {
+        context: buildMockCommerceContext(),
+      };
+
+      const engineOptions = augmentCommerceEngineOptions(
+        sampleCommerceConfig,
+        buildConfigWithout as CommonBuildConfig
+      );
+
+      expect(engineOptions.configuration.analytics?.enabled).toBe(false);
+    });
+
+    it('should not change the shared definition configuration', () => {
+      augmentCommerceEngineOptions(sampleCommerceConfig, {
+        navigatorContext: createNavigatorContext({clientId: ''}),
+        context: buildMockCommerceContext(),
+      });
+
+      expect(sampleCommerceConfig.configuration.analytics?.enabled).not.toBe(false);
+    });
+  });
+
   describe('context and cart configuration', () => {
     it('should set the context fields from buildConfig', () => {
       const navigatorContext = createNavigatorContext();

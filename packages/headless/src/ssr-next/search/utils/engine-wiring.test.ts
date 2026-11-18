@@ -86,6 +86,56 @@ describe('#augmentSearchEngineOptions', () => {
     });
   });
 
+  describe('analytics', () => {
+    it('should leave the analytics configuration as defined for a visitor with a client ID', () => {
+      const engineOptions = augmentSearchEngineOptions(sampleSearchConfig, {
+        navigatorContext: createNavigatorContext(),
+      });
+
+      expect(engineOptions.configuration.analytics).toBe(
+        sampleSearchConfig.configuration.analytics
+      );
+    });
+
+    it('should turn analytics off for a visitor without a client ID', () => {
+      const engineOptions = augmentSearchEngineOptions(sampleSearchConfig, {
+        navigatorContext: createNavigatorContext({clientId: ''}),
+      });
+
+      expect(engineOptions.configuration.analytics).toEqual({
+        ...sampleSearchConfig.configuration.analytics,
+        enabled: false,
+      });
+    });
+
+    it('should turn analytics off when capture is off, even with a client ID', () => {
+      const engineOptions = augmentSearchEngineOptions(sampleSearchConfig, {
+        navigatorContext: createNavigatorContext({capture: false}),
+      });
+
+      expect(engineOptions.configuration.analytics?.enabled).toBe(false);
+    });
+
+    it('should turn analytics off when no navigator context is provided', () => {
+      const buildConfigWithout: BuildConfigWithout = {};
+
+      const engineOptions = augmentSearchEngineOptions(
+        sampleSearchConfig,
+        buildConfigWithout as BuildConfig
+      );
+
+      expect(engineOptions.configuration.analytics?.enabled).toBe(false);
+    });
+
+    it('should not change the shared definition configuration', () => {
+      augmentSearchEngineOptions(sampleSearchConfig, {
+        navigatorContext: createNavigatorContext({clientId: ''}),
+      });
+
+      expect(sampleSearchConfig.configuration.analytics?.enabled).not.toBe(false);
+    });
+  });
+
   describe('when an access token is provided', () => {
     it('should override the definition access token for that request', () => {
       const engineOptions = augmentSearchEngineOptions(sampleSearchConfig, {
