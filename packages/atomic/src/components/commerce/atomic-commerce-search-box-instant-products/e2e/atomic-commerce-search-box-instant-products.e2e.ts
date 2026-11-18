@@ -68,20 +68,28 @@ test.describe('atomic-commerce-search-box-instant-products', () => {
     });
   });
 
-  //TODO: Fix this failing test https://coveord.atlassian.net/browse/KIT-4352
-  test.describe('with a custom aria label generator', async () => {
+  test.describe('with a custom aria label generator', () => {
     test.beforeEach(async ({instantProduct, searchBox}) => {
-      await instantProduct.load({
-        args: {ariaLabelGenerator: () => 'custom-aria-label'},
-      });
+      await instantProduct.load();
       await searchBox.hydrated.waitFor();
-      await searchBox.searchInput.click();
+      // A function can't go through Storybook URL args, so set the property directly.
+      await instantProduct.hydrated.evaluate((el) => {
+        (el as HTMLElement & {ariaLabelGenerator: () => string}).ariaLabelGenerator = () =>
+          'custom-aria-label';
+      });
+      // The story's play function already rendered the products; a new query renders them again.
+      await searchBox.searchInput.fill('kayak');
     });
 
-    test.skip('should update the instant product aria label', async ({instantProduct}) => {
+    test('should update the instant product aria label', async ({instantProduct}) => {
+      await expect(instantProduct.instantProducts.first()).toBeVisible();
       const products = await instantProduct.instantProducts.all();
-      for (let i = 0; i < products.length; i++) {
-        await expect(products[i]).toHaveAttribute('aria-label', 'custom-aria-label');
+      expect(products.length).toBeGreaterThan(0);
+      for (const product of products) {
+        await expect(product).toHaveAttribute(
+          'aria-label',
+          /^custom-aria-label, instant product\./
+        );
       }
     });
   });
