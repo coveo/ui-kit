@@ -7,8 +7,8 @@ interface UseAutoScrollOptions {
   containerRef: React.RefObject<HTMLDivElement | null>;
   turnRefs: React.RefObject<Map<string, HTMLDivElement>>;
   turns: readonly Turn[];
-  /** Scrolls to the end of the conversation first, as for a restored one, not its latest turn. */
-  startAtEnd?: boolean;
+  /** The conversation was restored: its latest turn is aligned at once, not smoothly. */
+  restored?: boolean;
 }
 
 /** The turn's offset from the top of the container's scrolled content. */
@@ -21,16 +21,17 @@ function turnOffset(container: HTMLElement, turn: HTMLElement): number {
 const USER_SCROLL_EVENTS = ['wheel', 'touchstart', 'pointerdown', 'keydown'] as const;
 
 /**
- * Keeps `container` scrolled to its end while its content grows, as restored blocks do while they
- * render, until the shopper scrolls, presses or types in it. Returns what stops it.
+ * Keeps the start of `turn` at the top of `container` while the content changes height, as
+ * restored blocks and images do while they render, until the shopper scrolls, presses or types in
+ * it. Returns what stops it.
  */
-function followEnd(container: HTMLElement): () => void {
+function followTurn(container: HTMLElement, turn: HTMLElement): () => void {
   let stopped = false;
-  const toEnd = () => {
-    if (!stopped) container.scrollTo({top: container.scrollHeight});
+  const align = () => {
+    if (!stopped) container.scrollTo({top: turnOffset(container, turn) - MARGIN_TOP});
   };
-  const frame = requestAnimationFrame(toEnd);
-  const observer = new ResizeObserver(toEnd);
+  const frame = requestAnimationFrame(align);
+  const observer = new ResizeObserver(align);
   for (const child of container.children) observer.observe(child);
   const stop = () => {
     stopped = true;
@@ -50,16 +51,17 @@ function followEnd(container: HTMLElement): () => void {
  * - Never follows the answer as it streams: what does not fit stays below the fold
  * - Makes that turn at least as tall as the container, so its start can reach the top and stays
  *   there when its answer shrinks, such as when a placeholder is dropped
- * - With `startAtEnd`, scrolls to the end of the conversation at once on its first turn
+ * - When `restored`, aligns the latest turn at once, and keeps it aligned while the restored
+ *   conversation renders
  */
 export function useAutoScroll({
   containerRef,
   turnRefs,
   turns,
-  startAtEnd = false,
+  restored = false,
 }: UseAutoScrollOptions): void {
   const latestTurnId = turns.at(-1)?.id ?? null;
-  const atEnd = useRef(startAtEnd);
+  const jump = useRef(restored);
 
   const fitLatestTurn = useCallback(() => {
     const container = containerRef.current;
@@ -77,12 +79,12 @@ export function useAutoScroll({
     const turn = turnRefs.current.get(latestTurnId);
     fitLatestTurn();
 
-    const toEnd = atEnd.current;
-    atEnd.current = false;
+    const atOnce = jump.current;
+    jump.current = false;
     const container = containerRef.current;
     let stop: () => void;
-    if (toEnd && container) {
-      stop = followEnd(container);
+    if (atOnce && container && turn) {
+      stop = followTurn(container, turn);
     } else {
       const frame = requestAnimationFrame(() => {
         if (!container || !turn) return;

@@ -26,9 +26,9 @@ export function ConversationPage({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const turnRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
-  // A page that opens on a finished turn shows a restored conversation, from its end.
+  // A page that opens on a finished turn shows a restored conversation, from its last prompt.
   const [restored] = useState(() => turns.at(-1)?.status !== 'streaming');
-  useAutoScroll({containerRef, turnRefs, turns, startAtEnd: restored});
+  useAutoScroll({containerRef, turnRefs, turns, restored});
 
   return (
     <section className={styles.page}>
