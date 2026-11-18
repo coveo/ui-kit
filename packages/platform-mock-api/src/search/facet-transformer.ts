@@ -339,6 +339,11 @@ function buildFacetResponse(facetRequest: FacetRequest) {
   };
 }
 
+// Stable counts keep facet stories and visual snapshots deterministic across runs.
+function deterministicRangeCount(start: number, end: number) {
+  return 50 + ((Math.abs(Math.round(start * 31 + end * 17)) * 97) % 450);
+}
+
 function buildNumericFacetResponse(facetRequest: NumericFacetRequest) {
   const {
     facetId,
@@ -356,7 +361,7 @@ function buildNumericFacetResponse(facetRequest: NumericFacetRequest) {
         end: numberOfValues + 1,
         endInclusive: false,
         state: 'idle' as const,
-        numberOfResults: Math.floor(Math.random() * 500) + 50,
+        numberOfResults: deterministicRangeCount(i, numberOfValues + 1),
       });
     }
     return {
@@ -373,7 +378,7 @@ function buildNumericFacetResponse(facetRequest: NumericFacetRequest) {
     end: cv.end,
     endInclusive: cv.endInclusive,
     state: cv.state,
-    numberOfResults: Math.floor(Math.random() * 500) + 50,
+    numberOfResults: deterministicRangeCount(cv.start, cv.end),
   }));
 
   return {
