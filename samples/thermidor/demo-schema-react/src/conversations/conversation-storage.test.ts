@@ -59,7 +59,7 @@ describe('createConversationStorage', () => {
   });
 
   it('keeps every conversation, and its previous save, when it does not fit even alone', () => {
-    const {storage} = setup({quota: 400});
+    const {storage} = setup({quota: 400, max: 2});
     storage.save('a', 'a', serialized('x'.repeat(100)));
     storage.save('b', 'b', serialized('b'));
 
@@ -100,6 +100,17 @@ describe('createConversationStorage', () => {
     ]);
     expect(storage.load('c')).toBeUndefined();
     expect(storage.load('a')).toBeUndefined();
+  });
+
+  it('keeps the conversation a start would evict when the index does not fit', () => {
+    const {storage} = setup({quota: 400, max: 2});
+    storage.save('a', 'surfboards', serialized('x'.repeat(100)));
+    storage.save('b', 'wetsuits', serialized());
+
+    storage.start('c', 'x'.repeat(1000));
+
+    expect(ids(storage)).toEqual(['b', 'a']);
+    expect(storage.load('a')).toEqual(serialized('x'.repeat(100)));
   });
 
   it('removes a conversation', () => {

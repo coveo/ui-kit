@@ -86,11 +86,19 @@ export function createConversationStorage({
         {id, title: kept, updatedAt: now()},
         ...saved.filter((entry) => entry.id !== id),
       ];
+      const evicted: [string, string][] = [];
+      const evict = (staleId: string) => {
+        const staleKey = ENTRY_PREFIX + staleId;
+        const staleValue = read(local, staleKey);
+        if (staleValue) {
+          evicted.push([staleKey, staleValue]);
+        }
+        index = drop(index, staleId);
+      };
       for (const stale of index.slice(max)) {
-        index = drop(index, stale.id);
+        evict(stale.id);
       }
       const value = JSON.stringify(serialized);
-      const evicted: [string, string][] = [];
       for (;;) {
         try {
           local().setItem(key, value);
@@ -99,12 +107,7 @@ export function createConversationStorage({
         } catch (error) {
           const oldest = index.findLast((entry) => entry.id !== id);
           if (isQuotaError(error) && oldest) {
-            const oldestKey = ENTRY_PREFIX + oldest.id;
-            const oldestValue = read(local, oldestKey);
-            if (oldestValue) {
-              evicted.push([oldestKey, oldestValue]);
-            }
-            index = drop(index, oldest.id);
+            evict(oldest.id);
             continue;
           }
           // It does not fit even alone: everything goes back as it was, its previous save included.
@@ -127,11 +130,16 @@ export function createConversationStorage({
     start(id, title) {
       const saved = list();
       if (saved.some((entry) => entry.id === id)) return;
-      let index = [{id, title, updatedAt: now()}, ...saved];
+      const index = [{id, title, updatedAt: now()}, ...saved];
+      // The evicted transcripts go only once the index no longer lists them.
+      const written = attempt(() => {
+        writeIndex(index.slice(0, max));
+        return true;
+      });
+      if (!written) return;
       for (const stale of index.slice(max)) {
-        index = drop(index, stale.id);
+        attempt(() => local().removeItem(ENTRY_PREFIX + stale.id));
       }
-      attempt(() => writeIndex(index));
     },
     currentId: () => read(session, CURRENT_KEY) ?? undefined,
     setCurrentId(id) {

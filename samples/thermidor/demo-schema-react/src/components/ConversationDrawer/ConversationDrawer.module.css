@@ -91,7 +91,7 @@
   margin: 0;
   padding: 0 var(--space-3);
   font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
 }
 
 .list {

@@ -366,4 +366,28 @@ describe('SessionProvider conversations', () => {
     expect(reloaded.session().turns).toEqual([]);
     expect(tab.list()).toEqual([]);
   });
+
+  it('keeps a conversation deleted while it answers deleted once its request ends', async () => {
+    const tab = browser().tab();
+    const {session, conversations} = renderConversations(tab, (request, signal) =>
+      request.message === 'wetsuits'
+        ? new Promise<Response>((_resolve, reject) =>
+            signal?.addEventListener('abort', () =>
+              reject(new DOMException('The request was aborted.', 'AbortError'))
+            )
+          )
+        : answerShell(request, signal)
+    );
+    await ask(session(), 'surfboards');
+    const deleted = conversations().currentId;
+    const stopped = session();
+    void stopped.dispatchAction({name: 'submitPrompt', payload: {prompt: 'wetsuits'}});
+    await waitFor(() => expect(stopped.getSnapshot().request?.kind).toBe('prompt'));
+
+    act(() => conversations().remove(deleted));
+    await waitFor(() => expect(stopped.getSnapshot().request).toBeUndefined());
+
+    expect(tab.list()).toEqual([]);
+    expect(tab.load(deleted)).toBeUndefined();
+  });
 });

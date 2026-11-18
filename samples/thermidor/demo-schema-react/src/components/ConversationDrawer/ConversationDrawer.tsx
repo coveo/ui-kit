@@ -60,6 +60,18 @@ export function ConversationDrawer({id, toggleRef, onClose}: ConversationDrawerP
     return () => document.removeEventListener('pointerdown', onPointerDown, true);
   }, [overlay, toggleRef, onClose]);
 
+  // Opening the drawer leaves the focus on its toggle, where Escape closes it too.
+  useEffect(() => {
+    const toggle = toggleRef.current;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose(true);
+      }
+    };
+    toggle?.addEventListener('keydown', onKeyDown);
+    return () => toggle?.removeEventListener('keydown', onKeyDown);
+  }, [toggleRef, onClose]);
+
   const pick = (swap: () => void) => {
     swap();
     if (overlay) {
@@ -76,6 +88,16 @@ export function ConversationDrawer({id, toggleRef, onClose}: ConversationDrawerP
       onKeyDown={(event) => {
         if (event.key === 'Escape') {
           onClose(true);
+        }
+      }}
+      onBlur={({relatedTarget}) => {
+        if (
+          overlay &&
+          relatedTarget instanceof Node &&
+          !drawerRef.current?.contains(relatedTarget) &&
+          !toggleRef.current?.contains(relatedTarget)
+        ) {
+          onClose(false);
         }
       }}
     >

@@ -182,7 +182,7 @@ describe('ConversationDrawer', () => {
     await waitFor(() => expect(document.activeElement).toBe(options('surfboards')));
   });
 
-  it('closes on a narrow screen once a conversation opens, or on a press outside', async () => {
+  it('closes on a narrow screen once a conversation opens, on a press outside, or when the focus leaves it', async () => {
     vi.spyOn(window, 'matchMedia').mockImplementation(
       (query) =>
         ({matches: true, media: query, addEventListener() {}, removeEventListener() {}}) as never
@@ -198,15 +198,22 @@ describe('ConversationDrawer', () => {
     fireEvent.click(toggle());
     fireEvent.pointerDown(document.body);
     expect(screen.queryByRole('navigation', {name: 'Conversations'})).toBeNull();
+
+    fireEvent.click(toggle());
+    fireEvent.blur(within(drawer()).getByRole('button', {name: 'New conversation'}), {
+      relatedTarget: screen.getByLabelText('Prompt'),
+    });
+    expect(screen.queryByRole('navigation', {name: 'Conversations'})).toBeNull();
   });
 
-  it('closes on Escape, giving the focus back to its toggle', () => {
+  it.each([
+    ['in it', () => within(drawer()).getByRole('button', {name: 'New conversation'})],
+    ['on its toggle, right after opening it', toggle],
+  ])('closes on Escape %s, giving the focus back to its toggle', (_where, target) => {
     renderApp();
     fireEvent.click(toggle());
 
-    fireEvent.keyDown(within(drawer()).getByRole('button', {name: 'New conversation'}), {
-      key: 'Escape',
-    });
+    fireEvent.keyDown(target(), {key: 'Escape'});
 
     expect(screen.queryByRole('navigation', {name: 'Conversations'})).toBeNull();
     expect(document.activeElement).toBe(toggle());
