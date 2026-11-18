@@ -345,4 +345,25 @@ describe('SessionProvider conversations', () => {
       ])
     );
   });
+
+  it('drops a conversation reloaded before its first turn was saved, and starts a new one', async () => {
+    const tab = browser().tab();
+    const first = renderConversations(tab, (request, signal) =>
+      request.message === 'surfboards'
+        ? new Promise<Response>(() => {})
+        : answerShell(request, signal)
+    );
+    void first.session().dispatchAction({name: 'submitPrompt', payload: {prompt: 'surfboards'}});
+    await waitFor(() =>
+      expect(first.conversations().list.map(({title}) => title)).toEqual(['surfboards'])
+    );
+    const listed = first.conversations().currentId;
+    first.view.unmount();
+
+    const reloaded = renderConversations(tab);
+
+    expect(reloaded.conversations().currentId).not.toBe(listed);
+    expect(reloaded.session().turns).toEqual([]);
+    expect(tab.list()).toEqual([]);
+  });
 });

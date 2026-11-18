@@ -19,6 +19,8 @@ export interface ConversationStorage {
    */
   save(id: string, title: string, session: SerializedSession): void;
   remove(id: string): void;
+  /** Lists a conversation as the newest one before it has anything to save, unless it is listed. */
+  start(id: string, title: string): void;
   /** The conversation this tab shows, which a reload resumes. */
   currentId(): string | undefined;
   setCurrentId(id: string): void;
@@ -109,6 +111,15 @@ export function createConversationStorage({
     },
     remove(id) {
       const index = drop(list(), id);
+      attempt(() => writeIndex(index));
+    },
+    start(id, title) {
+      const saved = list();
+      if (saved.some((entry) => entry.id === id)) return;
+      let index = [{id, title, updatedAt: now()}, ...saved];
+      for (const stale of index.slice(max)) {
+        index = drop(index, stale.id);
+      }
       attempt(() => writeIndex(index));
     },
     currentId: () => read(session, CURRENT_KEY) ?? undefined,

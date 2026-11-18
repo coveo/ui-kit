@@ -8,6 +8,7 @@ import {memoryStorage} from '../../test/memory-storage.js';
 import {
   answerShell,
   createTestSessionFactory,
+  findSearchBox,
   run,
   shellRun,
   sseResponse,
@@ -184,5 +185,32 @@ describe('ConversationDrawer', () => {
 
     await waitFor(() => expect(newConversation.getAttribute('aria-disabled')).toBeNull());
     expect(waits(newConversation)).toEqual({busy: false, reason: null});
+  });
+
+  it('lists a conversation from its first prompt, and waits while it answers', async () => {
+    let finish = () => {};
+    const app = renderApp((request, signal) =>
+      request.message === 'life jackets'
+        ? new Promise((resolve) => (finish = () => resolve(sseResponse(run([])))))
+        : answerShell(request, signal)
+    );
+    fireEvent.click(toggle());
+    const newConversation = within(drawer()).getByRole('button', {name: 'New conversation'});
+    const textarea = await findSearchBox();
+    await waitFor(() => expect(waits(newConversation).busy).toBe(false));
+
+    fireEvent.change(textarea, {target: {value: 'life jackets'}});
+    fireEvent.keyDown(textarea, {key: 'Enter', code: 'Enter'});
+
+    await waitFor(() => expect(waits(newConversation)).toEqual({busy: true, reason: NOT_READY}));
+    expect(entries().map((entry) => entry.textContent)).toEqual(['life jackets']);
+    expect(entries()[0].getAttribute('aria-current')).toBe('true');
+    const [{id}] = app.storage.list();
+    expect(app.storage.load(id)).toBeUndefined();
+
+    await act(async () => finish());
+    await waitFor(() => expect(waits(newConversation).busy).toBe(false));
+    expect(app.storage.list().map(({title}) => title)).toEqual(['life jackets']);
+    expect(app.storage.load(id)?.turns).toHaveLength(1);
   });
 });
