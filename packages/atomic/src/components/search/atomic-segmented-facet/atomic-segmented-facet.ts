@@ -18,7 +18,7 @@ import {
   buildSearchStatus,
   buildTabManager,
 } from '@coveo/headless';
-import {type CSSResultGroup, html, LitElement} from 'lit';
+import {type CSSResultGroup, html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
@@ -37,6 +37,7 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
 import {mapProperty} from '@/src/utils/props-utils';
+import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils';
 
 /**
  * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
@@ -51,6 +52,22 @@ import {mapProperty} from '@/src/utils/props-utils';
 @bindings()
 @withTailwindStyles
 export class AtomicSegmentedFacet extends LitElement implements InitializableComponent<Bindings> {
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'filterFacetCount',
+      attribute: 'filter-facet-count',
+      defaultValue: true,
+      instruction: 'Use `disable-facet-count-filtering` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
+  ]);
+
+  willUpdate(changedProperties: PropertyValues) {
+    super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.bindings?.engine?.logger);
+  }
+
   @state() bindings!: Bindings;
 
   /**
@@ -145,7 +162,7 @@ export class AtomicSegmentedFacet extends LitElement implements InitializableCom
    */
   @property({
     type: Boolean,
-    converter: createBooleanConverter('disable-facet-count-filtering'),
+    converter: createBooleanConverter('disable-facet-count-filtering', {silent: true}),
     attribute: 'filter-facet-count',
     reflect: true,
   })

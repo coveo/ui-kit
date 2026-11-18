@@ -1,6 +1,6 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import DOMPurify from 'dompurify';
-import {html, LitElement} from 'lit';
+import {html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -8,6 +8,7 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {createBooleanConverter} from '@/src/converters/boolean-converter';
+import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils';
 
 /**
  * The `atomic-html` component renders the HTML value of a string.
@@ -20,6 +21,23 @@ import {createBooleanConverter} from '@/src/converters/boolean-converter';
 @bindings()
 @withTailwindStyles
 export class AtomicHtml extends LitElement implements InitializableComponent<Bindings> {
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'sanitize',
+      attribute: 'sanitize',
+      defaultValue: true,
+      instruction:
+        'Use `disable-sanitization` instead. Setting the attribute to `"false"` has no effect.',
+      onlyWhenFalse: true,
+    },
+  ]);
+
+  willUpdate(changedProperties: PropertyValues) {
+    super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.bindings?.engine?.logger);
+  }
+
   @state() bindings!: Bindings;
   @state() error!: Error;
 
@@ -34,7 +52,7 @@ export class AtomicHtml extends LitElement implements InitializableComponent<Bin
   @property({
     type: Boolean,
     reflect: true,
-    converter: createBooleanConverter('disable-sanitization', {ignoreFalse: true}),
+    converter: createBooleanConverter('disable-sanitization', {ignoreFalse: true, silent: true}),
   })
   sanitize = true;
 

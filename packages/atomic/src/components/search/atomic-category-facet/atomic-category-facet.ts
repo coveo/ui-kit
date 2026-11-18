@@ -17,7 +17,7 @@ import {
   type TabManager,
   type TabManagerState,
 } from '@coveo/headless';
-import {css, html, LitElement, nothing, type TemplateResult} from 'lit';
+import {css, html, LitElement, nothing, type TemplateResult, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {map} from 'lit/directives/map.js';
 import {when} from 'lit/directives/when.js';
@@ -62,6 +62,7 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {AriaLiveRegionController, FocusTargetController} from '@/src/utils/accessibility-utils';
 import {getFieldCaptions, getFieldValueCaption} from '@/src/utils/field-utils';
 import {mapProperty} from '@/src/utils/props-utils';
+import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils';
 
 /**
  * The `atomic-category-facet` component displays a facet of values in a browsable, hierarchical fashion.
@@ -112,6 +113,29 @@ import {mapProperty} from '@/src/utils/props-utils';
 @bindings()
 @withTailwindStyles
 export class AtomicCategoryFacet extends LitElement implements InitializableComponent<Bindings> {
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'filterByBasePath',
+      attribute: 'filter-by-base-path',
+      defaultValue: true,
+      instruction: 'Use `disable-base-path-filtering` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
+    {
+      property: 'filterFacetCount',
+      attribute: 'filter-facet-count',
+      defaultValue: true,
+      instruction: 'Use `disable-facet-count-filtering` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
+  ]);
+
+  willUpdate(changedProperties: PropertyValues) {
+    super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.bindings?.engine?.logger);
+  }
+
   private static readonly propsSchema = new Schema({
     field: new StringValue({required: true, emptyAllowed: false}),
     numberOfValues: new NumberValue({min: 1}),
@@ -278,7 +302,7 @@ export class AtomicCategoryFacet extends LitElement implements InitializableComp
     type: Boolean,
     reflect: true,
     attribute: 'filter-by-base-path',
-    converter: createBooleanConverter('disable-base-path-filtering'),
+    converter: createBooleanConverter('disable-base-path-filtering', {silent: true}),
   })
   public filterByBasePath = true;
 
@@ -315,7 +339,7 @@ export class AtomicCategoryFacet extends LitElement implements InitializableComp
     type: Boolean,
     reflect: true,
     attribute: 'filter-facet-count',
-    converter: createBooleanConverter('disable-facet-count-filtering'),
+    converter: createBooleanConverter('disable-facet-count-filtering', {silent: true}),
   })
   public filterFacetCount = true;
 

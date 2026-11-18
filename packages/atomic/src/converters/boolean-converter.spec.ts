@@ -141,5 +141,28 @@ describe('booleanConverter', () => {
         )
       );
     });
+
+    @customElement('test-element-silent')
+    class TestElementSilent extends LitElement {
+      @property({
+        converter: createBooleanConverter('disable-value', {silent: true}),
+        type: Boolean,
+      })
+      value = true;
+
+      render() {
+        return html`<div>${this.value}</div>`;
+      }
+    }
+
+    it('should convert "false" to false without a console warning when silent is set', async () => {
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      await fixture<TestElementSilent>(
+        html`<test-element-silent value="false"></test-element-silent>`
+      );
+
+      await expect.element(page.getByText('false')).toBeInTheDocument();
+      expect(consoleWarnSpy).not.toHaveBeenCalled();
+    });
   });
 });

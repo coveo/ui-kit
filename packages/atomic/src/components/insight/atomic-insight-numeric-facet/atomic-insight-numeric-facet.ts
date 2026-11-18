@@ -19,7 +19,7 @@ import {
   type SearchStatus,
   type SearchStatusState,
 } from '@coveo/headless/insight';
-import {type CSSResultGroup, html, LitElement} from 'lit';
+import {type CSSResultGroup, html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
@@ -53,6 +53,7 @@ import {randomID} from '@/src/utils/utils';
 import '@/src/components/common/atomic-facet-number-input/atomic-facet-number-input';
 import '@/src/components/common/atomic-numeric-range/atomic-numeric-range';
 import {createBooleanConverter} from '@/src/converters/boolean-converter';
+import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils';
 
 /**
  * The `atomic-insight-numeric-facet` component displays a facet of the results for the current query as numeric ranges.
@@ -89,6 +90,23 @@ export class AtomicInsightNumericFacet
   extends LitElement
   implements InitializableComponent<InsightBindings>
 {
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'filterFacetCount',
+      attribute: 'filter-facet-count',
+      defaultValue: true,
+      instruction:
+        'Use `disable-facet-count-filtering` instead. Setting the attribute to `"false"` has no effect.',
+      onlyWhenFalse: true,
+    },
+  ]);
+
+  willUpdate(changedProperties: PropertyValues) {
+    super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.bindings?.engine?.logger);
+  }
+
   private static readonly propsSchema = new Schema({
     displayValuesAs: new StringValue({constrainTo: ['checkbox', 'link']}),
     withInput: new StringValue({constrainTo: ['integer', 'decimal']}),
@@ -173,7 +191,10 @@ export class AtomicInsightNumericFacet
     type: Boolean,
     reflect: true,
     attribute: 'filter-facet-count',
-    converter: createBooleanConverter('disable-facet-count-filtering'),
+    converter: createBooleanConverter('disable-facet-count-filtering', {
+      ignoreFalse: true,
+      silent: true,
+    }),
   })
   filterFacetCount = true;
 

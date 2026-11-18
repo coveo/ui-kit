@@ -90,6 +90,13 @@ export class AtomicSearchInterface
   );
   private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
     {
+      property: 'analytics',
+      attribute: 'analytics',
+      defaultValue: true,
+      instruction: 'Use `disable-analytics` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
+    {
       property: 'reflectStateInUrl',
       attribute: 'reflect-state-in-url',
       defaultValue: true,
@@ -155,7 +162,7 @@ export class AtomicSearchInterface
    */
   @property({
     type: Boolean,
-    converter: createBooleanConverter('disable-analytics'),
+    converter: createBooleanConverter('disable-analytics', {silent: true}),
     reflect: true,
   })
   public analytics = true;
@@ -214,7 +221,7 @@ export class AtomicSearchInterface
     type: Boolean,
     attribute: 'reflect-state-in-url',
     reflect: true,
-    converter: createBooleanConverter('disable-state-reflection-in-url'),
+    converter: createBooleanConverter('disable-state-reflection-in-url', {silent: true}),
   })
   reflectStateInUrl = true;
 
@@ -265,7 +272,7 @@ export class AtomicSearchInterface
     type: Boolean,
     attribute: 'enable-relevance-inspector',
     reflect: true,
-    converter: createBooleanConverter('disable-relevance-inspector'),
+    converter: createBooleanConverter('disable-relevance-inspector', {silent: true}),
   })
   public enableRelevanceInspector = true;
 

@@ -539,16 +539,11 @@ describe('atomic-product-text', () => {
       expect(deprecationWarnings(engine)).toEqual([]);
     });
 
-    it('should point to no-highlight when should-highlight is set to "false"', async () => {
+    it('should not log a console warning when should-highlight is set to "false"', async () => {
       const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
       await renderComponent({field: 'ec_name', shouldHighlight: false});
 
-      expect(consoleWarn).toHaveBeenCalledWith(
-        expect.stringContaining('Use the `no-highlight` attribute instead.')
-      );
-      expect(consoleWarn).not.toHaveBeenCalledWith(
-        expect.stringContaining('omit the attribute instead')
-      );
+      expect(consoleWarn).not.toHaveBeenCalledWith(expect.stringContaining('boolean attribute'));
     });
   });
 });

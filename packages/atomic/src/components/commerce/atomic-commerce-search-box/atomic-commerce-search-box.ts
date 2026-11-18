@@ -9,7 +9,15 @@ import {
   type StandaloneSearchBox,
   type StandaloneSearchBoxState,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, css, html, LitElement, nothing, type TemplateResult} from 'lit';
+import {
+  type CSSResultGroup,
+  css,
+  html,
+  LitElement,
+  nothing,
+  type TemplateResult,
+  type PropertyValues,
+} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {createRef, type RefOrCallback, ref} from 'lit/directives/ref.js';
@@ -52,6 +60,7 @@ import '../atomic-commerce-search-box-instant-products/atomic-commerce-search-bo
 import '../atomic-commerce-search-box-query-suggestions/atomic-commerce-search-box-query-suggestions';
 import '../atomic-commerce-search-box-recent-queries/atomic-commerce-search-box-recent-queries';
 import '@coveo/atomic-legacy/atomic-suggestion-renderer';
+import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils';
 
 /**
  * The `atomic-commerce-search-box` component enables users to perform product searches with built-in query suggestions and optional redirection to a search page.
@@ -105,6 +114,16 @@ export class AtomicCommerceSearchBox
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'clearFilters',
+      attribute: 'clear-filters',
+      defaultValue: true,
+      instruction: 'Use `disable-clear-filters` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
+  ]);
+
   private static readonly propsSchema = new Schema({
     clearRecentButtonPosition: new StringValue({constrainTo: ['top', 'bottom']}),
   });
@@ -209,7 +228,7 @@ export class AtomicCommerceSearchBox
     type: Boolean,
     attribute: 'clear-filters',
     reflect: true,
-    converter: createBooleanConverter('disable-clear-filters'),
+    converter: createBooleanConverter('disable-clear-filters', {silent: true}),
   })
   public clearFilters = true;
 
@@ -259,7 +278,10 @@ export class AtomicCommerceSearchBox
     });
   }
 
-  willUpdate() {
+  willUpdate(changedProperties: PropertyValues) {
+    super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.bindings?.engine?.logger);
     if (!this.searchBoxState || !this.searchBox) {
       return;
     }

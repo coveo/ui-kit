@@ -50,7 +50,7 @@ export class AtomicResultText
     type: Boolean,
     attribute: 'should-highlight',
     reflect: true,
-    converter: createBooleanConverter('no-highlight'),
+    converter: createBooleanConverter('no-highlight', {silent: true}),
   })
   public shouldHighlight = true;
 

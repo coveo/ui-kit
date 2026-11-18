@@ -243,6 +243,14 @@ describe('atomic-numeric-facet', () => {
       });
     });
 
+    it('should keep #filterFacetCount true when the filter-facet-count attribute is set to "false"', () => {
+      const element = document.createElement('atomic-numeric-facet') as AtomicNumericFacet;
+
+      element.setAttribute('filter-facet-count', 'false');
+
+      expect(element.filterFacetCount).toBe(true);
+    });
+
     it('should call buildNumericFacet with filterFacetCount false when disableFacetCountFiltering is true', async () => {
       const {element} = await setupElement({
         props: {disableFacetCountFiltering: true},

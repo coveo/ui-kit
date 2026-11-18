@@ -16,7 +16,7 @@ import {
   type SearchStatus,
   type SearchStatusState,
 } from '@coveo/headless/insight';
-import {type CSSResultGroup, html, LitElement} from 'lit';
+import {type CSSResultGroup, html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
@@ -35,6 +35,7 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {mapProperty} from '@/src/utils/props-utils';
+import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils';
 
 /**
  * The `atomic-insight-timeframe-facet` component displays a facet of results for the current query as date intervals.
@@ -66,6 +67,22 @@ export class AtomicInsightTimeframeFacet
   extends LitElement
   implements InitializableComponent<InsightBindings>
 {
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'filterFacetCount',
+      attribute: 'filter-facet-count',
+      defaultValue: true,
+      instruction: 'Use `disable-facet-count-filtering` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
+  ]);
+
+  willUpdate(changedProperties: PropertyValues) {
+    super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.bindings?.engine?.logger);
+  }
+
   private static readonly propsSchema = new Schema({
     injectionDepth: new NumberValue({min: 0, required: false}),
     headingLevel: new NumberValue({min: 0, max: 6, required: false}),
@@ -120,7 +137,7 @@ export class AtomicInsightTimeframeFacet
   @property({
     type: Boolean,
     reflect: true,
-    converter: createBooleanConverter('disable-facet-count-filtering'),
+    converter: createBooleanConverter('disable-facet-count-filtering', {silent: true}),
     attribute: 'filter-facet-count',
   })
   filterFacetCount = true;

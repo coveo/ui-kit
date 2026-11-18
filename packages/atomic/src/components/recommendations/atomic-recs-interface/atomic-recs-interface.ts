@@ -11,7 +11,7 @@ import {
 } from '@coveo/headless/recommendation';
 import {provide} from '@lit/context';
 import i18next, {type i18n} from 'i18next';
-import {html, LitElement} from 'lit';
+import {html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {bindingsContext} from '@/src/components/common/context/bindings-context';
 import {augmentAnalyticsConfigWithAtomicVersion} from '@/src/components/common/interface/analytics-config';
@@ -31,6 +31,7 @@ import {markParentAsReady} from '@/src/utils/init-queue';
 import {waitForAtomicChildrenToBeDefined} from '@/src/utils/initialization-common-utils';
 import {getAnalyticsConfig} from './analytics-config';
 import {createRecsStore, type RecsStore} from './store';
+import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils';
 
 type RecsInitializationOptions = RecommendationEngineConfiguration;
 export type RecsBindings = CommonBindings<RecommendationEngine, RecsStore, AtomicRecsInterface>;
@@ -50,6 +51,16 @@ export class AtomicRecsInterface
   extends ChildrenUpdateCompleteMixin(LitElement)
   implements BaseAtomicInterface<RecommendationEngine>
 {
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'analytics',
+      attribute: 'analytics',
+      defaultValue: true,
+      instruction: 'Use `disable-analytics` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
+  ]);
+
   @state()
   @provide({context: bindingsContext})
   public bindings: RecsBindings = {} as RecsBindings;
@@ -101,7 +112,7 @@ export class AtomicRecsInterface
    */
   @property({
     type: Boolean,
-    converter: createBooleanConverter('disable-analytics'),
+    converter: createBooleanConverter('disable-analytics', {silent: true}),
     reflect: true,
   })
   public analytics = true;
@@ -186,8 +197,10 @@ export class AtomicRecsInterface
     this.addEventListener('atomic/initializeComponent', this.handleInitialization as EventListener);
   }
 
-  public willUpdate(changedProperties: Map<string, unknown>) {
+  public willUpdate(changedProperties: PropertyValues) {
     super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.engine?.logger);
 
     if (changedProperties.has('fieldsToInclude')) {
       this.updateFieldsToInclude();

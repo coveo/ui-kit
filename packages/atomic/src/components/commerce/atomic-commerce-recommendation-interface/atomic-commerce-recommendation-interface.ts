@@ -9,7 +9,7 @@ import {
 import type {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {provide} from '@lit/context';
 import i18next, {type i18n} from 'i18next';
-import {type CSSResultGroup, css, html, LitElement} from 'lit';
+import {type CSSResultGroup, css, html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {createBooleanConverter} from '@/src/converters/boolean-converter.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
@@ -27,6 +27,7 @@ import {
   InterfaceController,
 } from '../../common/interface/interface-controller.js';
 import {type CommerceRecommendationStore, createCommerceRecommendationStore} from './store.js';
+import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils';
 
 export type CommerceBindings = CommonBindings<
   CommerceEngine,
@@ -48,6 +49,22 @@ export class AtomicCommerceRecommendationInterface
   extends ChildrenUpdateCompleteMixin(LitElement)
   implements BaseAtomicInterface<CommerceEngine>
 {
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'analytics',
+      attribute: 'analytics',
+      defaultValue: true,
+      instruction: 'Use `disable-analytics` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
+  ]);
+
+  willUpdate(changedProperties: PropertyValues) {
+    super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.engine?.logger);
+  }
+
   @state()
   @provide({context: bindingsContext})
   public bindings: CommerceBindings = {} as CommerceBindings;
@@ -140,7 +157,7 @@ export class AtomicCommerceRecommendationInterface
    */
   @property({
     type: Boolean,
-    converter: createBooleanConverter('disable-analytics'),
+    converter: createBooleanConverter('disable-analytics', {silent: true}),
     reflect: true,
   })
   analytics: boolean = true;

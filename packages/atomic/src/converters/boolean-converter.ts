@@ -10,6 +10,11 @@ interface BooleanConverterOptions {
    * opt-in through the replacement attribute.
    */
   ignoreFalse?: boolean;
+  /**
+   * Whether to skip the console warning, for components that log a deprecation warning through the engine logger with
+   * `DeprecatedPropertyWarnings` instead.
+   */
+  silent?: boolean;
 }
 
 /**
@@ -22,26 +27,23 @@ interface BooleanConverterOptions {
  */
 export const createBooleanConverter = (
   replacementAttribute?: string,
-  {ignoreFalse = false}: BooleanConverterOptions = {}
+  {ignoreFalse = false, silent = false}: BooleanConverterOptions = {}
 ): ComplexAttributeConverter<boolean> => ({
   fromAttribute: (value: string) => {
     if (value !== 'false') {
       return true;
     }
 
-    if (ignoreFalse) {
+    if (!silent) {
       console.warn(
-        `${NON_COMPLIANT_FALSE_WARNING} The \`"false"\` value is ignored. Use the \`${replacementAttribute}\` attribute instead.`
+        ignoreFalse
+          ? `${NON_COMPLIANT_FALSE_WARNING} The \`"false"\` value is ignored. Use the \`${replacementAttribute}\` attribute instead.`
+          : replacementAttribute
+            ? `${NON_COMPLIANT_FALSE_WARNING} Use the \`${replacementAttribute}\` attribute instead.`
+            : `${NON_COMPLIANT_FALSE_WARNING} To set a boolean attribute to false, omit the attribute instead.`
       );
-      return true;
     }
-
-    console.warn(
-      replacementAttribute
-        ? `${NON_COMPLIANT_FALSE_WARNING} Use the \`${replacementAttribute}\` attribute instead.`
-        : `${NON_COMPLIANT_FALSE_WARNING} To set a boolean attribute to false, omit the attribute instead.`
-    );
-    return false;
+    return ignoreFalse;
   },
 });
 

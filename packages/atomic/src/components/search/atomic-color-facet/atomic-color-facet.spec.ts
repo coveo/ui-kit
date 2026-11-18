@@ -50,7 +50,7 @@ describe('atomic-color-facet', () => {
       isCollapsed?: boolean;
       displayValuesAs?: 'checkbox' | 'box';
       withSearch?: boolean;
-      disableSearch?: boolean;
+      disableFacetSearch?: boolean;
       facetId?: string;
     } = {}
   ) => {
@@ -72,7 +72,7 @@ describe('atomic-color-facet', () => {
         ?disable-facet-count-filtering=${props.disableFacetCountFiltering}
         is-collapsed=${ifDefined(props.isCollapsed)}
         with-search=${ifDefined(props.withSearch)}
-        ?disable-search=${props.disableSearch}
+        ?disable-facet-search=${props.disableFacetSearch}
       ></atomic-color-facet>`,
       selector: 'atomic-color-facet',
       bindings: (bindings) => ({
@@ -392,8 +392,8 @@ describe('atomic-color-facet', () => {
     await expect.element(locators.searchInput as HTMLElement).toBeInTheDocument();
   });
 
-  it('should not render search input when disableSearch is true', async () => {
-    const {locators} = await setupElement({disableSearch: true});
+  it('should not render search input when disableFacetSearch is true', async () => {
+    const {locators} = await setupElement({disableFacetSearch: true});
     expect(locators.searchWrapper).toBeNull();
   });
 

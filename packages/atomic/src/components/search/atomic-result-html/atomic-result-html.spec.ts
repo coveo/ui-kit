@@ -150,11 +150,7 @@ describe('atomic-result-html', () => {
         element.setAttribute('sanitize', 'false');
 
         expect(element.sanitize).toBe(true);
-        expect(consoleWarn).toHaveBeenCalledWith(
-          expect.stringContaining(
-            'The `"false"` value is ignored. Use the `disable-sanitization` attribute instead.'
-          )
-        );
+        expect(consoleWarn).not.toHaveBeenCalledWith(expect.stringContaining('boolean attribute'));
       });
 
       it('should sanitize by default', async () => {

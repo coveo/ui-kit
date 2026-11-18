@@ -18,7 +18,7 @@ import {
   type TabManager,
   type TabManagerState,
 } from '@coveo/headless';
-import {css, html, LitElement, nothing} from 'lit';
+import {css, html, LitElement, nothing, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
@@ -58,6 +58,7 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {AriaLiveRegionController, FocusTargetController} from '@/src/utils/accessibility-utils';
 import {getFieldCaptions, getFieldValueCaption} from '@/src/utils/field-utils';
 import {mapProperty} from '@/src/utils/props-utils';
+import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils';
 
 /**
  * The `atomic-color-facet` component displays facet values as color boxes or checkboxes with color indicators.
@@ -104,6 +105,29 @@ import {mapProperty} from '@/src/utils/props-utils';
 @bindings()
 @withTailwindStyles
 export class AtomicColorFacet extends LitElement implements InitializableComponent<Bindings> {
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'withSearch',
+      attribute: 'with-search',
+      defaultValue: true,
+      instruction: 'Use `disable-facet-search` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
+    {
+      property: 'filterFacetCount',
+      attribute: 'filter-facet-count',
+      defaultValue: true,
+      instruction: 'Use `disable-facet-count-filtering` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
+  ]);
+
+  willUpdate(changedProperties: PropertyValues) {
+    super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.bindings?.engine?.logger);
+  }
+
   private static readonly propsSchema = new Schema({
     field: new StringValue({required: true, emptyAllowed: false}),
     numberOfValues: new NumberValue({min: 1, required: false}),
@@ -245,11 +269,11 @@ export class AtomicColorFacet extends LitElement implements InitializableCompone
 
   /**
    * Whether this facet should contain a search box.
-   * @deprecated - Use `disable-search` instead (this defaults to `true`, while the replacement defaults to `false`).
+   * @deprecated - Use `disable-facet-search` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
-    converter: createBooleanConverter('disable-search'),
+    converter: createBooleanConverter('disable-facet-search', {silent: true}),
     attribute: 'with-search',
     reflect: true,
   })
@@ -258,8 +282,8 @@ export class AtomicColorFacet extends LitElement implements InitializableCompone
   /**
    * Whether to remove the search box from this facet.
    */
-  @property({type: Boolean, attribute: 'disable-search', reflect: true})
-  public disableSearch = false;
+  @property({type: Boolean, attribute: 'disable-facet-search', reflect: true})
+  public disableFacetSearch = false;
 
   /**
    * The sort criterion to apply to the returned facet values.
@@ -307,7 +331,7 @@ export class AtomicColorFacet extends LitElement implements InitializableCompone
    */
   @property({
     type: Boolean,
-    converter: createBooleanConverter('disable-facet-count-filtering'),
+    converter: createBooleanConverter('disable-facet-count-filtering', {silent: true}),
     attribute: 'filter-facet-count',
     reflect: true,
   })
@@ -817,7 +841,7 @@ export class AtomicColorFacet extends LitElement implements InitializableCompone
   }
 
   private get hasSearch() {
-    return this.withSearch && !this.disableSearch;
+    return this.withSearch && !this.disableFacetSearch;
   }
 }
 

@@ -53,7 +53,7 @@ export class AtomicNoResults extends LitElement implements InitializableComponen
     type: Boolean,
     reflect: true,
     attribute: 'enable-cancel-last-action',
-    converter: createBooleanConverter('hide-cancel-last-action'),
+    converter: createBooleanConverter('hide-cancel-last-action', {silent: true}),
   })
   enableCancelLastAction = true;
 
