@@ -1,6 +1,8 @@
+import {expect} from '@playwright/test';
 import {InsightPanelObject} from './pageObject';
 import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
 import {InsightSetupObject} from '../../../../../../playwright/page-object/insightSetupObject';
+import {insightInterfaceRequestRegex} from '../../../../../../playwright/utils/requests';
 
 const pageUrl = 's/insight-panel-example';
 
@@ -32,7 +34,18 @@ export const testInsight = quanticBase.extend<InsightPanelE2EFixtures>({
     const insightPanel = new InsightPanelObject(page);
     const firstSearchResponsePromise =
       insightPanel.waitForSuccessfulSearchResponse(() => true);
+    const interfaceConfigResponsePromise = page.waitForResponse(
+      (response) =>
+        insightInterfaceRequestRegex.test(response.url()) &&
+        response.request().method() === 'GET'
+    );
     await page.goto(pageUrl);
+
+    // This suite is the real Insight happy path: a response fulfilled by a route has no server address.
+    const interfaceConfigResponse = await interfaceConfigResponsePromise;
+    const liveApiMessage = 'Insight interface config did not reach the live API';
+    expect(interfaceConfigResponse.ok(), liveApiMessage).toBe(true);
+    expect(await interfaceConfigResponse.serverAddr(), liveApiMessage).not.toBeNull();
 
     await insightSetup.waitForInsightInterfaceInitialization();
     await firstSearchResponsePromise;
