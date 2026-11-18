@@ -10,6 +10,7 @@ import {
   createTestSessionFactory,
   sseResponse,
   run,
+  findSearchBox,
   shellRun,
   type ConverseHandler,
 } from '../../test/session.js';
@@ -286,5 +287,25 @@ describe('ConversationDrawer', () => {
 
     await waitFor(() => expect(newConversation.getAttribute('aria-disabled')).toBeNull());
     expect(waits(newConversation)).toEqual({busy: false, reason: null});
+  });
+
+  it('waits while the first prompt from the landing page answers', async () => {
+    let finish = () => {};
+    renderApp((request, signal) =>
+      request.message === 'life jackets'
+        ? new Promise((resolve) => (finish = () => resolve(sseResponse(run([])))))
+        : answerShell(request, signal)
+    );
+    fireEvent.click(toggle());
+    const newConversation = within(drawer()).getByRole('button', {name: 'New conversation'});
+    const textarea = await findSearchBox();
+    await waitFor(() => expect(waits(newConversation).busy).toBe(false));
+
+    fireEvent.change(textarea, {target: {value: 'life jackets'}});
+    fireEvent.keyDown(textarea, {key: 'Enter', code: 'Enter'});
+
+    await waitFor(() => expect(waits(newConversation)).toEqual({busy: true, reason: NOT_READY}));
+    await act(async () => finish());
+    await waitFor(() => expect(waits(newConversation).busy).toBe(false));
   });
 });
