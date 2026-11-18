@@ -100,11 +100,12 @@ describe('field suggestions', () => {
     let fieldSuggestions: FieldSuggestions;
 
     beforeEach(async () => {
-      fieldSuggestions = buildFieldSuggestions(engine, {
-        options: {facet: {field}},
-      });
       await waitForNextStateChange(engine, {
-        action: () => {},
+        action: () => {
+          fieldSuggestions = buildFieldSuggestions(engine, {
+            options: {facet: {field}},
+          });
+        },
         expectedSubscriberCalls: 3,
       });
     });

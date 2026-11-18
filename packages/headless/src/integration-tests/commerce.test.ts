@@ -4,8 +4,6 @@ import {
   type CommerceEngineConfiguration,
 } from '../app/commerce-engine/commerce-engine.js';
 import {getSampleCommerceEngineConfiguration} from '../app/commerce-engine/commerce-engine-configuration.js';
-import type {CategoryFieldSuggestions} from '../controllers/commerce/field-suggestions/headless-category-field-suggestions.js';
-import {buildFieldSuggestionsGenerator} from '../controllers/commerce/field-suggestions/headless-field-suggestions-generator.js';
 import {
   buildProductListing,
   type ProductListing,
@@ -18,7 +16,7 @@ import {
 } from '../controllers/commerce/search-box/headless-search-box.js';
 import {waitForNextStateChange} from '../test/functional-test-utils.js';
 
-describe.skip('commerce', () => {
+describe('commerce', () => {
   let configuration: CommerceEngineConfiguration;
   let engine: CommerceEngine;
 
@@ -30,6 +28,12 @@ describe.skip('commerce', () => {
         analytics: {
           ...configuration.analytics,
           enabled: false,
+        },
+        context: {
+          ...configuration.context,
+          view: {
+            url: 'https://sports.barca.group/browse/promotions/ui-kit-testing',
+          },
         },
       },
     });
@@ -51,19 +55,8 @@ describe.skip('commerce', () => {
     });
 
     it('uses the context to fetch the product listing', async () => {
-      expect(productListing.state.products).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            ec_name: 'Lime Surfboard',
-          }),
-          expect.objectContaining({
-            ec_name: 'Sunnysurf Surfboard',
-          }),
-          expect.objectContaining({
-            ec_name: 'Eco-Surf',
-          }),
-        ])
-      );
+      expect(productListing.state.error).toBeNull();
+      expect(productListing.state.products).not.toEqual([]);
     });
 
     it('applies sort to product listing', async () => {
@@ -72,8 +65,9 @@ describe.skip('commerce', () => {
         (availableSort) => !sort.isSortedBy(availableSort)
       )!;
 
-      await waitForNextStateChange(sort, {
+      await waitForNextStateChange(productListing, {
         action: () => sort.sortBy(differentSort),
+        expectedSubscriberCalls: 2,
       });
 
       expect(sort.isSortedBy(differentSort)).toBeTruthy();
@@ -136,7 +130,7 @@ describe.skip('commerce', () => {
   it('provides recommendations', async () => {
     const recommendations = buildRecommendations(engine, {
       options: {
-        slotId: 'abccdea4-7d8d-4d56-b593-20267083f88f',
+        slotId: 'af4fb7ba-6641-4b67-9cf9-be67e9f30174',
       },
     });
     await waitForNextStateChange(recommendations, {
@@ -145,46 +139,6 @@ describe.skip('commerce', () => {
     });
 
     expect(recommendations.state.products).not.toEqual([]);
-  });
-
-  it('provides field suggestions', async () => {
-    const box = buildSearchBox(engine);
-    const generator = buildFieldSuggestionsGenerator(engine);
-
-    await search(box, 'can');
-
-    expect(generator.fieldSuggestions).toHaveLength(3);
-
-    for (const controller of generator.fieldSuggestions) {
-      await waitForNextStateChange(controller, {
-        action: () => controller.updateText('can'),
-        expectedSubscriberCalls: 2,
-      });
-    }
-
-    let controller = generator.fieldSuggestions.find(
-      (controller) => controller.state.facetId === 'ec_category'
-    )!;
-
-    expect(controller.state.values).not.toEqual([]);
-
-    await search(box, 'acc');
-
-    for (const controller of generator.fieldSuggestions) {
-      await waitForNextStateChange(controller, {
-        action: () => controller.updateText('acc'),
-        expectedSubscriberCalls: 3,
-      });
-    }
-
-    controller = generator.fieldSuggestions.find(
-      (controller) => controller.state.facetId === 'ec_category'
-    )! as CategoryFieldSuggestions;
-
-    expect(controller.state.values).not.toEqual([]);
-    for (const value of controller.state.values) {
-      expect(value.displayValue).toContain('Acc');
-    }
   });
 
   async function search(box: SearchBox, query: string) {

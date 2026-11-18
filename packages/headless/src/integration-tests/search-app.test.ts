@@ -179,10 +179,8 @@ describe('search app with expired token and #renewAccessToken configured to retu
     initEngine();
     initControllers();
 
-    await waitForNextStateChange(engine, {
-      action: () => engine.executeFirstSearch(),
-      expectedSubscriberCalls: 5,
-    });
+    engine.executeFirstSearch();
+    await vi.waitFor(() => expect(resultList.state.results).not.toEqual([]), {timeout: 9e3});
   });
 
   it('sets the valid token in state', () => {
@@ -190,6 +188,6 @@ describe('search app with expired token and #renewAccessToken configured to retu
   });
 
   it('displays 10 results in the result list', () => {
-    vi.waitFor(() => expect(resultList.state.results.length).toBe(10));
+    expect(resultList.state.results.length).toBe(10);
   });
 });

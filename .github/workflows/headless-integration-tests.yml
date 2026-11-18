@@ -1,0 +1,40 @@
+name: Headless integration tests
+
+# Runs the Headless integration tests (packages/headless/src/integration-tests), which query the
+# public sample organizations. They are not a pull request check, so a live-org outage or data
+# change can't block merges. Pull requests only run them when they change this workflow.
+on:
+  schedule:
+    - cron: '0 7 * * *'
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/headless-integration-tests.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integration-test:
+    name: 'Run Headless integration tests'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 1
+          fetch-tags: false
+          filter: blob:none
+      - uses: ./.github/actions/setup
+      # The tests import Headless from source, but its workspace dependencies from their builds.
+      - run: pnpm exec turbo run build --filter=@coveo/headless^...
+      - run: pnpm --filter @coveo/headless run integration-test
