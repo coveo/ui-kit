@@ -40,7 +40,24 @@ export function ConversationRow({
   const focusKebab = useRef(false);
   // Enter and Escape end the rename before the field blurs, which must not end it again.
   const renameEnded = useRef(false);
+  const renameRef = useRef<HTMLInputElement>(null);
+  const latest = useRef({title, onRename});
+  latest.current = {title, onRename};
   const menuId = useId();
+
+  // On a narrow screen a press outside closes the drawer before the field blurs.
+  useEffect(() => {
+    if (!renaming) return;
+    const input = renameRef.current;
+    return () => {
+      if (renameEnded.current || !input) return;
+      renameEnded.current = true;
+      const trimmed = input.value.trim();
+      if (trimmed && trimmed !== latest.current.title) {
+        latest.current.onRename(trimmed);
+      }
+    };
+  }, [renaming]);
 
   useEffect(() => {
     if (!menu) return;
@@ -87,6 +104,7 @@ export function ConversationRow({
     return (
       <div className={styles.row}>
         <input
+          ref={renameRef}
           className={styles.rename}
           aria-label="Conversation title"
           defaultValue={title}

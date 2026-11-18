@@ -170,6 +170,21 @@ describe('ConversationDrawer', () => {
     expect(entries().map((entry) => entry.textContent)).toEqual(['Board shopping']);
   });
 
+  it('saves a rename when a press outside closes the drawer on a narrow screen', async () => {
+    vi.spyOn(window, 'matchMedia').mockImplementation(
+      (query) =>
+        ({matches: true, media: query, addEventListener() {}, removeEventListener() {}}) as never
+    );
+    const app = renderApp();
+    await ask(app, 'surfboards');
+    fireEvent.click(toggle());
+
+    rename('surfboards', 'Board shopping', () => fireEvent.pointerDown(document.body));
+
+    expect(screen.queryByRole('navigation', {name: 'Conversations'})).toBeNull();
+    expect(app.storage.list().map(({title}) => title)).toEqual(['Board shopping']);
+  });
+
   it('cancels a rename on Escape, leaving the drawer open', async () => {
     const app = renderApp();
     await ask(app, 'surfboards');
