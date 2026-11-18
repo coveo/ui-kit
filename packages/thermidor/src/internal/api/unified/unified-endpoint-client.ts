@@ -64,12 +64,15 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
           Authorization: `Bearer ${accessToken}`,
         },
       };
+      // Throws here, outside the transient catch, for a malformed URL or header, which no retry fixes.
+      new Request(url, init);
       let response: Response;
       try {
         response = await fetch(url, init);
       } catch (error) {
-        // What `fetch` throws, short of an abort, means the request never got an answer.
-        if (isAbortError(error)) {
+        // What `fetch` throws, short of an abort, means the request never got an answer. An abort may
+        // carry its own reason, or be a timeout, so the signal says whether it was one.
+        if (options?.signal?.aborted || isAbortError(error)) {
           return {success: false, error: transformError(error)};
         }
         return {success: false, error: transformError(error), transient: {}};

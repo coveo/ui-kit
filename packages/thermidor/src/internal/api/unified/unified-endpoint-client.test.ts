@@ -355,6 +355,13 @@ describe('UnifiedEndpointClient', () => {
     });
   });
 
+  /** Makes the mocked `fetch` reject a malformed URL or header as the real one does. */
+  const rejectLikeFetch = () =>
+    mockedFetch.mockImplementation(async (input, init) => {
+      new Request(input, init);
+      return new Response(null, {status: 200});
+    });
+
   it.each([
     [
       'a request it cannot build',
@@ -363,6 +370,41 @@ describe('UnifiedEndpointClient', () => {
           organizationId: 'test-org-id',
           accessToken: 'test-token',
         }),
+    ],
+    [
+      'a malformed endpoint',
+      () => {
+        rejectLikeFetch();
+        return client.call(request, {
+          organizationId: 'test-org-id',
+          accessToken: 'test-token',
+          endpoint: 'http://[',
+        });
+      },
+    ],
+    [
+      'an access token that is not a valid header value',
+      () => {
+        rejectLikeFetch();
+        return client.call(request, {
+          organizationId: 'test-org-id',
+          accessToken: 'token\nwith-newline',
+        });
+      },
+    ],
+    [
+      'a fetch aborted with its own reason',
+      () => {
+        const controller = new AbortController();
+        const reason = new Error('cancelled');
+        controller.abort(reason);
+        mockedFetch.mockRejectedValue(reason);
+        return client.call(
+          request,
+          {organizationId: 'test-org-id', accessToken: 'test-token'},
+          {signal: controller.signal}
+        );
+      },
     ],
     [
       'an aborted fetch',
