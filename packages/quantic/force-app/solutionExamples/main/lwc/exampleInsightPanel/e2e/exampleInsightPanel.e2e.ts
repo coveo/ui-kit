@@ -4,6 +4,9 @@ import type {SearchRequestBody} from './pageObject';
 const test = testInsight;
 
 test.describe('Example Insight Panel E2E Tests', () => {
+  // The one Insight happy path that keeps calling the real Insight API.
+  test.use({liveInsightConfig: true});
+
   test.describe('when loading the Insight Panel', () => {
     test('should render correctly and load results automatically', async ({
       insightPanel,
