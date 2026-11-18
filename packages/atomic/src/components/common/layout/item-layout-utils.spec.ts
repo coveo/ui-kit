@@ -123,6 +123,18 @@ describe('item-layout-utils', () => {
       expect(classes).toEqual(['display-list', 'density-normal', 'image-large']);
     });
 
+    it('should use image size from a product visual section when present', () => {
+      mockContainsSections.mockReturnValue(false);
+      const productVisualElement = document.createElement('atomic-product-section-visual');
+      productVisualElement.setAttribute('image-size', 'small');
+      const container = document.createElement('div');
+      container.appendChild(productVisualElement);
+
+      const classes = getItemLayoutClasses({...config, children: container.children});
+
+      expect(classes).toEqual(['display-list', 'density-normal', 'image-small']);
+    });
+
     it('should fallback to config image size when no visual section', () => {
       const emptyDiv = document.createElement('div');
       const emptyChildren = emptyDiv.children;
