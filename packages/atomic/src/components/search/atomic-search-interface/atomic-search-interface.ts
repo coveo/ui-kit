@@ -338,14 +338,14 @@ export class AtomicSearchInterface
   }
 
   /**
-   * @deprecated provided for backward compatibility. set the 'open' property directly on the relevance inspector instead.
+   * @deprecated Remove the call: the relevance inspector closes from its own dialog.
    */
   public closeRelevanceInspector() {
     if (this.engine) {
       warnDeprecatedOnce(
         this.engine.logger,
         'The `closeRelevanceInspector` method of `atomic-search-interface`',
-        'Set the `open` property of the relevance inspector to `false` instead.'
+        'Remove the call: the relevance inspector closes from its own dialog.'
       );
     }
     if (this.relevanceInspector) {

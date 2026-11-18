@@ -41,7 +41,7 @@ class TestDeprecatedPropertyElement extends LitElement {
 
 describe('deprecation-utils', () => {
   describe('#warnDeprecatedOnce', () => {
-    it('logs a warning that names the API and what to do instead', () => {
+    it('should log a warning that names the API and what to do instead', () => {
       const logger = buildLogger();
 
       warnDeprecatedOnce(logger, '`foo`', 'Use `bar` instead.');
@@ -51,7 +51,7 @@ describe('deprecation-utils', () => {
       );
     });
 
-    it('logs the warning only once per logger and API', () => {
+    it('should log the warning only once per logger and API', () => {
       const logger = buildLogger();
 
       warnDeprecatedOnce(logger, '`foo`', 'Use `bar` instead.');
@@ -60,7 +60,7 @@ describe('deprecation-utils', () => {
       expect(logger.warn).toHaveBeenCalledOnce();
     });
 
-    it('logs once for each logger', () => {
+    it('should log once for each logger', () => {
       const firstLogger = buildLogger();
       const secondLogger = buildLogger();
 
@@ -84,13 +84,13 @@ describe('deprecation-utils', () => {
       return {element, logger};
     };
 
-    it('does not log a warning when the property keeps its default value', async () => {
+    it('should not log a warning when the property keeps its default value', async () => {
       const {logger} = await setupElement();
 
       expect(logger.warn).not.toHaveBeenCalled();
     });
 
-    it('logs a warning when the attribute is set', async () => {
+    it('should log a warning when the attribute is set', async () => {
       const {logger} = await setupElement(
         html`<test-deprecated-property-element old-flag="false"></test-deprecated-property-element>`
       );
@@ -100,7 +100,7 @@ describe('deprecation-utils', () => {
       );
     });
 
-    it('logs a warning when the attribute is set to its default value', async () => {
+    it('should log a warning when the attribute is set to its default value', async () => {
       const {logger} = await setupElement(
         html`<test-deprecated-property-element old-flag></test-deprecated-property-element>`
       );
@@ -108,7 +108,7 @@ describe('deprecation-utils', () => {
       expect(logger.warn).toHaveBeenCalledOnce();
     });
 
-    it('logs a warning when the property is set after the first update', async () => {
+    it('should log a warning when the property is set after the first update', async () => {
       const {element, logger} = await setupElement();
 
       element.oldFlag = false;
@@ -117,7 +117,7 @@ describe('deprecation-utils', () => {
       expect(logger.warn).toHaveBeenCalledOnce();
     });
 
-    it('logs a warning when the property is set before the element is first updated', async () => {
+    it('should log a warning when the property is set before the element is first updated', async () => {
       const element = document.createElement(
         'test-deprecated-property-element'
       ) as TestDeprecatedPropertyElement;
@@ -132,7 +132,7 @@ describe('deprecation-utils', () => {
       element.remove();
     });
 
-    it('logs the warning once, even when the property changes again', async () => {
+    it('should log the warning once, even when the property changes again', async () => {
       const {element, logger} = await setupElement(
         html`<test-deprecated-property-element old-flag="false"></test-deprecated-property-element>`
       );
@@ -145,7 +145,7 @@ describe('deprecation-utils', () => {
       expect(logger.warn).toHaveBeenCalledOnce();
     });
 
-    it('waits for a logger before logging the warning', async () => {
+    it('should wait for a logger before logging the warning', async () => {
       const element = await fixture<TestDeprecatedPropertyElement>(
         html`<test-deprecated-property-element old-flag="false"></test-deprecated-property-element>`
       );
@@ -170,7 +170,7 @@ describe('deprecation-utils', () => {
       return host;
     };
 
-    it('logs a warning when the property is a comma-separated string', () => {
+    it('should log a warning when the property is a comma-separated string', () => {
       const logger = buildLogger();
 
       warnOnCommaSeparatedFieldList(buildHost(), logger, attribute, 'fieldA,fieldB');
@@ -180,7 +180,19 @@ describe('deprecation-utils', () => {
       );
     });
 
-    it('logs a warning when the attribute is a comma-separated string', () => {
+    it('should log a warning when the property is a stringified JSON array', () => {
+      const logger = buildLogger();
+
+      warnOnCommaSeparatedFieldList(buildHost(), logger, attribute, '["fieldA","fieldB"]');
+
+      expect(logger.warn).toHaveBeenCalledExactlyOnceWith(
+        expect.stringContaining(
+          '[Deprecated] A string `fields-to-include-in-citations` property value on `test-host`'
+        )
+      );
+    });
+
+    it('should log a warning when the attribute is a comma-separated string', () => {
       const logger = buildLogger();
 
       warnOnCommaSeparatedFieldList(buildHost('fieldA,fieldB'), logger, attribute, [
@@ -191,7 +203,7 @@ describe('deprecation-utils', () => {
       expect(logger.warn).toHaveBeenCalledOnce();
     });
 
-    it('does not log a warning when the attribute is a JSON array', () => {
+    it('should not log a warning when the attribute is a JSON array', () => {
       const logger = buildLogger();
 
       warnOnCommaSeparatedFieldList(buildHost('["fieldA","fieldB"]'), logger, attribute, [
@@ -202,7 +214,7 @@ describe('deprecation-utils', () => {
       expect(logger.warn).not.toHaveBeenCalled();
     });
 
-    it('does not log a warning when the property is an array', () => {
+    it('should not log a warning when the property is an array', () => {
       const logger = buildLogger();
 
       warnOnCommaSeparatedFieldList(buildHost(), logger, attribute, ['fieldA']);
@@ -210,7 +222,7 @@ describe('deprecation-utils', () => {
       expect(logger.warn).not.toHaveBeenCalled();
     });
 
-    it('does not log a warning when there is no value', () => {
+    it('should not log a warning when there is no value', () => {
       const logger = buildLogger();
 
       warnOnCommaSeparatedFieldList(buildHost(), logger, attribute, undefined);

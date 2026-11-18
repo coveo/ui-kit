@@ -100,8 +100,9 @@ export class DeprecatedPropertyWarnings {
 }
 
 /**
- * Logs a deprecation warning, once per engine, when a field list property receives a comma-separated string instead
- * of an array, whether through its attribute or as a property value.
+ * Logs a deprecation warning, once per engine, when a field list property receives a string instead of an array: a
+ * comma-separated value, through its attribute or as a property value, or a stringified JSON array set as a property
+ * value, which the component splits on commas.
  */
 export function warnOnCommaSeparatedFieldList(
   host: HTMLElement,
@@ -113,8 +114,20 @@ export function warnOnCommaSeparatedFieldList(
     return;
   }
 
-  const rawValue = (typeof value === 'string' ? value : host.getAttribute(attribute))?.trim();
-  if (!rawValue || rawValue.startsWith('[')) {
+  const isStringProperty = typeof value === 'string';
+  const rawValue = (isStringProperty ? value : host.getAttribute(attribute))?.trim();
+  if (!rawValue) {
+    return;
+  }
+
+  if (rawValue.startsWith('[')) {
+    if (isStringProperty) {
+      warnDeprecatedOnce(
+        logger,
+        `A string \`${attribute}\` property value on \`${host.tagName.toLowerCase()}\``,
+        'Set the property to an array of strings instead, for example `["fieldA", "fieldB"]`.'
+      );
+    }
     return;
   }
 
