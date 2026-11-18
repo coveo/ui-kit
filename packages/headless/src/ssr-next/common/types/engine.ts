@@ -2,6 +2,46 @@ import type {UnknownAction} from '@reduxjs/toolkit';
 import type {ControllerStaticStateMap} from './controllers.js';
 
 /**
+ * The contract every engine definition fulfils: `fetchStaticState()` returns the static state of a
+ * page, and `hydrateStaticState()` takes that static state, as is, and returns the engine and the
+ * live controllers.
+ *
+ * Use it to type code that works with any engine definition, such as a provider or a framework
+ * integration, and constrain the states to what that code reads, as in the example. The static and
+ * hydrated states are inferred from the definition passed in, so the controllers stay typed.
+ *
+ * @typeParam TStaticState - The static state returned by `fetchStaticState()`.
+ * @typeParam THydratedState - The engine and the live controllers returned by `hydrateStaticState()`.
+ * @typeParam TFetchOptions - The options of `fetchStaticState()`. Leave it out in code that only
+ *  hydrates. In code that fetches, type the options `NoInfer<TFetchOptions>` (TypeScript 5.4 and
+ *  later), so that they are checked against the definition, misspelled options included.
+ *
+ * @example
+ * ```typescript
+ * function hydrate<
+ *   TStaticState extends {controllers: object},
+ *   THydratedState extends {engine: unknown; controllers: object},
+ * >(definition: EngineDefinition<TStaticState, THydratedState>, staticState: TStaticState) {
+ *   return definition.hydrateStaticState(staticState);
+ * }
+ *
+ * const {controllers} = await hydrate(searchEngineDefinition, staticState);
+ * ```
+ *
+ * @group Engine
+ */
+export interface EngineDefinition<TStaticState, THydratedState, TFetchOptions = never> {
+  /**
+   * Fetches the static state of a page on the server.
+   */
+  fetchStaticState: (options: TFetchOptions) => Promise<TStaticState>;
+  /**
+   * Builds the engine and the live controllers in the browser, from the static state.
+   */
+  hydrateStaticState: (staticState: TStaticState) => Promise<THydratedState>;
+}
+
+/**
  * The part of a static state that every SSR engine definition returns: the actions to replay and the
  * state of each controller.
  *

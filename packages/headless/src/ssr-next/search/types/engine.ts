@@ -1,5 +1,6 @@
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
+import type {EngineDefinition} from '../../common/types/engine.js';
 import type {HasKeys} from '../../common/types/utilities.js';
 import type {BuildConfig, SSRSearchEngine, SSRSearchEngineOptions} from './build.js';
 import type {ControllerDefinitionsMap} from './controller-definition.js';
@@ -53,7 +54,13 @@ type FetchStaticStateOptions<TControllers extends SearchControllerDefinitionsMap
  *
  * @group Engine
  */
-export interface SearchEngineDefinition<TControllers extends SearchControllerDefinitionsMap> {
+export interface SearchEngineDefinition<
+  TControllers extends SearchControllerDefinitionsMap,
+> extends EngineDefinition<
+  SearchStaticState<TControllers>,
+  SearchHydratedState<TControllers>,
+  FetchStaticStateOptions<TControllers>
+> {
   /**
    * Fetches the static state on the server side using your engine definition.
    *
