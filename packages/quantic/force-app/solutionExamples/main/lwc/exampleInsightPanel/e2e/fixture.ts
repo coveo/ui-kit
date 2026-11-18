@@ -1,10 +1,42 @@
-import {expect} from '@playwright/test';
+import {expect, type Page, type Request, type Response} from '@playwright/test';
 import {InsightPanelObject} from './pageObject';
 import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
 import {InsightSetupObject} from '../../../../../../playwright/page-object/insightSetupObject';
 import {insightInterfaceRequestRegex} from '../../../../../../playwright/utils/requests';
 
 const pageUrl = 's/insight-panel-example';
+const liveApiMessage = 'Insight interface config did not reach the live API';
+
+const isInterfaceConfigRequest = (request: Request) =>
+  insightInterfaceRequestRegex.test(request.url()) &&
+  request.method() === 'GET';
+
+/**
+ * Resolves with the Insight interface config response, or rejects as soon as the request
+ * fails without a response (e.g. a CORS-blocked `net::ERR_FAILED`).
+ */
+function waitForInterfaceConfigResponse(page: Page): Promise<Response> {
+  let onRequestFailed: (request: Request) => void = () => {};
+  const requestFailed = new Promise<never>((_, reject) => {
+    onRequestFailed = (request) => {
+      if (isInterfaceConfigRequest(request)) {
+        reject(
+          new Error(`${liveApiMessage}: ${request.failure()?.errorText}`)
+        );
+      }
+    };
+    page.on('requestfailed', onRequestFailed);
+  });
+  const response = Promise.race([
+    page.waitForResponse((response) =>
+      isInterfaceConfigRequest(response.request())
+    ),
+    requestFailed,
+  ]).finally(() => page.off('requestfailed', onRequestFailed));
+  // Awaited after page.goto; this keeps an early failure from being reported as unhandled.
+  response.catch(() => {});
+  return response;
+}
 
 type InsightPanelE2EFixtures = {
   insightPanel: InsightPanelObject;
@@ -34,18 +66,17 @@ export const testInsight = quanticBase.extend<InsightPanelE2EFixtures>({
     const insightPanel = new InsightPanelObject(page);
     const firstSearchResponsePromise =
       insightPanel.waitForSuccessfulSearchResponse(() => true);
-    const interfaceConfigResponsePromise = page.waitForResponse(
-      (response) =>
-        insightInterfaceRequestRegex.test(response.url()) &&
-        response.request().method() === 'GET'
-    );
+    const interfaceConfigResponsePromise =
+      waitForInterfaceConfigResponse(page);
     await page.goto(pageUrl);
 
     // This suite is the real Insight happy path: a response fulfilled by a route has no server address.
     const interfaceConfigResponse = await interfaceConfigResponsePromise;
-    const liveApiMessage = 'Insight interface config did not reach the live API';
     expect(interfaceConfigResponse.ok(), liveApiMessage).toBe(true);
-    expect(await interfaceConfigResponse.serverAddr(), liveApiMessage).not.toBeNull();
+    expect(
+      await interfaceConfigResponse.serverAddr(),
+      liveApiMessage
+    ).not.toBeNull();
 
     await insightSetup.waitForInsightInterfaceInitialization();
     await firstSearchResponsePromise;
