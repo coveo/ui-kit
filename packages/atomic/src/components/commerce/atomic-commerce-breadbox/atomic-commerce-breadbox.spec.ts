@@ -185,10 +185,11 @@ describe('atomic-commerce-breadbox', () => {
   });
 
   it('should render nothing when there are no breadcrumbs', async () => {
-    const {element} = await renderBreadbox({
+    const {element, parts} = await renderBreadbox({
       state: {facetBreadcrumbs: []},
     });
-    expect(element.shadowRoot?.querySelector('atomic-commerce-breadbox')).toBeNull();
+    expect(parts(element).container).toBeNull();
+    expect(parts(element).clearAll).toBeNull();
   });
 
   it('should have the right text on the label', async () => {
@@ -422,11 +423,13 @@ describe('atomic-commerce-breadbox', () => {
 
   it('should hide the breadcrumbs when the viewport gets smaller', async () => {
     await page.viewport(1600, 100);
-    const {regular, hierarchical, numericalRange, dateRange, showMore} = await renderBreadbox();
+    const {element, parts, regular, hierarchical, numericalRange, dateRange, showMore} =
+      await renderBreadbox();
     await expect.element(regular()).toBeVisible();
     await expect.element(hierarchical()).toBeVisible();
     await expect.element(numericalRange()).toBeVisible();
     await expect.element(dateRange()).toBeVisible();
+    await expect.element(parts(element).showMore as HTMLElement).not.toBeVisible();
 
     await page.viewport(200, 100);
 
@@ -434,7 +437,36 @@ describe('atomic-commerce-breadbox', () => {
     await expect.element(hierarchical()).not.toBeVisible();
     await expect.element(numericalRange()).not.toBeVisible();
     await expect.element(dateRange()).not.toBeVisible();
+    await expect.element(showMore()).toBeVisible();
     await expect.element(showMore()).toHaveTextContent('Show 4 more filters');
+  });
+
+  it('should update the number of hidden breadcrumbs when the breadcrumbs change without a resize', async () => {
+    await page.viewport(200, 100);
+    const {element, showMore} = await renderBreadbox();
+    await expect.element(showMore()).toHaveTextContent('Show 4 more filters');
+
+    element.breadcrumbManagerState = {
+      ...element.breadcrumbManagerState,
+      facetBreadcrumbs: element.breadcrumbManagerState.facetBreadcrumbs.slice(0, 3),
+    };
+
+    await expect.element(showMore()).toHaveTextContent('Show 3 more filters');
+  });
+
+  it('should only show the show less button when the expanded breadcrumbs wrap', async () => {
+    await page.viewport(200, 100);
+    const {element, parts, showMore, showLess} = await renderBreadbox();
+    await userEvent.click(showMore());
+    await expect.element(showLess()).toBeVisible();
+
+    await page.viewport(1600, 100);
+
+    await expect.element(parts(element).showLess as HTMLElement).not.toBeVisible();
+
+    await page.viewport(200, 100);
+
+    await expect.element(showLess()).toBeVisible();
   });
 
   it('should not hide the breadcrumbs when they are expanded and the viewport gets smaller', async () => {
