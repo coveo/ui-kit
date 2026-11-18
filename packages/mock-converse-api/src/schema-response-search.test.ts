@@ -1,6 +1,7 @@
 import {describe, it, expect, beforeEach} from 'vitest';
 import {converseSchemaResponses} from '@coveo/platform-mock-api/converse';
 import type {ConverseEvent} from '@coveo/platform-mock-api/converse';
+import {expectNormalizedGroups, groupsOf} from './product-groups.test-utils.js';
 
 const {matchSchemaPrompt, buildSearchActionEvents} = converseSchemaResponses;
 
@@ -291,6 +292,71 @@ describe('schema-response-search initial response totals', () => {
     expect(summary.firstIndex).toBe(1);
     expect(summary.lastIndex).toBe(12);
     expect(summary.totalEntries).toBe(43);
+  });
+});
+
+describe('schema-response-search product groups', () => {
+  const productsFor = (prompt: string) =>
+    (
+      collectComponentState(matchSchemaPrompt(prompt))['product-list-2'] as {
+        products: Array<Record<string, unknown>>;
+      }
+    ).products;
+  const products = productsFor('water sports');
+  const kayaks = productsFor('kayaks');
+  const lifeJackets = productsFor('life jackets');
+
+  it('lists grouped and ungrouped products, some groups larger than their listed children', () => {
+    expect(groupsOf(products).slice(0, 8)).toEqual([
+      {name: 'HydroLite Sleeveless Wetsuit', listed: 3, total: 3},
+      {name: 'EcoWave Performance Wetsuit', listed: 6, total: 9},
+      {name: 'ArcticShield Full Drysuit', listed: undefined, total: undefined},
+      {name: 'SunSeeker Spring Wetsuit', listed: undefined, total: undefined},
+      {name: 'DeepBlue Diving Wetsuit', listed: undefined, total: undefined},
+      {name: 'TideRunner Junior Wetsuit', listed: undefined, total: undefined},
+      {name: 'WaveRider Shortboard Surfboard', listed: 2, total: 4},
+      {name: 'GlideMax Longboard Surfboard', listed: undefined, total: undefined},
+    ]);
+    expect(groupsOf(lifeJackets)).toEqual([
+      {name: 'SafeFloat Adult Life Jacket', listed: 4, total: 6},
+      {name: 'AquaGuard Kids Life Jacket', listed: undefined, total: undefined},
+    ]);
+  });
+
+  it('lists each product first among its children', () => {
+    expectNormalizedGroups([...products, ...kayaks, ...lifeJackets]);
+  });
+
+  it('gives each child its own color, price and link', () => {
+    const [, blue, red] = products[0].children as Array<Record<string, unknown>>;
+    expect(blue).toMatchObject({
+      ec_name: 'HydroLite Sleeveless Wetsuit',
+      ec_color: 'Blue',
+      ec_price: 99.99,
+    });
+    expect(red).toMatchObject({ec_color: 'Red', ec_price: 94.99});
+    expect(blue.clickUri).toBe(
+      `${products[0].clickUri}?variant=${String(blue.permanentid).split('/').at(-1)}`
+    );
+  });
+
+  it('keeps a child without imagery', () => {
+    const [riverRun] = kayaks;
+    const children = riverRun.children as Array<Record<string, unknown>>;
+    expect(children.map(({ec_images}) => ec_images)).toEqual([
+      riverRun.ec_images,
+      expect.any(Array),
+      [],
+    ]);
+  });
+
+  it('leaves the thumbnails of one group empty, as the catalog sends them', () => {
+    const [safeFloat] = lifeJackets;
+    const children = safeFloat.children as Array<Record<string, unknown>>;
+    expect([safeFloat, ...children].map(({ec_thumbnails}) => ec_thumbnails)).toEqual(
+      Array(children.length + 1).fill([])
+    );
+    expect(products[0].ec_thumbnails).toEqual(products[0].ec_images);
   });
 });
 

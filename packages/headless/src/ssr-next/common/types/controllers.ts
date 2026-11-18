@@ -5,7 +5,15 @@ export interface ControllersMap {
 }
 
 export interface ControllerStaticState<TState> {
+  /**
+   * The state of the controller when the static state was fetched.
+   */
   state: TState;
+  /**
+   * For controllers defined with props, the state they were built with. Hydration rebuilds them from
+   * the `controllerProps` of the static state, not from this snapshot.
+   */
+  initialState?: TState;
 }
 
 export interface ControllerStaticStateMap {

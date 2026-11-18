@@ -1,6 +1,8 @@
+import type {UnknownAction} from '@reduxjs/toolkit';
 import type {CommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
 import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import type {HasKey} from '../../common/types/utilities.js';
 import type {CartInitialState} from '../controllers/cart/headless-cart.ssr.js';
 import type {ContextOptions} from '../controllers/context/headless-context.ssr.js';
@@ -15,7 +17,7 @@ import type {
 } from './controller-definitions.js';
 
 export interface SearchBuildConfig extends CommonBuildConfig {
-  searchParams: ParameterManagerState<
+  searchParams?: ParameterManagerState<
     Parameters & {
       /**
        * The query.
@@ -30,9 +32,15 @@ export interface ListingBuildConfig extends CommonBuildConfig {}
 export interface StandaloneBuildConfig extends CommonBuildConfig {}
 
 /**
- * Commerce engine options for SSR scenarios, where the context and the cart are defined when fetching static state.
+ * Commerce engine options for SSR scenarios.
+ *
+ * The context, the cart and the navigator context are per-request data: they are passed to
+ * `fetchStaticState()` rather than to the engine definition.
  */
-export type SSRCommerceEngineOptions = Omit<CommerceEngineOptions, 'configuration'> & {
+export type SSRCommerceEngineOptions = Omit<
+  CommerceEngineOptions,
+  'configuration' | 'navigatorContextProvider'
+> & {
   configuration: Omit<CommerceEngineOptions['configuration'], 'context' | 'cart'>;
 };
 
@@ -74,9 +82,9 @@ export type RecommendationBuildConfig<TControllers extends ControllerDefinitions
      */
     productId?: string;
     /**
-     * An array of recommendation controller names from your engine definition to include in the SSR request.
-     * Each name corresponds to a key used when defining recommendation controllers in your engine definition.
-     * If not specified, no recommendation requests will be executed.
+     * The names of the recommendation controllers to request on the server, as declared in your engine
+     * definition. Only the listed controllers are refreshed; the others keep an empty state until they
+     * are refreshed in the browser.
      */
     recommendations: Array<
       Extract<
@@ -216,3 +224,13 @@ export type BuildConfig<
       : TSolutionType extends SolutionType.standalone
         ? CommonBuildConfig
         : never;
+
+/**
+ * What a build reads: the build configuration, the controller props under `controllers` and, when
+ * hydrating, the search actions to replay.
+ */
+export type BuildParameters<TControllers extends ControllerDefinitionsMap<Controller>> =
+  BuildConfig<TControllers, SolutionType> & {
+    controllers?: ControllersPropsMap;
+    searchActions?: UnknownAction[];
+  };

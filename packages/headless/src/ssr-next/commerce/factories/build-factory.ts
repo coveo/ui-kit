@@ -5,21 +5,19 @@ import {
   type CommerceEngineOptions,
 } from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
+import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {
   createWaitForActionMiddleware,
   createWaitForActionMiddlewareForRecommendation,
 } from '../../../utils/utils.js';
 import {buildControllerDefinitions} from '../controller-utils.js';
-import type {RecommendationBuildConfig} from '../types/build.js';
+import type {BuildParameters} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
-import type {BakedInControllers} from '../types/controller-definitions.js';
-import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
 import type {
   CommerceControllerDefinitionsMap,
   CommerceEngineDefinitionOptions,
-  FetchStaticStateParameters,
-  HydrateStaticStateParameters,
 } from '../types/engine.js';
+import type {CommerceHydratedState} from '../types/hydrate-static-state.js';
 import {wireControllerParams} from '../utils/controller-wiring.js';
 import {augmentCommerceEngineOptions} from '../utils/engine-wiring.js';
 
@@ -114,19 +112,11 @@ export const buildFactory =
     options: CommerceEngineDefinitionOptions<TControllerDefinitions>
   ) =>
   <TSolutionType extends SolutionType>(solutionType: TSolutionType) =>
-  async (
-    buildOptions:
-      | FetchStaticStateParameters<TControllerDefinitions, TSolutionType>
-      | HydrateStaticStateParameters<TControllerDefinitions, TSolutionType>
-  ) => {
+  async (buildOptions: BuildParameters<TControllerDefinitions>) => {
     const controllerProps = wireControllerParams(solutionType, controllerDefinitions, buildOptions);
 
     const enabledRecommendationControllers =
-      buildOptions && 'recommendations' in buildOptions
-        ? new Set(
-            (buildOptions as RecommendationBuildConfig<TControllerDefinitions>)?.recommendations
-          ).size
-        : 0;
+      'recommendations' in buildOptions ? new Set(buildOptions.recommendations).size : 0;
 
     const engineOptions: CommerceEngineOptions = augmentCommerceEngineOptions(
       options,
@@ -139,25 +129,22 @@ export const buildFactory =
       enabledRecommendationControllers
     );
 
-    const controllers = buildControllerDefinitions({
+    const controllers: Record<string, Controller> = buildControllerDefinitions({
       definitionsMap: controllerDefinitions ?? {},
       engine,
       solutionType,
       propsMap: controllerProps,
     });
 
-    if (buildOptions && 'searchActions' in buildOptions) {
-      buildOptions.searchActions.forEach((action) => {
-        engine.dispatch(action);
-      });
-    }
+    buildOptions.searchActions?.forEach((action) => {
+      engine.dispatch(action);
+    });
 
     return {
       engine,
-      controllers: controllers as InferControllersMapFromDefinition<
+      controllers: controllers as CommerceHydratedState<
         TControllerDefinitions,
         TSolutionType
-      > &
-        BakedInControllers,
+      >['controllers'],
     };
   };

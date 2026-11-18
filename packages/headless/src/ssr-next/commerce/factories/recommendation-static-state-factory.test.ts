@@ -6,9 +6,8 @@ import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import {defineMockRecommendationDefinition} from '../../../test/mock-ssr-controller-definitions.js';
 import type {SolutionType} from '../types/controller-constants.js';
-import type {BakedInControllers} from '../types/controller-definitions.js';
-import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
 import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
+import type {CommerceHydratedState} from '../types/hydrate-static-state.js';
 import * as buildFactory from './build-factory.js';
 import {fetchRecommendationStaticStateFactory} from './recommendation-static-state-factory.js';
 
@@ -43,11 +42,10 @@ describe('fetchRecommendationStaticStateFactory', () => {
         async () =>
           Promise.resolve({
             engine: mockEngine,
-            controllers: mockControllers as InferControllersMapFromDefinition<
+            controllers: mockControllers as CommerceHydratedState<
               CommerceControllerDefinitionsMap,
               T
-            > &
-              BakedInControllers,
+            >['controllers'],
           })
     );
 
@@ -82,5 +80,28 @@ describe('fetchRecommendationStaticStateFactory', () => {
     });
 
     expect(engineSpy).toHaveBeenCalledWith(controllerDefinitions, options);
+  });
+
+  it('should carry the controller props in the static state', async () => {
+    const controllerProps = {rec1: {options: {productId: 'some-product'}}};
+    const factory = fetchRecommendationStaticStateFactory(
+      // @ts-expect-error: do not care about baked-in controller initial state
+      controllerDefinitions,
+      options
+    );
+
+    const staticState = await factory({
+      navigatorContext: mockNavigatorContext,
+      recommendations: ['rec1', 'rec2'],
+      context: {
+        country: 'CA',
+        currency: 'USD',
+        language: 'en',
+        view: {url: 'https://example.com'},
+      },
+      controllers: controllerProps,
+    } as unknown as Parameters<typeof factory>[0]);
+
+    expect(staticState.controllerProps).toEqual(controllerProps);
   });
 });

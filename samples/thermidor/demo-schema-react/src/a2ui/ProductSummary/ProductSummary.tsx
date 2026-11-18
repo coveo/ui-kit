@@ -1,6 +1,8 @@
+import {useContext} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {Product} from '@coveo/thermidor-schema';
 import {ProductSummaryPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {ProductCardActionsContext} from '../ProductCard/product-card-actions.js';
 import styles from './ProductSummary.module.css';
 
 function formatPrice(value: number): string {
@@ -16,14 +18,19 @@ function resolveProductImage(product: Product): string | null {
 }
 
 function resolvePrice(product: Product): number | undefined {
-  return product.ec_promo_price ?? product.ec_price;
+  const {ec_price: price, ec_promo_price: promoPrice} = product;
+  if (promoPrice === undefined) {
+    return price;
+  }
+  return price === undefined || promoPrice < price ? promoPrice : price;
 }
 
 /**
  * A2-UI component for the `product-summary`: a compact single-product summary row for a bundle
  * category slot. The generic binder resolves `categoryLabel` / `product` from
- * `ProductSummaryPropsSchema`. Presentational — no actions. `categoryLabel === undefined`
- * (bindings not yet resolved) renders a loading state.
+ * `ProductSummaryPropsSchema`. No surface actions; the row renders the
+ * `ProductCardActionsContext` actions for its product. `categoryLabel === undefined` (bindings not
+ * yet resolved) renders a loading state.
  */
 export const ProductSummary = createReactComponent(
   {
@@ -31,6 +38,8 @@ export const ProductSummary = createReactComponent(
     schema: ProductSummaryPropsSchema,
   },
   ({props}) => {
+    const renderActions = useContext(ProductCardActionsContext);
+
     if (props.categoryLabel === undefined) {
       return (
         <div className={styles.loading} aria-label="Loading product summary">
@@ -43,6 +52,15 @@ export const ProductSummary = createReactComponent(
     const name = product?.ec_name ?? categoryLabel;
     const imageUrl = product ? resolveProductImage(product) : null;
     const price = product ? resolvePrice(product) : undefined;
+    const actions =
+      product &&
+      renderActions?.({
+        productId: product.permanentid,
+        name: product.ec_name ?? product.permanentid,
+        price,
+        imageUrl: imageUrl ?? undefined,
+        clickUri: product.clickUri,
+      });
 
     return (
       <div className={styles.itemRow} role="listitem">
@@ -62,6 +80,7 @@ export const ProductSummary = createReactComponent(
           )}
           {price !== undefined && <span className={styles.itemPrice}>{formatPrice(price)}</span>}
         </div>
+        {actions != null && <div className={styles.itemActions}>{actions}</div>}
       </div>
     );
   }

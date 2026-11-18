@@ -109,6 +109,7 @@ describe('streaming→error downgrade preserves partial response', () => {
           // Downgrade: streaming → error with the interrupted-stream marker.
           expect(restoredTurn.status).toBe('error');
           expect(restoredTurn.error).toBe(STREAM_INTERRUPTED_ERROR);
+          expect(restoredTurn.reason).toBe('failed');
 
           // Partial response preserved unchanged from what was persisted.
           expect(restoredTurn.response.activities).toEqual(persistedTurn.response.activities);

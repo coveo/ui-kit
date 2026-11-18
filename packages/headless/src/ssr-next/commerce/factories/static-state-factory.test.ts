@@ -17,9 +17,8 @@ import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js
 import {defineMockCommerceController} from '../../../test/mock-ssr-controller-definitions.js';
 import type {ContextOptions} from '../controllers/context/headless-context.ssr.js';
 import {SolutionType} from '../types/controller-constants.js';
-import type {BakedInControllers} from '../types/controller-definitions.js';
-import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
 import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
+import type {CommerceHydratedState} from '../types/hydrate-static-state.js';
 import * as buildFactory from './build-factory.js';
 import {fetchStaticStateFactory} from './static-state-factory.js';
 
@@ -67,11 +66,10 @@ describe('fetchStaticStateFactory', () => {
         async () =>
           Promise.resolve({
             engine: mockEngine,
-            controllers: {} as InferControllersMapFromDefinition<
+            controllers: {} as CommerceHydratedState<
               CommerceControllerDefinitionsMap,
               T
-            > &
-              BakedInControllers,
+            >['controllers'],
           })
     );
 
@@ -240,11 +238,10 @@ describe('fetchStaticStateFactory', () => {
                   solutionType === SolutionType.listing
                     ? mockProductListController
                     : mockSearchProductListController,
-              } as unknown as InferControllersMapFromDefinition<
+              } as unknown as CommerceHydratedState<
                 CommerceControllerDefinitionsMap,
                 T
-              > &
-                BakedInControllers,
+              >['controllers'],
             })
       );
     });

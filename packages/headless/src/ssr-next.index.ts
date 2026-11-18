@@ -1,48 +1,45 @@
 /**
- * The Coveo Headless SSR sub-package exposes exposes the engine, definers, controllers, actions, and utility functions to build a server side rendered search experience.
+ * The Coveo Headless SSR sub-package exposes the engine definer, controller definers, actions, and utility functions to build a server-side rendered search experience.
  *
  * @example
  * ```typescript
- *   import {
- *     Controller,
- *     ControllerDefinitionsMap,
- *     defineSearchEngine,
- *     InferStaticState,
- *     InferHydratedState,
- *     SearchEngine,
- *     SearchEngineDefinitionOptions,
- *     getSampleSearchEngineConfiguration,
- *     defineResultList,
- *     defineSearchBox,
- *   } from '@coveo/headless/ssr';
+ * import {
+ *   defineResultList,
+ *   defineSearchBox,
+ *   defineSearchEngine,
+ *   getSampleSearchEngineConfiguration,
+ *   type InferHydratedState,
+ *   type InferStaticState,
+ * } from '@coveo/headless/ssr';
  *
- *  const config = {
- *     configuration: {
- *       ...getSampleSearchEngineConfiguration(),
- *       analytics: {
- *         trackingId: 'sports-ui-samples',
- *       },
- *     },
- *     controllers: {
- *       searchBox: defineSearchBox(),
- *       resultList: defineResultList(),
- *     },
- *   } satisfies SearchEngineDefinitionOptions<
- *     ControllerDefinitionsMap<SearchEngine, Controller>
- *   >;
- *
- * const engineDefinition = defineSearchEngine(config);
- *
- * export type SearchStaticState = InferStaticState<typeof engineDefinition>;
- * export type SearchHydratedState = InferHydratedState<typeof engineDefinition>;
- *
- * export const {fetchStaticState, hydrateStaticState} = engineDefinition;
- *
- * await fetchStaticState({
- *   navigatorContextProvider: () => {/*...* /},
- *   context: {/*...* /},
+ * // Shared by the server and the browser. The navigator context is per-request data: it is passed
+ * // to `fetchStaticState()`, not to the configuration.
+ * export const {searchEngineDefinition, standaloneEngineDefinition} = defineSearchEngine({
+ *   configuration: getSampleSearchEngineConfiguration(),
+ *   controllers: {
+ *     searchBox: defineSearchBox(),
+ *     resultList: defineResultList(),
+ *   },
  * });
-
+ *
+ * export type StaticState = InferStaticState<typeof searchEngineDefinition>;
+ * export type HydratedState = InferHydratedState<typeof searchEngineDefinition>;
+ *
+ * // On the server, once per request
+ * const staticState = await searchEngineDefinition.fetchStaticState({
+ *   navigatorContext: {
+ *     clientId: '...',
+ *     location: 'https://example.com/search?q=running+shoes',
+ *     referrer: null,
+ *     userAgent: '...',
+ *     forwardedFor: '...',
+ *   },
+ *   searchParams: {q: 'running shoes'},
+ * });
+ *
+ * // In the browser, from the serialized static state, passed as is: it already carries the
+ * // navigator context, the search parameters and the access token.
+ * const {engine, controllers} = await searchEngineDefinition.hydrateStaticState(staticState);
  * ```
  * @module SSR Search
  */
@@ -60,12 +57,13 @@ export type {
 } from './app/engine-configuration.js';
 export type {LoggerOptions, LogLevel} from './app/logger.js';
 export type {NavigatorContext, NavigatorContextProvider} from './app/navigator-context-provider.js';
+export type {ControllerStaticState} from './ssr-next/common/types/controllers.js';
 // Main App
 export type {
   SearchConfigurationOptions,
   SearchEngineConfiguration,
-  SearchEngineOptions,
 } from './app/search-engine/search-engine.js';
+export type {SSRSearchEngineOptions as SearchEngineOptions} from './ssr-next/search/types/build.js';
 export {getSampleSearchEngineConfiguration} from './app/search-engine/search-engine.js';
 export type {ErrorPayload} from './controllers/controller/error-payload.js';
 //#region Controllers
@@ -476,12 +474,9 @@ export type {
   SearchEngineDefinition,
   SearchEngineDefinitionOptions,
 } from './ssr-next/search/types/engine.js';
-export type {FetchStaticState} from './ssr-next/search/types/fetch-static-state.js';
-// export type
-export type {
-  HydratedState,
-  HydrateStaticState,
-} from './ssr-next/search/types/hydrate-static-state.js';
+export type {SearchStaticState} from './ssr-next/search/types/fetch-static-state.js';
+export type {SearchHydratedState} from './ssr-next/search/types/hydrate-static-state.js';
+export type {EngineDefinition} from './ssr-next/common/types/engine.js';
 // State
 export type {SearchAppState, SearchParametersState} from './state/search-app-state.js';
 

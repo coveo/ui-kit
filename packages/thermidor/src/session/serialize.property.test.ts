@@ -61,7 +61,7 @@ const nonStreamingStatus: fc.Arbitrary<TurnStatus> = fc.constantFrom<TurnStatus>
 
 /**
  * Generates a single arbitrary Turn with the given `id`. A `status: 'error'`
- * turn carries an `error` string; other statuses omit it. The optional agent
+ * turn carries an `error` string, a `reason` and maybe an `errorCode`; other statuses omit them. The optional agent
  * facet is present about half the time.
  */
 function turnArbitrary(id: string): fc.Arbitrary<Turn> {
@@ -78,8 +78,10 @@ function turnArbitrary(id: string): fc.Arbitrary<Turn> {
         {nil: undefined}
       ),
       error: fc.string({maxLength: 20}),
+      reason: fc.constantFrom('cancelled' as const, 'failed' as const),
+      errorCode: fc.option(fc.string({minLength: 1, maxLength: 20}), {nil: undefined}),
     })
-    .map(({status, prompt, activities, agent, error}) => {
+    .map(({status, prompt, activities, agent, error, reason, errorCode}) => {
       const turn: Turn = {
         id,
         input: prompt === undefined ? {} : {prompt},
@@ -92,6 +94,10 @@ function turnArbitrary(id: string): fc.Arbitrary<Turn> {
       };
       if (status === 'error') {
         turn.error = error;
+        turn.reason = reason;
+        if (reason === 'failed' && errorCode !== undefined) {
+          turn.errorCode = errorCode;
+        }
       }
       return turn;
     });
@@ -131,7 +137,7 @@ const sessionStateArbitrary: fc.Arbitrary<SessionStoreState<Turn>> = fc
   });
 
 describe('serialize/restore round-trip', () => {
-  it('preserves every turn id/input/status/error across a round-trip', () => {
+  it('preserves every turn id/input/status/error/reason/errorCode across a round-trip', () => {
     fc.assert(
       fc.property(sessionStateArbitrary, (original) => {
         const restored = restoreSession(serializeSession(original));
@@ -143,6 +149,8 @@ describe('serialize/restore round-trip', () => {
           expect(roundTripped.input).toEqual(turn.input);
           expect(roundTripped.status).toBe(turn.status);
           expect(roundTripped.error).toBe(turn.error);
+          expect(roundTripped.reason).toBe(turn.reason);
+          expect(roundTripped.errorCode).toBe(turn.errorCode);
         });
       }),
       {numRuns: NUM_RUNS}

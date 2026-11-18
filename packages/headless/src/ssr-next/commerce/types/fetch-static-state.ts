@@ -1,40 +1,48 @@
-import type {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {
-  ControllerStaticStateMap,
-  ControllersPropsMap,
-} from '../../common/types/controllers.js';
+import type {ControllerStaticState, ControllersPropsMap} from '../../common/types/controllers.js';
 import type {EngineStaticState} from '../../common/types/engine.js';
 import type {BuildConfig} from './build.js';
 import type {SolutionType} from './controller-constants.js';
+import type {BakedInControllers, ControllerDefinitionsMap} from './controller-definitions.js';
 import type {
-  CommerceEngineDefinitionControllersPropsOption,
-  ControllerDefinitionsMap,
-  FilteredBakedInControllers,
-} from './controller-definitions.js';
+  AvailableControllerNames,
+  BakedInControllerNames,
+  InferControllerFromDefinition,
+} from './controller-inference.js';
 
 /**
- * Executes only the initial search for a given configuration, then returns a resumable snapshot of engine state along with the state of the controllers.
+ * The serializable snapshot returned by `fetchStaticState()`.
  *
- * Useful for static generation and server-side rendering.
+ * It carries the state of every controller, the actions to replay, and the build configuration
+ * that produced it (navigator context, context, cart, search parameters, per-request access token),
+ * so that it can be passed as is to `hydrateStaticState()`.
+ *
+ * Its `controllers` hold the state of the controllers of the engine definition that are available to
+ * the solution type, and of the baked-in ones (`context` and `cart` everywhere, `parameterManager`
+ * for search and listing).
+ *
+ * @typeParam TControllers - The controllers of the engine definition.
+ * @typeParam TSolutionType - The kind of page the engine definition serves.
  */
-export type FetchStaticState<
-  TSearchAction extends UnknownAction,
-  TControllersStaticState extends ControllerStaticStateMap,
-  TControllersProps extends ControllersPropsMap,
-  TControllersDefinitionsMap extends ControllerDefinitionsMap<Controller>,
+export type CommerceStaticState<
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
-> = (
-  params: BuildConfig<TControllersDefinitionsMap, TSolutionType> &
-    CommerceEngineDefinitionControllersPropsOption<
-      TControllersDefinitionsMap,
-      TControllersProps,
-      TSolutionType
-    >
-) => Promise<
-  EngineStaticState<
-    TSearchAction,
-    TControllersStaticState & FilteredBakedInControllers<TSolutionType>
-  > &
-    BuildConfig<TControllersDefinitionsMap, TSolutionType>
->;
+> = EngineStaticState<
+  {
+    [K in AvailableControllerNames<TControllers, TSolutionType>]: ControllerStaticState<
+      InferControllerFromDefinition<TControllers[K & keyof TControllers]>['state']
+    >;
+  } & {
+    [K in BakedInControllerNames<TSolutionType>]: ControllerStaticState<
+      BakedInControllers[K]['state']
+    >;
+  }
+> &
+  BuildConfig<TControllers, TSolutionType> & {
+    /**
+     * The controller props that were passed to `fetchStaticState()` through the `controllers` option.
+     * `hydrateStaticState()` reuses them to rebuild the controllers with the same props. They are sent
+     * to the browser with the static state, so they must be serializable and must not hold secrets.
+     */
+    controllerProps?: ControllersPropsMap;
+  };

@@ -4,7 +4,9 @@ import type {Product} from '@coveo/thermidor-schema';
 import {ProductListPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {ProductCardActionsContext} from '../ProductCard/product-card-actions.js';
 import {ProductBadges} from '../ProductBadges/ProductBadges.js';
-import {resultsFocusTarget} from '../results-focus.js';
+import {ProductChildren} from '../ProductChildren/ProductChildren.js';
+import {usePromotedProduct} from '../ProductChildren/use-promoted-product.js';
+import {productListTarget, resultsFocusTarget} from '../results-focus.js';
 import styles from './ProductList.module.css';
 
 function formatPrice(value: number): string {
@@ -19,7 +21,8 @@ function resolveProductImage(product: Product): string | null {
   return null;
 }
 
-function ProductCard({product}: {product: Product}) {
+function ProductCard({product: listed}: {product: Product}) {
+  const [product, promote] = usePromotedProduct(listed);
   const imageUrl = resolveProductImage(product);
   const {ec_name: name, ec_brand: brand, ec_price: price, ec_promo_price: promoPrice} = product;
   const hasPromo = promoPrice !== undefined && price !== undefined && promoPrice < price;
@@ -33,7 +36,7 @@ function ProductCard({product}: {product: Product}) {
   });
 
   return (
-    <article className={styles.card} role="listitem">
+    <article className={styles.card} role="listitem" tabIndex={-1}>
       <div className={styles.imageWrapper}>
         {imageUrl ? (
           <img className={styles.image} src={imageUrl} alt={name ?? ''} />
@@ -49,6 +52,7 @@ function ProductCard({product}: {product: Product}) {
         <h3 className={styles.name} title={name ?? ''}>
           {name}
         </h3>
+        <ProductChildren product={product} onPromote={promote} />
         <div className={styles.pricing}>
           {price === undefined ? (
             <span className={styles.price}>&mdash;</span>
@@ -96,7 +100,13 @@ export const ProductList = createReactComponent(
 
     return (
       <section>
-        <div className={styles.grid} role="list" aria-label="Product list" {...resultsFocusTarget}>
+        <div
+          className={styles.grid}
+          role="list"
+          aria-label="Product list"
+          {...resultsFocusTarget}
+          {...productListTarget}
+        >
           {products.map((product) => (
             <ProductCard key={product.permanentid} product={product} />
           ))}

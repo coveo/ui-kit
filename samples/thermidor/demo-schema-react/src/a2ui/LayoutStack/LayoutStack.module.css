@@ -13,20 +13,21 @@
   flex-wrap: wrap;
 }
 
-/* A child that renders nothing takes no slot, so space-between keeps the first visible child left. */
-.row > :empty {
+/* A child that renders nothing takes no slot, so space-between keeps the first visible child left.
+   A slot may wrap its child in surface controls, whose fieldset stays in the DOM. */
+.row > :is(:empty, :has(> [data-surface-controls]:empty)) {
   display: none;
 }
 
-.row > :has(> [data-layout='full-row']) {
+.row > :has(> [data-layout='full-row'], > [data-surface-controls] > [data-layout='full-row']) {
   flex-basis: 100%;
 }
 
-.row:has(> * > [data-layout='fill']) {
+.row:has(> * > [data-layout='fill'], > * > [data-surface-controls] > [data-layout='fill']) {
   align-items: flex-start;
 }
 
-.row > :has(> [data-layout='fill']) {
+.row > :has(> [data-layout='fill'], > [data-surface-controls] > [data-layout='fill']) {
   flex: 1 1 0;
   min-width: 16rem;
 }

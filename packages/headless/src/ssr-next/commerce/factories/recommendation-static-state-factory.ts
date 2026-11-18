@@ -1,5 +1,5 @@
-import type {UnknownAction} from '@reduxjs/toolkit';
 import {createStaticState} from '../controller-utils.js';
+import type {BuildParameters} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {AugmentedControllerDefinition} from '../types/controller-definitions.js';
 import type {
@@ -34,18 +34,20 @@ export function fetchRecommendationStaticStateFactory<
 
     const searchActions = await Promise.all(engine.waitForRequestCompletedAction());
 
-    const staticState = createStaticState<
-      UnknownAction,
-      TControllerDefinitions,
-      SolutionType.recommendation
-    >({
+    const staticState = createStaticState<TControllerDefinitions, SolutionType.recommendation>({
       searchActions,
       controllers,
     });
 
+    const {
+      controllers: controllerProps,
+      ...restParams
+    }: BuildParameters<TControllerDefinitions> & typeof params = params;
+
     return {
-      ...params,
+      ...restParams,
       ...staticState,
+      ...(controllerProps && {controllerProps}),
     };
   };
 }
