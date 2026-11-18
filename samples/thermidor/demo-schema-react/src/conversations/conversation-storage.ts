@@ -24,7 +24,7 @@ export interface ConversationStorage {
   setCurrentId(id: string): void;
 }
 
-export const MAX_CONVERSATIONS = 20;
+const MAX_CONVERSATIONS = 20;
 
 const INDEX_KEY = 'demo-conversations';
 const ENTRY_PREFIX = 'demo-conversation:';
