@@ -574,7 +574,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   // Whether the request in flight reached the endpoint in a way that may have reserved its id.
   let requestMayHaveReservedSessionId = false;
   // The dispatch that stopped the request in flight, which takes `request` over once it unwinds.
-  let handoff: SessionRequest | undefined;
+  let handoff: {request: SessionRequest; abortController: AbortController} | undefined;
 
   // One request at a time: the endpoint handles a single request per session, and each response
   // is a whole-node snapshot, so overlapping streams would let the last to ARRIVE win over a newer
@@ -588,12 +588,13 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   ): Promise<void> {
     if (store.getState().request && initializeRetrying && !handoff) {
       // The stopped request hands `request` straight to this one, so no other dispatch takes it.
-      handoff = request;
+      const abortController = new AbortController();
+      handoff = {request, abortController};
       cancel();
       await requestSettled;
       handoff = undefined;
       if (store.getState().request === request) {
-        requestSettled = runRequest(request, send, abandoned);
+        requestSettled = runRequest(request, send, abandoned, abortController);
         return requestSettled;
       }
     }
@@ -608,10 +609,10 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   async function runRequest(
     request: SessionRequest,
     send: (abortController: AbortController) => Promise<void>,
-    abandoned: ReadonlySet<string> | undefined
+    abandoned: ReadonlySet<string> | undefined,
+    abortController = new AbortController()
   ): Promise<void> {
     // Armed before it is published, so a listener's `cancel()` stops the request it was told about.
-    const abortController = new AbortController();
     activeAbortController = abortController;
     requestAbandoned = abandoned && {request, ids: abandoned};
     requestMayHaveReservedSessionId = false;
@@ -627,9 +628,12 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
       activeAbortController = null;
     }
     initializeRetrying = false;
+    if (handoff) {
+      activeAbortController = handoff.abortController;
+    }
     store.setState((current) => ({
       ...current,
-      request: handoff,
+      request: handoff?.request,
       ...(holdsUnconfirmedSessionId(current) && {sessionId: undefined}),
     }));
   }

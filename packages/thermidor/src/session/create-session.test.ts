@@ -2509,6 +2509,28 @@ describe('createSession lifecycle', () => {
         stream.close();
       });
 
+      it('cancels a preempting prompt from a listener told it is in flight', async () => {
+        queueTransient();
+        const session = createSession(shellConfig);
+        await vi.advanceTimersByTimeAsync(100);
+        const unsubscribe = session.subscribe(() => {
+          if (session.request?.kind === 'prompt') {
+            unsubscribe();
+            session.cancel();
+          }
+        });
+
+        const stream = queueStream();
+        const turn = dispatchPrompt(session);
+        await vi.advanceTimersByTimeAsync(0);
+        stream.close();
+
+        expect(callMock).toHaveBeenCalledTimes(1);
+        await turn;
+        expect(session.request).toBeUndefined();
+        expect(session.turns).toEqual([]);
+      });
+
       it.each([
         ['during the first attempt', () => queueAbortableCall()],
         [
