@@ -89,6 +89,7 @@ Each controller of the definition still yields a `use<Name>` hook, and `useParam
 #### Providers
 
 `buildProviderWithDefinition()` replaces `StaticStateProvider`, `HydratedStateProvider` and the provider you wrote to hydrate the static state.
+Its type parameters are now the static and hydrated states, inferred from the definition: drop explicit type arguments such as `buildProviderWithDefinition<typeof controllers, SolutionType.listing>(definition)`.
 
 **Headless Version 3**
 

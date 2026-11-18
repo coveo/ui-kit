@@ -60,6 +60,7 @@ export type {
 } from './app/engine-configuration.js';
 export type {LoggerOptions, LogLevel} from './app/logger.js';
 export type {NavigatorContext, NavigatorContextProvider} from './app/navigator-context-provider.js';
+export type {ControllerStaticState} from './ssr-next/common/types/controllers.js';
 // Main App
 export type {
   SearchConfigurationOptions,

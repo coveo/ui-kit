@@ -19,10 +19,8 @@ import type {
   StandaloneController,
   UniversalController,
 } from './controller-scopes.js';
-import type {HydratedState} from './hydrate-static-state.js';
 
 export type {
-  HydratedState,
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
 };
@@ -85,23 +83,6 @@ export type BakedInControllers = {
     BakedInControllerDefinitions[K]['buildWithProps']
   >;
 };
-
-/**
- * A dynamically filtered map of baked-in controller definitions based on solution type compatibility.
- *
- * `cart` and `context` are built for every solution type, and `parameterManager` for search and
- * listing. The two universal controllers are listed outside the conditional part, so code that is
- * generic over the solution type can still reach them.
- *
- * @template TSolutionType - The target solution type to filter controllers for
- */
-export type FilteredBakedInControllers<TSolutionType extends SolutionType> = Pick<
-  BakedInControllers,
-  'cart' | 'context'
-> &
-  (TSolutionType extends SolutionType.search | SolutionType.listing
-    ? Pick<BakedInControllers, 'parameterManager'>
-    : {});
 
 /**
  * Map of controller definitions available to the commerce engine definition.
