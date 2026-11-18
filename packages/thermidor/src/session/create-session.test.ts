@@ -2435,6 +2435,60 @@ describe('createSession lifecycle', () => {
         ]);
       });
 
+      it('keeps the restored shell when a shell action follows a failed resume', async () => {
+        const initialized = await initializedSession();
+        callMock.mockReset();
+        callMock.mockImplementationOnce(async () => ({success: false, error: 'Unavailable'}));
+        const session = createSession({...shellConfig, sessionToRestore: initialized.serialize()});
+        await vi.waitFor(() => expect(session.initialization?.status).toBe('error'));
+
+        const stream = queueStream();
+        const sent = session.dispatchAction(shellSelectPage(2));
+        await stream.opened;
+        stream.emit(shellPageUpdate('page-2'));
+        stream.emit({type: 'RUN_FINISHED'});
+        stream.close();
+        await sent;
+
+        expect(session.surfaces.map((surface) => surface.surfaceId)).toEqual([SHELL_ID]);
+        expect(session.state).toHaveProperty(SHELL_ID);
+      });
+
+      it('keeps a placeholder the restored initialization left behind out while it resumes', async () => {
+        const serialized = (await initializedSession()).serialize();
+        callMock.mockReset();
+        serialized.initialization = {
+          status: 'streaming',
+          activities: [
+            ...(serialized.initialization?.activities ?? []),
+            {
+              id: 'placeholder-activity',
+              kind: 'a2ui-surface',
+              replace: false,
+              payload: {
+                messages: [
+                  {
+                    version: 'v1.0',
+                    createSurface: {
+                      surfaceId: 'carousel-placeholder',
+                      catalogId: 'commerce',
+                      components: [{id: 'root', component: 'ProductCarousel'}],
+                      dataModel: {isLoading: true},
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        };
+        const stream = queueStream();
+        const session = createSession({...shellConfig, sessionToRestore: serialized});
+        await stream.opened;
+
+        expect(session.surfaces.map((surface) => surface.surfaceId)).toEqual([SHELL_ID]);
+        stream.close();
+      });
+
       it('never sends initialize for a restored session without a token', async () => {
         const initialized = await initializedSession();
         callMock.mockReset();
@@ -2999,16 +3053,26 @@ describe('createSession session keys', () => {
       expect(session.sessionToken).toBe(SESSION_TOKEN);
     });
 
-    it('drops the old token when the endpoint sends a new id without one', async () => {
-      const newId = '7c9e6679-7425-40de-944b-e07fc1f90ae7';
-      answerWith({type: 'RUN_STARTED', conversationSessionId: newId}, {type: 'RUN_FINISHED'});
-      const session = createSession(config(keys));
+    it.each([
+      ['fails', {type: 'RUN_ERROR', message: 'Agent failed'}],
+      ['finishes', {type: 'RUN_FINISHED'}],
+    ])(
+      'drops a replacement id whose token never came when the request %s, so the endpoint assigns one',
+      async (_, end) => {
+        const newId = '7c9e6679-7425-40de-944b-e07fc1f90ae7';
+        answerWith({type: 'RUN_STARTED', conversationSessionId: newId}, end);
+        const session = createSession(config(keys));
+        await session.dispatchAction(PROMPT);
 
-      await session.dispatchAction(PROMPT);
+        expect(session.sessionId).toBeUndefined();
+        expect(session.sessionToken).toBeUndefined();
+        answerWithKeys(SESSION_ID, 'token-1');
+        await session.dispatchAction(PROMPT);
 
-      expect(session.sessionId).toBe(newId);
-      expect(session.sessionToken).toBeUndefined();
-    });
+        expect(sent()[1].conversationSessionId).toBeUndefined();
+        expect(sent()[1].conversationToken).toBeUndefined();
+      }
+    );
 
     it('adopts the new keys the endpoint answers with, and sends them next', async () => {
       const newId = '7c9e6679-7425-40de-944b-e07fc1f90ae7';
