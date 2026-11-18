@@ -1111,30 +1111,41 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
 
   /** Its run is recorded as the initialization, never as a turn. */
   function initialize(): Promise<void> {
-    return sendRequest({kind: 'initialize'}, async (abortController) => {
-      // A resume that fails or is cancelled before it sends anything leaves the restored shell.
-      const restoredShell = config.sessionToRestore
-        ? (store.getState().initialization?.activities ?? [])
-        : [];
-      holdsRestoredShell = restoredShell.length > 0;
-      store.setState((current) => ({
-        ...current,
-        initialization: {activities: restoredShell, status: 'streaming'},
-      }));
-      const failure = await executeStream(
-        INITIALIZATION,
-        () =>
-          buildActionRequest({
-            name: 'initialize',
-            timestamp: new Date().toISOString(),
-            context: {},
-          }),
-        abortController
-      );
-      if (failure) {
-        failRun(INITIALIZATION, failure.error);
-      }
-    });
+    // Resuming must not bring back a placeholder the restored initialization left behind.
+    const abandoned = abandonedPlaceholderIds(store.getState(), INITIALIZATION);
+    return sendRequest(
+      {kind: 'initialize'},
+      async (abortController) => {
+        // A resume that fails or is cancelled before it sends anything leaves the restored shell.
+        const restoredShell = config.sessionToRestore
+          ? (store.getState().initialization?.activities ?? [])
+          : [];
+        holdsRestoredShell = restoredShell.length > 0;
+        store.setState((current) => ({
+          ...current,
+          initialization: {activities: restoredShell, status: 'streaming'},
+        }));
+        try {
+          const failure = await executeStream(
+            INITIALIZATION,
+            () =>
+              buildActionRequest({
+                name: 'initialize',
+                timestamp: new Date().toISOString(),
+                context: {},
+              }),
+            abortController
+          );
+          if (failure) {
+            failRun(INITIALIZATION, failure.error);
+          }
+        } finally {
+          // Only the resume replaces the shell; a later action into the initialization keeps it.
+          holdsRestoredShell = false;
+        }
+      },
+      abandoned
+    );
   }
 
   /**
