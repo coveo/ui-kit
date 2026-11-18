@@ -2484,6 +2484,31 @@ describe('createSession lifecycle', () => {
         expect(callMock).toHaveBeenCalledTimes(at === 100 ? 2 : 3);
       });
 
+      it('keeps the slot for a preempting prompt over a listener that dispatches when idle', async () => {
+        queueTransient();
+        const session = createSession(shellConfig);
+        await vi.advanceTimersByTimeAsync(100);
+        const listenerDispatch = vi.fn(() => {
+          void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'queued'}});
+        });
+        const unsubscribe = session.subscribe(() => {
+          if (session.request === undefined) {
+            unsubscribe();
+            listenerDispatch();
+          }
+        });
+
+        const stream = queueStream();
+        void dispatchPrompt(session);
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(callMock).toHaveBeenCalledTimes(2);
+        expect(callMock.mock.calls[1][0]).toMatchObject({message: 'find shoes'});
+        expect(listenerDispatch).not.toHaveBeenCalled();
+        unsubscribe();
+        stream.close();
+      });
+
       it.each([
         ['during the first attempt', () => queueAbortableCall()],
         [

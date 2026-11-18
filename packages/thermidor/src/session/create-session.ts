@@ -573,6 +573,8 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   let initializeRetrying = false;
   // Whether the request in flight reached the endpoint in a way that may have reserved its id.
   let requestMayHaveReservedSessionId = false;
+  // The dispatch that stopped the request in flight, which takes `request` over once it unwinds.
+  let handoff: SessionRequest | undefined;
 
   // One request at a time: the endpoint handles a single request per session, and each response
   // is a whole-node snapshot, so overlapping streams would let the last to ARRIVE win over a newer
@@ -584,9 +586,16 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     send: (abortController: AbortController) => Promise<void>,
     abandoned?: ReadonlySet<string>
   ): Promise<void> {
-    if (store.getState().request && initializeRetrying) {
+    if (store.getState().request && initializeRetrying && !handoff) {
+      // The stopped request hands `request` straight to this one, so no other dispatch takes it.
+      handoff = request;
       cancel();
       await requestSettled;
+      handoff = undefined;
+      if (store.getState().request === request) {
+        requestSettled = runRequest(request, send, abandoned);
+        return requestSettled;
+      }
     }
     if (store.getState().request) {
       devWarn('dispatchAction: withheld: another request is in flight.');
@@ -620,7 +629,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     initializeRetrying = false;
     store.setState((current) => ({
       ...current,
-      request: undefined,
+      request: handoff,
       ...(holdsUnconfirmedSessionId(current) && {sessionId: undefined}),
     }));
   }
