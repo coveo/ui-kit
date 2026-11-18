@@ -1,9 +1,12 @@
 import {describe, expectTypeOf, it} from 'vitest';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
+import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
-import type {InferStaticState} from '../types/controller-inference.js';
+import type {InferHydratedState, InferStaticState} from '../types/controller-inference.js';
+import type {SolutionType} from '../types/controller-constants.js';
+import type {CommerceEngineDefinition} from '../types/engine.js';
 import {defineCommerceEngine} from './commerce-engine.ssr.js';
 
 // Types the customer relies on for IntelliSense: everything below is inferred from the controllers
@@ -23,6 +26,7 @@ const {
 });
 
 type ListingStaticState = InferStaticState<typeof listingEngineDefinition>;
+type ListingHydratedState = InferHydratedState<typeof listingEngineDefinition>;
 
 describe('defineCommerceEngine', () => {
   it('should hydrate each definition with the static state it fetched, as is', () => {
@@ -38,5 +42,75 @@ describe('defineCommerceEngine', () => {
     expectTypeOf<
       Parameters<typeof recommendationEngineDefinition.hydrateStaticState>[0]
     >().toEqualTypeOf<InferStaticState<typeof recommendationEngineDefinition>>();
+  });
+
+  it('should take the navigator context per request, not on the definition', () => {
+    const options = {configuration: getSampleCommerceEngineConfiguration()};
+    const withProvider = {...options, navigatorContextProvider: () => buildMockNavigatorContext()};
+    defineCommerceEngine({...options, controllers: {}});
+    // @ts-expect-error: a navigatorContextProvider spread from shared options.
+    defineCommerceEngine({...withProvider, controllers: {}});
+    // @ts-expect-error: a navigatorContextProvider in an options variable.
+    defineCommerceEngine(withProvider);
+    expectTypeOf<ListingStaticState>().toHaveProperty('navigatorContext');
+    expectTypeOf<ListingStaticState['accessToken']>().toEqualTypeOf<string | undefined>();
+  });
+
+  it('should list the controllers of each kind of page in its static state', () => {
+    expectTypeOf<ListingStaticState['controllers']>().toHaveProperty('productList');
+    expectTypeOf<ListingStaticState['controllers']>().toHaveProperty('cart');
+    expectTypeOf<ListingStaticState['controllers']>().toHaveProperty('context');
+    expectTypeOf<ListingStaticState['controllers']>().toHaveProperty('parameterManager');
+    expectTypeOf<ListingStaticState['controllers']>().not.toHaveProperty('searchBox');
+    expectTypeOf<ListingStaticState['controllers']>().not.toHaveProperty('popularViewed');
+    expectTypeOf<InferStaticState<typeof searchEngineDefinition>['controllers']>().toHaveProperty(
+      'searchBox'
+    );
+    expectTypeOf<
+      InferStaticState<typeof standaloneEngineDefinition>['controllers']
+    >().not.toHaveProperty('parameterManager');
+    expectTypeOf<
+      InferStaticState<typeof recommendationEngineDefinition>['controllers']
+    >().toHaveProperty('popularViewed');
+  });
+
+  it('should type the controllers of the static state as state snapshots', () => {
+    expectTypeOf<ListingStaticState['controllers']['productList']>().toHaveProperty('state');
+    expectTypeOf<ListingStaticState['controllers']['productList']>().not.toHaveProperty(
+      'subscribe'
+    );
+    expectTypeOf<ListingStaticState['controllers']['cart']>().toHaveProperty('state');
+    expectTypeOf<ListingStaticState['controllers']['cart']>().not.toHaveProperty('empty');
+    expectTypeOf<ListingStaticState['controllers']['parameterManager']>().not.toHaveProperty(
+      'synchronize'
+    );
+  });
+
+  it('should not offer controller props on the static state, which never carries them', () => {
+    expectTypeOf<
+      InferStaticState<typeof recommendationEngineDefinition>['controllers']['popularViewed']
+    >().not.toHaveProperty('productId');
+  });
+
+  it('should let code that is generic over the solution type reach cart and context', () => {
+    function readUniversalControllers<TSolutionType extends SolutionType>(
+      staticState: InferStaticState<CommerceEngineDefinition<{}, TSolutionType>>,
+      hydratedState: InferHydratedState<CommerceEngineDefinition<{}, TSolutionType>>
+    ) {
+      expectTypeOf(staticState.controllers.cart).toHaveProperty('state');
+      expectTypeOf(hydratedState.controllers.cart).toHaveProperty('empty');
+      expectTypeOf(hydratedState.controllers.context).toHaveProperty('state');
+    }
+    expectTypeOf(readUniversalControllers).toBeFunction();
+  });
+
+  it('should hydrate the controllers of the page as live controllers', () => {
+    expectTypeOf<ListingHydratedState['controllers']['productList']>().toHaveProperty('subscribe');
+    expectTypeOf<ListingHydratedState['controllers']['parameterManager']>().toHaveProperty(
+      'synchronize'
+    );
+    expectTypeOf<
+      InferHydratedState<typeof standaloneEngineDefinition>['controllers']
+    >().not.toHaveProperty('parameterManager');
   });
 });

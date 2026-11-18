@@ -1,10 +1,9 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {CoreEngine, CoreEngineNext} from '../../../app/engine.js';
-import type {SearchEngineOptions} from '../../../app/search-engine/search-engine.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {ControllersMap, ControllersPropsMap} from '../../common/types/controllers.js';
 import type {HasKeys} from '../../common/types/utilities.js';
-import type {SSRSearchEngine} from './build.js';
+import type {SSRSearchEngine, SSRSearchEngineOptions} from './build.js';
 import type {ControllerDefinitionsMap} from './controller-definition.js';
 import type {
   InferControllerPropsMapFromDefinitions,
@@ -25,15 +24,23 @@ type ValidateControllerNames<T extends SearchControllerDefinitionsMap> = {
 /**
  * The options to create a search engine definition in SSR.
  *
+ * The navigator context is per-request data: it is passed to `fetchStaticState()` rather than to the
+ * engine definition.
+ *
  * @group Engine
  */
 export type SearchEngineDefinitionOptions<
   TControllers extends SearchControllerDefinitionsMap = {},
-> = SearchEngineOptions & {
+> = SSRSearchEngineOptions & {
   /**
    * The controllers to initialize with the search engine.
    */
   controllers?: ValidateControllerNames<TControllers>;
+  /**
+   * Not supported: the navigator context is per-request data. Pass `navigatorContext` to
+   * `fetchStaticState()` instead.
+   */
+  navigatorContextProvider?: 'ERROR: navigatorContextProvider is removed. Pass navigatorContext to fetchStaticState() instead.';
 };
 
 export interface SearchEngineDefinition<

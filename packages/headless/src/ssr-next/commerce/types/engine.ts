@@ -26,6 +26,9 @@ type ValidateControllerNames<T extends ControllerDefinitionsMap<Controller>> = {
 
 /**
  * The options to create a Commerce engine definition in SSR.
+ *
+ * The context, the cart and the navigator context are per-request data: they are passed to
+ * `fetchStaticState()` rather than to the engine definition.
  */
 export type CommerceEngineDefinitionOptions<
   TControllers extends ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
@@ -34,6 +37,11 @@ export type CommerceEngineDefinitionOptions<
    * The controllers to initialize with the commerce engine.
    */
   controllers?: ValidateControllerNames<TControllers>;
+  /**
+   * Not supported: the navigator context is per-request data. Pass `navigatorContext` to
+   * `fetchStaticState()` instead.
+   */
+  navigatorContextProvider?: 'ERROR: navigatorContextProvider is removed. Pass navigatorContext to fetchStaticState() instead.';
 };
 
 export interface CommerceEngineDefinition<

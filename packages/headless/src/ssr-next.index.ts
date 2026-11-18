@@ -64,8 +64,8 @@ export type {NavigatorContext, NavigatorContextProvider} from './app/navigator-c
 export type {
   SearchConfigurationOptions,
   SearchEngineConfiguration,
-  SearchEngineOptions,
 } from './app/search-engine/search-engine.js';
+export type {SSRSearchEngineOptions as SearchEngineOptions} from './ssr-next/search/types/build.js';
 export {getSampleSearchEngineConfiguration} from './app/search-engine/search-engine.js';
 export type {ErrorPayload} from './controllers/controller/error-payload.js';
 //#region Controllers

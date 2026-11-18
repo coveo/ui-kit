@@ -49,6 +49,5 @@ export type InferControllerStaticStateMapFromDefinitionsWithSolutionType<
 > = {
   [
     K in keyof TControllers as HasKey<TControllers[K], TSolutionType> extends never ? never : K
-  ]: InferControllerStaticStateFromController<InferControllerFromDefinition<TControllers[K]>> &
-    InferControllerPropsFromDefinition<TControllers[K]>;
+  ]: InferControllerStaticStateFromController<InferControllerFromDefinition<TControllers[K]>>;
 };
