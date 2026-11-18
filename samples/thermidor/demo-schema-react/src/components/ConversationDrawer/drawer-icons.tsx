@@ -1,8 +1,9 @@
 import type {ReactNode} from 'react';
 
-function Icon({children}: {children: ReactNode}) {
+function Icon({children, className}: {children: ReactNode; className?: string}) {
   return (
     <svg
+      className={className}
       viewBox="0 0 24 24"
       width="18"
       height="18"
@@ -50,6 +51,16 @@ export function KebabIcon() {
       <circle cx="12" cy="5" r="1" fill="currentColor" />
       <circle cx="12" cy="12" r="1" fill="currentColor" />
       <circle cx="12" cy="19" r="1" fill="currentColor" />
+    </Icon>
+  );
+}
+
+/** A wheel the size of the other icons, which `className` spins. */
+export function SpinnerIcon({className}: {className?: string}) {
+  return (
+    <Icon className={className}>
+      <circle cx="12" cy="12" r="8" opacity="0.25" />
+      <path d="M12 4a8 8 0 0 1 8 8" />
     </Icon>
   );
 }

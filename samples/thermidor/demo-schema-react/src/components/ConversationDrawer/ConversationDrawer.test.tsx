@@ -46,6 +46,15 @@ async function ask({session}: ReturnType<typeof renderApp>, prompt: string) {
 
 const NOT_READY = 'Available once the conversation is ready';
 
+/** Whether "New conversation" shows that it waits: busy, and described by why, out of sight. */
+function waits(newConversation: HTMLElement) {
+  const reason = newConversation.getAttribute('aria-describedby');
+  return {
+    busy: newConversation.getAttribute('aria-busy') === 'true',
+    reason: reason && document.getElementById(reason)?.textContent,
+  };
+}
+
 const toggle = () => screen.getByRole('button', {name: 'Conversations'});
 const drawer = () => screen.getByRole('navigation', {name: 'Conversations'});
 const entries = () =>
@@ -217,7 +226,8 @@ describe('ConversationDrawer', () => {
     const newConversation = within(drawer()).getByRole('button', {name: 'New conversation'});
     await waitFor(() => expect(newConversation.getAttribute('aria-disabled')).toBe('true'));
 
-    expect(screen.getByText(NOT_READY).id).toBe(newConversation.getAttribute('aria-describedby'));
+    expect(waits(newConversation)).toEqual({busy: true, reason: NOT_READY});
+    expect(entries()[1].title).toBe(NOT_READY);
     expect(entries().map((entry) => entry.getAttribute('aria-disabled'))).toEqual([null, 'true']);
     fireEvent.click(newConversation);
     fireEvent.click(entries()[1]);
@@ -231,7 +241,7 @@ describe('ConversationDrawer', () => {
 
     await act(async () => finish());
     await waitFor(() => expect(newConversation.getAttribute('aria-disabled')).toBeNull());
-    expect(screen.queryByText(NOT_READY)).toBeNull();
+    expect(waits(newConversation)).toEqual({busy: false, reason: null});
   });
 
   it('waits while the session opens', async () => {
@@ -244,7 +254,7 @@ describe('ConversationDrawer', () => {
     fireEvent.click(toggle());
     const newConversation = within(drawer()).getByRole('button', {name: 'New conversation'});
     await waitFor(() => expect(newConversation.getAttribute('aria-disabled')).toBe('true'));
-    expect(screen.getByText(NOT_READY)).toBeDefined();
+    expect(waits(newConversation)).toEqual({busy: true, reason: NOT_READY});
 
     await act(async () => open());
 
@@ -275,6 +285,6 @@ describe('ConversationDrawer', () => {
     act(() => end(app, fail));
 
     await waitFor(() => expect(newConversation.getAttribute('aria-disabled')).toBeNull());
-    expect(screen.queryByText(NOT_READY)).toBeNull();
+    expect(waits(newConversation)).toEqual({busy: false, reason: null});
   });
 });

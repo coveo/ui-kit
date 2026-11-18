@@ -2,12 +2,9 @@ import {useEffect, useId, useRef, useSyncExternalStore, type RefObject} from 're
 import {useConversations, useSession} from '../../context/session.js';
 import {isBlocking} from '../../a2ui/session-request.js';
 import {useMediaQuery} from '../../hooks/use-media-query.js';
-import {ConversationRow} from './ConversationRow.js';
-import {ComposeIcon} from './drawer-icons.js';
+import {ConversationRow, NOT_READY} from './ConversationRow.js';
+import {ComposeIcon, SpinnerIcon} from './drawer-icons.js';
 import styles from './ConversationDrawer.module.css';
-
-/** Why the drawer cannot swap the conversation while it sends a request, which would cancel it. */
-const NOT_READY = 'Available once the conversation is ready';
 
 interface ConversationDrawerProps {
   id: string;
@@ -22,7 +19,8 @@ interface ConversationDrawerProps {
  * On a narrow screen it slides over the page, and closes once a conversation opens or on a press
  * outside. Deleting a conversation moves the focus to the next one, or to "New conversation".
  * While the current conversation sends a request, the drawer does not swap it out: starting,
- * opening another and deleting the current one wait, with a line that says why.
+ * opening another and deleting the current one wait, while a spinner takes the place of the
+ * "New conversation" icon.
  */
 export function ConversationDrawer({id, toggleRef, onClose}: ConversationDrawerProps) {
   const {list, currentId, start, open, remove, rename} = useConversations();
@@ -86,17 +84,17 @@ export function ConversationDrawer({id, toggleRef, onClose}: ConversationDrawerP
         type="button"
         className={styles.start}
         aria-disabled={running || undefined}
+        aria-busy={running || undefined}
         aria-describedby={blockedBy}
+        title={running ? NOT_READY : undefined}
         onClick={() => !running && pick(start)}
       >
-        <ComposeIcon />
+        {running ? <SpinnerIcon className={styles.spinner} /> : <ComposeIcon />}
         New conversation
       </button>
-      {running && (
-        <p id={reasonId} className={styles.notReady}>
-          {NOT_READY}
-        </p>
-      )}
+      <span id={reasonId} className={styles.visuallyHidden}>
+        {NOT_READY}
+      </span>
       {list.length === 0 ? (
         <p className={styles.empty}>No saved conversations yet.</p>
       ) : (

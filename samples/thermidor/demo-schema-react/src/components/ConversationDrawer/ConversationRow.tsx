@@ -2,6 +2,9 @@ import {useEffect, useId, useRef, useState, type FocusEvent} from 'react';
 import {KebabIcon, PencilIcon, TrashIcon} from './drawer-icons.js';
 import styles from './ConversationDrawer.module.css';
 
+/** Why the drawer cannot swap the conversation while it sends a request, which would cancel it. */
+export const NOT_READY = 'Available once the conversation is ready';
+
 /** The room the menu needs below its row, or it opens upward. */
 const MENU_HEIGHT = 100;
 
@@ -129,6 +132,7 @@ export function ConversationRow({
         aria-current={current ? 'true' : undefined}
         aria-disabled={openBlockedBy ? true : undefined}
         aria-describedby={openBlockedBy}
+        title={openBlockedBy && NOT_READY}
         onClick={() => !openBlockedBy && onOpen()}
       >
         {title}
@@ -170,6 +174,7 @@ export function ConversationRow({
             className={styles.menuItem}
             aria-disabled={deleteBlockedBy ? true : undefined}
             aria-describedby={deleteBlockedBy}
+            title={deleteBlockedBy && NOT_READY}
             onClick={() => !deleteBlockedBy && onDelete()}
           >
             <TrashIcon />
