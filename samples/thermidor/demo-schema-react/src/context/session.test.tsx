@@ -320,7 +320,7 @@ describe('SessionProvider conversations', () => {
     expect(tab.list()).toEqual([]);
   });
 
-  it('saves the turn a swap stops', async () => {
+  it('saves the turn a swap stops, unless its conversation was deleted', async () => {
     const tab = browser().tab();
     const {session, conversations} = renderConversations(tab, (request, signal) =>
       request.message === 'wetsuits'
@@ -331,19 +331,26 @@ describe('SessionProvider conversations', () => {
           )
         : answerShell(request, signal)
     );
-    await ask(session(), 'surfboards');
-    const original = conversations().currentId;
-    void session().dispatchAction({name: 'submitPrompt', payload: {prompt: 'wetsuits'}});
-    await waitFor(() => expect(session().getSnapshot().request?.kind).toBe('prompt'));
+    const stop = async (swap: (id: string) => void) => {
+      await ask(session(), 'surfboards');
+      const id = conversations().currentId;
+      const stopped = session();
+      void stopped.dispatchAction({name: 'submitPrompt', payload: {prompt: 'wetsuits'}});
+      await waitFor(() => expect(stopped.getSnapshot().request?.kind).toBe('prompt'));
+      act(() => swap(id));
+      await waitFor(() => expect(stopped.getSnapshot().request).toBeUndefined());
+      return id;
+    };
 
-    act(() => conversations().start());
+    const swapped = await stop(() => conversations().start());
+    const deleted = await stop((id) => conversations().remove(id));
 
-    await waitFor(() =>
-      expect(tab.load(original)?.turns.map(({input}) => input.prompt)).toEqual([
-        'surfboards',
-        'wetsuits',
-      ])
-    );
+    expect(tab.load(swapped)?.turns.map(({input}) => input.prompt)).toEqual([
+      'surfboards',
+      'wetsuits',
+    ]);
+    expect(tab.list().map(({id}) => id)).toEqual([swapped]);
+    expect(tab.load(deleted)).toBeUndefined();
   });
 
   it('drops a conversation reloaded before its first turn was saved, and starts a new one', async () => {
@@ -365,29 +372,5 @@ describe('SessionProvider conversations', () => {
     expect(reloaded.conversations().currentId).not.toBe(listed);
     expect(reloaded.session().turns).toEqual([]);
     expect(tab.list()).toEqual([]);
-  });
-
-  it('keeps a conversation deleted while it answers deleted once its request ends', async () => {
-    const tab = browser().tab();
-    const {session, conversations} = renderConversations(tab, (request, signal) =>
-      request.message === 'wetsuits'
-        ? new Promise<Response>((_resolve, reject) =>
-            signal?.addEventListener('abort', () =>
-              reject(new DOMException('The request was aborted.', 'AbortError'))
-            )
-          )
-        : answerShell(request, signal)
-    );
-    await ask(session(), 'surfboards');
-    const deleted = conversations().currentId;
-    const stopped = session();
-    void stopped.dispatchAction({name: 'submitPrompt', payload: {prompt: 'wetsuits'}});
-    await waitFor(() => expect(stopped.getSnapshot().request?.kind).toBe('prompt'));
-
-    act(() => conversations().remove(deleted));
-    await waitFor(() => expect(stopped.getSnapshot().request).toBeUndefined());
-
-    expect(tab.list()).toEqual([]);
-    expect(tab.load(deleted)).toBeUndefined();
   });
 });
