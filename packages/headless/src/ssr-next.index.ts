@@ -455,6 +455,11 @@ export type {
 } from './ssr-next/search/controllers/url-manager/headless-url-manager.ssr.js';
 export {defineUrlManager} from './ssr-next/search/controllers/url-manager/headless-url-manager.ssr.js';
 export {MissingControllerProps} from './ssr-next/common/errors.js';
+export type {
+  BuildNavigatorContextOptions,
+  RequestHeaders,
+} from './ssr-next/common/navigator-context.js';
+export {buildNavigatorContext} from './ssr-next/common/navigator-context.js';
 export {defineSearchEngine} from './ssr-next/search/engine/search-engine.ssr.js';
 export type {
   BuildConfig,
