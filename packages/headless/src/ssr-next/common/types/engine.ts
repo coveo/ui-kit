@@ -1,10 +1,13 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {ControllerStaticStateMap} from './controllers.js';
 
-export interface EngineStaticState<
-  TSearchAction extends UnknownAction,
-  TControllers extends ControllerStaticStateMap,
-> {
+/**
+ * The part of a static state that every SSR engine definition returns: the actions to replay and the
+ * state of each controller.
+ *
+ * @typeParam TControllerStates - The state snapshot of each controller, by controller name.
+ */
+export interface EngineStaticState<TControllerStates extends ControllerStaticStateMap> {
   /**
    * An array of Redux actions representing completed search operations that were executed when the static state was fetched.
    *
@@ -14,13 +17,13 @@ export interface EngineStaticState<
    *
    * Each action contains the search results, metadata, and any error information from the Search API responses.
    */
-  searchActions: TSearchAction[];
+  searchActions: UnknownAction[];
 
   /**
    * A map of controller static states, where each key is the controller name and
    * each value contains the serializable state of that controller.
    */
-  controllers: TControllers;
+  controllers: TControllerStates;
 }
 
 /**

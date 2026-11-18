@@ -102,3 +102,49 @@ describe('the states of a commerce engine definition, as editors show them', () 
     );
   });
 });
+
+describe('the states of a search engine definition, as editors show them', () => {
+  const quickInfo = getQuickInfo(
+    'src/ssr-next',
+    `
+    import {
+      defineResultList,
+      defineSearchBox,
+      defineSearchEngine,
+      getSampleSearchEngineConfiguration,
+      type InferHydratedState,
+      type InferStaticState,
+      type NavigatorContext,
+    } from '../ssr-next.index.js';
+
+    const {searchEngineDefinition} = defineSearchEngine({
+      configuration: getSampleSearchEngineConfiguration(),
+      controllers: {searchBox: defineSearchBox(), resultList: defineResultList()},
+    });
+    type StaticState = InferStaticState<typeof searchEngineDefinition>;
+    type HydratedState = InferHydratedState<typeof searchEngineDefinition>;
+
+    export async function render(navigatorContext: NavigatorContext) {
+      const staticState = await searchEngineDefinition.fetchStaticState({navigatorContext});
+      const hydratedState = await searchEngineDefinition.hydrateStaticState(staticState);
+      return {staticState, hydratedState};
+    }
+    `,
+    ['staticState', 'hydratedState', 'StaticState', 'HydratedState']
+  );
+  const controllers = '{ searchBox: SearchBoxDefinition; resultList: ResultListDefinition; }';
+
+  it('should name the static state after the controllers of the definition', () => {
+    expect(quickInfo.staticState).toBe(`const staticState: SearchStaticState<${controllers}>`);
+    expect(quickInfo.StaticState).toBe(`type StaticState = SearchStaticState<${controllers}>`);
+  });
+
+  it('should name the hydrated state after the controllers of the definition', () => {
+    expect(quickInfo.hydratedState).toBe(
+      `const hydratedState: SearchHydratedState<${controllers}>`
+    );
+    expect(quickInfo.HydratedState).toBe(
+      `type HydratedState = SearchHydratedState<${controllers}>`
+    );
+  });
+});

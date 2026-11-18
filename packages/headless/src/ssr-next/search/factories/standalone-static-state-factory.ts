@@ -26,7 +26,7 @@ export function fetchStandaloneStaticStateFactory<
 
     const searchActions: SearchCompletedAction[] = [];
 
-    const staticState = createStaticState<SearchCompletedAction, TControllerDefinitions>({
+    const staticState = createStaticState<TControllerDefinitions>({
       searchActions,
       controllers,
     });

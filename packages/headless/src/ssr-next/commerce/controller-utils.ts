@@ -13,14 +13,13 @@ import type {
 import type {CommerceStaticState} from './types/fetch-static-state.js';
 
 export function createStaticState<
-  TSearchAction extends UnknownAction,
   TControllerDefinitions extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 >({
   searchActions,
   controllers,
 }: {
-  searchActions: TSearchAction[];
+  searchActions: UnknownAction[];
   controllers: Record<string, Controller>;
 }) {
   return {
