@@ -8,6 +8,7 @@ import {defineProductList} from '../controllers/product-list/headless-product-li
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
 import type {BuildConfig} from '../types/build.js';
+import type {ContextOptions} from '../controllers/context/headless-context.ssr.js';
 import type {SolutionType} from '../types/controller-constants.js';
 import type {ControllerDefinitionsMap} from '../types/controller-definitions.js';
 import type {InferHydratedState, InferStaticState} from '../types/controller-inference.js';
@@ -104,6 +105,27 @@ describe('defineCommerceEngine', () => {
     expectTypeOf<StandaloneFetchOptions['productId']>().toEqualTypeOf<string | undefined>();
   });
 
+  it('should keep a static state usable as the fetch options of its definition', () => {
+    expectTypeOf<ListingStaticState>().toMatchTypeOf<ListingFetchOptions>();
+    expectTypeOf<
+      InferStaticState<typeof searchEngineDefinition>
+    >().toMatchTypeOf<SearchFetchOptions>();
+    expectTypeOf<
+      InferStaticState<typeof standaloneEngineDefinition>
+    >().toMatchTypeOf<StandaloneFetchOptions>();
+  });
+
+  it('should always carry the view URL in the static state', () => {
+    expectTypeOf<ListingStaticState['context']['view']['url']>().toEqualTypeOf<string>();
+
+    function readViewUrl<TSolutionType extends SolutionType>(
+      staticState: CommerceStaticState<typeof controllers, TSolutionType>
+    ) {
+      expectTypeOf(staticState.context.view.url).toEqualTypeOf<string>();
+    }
+    expectTypeOf(readViewUrl).toBeFunction();
+  });
+
   it('should list the controllers of each kind of page in its static state', () => {
     expectTypeOf<ListingStaticState['controllers']>().toHaveProperty('productList');
     expectTypeOf<ListingStaticState['controllers']>().toHaveProperty('cart');
@@ -185,6 +207,7 @@ describe('the static and hydrated states of a commerce engine definition', () =>
     > &
       BuildConfig<typeof controllers, TSolutionType> & {
         solutionType: TSolutionType;
+        context: ContextOptions;
         controllerProps?: ControllersPropsMap;
       };
     type Listing = CommerceStaticState<typeof controllers, SolutionType.listing>;
