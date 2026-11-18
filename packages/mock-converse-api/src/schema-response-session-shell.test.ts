@@ -1,5 +1,6 @@
 import {describe, it, expect} from 'vitest';
 import {converseSchemaResponses} from '@coveo/platform-mock-api/converse';
+import {groupsOf, PRODUCT_PROPERTIES} from './product-groups.test-utils.js';
 
 const session = {conversationSessionId: 'session-1', conversationToken: 'token-1'};
 
@@ -209,28 +210,6 @@ describe('fetchSuggestions', () => {
 });
 
 describe('fetchInstantProducts', () => {
-  const PRODUCT_PROPERTIES = new Set([
-    'permanentid',
-    'ec_name',
-    'ec_description',
-    'ec_shortdesc',
-    'ec_brand',
-    'ec_category',
-    'ec_price',
-    'ec_promo_price',
-    'ec_images',
-    'ec_thumbnails',
-    'ec_in_stock',
-    'ec_rating',
-    'ec_color',
-    'ec_item_group_id',
-    'ec_item_group_name',
-    'clickUri',
-    'additionalFields',
-    'children',
-    'badgePlacements',
-  ]);
-
   async function openShell(keys = session) {
     const events = await readEvents(
       converseSchemaResponses.buildSchemaActionResponse({name: 'initialize', context: {}}, keys)
@@ -286,6 +265,18 @@ describe('fetchInstantProducts', () => {
     for (const product of write.value.products) {
       expect(Object.keys(product).filter((key) => !PRODUCT_PROPERTIES.has(key))).toEqual([]);
     }
+  });
+
+  it('writes the children of a product and their count', async () => {
+    const shellId = await openShell();
+
+    const {products} = (await instantProducts(shellId, 'wetsuits')).value;
+
+    expect(groupsOf(products)[1]).toEqual({
+      name: 'EcoWave Performance Wetsuit',
+      listed: 6,
+      total: 9,
+    });
   });
 
   it('matches every term of the query against name, brand and category', async () => {
@@ -447,7 +438,9 @@ describe('recent queries', () => {
     const surfaceId = await searchSurface(session);
     await session.restore(surfaceId, 'kayaks');
 
-    await readEvents(session.act('selectSort', {sortCriteria: 'relevance'}, surfaceId, 'sort-2'));
+    await readEvents(
+      session.act('selectSort', {sort: {sortCriteria: 'relevance'}}, surfaceId, 'sort-2')
+    );
 
     expect(await session.recentQueries()).toEqual(['kayaks', 'water sports']);
   });

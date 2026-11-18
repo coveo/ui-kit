@@ -11,8 +11,10 @@
 import {useEffect, useMemo, useRef, type ReactNode} from 'react';
 import {A2UIRenderer, useA2UI} from '@copilotkit/a2ui-renderer';
 import type {A2uiV09Message, DiscoveredSurface} from '@coveo/thermidor';
+import {turnSurfacesTarget} from './results-focus.js';
 import {A2UISkeleton} from './Skeleton/Skeleton.js';
 import {useActionError, useSurfaceLocked} from './session-request.js';
+import {EarlierTurnContext} from './surface-controls.js';
 import styles from './surfaces.module.css';
 
 /** The control a pointer press lands on, through its label when the press is on one. */
@@ -74,9 +76,9 @@ interface TurnSurfacesProps {
    */
   surfaces: readonly DiscoveredSurface[];
   /**
-   * Whether the shopper can act on these surfaces. The session only sends actions for the
-   * surfaces of its active turn, so the controls of earlier turns' blocks are disabled while
-   * their content stays readable. A disabled `fieldset` disables every control inside it.
+   * Whether these surfaces belong to the latest turn. The session only sends actions for the
+   * surfaces of its active turn, so an earlier turn disables the controls that act on its surfaces
+   * (see `actsOnSurface`), while its products can still be opened and added to the cart.
    */
   interactive: boolean;
   /** Whether the turn these surfaces belong to is still streaming. */
@@ -118,10 +120,11 @@ export function TurnSurfaces({surfaces, interactive, isStreaming}: TurnSurfacesP
     // local state when the turn stops being the active one.
     <fieldset
       ref={fieldsetRef}
+      {...turnSurfacesTarget}
       className={[styles.surfaces, !interactive && styles.readOnly, dimmed && styles.locked]
         .filter(Boolean)
         .join(' ')}
-      disabled={!interactive || locked}
+      disabled={locked}
       // Only set while locked: any global ARIA attribute makes browsers ignore `role="none"`.
       aria-busy={locked || undefined}
       onFocus={(event) => {
@@ -138,22 +141,24 @@ export function TurnSurfaces({surfaces, interactive, isStreaming}: TurnSurfacesP
           Earlier results. Ask a follow-up or search again to refine.
         </legend>
       )}
-      {surfaces.map(({surfaceId, rootComponentType, isLoading}) => {
-        return (
-          <section
-            className="catalog-surface"
-            aria-label={`A2-UI surface ${surfaceId}`}
-            key={surfaceId}
-          >
-            {isLoading ? (
-              <A2UISkeleton componentType={rootComponentType} />
-            ) : (
-              <A2UIRenderer surfaceId={surfaceId} />
-            )}
-            <ActionErrorNote surfaceId={surfaceId} />
-          </section>
-        );
-      })}
+      <EarlierTurnContext.Provider value={!interactive}>
+        {surfaces.map(({surfaceId, rootComponentType, isLoading}) => {
+          return (
+            <section
+              className="catalog-surface"
+              aria-label={`A2-UI surface ${surfaceId}`}
+              key={surfaceId}
+            >
+              {isLoading ? (
+                <A2UISkeleton componentType={rootComponentType} />
+              ) : (
+                <A2UIRenderer surfaceId={surfaceId} />
+              )}
+              <ActionErrorNote surfaceId={surfaceId} />
+            </section>
+          );
+        })}
+      </EarlierTurnContext.Provider>
     </fieldset>
   );
 }

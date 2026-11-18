@@ -71,6 +71,10 @@ export default class QuanticRecentQueriesList extends LightningElement {
   /** @type {boolean} */
   _isCollapsed = false;
 
+  get isExpanded() {
+    return !this.isCollapsed;
+  }
+
   /** @type {RecentQueriesState} */
   @track state;
 
@@ -138,6 +142,10 @@ export default class QuanticRecentQueriesList extends LightningElement {
 
   get hasQueries() {
     return !!this.queries.length;
+  }
+
+  get hasNoQueries() {
+    return !this.hasQueries;
   }
 
   get localStorageKey() {

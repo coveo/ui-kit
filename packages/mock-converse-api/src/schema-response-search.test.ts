@@ -1,6 +1,7 @@
 import {describe, it, expect, beforeEach} from 'vitest';
 import {converseSchemaResponses} from '@coveo/platform-mock-api/converse';
 import type {ConverseEvent} from '@coveo/platform-mock-api/converse';
+import {expectNormalizedGroups, groupsOf} from './product-groups.test-utils.js';
 
 const {matchSchemaPrompt, buildSearchActionEvents} = converseSchemaResponses;
 
@@ -72,7 +73,7 @@ function collectComponentState(events: ConverseEvent[]): Record<string, unknown>
 
 // The sorts Agent Gateway sends: relevance without fields, and each field sort with the Commerce
 // API's displayName on its field.
-const RELEVANCE_SORT = {sortCriteria: 'relevance', fields: []};
+const RELEVANCE_SORT = {sortCriteria: 'relevance'};
 const PRICE_ASC_SORT = {
   sortCriteria: 'fields',
   fields: [{field: 'ec_price', direction: 'asc', displayName: 'Price (Low to High)'}],
@@ -294,6 +295,71 @@ describe('schema-response-search initial response totals', () => {
   });
 });
 
+describe('schema-response-search product groups', () => {
+  const productsFor = (prompt: string) =>
+    (
+      collectComponentState(matchSchemaPrompt(prompt))['product-list-2'] as {
+        products: Array<Record<string, unknown>>;
+      }
+    ).products;
+  const products = productsFor('water sports');
+  const kayaks = productsFor('kayaks');
+  const lifeJackets = productsFor('life jackets');
+
+  it('lists grouped and ungrouped products, some groups larger than their listed children', () => {
+    expect(groupsOf(products).slice(0, 8)).toEqual([
+      {name: 'HydroLite Sleeveless Wetsuit', listed: 3, total: 3},
+      {name: 'EcoWave Performance Wetsuit', listed: 6, total: 9},
+      {name: 'ArcticShield Full Drysuit', listed: undefined, total: undefined},
+      {name: 'SunSeeker Spring Wetsuit', listed: undefined, total: undefined},
+      {name: 'DeepBlue Diving Wetsuit', listed: undefined, total: undefined},
+      {name: 'TideRunner Junior Wetsuit', listed: undefined, total: undefined},
+      {name: 'WaveRider Shortboard Surfboard', listed: 2, total: 4},
+      {name: 'GlideMax Longboard Surfboard', listed: undefined, total: undefined},
+    ]);
+    expect(groupsOf(lifeJackets)).toEqual([
+      {name: 'SafeFloat Adult Life Jacket', listed: 4, total: 6},
+      {name: 'AquaGuard Kids Life Jacket', listed: undefined, total: undefined},
+    ]);
+  });
+
+  it('lists each product first among its children', () => {
+    expectNormalizedGroups([...products, ...kayaks, ...lifeJackets]);
+  });
+
+  it('gives each child its own color, price and link', () => {
+    const [, blue, red] = products[0].children as Array<Record<string, unknown>>;
+    expect(blue).toMatchObject({
+      ec_name: 'HydroLite Sleeveless Wetsuit',
+      ec_color: 'Blue',
+      ec_price: 99.99,
+    });
+    expect(red).toMatchObject({ec_color: 'Red', ec_price: 94.99});
+    expect(blue.clickUri).toBe(
+      `${products[0].clickUri}?variant=${String(blue.permanentid).split('/').at(-1)}`
+    );
+  });
+
+  it('keeps a child without imagery', () => {
+    const [riverRun] = kayaks;
+    const children = riverRun.children as Array<Record<string, unknown>>;
+    expect(children.map(({ec_images}) => ec_images)).toEqual([
+      riverRun.ec_images,
+      expect.any(Array),
+      [],
+    ]);
+  });
+
+  it('leaves the thumbnails of one group empty, as the catalog sends them', () => {
+    const [safeFloat] = lifeJackets;
+    const children = safeFloat.children as Array<Record<string, unknown>>;
+    expect([safeFloat, ...children].map(({ec_thumbnails}) => ec_thumbnails)).toEqual(
+      Array(children.length + 1).fill([])
+    );
+    expect(products[0].ec_thumbnails).toEqual(products[0].ec_images);
+  });
+});
+
 describe('schema-response-search action-driven recomputation', () => {
   // State persists across calls, so reset the surface to defaults before each test.
   beforeEach(() => {
@@ -313,7 +379,7 @@ describe('schema-response-search action-driven recomputation', () => {
 
   it('selectSort with the ascending price sort sorts by ascending price on page 0', () => {
     buildSearchActionEvents({name: 'selectPage', context: {page: 1}});
-    const events = buildSearchActionEvents({name: 'selectSort', context: PRICE_ASC_SORT});
+    const events = buildSearchActionEvents({name: 'selectSort', context: {sort: PRICE_ASC_SORT}});
     const components = collectComponentState(events);
     const pagination = components['pagination-2'] as Record<string, unknown>;
     const prices = productPrices(components);
@@ -326,8 +392,10 @@ describe('schema-response-search action-driven recomputation', () => {
     const events = buildSearchActionEvents({
       name: 'selectSort',
       context: {
-        sortCriteria: 'fields',
-        fields: [{field: 'ec_price', direction: 'desc', displayName: 'Most expensive first'}],
+        sort: {
+          sortCriteria: 'fields',
+          fields: [{field: 'ec_price', direction: 'desc', displayName: 'Most expensive first'}],
+        },
       },
     });
     const components = collectComponentState(events);
@@ -338,9 +406,9 @@ describe('schema-response-search action-driven recomputation', () => {
 
   it('selectSort with relevance restores the catalog order', () => {
     const relevancePrices = productPrices(collectComponentState(resetSurface()));
-    buildSearchActionEvents({name: 'selectSort', context: PRICE_DESC_SORT});
+    buildSearchActionEvents({name: 'selectSort', context: {sort: PRICE_DESC_SORT}});
     const components = collectComponentState(
-      buildSearchActionEvents({name: 'selectSort', context: RELEVANCE_SORT})
+      buildSearchActionEvents({name: 'selectSort', context: {sort: RELEVANCE_SORT}})
     );
     expect(appliedSort(components)).toEqual(RELEVANCE_SORT);
     expect(productPrices(components)).toEqual(relevancePrices);
@@ -350,7 +418,9 @@ describe('schema-response-search action-driven recomputation', () => {
     const components = collectComponentState(
       buildSearchActionEvents({
         name: 'selectSort',
-        context: {sortCriteria: 'fields', fields: [{field: 'ec_rating', direction: 'asc'}]},
+        context: {
+          sort: {sortCriteria: 'fields', fields: [{field: 'ec_rating', direction: 'asc'}]},
+        },
       })
     );
     expect(appliedSort(components)).toEqual(RELEVANCE_SORT);
@@ -403,7 +473,7 @@ describe('schema-response-search stateful surface across actions', () => {
   });
 
   it('preserves the sort criteria when changing page after sorting', () => {
-    buildSearchActionEvents({name: 'selectSort', context: PRICE_ASC_SORT});
+    buildSearchActionEvents({name: 'selectSort', context: {sort: PRICE_ASC_SORT}});
     const events = buildSearchActionEvents({name: 'selectPage', context: {page: 1}});
     const components = collectComponentState(events);
     const pagination = components['pagination-2'] as Record<string, unknown>;
@@ -426,7 +496,7 @@ describe('schema-response-search stateful surface across actions', () => {
       context: {value: 'Billabong'},
       sourceComponentId: 'facet-brand-2',
     });
-    const events = buildSearchActionEvents({name: 'selectSort', context: PRICE_DESC_SORT});
+    const events = buildSearchActionEvents({name: 'selectSort', context: {sort: PRICE_DESC_SORT}});
     const components = collectComponentState(events);
     const productList = components['product-list-2'] as Record<string, unknown>;
     for (const product of productList.products as Array<Record<string, unknown>>) {
@@ -435,7 +505,7 @@ describe('schema-response-search stateful surface across actions', () => {
   });
 
   it('resets the view to defaults when the initial water sports response is rebuilt', () => {
-    buildSearchActionEvents({name: 'selectSort', context: PRICE_DESC_SORT});
+    buildSearchActionEvents({name: 'selectSort', context: {sort: PRICE_DESC_SORT}});
     buildSearchActionEvents({name: 'setPageSize', context: {pageSize: 6}});
     buildSearchActionEvents({name: 'selectPage', context: {page: 2}});
     buildSearchActionEvents({
@@ -674,7 +744,7 @@ describe('schema-response-search breadbox', () => {
   });
 
   it('returns to the first page on clearAll, preserving the sort and page size', () => {
-    act('selectSort', PRICE_ASC_SORT);
+    act('selectSort', {sort: PRICE_ASC_SORT});
     act('toggleSelect', {value: 'Billabong'}, 'facet-brand-2');
     act('setPageSize', {pageSize: 1});
     expect(page(act('selectPage', {page: 1}))).toBe(1);
@@ -813,17 +883,28 @@ describe('schema-response-search restoreState', () => {
   }
 
   it('restores the query, page, page size and sort', () => {
-    act('selectSort', PRICE_DESC_SORT);
-    const components = restore({page: 2, pageSize: 6, sortCriteria: 'relevance'});
+    act('selectSort', {sort: PRICE_DESC_SORT});
+    const components = restore({page: 2, pageSize: 6, sort: RELEVANCE_SORT});
     expect((components['query-summary-2'] as Record<string, unknown>).query).toBe('surf');
     expect(components['pagination-2']).toMatchObject({page: 2, pageSize: 6});
     expect(appliedSort(components)).toEqual(RELEVANCE_SORT);
   });
 
-  it('restores a field sort, which the payload names without its fields, as relevance', () => {
-    act('selectSort', PRICE_DESC_SORT);
-    const components = restore({sortCriteria: 'fields'});
-    expect(appliedSort(components)).toEqual(RELEVANCE_SORT);
+  it('restores a field sort with its label and its order', () => {
+    const components = restore({sort: PRICE_ASC_SORT});
+    const prices = productPrices(components);
+    expect(appliedSort(components)).toEqual(PRICE_ASC_SORT);
+    expect(prices).toEqual([...prices].sort((a, b) => a - b));
+  });
+
+  it('restores relevance when the payload has no sort', () => {
+    act('selectSort', {sort: PRICE_DESC_SORT});
+    expect(appliedSort(restore({}))).toEqual(RELEVANCE_SORT);
+  });
+
+  it('ignores the old sortCriteria key and restores relevance', () => {
+    act('selectSort', {sort: PRICE_DESC_SORT});
+    expect(appliedSort(restore({sortCriteria: 'fields'}))).toEqual(RELEVANCE_SORT);
   });
 
   it('restores the selected values of a regular facet', () => {
@@ -863,9 +944,64 @@ describe('schema-response-search restoreState', () => {
     act('toggleSelect', {value: 'Hurley'}, 'facet-brand-2');
     act('toggleSelect', {value: 'Xcel'}, 'facet-brand-2');
     act('toggleSelect', {start: 0, end: 100}, 'facet-price-2');
-    act('selectSort', PRICE_DESC_SORT);
+    act('selectSort', {sort: PRICE_DESC_SORT});
     const components = restore({});
     expect(breadboxFacets(components)).toEqual([]);
     expect(appliedSort(components)).toEqual(RELEVANCE_SORT);
+  });
+});
+
+describe('schema-response-search sort rejections', () => {
+  const session = {conversationSessionId: 'sort-session', conversationToken: 'sort-token'};
+  const RESTORE = {query: 'surf', page: 0, pageSize: 12};
+  const rejected = (errorCode: string) => ({
+    status: 400,
+    body: {errorCode, message: expect.any(String)},
+  });
+
+  beforeEach(() => {
+    resetSurface();
+  });
+
+  async function respond(name: string, context: Record<string, unknown>) {
+    const response = await converseSchemaResponses.buildSchemaActionResponse(
+      {name, context, sourceComponentId: name === 'selectSort' ? 'sort-2' : 'root'},
+      session
+    );
+    return {
+      status: response.status,
+      body: response.status === 400 ? await response.json() : undefined,
+    };
+  }
+
+  it.each([
+    ['selectSort', 'no sort', {}],
+    ['selectSort', 'the old flat payload', PRICE_ASC_SORT],
+    ['selectSort', 'a field sort without fields', {sort: {sortCriteria: 'fields', fields: []}}],
+    [
+      'selectSort',
+      'a field sort that names no field',
+      {sort: {sortCriteria: 'fields', fields: [{}]}},
+    ],
+    ['restoreState', 'a field sort without fields', {...RESTORE, sort: {sortCriteria: 'fields'}}],
+  ])('rejects %s with %s as not applicable, as the gateway does', async (name, _, context) => {
+    expect(await respond(name, context)).toEqual(rejected('AGENT:ACTION_NOT_APPLICABLE'));
+  });
+
+  it.each([
+    ['selectSort', 'an unknown sortCriteria', {sort: {sortCriteria: 'date'}}],
+    ['selectSort', 'a sort without sortCriteria', {sort: {fields: PRICE_ASC_SORT.fields}}],
+    ['restoreState', 'an unknown sortCriteria', {...RESTORE, sort: {sortCriteria: 'date'}}],
+  ])('rejects %s with %s as invalid JSON, as the gateway does', async (name, _, context) => {
+    expect(await respond(name, context)).toEqual(rejected('INVALID_JSON'));
+  });
+
+  it.each([
+    ['selectSort', 'a price sort', {sort: PRICE_ASC_SORT}],
+    ['restoreState', 'no sort', RESTORE],
+    ['restoreState', 'the old sortCriteria key', {...RESTORE, sortCriteria: 'fields'}],
+    ['restoreState', 'a price sort', {...RESTORE, sort: PRICE_ASC_SORT}],
+  ])('accepts %s with %s', async (name, _, context) => {
+    expect((await respond(name, context)).status).toBe(200);
   });
 });

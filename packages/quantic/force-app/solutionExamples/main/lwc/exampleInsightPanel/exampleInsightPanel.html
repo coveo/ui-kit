@@ -46,7 +46,7 @@
                 </div>
               </c-quantic-refine-toggle>
             </div>
-            <template if:true={userActionsReady}>
+            <template lwc:if={userActionsReady}>
               <div class="slds-var-p-left_x-small">
                 <c-quantic-user-actions-toggle
                   engine-id={engineId}

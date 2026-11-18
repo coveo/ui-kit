@@ -1,7 +1,9 @@
-import {describe, it, expect, afterEach} from 'vitest';
-import {screen, fireEvent, cleanup, waitFor, act} from '@testing-library/react';
-import type {PageSizeProps, PaginationProps, SortProps} from '@coveo/thermidor-schema';
+import {describe, it, expect, afterEach, beforeEach, vi, type Mock} from 'vitest';
+import {screen, fireEvent, cleanup, waitFor, act, within} from '@testing-library/react';
+import type {PageSizeProps, PaginationProps, Product, SortProps} from '@coveo/thermidor-schema';
+import type {PropsWithChildren} from 'react';
 import {mountSurface} from './mount-surface.harness.js';
+import {turnStartTarget, turnSurfacesTarget} from './results-focus.js';
 
 afterEach(cleanup);
 
@@ -116,11 +118,223 @@ describe('PageSize', () => {
   });
 });
 
+describe('Page change focus', () => {
+  let scrollIntoView: Mock;
+
+  beforeEach(() => {
+    scrollIntoView = vi.fn();
+    Element.prototype.scrollIntoView = scrollIntoView;
+  });
+
+  afterEach(() => {
+    delete (Element.prototype as Partial<Element>).scrollIntoView;
+    document.querySelectorAll('[data-earlier-turn]').forEach((turn) => turn.remove());
+  });
+
+  /** An earlier turn with results of its own, ahead of the surface in the page. */
+  function addEarlierTurn() {
+    const earlierTurn = document.createElement('div');
+    earlierTurn.setAttribute('data-earlier-turn', '');
+    earlierTurn.setAttribute('data-turn-start', '');
+    earlierTurn.innerHTML =
+      '<fieldset data-turn-surfaces><div data-product-list>' +
+      '<article role="listitem" tabindex="-1">Earlier product</article></div></fieldset>';
+    document.body.prepend(earlierTurn);
+  }
+
+  function products(page: number): Product[] {
+    return [1, 2].map((n) => ({
+      permanentid: `p${page}-${n}`,
+      ec_name: `Page ${page} product ${n}`,
+      ec_price: 10 * n,
+      additionalFields: {},
+    }));
+  }
+
+  /** Holds the request in flight until `answer` or `fail`: the surface stays locked meanwhile. */
+  function held() {
+    let settle!: {resolve: () => void; reject: (error: Error) => void};
+    const pending = new Promise<void>((resolve, reject) => (settle = {resolve, reject}));
+    const end = (finish: () => void) =>
+      act(async () => {
+        finish();
+        await pending.catch(() => undefined);
+      });
+    return {
+      gate: () => pending,
+      answer: () => end(settle.resolve),
+      fail: () => end(() => settle.reject(new Error('Page change failed'))),
+    };
+  }
+
+  function Turn({children}: PropsWithChildren) {
+    return (
+      <div role="article" aria-label="Current turn" {...turnStartTarget}>
+        <fieldset {...turnSurfacesTarget}>{children}</fieldset>
+      </div>
+    );
+  }
+
+  function mountResults(dispatchGate: () => Promise<void>, wrapper?: typeof Turn) {
+    return mountSurface({
+      component: {
+        component: 'LayoutStack',
+        direction: 'column',
+        children: ['size', 'list', 'pages'],
+      },
+      children: [
+        {id: 'size', component: 'PageSize', pageSize: {path: '/state/pagination/pageSize'}},
+        {id: 'list', component: 'ProductList', products: {path: '/state/list/products'}},
+        {
+          id: 'pages',
+          component: 'Pagination',
+          page: {path: '/state/pagination/page'},
+          pageSize: {path: '/state/pagination/pageSize'},
+          totalEntries: {path: '/state/pagination/totalEntries'},
+          totalPages: {path: '/state/pagination/totalPages'},
+        },
+      ],
+      dataModel: [
+        {path: '/state/list/products', value: products(2)},
+        {
+          path: '/state/pagination',
+          value: {page: 1, pageSize: 12, totalEntries: 60, totalPages: 5},
+        },
+      ],
+      dispatchGate,
+      wrapper,
+    });
+  }
+
+  const productList = () => screen.getByRole('list', {name: 'Product list'});
+  const firstProduct = () => within(productList()).getAllByRole('listitem')[0];
+
+  async function changePage(label: string) {
+    await waitFor(() => expect(screen.getByLabelText(label)).toBeDefined());
+    fireEvent.click(screen.getByLabelText(label));
+  }
+
+  it.each(['Previous page', 'Next page', 'Page 4'])(
+    'scrolls to the results and focuses the first product once %s is answered',
+    async (label) => {
+      const request = held();
+      const {pushDataModel, lastAction} = mountResults(request.gate);
+
+      await changePage(label);
+      await waitFor(() => expect(lastAction()?.name).toBe('selectPage'));
+      expect(scrollIntoView).not.toHaveBeenCalled();
+      expect(document.activeElement).toBe(document.body);
+
+      pushDataModel([{path: '/state/list/products', value: products(3)}]);
+      await request.answer();
+
+      await waitFor(() => expect(document.activeElement).toBe(firstProduct()));
+      expect(firstProduct().textContent).toContain('Page 3 product 1');
+      expect(scrollIntoView).toHaveBeenCalledExactlyOnceWith({block: 'start'});
+      expect(scrollIntoView.mock.contexts[0]).toBe(productList());
+    }
+  );
+
+  it('scrolls to the results and focuses the first product once a page size is answered', async () => {
+    const request = held();
+    const {pushDataModel} = mountResults(request.gate);
+
+    await waitFor(() => expect(screen.getByLabelText(/Products per page/)).toBeDefined());
+    fireEvent.change(screen.getByLabelText(/Products per page/), {target: {value: '48'}});
+    pushDataModel([
+      {path: '/state/list/products', value: products(1)},
+      {path: '/state/pagination', value: {page: 0, pageSize: 48, totalEntries: 60, totalPages: 2}},
+    ]);
+    await request.answer();
+
+    await waitFor(() => expect(document.activeElement).toBe(firstProduct()));
+    expect(scrollIntoView.mock.contexts).toEqual([productList()]);
+  });
+
+  it('scrolls back to the start of the turn holding the results', async () => {
+    const request = held();
+    mountResults(request.gate, Turn);
+
+    await changePage('Next page');
+    await request.answer();
+
+    await waitFor(() => expect(document.activeElement).toBe(firstProduct()));
+    expect(scrollIntoView).toHaveBeenCalledExactlyOnceWith({block: 'start'});
+    expect(scrollIntoView.mock.contexts).toEqual([
+      screen.getByRole('article', {name: 'Current turn'}),
+    ]);
+  });
+
+  it("leaves an earlier turn's results alone", async () => {
+    addEarlierTurn();
+    const request = held();
+    mountResults(request.gate, Turn);
+
+    await changePage('Next page');
+    await request.answer();
+
+    await waitFor(() => expect(document.activeElement).toBe(firstProduct()));
+    expect(scrollIntoView.mock.contexts).toEqual([
+      screen.getByRole('article', {name: 'Current turn'}),
+    ]);
+  });
+
+  it("leaves an earlier turn's results alone when the new page has no products", async () => {
+    addEarlierTurn();
+    const request = held();
+    const {pushDataModel} = mountResults(request.gate, Turn);
+
+    await changePage('Next page');
+    pushDataModel([{path: '/state/list/products', value: []}]);
+    await request.answer();
+
+    await waitFor(() => expect(screen.queryByRole('list', {name: 'Product list'})).toBeNull());
+    await waitFor(() =>
+      expect((screen.getByLabelText('Next page') as HTMLButtonElement).disabled).toBe(false)
+    );
+    expect(scrollIntoView).not.toHaveBeenCalled();
+    expect(document.activeElement).toBe(document.body);
+  });
+
+  it('leaves scroll and focus alone when the page change fails', async () => {
+    const request = held();
+    mountResults(request.gate);
+
+    await changePage('Next page');
+    await request.fail();
+
+    await waitFor(() =>
+      expect((screen.getByLabelText('Next page') as HTMLButtonElement).disabled).toBe(false)
+    );
+    expect(scrollIntoView).not.toHaveBeenCalled();
+    expect(document.activeElement).toBe(document.body);
+  });
+
+  it('leaves the focus where the shopper moved it while the page change was answered', async () => {
+    const elsewhere = document.createElement('a');
+    elsewhere.href = '#elsewhere';
+    document.body.append(elsewhere);
+    const request = held();
+    mountResults(request.gate);
+
+    await changePage('Next page');
+    elsewhere.focus();
+    await request.answer();
+
+    await waitFor(() =>
+      expect((screen.getByLabelText('Next page') as HTMLButtonElement).disabled).toBe(false)
+    );
+    expect(scrollIntoView).not.toHaveBeenCalled();
+    expect(document.activeElement).toBe(elsewhere);
+    elsewhere.remove();
+  });
+});
+
 describe('Sort', () => {
   const state: SortProps = {
-    appliedSort: {sortCriteria: 'relevance', fields: []},
+    appliedSort: {sortCriteria: 'relevance'},
     availableSorts: [
-      {sortCriteria: 'relevance', fields: []},
+      {sortCriteria: 'relevance'},
       {
         sortCriteria: 'fields',
         fields: [{field: 'ec_price', direction: 'asc', displayName: 'Price (Low to High)'}],
@@ -139,7 +353,7 @@ describe('Sort', () => {
     await waitFor(() =>
       expect(lastAction()).toMatchObject({
         name: 'selectSort',
-        context: {sortCriteria: 'fields', fields: [{field: 'ec_price', direction: 'asc'}]},
+        context: {sort: {sortCriteria: 'fields', fields: [{field: 'ec_price', direction: 'asc'}]}},
       })
     );
     expect((screen.getByLabelText(/Sort by/) as HTMLSelectElement).value).toBe('1');

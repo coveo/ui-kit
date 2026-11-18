@@ -1,5 +1,5 @@
 <template>
-  <template if:true={isStandalone}>
+  <template lwc:if={isStandalone}>
     <c-quantic-search-interface
       engine-id={standaloneEngineId}
       search-hub={searchHub}
@@ -17,7 +17,7 @@
       ></c-quantic-search-box-input>
     </c-quantic-search-interface>
   </template>
-  <template if:false={isStandalone}>
+  <template lwc:else>
     <c-quantic-search-box
       engine-id={engineId}
       placeholder={placeholder}
