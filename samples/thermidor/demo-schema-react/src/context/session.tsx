@@ -185,7 +185,8 @@ function openCurrent(storage: ConversationStorage, create: SessionFactory): Curr
  * Saves the conversation each time a request that updates it ends. When the session drops the
  * transcript it resumed, because the endpoint answered with another session, it becomes a new
  * conversation, so the saved one keeps its transcript. Once the session is swapped out, it is still
- * saved when the request it was sending ends.
+ * saved when the request it was sending ends. A new conversation is listed from its first turn,
+ * before it is saved; if the page reloads before that, it has nothing to restore and is dropped.
  */
 function persist(
   storage: ConversationStorage,
@@ -198,14 +199,22 @@ function persist(
   let boundSessionId = session.sessionId;
   let saving = savesAfter(session.getSnapshot().request);
   let swappedOut = false;
+  let listed = session.turns.length > 0;
   const unsubscribe = session.subscribe(() => {
     const {request, turns} = session.getSnapshot();
     if (session.sessionId !== boundSessionId) {
       if (boundSessionId !== undefined && turns.length === 0 && !swappedOut) {
         id = startWith(storage, session).id;
+        listed = false;
         onNewId(id);
       }
       boundSessionId = session.sessionId;
+    }
+    // Listed from its first prompt, so the drawer shows it while the answer streams.
+    if (!listed && turns.length > 0) {
+      listed = true;
+      storage.start(id, titleOf(turns[0].input));
+      onSaved();
     }
     if (saving && !request && turns.length > 0) {
       storage.save(id, titleOf(turns[0].input), session.serialize());

@@ -86,6 +86,22 @@ describe('createConversationStorage', () => {
     ]);
   });
 
+  it('lists a started conversation once, before it has anything to load', () => {
+    const {storage} = setup({max: 2});
+    storage.save('a', 'surfboards', serialized());
+    storage.save('b', 'wetsuits', serialized());
+
+    storage.start('c', 'life jackets');
+    storage.start('c', 'paddles');
+
+    expect(storage.list().map(({id, title}) => [id, title])).toEqual([
+      ['c', 'life jackets'],
+      ['b', 'wetsuits'],
+    ]);
+    expect(storage.load('c')).toBeUndefined();
+    expect(storage.load('a')).toBeUndefined();
+  });
+
   it('removes a conversation', () => {
     const {storage} = setup();
     storage.save('a', 'a', serialized());
