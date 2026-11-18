@@ -1,6 +1,7 @@
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {ControllerStaticState, ControllersPropsMap} from '../../common/types/controllers.js';
 import type {EngineStaticState} from '../../common/types/engine.js';
+import type {ContextOptions} from '../controllers/context/headless-context.ssr.js';
 import type {BuildConfig} from './build.js';
 import type {SolutionType} from './controller-constants.js';
 import type {BakedInControllers, ControllerDefinitionsMap} from './controller-definitions.js';
@@ -44,6 +45,11 @@ export type CommerceStaticState<
      * refuses a static state fetched by another engine definition.
      */
     solutionType: TSolutionType;
+    /**
+     * The commerce context of the request. `fetchStaticState()` always sets the URL of the page
+     * (`view.url`), taken from `navigatorContext.location` when it was left out.
+     */
+    context: ContextOptions;
     /**
      * The controller props that were passed to `fetchStaticState()` through the `controllers` option.
      * `hydrateStaticState()` reuses them to rebuild the controllers with the same props. They are sent
