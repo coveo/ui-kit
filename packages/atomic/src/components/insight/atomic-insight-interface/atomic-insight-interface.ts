@@ -23,6 +23,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
+import {warnDeprecatedOnce} from '@/src/utils/deprecation-utils';
 import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
 import {waitForAtomicChildrenToBeDefined} from '@/src/utils/initialization-common-utils';
 import {getAnalyticsConfig} from './analytics-config.js';
@@ -72,7 +73,7 @@ export class AtomicInsightInterface
     'CoveoAtomic',
     HEADLESS_VERSION
   );
-  public store: InsightStore; // TODO - (v4) KIT-5008: Make private
+  private insightStore: InsightStore;
 
   static styles: CSSResultGroup = css`
     :host {
@@ -178,7 +179,7 @@ export class AtomicInsightInterface
 
   public constructor() {
     super();
-    this.store = createInsightStore();
+    this.insightStore = createInsightStore();
     const {promise, resolve} = Promise.withResolvers<void>();
     this.i18Initialized = promise;
     this.i18n = i18next.createInstance(undefined, resolve);
@@ -186,7 +187,7 @@ export class AtomicInsightInterface
 
   public connectedCallback() {
     super.connectedCallback();
-    this.store.setLoadingFlag(FirstInsightRequestExecutedFlag);
+    this.insightStore.setLoadingFlag(FirstInsightRequestExecutedFlag);
 
     this.addEventListener('atomic/initializeComponent', this.handleInitialization as EventListener);
   }
@@ -232,7 +233,7 @@ export class AtomicInsightInterface
 
   @watch('iconAssetsPath')
   public updateIconAssetsPath(): void {
-    this.store.state.iconAssetsPath = this.iconAssetsPath;
+    this.insightStore.state.iconAssetsPath = this.iconAssetsPath;
   }
 
   @watch('language')
@@ -260,7 +261,7 @@ export class AtomicInsightInterface
     return {
       engine: this.engine!,
       i18n: this.i18n,
-      store: this.store,
+      store: this.insightStore,
       interfaceElement: this as AtomicInsightInterface,
     };
   }
@@ -302,15 +303,58 @@ export class AtomicInsightInterface
     this.bindings = this.getBindings();
     markParentAsReady(this);
     this.initResultsPerPage();
-    this.registerFieldsToInclude();
-    this.store.unsetLoadingFlag(FirstInsightRequestExecutedFlag);
+    this.dispatchFieldsToInclude();
+    this.insightStore.unsetLoadingFlag(FirstInsightRequestExecutedFlag);
     await waitForAtomicChildrenToBeDefined(this);
     await this.getUpdateComplete();
     this.initialized = true;
   }
 
-  // TODO - (v4) KIT-5008: Make private
+  // TODO - (v4) KIT-5008: Remove.
+  /**
+   * The store of the interface.
+   *
+   * @deprecated Use the `store` of the bindings that `initializeBindings` returns instead.
+   */
+  public get store(): InsightStore {
+    this.warnDeprecatedStore();
+    return this.insightStore;
+  }
+
+  public set store(store: InsightStore) {
+    this.warnDeprecatedStore();
+    this.insightStore = store;
+  }
+
+  // TODO - (v4) KIT-5008: Remove.
+  /**
+   * Registers the fields of `fields-to-include` with the engine.
+   *
+   * @deprecated Use `loadFieldActions(engine).registerFieldsToInclude` from `@coveo/headless/insight` instead.
+   */
   public registerFieldsToInclude() {
+    // The interface controller calls this method while the interface initializes, so only later calls come from user code.
+    if (this.initialized && this.engine) {
+      warnDeprecatedOnce(
+        this.engine.logger,
+        'The `registerFieldsToInclude` method of `atomic-insight-interface`',
+        'Use `loadFieldActions(engine).registerFieldsToInclude` from `@coveo/headless/insight` instead.'
+      );
+    }
+    this.dispatchFieldsToInclude();
+  }
+
+  private warnDeprecatedStore() {
+    if (this.engine) {
+      warnDeprecatedOnce(
+        this.engine.logger,
+        'The `store` property of `atomic-insight-interface`',
+        'Use the `store` of the bindings that `initializeBindings` returns instead.'
+      );
+    }
+  }
+
+  private dispatchFieldsToInclude() {
     if (this.fieldsToInclude.length) {
       this.engine!.dispatch(
         loadFieldActions(this.engine!).registerFieldsToInclude([...this.fieldsToInclude])
