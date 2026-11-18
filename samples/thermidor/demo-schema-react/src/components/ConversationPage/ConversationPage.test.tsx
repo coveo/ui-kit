@@ -24,7 +24,7 @@ afterEach(() => {
 describe('ConversationPage shell', () => {
   describe('scroll', () => {
     it.each([
-      ['a restored conversation from its end', 'complete', {top: 0}],
+      ['a restored conversation from its last prompt, at once', 'complete', {top: -20}],
       ['a new conversation from its turn', 'streaming', {top: -20, behavior: 'smooth'}],
     ] as const)('shows %s', (_name, status, expected) => {
       vi.stubGlobal('requestAnimationFrame', (callback: () => void) => {
