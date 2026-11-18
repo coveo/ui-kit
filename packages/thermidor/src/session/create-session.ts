@@ -527,7 +527,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   // An id without a token may not be the endpoint's: the session drops it if a request that may
   // have reserved it ends before the endpoint sends a token.
   const seed = config.sessionToRestore ?? config;
-  const unconfirmedSessionId = seed.sessionToken === undefined ? seed.sessionId : undefined;
+  let unconfirmedSessionId = seed.sessionToken === undefined ? seed.sessionId : undefined;
   const initialState: SessionStoreState<Turn> = config.sessionToRestore
     ? restoreSession(config.sessionToRestore)
     : {
@@ -935,21 +935,22 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
 
         const keys = readSessionKeys(event);
         if (keys) {
-          // A new id is a new session: the old token is not its token.
+          // A new id is a new session: the old token is not its token, and the id is unconfirmed
+          // until its own token arrives.
+          const sessionId = keys.sessionId ?? store.getState().sessionId;
+          if (sessionId !== store.getState().sessionId && keys.sessionToken === undefined) {
+            unconfirmedSessionId = sessionId;
+          }
           store.setState((current) => {
-            const sessionId = keys.sessionId ?? current.sessionId;
+            if (sessionId === current.sessionId) {
+              return {...current, sessionToken: keys.sessionToken ?? current.sessionToken};
+            }
             const resumedAnotherSession =
-              target.kind === 'initialization' &&
-              !action &&
-              current.sessionToken !== undefined &&
-              sessionId !== current.sessionId;
+              target.kind === 'initialization' && !action && current.sessionToken !== undefined;
             return {
               ...(resumedAnotherSession ? withoutTranscript(current) : current),
               sessionId,
-              sessionToken:
-                sessionId === current.sessionId
-                  ? (keys.sessionToken ?? current.sessionToken)
-                  : keys.sessionToken,
+              sessionToken: keys.sessionToken,
             };
           });
         }

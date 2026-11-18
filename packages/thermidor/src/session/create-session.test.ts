@@ -3053,16 +3053,26 @@ describe('createSession session keys', () => {
       expect(session.sessionToken).toBe(SESSION_TOKEN);
     });
 
-    it('drops the old token when the endpoint sends a new id without one', async () => {
-      const newId = '7c9e6679-7425-40de-944b-e07fc1f90ae7';
-      answerWith({type: 'RUN_STARTED', conversationSessionId: newId}, {type: 'RUN_FINISHED'});
-      const session = createSession(config(keys));
+    it.each([
+      ['fails', {type: 'RUN_ERROR', message: 'Agent failed'}],
+      ['finishes', {type: 'RUN_FINISHED'}],
+    ])(
+      'drops a replacement id whose token never came when the request %s, so the endpoint assigns one',
+      async (_, end) => {
+        const newId = '7c9e6679-7425-40de-944b-e07fc1f90ae7';
+        answerWith({type: 'RUN_STARTED', conversationSessionId: newId}, end);
+        const session = createSession(config(keys));
+        await session.dispatchAction(PROMPT);
 
-      await session.dispatchAction(PROMPT);
+        expect(session.sessionId).toBeUndefined();
+        expect(session.sessionToken).toBeUndefined();
+        answerWithKeys(SESSION_ID, 'token-1');
+        await session.dispatchAction(PROMPT);
 
-      expect(session.sessionId).toBe(newId);
-      expect(session.sessionToken).toBeUndefined();
-    });
+        expect(sent()[1].conversationSessionId).toBeUndefined();
+        expect(sent()[1].conversationToken).toBeUndefined();
+      }
+    );
 
     it('adopts the new keys the endpoint answers with, and sends them next', async () => {
       const newId = '7c9e6679-7425-40de-944b-e07fc1f90ae7';
