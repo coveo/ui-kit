@@ -24,9 +24,9 @@ vi.mock('@/src/utils/date-utils', () => {
   const parseDate = vi.fn((date) => {
     const d = new Date(date);
     // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
-    (d as any).format = vi.fn((_fmt: string) => {
-      return d.toISOString().split('T')[0];
-    });
+    (d as any).format = vi.fn((fmt: string) =>
+      fmt === 'YYYY-MM-DD' ? d.toISOString().split('T')[0] : `unexpected format ${fmt}`
+    );
     return d;
   });
   return {parseDate};
@@ -285,6 +285,79 @@ describe('atomic-commerce-breadbox', () => {
 
     const content = dateRange().element().textContent?.trim();
     expect(content).toContain('2023-01-01 to 2023-12-31');
+  });
+
+  describe('when formatting numerical range values', () => {
+    const numericalRangeBreadcrumb = (facetId: string, facetDisplayName: string) => ({
+      facetId,
+      facetDisplayName,
+      field: facetId,
+      type: 'numericalRange' as const,
+      values: [
+        {
+          value: {
+            start: 0,
+            end: 100,
+            endInclusive: true,
+            state: 'selected' as const,
+            numberOfResults: 1,
+            moreValuesAvailable: false,
+            isSuggested: false,
+            isAutoSelected: false,
+          },
+          deselect: vi.fn(),
+        },
+      ],
+    });
+
+    it('should format the ec_price range in the context currency', async () => {
+      await renderBreadbox({
+        state: {facetBreadcrumbs: [numericalRangeBreadcrumb('ec_price', 'Price')]},
+      });
+
+      await expect.element(page.getByTitle('Price')).toHaveTextContent('$0.00 to $100.00');
+    });
+
+    it('should format the ec_promo_price range in the context currency', async () => {
+      await renderBreadbox({
+        state: {facetBreadcrumbs: [numericalRangeBreadcrumb('ec_promo_price', 'Promo price')]},
+      });
+
+      await expect.element(page.getByTitle('Promo price')).toHaveTextContent('$0.00 to $100.00');
+    });
+
+    it('should format other numerical ranges as plain numbers', async () => {
+      await renderBreadbox({
+        state: {facetBreadcrumbs: [numericalRangeBreadcrumb('size', 'Size')]},
+      });
+
+      await expect.element(page.getByTitle('Size')).toHaveTextContent('0 to 100');
+      await expect.element(page.getByTitle('Size')).not.toHaveTextContent('$');
+    });
+  });
+
+  it('should log a warning and render an empty value for an unsupported breadcrumb type', async () => {
+    const {element, parts} = await renderBreadbox({
+      state: {
+        facetBreadcrumbs: [
+          {
+            facetId: 'location',
+            facetDisplayName: 'Location',
+            field: 'location',
+            type: 'location',
+            values: [
+              {
+                value: {value: 'Montreal', numberOfResults: 1, state: 'selected'},
+                deselect: vi.fn(),
+              },
+            ],
+          },
+        ],
+      },
+    });
+
+    expect(mockedEngine.logger.warn).toHaveBeenCalledWith('Unexpected breadcrumb type.');
+    expect(parts(element).breadcrumbValue?.textContent?.trim()).toBe('');
   });
 
   it('should show the correct number of breadcrumbs to expand when collapsed', async () => {
