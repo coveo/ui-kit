@@ -5,7 +5,14 @@ import {SessionProvider, useSession, type DemoSession} from '../../context/sessi
 import {createConversationStorage} from '../../conversations/conversation-storage.js';
 import {createFakeCartStore} from '../../test/fake-cart-store.js';
 import {memoryStorage} from '../../test/memory-storage.js';
-import {createTestSessionFactory} from '../../test/session.js';
+import {
+  answerShell,
+  createTestSessionFactory,
+  run,
+  shellRun,
+  sseResponse,
+  type ConverseHandler,
+} from '../../test/session.js';
 import {AppShell} from '../AppShell.js';
 
 afterEach(() => {
@@ -13,7 +20,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-function renderApp() {
+function renderApp(handler?: ConverseHandler) {
   const local = memoryStorage();
   const tab = memoryStorage();
   const storage = createConversationStorage({local: () => local, session: () => tab});
@@ -24,7 +31,7 @@ function renderApp() {
   }
   render(
     <CartProvider store={createFakeCartStore()}>
-      <SessionProvider createSession={createTestSessionFactory().create} storage={storage}>
+      <SessionProvider createSession={createTestSessionFactory(handler).create} storage={storage}>
         <Probe />
         <AppShell />
       </SessionProvider>
@@ -35,6 +42,17 @@ function renderApp() {
 
 async function ask({session}: ReturnType<typeof renderApp>, prompt: string) {
   await act(() => session().dispatchAction({name: 'submitPrompt', payload: {prompt}}));
+}
+
+const NOT_READY = 'Available once the conversation is ready';
+
+/** Whether "New conversation" shows that it waits: busy, and described by why, out of sight. */
+function waits(newConversation: HTMLElement) {
+  const reason = newConversation.getAttribute('aria-describedby');
+  return {
+    busy: newConversation.getAttribute('aria-busy') === 'true',
+    reason: reason && document.getElementById(reason)?.textContent,
+  };
 }
 
 const toggle = () => screen.getByRole('button', {name: 'Conversations'});
@@ -57,19 +75,14 @@ describe('ConversationDrawer', () => {
     expect(entries().map((entry) => entry.getAttribute('aria-current'))).toEqual(['true', null]);
   });
 
-  it('opens a saved conversation, and deletes one', async () => {
+  it('opens a saved conversation', async () => {
     const app = renderApp();
     await ask(app, 'surfboards');
     fireEvent.click(toggle());
     fireEvent.click(within(drawer()).getByRole('button', {name: 'New conversation'}));
 
     fireEvent.click(entries()[0]);
-    expect(app.session().turns).toHaveLength(1);
-
-    fireEvent.click(
-      within(drawer()).getByRole('button', {name: 'Delete conversation: surfboards'})
-    );
-    expect(within(drawer()).getByText('No saved conversations yet.')).toBeDefined();
+    expect(app.session().turns.map(({input}) => input.prompt)).toEqual(['surfboards']);
   });
 
   it('closes on a narrow screen once a conversation opens, or on a press outside', async () => {
@@ -100,5 +113,76 @@ describe('ConversationDrawer', () => {
 
     expect(screen.queryByRole('navigation', {name: 'Conversations'})).toBeNull();
     expect(document.activeElement).toBe(toggle());
+  });
+
+  it('keeps the running conversation while it answers', async () => {
+    let finish = () => {};
+    const app = renderApp((request, signal) =>
+      request.message === 'boots'
+        ? new Promise((resolve) => (finish = () => resolve(sseResponse(run([])))))
+        : answerShell(request, signal)
+    );
+    await ask(app, 'surfboards');
+    fireEvent.click(toggle());
+    fireEvent.click(within(drawer()).getByRole('button', {name: 'New conversation'}));
+    await ask(app, 'wetsuits');
+    void app.session().dispatchAction({name: 'submitPrompt', payload: {prompt: 'boots'}});
+    const newConversation = within(drawer()).getByRole('button', {name: 'New conversation'});
+    await waitFor(() => expect(newConversation.getAttribute('aria-disabled')).toBe('true'));
+
+    expect(waits(newConversation)).toEqual({busy: true, reason: NOT_READY});
+    expect(entries()[1].title).toBe(NOT_READY);
+    expect(entries().map((entry) => entry.getAttribute('aria-disabled'))).toEqual([null, 'true']);
+    fireEvent.click(newConversation);
+    fireEvent.click(entries()[1]);
+    expect(app.session().turns.map(({input}) => input.prompt)).toEqual(['wetsuits', 'boots']);
+
+    await act(async () => finish());
+    await waitFor(() => expect(newConversation.getAttribute('aria-disabled')).toBeNull());
+    expect(waits(newConversation)).toEqual({busy: false, reason: null});
+  });
+
+  it('waits while the session opens', async () => {
+    let open = () => {};
+    renderApp((request, signal) =>
+      request.action?.name === 'initialize'
+        ? new Promise((resolve) => (open = () => resolve(sseResponse(shellRun()))))
+        : answerShell(request, signal)
+    );
+    fireEvent.click(toggle());
+    const newConversation = within(drawer()).getByRole('button', {name: 'New conversation'});
+    await waitFor(() => expect(newConversation.getAttribute('aria-disabled')).toBe('true'));
+    expect(waits(newConversation)).toEqual({busy: true, reason: NOT_READY});
+
+    await act(async () => open());
+
+    await waitFor(() => expect(newConversation.getAttribute('aria-disabled')).toBeNull());
+  });
+
+  it.each([
+    ['fails', (app: ReturnType<typeof renderApp>, fail: () => void) => fail()],
+    ['is cancelled', (app: ReturnType<typeof renderApp>) => app.session().cancel()],
+  ])('is ready again once the request %s', async (_name, end) => {
+    let fail = () => {};
+    const app = renderApp((request, signal) =>
+      request.message === 'boots'
+        ? new Promise((resolve, reject) => {
+            fail = () => resolve(new Response('Unavailable', {status: 503}));
+            signal?.addEventListener('abort', () =>
+              reject(new DOMException('The request was aborted.', 'AbortError'))
+            );
+          })
+        : answerShell(request, signal)
+    );
+    await ask(app, 'surfboards');
+    fireEvent.click(toggle());
+    void app.session().dispatchAction({name: 'submitPrompt', payload: {prompt: 'boots'}});
+    const newConversation = within(drawer()).getByRole('button', {name: 'New conversation'});
+    await waitFor(() => expect(newConversation.getAttribute('aria-disabled')).toBe('true'));
+
+    act(() => end(app, fail));
+
+    await waitFor(() => expect(newConversation.getAttribute('aria-disabled')).toBeNull());
+    expect(waits(newConversation)).toEqual({busy: false, reason: null});
   });
 });

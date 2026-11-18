@@ -1,7 +1,9 @@
-import {useEffect, useRef, type RefObject} from 'react';
-import {useConversations} from '../../context/session.js';
+import {useEffect, useId, useRef, useSyncExternalStore, type RefObject} from 'react';
+import {useConversations, useSession} from '../../context/session.js';
+import {isBlocking} from '../../a2ui/session-request.js';
 import {useMediaQuery} from '../../hooks/use-media-query.js';
-import {CloseIcon} from '../../a2ui/icons/index.js';
+import {ConversationRow, NOT_READY} from './ConversationRow.js';
+import {ComposeIcon, SpinnerIcon} from './drawer-icons.js';
 import styles from './ConversationDrawer.module.css';
 
 interface ConversationDrawerProps {
@@ -13,11 +15,21 @@ interface ConversationDrawerProps {
 }
 
 /**
- * Lists the saved conversations, newest first, to open or delete one, and starts a new one. On a
- * narrow screen it slides over the page, and closes once a conversation opens or on a press outside.
+ * Lists the saved conversations, newest first, to open one, and starts a new one. On a narrow
+ * screen it slides over the page, and closes once a conversation opens or on a press outside.
+ * While the current conversation sends a request, the drawer does not swap it out: starting and
+ * opening another wait, while a spinner takes the place of the "New conversation" icon.
  */
 export function ConversationDrawer({id, toggleRef, onClose}: ConversationDrawerProps) {
-  const {list, currentId, start, open, remove} = useConversations();
+  const {list, currentId, start, open} = useConversations();
+  const session = useSession();
+  const running = useSyncExternalStore(
+    session.subscribe,
+    () => isBlocking(session.getSnapshot().request),
+    () => false
+  );
+  const reasonId = useId();
+  const blockedBy = running ? reasonId : undefined;
   const overlay = useMediaQuery('(max-width: 767px)');
   const drawerRef = useRef<HTMLElement>(null);
 
@@ -55,31 +67,33 @@ export function ConversationDrawer({id, toggleRef, onClose}: ConversationDrawerP
         }
       }}
     >
-      <button type="button" className={styles.start} onClick={() => pick(start)}>
+      <button
+        type="button"
+        className={styles.start}
+        aria-disabled={running || undefined}
+        aria-busy={running || undefined}
+        aria-describedby={blockedBy}
+        title={running ? NOT_READY : undefined}
+        onClick={() => !running && pick(start)}
+      >
+        {running ? <SpinnerIcon className={styles.spinner} /> : <ComposeIcon />}
         New conversation
       </button>
+      <span id={reasonId} className={styles.visuallyHidden}>
+        {NOT_READY}
+      </span>
       {list.length === 0 ? (
         <p className={styles.empty}>No saved conversations yet.</p>
       ) : (
         <ul className={styles.list}>
           {list.map(({id, title}) => (
-            <li key={id} className={styles.item}>
-              <button
-                type="button"
-                className={styles.open}
-                aria-current={id === currentId ? 'true' : undefined}
-                onClick={() => pick(() => open(id))}
-              >
-                {title}
-              </button>
-              <button
-                type="button"
-                className={styles.remove}
-                aria-label={`Delete conversation: ${title}`}
-                onClick={() => remove(id)}
-              >
-                <CloseIcon />
-              </button>
+            <li key={id}>
+              <ConversationRow
+                title={title}
+                current={id === currentId}
+                openBlockedBy={id === currentId ? undefined : blockedBy}
+                onOpen={() => pick(() => open(id))}
+              />
             </li>
           ))}
         </ul>

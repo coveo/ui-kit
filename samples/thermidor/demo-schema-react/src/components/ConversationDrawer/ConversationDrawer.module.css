@@ -29,36 +29,65 @@
 }
 
 .start,
-.open,
-.remove {
+.open {
   font: inherit;
   color: var(--color-text-primary);
   background: none;
-  border: 1px solid transparent;
-  border-radius: var(--radius-md);
+  border: 0;
+  border-radius: 999px;
   cursor: pointer;
 }
 
 .start {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  width: 100%;
   padding: var(--space-2) var(--space-3);
-  font-weight: 600;
-  background: var(--color-surface);
-  border-color: var(--color-border);
+  text-align: left;
 }
 
-.start:hover,
-.open:hover,
-.remove:hover {
+.start:is(:hover, :focus-visible),
+.row:hover .open,
+.open:focus-visible,
+.open[aria-current='true'] {
   background: var(--color-surface-hover);
 }
 
-:is(.start, .open, .remove):focus-visible {
+:is(.start, .open):focus-visible {
   outline: 2px solid var(--color-focus);
-  outline-offset: 1px;
+  outline-offset: -2px;
+}
+
+.drawer [aria-disabled='true']:is(.start, .open) {
+  color: var(--color-text-muted);
+  background: none;
+  cursor: not-allowed;
+}
+
+.spinner {
+  animation: spin 800ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 3s;
+  }
+}
+
+.visuallyHidden {
+  composes: visuallyHidden from '../../cart/QuantityStepper/QuantityStepper.module.css';
 }
 
 .empty {
   margin: 0;
+  padding: 0 var(--space-3);
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
 }
@@ -66,16 +95,16 @@
 .list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: 2px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.item {
+.row {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: var(--space-1);
 }
 
 .open {
@@ -90,16 +119,4 @@
 
 .open[aria-current='true'] {
   font-weight: 600;
-  background: var(--color-surface);
-  border-color: var(--color-border-active);
-}
-
-.remove {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  color: var(--color-text-muted);
 }
