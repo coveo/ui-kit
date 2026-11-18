@@ -159,6 +159,26 @@ describe('atomic-commerce-pager', () => {
     await expect.element(locators.previous).toHaveAttribute('disabled');
   });
 
+  it('should show the last pages of the range when on the last page', async () => {
+    await renderPager({state: {page: 9, totalPages: 10}});
+
+    await expect.element(page.getByLabelText('Page 6', {exact: true})).toBeInTheDocument();
+    await expect.element(page.getByLabelText('Page 10', {exact: true})).toBeInTheDocument();
+    await expect.element(page.getByLabelText('Page 11', {exact: true})).not.toBeInTheDocument();
+  });
+
+  it("should dispatch 'atomic/scrollToTop' when the interface has no product list", async () => {
+    const element = await renderPager({state: {page: 2}});
+    element.bindings.store.state.resultList = undefined;
+    const eventSpy = vi.spyOn(element, 'dispatchEvent');
+
+    await locators.next.click();
+
+    await expect
+      .poll(() => eventSpy)
+      .toHaveBeenCalledWith(expect.objectContaining({type: 'atomic/scrollToTop'}));
+  });
+
   it('should disable the next button when on the last page', async () => {
     await renderPager({state: {page: 9, totalPages: 10}});
 
@@ -191,7 +211,7 @@ describe('atomic-commerce-pager', () => {
     });
 
     it("should dispatch 'atomic/scrollToTop'", async () => {
-      expect(eventSpy).toHaveBeenCalledWith(new CustomEvent('atomic/scrollToTop'));
+      expect(eventSpy).toHaveBeenCalledWith(expect.objectContaining({type: 'atomic/scrollToTop'}));
     });
 
     it('should call #pager.previousPage', async () => {
@@ -229,7 +249,7 @@ describe('atomic-commerce-pager', () => {
     });
 
     it("should dispatch 'atomic/scrollToTop'", async () => {
-      expect(eventSpy).toHaveBeenCalledWith(new CustomEvent('atomic/scrollToTop'));
+      expect(eventSpy).toHaveBeenCalledWith(expect.objectContaining({type: 'atomic/scrollToTop'}));
     });
 
     it('should call #pager.nextPage', async () => {
@@ -262,7 +282,7 @@ describe('atomic-commerce-pager', () => {
     });
 
     it("should dispatch 'atomic/scrollToTop'", async () => {
-      expect(eventSpy).toHaveBeenCalledWith(new CustomEvent('atomic/scrollToTop'));
+      expect(eventSpy).toHaveBeenCalledWith(expect.objectContaining({type: 'atomic/scrollToTop'}));
     });
 
     it('should call #pager.selectPage', async () => {
