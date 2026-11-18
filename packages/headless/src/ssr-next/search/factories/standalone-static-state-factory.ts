@@ -1,5 +1,5 @@
 import {createStaticState} from '../controller-utils.js';
-import type {SearchCompletedAction} from '../types/build.js';
+import type {BuildParameters, SearchCompletedAction} from '../types/build.js';
 import type {AugmentedControllerDefinition} from '../types/controller-definition.js';
 import type {
   FetchStaticStateFunction,
@@ -31,9 +31,12 @@ export function fetchStandaloneStaticStateFactory<
       controllers,
     });
 
+    const {controllers: controllerProps, ...restParams}: BuildParameters & typeof params = params;
+
     return {
-      ...params,
+      ...restParams,
       ...staticState,
+      ...(controllerProps && {controllerProps}),
     };
   };
 }

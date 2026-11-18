@@ -56,13 +56,29 @@ describe('hydratedStaticStateFactory', () => {
 
     await hydratedStaticStateFactory(controllerDefinitions, options)(SolutionType.standalone)({
       ...params,
+      controllers: {productEnrichment: {state: {stale: true}}},
       controllerProps,
-    });
+    } as unknown as HydrateStaticStateParameters<
+      typeof controllerDefinitions,
+      SolutionType.listing
+    >);
 
     expect(mockSolutionTypeBuild).toHaveBeenCalledWith(
       expect.objectContaining({controllers: controllerProps})
     );
     expect(mockSolutionTypeBuild.mock.calls[0][0]).not.toHaveProperty('controllerProps');
+  });
+
+  it('should not hand the controller snapshots to the build when the static state has no controller props', async () => {
+    await hydratedStaticStateFactory(controllerDefinitions, options)(SolutionType.listing)({
+      ...params,
+      controllers: {productEnrichment: {state: {snapshot: true}}},
+    } as unknown as HydrateStaticStateParameters<
+      typeof controllerDefinitions,
+      SolutionType.listing
+    >);
+
+    expect(mockSolutionTypeBuild.mock.calls[0][0]).not.toHaveProperty('controllers');
   });
 
   it('should resolve only once every replayed request has completed', async () => {
