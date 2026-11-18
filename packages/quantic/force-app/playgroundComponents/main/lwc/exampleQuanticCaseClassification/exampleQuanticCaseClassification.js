@@ -20,7 +20,7 @@ export default class ExampleQuanticCaseClassification extends LightningElement {
       label: 'Case Assist ID',
       description:
         'The ID of the Case Assist configuration the case assist interface uses.',
-      defaultValue: '',
+      defaultValue: 'a4fb453a-b1f1-4054-9067-bef117586baa',
     },
     {
       attribute: 'sfFieldApiName',

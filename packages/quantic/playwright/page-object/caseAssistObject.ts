@@ -10,6 +10,12 @@ import {
 
 export const fakeCaseAssistId = 'e2e-fake-case-assist-id';
 
+/**
+ * The ID of the "Demo" Case Assist configuration of the searchuisamples
+ * organization, for the few tests that call the live Case Assist API.
+ */
+export const demoCaseAssistId = 'a4fb453a-b1f1-4054-9067-bef117586baa';
+
 export class CaseAssistObject {
   constructor(private page: Page) {
     this.page = page;
