@@ -21,6 +21,7 @@ import {
   productSearchQuery,
   rerunsSearch,
   searchProductsFor,
+  sortActionRejection,
 } from './templates/schema-response-search.js';
 import type {ConverseEvent} from './events.js';
 
@@ -371,6 +372,10 @@ function buildSchemaActionResponse(action: SchemaAction, session: SessionKeys) {
       ),
       {delayBetweenMessages: SUGGESTIONS_DELAY_MS}
     );
+  }
+  const sortRejection = sortActionRejection(action);
+  if (sortRejection) {
+    return HttpResponse.json(sortRejection, {status: 400});
   }
   // The search surface's answer targets the surface the action came from, under the id its prompt
   // minted for it.

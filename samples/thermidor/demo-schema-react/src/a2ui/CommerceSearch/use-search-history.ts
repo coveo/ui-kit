@@ -12,7 +12,7 @@ import {buildRestoreSnapshot} from './restore-snapshot.js';
 export interface SearchSurfaceContext {
   componentModel: {id: string};
   dataContext: {
-    surface: {id: string};
+    surface?: {id: string};
     dataModel: {
       get(path: string): unknown;
       subscribe(path: string, onChange: () => void): {unsubscribe(): void};
@@ -50,7 +50,8 @@ function snapshotOf(context: SearchSurfaceContext): RestoreStatePayload | undefi
  * that search with `restoreState`.
  */
 export function useSearchHistory(context: SearchSurfaceContext): void {
-  const surfaceId = context.dataContext.surface.id;
+  // A context built from a bare data model has no surface, so it keeps no history.
+  const surfaceId = context.dataContext.surface?.id ?? '';
   const busy = useSessionBusy();
   // The surface may hold its state before it mounts, so its first render counts as a change.
   const [stateVersion, setStateVersion] = useState(1);
@@ -76,7 +77,7 @@ export function useSearchHistory(context: SearchSurfaceContext): void {
   }, [context]);
 
   useEffect(() => {
-    if (busy || stateVersion === recordedVersion.current) {
+    if (!surfaceId || busy || stateVersion === recordedVersion.current) {
       return;
     }
     recordedVersion.current = stateVersion;

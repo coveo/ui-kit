@@ -6,8 +6,9 @@ import type {
   QuerySummaryState,
   RegularFacetState,
   RestoreStatePayload,
+  SortCriterion,
   SortState,
-} from '@coveo/thermidor-schema';
+} from '@coveo/thermidor-schema/zod3';
 
 /** A node of a commerce-search surface: its id and its component type. */
 export interface SurfaceNode {
@@ -53,7 +54,7 @@ export function buildRestoreSnapshot(
 ): RestoreStatePayload | undefined {
   let query = '';
   let pagination: PaginationState | undefined;
-  let sortCriteria: string | undefined;
+  let sort: SortCriterion | undefined;
   const facets: FacetRestore[] = [];
 
   for (const {id, type} of nodes) {
@@ -69,7 +70,7 @@ export function buildRestoreSnapshot(
         pagination = state as PaginationState;
         break;
       case 'Sort':
-        sortCriteria = (state as SortState).appliedSort.sortCriteria;
+        sort = (state as SortState).appliedSort;
         break;
       default: {
         const facet = facetRestore(type, state);
@@ -87,7 +88,7 @@ export function buildRestoreSnapshot(
     query,
     page: pagination.page,
     pageSize: pagination.pageSize,
-    ...(sortCriteria !== undefined && {sortCriteria}),
+    ...(sort !== undefined && {sort}),
     ...(facets.length > 0 && {facets}),
   };
 }

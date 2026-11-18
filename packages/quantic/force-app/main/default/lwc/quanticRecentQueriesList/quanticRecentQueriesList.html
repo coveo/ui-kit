@@ -4,18 +4,18 @@
     </c-quantic-component-error>
   </template>
   <template lwc:else>
-    <template if:true={showPlaceholder}>
+    <template lwc:if={showPlaceholder}>
       <c-quantic-placeholder variant="card" number-of-rows={maxLength}></c-quantic-placeholder>
     </template>
-    <template if:false={showPlaceholder}>
+    <template lwc:else>
       <template lwc:if={shouldDisplayRecentQueriesCard}>
         <c-quantic-card-container title={label} onquantic__headerclick={toggleVisibility} onquantic__headerkeydown={toggleVisibility}>
           <lightning-button-icon class="slds-p-bottom_small" slot="actions" icon-name={actionButtonIcon}
             alternative-text={actionButtonLabel} variant="bare" tabindex="-1" aria-hidden="true" data-testid="action-button">
           </lightning-button-icon>
-          <template if:false={isCollapsed}>
+          <template lwc:if={isExpanded}>
             <div class="slds-m-top_medium">
-              <template if:false={hasQueries}>
+              <template lwc:if={hasNoQueries}>
                 <div
                   class="slds-text-body_small empty-list-message slds-var-m-vertical_small slds-p-horizontal_x-small">
                   {labels.emptyListLabel}

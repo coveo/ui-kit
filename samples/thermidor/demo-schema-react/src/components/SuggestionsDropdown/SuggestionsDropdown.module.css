@@ -21,9 +21,11 @@
   margin-bottom: var(--space-1);
 }
 
-/* Fixed while an aside is shown, so the height does not follow its content as the highlight moves. */
+/* Fixed while an aside is shown, so the height does not follow its content as the highlight moves.
+   Sized for four instant products, two of them with children; more children scroll. */
 .dropdown:has(> .listbox + *) {
-  height: 400px;
+  height: 416px;
+  max-height: none;
 }
 
 .listbox {

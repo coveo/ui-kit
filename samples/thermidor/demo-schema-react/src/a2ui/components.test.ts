@@ -76,7 +76,10 @@ describe('component state contracts', () => {
         ec_name: 'Trail shoes',
         ec_rating: null,
         additionalFields: {},
-        children: [{permanentid: 'p1-blue', ec_name: 'Trail shoes', additionalFields: {}}],
+        children: [
+          {permanentid: 'p1', ec_name: 'Trail shoes', additionalFields: {}},
+          {permanentid: 'p1-blue', ec_name: 'Trail shoes', additionalFields: {}},
+        ],
       }).success
     ).toBe(true);
     expect(

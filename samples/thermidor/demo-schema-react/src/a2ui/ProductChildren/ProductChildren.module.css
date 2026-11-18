@@ -1,0 +1,50 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2px;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.children {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+.child {
+  flex: 0 1 32px;
+  min-width: 24px;
+  aspect-ratio: 1;
+  padding: 2px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: none;
+  cursor: pointer;
+}
+
+.child:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 1px;
+}
+
+.shown {
+  border-color: var(--color-primary);
+}
+
+.thumbnail {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 2px;
+  object-fit: cover;
+}
+
+.more {
+  color: var(--color-primary);
+}
+
+.visuallyHidden {
+  composes: visuallyHidden from '../../cart/QuantityStepper/QuantityStepper.module.css';
+}

@@ -9,27 +9,32 @@ import type {
   SessionConfig,
 } from '@/src/index.js';
 import {createPrivateSession} from '@/src/private.js';
-import type {PrivateSessionConfig} from '@/src/private.js';
+import type {PrivateSession, PrivateSessionConfig} from '@/src/private.js';
 
 declare const contracts: ContractsSchema;
 
-test('exposes createPrivateSession, which returns a regular Session', () => {
+test('exposes createPrivateSession, which returns a Session that exposes its sessionId', () => {
   expectTypeOf(createPrivateSession).toBeFunction();
-  expectTypeOf(createPrivateSession<ContractsSchema>).returns.toEqualTypeOf<Session>();
+  expectTypeOf(createPrivateSession<ContractsSchema>).returns.toEqualTypeOf<PrivateSession>();
+  expectTypeOf<PrivateSession>().toMatchTypeOf<Session>();
+  expectTypeOf<PrivateSession['sessionId']>().toEqualTypeOf<string | undefined>();
+  expectTypeOf<Session>().not.toHaveProperty('sessionId');
 });
 
 test('takes the public config with optional ids, and no locale fields', () => {
   expectTypeOf<PrivateSessionConfig['agentConfigurationId']>().toEqualTypeOf<string | undefined>();
   expectTypeOf<PrivateSessionConfig['trackingId']>().toEqualTypeOf<string | undefined>();
+  expectTypeOf<PrivateSessionConfig['sessionId']>().toEqualTypeOf<string | undefined>();
+  expectTypeOf<SessionConfig>().not.toHaveProperty('sessionId');
   expectTypeOf<
     PrivateSessionConfig['navigatorContextProvider']
   >().toEqualTypeOf<NavigatorContextProvider>();
   expectTypeOf<PrivateSessionConfig>().not.toHaveProperty('language');
   expectTypeOf<PrivateSessionConfig>().not.toHaveProperty('country');
   expectTypeOf<PrivateSessionConfig>().not.toHaveProperty('currency');
-  expectTypeOf<Omit<PrivateSessionConfig, 'agentConfigurationId' | 'trackingId'>>().toEqualTypeOf<
-    Omit<SessionConfig, 'agentConfigurationId' | 'trackingId'>
-  >();
+  expectTypeOf<
+    Omit<PrivateSessionConfig, 'agentConfigurationId' | 'trackingId' | 'sessionId'>
+  >().toEqualTypeOf<Omit<SessionConfig, 'agentConfigurationId' | 'trackingId'>>();
   expectTypeOf<PrivateSessionConfig>().not.toHaveProperty('request');
 
   const navigatorContextProvider = () => ({

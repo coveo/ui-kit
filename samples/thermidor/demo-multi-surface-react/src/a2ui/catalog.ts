@@ -3,7 +3,6 @@ import {THERMIDOR_CATALOG_ID} from '@coveo/thermidor-schema/zod3';
 import {Breadbox} from '../../../demo-schema-react/src/a2ui/Breadbox/Breadbox.js';
 import {BundleDisplay} from '../../../demo-schema-react/src/a2ui/BundleDisplay/BundleDisplay.js';
 import {CategoryFacet} from '../../../demo-schema-react/src/a2ui/CategoryFacet/CategoryFacet.js';
-import {CommerceSearch} from '../../../demo-schema-react/src/a2ui/CommerceSearch/CommerceSearch.js';
 import {createComparisonTable} from '../../../demo-schema-react/src/a2ui/ComparisonTable/ComparisonTable.js';
 import {FacetManager} from '../../../demo-schema-react/src/a2ui/FacetManager/FacetManager.js';
 import {LayoutStack} from '../../../demo-schema-react/src/a2ui/LayoutStack/LayoutStack.js';
@@ -18,6 +17,7 @@ import {ProductSummary} from '../../../demo-schema-react/src/a2ui/ProductSummary
 import {QuerySummary} from '../../../demo-schema-react/src/a2ui/QuerySummary/QuerySummary.js';
 import {RegularFacet} from '../../../demo-schema-react/src/a2ui/RegularFacet/RegularFacet.js';
 import {Sort} from '../../../demo-schema-react/src/a2ui/Sort/Sort.js';
+import {StorefrontCommerceSearch} from './CommerceSearch/StorefrontCommerceSearch.js';
 
 /**
  * The renderers for the public `@coveo/thermidor-schema` components the Storefront Preview views
@@ -26,7 +26,8 @@ import {Sort} from '../../../demo-schema-react/src/a2ui/Sort/Sort.js';
  *
  * Every surface uses the one public Thermidor catalog: the page's views differ in which of its
  * components they use, not in which catalog they use. The search page's commerce search layout is
- * the one the private `storefront-preview-search` surface allows, plus the `Breadbox` it mounts.
+ * the one the private `storefront-preview-search` surface allows, plus the `Breadbox` it mounts. Its
+ * root is the storefront's own `CommerceSearch`, restored on Back.
  */
 export function createStorefrontCatalog() {
   return new Catalog(THERMIDOR_CATALOG_ID, [
@@ -36,7 +37,7 @@ export function createStorefrontCatalog() {
     BundleDisplay,
     createProductResearchCard(),
     ProductSummary,
-    CommerceSearch,
+    StorefrontCommerceSearch,
     LayoutStack,
     QuerySummary,
     Sort,

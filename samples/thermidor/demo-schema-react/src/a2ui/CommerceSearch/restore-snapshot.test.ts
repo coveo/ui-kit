@@ -2,21 +2,25 @@ import {describe, it, expect} from 'vitest';
 import {buildRestoreSnapshot, type SurfaceNode} from './restore-snapshot.js';
 
 const PAGINATION = {page: 2, pageSize: 12, totalEntries: 43, totalPages: 4};
+const PRICE_DESCENDING = {
+  sortCriteria: 'fields',
+  fields: [{field: 'ec_price', direction: 'desc', displayName: 'Price (High to Low)'}],
+};
 
 function snapshot(states: Record<string, unknown>, nodes: SurfaceNode[]) {
   return buildRestoreSnapshot(nodes, (id) => states[id]);
 }
 
 describe('buildRestoreSnapshot', () => {
-  it('restores the query, page, page size and sort', () => {
+  it('restores the query, page, page size and the whole applied sort', () => {
     expect(
       snapshot(
         {
           summary: {query: 'surf', firstIndex: 25, lastIndex: 36, totalEntries: 43},
           pagination: PAGINATION,
           sort: {
-            appliedSort: {sortCriteria: 'price_asc', fields: []},
-            availableSorts: [],
+            appliedSort: PRICE_DESCENDING,
+            availableSorts: [{sortCriteria: 'relevance'}, PRICE_DESCENDING],
           },
         },
         [
@@ -26,7 +30,7 @@ describe('buildRestoreSnapshot', () => {
           {id: 'sort', type: 'Sort'},
         ]
       )
-    ).toEqual({query: 'surf', page: 2, pageSize: 12, sortCriteria: 'price_asc'});
+    ).toEqual({query: 'surf', page: 2, pageSize: 12, sort: PRICE_DESCENDING});
   });
 
   it('restores the selected values of a regular facet', () => {

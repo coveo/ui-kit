@@ -96,6 +96,8 @@ interface ControllableStream {
   emit(activity: Record<string, unknown>): void;
   /** Closes the stream, ending the turn's consumption. */
   close(): void;
+  /** Errors the stream, as a dropped connection would. */
+  error(reason: unknown): void;
   /** Resolves once the endpoint client's `call` has been invoked and the reader is attached. */
   readonly opened: Promise<void>;
 }
@@ -138,6 +140,9 @@ function createControllableStream(): ControllableStream {
       } catch {
         // Already closed (e.g. after a cancel); ignore.
       }
+    },
+    error(reason) {
+      controller.error(reason);
     },
     opened,
   };
@@ -772,6 +777,64 @@ describe('createSession lifecycle', () => {
       await action;
     });
 
+    it('keeps a surface an action re-creates on the turn that drew it', async () => {
+      const session = createSession(baseConfig);
+      await prompt(session, searchSurface);
+      await prompt(session, answerSurface);
+
+      const stream = queueStream();
+      const action = session.dispatchAction(selectPageMessage(2));
+      await stream.opened;
+      stream.emit({...searchSurface, messageId: 'restored-search'});
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await action;
+
+      expect(
+        session.turns.map((turn) => turn.response.surfaces.map((surface) => surface.surfaceId))
+      ).toEqual([['commerce-search-surface'], ['answer-surface']]);
+    });
+
+    it('keeps a placeholder its turn left behind out when a later turn creates it without a catalog', async () => {
+      const session = createSession(baseConfig);
+      await prompt(
+        session,
+        surfaceSnapshot('placeholder', [
+          {
+            version: 'v1.0',
+            createSurface: {
+              surfaceId: 'carousel-placeholder',
+              catalogId: 'catalog',
+              components: [{id: 'root', component: 'ProductCarousel'}],
+              dataModel: {isLoading: true},
+            },
+          },
+        ])
+      );
+
+      const stream = queueStream();
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'go'}});
+      await stream.opened;
+      stream.emit(
+        surfaceSnapshot('no-catalog', [
+          {
+            version: 'v1.0',
+            createSurface: {
+              surfaceId: 'carousel-placeholder',
+              components: [{id: 'root', component: 'ProductCarousel'}],
+            },
+          },
+        ])
+      );
+      await flush();
+      const during = session.surfaces.map((surface) => surface.surfaceId);
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
+
+      expect(during).toEqual([]);
+    });
+
     it('applies a later turn validated write to the state of an earlier surface', async () => {
       const session = createSession(baseConfig);
       await prompt(session, searchSurface);
@@ -902,6 +965,29 @@ describe('createSession lifecycle', () => {
 
       expect(session.turns.map((turn) => turn.status)).toEqual(['complete', 'complete']);
       expect(session.actionError).toEqual({message: 'Search failed', ...PAGE_ACTION});
+    });
+
+    it("keeps the code of an action's RUN_ERROR on actionError", async () => {
+      const session = createSession(baseConfig);
+      await prompt(session, searchSurface);
+      await prompt(session, answerSurface);
+
+      const stream = queueStream();
+      const action = session.dispatchAction(selectPageMessage(2));
+      await stream.opened;
+      stream.emit({
+        type: 'RUN_ERROR',
+        message: 'Upstream timed out',
+        code: 'AGENT:UPSTREAM_TIMEOUT',
+      });
+      stream.close();
+      await action;
+
+      expect(session.actionError).toEqual({
+        message: 'Upstream timed out',
+        errorCode: 'AGENT:UPSTREAM_TIMEOUT',
+        ...PAGE_ACTION,
+      });
     });
 
     it('leaves the active turn as it is when an action on an earlier surface ends without a terminal event', async () => {
@@ -1372,8 +1458,8 @@ describe('createSession lifecycle', () => {
       await submitPromise;
 
       const turn = session.turns[0];
-      expect(turn.status).toBe('error');
-      expect(turn.error).toBeDefined();
+      expect(turn).toMatchObject({status: 'error', error: 'Cancelled', reason: 'cancelled'});
+      expect(turn.errorCode).toBeUndefined();
       // Partial response already folded is retained.
       expect(turn.response.agent?.messages).toEqual([{content: 'partial', role: 'assistant'}]);
     });
@@ -1407,6 +1493,7 @@ describe('createSession lifecycle', () => {
       expect(session.turns).toHaveLength(1);
       expect(session.turns[0]).toBe(completedTurn);
       expect(session.turns[0].status).toBe('complete');
+      expect(session.turns[0].reason).toBeUndefined();
     });
   });
 
@@ -1474,6 +1561,103 @@ describe('createSession lifecycle', () => {
       expect(callMock).toHaveBeenCalledTimes(2);
       expect(session.turns[0].status).toBe('complete');
       expect(session.request).toBeUndefined();
+    });
+  });
+
+  describe('why a turn errored', () => {
+    async function settledPrompt(
+      session: ReturnType<typeof createSession>,
+      events: Record<string, unknown>[],
+      dropConnection = false
+    ) {
+      const stream = queueStream();
+      const submit = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'find shoes'},
+      });
+      await stream.opened;
+      for (const event of events) {
+        stream.emit(event);
+      }
+      if (dropConnection) {
+        await vi.waitFor(() => expect(session.turns.at(-1)?.status).not.toBe('streaming'));
+        stream.error(new TypeError('network error'));
+      } else {
+        stream.close();
+      }
+      await submit;
+      return session.turns.at(-1)!;
+    }
+
+    it('fails the turn with the code of a RUN_ERROR', async () => {
+      const session = createSession(baseConfig);
+
+      const turn = await settledPrompt(session, [
+        {type: 'RUN_STARTED'},
+        {type: 'RUN_ERROR', message: 'Timed out', code: 'AGENT:UPSTREAM_TIMEOUT'},
+      ]);
+
+      expect(turn).toMatchObject({
+        status: 'error',
+        error: 'Timed out',
+        reason: 'failed',
+        errorCode: 'AGENT:UPSTREAM_TIMEOUT',
+      });
+    });
+
+    it('keeps the outcome of a terminal event when the connection drops after it', async () => {
+      const session = createSession(baseConfig);
+
+      const failed = await settledPrompt(
+        session,
+        [{type: 'RUN_ERROR', message: 'Timed out', code: 'AGENT:UPSTREAM_TIMEOUT'}],
+        true
+      );
+      expect(failed).toMatchObject({
+        status: 'error',
+        error: 'Timed out',
+        errorCode: 'AGENT:UPSTREAM_TIMEOUT',
+      });
+
+      const completed = await settledPrompt(session, [{type: 'RUN_FINISHED'}], true);
+      expect(completed.status).toBe('complete');
+    });
+
+    it('fails the turn when the stream ends without a terminal event', async () => {
+      const session = createSession(baseConfig);
+
+      const turn = await settledPrompt(session, [{type: 'RUN_STARTED'}]);
+
+      expect(turn).toMatchObject({
+        status: 'error',
+        error: 'Stream ended without a terminal event.',
+        reason: 'failed',
+      });
+      expect(turn).not.toHaveProperty('errorCode');
+    });
+
+    it('clears error, reason and errorCode on retry', async () => {
+      const session = createSession(baseConfig);
+      const turn = await settledPrompt(session, [
+        {type: 'RUN_ERROR', message: 'Timed out', code: 'AGENT:UPSTREAM_TIMEOUT'},
+      ]);
+
+      const retryStream = queueStream();
+      session.retry(turn.id);
+      await retryStream.opened;
+
+      const retried = session.turns[0];
+      expect(retried.status).toBe('streaming');
+      expect(retried).not.toHaveProperty('error');
+      expect(retried).not.toHaveProperty('reason');
+      expect(retried).not.toHaveProperty('errorCode');
+
+      retryStream.emit({type: 'RUN_FINISHED'});
+      retryStream.close();
+      await vi.waitFor(() => expect(session.request).toBeUndefined());
+
+      expect(session.turns[0].status).toBe('complete');
+      expect(session.turns[0]).not.toHaveProperty('reason');
     });
   });
 
@@ -1555,8 +1739,7 @@ describe('createSession lifecycle', () => {
 
       expect(callMock).not.toHaveBeenCalled();
       expect(session.turns).toHaveLength(1);
-      expect(session.turns[0].status).toBe('error');
-      expect(session.turns[0].error).toBe('boom');
+      expect(session.turns[0]).toMatchObject({status: 'error', error: 'boom', reason: 'failed'});
 
       provider.failing = false;
       const next = queueStream();
@@ -1948,7 +2131,11 @@ describe('createSession lifecycle', () => {
       await turn;
 
       expect(callMock).toHaveBeenCalledTimes(exhaustingConflicts);
-      expect(session.turns[0]).toMatchObject({status: 'error', error: conflictError});
+      expect(session.turns[0]).toMatchObject({
+        status: 'error',
+        error: conflictError,
+        reason: 'failed',
+      });
       expect(session.actionError).toBeUndefined();
     });
   });
@@ -2160,6 +2347,7 @@ describe('createSession lifecycle', () => {
         activities: [],
         status: 'error',
         error: 'Unknown action',
+        reason: 'failed',
       });
       expect(session.request).toBeUndefined();
 
@@ -2179,7 +2367,11 @@ describe('createSession lifecycle', () => {
       session.cancel();
       await vi.waitFor(() => expect(session.request).toBeUndefined());
 
-      expect(session.initialization).toMatchObject({status: 'error', error: 'Cancelled'});
+      expect(session.initialization).toMatchObject({
+        status: 'error',
+        error: 'Cancelled',
+        reason: 'cancelled',
+      });
     });
 
     it('marks the initialization cancelled when cancelled in flight', async () => {
@@ -2191,7 +2383,12 @@ describe('createSession lifecycle', () => {
       stream.close();
       await vi.waitFor(() => expect(session.request).toBeUndefined());
 
-      expect(session.initialization).toEqual({activities: [], status: 'error', error: 'Cancelled'});
+      expect(session.initialization).toEqual({
+        activities: [],
+        status: 'error',
+        error: 'Cancelled',
+        reason: 'cancelled',
+      });
       expect(session.turns).toEqual([]);
       expect(callMock).toHaveBeenCalledTimes(1);
     });
@@ -2352,14 +2549,14 @@ describe('createSession lifecycle', () => {
       ]);
     });
 
-    it('round-trips the initialization, the turns and the session state through serialized format 4', async () => {
+    it('round-trips the initialization, the turns and the session state through serialized format 5', async () => {
       const session = await initializedSession();
       await completePrompt(session, 'first', [shellPageUpdate('shell-page')]);
 
       const serialized = session.serialize();
       const restored = createSession({...shellConfig, sessionToRestore: serialized});
 
-      expect(serialized.version).toBe(4);
+      expect(serialized.version).toBe(5);
       expect(serialized.initialization).toEqual({
         activities: session.initialization?.activities,
         status: 'complete',
@@ -2384,6 +2581,7 @@ describe('createSession lifecycle', () => {
       expect(restored.initialization).toMatchObject({
         status: 'error',
         error: 'Stream was interrupted',
+        reason: 'failed',
       });
       expect(restored.a2uiMessages).toEqual(session.a2uiMessages);
       session.cancel();

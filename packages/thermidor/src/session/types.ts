@@ -13,6 +13,15 @@
 export type TurnStatus = 'streaming' | 'complete' | 'error';
 
 /**
+ * Why a {@link Turn} or the {@link SessionInitialization} ended in `'error'`.
+ *
+ * - `'cancelled'`: `session.cancel()` stopped it while it streamed.
+ * - `'failed'`: the endpoint sent `RUN_ERROR`, the request or stream failed, or the stream ended
+ *   without a terminal event, including a run restored while it was streaming.
+ */
+export type TurnErrorReason = 'cancelled' | 'failed';
+
+/**
  * The server-authoritative UI state of the session, keyed BY SURFACE: each live
  * surface owns its own data model at `state[surfaceId]`, into which validated
  * `updateDataModel` ops are applied at their `/state/<nodeId>` pointer, whichever
@@ -195,6 +204,11 @@ export interface ActionRequest {
 export interface ActionError {
   /** Why the action failed. */
   message: string;
+  /**
+   * The code of the gateway's `RUN_ERROR` that failed the action, such as `'AGENT:UPSTREAM_TIMEOUT'`.
+   * Absent when the gateway sent none or the action failed otherwise.
+   */
+  errorCode?: string;
   /** The PascalCase `component` discriminant of the node that dispatched the action. */
   component: string;
   /** The action name declared by the dispatching component's contract. */
@@ -256,8 +270,9 @@ export interface TurnResponse {
   /**
    * The live surfaces this turn created, in creation order, so a transcript
    * knows where to draw them. Consumers read this instead of walking
-   * `activities` themselves. A surface a later run deletes leaves the list, and
-   * one a later turn creates again under the same id belongs to that turn.
+   * `activities` themselves. A surface a later run deletes leaves the list. One
+   * a later run creates again under its live id, such as the answer to an
+   * action recorded with a later turn, stays with this turn.
    */
   surfaces: DiscoveredSurface[];
 
@@ -282,6 +297,13 @@ export interface SessionInitialization {
   status: TurnStatus;
   /** Why `initialize` failed. Present when `status === 'error'`, absent otherwise. */
   error?: string;
+  /** Why it ended in `'error'`. Present when `status === 'error'`, absent otherwise. */
+  reason?: TurnErrorReason;
+  /**
+   * The code of the gateway's `RUN_ERROR`, such as `'AGENT:UPSTREAM_TIMEOUT'`. Present only when
+   * `reason === 'failed'` and the gateway sent one.
+   */
+  errorCode?: string;
 }
 
 /**
@@ -294,4 +316,11 @@ export interface Turn {
   status: TurnStatus;
   /** Present when `status === 'error'`, absent otherwise. */
   error?: string;
+  /** Why it ended in `'error'`. Present when `status === 'error'`, absent otherwise. */
+  reason?: TurnErrorReason;
+  /**
+   * The code of the gateway's `RUN_ERROR`, such as `'AGENT:UPSTREAM_TIMEOUT'`. Present only when
+   * `reason === 'failed'` and the gateway sent one.
+   */
+  errorCode?: string;
 }

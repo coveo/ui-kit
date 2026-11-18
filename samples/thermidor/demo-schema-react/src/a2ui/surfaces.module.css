@@ -13,6 +13,10 @@
   border-left: 3px solid var(--color-border);
 }
 
+.surfaceControls {
+  display: contents;
+}
+
 .readOnlyNote {
   margin: 0 0 var(--space-2);
   font-size: var(--font-size-sm);
