@@ -455,7 +455,6 @@ export type {
 } from './ssr-next/search/controllers/url-manager/headless-url-manager.ssr.js';
 export {defineUrlManager} from './ssr-next/search/controllers/url-manager/headless-url-manager.ssr.js';
 export {MissingControllerProps} from './ssr-next/common/errors.js';
-export type {ControllerStaticState} from './ssr-next/common/types/controllers.js';
 export {defineSearchEngine} from './ssr-next/search/engine/search-engine.ssr.js';
 export type {
   BuildConfig,
