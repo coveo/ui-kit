@@ -23,7 +23,7 @@ import {
 
 /**
  * @alpha
- * @deprecated Use `buildFilterSuggestionsGenerator` instead.
+ * @deprecated Use `GeneratedFilterSuggestionsControllers` instead.
  */
 export type GeneratedFieldSuggestionsControllers = Array<CategoryFieldSuggestions>;
 
@@ -33,7 +33,7 @@ export type GeneratedFieldSuggestionsControllers = Array<CategoryFieldSuggestion
  * @group Buildable controllers
  * @category FieldSuggestionsGenerator
  * @alpha
- * @deprecated Use `buildFilterSuggestionsGenerator` instead.
+ * @deprecated Use `FilterSuggestionsGenerator` instead.
  */
 export interface FieldSuggestionsGenerator extends Controller {
   /**
