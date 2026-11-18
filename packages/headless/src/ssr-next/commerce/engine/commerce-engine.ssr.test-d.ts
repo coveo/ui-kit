@@ -87,6 +87,17 @@ describe('defineCommerceEngine', () => {
     expectTypeOf<ListingContext['view']>().toEqualTypeOf<{url: string} | undefined>();
   });
 
+  it('should always carry the view URL in the static state', () => {
+    expectTypeOf<ListingStaticState['context']['view']['url']>().toEqualTypeOf<string>();
+
+    function readViewUrl<TSolutionType extends SolutionType>(
+      staticState: CommerceStaticState<typeof controllers, TSolutionType>
+    ) {
+      expectTypeOf(staticState.context.view.url).toEqualTypeOf<string>();
+    }
+    expectTypeOf(readViewUrl).toBeFunction();
+  });
+
   it('should list the controllers of each kind of page in its static state', () => {
     expectTypeOf<ListingStaticState['controllers']>().toHaveProperty('productList');
     expectTypeOf<ListingStaticState['controllers']>().toHaveProperty('cart');
