@@ -154,8 +154,7 @@ describe('atomic-smart-snippet', () => {
       expect(getParts().feedbackBanner).toBeInTheDocument();
     });
 
-    // TODO: Enable when atomic-smart-snippet-source is migrated to Lit
-    it.skip('should render source url and title with correct href', async () => {
+    it('should render source url and title with correct href', async () => {
       const {getParts} = await renderAtomicSmartSnippet();
       const {sourceUrl, sourceTitle} = getParts();
 
@@ -218,24 +217,21 @@ describe('atomic-smart-snippet', () => {
   });
 
   describe('feedback functionality', () => {
-    // TODO: Enable when feedback button selectors are fixed
-    it.skip('should call smartSnippet.like() when like button is clicked', async () => {
+    it('should call smartSnippet.like() when like button is clicked', async () => {
       const likeSpy = vi.spyOn(mockedSmartSnippet, 'like');
       const {getParts} = await renderAtomicSmartSnippet();
       getParts().feedbackLikeButton?.click();
       expect(likeSpy).toHaveBeenCalled();
     });
 
-    // TODO: Enable when feedback button selectors are fixed
-    it.skip('should call smartSnippet.dislike() when dislike button is clicked', async () => {
+    it('should call smartSnippet.dislike() when dislike button is clicked', async () => {
       const dislikeSpy = vi.spyOn(mockedSmartSnippet, 'dislike');
       const {getParts} = await renderAtomicSmartSnippet();
       getParts().feedbackDislikeButton?.click();
       expect(dislikeSpy).toHaveBeenCalled();
     });
 
-    // TODO: Enable when feedback button selectors are fixed
-    it.skip('should load modal when dislike button is clicked', async () => {
+    it('should load modal when dislike button is clicked', async () => {
       const {element, getParts} = await renderAtomicSmartSnippet();
       getParts().feedbackDislikeButton?.click();
 
