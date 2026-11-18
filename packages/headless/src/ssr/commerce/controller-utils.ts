@@ -107,7 +107,7 @@ export function buildControllerDefinitions<
  * controller. The warning is logged once per definition rather than once per engine, since server-side rendering
  * builds an engine per request.
  */
-export function withDeprecatedDefinitionWarning<TDefinition extends object>(
+function withDeprecatedDefinitionWarning<TDefinition extends object>(
   definition: TDefinition,
   api: string,
   instruction: string
