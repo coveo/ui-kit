@@ -22,11 +22,9 @@ import type {
   BaseFacetValue,
   CategoryFacetResponse,
   DateFacetResponse,
-  LocationFacetResponse,
   NumericFacetResponse,
   RegularFacetResponse,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response.js';
-import {toggleSelectLocationFacetValue} from '../../../../features/commerce/facets/location-facet/location-facet-actions.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -129,9 +127,6 @@ const actions: Record<FacetType, ActionCreators> = {
     toggleSelectActionCreator: toggleSelectDateFacetValue,
     toggleExcludeActionCreator: toggleExcludeDateFacetValue,
   },
-  location: {
-    toggleSelectActionCreator: toggleSelectLocationFacetValue,
-  },
   hierarchical: {
     toggleSelectActionCreator: deselectAllValuesInCoreFacet,
   },
@@ -168,7 +163,7 @@ export function buildCoreBreadcrumbManager(
   });
 
   const getValuesForNonCategoryFacet = (
-    facet: RegularFacetResponse | NumericFacetResponse | DateFacetResponse | LocationFacetResponse
+    facet: RegularFacetResponse | NumericFacetResponse | DateFacetResponse
   ) => {
     return facet.values
       .filter((value) => value.state !== 'idle')
@@ -183,16 +178,14 @@ export function buildCoreBreadcrumbManager(
               })
             );
 
-            if (facet.type !== 'location') {
-              dispatch(
-                updateCoreFacetFreezeCurrentValues({
-                  facetId: facet.facetId,
-                  freezeCurrentValues: false,
-                })
-              );
-            }
+            dispatch(
+              updateCoreFacetFreezeCurrentValues({
+                facetId: facet.facetId,
+                freezeCurrentValues: false,
+              })
+            );
             dispatch(options.fetchProductsActionCreator());
-          } else if (selection.state === 'excluded' && facet.type !== 'location') {
+          } else if (selection.state === 'excluded') {
             dispatch(
               actions[facet.type].toggleExcludeActionCreator!({
                 facetId: facet.facetId,
