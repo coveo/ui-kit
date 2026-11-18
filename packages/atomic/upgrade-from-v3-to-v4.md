@@ -27,3 +27,9 @@ Modified behaviors will be listed here.
 | `scrollToTop()` on `atomic-search-interface` and `atomic-commerce-interface`                                                       | `scrollIntoView()` on the element that `scroll-container` selects <!-- decided 2026-10-31, not yet built -->                                                                                    |
 | `store` and `registerFieldsToInclude()` on `atomic-insight-interface`                                                              | The `store` of the bindings that `initializeBindings` returns, and `loadFieldActions(engine).registerFieldsToInclude` from `@coveo/headless/insight` <!-- decided 2026-10-31, not yet built --> |
 | The `updateLocale(language, country, currency)` form on `atomic-commerce-interface` and `atomic-commerce-recommendation-interface` | `updateLocale({language, country, currency})`, where each property is optional <!-- decided 2026-10-31, not yet built -->                                                                       |
+
+### Facets
+
+| Removed          | Replacement                                                                                                                      |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `atomic-popover` | `atomic-facet-popover`, which takes the same slotted facet and exposes the same parts <!-- decided 2026-10-31, not yet built --> |
