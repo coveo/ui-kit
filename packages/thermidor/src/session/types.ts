@@ -58,11 +58,12 @@ export interface DiscoveredSurface {
    */
   isLoading: boolean;
   /**
-   * `true` on a surface a restored turn other than the last created (`sessionToRestore`): a
-   * snapshot of an earlier page that takes no action. `dispatchAction` refuses its actions without
-   * a request, so a consumer draws it without its controls. Absent on every other surface, such as
-   * the last restored turn's, the restored shell or the new one the resuming `initialize` answers
-   * with, or one a later run creates again.
+   * `true` on a surface a restored turn created before the last restored turn that created one
+   * (`sessionToRestore`): a snapshot of an earlier page. `dispatchAction` refuses its actions
+   * without a request, except `productClick`, which the endpoint still counts, so a consumer draws
+   * it without its controls but keeps its product links. Absent on every other surface, such as
+   * the last restored turn's that created one, the restored shell or the new one the resuming
+   * `initialize` answers with, or one a later run creates again.
    */
   readOnly?: true;
 }
