@@ -23,6 +23,7 @@ import {
   searchProductsFor,
   sortActionRejection,
 } from './templates/schema-response-search.js';
+import {PROGRESS_BLOCK_ACTIVITY_ID, PROGRESS_BLOCK_STATE_ACTIVITY_ID} from './templates/shared.js';
 import type {ConverseEvent} from './events.js';
 
 const DEFAULT_DELAY_MS = 25;
@@ -135,6 +136,24 @@ function withSurfaceIds(
       ? {...event, data: renameSurfaceIds(event.data, rename) as ConverseEvent['data']}
       : event
   );
+}
+
+const PROGRESS_BLOCK_ACTIVITY_IDS = [PROGRESS_BLOCK_ACTIVITY_ID, PROGRESS_BLOCK_STATE_ACTIVITY_ID];
+
+// The progress block's two activity ids are per turn, like its surface id (Thermidor ADR-028), so
+// each prompt answer suffixes them the same way.
+function withProgressBlockActivityIds(
+  events: ConverseEvent[],
+  rename: (activityId: string) => string
+): ConverseEvent[] {
+  return events.map((event) => {
+    const {messageId} = event.data as {messageId?: unknown};
+    return event.event === 'ACTIVITY_SNAPSHOT' &&
+      typeof messageId === 'string' &&
+      PROGRESS_BLOCK_ACTIVITY_IDS.includes(messageId)
+      ? {...event, data: {...event.data, messageId: rename(messageId)}}
+      : event;
+  });
 }
 
 // Agent Gateway announces, in the AG-UI metadata of a surface snapshot, the actions whose answer it
@@ -318,6 +337,7 @@ const schemaBaseResponse = (body: unknown, session: SessionKeys) => {
     events = matchSchemaPrompt((body as Record<string, unknown>).message as string, mintSurfaceId);
   }
   events = withSurfaceIds(events, mintSurfaceId);
+  events = withProgressBlockActivityIds(events, mintSurfaceId);
   events = withTurnOpeningAnnouncements(events);
   recordRecentQuery(
     session.conversationSessionId,

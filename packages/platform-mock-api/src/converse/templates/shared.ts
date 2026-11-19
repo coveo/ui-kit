@@ -199,6 +199,8 @@ interface ProgressStep {
 }
 
 const PROGRESS_BLOCK_SURFACE_ID = 'progress-block';
+const PROGRESS_BLOCK_ACTIVITY_ID = 'activity-progress-block';
+const PROGRESS_BLOCK_STATE_ACTIVITY_ID = 'activity-progress-block-state';
 
 function progressBlockState(done: ProgressStep[], active: ProgressStep[]) {
   return {
@@ -214,7 +216,7 @@ function progressBlockState(done: ProgressStep[], active: ProgressStep[]) {
 // with the steps it started.
 function createProgressBlock(active: ProgressStep[]): ConverseEvent {
   return ActivitySnapshot({
-    messageId: 'activity-progress-block',
+    messageId: PROGRESS_BLOCK_ACTIVITY_ID,
     activityType: 'a2ui-surface',
     replace: true,
     content: {
@@ -243,7 +245,7 @@ function createProgressBlock(active: ProgressStep[]): ConverseEvent {
 // step left, the block is complete.
 function updateProgressBlock(done: ProgressStep[], active: ProgressStep[] = []): ConverseEvent {
   return UpdateDataModelActivity({
-    messageId: 'activity-progress-block-state',
+    messageId: PROGRESS_BLOCK_STATE_ACTIVITY_ID,
     replace: true,
     ops: [
       {
@@ -257,6 +259,8 @@ function updateProgressBlock(done: ProgressStep[], active: ProgressStep[] = []):
 
 export {
   CATALOG_ID,
+  PROGRESS_BLOCK_ACTIVITY_ID,
+  PROGRESS_BLOCK_STATE_ACTIVITY_ID,
   RENDERER_ROOT_ID,
   deleteSurfaceMessage,
   loadingSurfaceMessage,
