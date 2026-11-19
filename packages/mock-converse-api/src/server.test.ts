@@ -1,5 +1,6 @@
 import {describe, it, expect, afterEach} from 'vitest';
 import http from 'node:http';
+import {randomUUID} from 'node:crypto';
 import {createMockConverseServer} from './server.js';
 
 function makeRequest(
@@ -348,8 +349,12 @@ describe('createMockConverseServer', () => {
           .map((op) => [`${op.surfaceId} ${op.path}`, op.value])
       );
 
-    const initialize = async () => {
-      const res = await postSchema({message: null, action: {name: 'initialize', context: {}}});
+    const initialize = async (keys: Record<string, string> = {}) => {
+      const res = await postSchema({
+        message: null,
+        ...keys,
+        action: {name: 'initialize', context: {}},
+      });
       return parseEvents(res.body);
     };
 
@@ -375,41 +380,158 @@ describe('createMockConverseServer', () => {
       expect(createdSurfaceIds(second)[0]).not.toBe(createdSurfaceIds(first)[0]);
     });
 
-    it('refuses initialize with a session token', async () => {
+    const shellRecentQueries = (events: SseEvent[]) => {
+      const [createSurface] = surfaceMessages(events).map(
+        (message) =>
+          message.createSurface as {
+            dataModel: {state: Record<string, {recentQueries: string[]}>};
+          }
+      );
+      return createSurface.dataModel.state['query-suggestions'].recentQueries;
+    };
+
+    const openSessionWithRecentQuery = async () => {
+      const opened = await initialize();
+      const keys = sessionKeys(opened);
+      await postSchema({message: 'water sports', ...keys});
+      return {opened, keys};
+    };
+
+    it('resumes a session whose keys match, with its recent queries in a new shell', async () => {
       await startServer();
+      const {opened, keys} = await openSessionWithRecentQuery();
+
+      const resumed = await initialize(keys);
+      const prompted = parseEvents((await postSchema({message: 'life jackets', ...keys})).body);
+
+      expect(sessionKeys(resumed)).toEqual(keys);
+      expect(createdSurfaceIds(resumed)[0]).not.toBe(createdSurfaceIds(opened)[0]);
+      expect(shellRecentQueries(resumed)).toEqual(['water sports']);
+      expect(sessionKeys(prompted)).toEqual(keys);
+      expect(shellRecentQueries(await initialize(keys))).toEqual(['life jackets', 'water sports']);
+    });
+
+    type Keys = ReturnType<typeof sessionKeys>;
+    it.each<[string, (keys: Keys) => Keys]>([
+      [
+        'an unknown session id',
+        () => ({conversationSessionId: randomUUID(), conversationToken: randomUUID()}),
+      ],
+      ['a wrong token', (keys) => ({...keys, conversationToken: randomUUID()})],
+    ])('opens a new session with fresh keys on initialize with %s', async (_, keysToSend) => {
+      await startServer();
+      const {keys} = await openSessionWithRecentQuery();
+      const sent = keysToSend(keys);
+
+      const fallback = await initialize(sent);
+
+      expect(sessionKeys(fallback).conversationSessionId).not.toBe(sent.conversationSessionId);
+      expect(shellRecentQueries(fallback)).toEqual([]);
+      expect(sessionKeys(await initialize(keys))).toEqual(keys);
+    });
+
+    it('opens a new session under a new client-chosen session id sent without a token', async () => {
+      await startServer();
+      const conversationSessionId = randomUUID();
+
+      const opened = await initialize({conversationSessionId});
+
+      expect(sessionKeys(opened)).toEqual({
+        conversationSessionId,
+        conversationToken: expect.any(String),
+      });
+      expect(shellRecentQueries(opened)).toEqual([]);
+    });
+
+    it("refuses initialize with an existing session's id and no token", async () => {
+      await startServer();
+      const {keys} = await openSessionWithRecentQuery();
+
       const res = await postSchema({
         message: null,
-        conversationSessionId: 'session-1',
-        conversationToken: 'token-1',
+        conversationSessionId: keys.conversationSessionId,
         action: {name: 'initialize', context: {}},
       });
 
-      expect(res.statusCode).toBe(400);
+      expect(res.statusCode).toBe(403);
       expect(res.headers['access-control-allow-origin']).toBe('*');
-      expect(JSON.parse(res.body)).toEqual({
-        error: 'initialize opens a session: send it without a session token',
-      });
+      expect(JSON.parse(res.body)).toEqual({message: 'Invalid conversation token.'});
+      expect(sessionKeys(await initialize(keys))).toEqual(keys);
     });
 
-    it("answers fetchSuggestions on the shell's surface, keeping the session", async () => {
+    it.each<[string, (keys: Keys) => Record<string, string>, number, string]>([
+      [
+        'a wrong token',
+        (keys) => ({...keys, conversationToken: randomUUID()}),
+        403,
+        'Invalid conversation token.',
+      ],
+      [
+        "an existing session's id and no token",
+        (keys) => ({conversationSessionId: keys.conversationSessionId}),
+        403,
+        'Invalid conversation token.',
+      ],
+      [
+        'an unknown session id and a token',
+        () => ({conversationSessionId: randomUUID(), conversationToken: randomUUID()}),
+        404,
+        'Conversation not found.',
+      ],
+    ])(
+      'refuses a prompt with %s, as Agent Gateway does',
+      async (_, keysToSend, status, message) => {
+        await startServer();
+        const {keys} = await openSessionWithRecentQuery();
+
+        const res = await postSchema({message: 'life jackets', ...keysToSend(keys)});
+
+        expect(res.statusCode).toBe(status);
+        expect(res.headers['access-control-allow-origin']).toBe('*');
+        expect(JSON.parse(res.body)).toEqual({message});
+        expect(shellRecentQueries(await initialize(keys))).toEqual(['water sports']);
+      }
+    );
+
+    it('opens a session on a first prompt sent without a token', async () => {
+      await startServer();
+      const conversationSessionId = randomUUID();
+
+      const chosen = parseEvents(
+        (await postSchema({message: 'water sports', conversationSessionId})).body
+      );
+      const minted = parseEvents((await postSchema({message: 'water sports'})).body);
+
+      expect(sessionKeys(chosen)).toEqual({
+        conversationSessionId,
+        conversationToken: expect.any(String),
+      });
+      expect(sessionKeys(minted).conversationSessionId).toEqual(expect.any(String));
+      expect(shellRecentQueries(await initialize(sessionKeys(chosen)))).toEqual(['water sports']);
+    });
+
+    it("answers fetchSuggestions on the shell's surface only, keeping the session", async () => {
       await startServer();
       const opened = await initialize();
       const keys = sessionKeys(opened);
       const [shellId] = createdSurfaceIds(opened);
-      const fetchSuggestions = (query: string) =>
+      const postFetchSuggestions = (query: string, surfaceId = shellId) =>
         postSchema({
           message: null,
           ...keys,
           action: {
             name: 'fetchSuggestions',
-            surfaceId: shellId,
+            surfaceId,
             sourceComponentId: 'query-suggestions',
             context: {query},
           },
-        }).then((res) => parseEvents(res.body));
+        });
+      const fetchSuggestions = (query: string) =>
+        postFetchSuggestions(query).then((res) => parseEvents(res.body));
 
       const surf = await fetchSuggestions('surf');
       const empty = await fetchSuggestions('');
+      const otherSurface = await postFetchSuggestions('surf', 'not-the-shell');
 
       expect(sessionKeys(surf)).toEqual(keys);
       expect(statesByNode(surf)[`${shellId} /state/query-suggestions`]).toMatchObject({
@@ -420,6 +542,17 @@ describe('createMockConverseServer', () => {
         query: '',
         recentQueries: [],
         completions: [],
+      });
+      expect(otherSurface.statusCode).toBe(400);
+      expect(JSON.parse(otherSurface.body)).toMatchObject({
+        errorCode: 'AGENT:ACTION_NOT_APPLICABLE',
+      });
+
+      await initialize(keys);
+      const replacedShell = await postFetchSuggestions('surf');
+      expect(replacedShell.statusCode).toBe(400);
+      expect(JSON.parse(replacedShell.body)).toMatchObject({
+        errorCode: 'AGENT:ACTION_NOT_APPLICABLE',
       });
     });
 

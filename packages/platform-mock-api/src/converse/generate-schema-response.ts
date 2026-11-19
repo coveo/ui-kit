@@ -347,7 +347,13 @@ function buildSchemaActionResponse(action: SchemaAction, session: SessionKeys) {
     shellSurfaceIdsBySession.set(session.conversationSessionId, shellSurfaceId);
     return buildStreamingResponse(
       withSessionKeys(
-        withShellAnnouncements(buildSessionShellEvents(shellSurfaceId), shellSurfaceId),
+        withShellAnnouncements(
+          buildSessionShellEvents(
+            shellSurfaceId,
+            recentQueriesBySession.get(session.conversationSessionId)
+          ),
+          shellSurfaceId
+        ),
         session
       ),
       {delayBetweenMessages: DEFAULT_DELAY_MS}
@@ -359,12 +365,15 @@ function buildSchemaActionResponse(action: SchemaAction, session: SessionKeys) {
   if (action.name === 'clearRecentQueries' || action.name === 'removeRecentQuery') {
     return buildRecentQueriesActionResponse(action, session);
   }
-  if (action.name === 'fetchSuggestions' && action.surfaceId && action.sourceComponentId) {
+  if (action.name === 'fetchSuggestions') {
+    if (!appliesToQuerySuggestions(action, session)) {
+      return actionNotApplicableResponse();
+    }
     return buildStreamingResponse(
       withSessionKeys(
         buildQuerySuggestionsEvents({
-          surfaceId: action.surfaceId,
-          sourceComponentId: action.sourceComponentId,
+          surfaceId: action.surfaceId!,
+          sourceComponentId: QUERY_SUGGESTIONS_ID,
           query: queryOf(action),
           sessionRecentQueries: recentQueriesBySession.get(session.conversationSessionId) ?? [],
         }),
