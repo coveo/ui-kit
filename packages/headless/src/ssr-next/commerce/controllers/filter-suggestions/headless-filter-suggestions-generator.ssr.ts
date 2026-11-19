@@ -12,7 +12,7 @@ import {
   type FilterSuggestionsGenerator,
   type GeneratedFilterSuggestionsControllers,
 } from '../../../../controllers/commerce/filter-suggestions/headless-filter-suggestions-generator.js';
-import type {NonRecommendationControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
+import type {UniversalControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
 
 export type {
   CategoryFilterSuggestions,
@@ -25,7 +25,7 @@ export type {
 };
 
 export type FilterSuggestionsGeneratorDefinition =
-  NonRecommendationControllerDefinitionWithoutProps<FilterSuggestionsGenerator>;
+  UniversalControllerDefinitionWithoutProps<FilterSuggestionsGenerator>;
 
 /**
  * Defines the `FilterSuggestionsGenerator` controller for the purpose of server-side rendering.

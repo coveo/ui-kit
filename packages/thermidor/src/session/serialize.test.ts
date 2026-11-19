@@ -23,6 +23,8 @@ function turn(
       ...overrides.response,
     },
     ...(overrides.error !== undefined ? {error: overrides.error} : {}),
+    ...(overrides.reason !== undefined ? {reason: overrides.reason} : {}),
+    ...(overrides.errorCode !== undefined ? {errorCode: overrides.errorCode} : {}),
   };
 }
 
@@ -71,7 +73,7 @@ describe('serializeSession', () => {
       response: {
         activities: [],
         surfaces: [],
-        agent: {messages: [{content: 'hi', role: 'assistant'}], reasoningSteps: []},
+        agent: {messages: [{content: 'hi', role: 'assistant'}], toolCalls: []},
       },
     });
     const withoutAgent = turn({id: 't2'});
@@ -80,7 +82,7 @@ describe('serializeSession', () => {
 
     expect(result.turns[0].response.agent).toEqual({
       messages: [{content: 'hi', role: 'assistant'}],
-      reasoningSteps: [],
+      toolCalls: [],
     });
     expect(result.turns[1].response.agent).toBeUndefined();
   });
@@ -180,6 +182,36 @@ describe('restoreSession', () => {
     ]);
   });
 
+  it('round-trips the reason and errorCode of errored turns and the initialization', () => {
+    const failed = turn({
+      id: 't1',
+      status: 'error',
+      error: 'busy',
+      reason: 'failed',
+      errorCode: 'AGENT:UPSTREAM_TIMEOUT',
+    });
+    const cancelled = turn({id: 't2', status: 'error', error: 'Cancelled', reason: 'cancelled'});
+    const initialization = {
+      activities: [],
+      status: 'error' as const,
+      error: 'late',
+      reason: 'failed' as const,
+      errorCode: 'AGENT:UPSTREAM_TIMEOUT',
+    };
+
+    const serialized = serializeSession(state({turns: [failed, cancelled], initialization}));
+    const restored = restoreSession(serialized);
+
+    expect(serialized.turns[0]).toMatchObject({
+      reason: 'failed',
+      errorCode: 'AGENT:UPSTREAM_TIMEOUT',
+    });
+    expect(serialized.turns[1]).toMatchObject({reason: 'cancelled'});
+    expect(serialized.turns[1]).not.toHaveProperty('errorCode');
+    expect(restored.turns).toEqual([failed, cancelled]);
+    expect(restored.initialization).toEqual(initialization);
+  });
+
   it('downgrades a streaming turn to error while preserving its partial response', () => {
     const streaming = turn({
       id: 't1',
@@ -187,7 +219,7 @@ describe('restoreSession', () => {
       response: {
         activities: [{id: 'a1', kind: 'k', replace: false, payload: {x: 1}}],
         surfaces: [],
-        agent: {messages: [{content: 'partial', role: 'assistant'}], reasoningSteps: []},
+        agent: {messages: [{content: 'partial', role: 'assistant'}], toolCalls: []},
       },
     });
 
@@ -197,12 +229,13 @@ describe('restoreSession', () => {
 
     expect(restored.turns[0].status).toBe('error');
     expect(restored.turns[0].error).toBe(STREAM_INTERRUPTED_ERROR);
+    expect(restored.turns[0].reason).toBe('failed');
     expect(restored.turns[0].response.activities).toEqual([
       {id: 'a1', kind: 'k', replace: false, payload: {x: 1}},
     ]);
     expect(restored.turns[0].response.agent).toEqual({
       messages: [{content: 'partial', role: 'assistant'}],
-      reasoningSteps: [],
+      toolCalls: [],
     });
   });
 

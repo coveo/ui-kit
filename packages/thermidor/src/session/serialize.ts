@@ -10,11 +10,12 @@
  *
  *   | Field                                       | Persist | Scope            |
  *   | ------------------------------------------- | ------- | ---------------- |
- *   | id, input, status, error                    | yes     | all turns        |
- *   | initialization (activities, status, error)  | yes     | session-level    |
+ *   | id, input, status, error, reason, errorCode | yes     | all turns        |
+ *   | initialization (activities, status, error,  | yes     | session-level    |
+ *   |   reason, errorCode)                        |         |                  |
  *   | sessionId, sessionToken, activeTurnId       | yes     | session-level    |
  *   | response.activities                         | yes     | all turns        |
- *   | response.agent.{messages,reasoningSteps}    | yes     | all turns        |
+ *   | response.agent.{messages,toolCalls}         | yes     | all turns        |
  *   | state (validated data model)                | yes     | session-level    |
  *   | response.surfaces                           | no      | derived          |
  *   | renderer stream (`a2uiMessages`)            | no      | derived          |
@@ -24,7 +25,8 @@
  *     `activities` of the initialization, then of each turn, in order (never
  *     persisted, never an independent source of truth).
  *   - a turn or initialization persisted mid-stream (`status: 'streaming'`) is
- *     downgraded to `status: 'error'` (`'Stream was interrupted'`), preserving
+ *     downgraded to `status: 'error'` (`'Stream was interrupted'`,
+ *     `reason: 'failed'`), preserving
  *     whatever partial `response` had streamed in.
  *   - an unsupported `version` is rejected without partially populating a
  *     session.
@@ -36,15 +38,16 @@ import {
   convertA2uiMessages,
   type RendererStream,
 } from './a2ui-v09-projection.js';
-import {deriveSurfaces, SURFACE_ACTIVITY_KIND} from './fold.js';
+import {deriveSurfaces, runOutcome, SURFACE_ACTIVITY_KIND} from './fold.js';
 import {sessionActivities, type SessionRuns} from './session-surfaces.js';
 import type {SessionStoreState} from './store.js';
 import type {
   Activity,
   AgentMessage,
-  ReasoningStep,
   SessionInitialization,
+  ToolCall,
   Turn,
+  TurnErrorReason,
   TurnInput,
   TurnStatus,
 } from './types.js';
@@ -53,12 +56,18 @@ import type {
  * The current serialized-session shape version. Bumped whenever the persisted
  * shape changes. Restoration rejects any `version` that is not this value.
  */
-export const SERIALIZED_SESSION_VERSION = 4;
+export const SERIALIZED_SESSION_VERSION = 6;
 
 /**
  * The error message used when a mid-stream turn is restored.
  */
 export const STREAM_INTERRUPTED_ERROR = 'Stream was interrupted';
+
+const STREAM_INTERRUPTED = {
+  status: 'error',
+  error: STREAM_INTERRUPTED_ERROR,
+  reason: 'failed',
+} as const satisfies Pick<Turn, 'status' | 'error' | 'reason'>;
 
 /**
  * The agent facet of a {@link SerializedTurn}'s response. Present only for
@@ -66,7 +75,7 @@ export const STREAM_INTERRUPTED_ERROR = 'Stream was interrupted';
  */
 export interface SerializedTurnAgent {
   messages: AgentMessage[];
-  reasoningSteps: ReasoningStep[];
+  toolCalls: ToolCall[];
 }
 
 /**
@@ -90,6 +99,8 @@ export interface SerializedTurn {
   input: TurnInput;
   status: TurnStatus;
   error?: string;
+  reason?: TurnErrorReason;
+  errorCode?: string;
   response: SerializedTurnResponse;
 }
 
@@ -100,6 +111,10 @@ export interface SerializedInitialization {
   status: TurnStatus;
   /** Present when `status === 'error'`, absent otherwise. */
   error?: string;
+  /** Present when `status === 'error'`, absent otherwise. */
+  reason?: TurnErrorReason;
+  /** The gateway's `RUN_ERROR` code, when it sent one. */
+  errorCode?: string;
 }
 
 /**
@@ -142,8 +157,8 @@ export class UnsupportedSerializedSessionVersionError extends Error {
  * Serializes a session's runtime store state into a versioned, persistable
  * {@link SerializedSession}.
  *
- * Persists `id`/`input`/`status`/`error` and `response.activities` for every
- * turn, `response.agent.{messages,reasoningSteps}` for turns that have an
+ * Persists `id`/`input`/`status`/`error`/`reason`/`errorCode` and `response.activities` for every
+ * turn, `response.agent.{messages,toolCalls}` for turns that have an
  * agent, and session-level `initialization`, `sessionId`/`sessionToken`/`activeTurnId`
  * and `state`. Never persists the derived `response.surfaces` or renderer stream.
  */
@@ -158,20 +173,17 @@ export function serializeSession(state: SessionStoreState<Turn>): SerializedSess
     if (turn.response.agent) {
       response.agent = {
         messages: [...turn.response.agent.messages],
-        reasoningSteps: [...turn.response.agent.reasoningSteps],
+        toolCalls: [...turn.response.agent.toolCalls],
       };
     }
 
-    const serialized: SerializedTurn = {
+    return {
       id: turn.id,
       input: {...turn.input},
       status: turn.status,
+      ...runOutcome(turn),
       response,
     };
-    if (turn.error !== undefined) {
-      serialized.error = turn.error;
-    }
-    return serialized;
   });
 
   const session: SerializedSession = {
@@ -191,7 +203,7 @@ export function serializeSession(state: SessionStoreState<Turn>): SerializedSess
     session.initialization = {
       activities: [...initialization.activities],
       status: initialization.status,
-      ...(initialization.error === undefined ? {} : {error: initialization.error}),
+      ...runOutcome(initialization),
     };
   }
   if (sessionState !== undefined && Object.keys(sessionState).length > 0) {
@@ -225,27 +237,20 @@ export function restoreSession(serialized: SerializedSession): SessionStoreState
     if (turn.response.agent) {
       response.agent = {
         messages: [...turn.response.agent.messages],
-        reasoningSteps: [...turn.response.agent.reasoningSteps],
+        toolCalls: [...turn.response.agent.toolCalls],
       };
     }
 
-    const restored: Turn = {
+    // A turn persisted mid-stream cannot resume; downgrade to error while
+    // preserving the partial response exactly as persisted.
+    return {
       id: turn.id,
       input: {...turn.input},
       response,
-      status: turn.status,
+      ...(turn.status === 'streaming'
+        ? STREAM_INTERRUPTED
+        : {status: turn.status, ...runOutcome(turn)}),
     };
-
-    if (turn.status === 'streaming') {
-      // A turn persisted mid-stream cannot resume; downgrade to error while
-      // preserving the partial response exactly as persisted.
-      restored.status = 'error';
-      restored.error = STREAM_INTERRUPTED_ERROR;
-    } else if (turn.error !== undefined) {
-      restored.error = turn.error;
-    }
-
-    return restored;
   });
 
   const initialization =
@@ -274,13 +279,9 @@ export function restoreSession(serialized: SerializedSession): SessionStoreState
 function restoreInitialization(initialization: SerializedInitialization): SessionInitialization {
   const activities = [...initialization.activities];
   if (initialization.status === 'streaming') {
-    return {activities, status: 'error', error: STREAM_INTERRUPTED_ERROR};
+    return {activities, ...STREAM_INTERRUPTED};
   }
-  return {
-    activities,
-    status: initialization.status,
-    ...(initialization.error === undefined ? {} : {error: initialization.error}),
-  };
+  return {activities, status: initialization.status, ...runOutcome(initialization)};
 }
 
 function deriveRendererStream(runs: SessionRuns): RendererStream {

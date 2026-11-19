@@ -43,12 +43,14 @@ describe('atomic-color-facet', () => {
       allowedValues?: string[];
       injectionDepth?: number;
       filterFacetCount?: boolean;
+      disableFacetCountFiltering?: boolean;
       resultsMustMatch?: 'allValues' | 'atLeastOneValue';
       sortCriteria?: 'score' | 'alphanumeric' | 'occurrences';
       numberOfValues?: number;
       isCollapsed?: boolean;
       displayValuesAs?: 'checkbox' | 'box';
       withSearch?: boolean;
+      disableFacetSearch?: boolean;
       facetId?: string;
     } = {}
   ) => {
@@ -67,8 +69,10 @@ describe('atomic-color-facet', () => {
         .tabsIncluded=${props.tabsIncluded || []}
         .tabsExcluded=${props.tabsExcluded || []}
         filter-facet-count=${ifDefined(props.filterFacetCount)}
+        ?disable-facet-count-filtering=${props.disableFacetCountFiltering}
         is-collapsed=${ifDefined(props.isCollapsed)}
         with-search=${ifDefined(props.withSearch)}
+        ?disable-facet-search=${props.disableFacetSearch}
       ></atomic-color-facet>`,
       selector: 'atomic-color-facet',
       bindings: (bindings) => ({
@@ -383,12 +387,42 @@ describe('atomic-color-facet', () => {
     expect(locators.searchWrapper).toBeNull();
   });
 
+  it('should render search input by default', async () => {
+    const {locators} = await setupElement();
+    await expect.element(locators.searchInput as HTMLElement).toBeInTheDocument();
+  });
+
+  it('should not render search input when disableFacetSearch is true', async () => {
+    const {locators} = await setupElement({disableFacetSearch: true});
+    expect(locators.searchWrapper).toBeNull();
+  });
+
   it('should pass filterFacetCount to facet controller', async () => {
     await setupElement({filterFacetCount: false});
     expect(buildFacet).toHaveBeenCalledWith(
       expect.any(Object),
       expect.objectContaining({
         options: expect.objectContaining({filterFacetCount: false}),
+      })
+    );
+  });
+
+  it('should pass filterFacetCount as false to facet controller when disableFacetCountFiltering is true', async () => {
+    await setupElement({disableFacetCountFiltering: true});
+    expect(buildFacet).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.objectContaining({
+        options: expect.objectContaining({filterFacetCount: false}),
+      })
+    );
+  });
+
+  it('should pass filterFacetCount as true to facet controller by default', async () => {
+    await setupElement();
+    expect(buildFacet).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.objectContaining({
+        options: expect.objectContaining({filterFacetCount: true}),
       })
     );
   });

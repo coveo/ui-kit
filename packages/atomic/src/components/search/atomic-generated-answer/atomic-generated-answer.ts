@@ -34,6 +34,7 @@ import type {Bindings} from '@/src/components/search/atomic-search-interface/ato
 import {arrayConverter} from '@/src/converters/array-converter';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {createLegacyArrayStringConverter} from '@/src/converters/legacy-array-string-converter';
+import {warnOnCommaSeparatedFieldList} from '@/src/utils/deprecation-utils';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -155,13 +156,7 @@ export class AtomicGeneratedAnswer extends LitElement implements InitializableCo
   });
 
   // TODO V4 (KIT-5306): Remove converter and use arrayConverter directly.
-  private static readonly fieldsToIncludeInCitationsConverter = createLegacyArrayStringConverter(
-    (value) => {
-      console.warn(
-        `Starting from Atomic v4, the "fields-to-include-in-citations" property will only accept an array of strings. Using a comma-separated string value ("${value}") is now deprecated. Please update the value to be a JSON array. For example: fields-to-include-in-citations='["fieldA","fieldB"]'`
-      );
-    }
-  );
+  private static readonly fieldsToIncludeInCitationsConverter = createLegacyArrayStringConverter();
 
   private readonly DEFAULT_COLLAPSED_HEIGHT = 16;
   private readonly MAX_COLLAPSED_HEIGHT = 32;
@@ -212,7 +207,7 @@ export class AtomicGeneratedAnswer extends LitElement implements InitializableCo
   /**
    * A list of fields to include with the citations used to generate the answer.
    *
-   * Set this property as a stringified JSON array, for example:
+   * In JavaScript, set the property to an array of strings. In HTML, set the attribute to a stringified JSON array, for example:
    * ```html
    *  <atomic-generated-answer fields-to-include-in-citations='["fieldA", "fieldB"]'></atomic-generated-answer>
    * ```
@@ -222,7 +217,7 @@ export class AtomicGeneratedAnswer extends LitElement implements InitializableCo
     attribute: 'fields-to-include-in-citations',
     converter: AtomicGeneratedAnswer.fieldsToIncludeInCitationsConverter,
   })
-  fieldsToIncludeInCitations?: string;
+  fieldsToIncludeInCitations?: string[] | string;
 
   /**
    * Whether to disable citation anchoring.
@@ -365,6 +360,12 @@ export class AtomicGeneratedAnswer extends LitElement implements InitializableCo
   }
 
   protected willUpdate(changedProperties: PropertyValueMap<this>) {
+    warnOnCommaSeparatedFieldList(
+      this,
+      this.bindings?.engine?.logger,
+      'fields-to-include-in-citations',
+      this.fieldsToIncludeInCitations
+    );
     if (changedProperties.has('tabManagerState' as keyof this)) {
       const oldValue = changedProperties.get('tabManagerState' as keyof this) as
         | TabManagerState

@@ -146,6 +146,23 @@ describe('generated answer', () => {
     expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(testCitation.id, providedAnswerId);
   });
 
+  it('#logCitationClick logs a deprecation warning once per engine when called without an answerId', () => {
+    const testCitation = buildMockCitation();
+    generatedAnswer.logCitationClick(testCitation.id);
+    generatedAnswer.logCitationClick(testCitation.id);
+
+    expect(engine.logger.warn).toHaveBeenCalledExactlyOnceWith(
+      expect.stringContaining('[Deprecated] Calling `logCitationClick` without an `answerId`')
+    );
+  });
+
+  it('#logCitationClick does not log a deprecation warning when called with an answerId', () => {
+    const testCitation = buildMockCitation();
+    generatedAnswer.logCitationClick(testCitation.id, providedAnswerId);
+
+    expect(engine.logger.warn).not.toHaveBeenCalled();
+  });
+
   it('#logCitationHover dispatches analytics action', () => {
     const testCitation = buildMockCitation();
     const exampleDuration = 100;

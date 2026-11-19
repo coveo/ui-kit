@@ -103,8 +103,6 @@ export type {
   DateRangeRequest,
   FacetType,
   FacetValueRequest,
-  LocationFacetValue,
-  LocationFacetValueRequest,
   NumericFacetValue,
   NumericRangeRequest,
   RegularFacetValue,
@@ -112,6 +110,8 @@ export type {
 export type {
   LocationFacet,
   LocationFacetState,
+  LocationFacetValue,
+  LocationFacetValueRequest,
 } from './controllers/commerce/core/facets/location/headless-commerce-location-facet.js';
 export type {
   NumericFacet,

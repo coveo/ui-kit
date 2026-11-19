@@ -210,6 +210,29 @@ describe('atomic-product', () => {
       const resultRoot = element.shadowRoot!.querySelector('.result-root');
       expect(resultRoot?.classList).toContain('with-sections');
     });
+
+    it('should use the image size of the visual section instead of the image size of the list', async () => {
+      const element = await renderProduct({
+        imageSize: 'small',
+        content: renderTemplateContent(
+          '<atomic-product-section-visual image-size="large"></atomic-product-section-visual>'
+        ),
+      });
+      const resultRoot = element.shadowRoot!.querySelector('.result-root');
+      expect(resultRoot?.classList).toContain('image-large');
+      expect(resultRoot?.classList).not.toContain('image-small');
+    });
+
+    it('should use the image size of the list when the visual section does not set one', async () => {
+      const element = await renderProduct({
+        imageSize: 'small',
+        content: renderTemplateContent(
+          '<atomic-product-section-visual></atomic-product-section-visual>'
+        ),
+      });
+      const resultRoot = element.shadowRoot!.querySelector('.result-root');
+      expect(resultRoot?.classList).toContain('image-small');
+    });
   });
 
   describe('when using a custom rendering function', () => {

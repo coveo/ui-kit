@@ -38,11 +38,10 @@ describe('buildProviderWithDefinition', () => {
 
   const hydrateArgs = () => hydrateStaticState.mock.calls[0][0];
 
-  const buildStaticState = () => ({
-    searchActions: [],
-    controllers: {},
-    navigatorContext,
-  });
+  type StaticState = Parameters<typeof definition.hydrateStaticState>[0];
+
+  const buildStaticState = () =>
+    ({searchActions: [], controllers: {}, navigatorContext}) as unknown as StaticState;
 
   beforeEach(() => {
     hydrateStaticState = vi.fn().mockResolvedValue({engine: {}, controllers: {}});
@@ -71,7 +70,7 @@ describe('buildProviderWithDefinition', () => {
       controllers: {},
       navigatorContext,
       accessToken: 'per-request-token',
-    };
+    } as unknown as StaticState;
 
     render(
       <Provider staticState={staticState}>

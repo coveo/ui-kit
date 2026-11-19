@@ -1,7 +1,7 @@
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import type {NormalizedStreamEvent} from '@/src/internal/api/protocol/stream-types.js';
 import {convertA2uiMessages} from './a2ui-v09-projection.js';
-import {createTurn, deriveSurfaces, foldActivities} from './fold.js';
+import {createTurn, deriveSurfaces, foldActivities, foldInitialization} from './fold.js';
 import type {A2uiV09Message, Activity} from './types.js';
 
 /** The v0.9 messages a renderer receives for the surface activities of a folded turn. */
@@ -40,8 +40,36 @@ describe('fold Turn/TurnResponse shape', () => {
     it('sets status "error" and an error message on a RUN_ERROR sequence', () => {
       const turn = foldActivities(createTurn('t1', {prompt: 'hi'}), [runError]);
 
-      expect(turn.status).toBe('error');
-      expect(turn.error).toBe('boom');
+      expect(turn).toMatchObject({status: 'error', error: 'boom', reason: 'failed'});
+      expect(turn).not.toHaveProperty('errorCode');
+    });
+
+    it('marks a RUN_ERROR failed and keeps its code', () => {
+      const turn = foldActivities(createTurn('t1', {prompt: 'hi'}), [
+        activity({type: 'RUN_ERROR', message: 'busy', code: 'AGENT:UPSTREAM_TIMEOUT'}),
+      ]);
+
+      expect(turn).toMatchObject({
+        status: 'error',
+        error: 'busy',
+        reason: 'failed',
+        errorCode: 'AGENT:UPSTREAM_TIMEOUT',
+      });
+    });
+
+    it('carries reason and errorCode into the initialization', () => {
+      const initialization = foldInitialization(
+        {activities: [], status: 'streaming'},
+        activity({type: 'RUN_ERROR', message: 'late', code: 'AGENT:UPSTREAM_TIMEOUT'})
+      );
+
+      expect(initialization).toEqual({
+        activities: [],
+        status: 'error',
+        error: 'late',
+        reason: 'failed',
+        errorCode: 'AGENT:UPSTREAM_TIMEOUT',
+      });
     });
 
     it('omits error on a completed (RUN_FINISHED) sequence', () => {
@@ -79,7 +107,7 @@ describe('fold Turn/TurnResponse shape', () => {
   });
 
   describe('agent facet presence', () => {
-    it('populates response.agent with messages and reasoningSteps when the router invoked an agent', () => {
+    it('populates response.agent with messages and toolCalls when the router invoked an agent', () => {
       const turn = foldActivities(createTurn('t1', {prompt: 'hi'}), [
         textMessageStart,
         activity({type: 'TEXT_MESSAGE_CONTENT', delta: 'hello'}),
@@ -88,12 +116,12 @@ describe('fold Turn/TurnResponse shape', () => {
 
       expect(turn.response.agent).toBeDefined();
       expect(turn.response.agent?.messages).toEqual([{content: 'hello', role: 'assistant'}]);
-      expect(Array.isArray(turn.response.agent?.reasoningSteps)).toBe(true);
+      expect(turn.response.agent?.toolCalls).toEqual([]);
     });
 
     // The fold's ACTIVITY_SNAPSHOT case must not materialize an empty
     // `response.agent` facet. `response.agent` is created only by genuinely
-    // agent-invoking events (TEXT_MESSAGE_*, REASONING_MESSAGE_*, TOOL_CALL_*),
+    // agent-invoking events (TEXT_MESSAGE_*, TOOL_CALL_*),
     // so a turn the router never routed to an agent has `response.agent`
     // omitted entirely.
     it('omits response.agent for a turn the router did not route to an agent', () => {
@@ -101,6 +129,16 @@ describe('fold Turn/TurnResponse shape', () => {
 
       expect(turn.response.agent).toBeUndefined();
       expect('agent' in turn.response).toBe(false);
+    });
+
+    it('ignores reasoning events', () => {
+      const turn = foldActivities(createTurn('t1', {prompt: 'hi'}), [
+        activity({type: 'REASONING_MESSAGE_START', messageId: 'r1', role: 'reasoning'}),
+        activity({type: 'REASONING_MESSAGE_CONTENT', messageId: 'r1', delta: 'thinking'}),
+        activity({type: 'REASONING_MESSAGE_END', messageId: 'r1'}),
+      ]);
+
+      expect(turn.response.agent).toBeUndefined();
     });
   });
 });

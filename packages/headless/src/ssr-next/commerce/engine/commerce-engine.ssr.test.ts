@@ -36,18 +36,18 @@ describe('Commerce Engine SSR', () => {
     vi.clearAllMocks();
   });
 
-  it('should return 4 engine definitions', () => {
+  it('should return 3 engine definitions', () => {
     const engineDefinition = defineCommerceEngine(definitionOptions);
-    expect(engineDefinition).toHaveProperty('listingEngineDefinition');
-    expect(engineDefinition).toHaveProperty('recommendationEngineDefinition');
-    expect(engineDefinition).toHaveProperty('searchEngineDefinition');
-    expect(engineDefinition).toHaveProperty('standaloneEngineDefinition');
+    expect(Object.keys(engineDefinition).toSorted()).toEqual([
+      'listingEngineDefinition',
+      'searchEngineDefinition',
+      'standaloneEngineDefinition',
+    ]);
   });
 
   describe.each([
     ['listingEngineDefinition'],
     ['searchEngineDefinition'],
-    ['recommendationEngineDefinition'],
     ['standaloneEngineDefinition'],
   ])('%s', (definitionName) => {
     it('should always return context and cart controllers as well as the ones provided', async () => {
@@ -56,7 +56,6 @@ describe('Commerce Engine SSR', () => {
       const staticState = await engineDefinition[solutionType].fetchStaticState({
         navigatorContext: mockNavigatorContext,
         searchParams: {q: 'test'},
-        recommendations: [],
         context: {
           view: {url: 'http://example.com'},
           country: 'US',
@@ -101,6 +100,74 @@ describe('Commerce Engine SSR', () => {
         },
       });
       expect(staticState.controllers).toHaveProperty('parameterManager');
+    });
+  });
+
+  describe('definition validation', () => {
+    it('should throw at definition time when two recommendation controllers share a slot ID', () => {
+      expect(() =>
+        defineCommerceEngine({
+          ...definitionOptions,
+          controllers: {
+            popularViewed: defineRecommendations({options: {slotId: 'same-slot-id'}}),
+            popularBought: defineRecommendations({options: {slotId: 'same-slot-id'}}),
+          },
+        })
+      ).toThrow('Multiple recommendation controllers found for the same slotId: same-slot-id');
+    });
+  });
+
+  describe('static state round trip', () => {
+    const context = {
+      view: {url: 'http://example.com'},
+      country: 'US',
+      currency: 'USD' as const,
+      language: 'en',
+    };
+
+    it('should refuse to hydrate a static state fetched by another engine definition', async () => {
+      const {listingEngineDefinition, searchEngineDefinition} =
+        defineCommerceEngine(definitionOptions);
+      const listingStaticState = await listingEngineDefinition.fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+        context,
+      });
+
+      await expect(
+        // @ts-expect-error: a listing static state is not a search static state
+        searchEngineDefinition.hydrateStaticState(listingStaticState)
+      ).rejects.toThrow(
+        'This static state was fetched with the listing engine definition but is being hydrated with the search engine definition'
+      );
+    });
+
+    it('should not serialize the forwarded-for header into the static state', async () => {
+      const {listingEngineDefinition} = defineCommerceEngine(definitionOptions);
+
+      const staticState = await listingEngineDefinition.fetchStaticState({
+        navigatorContext: buildMockNavigatorContext({forwardedFor: '1.2.3.4'}),
+        context,
+      });
+
+      expect(staticState.navigatorContext).not.toHaveProperty('forwardedFor');
+      expect(staticState.navigatorContext.clientId).toBe(mockNavigatorContext.clientId);
+    });
+
+    it('should default the view URL to the navigator context location', async () => {
+      const {listingEngineDefinition} = defineCommerceEngine(definitionOptions);
+      const {view: _view, ...contextWithoutView} = context;
+
+      const staticState = await listingEngineDefinition.fetchStaticState({
+        navigatorContext: buildMockNavigatorContext({
+          location: 'https://example.com/browse/toys',
+        }),
+        context: contextWithoutView,
+      });
+
+      expect(staticState.context.view?.url).toBe('https://example.com/browse/toys');
+      expect(staticState.controllers.context.state.view.url).toBe(
+        'https://example.com/browse/toys'
+      );
     });
   });
 
@@ -185,14 +252,14 @@ describe('Commerce Engine SSR', () => {
     });
 
     it('should seed the recommendation requests with the product ID', async () => {
-      const {recommendationEngineDefinition} = defineCommerceEngine({
+      const {standaloneEngineDefinition} = defineCommerceEngine({
         ...definitionOptions,
         controllers: {
           viewedTogether: defineRecommendations({options: {slotId: 'some-slot-id'}}),
         },
       });
 
-      await recommendationEngineDefinition.fetchStaticState({
+      await standaloneEngineDefinition.fetchStaticState({
         navigatorContext: mockNavigatorContext,
         context,
         recommendations: ['viewedTogether'],
@@ -207,23 +274,95 @@ describe('Commerce Engine SSR', () => {
       );
     });
 
-    it('should request a slot listed twice once instead of waiting for a second request', async () => {
-      const {recommendationEngineDefinition} = defineCommerceEngine({
-        ...definitionOptions,
-        controllers: {
-          viewedTogether: defineRecommendations({options: {slotId: 'some-slot-id'}}),
-        },
+    describe('recommendation slots of a listing page', () => {
+      const defineEngineWithSlots = () =>
+        defineCommerceEngine({
+          ...definitionOptions,
+          controllers: {
+            popularViewed: defineRecommendations({options: {slotId: 'slot-viewed'}}),
+            popularBought: defineRecommendations({options: {slotId: 'slot-bought'}}),
+          },
+        });
+
+      const requestsTo = (path: string) =>
+        commerceRequests.filter((request) => request.url.includes(path));
+
+      it('should send the listing request and one request per requested slot', async () => {
+        const {listingEngineDefinition} = defineEngineWithSlots();
+
+        await listingEngineDefinition.fetchStaticState({
+          navigatorContext: mockNavigatorContext,
+          context,
+          recommendations: ['popularViewed', 'popularBought'],
+        });
+
+        expect(requestsTo('/listing')).toHaveLength(1);
+        expect(
+          requestsTo('/recommendations')
+            .map((request) => request.body.slotId)
+            .toSorted()
+        ).toEqual(['slot-bought', 'slot-viewed']);
       });
 
-      await recommendationEngineDefinition.fetchStaticState({
-        navigatorContext: mockNavigatorContext,
-        context,
-        recommendations: ['viewedTogether', 'viewedTogether'],
+      it('should request only the listed slots', async () => {
+        const {listingEngineDefinition} = defineEngineWithSlots();
+
+        await listingEngineDefinition.fetchStaticState({
+          navigatorContext: mockNavigatorContext,
+          context,
+          recommendations: ['popularBought'],
+        });
+
+        expect(requestsTo('/recommendations').map((request) => request.body.slotId)).toEqual([
+          'slot-bought',
+        ]);
       });
 
-      expect(
-        commerceRequests.filter((request) => request.url.includes('/recommendations'))
-      ).toHaveLength(1);
+      it('should request no slot when none is listed', async () => {
+        const {listingEngineDefinition} = defineEngineWithSlots();
+
+        await listingEngineDefinition.fetchStaticState({
+          navigatorContext: mockNavigatorContext,
+          context,
+        });
+
+        expect(requestsTo('/listing')).toHaveLength(1);
+        expect(requestsTo('/recommendations')).toHaveLength(0);
+      });
+
+      it('should carry the slots in the static state and refuse an unknown slot', async () => {
+        const {listingEngineDefinition} = defineEngineWithSlots();
+
+        const staticState = await listingEngineDefinition.fetchStaticState({
+          navigatorContext: mockNavigatorContext,
+          context,
+          recommendations: ['popularViewed'],
+        });
+
+        expect(staticState.controllers).toHaveProperty('popularViewed');
+        expect(staticState.controllers).toHaveProperty('popularBought');
+        expect(staticState.recommendations).toEqual(['popularViewed']);
+        await expect(
+          listingEngineDefinition.fetchStaticState({
+            navigatorContext: mockNavigatorContext,
+            context,
+            // @ts-expect-error: the slot is not defined
+            recommendations: ['unknownSlot'],
+          })
+        ).rejects.toThrow(/value should be one of: popularViewed, popularBought/);
+      });
+
+      it('should request a slot listed twice once instead of waiting for a second request', async () => {
+        const {listingEngineDefinition} = defineEngineWithSlots();
+
+        await listingEngineDefinition.fetchStaticState({
+          navigatorContext: mockNavigatorContext,
+          context,
+          recommendations: ['popularViewed', 'popularViewed'],
+        });
+
+        expect(requestsTo('/recommendations')).toHaveLength(1);
+      });
     });
   });
 });

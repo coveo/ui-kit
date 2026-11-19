@@ -3,6 +3,7 @@ import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import {page} from 'vitest/browser';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakePager} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/pager-subcontroller';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
@@ -158,6 +159,26 @@ describe('atomic-commerce-pager', () => {
     await expect.element(locators.previous).toHaveAttribute('disabled');
   });
 
+  it('should show the last pages of the range when on the last page', async () => {
+    await renderPager({state: {page: 9, totalPages: 10}});
+
+    await expect.element(page.getByLabelText('Page 6', {exact: true})).toBeInTheDocument();
+    await expect.element(page.getByLabelText('Page 10', {exact: true})).toBeInTheDocument();
+    await expect.element(page.getByLabelText('Page 11', {exact: true})).not.toBeInTheDocument();
+  });
+
+  it("should dispatch 'atomic/scrollToTop' when the interface has no product list", async () => {
+    const element = await renderPager({state: {page: 2}});
+    element.bindings.store.state.resultList = undefined;
+    const eventSpy = vi.spyOn(element, 'dispatchEvent');
+
+    await locators.next.click();
+
+    await expect
+      .poll(() => eventSpy)
+      .toHaveBeenCalledWith(expect.objectContaining({type: 'atomic/scrollToTop'}));
+  });
+
   it('should disable the next button when on the last page', async () => {
     await renderPager({state: {page: 9, totalPages: 10}});
 
@@ -168,7 +189,7 @@ describe('atomic-commerce-pager', () => {
     let focusSpy: MockInstance;
     let eventSpy: MockInstance;
     let previousSpy: MockInstance;
-    let announcePageLoaded: MockInstance;
+    let ariaMessageSpy: MockInstance;
 
     beforeEach(async () => {
       const element = await renderPager({state: {page: 2}});
@@ -177,8 +198,10 @@ describe('atomic-commerce-pager', () => {
         'focusOnFirstResultAfterNextSearch'
       );
       eventSpy = vi.spyOn(element, 'dispatchEvent');
-      previousSpy = vi.spyOn(element.pager, 'previousPage');
-      announcePageLoaded = vi.spyOn(element, 'announcePageLoaded');
+      previousSpy = vi.spyOn(element.pager, 'previousPage').mockImplementation(() => {
+        element.pagerState = {...element.pagerState, page: 1};
+      });
+      ariaMessageSpy = vi.spyOn(AriaLiveRegionController.prototype, 'message', 'set');
 
       await locators.previous.click();
     });
@@ -188,15 +211,15 @@ describe('atomic-commerce-pager', () => {
     });
 
     it("should dispatch 'atomic/scrollToTop'", async () => {
-      expect(eventSpy).toHaveBeenCalledWith(new CustomEvent('atomic/scrollToTop'));
+      expect(eventSpy).toHaveBeenCalledWith(expect.objectContaining({type: 'atomic/scrollToTop'}));
     });
 
     it('should call #pager.previousPage', async () => {
       expect(previousSpy).toHaveBeenCalled();
     });
 
-    it('should announce page loaded with correct page number', async () => {
-      expect(announcePageLoaded).toHaveBeenCalledOnce();
+    it('should announce the 1-based number of the new page', async () => {
+      expect(ariaMessageSpy).toHaveBeenCalledExactlyOnceWith('Page 2 loaded');
     });
   });
 
@@ -204,7 +227,7 @@ describe('atomic-commerce-pager', () => {
     let focusSpy: MockInstance;
     let eventSpy: MockInstance;
     let nextSpy: MockInstance;
-    let announcePageLoadedSpy: MockInstance;
+    let ariaMessageSpy: MockInstance;
 
     beforeEach(async () => {
       const element = await renderPager({state: {page: 2}});
@@ -213,8 +236,10 @@ describe('atomic-commerce-pager', () => {
         'focusOnFirstResultAfterNextSearch'
       );
       eventSpy = vi.spyOn(element, 'dispatchEvent');
-      nextSpy = vi.spyOn(element.pager, 'nextPage');
-      announcePageLoadedSpy = vi.spyOn(element, 'announcePageLoaded');
+      nextSpy = vi.spyOn(element.pager, 'nextPage').mockImplementation(() => {
+        element.pagerState = {...element.pagerState, page: 3};
+      });
+      ariaMessageSpy = vi.spyOn(AriaLiveRegionController.prototype, 'message', 'set');
 
       await locators.next.click();
     });
@@ -224,15 +249,15 @@ describe('atomic-commerce-pager', () => {
     });
 
     it("should dispatch 'atomic/scrollToTop'", async () => {
-      expect(eventSpy).toHaveBeenCalledWith(new CustomEvent('atomic/scrollToTop'));
+      expect(eventSpy).toHaveBeenCalledWith(expect.objectContaining({type: 'atomic/scrollToTop'}));
     });
 
     it('should call #pager.nextPage', async () => {
       expect(nextSpy).toHaveBeenCalled();
     });
 
-    it('should announce page loaded with correct page number', async () => {
-      expect(announcePageLoadedSpy).toHaveBeenCalledOnce();
+    it('should announce the 1-based number of the new page', async () => {
+      expect(ariaMessageSpy).toHaveBeenCalledExactlyOnceWith('Page 4 loaded');
     });
   });
 
@@ -257,7 +282,7 @@ describe('atomic-commerce-pager', () => {
     });
 
     it("should dispatch 'atomic/scrollToTop'", async () => {
-      expect(eventSpy).toHaveBeenCalledWith(new CustomEvent('atomic/scrollToTop'));
+      expect(eventSpy).toHaveBeenCalledWith(expect.objectContaining({type: 'atomic/scrollToTop'}));
     });
 
     it('should call #pager.selectPage', async () => {

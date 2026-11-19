@@ -81,9 +81,10 @@ function getSection(children: HTMLCollection, section: ItemSectionTagName): Elem
 }
 
 function getImageSizeFromSections(children: HTMLCollection): ItemDisplayImageSize | undefined {
-  const imageSize = getSection(children, 'atomic-result-section-visual')?.getAttribute(
-    'image-size'
-  );
+  const visualSection =
+    getSection(children, 'atomic-result-section-visual') ??
+    getSection(children, 'atomic-product-section-visual');
+  const imageSize = visualSection?.getAttribute('image-size');
   if (!imageSize) {
     return undefined;
   }

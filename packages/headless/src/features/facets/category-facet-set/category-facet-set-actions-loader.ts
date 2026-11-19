@@ -18,6 +18,7 @@ import {
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
 } from './category-facet-set-actions.js';
+import {withDeprecationWarning} from '../../../utils/deprecation.js';
 
 export type {
   RegisterCategoryFacetActionCreatorPayload,
@@ -117,7 +118,13 @@ export function loadCategoryFacetSetActions(engine: SearchEngine): CategoryFacet
 
   return {
     deselectAllCategoryFacetValues,
-    registerCategoryFacet,
+    registerCategoryFacet: withDeprecationWarning(
+      engine.logger,
+      registerCategoryFacet,
+      'The `activeTab` option of `registerCategoryFacet`',
+      'Omit it, since Headless reads the active tab from the engine state.',
+      (payload) => payload?.activeTab !== undefined
+    ),
     toggleSelectCategoryFacetValue,
     updateCategoryFacetNumberOfValues,
     updateCategoryFacetSortCriterion,

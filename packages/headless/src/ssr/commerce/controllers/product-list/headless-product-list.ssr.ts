@@ -4,7 +4,10 @@ import {
   type ProductListingState,
 } from '../../../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch, type Search} from '../../../../controllers/commerce/search/headless-search.js';
-import {ensureAtLeastOneSolutionType} from '../../controller-utils.js';
+import {
+  ensureAtLeastOneSolutionType,
+  withSolutionTypeOptionsWarning,
+} from '../../controller-utils.js';
 import {SolutionType} from '../../types/controller-constants.js';
 import type {
   ControllerDefinitionOption,
@@ -48,7 +51,7 @@ export function defineProductList<TOptions extends ControllerDefinitionOption | 
 ) {
   ensureAtLeastOneSolutionType(options);
   const {enableResults = false} = options ?? {};
-  return {
+  const definition = {
     listing: true,
     search: true,
     ...options,
@@ -57,4 +60,5 @@ export function defineProductList<TOptions extends ControllerDefinitionOption | 
         ? (buildProductListing(engine, {enableResults}) as ProductList)
         : (buildSearch(engine, {enableResults}) as ProductList),
   } as SubControllerDefinitionWithoutProps<ProductList, TOptions>;
+  return withSolutionTypeOptionsWarning(definition, 'defineProductList', options);
 }
