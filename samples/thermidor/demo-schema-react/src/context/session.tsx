@@ -74,7 +74,9 @@ export function SessionProvider({
   children,
 }: PropsWithChildren<SessionProviderProps>) {
   const cart = useContext(CartStoreContext);
-  const [storage] = useState(() => givenStorage ?? createConversationStorage());
+  const [storage] = useState(
+    () => givenStorage ?? createConversationStorage({scope: storageScope()})
+  );
   const [create] = useState(() => givenFactory ?? defaultFactory(cart));
   const [current, setCurrent] = useState<Current>(() =>
     initialSession ? startWith(storage, initialSession) : openCurrent(storage, create)
@@ -226,12 +228,13 @@ function persist(
     const deleted = removed.has(id) || (listed && !isListed(storage, id));
     // Listed from its first prompt, so the drawer shows it while the answer streams.
     if (!listed && turns.length > 0) {
-      listed = true;
       storage.start(id, titleOf(turns[0].input));
+      listed = isListed(storage, id);
       onSaved();
     }
     if (saving && !request && turns.length > 0 && !deleted) {
       storage.save(id, titleOf(turns[0].input), session.serialize());
+      listed = isListed(storage, id);
       onSaved();
     }
     // A request another listener started as this one ended keeps the save pending until idle.
@@ -300,6 +303,11 @@ function createThermidorSession(
     commerceContextProvider: () => getCartCommerceContext(cart),
     sessionToRestore,
   });
+}
+
+function storageScope() {
+  const {organizationId, agentConfigurationId} = getSampleConfiguration();
+  return `${organizationId}:${agentConfigurationId}`;
 }
 
 // The tab keeps its client id in sessionStorage; when it can't, the page keeps it in memory.

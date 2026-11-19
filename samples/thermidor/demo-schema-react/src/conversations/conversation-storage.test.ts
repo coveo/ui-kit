@@ -23,6 +23,28 @@ function setup({quota, max}: {quota?: number; max?: number} = {}) {
 const ids = (storage: ReturnType<typeof setup>['storage']) => storage.list().map(({id}) => id);
 
 describe('createConversationStorage', () => {
+  it('keeps the conversations of each scope apart', () => {
+    const local = memoryStorage();
+    const session = memoryStorage();
+    const open = (scope: string) =>
+      createConversationStorage({scope, local: () => local, session: () => session});
+    const first = open('org-a:agent');
+    const second = open('org-b:agent');
+
+    first.save('a', 'surfboards', serialized('a'));
+    first.setCurrentId('a');
+
+    expect(second.list()).toEqual([]);
+    expect(second.load('a')).toBeUndefined();
+    expect(second.currentId()).toBeUndefined();
+    expect(
+      open('org-a:agent')
+        .list()
+        .map(({id}) => id)
+    ).toEqual(['a']);
+    expect(open('org-a:agent').currentId()).toBe('a');
+  });
+
   it('lists saved conversations newest first, and loads them back', () => {
     const {storage} = setup();
 
