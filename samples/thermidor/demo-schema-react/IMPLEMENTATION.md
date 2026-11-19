@@ -183,8 +183,8 @@ Capture this before wiring dynamic facet composition.
 
 ### Temporary workarounds (to remove when upstream dependencies evolve)
 
-| Item                  | Description                                                                                                    | Remove when                                                        |
-| --------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| **Zod 3 projection**  | The sample pins `zod@3` and imports runtime schemas from `@coveo/thermidor-schema/zod3` to match the renderer. | `@a2ui/react` and `@a2ui/web_core` move to Zod 4                   |
-| **Slot schema marks** | `CommerceSearch` and `SearchBox` mark their named slots with `componentId()` themselves.                       | `@coveo/thermidor-schema` marks child references in `*PropsSchema` |
-| **`DataChild`**       | `BundleDisplay` draws the slot children named in its bound `tiers` itself.                                     | The bundle's slots become child references the renderer resolves   |
+| Item                  | Description                                                                                                                                                          | Remove when                                                      |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| **Zod 3 projection**  | The sample pins `zod@3` and imports runtime schemas from `@coveo/thermidor-schema/zod3` to match the renderer.                                                       | `@a2ui/react` and `@a2ui/web_core` move to Zod 4                 |
+| **Slot schema marks** | `CommerceSearch` and `SearchBox` mark their named slots with `componentId()` themselves. `@coveo/thermidor-schema` stays renderer-neutral, so it will not mark them. | `@a2ui/react` resolves child ids without schema marks            |
+| **`DataChild`**       | `BundleDisplay` draws the slot children named in its bound `tiers` itself.                                                                                           | The bundle's slots become child references the renderer resolves |
