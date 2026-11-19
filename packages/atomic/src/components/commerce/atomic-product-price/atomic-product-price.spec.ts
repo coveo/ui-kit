@@ -1,4 +1,4 @@
-import {buildContext} from '@coveo/headless/commerce';
+import {buildContext, type Context, type ContextState} from '@coveo/headless/commerce';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-product-fixture';
@@ -13,13 +13,15 @@ vi.mock('@coveo/headless/commerce', {spy: true});
 describe('atomic-product-price', () => {
   const mockedEngine = buildFakeCommerceEngine();
   const mockedContext = buildFakeContext({});
-  const renderProductPrice = async (props: {ecPrice?: number; ecPromoPrice?: number} = {}) => {
+  const renderProductPrice = async (
+    props: {ecPrice?: number | null; ecPromoPrice?: number; context?: Context} = {}
+  ) => {
     const mockedProduct = buildFakeProduct({
-      ec_price: props.ecPrice ?? 100,
+      ec_price: props.ecPrice === undefined ? 100 : props.ecPrice,
       ec_promo_price: props.ecPromoPrice ?? null,
     });
 
-    vi.mocked(buildContext).mockReturnValue(mockedContext);
+    vi.mocked(buildContext).mockReturnValue(props.context ?? mockedContext);
 
     const {element} = await renderInAtomicProduct<AtomicProductPrice>({
       template: html`<atomic-product-price></atomic-product-price>`,
@@ -84,5 +86,37 @@ describe('atomic-product-price', () => {
     });
     expect(firstPrice).toHaveTextContent('$80.00');
     expect(originalPrice).toHaveTextContent('$100.00');
+  });
+
+  it('should keep the original price invisible when there is no promotional price', async () => {
+    const {originalPrice} = await renderProductPrice({ecPrice: 100});
+    expect(originalPrice).toHaveClass('invisible');
+  });
+
+  it('should make the original price visible when ec_promo_price is lower than ec_price', async () => {
+    const {originalPrice} = await renderProductPrice({
+      ecPrice: 100,
+      ecPromoPrice: 80,
+    });
+    expect(originalPrice).not.toHaveClass('invisible');
+  });
+
+  it('should render an empty main price when ec_price is null', async () => {
+    const {element, firstPrice} = await renderProductPrice({ecPrice: null});
+    expect(element.error).toBeNull();
+    expect(firstPrice).toBeInTheDocument();
+    expect(firstPrice).toHaveTextContent('');
+  });
+
+  it('should set an error and render the raw price when the currency is invalid', async () => {
+    const {element, firstPrice} = await renderProductPrice({
+      ecPrice: 100,
+      context: buildFakeContext({
+        state: {currency: 'INVALID' as ContextState['currency']},
+      }),
+    });
+    expect(element.error).toBeInstanceOf(RangeError);
+    expect(firstPrice).toHaveTextContent('100');
+    expect(firstPrice).not.toHaveTextContent('$');
   });
 });
