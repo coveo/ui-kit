@@ -15,19 +15,15 @@
  *
  * // Shared by the server and the browser. The context, the cart and the navigator context
  * // are per-request data: they are passed to `fetchStaticState()`, not to the configuration.
- * export const {
- *   listingEngineDefinition,
- *   searchEngineDefinition,
- *   standaloneEngineDefinition,
- *   recommendationEngineDefinition,
- * } = defineCommerceEngine({
- *   configuration: getSampleCommerceEngineConfiguration(),
- *   controllers: {
- *     productList: defineProductList(),
- *     pagination: definePagination(),
- *     popularViewed: defineRecommendations({options: {slotId: '...'}}),
- *   },
- * });
+ * export const {listingEngineDefinition, searchEngineDefinition, standaloneEngineDefinition} =
+ *   defineCommerceEngine({
+ *     configuration: getSampleCommerceEngineConfiguration(),
+ *     controllers: {
+ *       productList: defineProductList(),
+ *       pagination: definePagination(),
+ *       popularViewed: defineRecommendations({options: {slotId: '...'}}),
+ *     },
+ *   });
  *
  * export type ListingStaticState = InferStaticState<typeof listingEngineDefinition>;
  * export type ListingHydratedState = InferHydratedState<typeof listingEngineDefinition>;
@@ -48,6 +44,7 @@
  *     view: {url: 'https://example.com/browse/toys'},
  *   },
  *   cart: {items: []},
+ *   recommendations: ['popularViewed'],
  * });
  *
  * // In the browser, from the serialized static state, passed as is: it already carries the
@@ -282,6 +279,7 @@ export type {SSRCommerceEngine as CommerceEngine} from './ssr-next/commerce/fact
 // Main App
 export type {
   BuildConfig,
+  RecommendationNames,
   SSRCommerceEngineOptions as CommerceEngineOptions,
   SSRContextOptions,
 } from './ssr-next/commerce/types/build.js';

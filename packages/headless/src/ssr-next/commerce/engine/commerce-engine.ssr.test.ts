@@ -36,18 +36,18 @@ describe('Commerce Engine SSR', () => {
     vi.clearAllMocks();
   });
 
-  it('should return 4 engine definitions', () => {
+  it('should return 3 engine definitions', () => {
     const engineDefinition = defineCommerceEngine(definitionOptions);
-    expect(engineDefinition).toHaveProperty('listingEngineDefinition');
-    expect(engineDefinition).toHaveProperty('recommendationEngineDefinition');
-    expect(engineDefinition).toHaveProperty('searchEngineDefinition');
-    expect(engineDefinition).toHaveProperty('standaloneEngineDefinition');
+    expect(Object.keys(engineDefinition).toSorted()).toEqual([
+      'listingEngineDefinition',
+      'searchEngineDefinition',
+      'standaloneEngineDefinition',
+    ]);
   });
 
   describe.each([
     ['listingEngineDefinition'],
     ['searchEngineDefinition'],
-    ['recommendationEngineDefinition'],
     ['standaloneEngineDefinition'],
   ])('%s', (definitionName) => {
     it('should always return context and cart controllers as well as the ones provided', async () => {
@@ -56,7 +56,6 @@ describe('Commerce Engine SSR', () => {
       const staticState = await engineDefinition[solutionType].fetchStaticState({
         navigatorContext: mockNavigatorContext,
         searchParams: {q: 'test'},
-        recommendations: [],
         context: {
           view: {url: 'http://example.com'},
           country: 'US',
@@ -253,14 +252,14 @@ describe('Commerce Engine SSR', () => {
     });
 
     it('should seed the recommendation requests with the product ID', async () => {
-      const {recommendationEngineDefinition} = defineCommerceEngine({
+      const {standaloneEngineDefinition} = defineCommerceEngine({
         ...definitionOptions,
         controllers: {
           viewedTogether: defineRecommendations({options: {slotId: 'some-slot-id'}}),
         },
       });
 
-      await recommendationEngineDefinition.fetchStaticState({
+      await standaloneEngineDefinition.fetchStaticState({
         navigatorContext: mockNavigatorContext,
         context,
         recommendations: ['viewedTogether'],
@@ -275,23 +274,95 @@ describe('Commerce Engine SSR', () => {
       );
     });
 
-    it('should request a slot listed twice once instead of waiting for a second request', async () => {
-      const {recommendationEngineDefinition} = defineCommerceEngine({
-        ...definitionOptions,
-        controllers: {
-          viewedTogether: defineRecommendations({options: {slotId: 'some-slot-id'}}),
-        },
+    describe('recommendation slots of a listing page', () => {
+      const defineEngineWithSlots = () =>
+        defineCommerceEngine({
+          ...definitionOptions,
+          controllers: {
+            popularViewed: defineRecommendations({options: {slotId: 'slot-viewed'}}),
+            popularBought: defineRecommendations({options: {slotId: 'slot-bought'}}),
+          },
+        });
+
+      const requestsTo = (path: string) =>
+        commerceRequests.filter((request) => request.url.includes(path));
+
+      it('should send the listing request and one request per requested slot', async () => {
+        const {listingEngineDefinition} = defineEngineWithSlots();
+
+        await listingEngineDefinition.fetchStaticState({
+          navigatorContext: mockNavigatorContext,
+          context,
+          recommendations: ['popularViewed', 'popularBought'],
+        });
+
+        expect(requestsTo('/listing')).toHaveLength(1);
+        expect(
+          requestsTo('/recommendations')
+            .map((request) => request.body.slotId)
+            .toSorted()
+        ).toEqual(['slot-bought', 'slot-viewed']);
       });
 
-      await recommendationEngineDefinition.fetchStaticState({
-        navigatorContext: mockNavigatorContext,
-        context,
-        recommendations: ['viewedTogether', 'viewedTogether'],
+      it('should request only the listed slots', async () => {
+        const {listingEngineDefinition} = defineEngineWithSlots();
+
+        await listingEngineDefinition.fetchStaticState({
+          navigatorContext: mockNavigatorContext,
+          context,
+          recommendations: ['popularBought'],
+        });
+
+        expect(requestsTo('/recommendations').map((request) => request.body.slotId)).toEqual([
+          'slot-bought',
+        ]);
       });
 
-      expect(
-        commerceRequests.filter((request) => request.url.includes('/recommendations'))
-      ).toHaveLength(1);
+      it('should request no slot when none is listed', async () => {
+        const {listingEngineDefinition} = defineEngineWithSlots();
+
+        await listingEngineDefinition.fetchStaticState({
+          navigatorContext: mockNavigatorContext,
+          context,
+        });
+
+        expect(requestsTo('/listing')).toHaveLength(1);
+        expect(requestsTo('/recommendations')).toHaveLength(0);
+      });
+
+      it('should carry the slots in the static state and refuse an unknown slot', async () => {
+        const {listingEngineDefinition} = defineEngineWithSlots();
+
+        const staticState = await listingEngineDefinition.fetchStaticState({
+          navigatorContext: mockNavigatorContext,
+          context,
+          recommendations: ['popularViewed'],
+        });
+
+        expect(staticState.controllers).toHaveProperty('popularViewed');
+        expect(staticState.controllers).toHaveProperty('popularBought');
+        expect(staticState.recommendations).toEqual(['popularViewed']);
+        await expect(
+          listingEngineDefinition.fetchStaticState({
+            navigatorContext: mockNavigatorContext,
+            context,
+            // @ts-expect-error: the slot is not defined
+            recommendations: ['unknownSlot'],
+          })
+        ).rejects.toThrow(/value should be one of: popularViewed, popularBought/);
+      });
+
+      it('should request a slot listed twice once instead of waiting for a second request', async () => {
+        const {listingEngineDefinition} = defineEngineWithSlots();
+
+        await listingEngineDefinition.fetchStaticState({
+          navigatorContext: mockNavigatorContext,
+          context,
+          recommendations: ['popularViewed', 'popularViewed'],
+        });
+
+        expect(requestsTo('/recommendations')).toHaveLength(1);
+      });
     });
   });
 });
