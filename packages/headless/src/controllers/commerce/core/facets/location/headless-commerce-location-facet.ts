@@ -1,90 +1,50 @@
-import type {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
-import type {LocationFacetValue} from '../../../../../features/commerce/facets/facet-set/interfaces/response.js';
-import {toggleSelectLocationFacetValue} from '../../../../../features/commerce/facets/location-facet/location-facet-actions.js';
-import {
-  buildCoreCommerceFacet,
-  type CoreCommerceFacet,
-  type CoreCommerceFacetOptions,
-  type CoreCommerceFacetState,
-  type FacetControllerType,
-  type FacetValueRequest,
+import type {
+  BaseFacetValue,
+  CoreCommerceFacet,
+  CoreCommerceFacetState,
+  FacetValueRequest,
+  RegularFacetValue,
 } from '../headless-core-commerce-facet.js';
 
 /**
- * @group Sub-controllers
- * @category LocationFacet
+ * @deprecated Commerce location facets were an experimental feature that is now retired. Headless no longer
+ * returns or handles location facets, so this type is not used anymore. It will be removed in the next major
+ * version.
  */
-export type LocationFacetOptions = Omit<
-  CoreCommerceFacetOptions,
-  'toggleSelectActionCreator' | 'toggleExcludeActionCreator'
->;
+export interface LocationFacetValue extends BaseFacetValue {
+  value: string;
+}
 
 /**
- * @group Sub-controllers
- * @category LocationFacet
+ * @deprecated Commerce location facets were an experimental feature that is now retired. Headless no longer
+ * returns or handles location facets, so this type is not used anymore. It will be removed in the next major
+ * version.
  */
-export type LocationFacetState = Omit<CoreCommerceFacetState<LocationFacetValue>, 'type'> & {
+export type LocationFacetValueRequest = FacetValueRequest;
+
+/**
+ * @deprecated Commerce location facets were an experimental feature that is now retired. Headless no longer
+ * returns or handles location facets, so this type is not used anymore. It will be removed in the next major
+ * version.
+ */
+export type LocationFacetState = Omit<
+  CoreCommerceFacetState<RegularFacetValue>,
+  'type' | 'values'
+> & {
   type: 'location';
+  values: LocationFacetValue[];
 };
 
 /**
- * The `LocationFacet` sub-controller offers a high-level programming interface for implementing a location commerce
- * facet UI component.
- *
- * @group Sub-controllers
- * @category LocationFacet
+ * @deprecated Commerce location facets were an experimental feature that is now retired. The `FacetGenerator`
+ * no longer creates `LocationFacet` sub-controllers, so this type is not used anymore. It will be removed in the
+ * next major version.
  */
 export type LocationFacet = Omit<
-  CoreCommerceFacet<FacetValueRequest, LocationFacetValue>,
-  'isValueExcluded' | 'toggleExclude' | 'toggleSingleExclude'
+  CoreCommerceFacet<FacetValueRequest, RegularFacetValue>,
+  'isValueExcluded' | 'isValueSelected' | 'toggleExclude' | 'toggleSingleExclude'
 > & {
+  isValueSelected(value: LocationFacetValue): boolean;
   state: LocationFacetState;
-} & FacetControllerType<'location'>;
-
-/**
- * @internal
- *
- * **Important:** This initializer is meant for internal use by headless only.
- * As an implementer, you must not import or use this initializer directly in your code.
- * You will instead interact with `LocationFacet` sub-controller instances through the state of a `FacetGenerator`
- * sub-controller.
- *
- * @param engine - The headless commerce engine.
- * @param options - The `LocationFacet` options used internally.
- * @returns A `LocationFacet` sub-controller instance.
- * */
-export function buildCommerceLocationFacet(
-  engine: CommerceEngine,
-  options: LocationFacetOptions
-): LocationFacet {
-  const {
-    toggleSingleExclude: _toggleSingleExclude,
-    toggleExclude: _toggleExclude,
-    isValueExcluded: _isValueExcluded,
-    ...coreController
-  } = buildCoreCommerceFacet<FacetValueRequest, LocationFacetValue>(engine, {
-    options: {
-      ...options,
-      toggleSelectActionCreator: toggleSelectLocationFacetValue,
-    },
-  });
-
-  return {
-    ...coreController,
-
-    get state() {
-      return getLocationFacetState(coreController.state);
-    },
-
-    type: 'location',
-  };
-}
-
-export const getLocationFacetState = (
-  coreState: CoreCommerceFacetState<LocationFacetValue>
-): LocationFacetState => {
-  return {
-    ...coreState,
-    type: 'location',
-  };
+  type: 'location';
 };

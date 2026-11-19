@@ -24,11 +24,6 @@ import type {
 } from '../../../../controllers/commerce/core/facets/headless-core-commerce-facet.js';
 import {getCoreFacetState} from '../../../../controllers/commerce/core/facets/headless-core-commerce-facet.js';
 import type {
-  LocationFacet,
-  LocationFacetState,
-} from '../../../../controllers/commerce/core/facets/location/headless-commerce-location-facet.js';
-import {getLocationFacetState} from '../../../../controllers/commerce/core/facets/location/headless-commerce-location-facet.js';
-import type {
   NumericFacet,
   NumericFacetState,
   NumericFacetValue,
@@ -53,14 +48,16 @@ import {facetRequestSelector} from '../../../../features/commerce/facets/facet-s
 import type {CategoryFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request.js';
 import type {
   AnyFacetResponse,
-  LocationFacetValue,
   RegularFacetValue,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response.js';
 import {manualNumericFacetSelector} from '../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-selectors.js';
 import {manualNumericFacetReducer as manualNumericFacetSet} from '../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice.js';
 import {categoryFacetSearchStateSelector} from '../../../../features/facets/facet-search-set/category/category-facet-search-state-selector.js';
 import {specificFacetSearchStateSelector} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-state-selector.js';
-import {ensureAtLeastOneSolutionType} from '../../../../ssr/commerce/controller-utils.js';
+import {
+  ensureAtLeastOneSolutionType,
+  withSolutionTypeOptionsWarning,
+} from '../../../../ssr/commerce/controller-utils.js';
 import type {ManualRangeSection} from '../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {SolutionType} from '../../types/controller-constants.js';
@@ -79,9 +76,6 @@ export type {
   DateFacet,
   DateFacetState,
   DateFacetValue,
-  LocationFacet,
-  LocationFacetState,
-  LocationFacetValue,
   MappedGeneratedFacetController,
   NumericFacet,
   NumericFacetState,
@@ -106,9 +100,7 @@ export type MappedFacetState = {
         ? DateFacetState
         : T extends 'hierarchical'
           ? CategoryFacetState
-          : T extends 'location'
-            ? LocationFacetState
-            : never;
+          : never;
 };
 
 /**
@@ -121,13 +113,14 @@ export function defineFacetGenerator<TOptions extends ControllerDefinitionOption
   options?: TOptions
 ) {
   ensureAtLeastOneSolutionType(options);
-  return {
+  const definition = {
     listing: true,
     search: true,
     ...options,
     build: (engine, solutionType) =>
       buildFacetGenerator(engine, {props: {solutionType: solutionType!}}),
   } as SubControllerDefinitionWithoutProps<FacetGenerator, TOptions>;
+  return withSolutionTypeOptionsWarning(definition, 'defineFacetGenerator', options);
 }
 
 /**
@@ -256,10 +249,6 @@ export function buildFacetGenerator(
             return getRegularFacetState(
               createFacetState(facetResponseSelector) as RegularFacetState,
               specificFacetSearchStateSelector(getEngineState(), facetId)
-            );
-          case 'location':
-            return getLocationFacetState(
-              createFacetState(facetResponseSelector) as LocationFacetState
             );
         }
       });

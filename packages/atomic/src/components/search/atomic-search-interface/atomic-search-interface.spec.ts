@@ -91,9 +91,9 @@ describe('atomic-search-interface', () => {
         pipeline=${ifDefined(props.pipeline)}
         search-hub=${ifDefined(props.searchHub)}
         timezone=${ifDefined(props.timezone)}
-        reflect-state-in-url=${props.reflectStateInUrl}
+        reflect-state-in-url=${ifDefined(props.reflectStateInUrl)}
         scroll-container=${ifDefined(props.scrollContainer)}
-        enable-relevance-inspector=${props.enableRelevanceInspector}
+        enable-relevance-inspector=${ifDefined(props.enableRelevanceInspector)}
         ?disable-relevance-inspector=${props.disableRelevanceInspector}
       >${when(props.mobileBreakpoint, () => html`<atomic-search-layout mobile-breakpoint=${ifDefined(props.mobileBreakpoint)}></atomic-search-layout>`)}<div>Interface content</div></atomic-search-layout>
       </atomic-search-interface>`
@@ -1238,6 +1238,72 @@ describe('atomic-search-interface', () => {
 
         expect(element.shadowRoot?.querySelector('atomic-relevance-inspector')).toBeFalsy();
       });
+    });
+  });
+
+  describe('deprecation warnings', () => {
+    const initializeWithFreshEngine = async (element: AtomicSearchInterface) => {
+      const engine = buildFakeSearchEngine();
+      await element.initializeWithSearchEngine(engine);
+      await element.updateComplete;
+      return engine;
+    };
+
+    it('should not log a deprecation warning when no deprecated property is set', async () => {
+      const element = await setupElement();
+      const engine = await initializeWithFreshEngine(element);
+
+      expect(engine.logger.warn).not.toHaveBeenCalledWith(expect.stringContaining('[Deprecated]'));
+    });
+
+    it('should log a deprecation warning when reflect-state-in-url is set', async () => {
+      const element = await setupElement({reflectStateInUrl: false});
+      const engine = await initializeWithFreshEngine(element);
+
+      expect(engine.logger.warn).toHaveBeenCalledWith(
+        expect.stringContaining(
+          '[Deprecated] The `reflect-state-in-url` property of `atomic-search-interface` is deprecated'
+        )
+      );
+    });
+
+    it('should log a deprecation warning when enable-relevance-inspector is set', async () => {
+      const element = await setupElement({enableRelevanceInspector: false});
+      const engine = await initializeWithFreshEngine(element);
+
+      expect(engine.logger.warn).toHaveBeenCalledWith(
+        expect.stringContaining(
+          '[Deprecated] The `enable-relevance-inspector` property of `atomic-search-interface` is deprecated'
+        )
+      );
+    });
+
+    it('should log a deprecation warning once when #closeRelevanceInspector is called', async () => {
+      const element = await setupElement();
+      const engine = await initializeWithFreshEngine(element);
+
+      element.closeRelevanceInspector();
+      element.closeRelevanceInspector();
+
+      expect(
+        vi
+          .mocked(engine.logger.warn)
+          .mock.calls.filter(([message]) => String(message).includes('`closeRelevanceInspector`'))
+      ).toHaveLength(1);
+    });
+
+    it('should not log a console warning when reflect-state-in-url is set to "false"', async () => {
+      const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      await setupElement({reflectStateInUrl: false});
+
+      expect(consoleWarn).not.toHaveBeenCalledWith(expect.stringContaining('boolean attribute'));
+    });
+
+    it('should not log a console warning when enable-relevance-inspector is set to "false"', async () => {
+      const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      await setupElement({enableRelevanceInspector: false});
+
+      expect(consoleWarn).not.toHaveBeenCalledWith(expect.stringContaining('boolean attribute'));
     });
   });
 });

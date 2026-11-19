@@ -1,73 +1,55 @@
 /**
- * The Coveo Headless SSR Commerce sub-package exposes exposes the engine, definers, controllers, actions, and utility functions to build a server side rendered commerce experience.
+ * The Coveo Headless SSR Commerce sub-package exposes the engine definer, controller definers, actions, and utility functions to build a server-side rendered commerce experience.
  *
  * @example
  * ```typescript
  * import {
- *   Controller,
- *   ControllerDefinitionsMap,
- *   CommerceEngineDefinitionOptions,
- *   CommerceEngine,
  *   defineCommerceEngine,
- *   InferStaticState,
- *   InferHydratedState,
+ *   definePagination,
  *   defineProductList,
+ *   defineRecommendations,
  *   getSampleCommerceEngineConfiguration,
+ *   type InferHydratedState,
+ *   type InferStaticState,
  * } from '@coveo/headless/ssr-commerce';
  *
- * type CommerceEngineConfig = CommerceEngineDefinitionOptions<
- *   ControllerDefinitionsMap<CommerceEngine, Controller>
- * >;
- *
- * const config = {
- *   configuration: {
- *     ...getSampleCommerceEngineConfiguration(),
- *     context: {
- *       language: 'en',
- *       country: 'US',
- *       currency: 'USD',
- *       view: {
- *         url: '...',
- *       },
+ * // Shared by the server and the browser. The context, the cart and the navigator context
+ * // are per-request data: they are passed to `fetchStaticState()`, not to the configuration.
+ * export const {listingEngineDefinition, searchEngineDefinition, standaloneEngineDefinition} =
+ *   defineCommerceEngine({
+ *     configuration: getSampleCommerceEngineConfiguration(),
+ *     controllers: {
+ *       productList: defineProductList(),
+ *       pagination: definePagination(),
+ *       popularViewed: defineRecommendations({options: {slotId: '...'}}),
  *     },
+ *   });
+ *
+ * export type ListingStaticState = InferStaticState<typeof listingEngineDefinition>;
+ * export type ListingHydratedState = InferHydratedState<typeof listingEngineDefinition>;
+ *
+ * // On the server, once per request
+ * const staticState = await listingEngineDefinition.fetchStaticState({
+ *   navigatorContext: {
+ *     clientId: '...',
+ *     location: 'https://example.com/browse/toys',
+ *     referrer: null,
+ *     userAgent: '...',
+ *     forwardedFor: '...',
  *   },
- *   controllers: {
- *     productList: defineProductList(),
+ *   context: {
+ *     language: 'en',
+ *     country: 'US',
+ *     currency: 'USD',
+ *     view: {url: 'https://example.com/browse/toys'},
  *   },
- * } satisfies CommerceEngineConfig;
- *
- * const engineDefinition = defineCommerceEngine(engineConfig);
- *
- * export const {
- *   listingEngineDefinition,
- *   searchEngineDefinition,
- *   standaloneEngineDefinition,
- * } = engineDefinition;
- *
- * await listingEngineDefinition.fetchStaticState({
- *   navigatorContextProvider: () => {/*...* /},
- *   context: {/*...* /},
+ *   cart: {items: []},
+ *   recommendations: ['popularViewed'],
  * });
  *
- * export type ListingStaticState = InferStaticState<
- *   typeof listingEngineDefinition
- * >;
- * export type ListingHydratedState = InferHydratedState<
- *   typeof listingEngineDefinition
- * >;
- *
- * export type SearchStaticState = InferStaticState<typeof searchEngineDefinition>;
- * export type SearchHydratedState = InferHydratedState<
- *   typeof searchEngineDefinition
- * >;
- *
- * export type StandaloneStaticState = InferStaticState<
- *   typeof standaloneEngineDefinition
- * >;
- * export type StandaloneHydratedState = InferHydratedState<
- *   typeof standaloneEngineDefinition
- * >;
- *
+ * // In the browser, from the serialized static state, passed as is: it already carries the
+ * // navigator context, the context, the cart, the search parameters and the access token.
+ * const {engine, controllers} = await listingEngineDefinition.hydrateStaticState(staticState);
  * ```
  * @module SSR Commerce
  */
@@ -156,9 +138,6 @@ export type {
   FacetGeneratorDefinition,
   FacetGeneratorState,
   FacetType,
-  LocationFacet,
-  LocationFacetState,
-  LocationFacetValue,
   MappedFacetState,
   MappedFacetStates,
   MappedGeneratedFacetController,
@@ -209,6 +188,7 @@ export type {
   ProductList,
   ProductListDefinition,
   ProductListing,
+  ProductListOptions,
   ProductListState,
   Search,
 } from './ssr-next/commerce/controllers/product-list/headless-product-list.ssr.js';
@@ -284,12 +264,24 @@ export type {
   RedirectionTriggerState,
 } from './ssr-next/commerce/controllers/triggers/headless-redirection-trigger.ssr.js';
 export {defineRedirectionTrigger} from './ssr-next/commerce/controllers/triggers/headless-redirection-trigger.ssr.js';
+export {
+  MissingControllerProps,
+  MultipleRecommendationError,
+  SolutionTypeMismatchError,
+} from './ssr-next/common/errors.js';
+export type {
+  BuildNavigatorContextOptions,
+  RequestHeaders,
+} from './ssr-next/common/navigator-context.js';
+export {buildNavigatorContext} from './ssr-next/common/navigator-context.js';
 export {defineCommerceEngine} from './ssr-next/commerce/engine/commerce-engine.ssr.js';
 export type {SSRCommerceEngine as CommerceEngine} from './ssr-next/commerce/factories/build-factory.js';
 // Main App
 export type {
   BuildConfig,
+  RecommendationNames,
   SSRCommerceEngineOptions as CommerceEngineOptions,
+  SSRContextOptions,
 } from './ssr-next/commerce/types/build.js';
 export {SolutionType} from './ssr-next/commerce/types/controller-constants.js';
 export type {
@@ -297,7 +289,6 @@ export type {
   CommerceEngineDefinitionControllersPropsOption as EngineDefinitionControllersPropsOption,
   ControllerDefinition,
   ControllerDefinitionsMap,
-  HydratedState,
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
 } from './ssr-next/commerce/types/controller-definitions.js';
@@ -311,13 +302,12 @@ export type {
 } from './ssr-next/commerce/types/controller-inference.js';
 export type {
   CommerceEngineDefinition,
-  CommerceEngineDefinitionBuildResult,
   CommerceEngineDefinitionOptions,
-  EngineStaticState,
-  FetchStaticState,
-  HydrateStaticState,
-  HydrateStaticStateOptions,
 } from './ssr-next/commerce/types/engine.js';
+export type {CommerceStaticState} from './ssr-next/commerce/types/fetch-static-state.js';
+export type {CommerceHydratedState} from './ssr-next/commerce/types/hydrate-static-state.js';
+export type {ControllerStaticState} from './ssr-next/common/types/controllers.js';
+export type {EngineDefinition, EngineStaticState} from './ssr-next/common/types/engine.js';
 // State
 export type {
   CommerceAppState,
@@ -337,6 +327,11 @@ export * from './features/commerce/facets/category-facet/category-facet-actions-
 export * from './features/commerce/facets/core-facet/core-facet-actions-loader.js';
 export * from './features/commerce/facets/date-facet/date-facet-actions-loader.js';
 export * from './features/commerce/facets/numeric-facet/numeric-facet-actions-loader.js';
+export type {
+  LocationFacet,
+  LocationFacetState,
+  LocationFacetValue,
+} from './controllers/commerce/core/facets/location/headless-commerce-location-facet.js';
 export * from './features/commerce/facets/regular-facet/regular-facet-actions-loader.js';
 export * from './features/commerce/instant-products/instant-products-actions-loader.js';
 export * from './features/commerce/pagination/pagination-actions-loader.js';

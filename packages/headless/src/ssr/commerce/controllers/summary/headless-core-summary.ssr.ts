@@ -7,7 +7,10 @@ import type {ProductListingSummaryState} from '../../../../controllers/commerce/
 import type {RecommendationsSummaryState} from '../../../../controllers/commerce/recommendations/summary/headless-recommendations-summary.js';
 import {buildSearch} from '../../../../controllers/commerce/search/headless-search.js';
 import type {SearchSummaryState} from '../../../../controllers/commerce/search/summary/headless-search-summary.js';
-import {ensureAtLeastOneSolutionType} from '../../../../ssr/commerce/controller-utils.js';
+import {
+  ensureAtLeastOneSolutionType,
+  withSolutionTypeOptionsWarning,
+} from '../../../../ssr/commerce/controller-utils.js';
 import {SolutionType} from '../../types/controller-constants.js';
 import type {
   ControllerDefinitionOption,
@@ -34,7 +37,7 @@ export function defineSummary<TOptions extends ControllerDefinitionOption | unde
   options?: TOptions
 ) {
   ensureAtLeastOneSolutionType(options);
-  return {
+  const definition = {
     listing: true,
     search: true,
     ...options,
@@ -46,4 +49,5 @@ export function defineSummary<TOptions extends ControllerDefinitionOption | unde
     Summary<ProductListingSummaryState | SearchSummaryState | RecommendationsSummaryState>,
     TOptions
   >;
+  return withSolutionTypeOptionsWarning(definition, 'defineSummary', options);
 }

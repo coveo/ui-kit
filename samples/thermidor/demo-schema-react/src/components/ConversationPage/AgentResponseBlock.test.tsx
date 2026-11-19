@@ -1,21 +1,15 @@
 import {render, screen} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
-import type {ReasoningStep, TurnResponse} from '@coveo/thermidor';
+import type {ToolCall, TurnResponse} from '@coveo/thermidor';
 import {AgentResponseBlock} from './AgentResponseBlock.js';
 import {makeResponse} from '../../test/turn-fixtures.js';
 
 vi.mock('./ThinkingBlock.js', () => ({
-  ThinkingBlock: ({
-    reasoningSteps,
-    isStreaming,
-  }: {
-    reasoningSteps: ReasoningStep[];
-    isStreaming: boolean;
-  }) => (
+  ThinkingBlock: ({toolCalls, isStreaming}: {toolCalls: ToolCall[]; isStreaming: boolean}) => (
     <div
       data-testid="thinking-block"
       data-streaming={isStreaming}
-      data-steps={reasoningSteps.length}
+      data-tool-calls={toolCalls.length}
     />
   ),
 }));
@@ -28,12 +22,12 @@ vi.mock('./StreamingMessage.js', () => ({
 
 interface AgentContent {
   messages?: {content: string; role: string}[];
-  reasoningSteps?: ReasoningStep[];
+  toolCalls?: ToolCall[];
 }
 
 function makeAgentResponse(overrides: AgentContent = {}): TurnResponse {
-  const {messages = [], reasoningSteps = []} = overrides;
-  return makeResponse({agent: {messages, reasoningSteps}});
+  const {messages = [], toolCalls = []} = overrides;
+  return makeResponse({agent: {messages, toolCalls}});
 }
 
 function renderBlock(
@@ -55,7 +49,7 @@ describe('AgentResponseBlock', () => {
   describe('render order (ThinkingBlock → StreamingMessage → turn blocks)', () => {
     it('renders ThinkingBlock, StreamingMessage, and the turn blocks in DOM order', () => {
       const response = makeAgentResponse({
-        reasoningSteps: [{type: 'reasoning', content: 'Thinking...'}],
+        toolCalls: [{id: 'tc-1', name: 'product_search', args: '{}', status: 'completed'}],
         messages: [{content: 'Hello world', role: 'assistant'}],
       });
 
@@ -75,7 +69,7 @@ describe('AgentResponseBlock', () => {
   });
 
   describe('components are omitted when their data is empty', () => {
-    it('omits ThinkingBlock when reasoningSteps is empty and not streaming', () => {
+    it('omits ThinkingBlock when toolCalls is empty and not streaming', () => {
       const response = makeAgentResponse({
         messages: [{content: 'Hello', role: 'assistant'}],
       });
@@ -86,14 +80,14 @@ describe('AgentResponseBlock', () => {
       expect(screen.queryByTestId('streaming-message')).not.toBeNull();
     });
 
-    it('shows ThinkingBlock when isStreaming is true even with no reasoning steps', () => {
+    it('shows ThinkingBlock when isStreaming is true even with no tool calls', () => {
       renderBlock(makeAgentResponse(), {isStreaming: true});
       expect(screen.queryByTestId('thinking-block')).not.toBeNull();
     });
 
-    it('shows ThinkingBlock when reasoningSteps is non-empty even if not streaming', () => {
+    it('shows ThinkingBlock when toolCalls is non-empty even if not streaming', () => {
       const response = makeAgentResponse({
-        reasoningSteps: [{type: 'reasoning', content: 'done'}],
+        toolCalls: [{id: 'tc-1', name: 'product_search', args: '{}', status: 'completed'}],
       });
 
       renderBlock(response, {isStreaming: false});
@@ -127,7 +121,7 @@ describe('AgentResponseBlock', () => {
       render(
         <AgentResponseBlock
           response={makeResponse({
-            agent: {messages: [{content: 'Answer', role: 'assistant'}], reasoningSteps: []},
+            agent: {messages: [{content: 'Answer', role: 'assistant'}], toolCalls: []},
           })}
           isStreaming={false}
         >

@@ -18,7 +18,7 @@ const shortText = fc.string({maxLength: 20});
 
 /**
  * Generates a single arbitrary activity spanning the event kinds the fold
- * handles: agent messages, reasoning, tool calls, activity/state snapshots, and
+ * handles: agent messages, tool calls, activity/state snapshots, and
  * the run/turn lifecycle (including error) events.
  */
 const activityArbitrary: fc.Arbitrary<NormalizedStreamEvent> = fc.oneof(
@@ -27,9 +27,6 @@ const activityArbitrary: fc.Arbitrary<NormalizedStreamEvent> = fc.oneof(
   fc.record({type: fc.constant('TEXT_MESSAGE_START'), role: fc.constant('assistant')}),
   fc.record({type: fc.constant('TEXT_MESSAGE_CONTENT'), delta: shortText}),
   fc.record({type: fc.constant('TEXT_MESSAGE_END')}),
-  fc.record({type: fc.constant('REASONING_MESSAGE_START')}),
-  fc.record({type: fc.constant('REASONING_MESSAGE_CONTENT'), delta: shortText}),
-  fc.record({type: fc.constant('REASONING_MESSAGE_END')}),
   fc.record({
     type: fc.constant('TOOL_CALL_START'),
     toolCallId,

@@ -4,9 +4,8 @@ import {devWarn} from '@/src/internal/utils/dev-warn.js';
 import type {
   Activity,
   DiscoveredSurface,
-  ReasoningStep,
   SessionInitialization,
-  ToolCallStep,
+  ToolCall,
   Turn,
   TurnAgent,
   TurnInput,
@@ -25,28 +24,25 @@ function cloneResponse(response: TurnResponse): TurnResponse {
   if (response.agent) {
     next.agent = {
       messages: [...response.agent.messages],
-      reasoningSteps: [...response.agent.reasoningSteps],
+      toolCalls: [...response.agent.toolCalls],
     };
   }
   return next;
 }
 
 function cloneTurn(turn: Turn): Turn {
-  const next: Turn = {
+  return {
     id: turn.id,
     input: {...turn.input},
     response: cloneResponse(turn.response),
     status: turn.status,
+    ...runOutcome(turn),
   };
-  if (turn.error !== undefined) {
-    next.error = turn.error;
-  }
-  return next;
 }
 
 function ensureAgent(response: TurnResponse): TurnAgent {
   if (!response.agent) {
-    response.agent = {messages: [], reasoningSteps: []};
+    response.agent = {messages: [], toolCalls: []};
   }
   return response.agent;
 }
@@ -93,37 +89,12 @@ export function foldActivity(previousTurn: Turn, activity: NormalizedStreamEvent
       return turn;
     }
 
-    case 'REASONING_MESSAGE_START': {
-      const agent = ensureAgent(response);
-      agent.reasoningSteps = [...agent.reasoningSteps, {type: 'reasoning', content: ''}];
-      return turn;
-    }
-
-    case 'REASONING_MESSAGE_CONTENT': {
-      const agent = ensureAgent(response);
-      const delta = (activity as {delta: string}).delta;
-      const steps = [...agent.reasoningSteps];
-      if (!steps.some((s) => s.type === 'reasoning')) {
-        steps.push({type: 'reasoning', content: ''});
-      }
-      const lastIndex = steps.map((s) => s.type).lastIndexOf('reasoning');
-      const last = steps[lastIndex] as Extract<ReasoningStep, {type: 'reasoning'}>;
-      steps[lastIndex] = {...last, content: last.content + delta};
-      agent.reasoningSteps = steps;
-      return turn;
-    }
-
-    case 'REASONING_MESSAGE_END': {
-      // Lifecycle signal only.
-      return turn;
-    }
-
     case 'TOOL_CALL_START': {
       const agent = ensureAgent(response);
       const {toolCallId, toolCallName} = activity as {toolCallId: string; toolCallName: string};
-      agent.reasoningSteps = [
-        ...agent.reasoningSteps,
-        {type: 'tool-call', id: toolCallId, name: toolCallName, args: '', status: 'calling'},
+      agent.toolCalls = [
+        ...agent.toolCalls,
+        {id: toolCallId, name: toolCallName, args: '', status: 'calling'},
       ];
       return turn;
     }
@@ -131,9 +102,9 @@ export function foldActivity(previousTurn: Turn, activity: NormalizedStreamEvent
     case 'TOOL_CALL_ARGS': {
       const agent = ensureAgent(response);
       const {toolCallId, delta} = activity as {toolCallId: string; delta: string};
-      agent.reasoningSteps = mapToolCall(agent.reasoningSteps, toolCallId, (step) => ({
-        ...step,
-        args: step.args + delta,
+      agent.toolCalls = mapToolCall(agent.toolCalls, toolCallId, (toolCall) => ({
+        ...toolCall,
+        args: toolCall.args + delta,
       }));
       return turn;
     }
@@ -145,8 +116,8 @@ export function foldActivity(previousTurn: Turn, activity: NormalizedStreamEvent
     case 'TOOL_CALL_RESULT': {
       const agent = ensureAgent(response);
       const {toolCallId, content} = activity as {toolCallId: string; content: string};
-      agent.reasoningSteps = mapToolCall(agent.reasoningSteps, toolCallId, (step) => ({
-        ...step,
+      agent.toolCalls = mapToolCall(agent.toolCalls, toolCallId, (toolCall) => ({
+        ...toolCall,
         result: content,
         status: 'completed',
       }));
@@ -213,8 +184,13 @@ export function foldActivity(previousTurn: Turn, activity: NormalizedStreamEvent
     }
 
     case 'RUN_ERROR': {
+      const {message, code} = activity as {message?: string; code?: unknown};
       turn.status = 'error';
-      turn.error = (activity as {message?: string}).message || 'An error occurred during the turn.';
+      turn.error = message || 'An error occurred during the turn.';
+      turn.reason = 'failed';
+      if (typeof code === 'string' && code) {
+        turn.errorCode = code;
+      }
       return turn;
     }
 
@@ -356,13 +332,11 @@ function updateDataModelSlice(message: unknown): string | null {
 }
 
 function mapToolCall(
-  steps: ReasoningStep[],
+  toolCalls: ToolCall[],
   toolCallId: string,
-  update: (step: ToolCallStep) => ToolCallStep
-): ReasoningStep[] {
-  return steps.map((step) =>
-    step.type === 'tool-call' && step.id === toolCallId ? update(step) : step
-  );
+  update: (toolCall: ToolCall) => ToolCall
+): ToolCall[] {
+  return toolCalls.map((toolCall) => (toolCall.id === toolCallId ? update(toolCall) : toolCall));
 }
 
 function foldUnknown(turn: Turn, activity: NormalizedStreamEvent): Turn {
@@ -374,6 +348,7 @@ function foldUnknown(turn: Turn, activity: NormalizedStreamEvent): Turn {
       typeof errorObj === 'object' && errorObj !== null && 'message' in errorObj
         ? String((errorObj as {message: unknown}).message)
         : 'A gateway error occurred.';
+    turn.reason = 'failed';
     return turn;
   }
   return turn;
@@ -388,7 +363,7 @@ export function createTurn(id: string, input: TurnInput): Turn {
 
 /**
  * Folds one streamed event into the session's initialization, as {@link foldActivity} folds it into
- * a turn. The initialization keeps only its activities and status: agent messages and reasoning
+ * a turn. The initialization keeps only its activities and status: agent messages and tool calls
  * have no transcript to appear in.
  */
 export function foldInitialization(
@@ -404,14 +379,25 @@ export function foldInitialization(
         surfaces: deriveSurfaces(initialization.activities),
       },
       status: initialization.status,
-      ...(initialization.error === undefined ? {} : {error: initialization.error}),
+      ...runOutcome(initialization),
     },
     activity
   );
   return {
     activities: folded.response.activities,
     status: folded.status,
-    ...(folded.error === undefined ? {} : {error: folded.error}),
+    ...runOutcome(folded),
+  };
+}
+
+/** The `error`, `reason` and `errorCode` a run carries, without the keys it lacks. */
+export function runOutcome(
+  run: Pick<Turn, 'error' | 'reason' | 'errorCode'>
+): Pick<Turn, 'error' | 'reason' | 'errorCode'> {
+  return {
+    ...(run.error === undefined ? {} : {error: run.error}),
+    ...(run.reason === undefined ? {} : {reason: run.reason}),
+    ...(run.errorCode === undefined ? {} : {errorCode: run.errorCode}),
   };
 }
 

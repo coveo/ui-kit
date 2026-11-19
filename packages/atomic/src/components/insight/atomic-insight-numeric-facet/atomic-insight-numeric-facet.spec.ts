@@ -61,6 +61,7 @@ describe('atomic-insight-numeric-facet', () => {
       isCollapsed: boolean;
       headingLevel: number;
       filterFacetCount: boolean;
+      disableFacetCountFiltering: boolean;
       injectionDepth: number;
       withInput: 'integer' | 'decimal';
       dependsOn: Record<string, string>;
@@ -86,6 +87,7 @@ describe('atomic-insight-numeric-facet', () => {
         ?is-collapsed=${props.isCollapsed}
         heading-level=${ifDefined(props.headingLevel)}
         ?filter-facet-count=${props.filterFacetCount}
+        ?disable-facet-count-filtering=${props.disableFacetCountFiltering}
         injection-depth=${ifDefined(props.injectionDepth)}
         with-input=${ifDefined(inputType)}
         .dependsOn=${props.dependsOn || {}}
@@ -224,6 +226,24 @@ describe('atomic-insight-numeric-facet', () => {
           injectionDepth: 500,
           generateAutomaticRanges: true,
         }),
+      });
+    });
+
+    it('should call buildNumericFacet with filterFacetCount true by default', async () => {
+      const {element} = await setupElement();
+
+      expect(buildNumericFacet).toHaveBeenCalledWith(element.bindings.engine, {
+        options: expect.objectContaining({filterFacetCount: true}),
+      });
+    });
+
+    it('should call buildNumericFacet with filterFacetCount false when disableFacetCountFiltering is true', async () => {
+      const {element} = await setupElement({
+        props: {disableFacetCountFiltering: true},
+      });
+
+      expect(buildNumericFacet).toHaveBeenCalledWith(element.bindings.engine, {
+        options: expect.objectContaining({filterFacetCount: false}),
       });
     });
 

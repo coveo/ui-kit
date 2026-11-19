@@ -5,7 +5,10 @@ import type {
 } from '../../../../controllers/commerce/core/sort/headless-core-commerce-sort.js';
 import {buildProductListing} from '../../../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch} from '../../../../controllers/commerce/search/headless-search.js';
-import {ensureAtLeastOneSolutionType} from '../../../../ssr/commerce/controller-utils.js';
+import {
+  ensureAtLeastOneSolutionType,
+  withSolutionTypeOptionsWarning,
+} from '../../../../ssr/commerce/controller-utils.js';
 import {SolutionType} from '../../types/controller-constants.js';
 import type {
   ControllerDefinitionOption,
@@ -27,7 +30,7 @@ export function defineSort<TOptions extends ControllerDefinitionOption | undefin
   props?: SortProps & TOptions
 ) {
   ensureAtLeastOneSolutionType(props);
-  return {
+  const definition = {
     listing: true,
     search: true,
     ...props,
@@ -36,4 +39,5 @@ export function defineSort<TOptions extends ControllerDefinitionOption | undefin
         ? buildProductListing(engine).sort(props)
         : buildSearch(engine).sort(props),
   } as SubControllerDefinitionWithoutProps<Sort, TOptions>;
+  return withSolutionTypeOptionsWarning(definition, 'defineSort', props);
 }

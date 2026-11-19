@@ -34,6 +34,9 @@ export class AtomicProductSectionVisual extends ItemSectionMixin(
 ) {
   /**
    * How large or small the visual section of product using this template should be.
+   *
+   * Overrides the `image-size` of the product list for the products that use this template. The `image-size` of the list
+   * still sets the grid columns and the loading placeholders.
    */
   @property({reflect: true, attribute: 'image-size', type: Object})
   public imageSize?: Omit<ItemDisplayImageSize, 'icon'>;

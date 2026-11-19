@@ -217,7 +217,7 @@ export class AtomicCommercePager
 
   private announcePageLoaded() {
     this.ariaMessage.message = this.bindings.i18n.t('pager-page-loaded', {
-      page: this.pagerState.page,
+      page: this.pagerState.page + 1,
     });
   }
 }

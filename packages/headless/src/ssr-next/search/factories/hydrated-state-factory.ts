@@ -1,5 +1,5 @@
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {SSRSearchEngine} from '../types/build.js';
+import type {BuildParameters, SSRSearchEngine} from '../types/build.js';
 import type {
   AugmentedControllerDefinition,
   ControllerDefinitionsMap,
@@ -18,7 +18,17 @@ export function hydratedStaticStateFactory<
   options: SearchEngineDefinitionOptions<TControllerDefinitions>
 ): HydrateStaticStateFunction<TControllerDefinitions> {
   return async (params: HydrateStaticStateParameters<TControllerDefinitions>) => {
-    const {engine, controllers} = await buildFactory(controllerDefinitions, options)(params);
+    const {controllerProps, controllers: _snapshots, ...restParams} = params;
+
+    const buildParameters: BuildParameters = {
+      ...restParams,
+      ...(controllerProps && {controllers: controllerProps}),
+    };
+
+    const {engine, controllers} = await buildFactory(
+      controllerDefinitions,
+      options
+    )(buildParameters);
 
     if (params.searchActions.length > 0) {
       await engine.waitForSearchCompletedAction();

@@ -61,7 +61,7 @@ function shopperPrompt({input}: Turn): string | undefined {
 }
 
 /**
- * A turn shows the agent's reasoning and text when an agent answered, then every block the
+ * A turn shows the agent's tool calls and text when an agent answered, then every block the
  * server produced for it, search blocks included. Only the latest turn's blocks are interactive.
  */
 function renderTurnContent(turn: Turn, isLatest: boolean) {

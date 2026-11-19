@@ -17,7 +17,7 @@ import {
   type TabManager,
   type TabManagerState,
 } from '@coveo/headless';
-import {css, html, LitElement, nothing, type TemplateResult} from 'lit';
+import {css, html, LitElement, nothing, type TemplateResult, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {map} from 'lit/directives/map.js';
 import {when} from 'lit/directives/when.js';
@@ -52,7 +52,7 @@ import {initializePopover} from '@/src/components/common/facets/popover/popover-
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {arrayConverter} from '@/src/converters/array-converter';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {booleanConverter, createBooleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -62,6 +62,7 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {AriaLiveRegionController, FocusTargetController} from '@/src/utils/accessibility-utils';
 import {getFieldCaptions, getFieldValueCaption} from '@/src/utils/field-utils';
 import {mapProperty} from '@/src/utils/props-utils';
+import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils';
 
 /**
  * The `atomic-category-facet` component displays a facet of values in a browsable, hierarchical fashion.
@@ -112,6 +113,29 @@ import {mapProperty} from '@/src/utils/props-utils';
 @bindings()
 @withTailwindStyles
 export class AtomicCategoryFacet extends LitElement implements InitializableComponent<Bindings> {
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'filterByBasePath',
+      attribute: 'filter-by-base-path',
+      defaultValue: true,
+      instruction: 'Use `disable-base-path-filtering` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
+    {
+      property: 'filterFacetCount',
+      attribute: 'filter-facet-count',
+      defaultValue: true,
+      instruction: 'Use `disable-facet-count-filtering` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
+  ]);
+
+  willUpdate(changedProperties: PropertyValues) {
+    super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.bindings?.engine?.logger);
+  }
+
   private static readonly propsSchema = new Schema({
     field: new StringValue({required: true, emptyAllowed: false}),
     numberOfValues: new NumberValue({min: 1}),
@@ -272,15 +296,21 @@ export class AtomicCategoryFacet extends LitElement implements InitializableComp
   /**
    * Whether to use basePath as a filter for the results.
    *
-   * TODO: KIT-4412 - Deprecate this property and replace with one that defaults to false.
+   * @deprecated - Use `disable-base-path-filtering` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
     reflect: true,
     attribute: 'filter-by-base-path',
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-base-path-filtering', {silent: true}),
   })
   public filterByBasePath = true;
+
+  /**
+   * Whether to stop using the base path as a filter for the results.
+   */
+  @property({type: Boolean, attribute: 'disable-base-path-filtering', reflect: true})
+  public disableBasePathFiltering = false;
 
   /**
    * Specifies whether the facet is collapsed.
@@ -303,15 +333,21 @@ export class AtomicCategoryFacet extends LitElement implements InitializableComp
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    *
    * Note: The target folding field must be a facet field with the **Use cache for nested queries** options enabled (see [Manage fields](https://docs.coveo.com/en/1833/)).
-   * TODO: KIT-4412 - Deprecate this property and replace with one that defaults to false.
+   * @deprecated - Use `disable-facet-count-filtering` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
     reflect: true,
     attribute: 'filter-facet-count',
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-facet-count-filtering', {silent: true}),
   })
   public filterFacetCount = true;
+
+  /**
+   * Whether to stop excluding the parents of folded results when estimating the result count for each facet value.
+   */
+  @property({type: Boolean, attribute: 'disable-facet-count-filtering', reflect: true})
+  public disableFacetCountFiltering = false;
 
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
@@ -394,9 +430,9 @@ export class AtomicCategoryFacet extends LitElement implements InitializableComp
       facetSearch: {numberOfValues: this.numberOfValues},
       basePath: this.basePath,
       delimitingCharacter: this.delimitingCharacter,
-      filterByBasePath: this.filterByBasePath,
+      filterByBasePath: this.shouldFilterByBasePath,
       injectionDepth: this.injectionDepth,
-      filterFacetCount: this.filterFacetCount,
+      filterFacetCount: this.shouldFilterFacetCount,
       tabs: {
         included: this.tabsIncluded,
         excluded: this.tabsExcluded,
@@ -818,5 +854,13 @@ export class AtomicCategoryFacet extends LitElement implements InitializableComp
         `
       )}
     `);
+  }
+
+  private get shouldFilterFacetCount() {
+    return this.filterFacetCount && !this.disableFacetCountFiltering;
+  }
+
+  private get shouldFilterByBasePath() {
+    return this.filterByBasePath && !this.disableBasePathFiltering;
   }
 }

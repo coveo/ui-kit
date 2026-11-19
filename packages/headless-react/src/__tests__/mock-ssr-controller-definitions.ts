@@ -5,7 +5,6 @@ type SolutionTypeAvailabilities = {
   listing?: boolean;
   search?: boolean;
   standalone?: boolean;
-  recommendation?: boolean;
 };
 
 export function buildMockController(): Controller {
@@ -23,7 +22,6 @@ export function defineMockCommerceController(options?: SolutionTypeAvailabilitie
     listing: options?.listing ?? true,
     search: options?.search ?? true,
     standalone: options?.standalone ?? true,
-    recommendation: options?.recommendation ?? true,
   };
 }
 
