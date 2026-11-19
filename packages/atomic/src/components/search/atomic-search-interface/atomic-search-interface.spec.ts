@@ -1114,6 +1114,18 @@ describe('atomic-search-interface', () => {
     });
   });
 
+  describe('#scrollToTop', () => {
+    it('should scroll the element matching the scrollContainer selector into view', async () => {
+      const element = await setupElement();
+      await element.initialize(searchEngineConfig);
+      const scrollIntoViewSpy = vi.spyOn(element, 'scrollIntoView');
+
+      element.scrollToTop();
+
+      expect(scrollIntoViewSpy).toHaveBeenCalledExactlyOnceWith();
+    });
+  });
+
   describe('#disconnectedCallback (when removed from the DOM)', () => {
     it('should remove aria-live element', async () => {
       const element = await setupElement();
@@ -1290,6 +1302,29 @@ describe('atomic-search-interface', () => {
           .mocked(engine.logger.warn)
           .mock.calls.filter(([message]) => String(message).includes('`closeRelevanceInspector`'))
       ).toHaveLength(1);
+    });
+
+    it('should log a deprecation warning once when #scrollToTop is called', async () => {
+      const element = await setupElement();
+      const engine = await initializeWithFreshEngine(element);
+
+      element.scrollToTop();
+      element.scrollToTop();
+
+      expect(
+        vi
+          .mocked(engine.logger.warn)
+          .mock.calls.filter(([message]) => String(message).includes('`scrollToTop`'))
+      ).toHaveLength(1);
+    });
+
+    it('should not log a deprecation warning when an "atomic/scrollToTop" event is dispatched', async () => {
+      const element = await setupElement();
+      const engine = await initializeWithFreshEngine(element);
+
+      element.dispatchEvent(new CustomEvent('atomic/scrollToTop'));
+
+      expect(engine.logger.warn).not.toHaveBeenCalledWith(expect.stringContaining('[Deprecated]'));
     });
 
     it('should not log a console warning when reflect-state-in-url is set to "false"', async () => {

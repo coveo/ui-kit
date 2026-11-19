@@ -1,5 +1,3 @@
-// @ts-ignore
-import {getCaseAssistId} from 'c/caseAssistUtils';
 import {LightningElement, track} from 'lwc';
 
 export default class ExampleQuanticDocumentSuggestion extends LightningElement {
@@ -16,6 +14,13 @@ export default class ExampleQuanticDocumentSuggestion extends LightningElement {
       label: 'Engine id',
       description: 'The id of the case assist engine associated.',
       defaultValue: 'case-assist-engine',
+    },
+    {
+      attribute: 'caseAssistId',
+      label: 'Case Assist ID',
+      description:
+        'The ID of the Case Assist configuration the case assist interface uses.',
+      defaultValue: 'a4fb453a-b1f1-4054-9067-bef117586baa',
     },
     {
       attribute: 'searchEngineId',
@@ -53,8 +58,7 @@ export default class ExampleQuanticDocumentSuggestion extends LightningElement {
     },
   ];
 
-  async handleTryItNow(evt) {
-    this.caseAssistId = await getCaseAssistId('Demo');
+  handleTryItNow(evt) {
     this.config = evt.detail;
     this.isConfigured = true;
   }

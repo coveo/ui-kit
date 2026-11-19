@@ -65,7 +65,7 @@ describe('atomic-facet-manager', () => {
   };
 
   const createMockPopover = (facet: MockFacet) => {
-    const popover = document.createElement('atomic-popover');
+    const popover = document.createElement('atomic-facet-popover');
     popover.appendChild(facet);
     return popover;
   };

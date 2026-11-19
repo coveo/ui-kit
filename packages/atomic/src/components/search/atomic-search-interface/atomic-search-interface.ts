@@ -302,7 +302,7 @@ export class AtomicSearchInterface
 
     this.addEventListener('atomic/initializeComponent', this.handleInitialization as EventListener);
 
-    this.addEventListener('atomic/scrollToTop', this.scrollToTop as EventListener);
+    this.addEventListener('atomic/scrollToTop', this.scrollContainerIntoView);
   }
 
   public willUpdate(changedProperties: Map<string, unknown>) {
@@ -328,20 +328,24 @@ export class AtomicSearchInterface
       'atomic/initializeComponent',
       this.handleInitialization as EventListener
     );
-    this.removeEventListener('atomic/scrollToTop', this.scrollToTop as EventListener);
+    this.removeEventListener('atomic/scrollToTop', this.scrollContainerIntoView);
   }
 
-  // TODO - (v4) KIT-4991: Make private.
+  // TODO - (v4) KIT-4991: Remove.
+  /**
+   * Scrolls the element that `scroll-container` selects into view.
+   *
+   * @deprecated Call `scrollIntoView()` on the element that `scroll-container` selects instead.
+   */
   public scrollToTop() {
-    const scrollContainerElement = document.querySelector(this.scrollContainer);
-    if (!scrollContainerElement) {
-      this.bindings.engine.logger.warn(
-        `Could not find the scroll container with the selector "${this.scrollContainer}". This will prevent UX interactions that require a scroll from working correctly. Please review the CSS selector in the scrollContainer option`
+    if (this.engine) {
+      warnDeprecatedOnce(
+        this.engine.logger,
+        'The `scrollToTop` method of `atomic-search-interface`',
+        'Call `scrollIntoView()` on the element that `scroll-container` selects instead.'
       );
-      return;
     }
-
-    scrollContainerElement.scrollIntoView();
+    this.scrollContainerIntoView();
   }
 
   /**
@@ -506,6 +510,18 @@ export class AtomicSearchInterface
 
   private handleInitialization = (event: InitializeEvent) => {
     this.interfaceController.onComponentInitializing(event);
+  };
+
+  private scrollContainerIntoView = () => {
+    const scrollContainerElement = document.querySelector(this.scrollContainer);
+    if (!scrollContainerElement) {
+      this.bindings.engine.logger.warn(
+        `Could not find the scroll container with the selector "${this.scrollContainer}". This will prevent UX interactions that require a scroll from working correctly. Please review the CSS selector in the scrollContainer option`
+      );
+      return;
+    }
+
+    scrollContainerElement.scrollIntoView();
   };
 
   private getBindings(): Bindings {

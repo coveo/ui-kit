@@ -5,8 +5,6 @@ export const insightSearchRequestRegex =
   /\/rest\/organizations\/.*\/insight\/v1\/configs\/.*\/search$/;
 export const insightInterfaceRequestRegex =
   /\/rest\/organizations\/.*\/insight\/v1\/configs\/.*\/interface$/;
-export const caseAssistConfigurationsRequestRegex =
-  /\/rest\/organizations\/[^/]+\/caseassists\/?(\?.*)?$/;
 export const classifyRequestRegex =
   /\/rest\/organizations\/.*\/caseassists\/.*\/classify/;
 export const documentsSuggestRequestRegex =

@@ -36,6 +36,50 @@ const stringField = (record: Record<string, unknown> | undefined, field: string)
 
 const sessionsInFlight = new Map<string, symbol>();
 
+// The token each session was given, by session id.
+const tokensBySession = new Map<string, string>();
+
+// As Agent Gateway does, initialize resumes a session whose keys match, opens a new session under a
+// new client-chosen id sent without a token, refuses an existing one, and opens a new session with
+// fresh keys otherwise.
+const initializedSessionKeys = (sessionId?: string, sessionToken?: string) => {
+  if (sessionId && sessionToken && tokensBySession.get(sessionId) === sessionToken) {
+    return {conversationSessionId: sessionId, conversationToken: sessionToken};
+  }
+  if (sessionId && !sessionToken) {
+    return tokensBySession.has(sessionId)
+      ? undefined
+      : {conversationSessionId: sessionId, conversationToken: randomUUID()};
+  }
+  return {conversationSessionId: randomUUID(), conversationToken: randomUUID()};
+};
+
+// Agent Gateway validates the keys of every other request: an unknown session id with a token is not
+// found, and a wrong token, or an existing session's id without one, is refused.
+const continuedSessionKeys = (sessionId?: string, sessionToken?: string) => {
+  if (sessionId && sessionToken) {
+    if (!tokensBySession.has(sessionId)) {
+      return conversationNotFoundResponse();
+    }
+    return tokensBySession.get(sessionId) === sessionToken
+      ? {conversationSessionId: sessionId, conversationToken: sessionToken}
+      : invalidConversationTokenResponse();
+  }
+  if (sessionId && tokensBySession.has(sessionId)) {
+    return invalidConversationTokenResponse();
+  }
+  return {
+    conversationSessionId: sessionId ?? randomUUID(),
+    conversationToken: sessionToken ?? randomUUID(),
+  };
+};
+
+const invalidConversationTokenResponse = () =>
+  HttpResponse.json({message: 'Invalid conversation token.'}, {status: 403});
+
+const conversationNotFoundResponse = () =>
+  HttpResponse.json({message: 'Conversation not found.'}, {status: 404});
+
 const actionInFlightResponse = () =>
   HttpResponse.json(
     {
@@ -176,21 +220,17 @@ const handleSchemaConversePost = async ({request}: {request: Request}) => {
   const sessionId = stringField(bodyRecord, 'conversationSessionId');
   const sessionToken = stringField(bodyRecord, 'conversationToken');
 
-  if (schemaAction && converseSchemaResponses.isInitialize(schemaAction) && sessionToken) {
-    return withCors(
-      HttpResponse.json(
-        {
-          error: 'initialize opens a session: send it without a session token',
-        },
-        {status: 400}
-      )
-    );
+  const initializes =
+    schemaAction !== undefined && converseSchemaResponses.isInitialize(schemaAction);
+  const session = initializes
+    ? (initializedSessionKeys(sessionId, sessionToken) ?? invalidConversationTokenResponse())
+    : continuedSessionKeys(sessionId, sessionToken);
+  if (session instanceof Response) {
+    return withCors(session);
   }
-
-  const session = {
-    conversationSessionId: sessionId ?? randomUUID(),
-    conversationToken: sessionToken ?? randomUUID(),
-  };
+  if (initializes || !tokensBySession.has(session.conversationSessionId)) {
+    tokensBySession.set(session.conversationSessionId, session.conversationToken);
+  }
 
   // Agent Gateway answers a concurrent action beside the turn: it neither waits for nor takes the
   // session's turn slot.
@@ -198,7 +238,7 @@ const handleSchemaConversePost = async ({request}: {request: Request}) => {
     return withCors(converseSchemaResponses.buildSchemaActionResponse(schemaAction, session));
   }
 
-  if (sessionId && sessionsInFlight.has(sessionId)) {
+  if (sessionsInFlight.has(session.conversationSessionId)) {
     return withCors(actionInFlightResponse());
   }
 

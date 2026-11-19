@@ -18,7 +18,7 @@ import '@/src/components/search/atomic-notifications/atomic-notifications.js';
 import '@/src/components/search/atomic-numeric-facet/atomic-numeric-facet.js';
 import '@/src/components/common/atomic-numeric-range/atomic-numeric-range.js';
 import '@/src/components/search/atomic-pager/atomic-pager.js';
-import '@/src/components/search/atomic-popover/atomic-popover.js';
+import '@/src/components/search/atomic-facet-popover/atomic-facet-popover.js';
 import '@/src/components/search/atomic-query-error/atomic-query-error.js';
 import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 import '@/src/components/search/atomic-quickview/atomic-quickview.js';
@@ -174,9 +174,9 @@ const meta: Meta = {
                 label="Object Type"
               ></atomic-segmented-facet>
             </atomic-segmented-facet-scrollable>
-            <atomic-popover>
+            <atomic-facet-popover>
               <atomic-facet field="concepts" label="Concepts"></atomic-facet>
-            </atomic-popover>
+            </atomic-facet-popover>
           </atomic-layout-section>
           <atomic-layout-section section="status">
             <atomic-breadbox></atomic-breadbox>
