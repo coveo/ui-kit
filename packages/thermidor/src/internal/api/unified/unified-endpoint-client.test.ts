@@ -77,7 +77,7 @@ describe('UnifiedEndpointClient', () => {
         body: JSON.stringify(request),
         headers: {
           'Content-Type': 'application/json',
-          Accept: 'text/event-stream, application/json',
+          Accept: 'text/event-stream, application/json;q=0.9',
           Authorization: 'Bearer test-token',
         },
       }
@@ -98,7 +98,7 @@ describe('UnifiedEndpointClient', () => {
     });
 
     const [, options] = mockedFetch.mock.calls[0];
-    expect(options?.headers).toHaveProperty('Accept', 'text/event-stream, application/json');
+    expect(options?.headers).toHaveProperty('Accept', 'text/event-stream, application/json;q=0.9');
     expect(response).toMatchObject({success: false, status: 412});
   });
 

@@ -59,7 +59,7 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
         body: JSON.stringify(agentInput),
         headers: {
           'Content-Type': 'application/json',
-          Accept: 'text/event-stream, application/json',
+          Accept: 'text/event-stream, application/json;q=0.9',
           Authorization: `Bearer ${accessToken}`,
         },
       };
