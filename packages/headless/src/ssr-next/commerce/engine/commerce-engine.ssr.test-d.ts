@@ -105,14 +105,16 @@ describe('defineCommerceEngine', () => {
     expectTypeOf<StandaloneFetchOptions['productId']>().toEqualTypeOf<string | undefined>();
   });
 
-  it('should keep a static state usable as the fetch options of its definition', () => {
-    expectTypeOf<ListingStaticState>().toMatchTypeOf<ListingFetchOptions>();
-    expectTypeOf<
-      InferStaticState<typeof searchEngineDefinition>
-    >().toMatchTypeOf<SearchFetchOptions>();
-    expectTypeOf<
-      InferStaticState<typeof standaloneEngineDefinition>
-    >().toMatchTypeOf<StandaloneFetchOptions>();
+  it('should keep each static state assignable to the build configuration of its page', () => {
+    expectTypeOf<ListingStaticState>().toExtend<
+      BuildConfig<typeof controllers, SolutionType.listing>
+    >();
+    expectTypeOf<InferStaticState<typeof searchEngineDefinition>>().toExtend<
+      BuildConfig<typeof controllers, SolutionType.search>
+    >();
+    expectTypeOf<InferStaticState<typeof standaloneEngineDefinition>>().toExtend<
+      BuildConfig<typeof controllers, SolutionType.standalone>
+    >();
   });
 
   it('should always carry the view URL in the static state', () => {
