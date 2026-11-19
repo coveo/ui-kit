@@ -15,8 +15,8 @@ interface CartLineItemProps {
 
 // `aria-disabled` rather than `disabled`, so a focused control keeps the focus while pending.
 function CartLineItem({line, pending, onFocus}: CartLineItemProps) {
-  const formatPrice = useFormatPrice();
-  const {add, remove} = useCart();
+  const {add, remove, cart} = useCart();
+  const formatPrice = useFormatPrice(cart.currency);
   const {productId, name, imageUrl, clickUri, unitPrice, quantity, lineTotal} = line;
   const unlessPending = (action: () => void) => () => {
     if (!pending) action();
@@ -93,8 +93,8 @@ interface CartPanelProps {
 }
 
 export function CartPanel({id, purchasing, orderId, onPurchase}: CartPanelProps) {
-  const formatPrice = useFormatPrice();
   const {cart, status, pendingProductIds, error} = useCart();
+  const formatPrice = useFormatPrice(cart.currency);
   const panelRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const linesRef = useRef<HTMLUListElement>(null);
