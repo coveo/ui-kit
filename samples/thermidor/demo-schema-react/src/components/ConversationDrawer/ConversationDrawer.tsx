@@ -121,11 +121,12 @@ export function ConversationDrawer({id, toggleRef, onClose}: ConversationDrawerP
         <p className={styles.empty}>No saved conversations yet.</p>
       ) : (
         <ul className={styles.list}>
-          {list.map(({id, title}, index) => (
+          {list.map(({id, title, expired}, index) => (
             <li key={id}>
               <ConversationRow
                 title={title}
                 current={id === currentId}
+                expired={expired}
                 openBlockedBy={id === currentId ? undefined : blockedBy}
                 deleteBlockedBy={id === currentId ? blockedBy : undefined}
                 onOpen={() => pick(() => open(id))}

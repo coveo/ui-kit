@@ -11,6 +11,8 @@ const MENU_HEIGHT = 100;
 interface ConversationRowProps {
   title: string;
   current: boolean;
+  /** Its session is gone: it opens read-only. */
+  expired?: boolean;
   /** The id of the note saying why the conversation cannot be opened now, if it cannot. */
   openBlockedBy?: string;
   /** The id of the note saying why the conversation cannot be deleted now, if it cannot. */
@@ -27,6 +29,7 @@ interface ConversationRowProps {
 export function ConversationRow({
   title,
   current,
+  expired = false,
   openBlockedBy,
   deleteBlockedBy,
   onOpen,
@@ -155,7 +158,8 @@ export function ConversationRow({
         title={openBlockedBy && NOT_READY}
         onClick={() => !openBlockedBy && onOpen()}
       >
-        {title}
+        <span className={styles.title}>{title}</span>
+        {expired && <span className={styles.tag}>Expired</span>}
       </button>
       <button
         ref={kebabRef}
