@@ -82,10 +82,12 @@ const styles = css`
       margin-bottom: var(--atomic-layout-spacing-y);
       row-gap: 0.5rem;
 
+      & > atomic-facet-popover,
       & > atomic-popover {
         margin-right: 0.5rem;
       }
 
+      & > atomic-facet-popover,
       & > atomic-popover {
         display: none;
       }

@@ -1,6 +1,6 @@
 import {expect, test} from './fixture';
 
-test.describe('atomic-popover', () => {
+test.describe('atomic-facet-popover', () => {
   test.beforeEach(async ({popover}) => {
     await popover.load({story: 'default'});
     await popover.hydrated.waitFor();
