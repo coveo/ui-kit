@@ -86,6 +86,21 @@ describe('createConversationStorage', () => {
     ]);
   });
 
+  it('marks a conversation expired, keeping its save, and keeps it expired when saved again', () => {
+    const {storage} = setup();
+    storage.save('a', 'surfboards', serialized());
+    storage.save('b', 'wetsuits', serialized());
+
+    storage.expire('a');
+    storage.save('a', 'surfboards', serialized('a2'));
+
+    expect(storage.list().map(({id, expired}) => [id, expired])).toEqual([
+      ['a', true],
+      ['b', undefined],
+    ]);
+    expect(storage.load('a')).toEqual(serialized('a2'));
+  });
+
   it('lists a started conversation once, before it has anything to load', () => {
     const {storage} = setup({max: 2});
     storage.save('a', 'surfboards', serialized());

@@ -7,6 +7,8 @@ export interface ConversationSummary {
   title: string;
   /** When the conversation was last saved, in milliseconds since the epoch. */
   updatedAt: number;
+  /** Set once its backend session is gone: it can be read, but not continued. */
+  expired?: true;
 }
 
 export interface ConversationStorage {
@@ -16,11 +18,13 @@ export interface ConversationStorage {
   /**
    * Saves the conversation, then drops the oldest ones past the cap, or to make room. A
    * conversation that does not fit even alone is not saved, and the others are kept. A saved
-   * conversation keeps its title, `title` naming a new one.
+   * conversation keeps its title, `title` naming a new one, and stays expired.
    */
   save(id: string, title: string, session: SerializedSession): void;
   remove(id: string): void;
   rename(id: string, title: string): void;
+  /** Marks a conversation {@link ConversationSummary.expired | expired}. */
+  expire(id: string): void;
   /** Lists a conversation as the newest one before it has anything to save, unless it is listed. */
   start(id: string, title: string): void;
   /** The conversation this tab shows, which a reload resumes. */
@@ -66,6 +70,11 @@ export function createConversationStorage({
     local().setItem(INDEX_KEY, JSON.stringify(index));
   }
 
+  function update(id: string, change: (entry: ConversationSummary) => ConversationSummary) {
+    const index = list().map((entry) => (entry.id === id ? change(entry) : entry));
+    attempt(() => writeIndex(index));
+  }
+
   function drop(index: ConversationSummary[], id: string) {
     attempt(() => local().removeItem(ENTRY_PREFIX + id));
     return index.filter((entry) => entry.id !== id);
@@ -81,9 +90,14 @@ export function createConversationStorage({
       const key = ENTRY_PREFIX + id;
       const previous = read(local, key);
       const saved = list();
-      const kept = saved.find((entry) => entry.id === id)?.title ?? title;
-      let index = [
-        {id, title: kept, updatedAt: now()},
+      const existing = saved.find((entry) => entry.id === id);
+      let index: ConversationSummary[] = [
+        {
+          id,
+          title: existing?.title ?? title,
+          updatedAt: now(),
+          ...(existing?.expired && {expired: true}),
+        },
         ...saved.filter((entry) => entry.id !== id),
       ];
       const evicted: [string, string][] = [];
@@ -124,8 +138,10 @@ export function createConversationStorage({
       attempt(() => writeIndex(index));
     },
     rename(id, title) {
-      const index = list().map((entry) => (entry.id === id ? {...entry, title} : entry));
-      attempt(() => writeIndex(index));
+      update(id, (entry) => ({...entry, title}));
+    },
+    expire(id) {
+      update(id, (entry) => ({...entry, expired: true}));
     },
     start(id, title) {
       const saved = list();
@@ -161,6 +177,11 @@ function isQuotaError(error: unknown) {
 }
 
 function isSummary(entry: unknown): entry is ConversationSummary {
-  const {id, title, updatedAt} = (entry ?? {}) as Partial<ConversationSummary>;
-  return typeof id === 'string' && typeof title === 'string' && typeof updatedAt === 'number';
+  const {id, title, updatedAt, expired} = (entry ?? {}) as Partial<ConversationSummary>;
+  return (
+    typeof id === 'string' &&
+    typeof title === 'string' &&
+    typeof updatedAt === 'number' &&
+    (expired === undefined || expired === true)
+  );
 }
