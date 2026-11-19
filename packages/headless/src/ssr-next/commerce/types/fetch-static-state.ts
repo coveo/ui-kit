@@ -42,10 +42,8 @@ export interface CommerceStaticState<
       }
     >,
     CommonBuildConfig<TControllers> {
-  /**
-   * The search parameters that `fetchStaticState()` received, the query (`q`) included on the search
-   * engine definition.
-   */
+  // Left undocumented so that editors show the documentation of `CommonBuildConfig.searchParams`.
+  // `Exclude` keeps the interface extending `CommonBuildConfig` under `exactOptionalPropertyTypes`.
   searchParams?: Exclude<BuildConfig<TControllers, TSolutionType>['searchParams'], undefined>;
   /**
    * The solution type of the engine definition that fetched the static state. `hydrateStaticState()`
