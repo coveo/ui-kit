@@ -7,7 +7,7 @@
  *
  * Outbound actions reach the core through the single consumer-facing entry
  * point {@link Session.dispatchAction}, wired directly as the renderer's
- * `onAction` handler; the action-payload validation happens internally, so the
+ * action handler; the action-payload validation happens internally, so the
  * consumer never runs Zod and writes no adapter glue.
  *
  * The entry is intentionally free of state-library concepts (no store, slice,

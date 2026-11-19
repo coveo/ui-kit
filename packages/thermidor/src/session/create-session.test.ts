@@ -2342,11 +2342,11 @@ describe('createSession lifecycle', () => {
       ) as typeof answerSurface;
 
       const answerSelectPage = {
-          name: 'selectPage',
-          surfaceId: ANSWER_ID,
-          sourceComponentId: 'answer-pagination',
-          context: {page: 2},
-        };
+        name: 'selectPage',
+        surfaceId: ANSWER_ID,
+        sourceComponentId: 'answer-pagination',
+        context: {page: 2},
+      };
 
       async function serializedConversation() {
         const session = await initializedSession();
@@ -2611,11 +2611,11 @@ describe('createSession lifecycle', () => {
 
         const stream = queueStream();
         const clicked = restored.dispatchAction({
-            name: 'productClick',
-            surfaceId: ANSWER_ID,
-            sourceComponentId: 'answer-products',
-            context: {productId: 'wetsuit-1', position: 1},
-          });
+          name: 'productClick',
+          surfaceId: ANSWER_ID,
+          sourceComponentId: 'answer-products',
+          context: {productId: 'wetsuit-1', position: 1},
+        });
         await stream.opened;
         stream.emit({type: 'RUN_FINISHED'});
         stream.close();
