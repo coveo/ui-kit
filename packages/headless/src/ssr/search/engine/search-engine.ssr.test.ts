@@ -181,6 +181,80 @@ describe('SSR', () => {
       spy.mockRestore();
     });
 
+    describe('deprecation warnings', () => {
+      const deprecationWarning = (api: string) =>
+        expect.stringContaining(`[Deprecated] ${api} is deprecated`);
+
+      it('does not log a deprecation warning when #fetchStaticState and #hydrateStaticState are used', async () => {
+        const staticState = await engineDefinition.fetchStaticState();
+        await engineDefinition.hydrateStaticState({searchAction: staticState.searchAction});
+
+        expect(mockedLoggerWarn).not.toHaveBeenCalledWith(expect.stringContaining('[Deprecated]'));
+      });
+
+      it('logs a deprecation warning once when #build is called', async () => {
+        await engineDefinition.build();
+        await engineDefinition.build();
+
+        expect(
+          mockedLoggerWarn.mock.calls.filter(([message]) => String(message).includes('`build`'))
+        ).toHaveLength(1);
+        expect(mockedLoggerWarn).toHaveBeenCalledWith(
+          '[Deprecated] `build` is deprecated and will be removed in Headless v4. Use `fetchStaticState()` instead.'
+        );
+      });
+
+      it('logs a deprecation warning when #fetchStaticState.fromBuildResult is called', async () => {
+        const buildResult = await engineDefinition.build();
+        await engineDefinition.fetchStaticState.fromBuildResult({buildResult});
+
+        expect(mockedLoggerWarn).toHaveBeenCalledWith(
+          deprecationWarning('`fetchStaticState.fromBuildResult`')
+        );
+      });
+
+      it('logs a deprecation warning when #hydrateStaticState.fromBuildResult is called', async () => {
+        const staticState = await engineDefinition.fetchStaticState();
+        const buildResult = await engineDefinition.build();
+        await engineDefinition.hydrateStaticState.fromBuildResult({
+          buildResult,
+          searchAction: staticState.searchAction,
+        });
+
+        expect(mockedLoggerWarn).toHaveBeenCalledWith(
+          deprecationWarning('`hydrateStaticState.fromBuildResult`')
+        );
+      });
+
+      it('logs a deprecation warning when the #extend build option is used', async () => {
+        await engineDefinition.build({extend: (options) => options});
+
+        expect(mockedLoggerWarn).toHaveBeenCalledWith(
+          deprecationWarning('The `extend` build option')
+        );
+      });
+
+      it('logs a deprecation warning when #setNavigatorContextProvider is called', () => {
+        engineDefinition.setNavigatorContextProvider(mockNavigatorContextProvider);
+
+        expect(mockedLoggerWarn).toHaveBeenCalledWith(
+          deprecationWarning('`setNavigatorContextProvider`')
+        );
+      });
+
+      it('logs a deprecation warning when #getAccessToken is called', () => {
+        engineDefinition.getAccessToken();
+
+        expect(mockedLoggerWarn).toHaveBeenCalledWith(deprecationWarning('`getAccessToken`'));
+      });
+
+      it('logs a deprecation warning when #setAccessToken is called', () => {
+        engineDefinition.setAccessToken('token');
+
+        expect(mockedLoggerWarn).toHaveBeenCalledWith(deprecationWarning('`setAccessToken`'));
+      });
+    });
+
     describe('when forwardedFor is not set in navigator context provider', () => {
       it('should log a warning', async () => {
         const navigatorContextProviderWithoutForwardedFor = buildMockNavigatorContextProvider({
@@ -207,7 +281,9 @@ describe('SSR', () => {
         engineDefinition.setNavigatorContextProvider(navigatorContextProviderWithForwardedFor);
         await engineDefinition.fetchStaticState();
 
-        expect(mockedLoggerWarn).not.toHaveBeenCalled();
+        expect(mockedLoggerWarn).not.toHaveBeenCalledWith(
+          expect.stringContaining('Unable to set x-forwarded-for header')
+        );
 
         mockedLoggerWarn.mockRestore();
       });

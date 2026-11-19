@@ -1,19 +1,27 @@
 import type {Logger} from 'pino';
 
-const warnedApisByLogger = new WeakMap<Logger, Set<string>>();
+const warnedApisByKey = new WeakMap<object, Set<string>>();
 
 /**
- * Logs a deprecation warning through the engine logger the first time a deprecated API is used with that engine.
+ * Logs a deprecation warning the first time a deprecated API is used for a given key.
  *
- * @param logger - The logger of the engine that uses the deprecated API.
+ * @param logger - The logger that logs the warning.
  * @param api - The name of the deprecated API.
  * @param instruction - What to do instead, as a full sentence.
+ * @param key - The object the warning is logged once for. Defaults to the logger, so that the warning is logged once
+ * per engine. Server-side rendering code builds an engine per request, so it passes its engine or controller
+ * definition instead.
  */
-export function warnDeprecatedOnce(logger: Logger, api: string, instruction: string) {
-  let warnedApis = warnedApisByLogger.get(logger);
+export function warnDeprecatedOnce(
+  logger: Logger,
+  api: string,
+  instruction: string,
+  key: object = logger
+) {
+  let warnedApis = warnedApisByKey.get(key);
   if (!warnedApis) {
     warnedApis = new Set();
-    warnedApisByLogger.set(logger, warnedApis);
+    warnedApisByKey.set(key, warnedApis);
   }
 
   if (warnedApis.has(api)) {

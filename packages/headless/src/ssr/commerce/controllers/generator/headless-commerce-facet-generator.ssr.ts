@@ -54,7 +54,10 @@ import {manualNumericFacetSelector} from '../../../../features/commerce/facets/n
 import {manualNumericFacetReducer as manualNumericFacetSet} from '../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice.js';
 import {categoryFacetSearchStateSelector} from '../../../../features/facets/facet-search-set/category/category-facet-search-state-selector.js';
 import {specificFacetSearchStateSelector} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-state-selector.js';
-import {ensureAtLeastOneSolutionType} from '../../../../ssr/commerce/controller-utils.js';
+import {
+  ensureAtLeastOneSolutionType,
+  withSolutionTypeOptionsWarning,
+} from '../../../../ssr/commerce/controller-utils.js';
 import type {ManualRangeSection} from '../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {SolutionType} from '../../types/controller-constants.js';
@@ -110,13 +113,14 @@ export function defineFacetGenerator<TOptions extends ControllerDefinitionOption
   options?: TOptions
 ) {
   ensureAtLeastOneSolutionType(options);
-  return {
+  const definition = {
     listing: true,
     search: true,
     ...options,
     build: (engine, solutionType) =>
       buildFacetGenerator(engine, {props: {solutionType: solutionType!}}),
   } as SubControllerDefinitionWithoutProps<FacetGenerator, TOptions>;
+  return withSolutionTypeOptionsWarning(definition, 'defineFacetGenerator', options);
 }
 
 /**
