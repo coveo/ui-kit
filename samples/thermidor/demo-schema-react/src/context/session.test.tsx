@@ -258,6 +258,25 @@ describe('SessionProvider conversations', () => {
     expect(session().turns).toEqual([]);
   });
 
+  it('opens a saved conversation when the tab cannot remember it', async () => {
+    const local = memoryStorage();
+    const full = memoryStorage();
+    full.setItem = () => {
+      throw new DOMException('Full', 'QuotaExceededError');
+    };
+    const {session, conversations} = renderConversations(
+      createConversationStorage({local: () => local, session: () => full})
+    );
+    await ask(session(), 'surfboards');
+    const saved = conversations().currentId;
+    act(() => conversations().start());
+
+    act(() => conversations().open(saved));
+
+    expect(conversations().currentId).toBe(saved);
+    expect(session().turns.map(({input}) => input.prompt)).toEqual(['surfboards']);
+  });
+
   it('saves a resumed conversation the server replaced as a new one', async () => {
     const tab = browser().tab();
     const first = renderConversations(tab);
