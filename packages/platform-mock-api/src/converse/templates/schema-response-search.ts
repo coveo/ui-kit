@@ -916,6 +916,37 @@ function sortActionRejection(action: {
   return undefined;
 }
 
+/**
+ * How the gateway rejects an out-of-range `selectPage` before the stream starts, or `undefined`
+ * when the page exists in the surface's current search (mirrors agent-gateway#706). A search
+ * without results has no page to select. `restoreState` past the end shows the last page instead.
+ */
+function pageActionRejection(
+  action: {name: string; context: Record<string, unknown>},
+  surfaceId?: string
+): ActionRejection | undefined {
+  if (action.name !== 'selectPage') {
+    return undefined;
+  }
+  const page = Number(action.context.page) || 0;
+  if (page < 0) {
+    return {
+      errorCode: 'AGENT:ACTION_NOT_APPLICABLE',
+      message: `selectPage requires a page of 0 or more: ${page}`,
+    };
+  }
+  const view =
+    (surfaceId !== undefined ? viewsBySurfaceId.get(surfaceId) : undefined) ?? currentView;
+  const totalPages = Math.ceil(filterProducts(view).length / view.pageSize);
+  if (page >= totalPages) {
+    return {
+      errorCode: 'AGENT:ACTION_NOT_APPLICABLE',
+      message: `selectPage page ${page} is past the last page: the search has ${totalPages} page(s)`,
+    };
+  }
+  return undefined;
+}
+
 interface PriceRange {
   start: number;
   end: number;
@@ -1310,13 +1341,25 @@ function deriveBreadboxState(view: SearchViewState) {
   return {facets};
 }
 
+const EMPTY_FACET_SEARCH = {query: '', canShowMoreResults: false, results: []};
+
+function emptyFacetState(fields: object, state: Record<string, unknown>) {
+  return {
+    ...fields,
+    ...state,
+    hasActiveValues: false,
+    canShowMoreValues: false,
+    canShowLessValues: false,
+  };
+}
+
 function computeComponentsState(view: SearchViewState): Record<string, unknown> {
   const {pageSize, sort: appliedSort} = view;
   const filteredProducts = filterProducts(view);
   const sortedProducts = sortProducts(filteredProducts, appliedSort);
   const totalEntries = sortedProducts.length;
-  const totalPages = Math.max(1, Math.ceil(totalEntries / pageSize));
-  const page = Math.min(Math.max(view.page, 0), totalPages - 1);
+  const totalPages = Math.ceil(totalEntries / pageSize);
+  const page = Math.min(Math.max(view.page, 0), Math.max(totalPages - 1, 0));
   const start = page * pageSize;
   const pageProducts = sortedProducts.slice(start, start + pageSize);
 
@@ -1353,9 +1396,22 @@ function computeComponentsState(view: SearchViewState): Record<string, unknown> 
       appliedSort,
       availableSorts,
     },
-    'facet-brand-2': deriveRegularFacetValues(view, FACET_COMPONENT_IDS.regular),
-    'facet-price-2': deriveNumericFacetValues(view),
-    'facet-category-2': deriveCategoryFacetValues(view, FACET_COMPONENT_IDS.category),
+    // Like the Commerce API, a search without results keeps only the facets with a selected value.
+    'facet-brand-2':
+      totalEntries === 0 && view.selectedBrands.length === 0
+        ? emptyFacetState(FACET_FIELDS.regular, {values: [], facetSearch: EMPTY_FACET_SEARCH})
+        : deriveRegularFacetValues(view, FACET_COMPONENT_IDS.regular),
+    'facet-price-2':
+      totalEntries === 0 && view.selectedPriceRange === null
+        ? emptyFacetState(FACET_FIELDS.numeric, {values: [], customRange: null})
+        : deriveNumericFacetValues(view),
+    'facet-category-2':
+      totalEntries === 0 && view.selectedCategoryPath.length === 0
+        ? emptyFacetState(FACET_FIELDS.category, {
+            values: {ancestry: [], selected: null, children: []},
+            facetSearch: EMPTY_FACET_SEARCH,
+          })
+        : deriveCategoryFacetValues(view, FACET_COMPONENT_IDS.category),
     [BREADBOX_ID]: deriveBreadboxState(view),
     // FacetManager has NO Component_State: facet ordering lives on its `children` (A2-UI
     // composition plane), so it emits no `/state` op.
@@ -2024,4 +2080,5 @@ export {
   searchProductsFor,
   rerunsSearch,
   sortActionRejection,
+  pageActionRejection,
 };

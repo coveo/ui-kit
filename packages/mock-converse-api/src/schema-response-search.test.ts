@@ -1005,3 +1005,95 @@ describe('schema-response-search sort rejections', () => {
     expect((await respond(name, context)).status).toBe(200);
   });
 });
+
+describe('schema-response-search empty and out-of-range searches', () => {
+  const session = {conversationSessionId: 'page-session', conversationToken: 'page-token'};
+  const NO_MATCH = {query: 'zzzqqq', page: 0, pageSize: 12};
+
+  beforeEach(() => {
+    resetSurface();
+  });
+
+  async function selectPage(page: number) {
+    const response = await converseSchemaResponses.buildSchemaActionResponse(
+      {name: 'selectPage', context: {page}, sourceComponentId: 'pagination-2'},
+      session
+    );
+    return {
+      status: response.status,
+      body: response.status === 400 ? await response.json() : undefined,
+    };
+  }
+
+  const notApplicable = (message: string) => ({
+    status: 400,
+    body: {errorCode: 'AGENT:ACTION_NOT_APPLICABLE', message},
+  });
+
+  it('reports no pages and keeps no facet values when nothing matches', () => {
+    const components = act('restoreState', NO_MATCH);
+    expect(components['pagination-2']).toEqual({
+      page: 0,
+      pageSize: 12,
+      totalEntries: 0,
+      totalPages: 0,
+    });
+    expect(components['query-summary-2']).toMatchObject({firstIndex: 0, lastIndex: 0});
+    expect((components['facet-brand-2'] as Record<string, unknown>).values).toEqual([]);
+    expect((components['facet-price-2'] as Record<string, unknown>).values).toEqual([]);
+    expect((components['facet-category-2'] as Record<string, unknown>).values).toEqual({
+      ancestry: [],
+      selected: null,
+      children: [],
+    });
+  });
+
+  it('keeps only the facets with a selected value when nothing matches', () => {
+    const components = act('restoreState', {
+      ...NO_MATCH,
+      facets: [{facetId: 'ec_brand', values: ['Xcel']}],
+    });
+    const brand = components['facet-brand-2'] as Record<string, unknown>;
+    expect(brand.values).toEqual([{value: 'Xcel', numberOfResults: 0, state: 'selected'}]);
+    expect((components['facet-price-2'] as Record<string, unknown>).values).toEqual([]);
+    expect(totalPages(components)).toBe(0);
+  });
+
+  it('rejects a negative page', async () => {
+    expect(await selectPage(-1)).toEqual(
+      notApplicable('selectPage requires a page of 0 or more: -1')
+    );
+  });
+
+  it('rejects the page count as a page, and leaves the page unchanged', async () => {
+    act('restoreState', {query: 'surf', page: 0, pageSize: 12});
+    const pages = totalPages(act('selectPage', {page: 0}));
+    expect(await selectPage(pages)).toEqual(
+      notApplicable(
+        `selectPage page ${pages} is past the last page: the search has ${pages} page(s)`
+      )
+    );
+    expect(page(act('selectPage', {page: 0}))).toBe(0);
+  });
+
+  it('rejects every page of a search without results', async () => {
+    act('restoreState', NO_MATCH);
+    expect(await selectPage(0)).toEqual(
+      notApplicable('selectPage page 0 is past the last page: the search has 0 page(s)')
+    );
+  });
+
+  it('answers a page in range', async () => {
+    act('restoreState', {query: 'surf', page: 0, pageSize: 12});
+    expect((await selectPage(1)).status).toBe(200);
+  });
+
+  it('shows the last page when restoreState asks past the end', () => {
+    const components = act('restoreState', {query: 'surf', page: 99, pageSize: 12});
+    expect(page(components)).toBe(totalPages(components) - 1);
+  });
+});
+
+function totalPages(components: Record<string, unknown>): number {
+  return (components['pagination-2'] as Record<string, unknown>).totalPages as number;
+}
