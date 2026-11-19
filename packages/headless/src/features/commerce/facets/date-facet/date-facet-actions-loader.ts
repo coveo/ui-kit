@@ -1,5 +1,6 @@
 import type {PayloadAction} from '@reduxjs/toolkit';
 import type {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
+import {withDeprecationWarning} from '../../../../utils/deprecation.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../facet-set/facet-set-slice.js';
 import {
   type ToggleExcludeDateFacetValuePayload,
@@ -68,6 +69,9 @@ export interface DateFacetActionCreators {
   ): PayloadAction<UpdateDateFacetValuesPayload>;
 }
 
+const dateFacetRemovalInstruction =
+  'Remove it from your interface: the Commerce API removes date range facets in June 2027, with no replacement.';
+
 /**
  * Loads the commerce facet set reducer and returns the available date facet action creators.
  *
@@ -83,8 +87,23 @@ export interface DateFacetActionCreators {
 export function loadDateFacetActions(engine: CommerceEngine): DateFacetActionCreators {
   engine.addReducers({commerceFacetSet});
   return {
-    toggleSelectDateFacetValue,
-    toggleExcludeDateFacetValue,
-    updateDateFacetValues,
+    toggleSelectDateFacetValue: withDeprecationWarning(
+      engine.logger,
+      toggleSelectDateFacetValue,
+      'The commerce `toggleSelectDateFacetValue` action creator',
+      dateFacetRemovalInstruction
+    ),
+    toggleExcludeDateFacetValue: withDeprecationWarning(
+      engine.logger,
+      toggleExcludeDateFacetValue,
+      'The commerce `toggleExcludeDateFacetValue` action creator',
+      dateFacetRemovalInstruction
+    ),
+    updateDateFacetValues: withDeprecationWarning(
+      engine.logger,
+      updateDateFacetValues,
+      'The commerce `updateDateFacetValues` action creator',
+      dateFacetRemovalInstruction
+    ),
   };
 }
