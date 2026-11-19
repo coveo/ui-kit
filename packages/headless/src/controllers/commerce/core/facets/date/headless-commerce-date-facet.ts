@@ -4,7 +4,10 @@ import {
   toggleSelectDateFacetValue,
   updateDateFacetValues,
 } from '../../../../../features/commerce/facets/date-facet/date-facet-actions.js';
-import {buildDateRange} from '../../../../core/facets/range-facet/date-facet/date-range.js';
+import {
+  buildDateRange as buildCoreDateRange,
+  type DateRangeOptions,
+} from '../../../../core/facets/range-facet/date-facet/date-range.js';
 import {
   buildCoreCommerceFacet,
   type CoreCommerceFacet,
@@ -27,6 +30,8 @@ export type DateFacetOptions = Omit<
  *
  * @group Sub-controllers
  * @category DateFacet
+ * @deprecated The Commerce API removes date range facets in June 2027, with no replacement. This type will be
+ * removed in the next major version.
  */
 export type DateFacetState = Omit<CoreCommerceFacetState<DateFacetValue>, 'type'> & {
   type: 'dateRange';
@@ -38,6 +43,8 @@ export type DateFacetState = Omit<CoreCommerceFacetState<DateFacetValue>, 'type'
  *
  * @group Sub-controllers
  * @category DateFacet
+ * @deprecated The Commerce API removes date range facets in June 2027, with no replacement. This type will be
+ * removed in the next major version.
  */
 export type DateFacet = CoreCommerceFacet<DateRangeRequest, DateFacetValue> & {
   /**
@@ -52,7 +59,18 @@ export type DateFacet = CoreCommerceFacet<DateRangeRequest, DateFacetValue> & {
   state: DateFacetState;
 } & FacetControllerType<'dateRange'>;
 
-export {buildDateRange};
+/**
+ * Creates a `DateRangeRequest`.
+ *
+ * @deprecated The Commerce API removes date range facets in June 2027, with no replacement. This function will be
+ * removed in the next major version.
+ *
+ * @param config - The options with which to create a `DateRangeRequest`.
+ * @returns A new `DateRangeRequest`.
+ */
+export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
+  return buildCoreDateRange(config);
+}
 
 /**
  * @internal

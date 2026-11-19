@@ -30,16 +30,23 @@ import type {
   CoreFacetState,
   CoreFacet as HeadlessCoreFacet,
 } from '../../../core/facets/facet/headless-core-facet.js';
-import type {DateRangeRequest} from '../../../core/facets/range-facet/date-facet/headless-core-date-facet.js';
+import type {DateRangeRequest as CoreDateRangeRequest} from '../../../core/facets/range-facet/date-facet/headless-core-date-facet.js';
 import type {NumericRangeRequest} from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet.js';
 import type {FetchProductsActionCreator, ToggleActionCreator} from '../common.js';
+
+/**
+ * The options defining a value to display in a `DateFacet`.
+ *
+ * @deprecated The Commerce API removes date range facets in June 2027, with no replacement. This type will be
+ * removed in the next major version.
+ */
+export interface DateRangeRequest extends CoreDateRangeRequest {}
 
 export type {
   BaseFacetValue,
   CategoryFacetValue,
   CategoryFacetValueRequest,
   DateFacetValue,
-  DateRangeRequest,
   FacetType,
   FacetValueRequest,
   NumericFacetValue,
