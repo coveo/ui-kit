@@ -229,12 +229,7 @@ export {
   FALLBACK_PROGRESS,
   GATEWAY_ERROR_PROGRESS,
   PRODUCT_RESEARCH_PROGRESS,
-  PROGRESS_BLOCK_ACTIVITY_ID,
-  PROGRESS_BLOCK_COMPONENT,
-  PROGRESS_BLOCK_STATE_ACTIVITY_ID,
-  PROGRESS_BLOCK_SURFACE_ID,
   searchProgress,
   withProgressBlock,
-  withoutToolCalls,
 };
-export type {ProgressBlockState, ProgressBlockStep, ProgressPlan};
+export type {ProgressPlan};

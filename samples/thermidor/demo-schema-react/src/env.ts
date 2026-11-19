@@ -124,7 +124,7 @@ function getConverseUrl(baseUrl: string, organizationId: string): string {
  * default) sends tool calls. Set by the `converseRoute` URL parameter
  * (`?converseRoute=public`), else by `VITE_COVEO_CONVERSE_ROUTE`.
  */
-export function resolveConverseRoute(): 'preview' | 'public' {
+function resolveConverseRoute(): 'preview' | 'public' {
   const fromUrl =
     typeof window === 'undefined'
       ? null

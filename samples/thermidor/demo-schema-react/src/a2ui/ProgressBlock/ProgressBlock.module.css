@@ -19,7 +19,7 @@
 }
 
 .step[data-state='done'] {
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
 }
 
 .step[data-state='failed'] {
