@@ -15,7 +15,7 @@
  *   |   reason, errorCode)                        |         |                  |
  *   | sessionId, sessionToken, activeTurnId       | yes     | session-level    |
  *   | response.activities                         | yes     | all turns        |
- *   | response.agent.{messages,reasoningSteps}    | yes     | all turns        |
+ *   | response.agent.{messages,toolCalls}         | yes     | all turns        |
  *   | state (validated data model)                | yes     | session-level    |
  *   | response.surfaces                           | no      | derived          |
  *   | renderer stream (`a2uiMessages`)            | no      | derived          |
@@ -44,8 +44,8 @@ import type {SessionStoreState} from './store.js';
 import type {
   Activity,
   AgentMessage,
-  ReasoningStep,
   SessionInitialization,
+  ToolCall,
   Turn,
   TurnErrorReason,
   TurnInput,
@@ -56,7 +56,7 @@ import type {
  * The current serialized-session shape version. Bumped whenever the persisted
  * shape changes. Restoration rejects any `version` that is not this value.
  */
-export const SERIALIZED_SESSION_VERSION = 5;
+export const SERIALIZED_SESSION_VERSION = 6;
 
 /**
  * The error message used when a mid-stream turn is restored.
@@ -75,7 +75,7 @@ const STREAM_INTERRUPTED = {
  */
 export interface SerializedTurnAgent {
   messages: AgentMessage[];
-  reasoningSteps: ReasoningStep[];
+  toolCalls: ToolCall[];
 }
 
 /**
@@ -158,7 +158,7 @@ export class UnsupportedSerializedSessionVersionError extends Error {
  * {@link SerializedSession}.
  *
  * Persists `id`/`input`/`status`/`error`/`reason`/`errorCode` and `response.activities` for every
- * turn, `response.agent.{messages,reasoningSteps}` for turns that have an
+ * turn, `response.agent.{messages,toolCalls}` for turns that have an
  * agent, and session-level `initialization`, `sessionId`/`sessionToken`/`activeTurnId`
  * and `state`. Never persists the derived `response.surfaces` or renderer stream.
  */
@@ -173,7 +173,7 @@ export function serializeSession(state: SessionStoreState<Turn>): SerializedSess
     if (turn.response.agent) {
       response.agent = {
         messages: [...turn.response.agent.messages],
-        reasoningSteps: [...turn.response.agent.reasoningSteps],
+        toolCalls: [...turn.response.agent.toolCalls],
       };
     }
 
@@ -237,7 +237,7 @@ export function restoreSession(serialized: SerializedSession): SessionStoreState
     if (turn.response.agent) {
       response.agent = {
         messages: [...turn.response.agent.messages],
-        reasoningSteps: [...turn.response.agent.reasoningSteps],
+        toolCalls: [...turn.response.agent.toolCalls],
       };
     }
 

@@ -60,9 +60,6 @@ import type {
   TextMessageStartEvent,
   TextMessageContentEvent,
   TextMessageEndEvent,
-  ReasoningMessageStartEvent,
-  ReasoningMessageContentEvent,
-  ReasoningMessageEndEvent,
   ToolCallStartEvent,
   ToolCallArgsEvent,
   ToolCallEndEvent,
@@ -83,9 +80,6 @@ export type NormalizedStreamEvent =
   | TextMessageStartEvent
   | TextMessageContentEvent
   | TextMessageEndEvent
-  | ReasoningMessageStartEvent
-  | ReasoningMessageContentEvent
-  | ReasoningMessageEndEvent
   | ToolCallStartEvent
   | ToolCallArgsEvent
   | ToolCallEndEvent

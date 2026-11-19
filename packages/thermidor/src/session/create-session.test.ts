@@ -2549,14 +2549,14 @@ describe('createSession lifecycle', () => {
       ]);
     });
 
-    it('round-trips the initialization, the turns and the session state through serialized format 5', async () => {
+    it('round-trips the initialization, the turns and the session state through serialized format 6', async () => {
       const session = await initializedSession();
       await completePrompt(session, 'first', [shellPageUpdate('shell-page')]);
 
       const serialized = session.serialize();
       const restored = createSession({...shellConfig, sessionToRestore: serialized});
 
-      expect(serialized.version).toBe(5);
+      expect(serialized.version).toBe(6);
       expect(serialized.initialization).toEqual({
         activities: session.initialization?.activities,
         status: 'complete',

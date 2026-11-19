@@ -2,7 +2,7 @@
  * The canonical runtime domain model for the session client.
  *
  * `state` and `activities` are routing-neutral and live at the top of
- * `response`; only `messages` and `reasoningSteps` are agent-specific and move
+ * `response`; only `messages` and `toolCalls` are agent-specific and move
  * under the optional `agent` facet, whose presence signals "the router invoked
  * an agent".
  */
@@ -77,27 +77,14 @@ export interface DiscoveredSurface {
 export type A2uiV09Message = Record<string, unknown>;
 
 /**
- * A single step in the agent's reasoning process — either a reasoning message
- * or a tool-call invocation. The array order in
- * {@link TurnAgent.reasoningSteps} reflects the chronological order of events
- * received from the stream.
+ * The lifecycle status of a {@link ToolCall}.
  */
-export type ReasoningStep = ReasoningMessageStep | ToolCallStep;
-
-export interface ReasoningMessageStep {
-  type: 'reasoning';
-
-  /**
-   * The accumulated reasoning/thinking text for this step.
-   */
-  content: string;
-}
-
 export type ToolCallStatus = 'calling' | 'completed';
 
-export interface ToolCallStep {
-  type: 'tool-call';
-
+/**
+ * A tool the agent invoked during a turn, in the order the stream started it.
+ */
+export interface ToolCall {
   /**
    * The server-assigned tool call identifier.
    */
@@ -158,7 +145,7 @@ export interface Activity {
  */
 export interface TurnAgent {
   messages: AgentMessage[];
-  reasoningSteps: ReasoningStep[];
+  toolCalls: ToolCall[];
 }
 
 /**

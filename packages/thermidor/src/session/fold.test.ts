@@ -107,7 +107,7 @@ describe('fold Turn/TurnResponse shape', () => {
   });
 
   describe('agent facet presence', () => {
-    it('populates response.agent with messages and reasoningSteps when the router invoked an agent', () => {
+    it('populates response.agent with messages and toolCalls when the router invoked an agent', () => {
       const turn = foldActivities(createTurn('t1', {prompt: 'hi'}), [
         textMessageStart,
         activity({type: 'TEXT_MESSAGE_CONTENT', delta: 'hello'}),
@@ -116,12 +116,12 @@ describe('fold Turn/TurnResponse shape', () => {
 
       expect(turn.response.agent).toBeDefined();
       expect(turn.response.agent?.messages).toEqual([{content: 'hello', role: 'assistant'}]);
-      expect(Array.isArray(turn.response.agent?.reasoningSteps)).toBe(true);
+      expect(turn.response.agent?.toolCalls).toEqual([]);
     });
 
     // The fold's ACTIVITY_SNAPSHOT case must not materialize an empty
     // `response.agent` facet. `response.agent` is created only by genuinely
-    // agent-invoking events (TEXT_MESSAGE_*, REASONING_MESSAGE_*, TOOL_CALL_*),
+    // agent-invoking events (TEXT_MESSAGE_*, TOOL_CALL_*),
     // so a turn the router never routed to an agent has `response.agent`
     // omitted entirely.
     it('omits response.agent for a turn the router did not route to an agent', () => {
@@ -129,6 +129,16 @@ describe('fold Turn/TurnResponse shape', () => {
 
       expect(turn.response.agent).toBeUndefined();
       expect('agent' in turn.response).toBe(false);
+    });
+
+    it('ignores reasoning events', () => {
+      const turn = foldActivities(createTurn('t1', {prompt: 'hi'}), [
+        activity({type: 'REASONING_MESSAGE_START', messageId: 'r1', role: 'reasoning'}),
+        activity({type: 'REASONING_MESSAGE_CONTENT', messageId: 'r1', delta: 'thinking'}),
+        activity({type: 'REASONING_MESSAGE_END', messageId: 'r1'}),
+      ]);
+
+      expect(turn.response.agent).toBeUndefined();
     });
   });
 });

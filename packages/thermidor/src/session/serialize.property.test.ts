@@ -2,14 +2,14 @@ import fc from 'fast-check';
 import {describe, expect, it} from 'vitest';
 import {restoreSession, serializeSession} from './serialize.js';
 import type {SessionStoreState} from './store.js';
-import type {Activity, AgentMessage, ReasoningStep, Turn, TurnStatus} from './types.js';
+import type {Activity, AgentMessage, ToolCall, Turn, TurnStatus} from './types.js';
 
 /**
  * Serialize/restore round-trip.
  *
  * For any session store state, `restoreSession(serializeSession(s))` preserves:
  * every turn's `id`/`input`/`status`/`error`, every turn's `response.activities`
- * and `response.agent.{messages,reasoningSteps}`, the session's `state`, and
+ * and `response.agent.{messages,toolCalls}`, the session's `state`, and
  * session-level `sessionId`/`sessionToken`/`activeTurnId`.
  *
  * The `streaming` status is deliberately excluded from the generated turns: a
@@ -36,19 +36,12 @@ const agentMessageArbitrary: fc.Arbitrary<AgentMessage> = fc.record({
   role: fc.string({minLength: 1, maxLength: 12}),
 });
 
-const reasoningStepArbitrary: fc.Arbitrary<ReasoningStep> = fc.oneof(
-  fc.record({
-    type: fc.constant<'reasoning'>('reasoning'),
-    content: fc.string({maxLength: 20}),
-  }),
-  fc.record({
-    type: fc.constant<'tool-call'>('tool-call'),
-    id: fc.string({minLength: 1, maxLength: 12}),
-    name: fc.string({minLength: 1, maxLength: 12}),
-    args: fc.string({maxLength: 20}),
-    status: fc.constantFrom<'calling' | 'completed'>('calling', 'completed'),
-  })
-);
+const toolCallArbitrary: fc.Arbitrary<ToolCall> = fc.record({
+  id: fc.string({minLength: 1, maxLength: 12}),
+  name: fc.string({minLength: 1, maxLength: 12}),
+  args: fc.string({maxLength: 20}),
+  status: fc.constantFrom<'calling' | 'completed'>('calling', 'completed'),
+});
 
 /**
  * Excludes `'streaming'` on purpose: the streaming → error downgrade is the
@@ -73,7 +66,7 @@ function turnArbitrary(id: string): fc.Arbitrary<Turn> {
       agent: fc.option(
         fc.record({
           messages: fc.array(agentMessageArbitrary, {maxLength: 5}),
-          reasoningSteps: fc.array(reasoningStepArbitrary, {maxLength: 5}),
+          toolCalls: fc.array(toolCallArbitrary, {maxLength: 5}),
         }),
         {nil: undefined}
       ),
