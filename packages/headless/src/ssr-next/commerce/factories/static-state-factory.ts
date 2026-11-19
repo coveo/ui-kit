@@ -1,7 +1,10 @@
-import type {UnknownAction} from '@reduxjs/toolkit';
 import {buildProductListing} from '../../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch} from '../../../controllers/commerce/search/headless-search.js';
+import {toSerializableNavigatorContext} from '../../common/serializable-navigator-context.js';
 import {createStaticState} from '../controller-utils.js';
+import type {BuildParameters} from '../types/build.js';
+import {filterRecommendationControllers} from '../utils/recommendation-filter.js';
+import {withDefaultViewUrl} from '../utils/view-url.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {AugmentedControllerDefinition} from '../types/controller-definitions.js';
 import type {
@@ -48,7 +51,9 @@ export function fetchStaticStateFactory<
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ) {
   return <TSolutionType extends SolutionType>(solutionType: TSolutionType) =>
-    async (params: FetchStaticStateParameters<TControllerDefinitions, TSolutionType>) => {
+    async (rawParams: FetchStaticStateParameters<TControllerDefinitions, TSolutionType>) => {
+      // The static state echoes these params, so hydration reuses the view URL the requests used.
+      const params = withDefaultViewUrl(rawParams);
       const solutionTypeBuild = buildFactory(controllerDefinitions, options)(solutionType);
       const {engine, controllers} = await solutionTypeBuild(params);
 
@@ -61,20 +66,27 @@ export function fetchStaticStateFactory<
           break;
       }
 
+      filterRecommendationControllers(controllers, controllerDefinitions).refresh(
+        params.recommendations
+      );
+
       const searchActions = await Promise.all(engine.waitForRequestCompletedAction());
 
-      const staticState = createStaticState<UnknownAction, TControllerDefinitions, TSolutionType>({
+      const staticState = createStaticState<TControllerDefinitions, TSolutionType>({
         searchActions,
         controllers,
       });
 
-      const {controllers: controllerProps, ...restParams} = params as {
-        controllers?: Record<string, unknown>;
-      } & typeof params;
+      const {
+        controllers: controllerProps,
+        ...restParams
+      }: BuildParameters<TControllerDefinitions> & typeof params = params;
 
       return {
         ...restParams,
         ...staticState,
+        navigatorContext: toSerializableNavigatorContext(params.navigatorContext),
+        solutionType,
         ...(controllerProps && {controllerProps}),
       };
     };

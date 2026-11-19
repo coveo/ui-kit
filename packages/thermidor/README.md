@@ -35,22 +35,23 @@ await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me r
 
 `createSession(config)` returns a `Session` exposing exactly:
 
-| Member                    | Purpose                                                                                                                                             |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `contracts`               | The injected contracts schema this session validates against (readonly).                                                                            |
-| `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                                                       |
-| `initialization`          | The run of the `initialize` action that opened the session, or `undefined`. See [Opening the session](#opening-the-session).                        |
-| `surfaces`                | Every live surface of the session, in creation order, whichever run created it.                                                                     |
-| `a2uiMessages`            | The session's whole renderer stream, in the A2-UI v0.9 shape. It only grows: feed each new message to one renderer once.                            |
-| `state`                   | The validated data model of every live surface, keyed by surface id.                                                                                |
-| `actionError`             | The last component action that failed (`ActionError`: `message`, `component`, `name`, `surfaceId`, `sourceComponentId`), or `undefined`.            |
-| `request`                 | The request being sent, or `undefined` when idle. See [One request at a time](#one-request-at-a-time).                                              |
-| `subscribe(listener)`     | Registers a listener called once per change to the turn list, the initialization, `actionError` or `request`.                                       |
-| `getSnapshot()`           | `turns`, `initialization`, `surfaces`, `a2uiMessages`, `state`, `request` and `actionError` as one immutable `SessionSnapshot`, replaced on change. |
-| `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`.                             |
-| `cancel()`                | Stops the active stream.                                                                                                                            |
-| `retry(turnId)`           | Re-submits the last turn's input when it errored: its prompt, or the action that opened it.                                                         |
-| `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                                                     |
+| Member                    | Purpose                                                                                                                                                |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `contracts`               | The injected contracts schema this session validates against (readonly).                                                                               |
+| `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                                                          |
+| `initialization`          | The run of the `initialize` action that opened the session, or `undefined`. See [Opening the session](#opening-the-session).                           |
+| `surfaces`                | Every live surface of the session, in creation order, whichever run created it.                                                                        |
+| `a2uiMessages`            | The session's whole renderer stream, in the A2-UI v0.9 shape. It only grows: feed each new message to one renderer once.                               |
+| `state`                   | The validated data model of every live surface, keyed by surface id.                                                                                   |
+| `actionError`             | The last component action that failed (`ActionError`: `message`, `errorCode?`, `component`, `name`, `surfaceId`, `sourceComponentId`), or `undefined`. |
+| `request`                 | The request being sent, or `undefined` when idle. See [One request at a time](#one-request-at-a-time).                                                 |
+| `subscribe(listener)`     | Registers a listener called once per change to the turn list, the initialization, `actionError` or `request`.                                          |
+| `getSnapshot()`           | `turns`, `initialization`, `surfaces`, `a2uiMessages`, `state`, `request` and `actionError` as one immutable `SessionSnapshot`, replaced on change.    |
+| `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`.                                |
+| `cancel()`                | Stops the active stream.                                                                                                                               |
+| `retry(turnId)`           | Re-submits the last turn's input when it errored: its prompt, or the action that opened it.                                                            |
+| `retryInitialization()`   | Sends `initialize` again when `initialization.status` is `'error'`. See [Opening the session](#opening-the-session).                                   |
+| `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                                                        |
 
 `subscribe` and `getSnapshot` do not rely on `this`, so they can be handed by reference to any store that compares snapshots by reference, such as React's `useSyncExternalStore(session.subscribe, session.getSnapshot)`. The package itself depends on no framework.
 
@@ -60,7 +61,7 @@ The concrete `contracts` type pinned at the `createSession` call site threads un
 
 The session opens itself: `createSession` sends an `initialize` action a microtask after it returns, so a listener subscribed in the same task sees it start. It carries no surface or source component, since no component exists yet. While it is in flight, `session.request` is `{kind: 'initialize'}`. It goes through the [one-request rule](#one-request-at-a-time) and the conflict retry, and adopts the session id and token from its run, like a prompt. The producer answers with the session's shell, such as its search box, as an ordinary surface.
 
-Its run is recorded as `session.initialization` (`activities`, `status`, `error`), never as a turn. A failed `initialize` is not retried: `initialization.status` becomes `'error'`, and the first prompt still opens the session. `cancel()` stops it like any request. A restored session never sends it, and neither does a session created with `initialize: false`, for tests or for a server that creates a session while rendering.
+Its run is recorded as `session.initialization` (`activities`, `status`, `error`), never as a turn. When the endpoint rejects it with a network error, a `429`, `502`, `503` or `504`, the session retries it, up to 3 attempts within 5 seconds, the attempts included, so a failure that takes several seconds to arrive, such as a proxy timeout, isn't retried. `request` stays `{kind: 'initialize'}` meanwhile, and a dispatch is withheld as during any request. Once it has failed, `initialization.status` is `'error'`, the first prompt still opens the session, and `retryInitialization()` sends it again, a restored session's included, while the session has no token. `cancel()` stops it like any request. A restored session never sends it by itself, and neither does a session created with `initialize: false`, for tests or for a server that creates a session while rendering.
 
 ## Dispatching actions
 
@@ -149,22 +150,49 @@ interface Turn {
   response: TurnResponse;
   status: 'streaming' | 'complete' | 'error';
   error?: string; // present iff status === 'error'
+  reason?: 'cancelled' | 'failed'; // present iff status === 'error'
+  errorCode?: string; // the gateway's RUN_ERROR code, e.g. 'AGENT:UPSTREAM_TIMEOUT', when it sent one
 }
 
 interface TurnResponse {
   activities: Activity[]; // raw snapshot log, latest snapshot per messageId, defaults to []
   surfaces: DiscoveredSurface[]; // the live surfaces this turn created
-  agent?: {messages: AgentMessage[]; reasoningSteps: ReasoningStep[]}; // present only when the router invoked an agent
+  agent?: {messages: AgentMessage[]; toolCalls: ToolCall[]}; // present only when the router invoked an agent
 }
 ```
 
-`activities` is routing-neutral and always present. `agent` appears only when the router invoked an agent for the turn. Consumers read `turn.input.prompt`, `turn.response.surfaces` (where to draw the turn's blocks) and `turn.response.agent?.messages` / `turn.response.agent?.reasoningSteps`.
+`activities` is routing-neutral and always present. `agent` appears only when the router invoked an agent for the turn. Consumers read `turn.input.prompt`, `turn.response.surfaces` (where to draw the turn's blocks) and `turn.response.agent?.messages` / `turn.response.agent?.toolCalls`.
+
+### Stopped and failed turns
+
+An errored turn, and an errored `session.initialization`, says why in `reason`: `'cancelled'` when `session.cancel()` stopped it, `'failed'` otherwise (a `RUN_ERROR`, a rejected or broken request, a stream that ended early, or a run restored while it was streaming). A `RUN_ERROR` also keeps the gateway's `errorCode`, such as `AGENT:INTERNAL_ERROR`, `AGENT:UPSTREAM_TIMEOUT`, `AGENT:RESPONSE_SIZE_EXCEEDED` or `AGENT:INCOMPLETE_AGENT_RESPONSE`. Pick the text from these rather than showing `error`, whose gateway messages end with a documentation URL:
+
+```tsx
+function TurnError({turn, session}: {turn: Turn; session: Session}) {
+  if (turn.status !== 'error') {
+    return null;
+  }
+  if (turn.reason === 'cancelled') {
+    return <p>You stopped the response.</p>;
+  }
+  return (
+    <p>
+      Something went wrong.
+      {turn.errorCode !== 'AGENT:RESPONSE_SIZE_EXCEEDED' && (
+        <button onClick={() => session.retry(turn.id)}>Try again</button>
+      )}
+    </p>
+  );
+}
+```
+
+`retry` clears `error`, `reason` and `errorCode` along with the turn's response.
 
 ### Session-scoped surfaces
 
 Surfaces live in the session, not in the turn that created them. The session derives them from one ordered activity log: the initialization's activities, then each turn's. A surface lives from its `createSurface` until its `deleteSurface`, whichever runs carry them, and a `createSurface` for a live id replaces that surface, so a producer mints a new id for each new surface.
 
-- `session.surfaces` lists every live surface in creation order; a surface the agent deletes leaves it, and one it re-creates moves to the end. Each turn's `response.surfaces` lists the live surfaces that turn created; find one no turn created, such as the shell, by its `rootComponentType`. A loading placeholder is listed only while the run that created it streams: while its turn or the initialization streams, or while the request in flight streams into that run and had not found it already left behind; one the agent left behind (a cancelled run, an error, a restored session) leaves the lists, so a consumer draws a skeleton for every listed surface whose `isLoading` holds.
+- `session.surfaces` lists every live surface in creation order; a surface the agent deletes leaves it, and one it re-creates moves to the end. Each turn's `response.surfaces` lists the live surfaces that turn created; one a later run creates again under its live id, such as the answer to an action recorded with a later turn, stays with the turn that first created it. Find one no turn created, such as the shell, by its `rootComponentType`. A loading placeholder is listed only while the run that last created it streams: while its turn or the initialization streams, or while the request in flight streams into that run and had not found it already left behind; one the agent left behind (a cancelled run, an error, a restored session) leaves the lists, so a consumer draws a skeleton for every listed surface whose `isLoading` holds.
 - `session.a2uiMessages` is the whole session's renderer stream, in arrival order. It only grows, so a single renderer is fed each new message once. Before a `createSurface` that replaces a live surface, it carries a `deleteSurface` for it, and it leaves out an operation on a surface that is not live, since a renderer refuses both. It exists because Agent Gateway emits A2-UI v1.0 while every available renderer consumes v0.9: Thermidor downgrades the stream on the consumer's behalf (recorded interim debt, see below).
 - `session.state` is the validated data model of every live surface, keyed by surface id, whichever run wrote it, with the answers to concurrent actions on top.
 - An action resolves its source component across the session's live surfaces, so the surfaces of earlier runs keep accepting actions. Its run only updates the surfaces: its surface snapshots are recorded with the active turn, or with the initialization before the first turn, and it never changes the status or response of a turn or of the initialization. When it fails, whether the endpoint rejects it, it streams `RUN_ERROR`, its stream ends without a terminal event or its request cannot be built, `session.actionError` identifies the action (`message`, `component`, `name`, `surfaceId`, `sourceComponentId`), so a consumer can show the failure next to the block it came from.
@@ -184,7 +212,7 @@ Each `DiscoveredSurface` carries `surfaceId`, `rootComponentType`, and `isLoadin
 
 ## Serialization
 
-`session.serialize()` produces a versioned `SerializedSession` (integer `version >= 1`), distinct from the runtime `Turn` type. Pass it back as `sessionToRestore` in `createSession` to continue a conversation. The initialization, the turns and the session's recorded `state` are persisted, without the answers to concurrent actions; the surfaces and the renderer stream are never persisted (they are re-derived from the initialization's and the turns' `activities` on restore); a turn or initialization persisted mid-stream is downgraded to `error` with `'Stream was interrupted'`, preserving what it holds.
+`session.serialize()` produces a versioned `SerializedSession` (integer `version >= 1`), distinct from the runtime `Turn` type. Pass it back as `sessionToRestore` in `createSession` to continue a conversation. The initialization, the turns and the session's recorded `state` are persisted, without the answers to concurrent actions; the surfaces and the renderer stream are never persisted (they are re-derived from the initialization's and the turns' `activities` on restore); a turn or initialization persisted mid-stream is downgraded to `error` with `'Stream was interrupted'` and `reason: 'failed'`, preserving what it holds.
 
 ## Recorded interim debt and out-of-scope items
 

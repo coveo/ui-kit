@@ -35,7 +35,7 @@ Try it:
 
 1. Ask a question in the header and press Enter. The prompt goes to the session shell, and the
    gateway routes it by intent: a question runs the agent, so the assistant layout opens as a chat
-   with the answer, its reasoning steps and its surfaces; the header stays. Try
+   with the answer, its tool calls and its surfaces; the header stays. Try
    `which kayak should I get?`, `what do I need to go snorkeling?` or `any gift ideas under $50?`.
    Keep chatting from the input at the bottom of the page, or pick a follow-up from the next
    actions: both go to the agent, and each answer joins the thread with its own surfaces.
@@ -48,12 +48,17 @@ Try it:
 4. Search `kayak`: the server opens a search surface for it, so the search layout shows it
    (facets, sort, pagination) with the chat panel beside it, answered from the search it keeps.
 5. On that search layout, ask `which one is the cheapest?` in the chat panel on the right: the answer
-   names the cheapest kayak, and its reasoning says what the shopper is looking at. The results stay
+   names the cheapest kayak among the results the shopper is looking at. The results stay
    as they are and keep working: pick a brand and ask again. A follow-up chip of a panel answer is
    sent in the panel too. A search from the header on the assistant layout also keeps the
    conversation in the panel of the search layout it opens.
-6. Open a **Listing pages** entry: it shows an _In progress_ placeholder and sends no request.
-7. Open **One session** at the bottom: every turn, the view that sent it, and the surfaces it
+6. On that search, pick a brand, then search `surfboards` and go back, with **← Back** or the
+   browser's Back: the `kayak` search comes back with its brand, its sort and its page. The page
+   sends `restoreState` for it, so the server runs that search again and the chat panel answers
+   about it. Each page is a browser history entry, so both Backs do the same thing.
+7. Open a **Listing pages** entry: it shows an _In progress_ placeholder and sends no request.
+   Back from it restores the search before it.
+8. Open **One session** at the bottom: every turn, the view that sent it, and the surfaces it
    created that are still alive.
 
 ## Pull-request previews
@@ -135,7 +140,7 @@ rather than tracking requests itself:
   `isLoading: true` is drawn as its component's skeleton while its turn streams
   (`DiscoveredSurface.isLoading`). The session drops a placeholder its turn left behind.
 - **The assistant layout is a chat,** as in `demo-schema-react`: every turn of the conversation,
-  each with its prompt, reasoning, answer and surfaces, over an input that sends the next prompt on
+  each with its prompt, tool calls, answer and surfaces, over an input that sends the next prompt on
   the same visit. Only the latest turn's surfaces take actions (`src/pages/AssistantPage.tsx`).
 - **One conversation across pages.** The assistant layout and the search layouts opened from it share
   a conversation (`thread` in `src/navigation.ts`): the chat and the chat panel both show its
@@ -219,7 +224,7 @@ src/
 
 The renderers for ProductCarousel, NextActionsBar, ComparisonTable, BundleDisplay,
 ProductResearchCard, ProductSummary (which BundleDisplay mounts) and the commerce search layout, the
-agent answer block with its reasoning steps, `TurnSurfaces`, the session request
+agent answer block with its tool calls, `TurnSurfaces`, the session request
 helpers and the renderer bridge are imported from
 [`demo-schema-react`](../demo-schema-react) by relative path rather than copied. Its product cards
 expose `ProductCardActionsContext`, through which each sample adds its own actions: this sample

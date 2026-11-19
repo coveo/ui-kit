@@ -1,10 +1,10 @@
 <template>
-  <template if:true={renderingError}>
+  <template lwc:if={renderingError}>
     <div class="error-message slds-text-color_destructive">
       {renderingError}
     </div>
   </template>
-  <template if:false={renderingError}>
+  <template lwc:else>
     <div role="dialog" aria-labelledby="modal-heading" aria-modal="true" aria-describedby="modal-content"
       class={modalCssClass}>
       <div tabindex="0" onfocus={focusOnLastElement}></div>

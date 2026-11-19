@@ -29,7 +29,6 @@ export function defineCart(): CartDefinition {
     listing: true,
     search: true,
     standalone: true,
-    recommendation: true,
     buildWithProps: (engine, props) => {
       return buildCart(engine, {
         initialState: props ? props.initialState : {},

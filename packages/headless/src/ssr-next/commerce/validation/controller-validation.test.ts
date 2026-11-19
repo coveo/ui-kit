@@ -12,38 +12,14 @@ describe('validateControllerNames', () => {
     expect(() => validateControllerNames(validControllers)).not.toThrow();
   });
 
-  it('should throw an error when using reserved name "context"', () => {
-    const controllersWithContext = {
-      context: {},
-      searchBox: {},
-    };
-
-    expect(() => validateControllerNames(controllersWithContext)).toThrow(
-      'Reserved controller names found: context. Please use different controller names than context, cart, parameterManager.'
-    );
-  });
-
-  it('should throw an error when using reserved name "cart"', () => {
-    const controllersWithCart = {
-      cart: {},
-      productList: {},
-    };
-
-    expect(() => validateControllerNames(controllersWithCart)).toThrow(
-      'Reserved controller names found: cart. Please use different controller names than context, cart, parameterManager.'
-    );
-  });
-
-  it('should throw an error when using reserved name "parameterManager"', () => {
-    const controllersWithParameterManager = {
-      parameterManager: {},
-      searchBox: {},
-    };
-
-    expect(() => validateControllerNames(controllersWithParameterManager)).toThrow(
-      'Reserved controller names found: parameterManager. Please use different controller names than context, cart, parameterManager.'
-    );
-  });
+  it.each(['context', 'cart', 'parameterManager'])(
+    'should throw an error when using the reserved name "%s"',
+    (reservedName) => {
+      expect(() => validateControllerNames({[reservedName]: {}, searchBox: {}})).toThrow(
+        `Reserved controller names found: ${reservedName}.`
+      );
+    }
+  );
 
   it('should handle empty controllers object', () => {
     const emptyControllers = {};

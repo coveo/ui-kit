@@ -48,6 +48,7 @@ describe('atomic-insight-facet', () => {
       field?: string;
       injectionDepth?: number;
       filterFacetCount?: boolean;
+      disableFacetCountFiltering?: boolean;
       resultsMustMatch?: 'allValues' | 'atLeastOneValue';
       sortCriteria?:
         | 'score'
@@ -77,6 +78,7 @@ describe('atomic-insight-facet', () => {
         injection-depth=${ifDefined(props.injectionDepth)}
         heading-level=${ifDefined(props.headingLevel)}
         filter-facet-count=${ifDefined(props.filterFacetCount)}
+        ?disable-facet-count-filtering=${props.disableFacetCountFiltering}
         is-collapsed=${ifDefined(props.isCollapsed)}
         enable-exclusion=${ifDefined(props.enableExclusion)}
       ></atomic-insight-facet>`,
@@ -193,6 +195,26 @@ describe('atomic-insight-facet', () => {
     it('should call buildInsightFacet', async () => {
       await setupElement();
       expect(buildInsightFacet).toHaveBeenCalled();
+    });
+
+    it('should call buildInsightFacet with filterFacetCount true by default', async () => {
+      await setupElement();
+      expect(buildInsightFacet).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          options: expect.objectContaining({filterFacetCount: true}),
+        })
+      );
+    });
+
+    it('should call buildInsightFacet with filterFacetCount false when disableFacetCountFiltering is true', async () => {
+      await setupElement({disableFacetCountFiltering: true});
+      expect(buildInsightFacet).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          options: expect.objectContaining({filterFacetCount: false}),
+        })
+      );
     });
 
     it('should call buildInsightSearchStatus', async () => {

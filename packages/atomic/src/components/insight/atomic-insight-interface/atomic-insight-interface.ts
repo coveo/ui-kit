@@ -9,7 +9,7 @@ import {
 } from '@coveo/headless/insight';
 import {provide} from '@lit/context';
 import i18next, {type i18n} from 'i18next';
-import {type CSSResultGroup, css, html, LitElement} from 'lit';
+import {type CSSResultGroup, css, html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {bindingsContext} from '@/src/components/common/context/bindings-context';
 import type {CommonBindings} from '@/src/components/common/interface/bindings';
@@ -18,15 +18,17 @@ import {
   InterfaceController,
 } from '@/src/components/common/interface/interface-controller';
 import {arrayConverter} from '@/src/converters/array-converter.js';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {createBooleanConverter} from '@/src/converters/boolean-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
+import {warnDeprecatedOnce} from '@/src/utils/deprecation-utils';
 import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
 import {waitForAtomicChildrenToBeDefined} from '@/src/utils/initialization-common-utils';
 import {getAnalyticsConfig} from './analytics-config.js';
 import {createInsightStore, type InsightStore} from './store.js';
+import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils';
 
 const FirstInsightRequestExecutedFlag = 'firstInsightRequestExecuted';
 type InsightInitializationOptions = InsightEngineConfiguration;
@@ -45,6 +47,22 @@ export class AtomicInsightInterface
   extends ChildrenUpdateCompleteMixin(LitElement)
   implements BaseAtomicInterface<InsightEngine>
 {
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'analytics',
+      attribute: 'analytics',
+      defaultValue: true,
+      instruction: 'Use `disable-analytics` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
+  ]);
+
+  willUpdate(changedProperties: PropertyValues) {
+    super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.engine?.logger);
+  }
+
   @state()
   @provide({context: bindingsContext})
   public bindings: InsightBindings = {} as InsightBindings;
@@ -55,7 +73,7 @@ export class AtomicInsightInterface
     'CoveoAtomic',
     HEADLESS_VERSION
   );
-  public store: InsightStore; // TODO - (v4) KIT-5008: Make private
+  private insightStore: InsightStore;
 
   static styles: CSSResultGroup = css`
     :host {
@@ -82,7 +100,7 @@ export class AtomicInsightInterface
    */
   @property({
     type: Boolean,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-analytics', {silent: true}),
     reflect: true,
   })
   public analytics = true;
@@ -161,7 +179,7 @@ export class AtomicInsightInterface
 
   public constructor() {
     super();
-    this.store = createInsightStore();
+    this.insightStore = createInsightStore();
     const {promise, resolve} = Promise.withResolvers<void>();
     this.i18Initialized = promise;
     this.i18n = i18next.createInstance(undefined, resolve);
@@ -169,7 +187,7 @@ export class AtomicInsightInterface
 
   public connectedCallback() {
     super.connectedCallback();
-    this.store.setLoadingFlag(FirstInsightRequestExecutedFlag);
+    this.insightStore.setLoadingFlag(FirstInsightRequestExecutedFlag);
 
     this.addEventListener('atomic/initializeComponent', this.handleInitialization as EventListener);
   }
@@ -215,7 +233,7 @@ export class AtomicInsightInterface
 
   @watch('iconAssetsPath')
   public updateIconAssetsPath(): void {
-    this.store.state.iconAssetsPath = this.iconAssetsPath;
+    this.insightStore.state.iconAssetsPath = this.iconAssetsPath;
   }
 
   @watch('language')
@@ -243,7 +261,7 @@ export class AtomicInsightInterface
     return {
       engine: this.engine!,
       i18n: this.i18n,
-      store: this.store,
+      store: this.insightStore,
       interfaceElement: this as AtomicInsightInterface,
     };
   }
@@ -285,15 +303,58 @@ export class AtomicInsightInterface
     this.bindings = this.getBindings();
     markParentAsReady(this);
     this.initResultsPerPage();
-    this.registerFieldsToInclude();
-    this.store.unsetLoadingFlag(FirstInsightRequestExecutedFlag);
+    this.dispatchFieldsToInclude();
+    this.insightStore.unsetLoadingFlag(FirstInsightRequestExecutedFlag);
     await waitForAtomicChildrenToBeDefined(this);
     await this.getUpdateComplete();
     this.initialized = true;
   }
 
-  // TODO - (v4) KIT-5008: Make private
+  // TODO - (v4) KIT-5008: Remove.
+  /**
+   * The store of the interface.
+   *
+   * @deprecated Use the `store` of the bindings that `initializeBindings` returns instead.
+   */
+  public get store(): InsightStore {
+    this.warnDeprecatedStore();
+    return this.insightStore;
+  }
+
+  public set store(store: InsightStore) {
+    this.warnDeprecatedStore();
+    this.insightStore = store;
+  }
+
+  // TODO - (v4) KIT-5008: Remove.
+  /**
+   * Registers the fields of `fields-to-include` with the engine.
+   *
+   * @deprecated Use `loadFieldActions(engine).registerFieldsToInclude` from `@coveo/headless/insight` instead.
+   */
   public registerFieldsToInclude() {
+    // The interface controller calls this method while the interface initializes, so only later calls come from user code.
+    if (this.initialized && this.engine) {
+      warnDeprecatedOnce(
+        this.engine.logger,
+        'The `registerFieldsToInclude` method of `atomic-insight-interface`',
+        'Use `loadFieldActions(engine).registerFieldsToInclude` from `@coveo/headless/insight` instead.'
+      );
+    }
+    this.dispatchFieldsToInclude();
+  }
+
+  private warnDeprecatedStore() {
+    if (this.engine) {
+      warnDeprecatedOnce(
+        this.engine.logger,
+        'The `store` property of `atomic-insight-interface`',
+        'Use the `store` of the bindings that `initializeBindings` returns instead.'
+      );
+    }
+  }
+
+  private dispatchFieldsToInclude() {
     if (this.fieldsToInclude.length) {
       this.engine!.dispatch(
         loadFieldActions(this.engine!).registerFieldsToInclude([...this.fieldsToInclude])

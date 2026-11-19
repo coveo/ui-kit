@@ -1,3 +1,5 @@
+import type {SearchEngine} from '@coveo/headless';
+import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import type {Result} from '@coveo/headless';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
@@ -58,6 +60,7 @@ describe('atomic-result-text', () => {
       shouldHighlight?: boolean;
       default?: string;
       result?: Result | null;
+      engine?: SearchEngine;
     } = {}
   ) => {
     const resultToUse = 'result' in options ? options.result : mockResult;
@@ -70,6 +73,9 @@ describe('atomic-result-text', () => {
       selector: 'atomic-result-text',
       result: resultToUse === null ? undefined : resultToUse,
       bindings: (bindings) => {
+        if (options.engine) {
+          bindings.engine = options.engine;
+        }
         bindings.i18n = i18n;
         bindings.store = {
           ...bindings.store,
@@ -371,6 +377,40 @@ describe('atomic-result-text', () => {
 
       const text = locators.getText(element);
       assertTextContent(text, value);
+    });
+  });
+
+  describe('deprecation warnings', () => {
+    const deprecationWarnings = (engine: {logger: {warn: unknown}}) =>
+      vi
+        .mocked(engine.logger.warn as (message: string) => void)
+        .mock.calls.filter(([message]) => String(message).startsWith('[Deprecated]'));
+
+    it('should log one deprecation warning when should-highlight is set', async () => {
+      const engine = buildFakeSearchEngine();
+      await renderComponent({field: 'title', shouldHighlight: false, engine});
+
+      expect(deprecationWarnings(engine)).toEqual([
+        [
+          expect.stringContaining(
+            '[Deprecated] The `should-highlight` property of `atomic-result-text` is deprecated'
+          ),
+        ],
+      ]);
+    });
+
+    it('should not log a deprecation warning when should-highlight is not set', async () => {
+      const engine = buildFakeSearchEngine();
+      await renderComponent({field: 'title', engine});
+
+      expect(deprecationWarnings(engine)).toEqual([]);
+    });
+
+    it('should not log a console warning when should-highlight is set to "false"', async () => {
+      const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      await renderComponent({field: 'title', shouldHighlight: false});
+
+      expect(consoleWarn).not.toHaveBeenCalledWith(expect.stringContaining('boolean attribute'));
     });
   });
 });

@@ -67,7 +67,8 @@ export default {
       ignoreDependencies: ['@playwright/mcp', 'size-limit'],
     },
     'packages/headless': {
-      entry: ['src/*index.ts', 'ponyfills/*.js'],
+      // Type tests run through Vitest's typecheck, which Knip's Vitest plugin does not follow.
+      entry: ['src/*index.ts', 'src/**/*.test-d.ts', 'ponyfills/*.js'],
       ignoreDependencies: ['reselect', 'node-fetch'],
     },
     'packages/atomic-hosted-page': {

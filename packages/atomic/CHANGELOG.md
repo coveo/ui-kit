@@ -1,3 +1,19 @@
+## 3.66.0
+
+### Minor Changes
+
+- [#8920](https://github.com/coveo/ui-kit/pull/8920) [`3973cbd`](https://github.com/coveo/ui-kit/commit/3973cbd98acae04af6d8d4038d8f8a194f0f41a2) - Add the `disable-analytics` attribute to `atomic-search-interface`, `atomic-commerce-interface`, `atomic-commerce-recommendation-interface`, `atomic-insight-interface`, and `atomic-recs-interface`. It follows the HTML boolean attribute rules: it defaults to `false`, and setting it has the same effect as `analytics="false"`. The `analytics` attribute is deprecated and will be removed in the next major version of Atomic (v4): replace `analytics="false"` with `disable-analytics`, or set the `disableAnalytics` property to `true` instead of setting `analytics` to `false`. Until then, analytics are off when either attribute turns them off.
+
+### Patch Changes
+
+- [#8871](https://github.com/coveo/ui-kit/pull/8871) [`ee36a80`](https://github.com/coveo/ui-kit/commit/ee36a80e1f23ab33d14fb15efece9e4f7748cc0b) - The accessible name of the facet clear button now contains its visible text in every locale, so it meets WCAG 2.5.3 Label in Name. The `clear-filters-for-facet` i18n key changed in several locales; in English, the singular form now reads "Clear filter for the {{label}} facet" instead of "Clear {{count}} filter for the {{label}} facet". The clear button of a category facet's selected value uses the same key.
+
+- [#8940](https://github.com/coveo/ui-kit/pull/8940) [`7e0277b`](https://github.com/coveo/ui-kit/commit/7e0277bd85f9c96d8fa7a6717f4b5eb9c99d8b7b) - Respect `disable-analytics` and `analytics="false"` on `atomic-recs-interface` when the options passed to `initialize()` include an `analytics` configuration, such as a `trackingId`. That configuration used to replace the one the interface builds, so analytics stayed on and events lost the Atomic version; it is now merged into it, as in the other interfaces.
+
+- Updated dependencies [[`2472f58`](https://github.com/coveo/ui-kit/commit/2472f5888fcf47b0055b59a69a09bdb310fbb22f), [`aea49cd`](https://github.com/coveo/ui-kit/commit/aea49cdaef393bf7d6d7b4b519fff9e6f0c23730), [`e7a84e1`](https://github.com/coveo/ui-kit/commit/e7a84e1272991e411bff60adb003a4a0b3ba9efb), [`0fc1e71`](https://github.com/coveo/ui-kit/commit/0fc1e714a1dc481bf3b3963f994015bf068ca6de), [`ecdf14b`](https://github.com/coveo/ui-kit/commit/ecdf14b11720a71736a0393fd06024d6c96d2b20), [`95d6e97`](https://github.com/coveo/ui-kit/commit/95d6e97e9c6b471425ad1a6b82fd0eea5547b8f9), [`a925e7f`](https://github.com/coveo/ui-kit/commit/a925e7f253283cd88734c6d045bf27c2dcecf769), [`350dd35`](https://github.com/coveo/ui-kit/commit/350dd35c0b5678edcae305058bc9a86cadfc10f6)]:
+  - @coveo/headless@3.59.0
+  - @coveo/atomic-legacy@0.1.11
+
 ## 3.65.1
 
 ### Patch Changes

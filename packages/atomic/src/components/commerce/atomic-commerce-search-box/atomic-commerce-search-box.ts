@@ -9,14 +9,22 @@ import {
   type StandaloneSearchBox,
   type StandaloneSearchBoxState,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, css, html, LitElement, nothing, type TemplateResult} from 'lit';
+import {
+  type CSSResultGroup,
+  css,
+  html,
+  LitElement,
+  nothing,
+  type TemplateResult,
+  type PropertyValues,
+} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {createRef, type RefOrCallback, ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
 import {renderButton} from '@/src/components/common/button';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {booleanConverter, createBooleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -52,6 +60,7 @@ import '../atomic-commerce-search-box-instant-products/atomic-commerce-search-bo
 import '../atomic-commerce-search-box-query-suggestions/atomic-commerce-search-box-query-suggestions';
 import '../atomic-commerce-search-box-recent-queries/atomic-commerce-search-box-recent-queries';
 import '@coveo/atomic-legacy/atomic-suggestion-renderer';
+import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils';
 
 /**
  * The `atomic-commerce-search-box` component enables users to perform product searches with built-in query suggestions and optional redirection to a search page.
@@ -105,6 +114,16 @@ export class AtomicCommerceSearchBox
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'clearFilters',
+      attribute: 'clear-filters',
+      defaultValue: true,
+      instruction: 'Use `disable-clear-filters` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
+  ]);
+
   private static readonly propsSchema = new Schema({
     clearRecentButtonPosition: new StringValue({constrainTo: ['top', 'bottom']}),
   });
@@ -203,14 +222,22 @@ export class AtomicCommerceSearchBox
   /**
    * Whether to clear all active query filters when the end user submits a new query from the search box.
    * Setting this option to "false" is not recommended and can lead to an increasing number of queries returning no products.
+   * @deprecated - Use `disable-clear-filters` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
     attribute: 'clear-filters',
     reflect: true,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-clear-filters', {silent: true}),
   })
   public clearFilters = true;
+
+  /**
+   * Whether to keep the active query filters when the end user submits a new query from the search box.
+   * Setting this option is not recommended and can lead to an increasing number of queries returning no results.
+   */
+  @property({type: Boolean, attribute: 'disable-clear-filters', reflect: true})
+  public disableClearFilters = false;
 
   // TODO - (v4) KIT-4365: Remove and always render the clear recent queries button.
   /**
@@ -251,7 +278,10 @@ export class AtomicCommerceSearchBox
     });
   }
 
-  willUpdate() {
+  willUpdate(changedProperties: PropertyValues) {
+    super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.bindings?.engine?.logger);
     if (!this.searchBoxState || !this.searchBox) {
       return;
     }
@@ -397,7 +427,7 @@ export class AtomicCommerceSearchBox
           enumerable: true,
         },
         clearFilters: {
-          get: () => this.clearFilters,
+          get: () => this.shouldClearFilters,
           enumerable: true,
         },
       }
@@ -420,7 +450,7 @@ export class AtomicCommerceSearchBox
           close: '</span>',
         },
       },
-      clearFilters: this.clearFilters,
+      clearFilters: this.shouldClearFilters,
     };
   }
 
@@ -843,6 +873,10 @@ export class AtomicCommerceSearchBox
 
   private announceClearSearchBoxToScreenReader() {
     this.searchBoxAriaMessage.message = this.bindings.i18n.t('search-box-cleared');
+  }
+
+  private get shouldClearFilters() {
+    return this.clearFilters && !this.disableClearFilters;
   }
 }
 

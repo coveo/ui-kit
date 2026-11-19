@@ -3,6 +3,8 @@ import {Request} from '@playwright/test';
 export const searchRequestRegex = /\/rest\/search\/v2\?organizationId=.*/;
 export const insightSearchRequestRegex =
   /\/rest\/organizations\/.*\/insight\/v1\/configs\/.*\/search$/;
+export const insightInterfaceRequestRegex =
+  /\/rest\/organizations\/.*\/insight\/v1\/configs\/.*\/interface$/;
 export const classifyRequestRegex =
   /\/rest\/organizations\/.*\/caseassists\/.*\/classify/;
 export const documentsSuggestRequestRegex =

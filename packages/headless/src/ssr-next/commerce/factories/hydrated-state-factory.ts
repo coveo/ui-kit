@@ -1,3 +1,4 @@
+import {SolutionTypeMismatchError} from '../../common/errors.js';
 import type {SolutionType} from '../types/controller-constants.js';
 import type {AugmentedControllerDefinition} from '../types/controller-definitions.js';
 import type {
@@ -5,7 +6,18 @@ import type {
   CommerceEngineDefinitionOptions,
   HydrateStaticStateParameters,
 } from '../types/engine.js';
+import type {BuildParameters} from '../types/build.js';
 import {buildFactory} from './build-factory.js';
+
+/**
+ * Refuses a static state fetched by another engine definition. A static state built by hand may
+ * omit the solution type.
+ */
+function ensureSolutionType(expected: SolutionType, received: SolutionType | undefined) {
+  if (received !== undefined && received !== expected) {
+    throw new SolutionTypeMismatchError(expected, received);
+  }
+}
 
 export function hydratedStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
@@ -14,20 +26,18 @@ export function hydratedStaticStateFactory<
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ) {
   return <TSolutionType extends SolutionType>(solutionType: TSolutionType) =>
-    async (
-      params: HydrateStaticStateParameters<TControllerDefinitions, TSolutionType> & {
-        controllerProps?: Record<string, unknown>;
-      }
-    ) => {
-      const {controllerProps, ...restParams} = params;
+    async (params: HydrateStaticStateParameters<TControllerDefinitions, TSolutionType>) => {
+      ensureSolutionType(solutionType, params.solutionType);
 
-      const paramsWithControllerProps = {
+      const {controllerProps, controllers: _snapshots, ...restParams} = params;
+
+      const buildParameters: BuildParameters<TControllerDefinitions> = {
         ...restParams,
         ...(controllerProps && {controllers: controllerProps}),
-      } as HydrateStaticStateParameters<TControllerDefinitions, TSolutionType>;
+      };
 
       const solutionTypeBuild = await buildFactory(controllerDefinitions, options)(solutionType);
-      const {engine, controllers} = await solutionTypeBuild(paramsWithControllerProps);
+      const {engine, controllers} = await solutionTypeBuild(buildParameters);
 
       if (params.searchActions.length > 0) {
         await Promise.all(engine.waitForRequestCompletedAction());

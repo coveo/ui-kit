@@ -1,5 +1,5 @@
 <template>
-  <template if:true={wasAutomaticallyCorrected}>
+  <template lwc:if={wasAutomaticallyCorrected}>
     <div class="slds-var-m-vertical_x-small">
       <p class="slds-var-m-bottom_xx-small">
         <lightning-formatted-rich-text data-testid="no-result-label"
@@ -9,7 +9,7 @@
         value={correctedQueryLabel}></lightning-formatted-rich-text>
     </div>
   </template>
-  <template if:false={wasAutomaticallyCorrected}>
+  <template lwc:else>
     <div class="slds-var-m-vertical_x-small">
       <span data-testid="did-you-mean-label">{labels.didYouMean} </span>
       <button data-testid="apply-correction-button" class="slds-button" onclick={applyCorrection}>

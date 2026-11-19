@@ -1,6 +1,12 @@
 import {describe, it, expect, afterEach} from 'vitest';
-import {screen, fireEvent, cleanup, waitFor} from '@testing-library/react';
+import {screen, fireEvent, cleanup, waitFor, within} from '@testing-library/react';
+import type {ReactNode} from 'react';
+import {vi} from 'vitest';
 import {mountSurface} from './mount-surface.harness.js';
+import {
+  ProductCardActionsContext,
+  type ProductCardProduct,
+} from './ProductCard/product-card-actions.js';
 
 /**
  * Pagination / Sort / ProductList are `createReactComponent` implementations driven by the generic
@@ -302,5 +308,66 @@ describe('ProductList', () => {
 
     const badges = await screen.findByRole('list', {name: 'Product badges'});
     expect(badges.textContent).toBe('Bestseller!');
+  });
+});
+
+// A product with children, as producers send it: the product first among its children.
+function trailShoe() {
+  const children = [
+    {
+      permanentid: 'shoe-red',
+      ec_name: 'Trail shoe, red',
+      ec_price: 120,
+      ec_images: ['https://example.com/red.png'],
+      ec_thumbnails: ['https://example.com/red-thumb.png'],
+      clickUri: 'https://example.com/shoe-red',
+      additionalFields: {},
+    },
+    {
+      permanentid: 'shoe-blue',
+      ec_name: 'Trail shoe, blue',
+      ec_price: 110,
+      ec_images: ['https://example.com/blue.png'],
+      ec_thumbnails: ['https://example.com/blue-thumb.png'],
+      clickUri: 'https://example.com/shoe-blue',
+      additionalFields: {},
+    },
+  ];
+  return {...children[0], children, totalNumberOfChildren: 4};
+}
+
+const roadShoe = {permanentid: 'road', ec_name: 'Road shoe', ec_price: 90, additionalFields: {}};
+
+describe('ProductList children', () => {
+  it('shows the picked child, hands it to the card actions, and keeps it until the products are sent again', async () => {
+    const renderActions = vi.fn((_: ProductCardProduct) => null as ReactNode);
+    const products = () => [{path: '/state/root/products', value: [trailShoe(), roadShoe]}];
+    const {pushDataModel} = mountSurface({
+      component: {component: 'ProductList', products: {path: '/state/root/products'}},
+      dataModel: products(),
+      wrapper: ({children}) => (
+        <ProductCardActionsContext.Provider value={renderActions}>
+          {children}
+        </ProductCardActionsContext.Provider>
+      ),
+    });
+    fireEvent.click(await screen.findByTitle('Trail shoe, blue'));
+
+    expect(screen.getByRole('heading', {name: 'Trail shoe, blue'})).toBeDefined();
+    expect(screen.getByText('$110.00')).toBeDefined();
+    expect(screen.getAllByRole('img')[0].getAttribute('src')).toBe('https://example.com/blue.png');
+    expect(renderActions).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        productId: 'shoe-blue',
+        price: 110,
+        clickUri: 'https://example.com/shoe-blue',
+      })
+    );
+
+    pushDataModel([{path: '/state/cart', value: {items: []}}]);
+    expect(screen.getByText('$110.00')).toBeDefined();
+
+    pushDataModel(products());
+    await screen.findByText('$120.00');
   });
 });

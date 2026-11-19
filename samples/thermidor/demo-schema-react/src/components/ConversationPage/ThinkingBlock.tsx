@@ -1,14 +1,9 @@
-import type {ReasoningStep, ToolCallStep} from '@coveo/thermidor';
-import {renderMarkdown} from '../../utils.js';
+import type {ToolCall} from '@coveo/thermidor';
 import styles from './ThinkingBlock.module.css';
 
 export interface ThinkingBlockProps {
-  reasoningSteps: ReasoningStep[];
+  toolCalls: ToolCall[];
   isStreaming: boolean;
-}
-
-function isToolCall(step: ReasoningStep): step is ToolCallStep {
-  return step.type === 'tool-call';
 }
 
 function formatArgs(args: string): string {
@@ -19,91 +14,60 @@ function formatArgs(args: string): string {
   }
 }
 
-function getSummaryContent(reasoningSteps: ReasoningStep[], isStreaming: boolean) {
+function getSummaryContent(toolCalls: ToolCall[], isStreaming: boolean) {
   if (!isStreaming) {
-    const toolCallCount = reasoningSteps.filter(isToolCall).length;
     const label =
-      toolCallCount === 0
+      toolCalls.length === 0
         ? 'Done.'
-        : toolCallCount === 1
+        : toolCalls.length === 1
           ? '1 tool call'
-          : `${toolCallCount} tool calls`;
+          : `${toolCalls.length} tool calls`;
     return <span className={styles.doneLabel}>{label}</span>;
   }
 
-  if (reasoningSteps.length === 0) {
-    return (
-      <span>
-        Working
-        <span className={styles.animatedDots} aria-hidden="true" />
-      </span>
-    );
-  }
-
-  const lastStep = reasoningSteps[reasoningSteps.length - 1];
-
-  if (isToolCall(lastStep) && lastStep.status === 'calling') {
-    return (
-      <span>
-        Calling tool: {lastStep.name}
-        <span className={styles.animatedDots} aria-hidden="true" />
-      </span>
-    );
-  }
-
+  const lastToolCall = toolCalls[toolCalls.length - 1];
+  const label =
+    lastToolCall?.status === 'calling' ? `Calling tool: ${lastToolCall.name}` : 'Thinking';
   return (
     <span>
-      Reasoning
+      {label}
       <span className={styles.animatedDots} aria-hidden="true" />
     </span>
   );
 }
 
-export function ThinkingBlock({reasoningSteps, isStreaming}: ThinkingBlockProps) {
-  const summaryContent = getSummaryContent(reasoningSteps, isStreaming);
-
+export function ThinkingBlock({toolCalls, isStreaming}: ThinkingBlockProps) {
   return (
-    <details className={styles.details} aria-label="Agent reasoning process">
+    <details className={styles.details} aria-label="Agent progress">
       <summary className={styles.summary}>
         <span className={styles.chevron} aria-hidden="true" />
-        {summaryContent}
+        {getSummaryContent(toolCalls, isStreaming)}
       </summary>
       <div className={styles.content}>
-        {reasoningSteps.map((step, index) => {
-          if (step.type === 'reasoning') {
-            return (
-              <div
-                key={`reasoning-${index}`}
-                className={styles.reasoningBlock}
-                dangerouslySetInnerHTML={{
-                  __html: renderMarkdown(step.content),
-                }}
-              />
-            );
-          }
-          return <ToolCallDetails key={step.id} step={step} />;
-        })}
+        {toolCalls.map((toolCall) => (
+          <ToolCallDetails key={toolCall.id} toolCall={toolCall} />
+        ))}
       </div>
     </details>
   );
 }
 
-function ToolCallDetails({step}: {step: ToolCallStep}) {
+function ToolCallDetails({toolCall}: {toolCall: ToolCall}) {
   return (
     <details className={styles.toolCallDetails}>
       <summary className={styles.toolCallSummary}>
         <span className={styles.chevron} aria-hidden="true" />
-        Tool call: {step.name}
+        Tool call: {toolCall.name}
       </summary>
       <div className={styles.toolCallContent}>
         <div className={styles.toolCallSection}>
           <span className={styles.toolCallLabel}>Arguments</span>
-          <pre className={styles.toolCallPre}>{formatArgs(step.args)}</pre>
+          <pre className={styles.toolCallPre}>{formatArgs(toolCall.args)}</pre>
         </div>
-        {step.status === 'completed' && step.result != null && (
+        {toolCall.status === 'completed' && toolCall.result != null && (
           <div className={styles.toolCallSection}>
             <span className={styles.toolCallLabel}>Result</span>
-            <pre className={styles.toolCallPre}>{step.result}</pre>
+            <pre className={styles.toolCallPre}>{toolCall.result}</pre>
           </div>
         )}
       </div>

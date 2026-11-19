@@ -1,3 +1,4 @@
+import type {InsightEngine} from '@coveo/headless/insight';
 import {
   buildGeneratedAnswer,
   buildInteractiveCitation,
@@ -34,10 +35,12 @@ describe('atomic-insight-generated-answer', () => {
     props = {},
     generatedAnswerState = {},
     searchStatusState = {},
+    engine = mockedEngine,
   }: {
     props?: Partial<AtomicInsightGeneratedAnswer>;
     generatedAnswerState?: Partial<GeneratedAnswerState>;
     searchStatusState?: {hasError?: boolean};
+    engine?: InsightEngine;
   } = {}) => {
     mockedGeneratedAnswer = buildFakeGeneratedAnswer({
       answer: 'Test answer',
@@ -73,7 +76,7 @@ describe('atomic-insight-generated-answer', () => {
       ></atomic-insight-generated-answer>`,
       selector: 'atomic-insight-generated-answer',
       bindings: (bindings) => {
-        bindings.engine = mockedEngine;
+        bindings.engine = engine;
         return bindings;
       },
     });
@@ -870,5 +873,42 @@ describe('atomic-insight-generated-answer', () => {
 
     element.remove();
     expect(disconnectSpy).toHaveBeenCalled();
+  });
+
+  describe('deprecation warnings', () => {
+    const deprecationWarnings = (engine: {logger: {warn: unknown}}) =>
+      vi
+        .mocked(engine.logger.warn as (message: string) => void)
+        .mock.calls.filter(([message]) => String(message).startsWith('[Deprecated]'));
+
+    it('should log one deprecation warning when fields-to-include-in-citations is a comma-separated string', async () => {
+      const engine = buildFakeInsightEngine();
+      await renderGeneratedAnswer({engine, props: {fieldsToIncludeInCitations: 'author,date'}});
+
+      expect(deprecationWarnings(engine)).toEqual([
+        [
+          expect.stringContaining(
+            '[Deprecated] A comma-separated `fields-to-include-in-citations` value on `atomic-insight-generated-answer`'
+          ),
+        ],
+      ]);
+    });
+
+    it('should not log a deprecation warning when fields-to-include-in-citations is a JSON array', async () => {
+      const engine = buildFakeInsightEngine();
+      await renderGeneratedAnswer({
+        engine,
+        props: {fieldsToIncludeInCitations: '["author","date"]'},
+      });
+
+      expect(deprecationWarnings(engine)).toEqual([]);
+    });
+
+    it('should not log a deprecation warning when fields-to-include-in-citations is not set', async () => {
+      const engine = buildFakeInsightEngine();
+      await renderGeneratedAnswer({engine});
+
+      expect(deprecationWarnings(engine)).toEqual([]);
+    });
   });
 });

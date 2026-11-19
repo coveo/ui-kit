@@ -7,7 +7,10 @@ import type {
 } from '../../../../controllers/commerce/core/pagination/headless-core-commerce-pagination.js';
 import {buildProductListing} from '../../../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch} from '../../../../controllers/commerce/search/headless-search.js';
-import {ensureAtLeastOneSolutionType} from '../../../../ssr/commerce/controller-utils.js';
+import {
+  ensureAtLeastOneSolutionType,
+  withSolutionTypeOptionsWarning,
+} from '../../../../ssr/commerce/controller-utils.js';
 import {SolutionType} from '../../types/controller-constants.js';
 import type {
   ControllerDefinitionOption,
@@ -35,7 +38,7 @@ export function definePagination<TOptions extends ControllerDefinitionOption | u
   props?: PaginationProps & TOptions
 ) {
   ensureAtLeastOneSolutionType(props);
-  return {
+  const definition = {
     listing: true,
     search: true,
     ...props,
@@ -44,4 +47,5 @@ export function definePagination<TOptions extends ControllerDefinitionOption | u
         ? buildProductListing(engine).pagination(props)
         : buildSearch(engine).pagination(props),
   } as SubControllerDefinitionWithoutProps<Pagination, TOptions>;
+  return withSolutionTypeOptionsWarning(definition, 'definePagination', props);
 }

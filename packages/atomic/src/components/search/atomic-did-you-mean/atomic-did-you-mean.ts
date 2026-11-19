@@ -7,11 +7,11 @@ import {
   type QueryTrigger,
   type QueryTriggerState,
 } from '@coveo/headless';
-import {html, LitElement, nothing} from 'lit';
+import {html, LitElement, nothing, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {createBooleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -24,6 +24,7 @@ import {renderAutoCorrection} from '../../common/query-correction/auto-correctio
 import {renderCorrection} from '../../common/query-correction/correction';
 import {renderTriggerCorrection} from '../../common/query-correction/trigger-correction';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils';
 
 /**
  * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
@@ -43,6 +44,22 @@ import type {Bindings} from '../atomic-search-interface/atomic-search-interface'
 @withTailwindStyles
 @bindings()
 export class AtomicDidYouMean extends LitElement implements InitializableComponent<Bindings> {
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'automaticallyCorrectQuery',
+      attribute: 'automatically-correct-query',
+      defaultValue: true,
+      instruction: 'Use `disable-automatic-query-correction` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
+  ]);
+
+  willUpdate(changedProperties: PropertyValues) {
+    super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.bindings?.engine?.logger);
+  }
+
   private static readonly propsSchema = new Schema({
     queryCorrectionMode: new StringValue({
       constrainTo: ['legacy', 'next'],
@@ -73,14 +90,22 @@ export class AtomicDidYouMean extends LitElement implements InitializableCompone
    * When `automaticallyCorrectQuery` is `false`, the component returns the suggested term without triggering a new query.
    *
    * The default value is `true`.
+   * @deprecated - Use `disable-automatic-query-correction` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     reflect: true,
     type: Boolean,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-automatic-query-correction', {silent: true}),
     attribute: 'automatically-correct-query',
   })
   public automaticallyCorrectQuery = true;
+
+  /**
+   * Whether to disable the automatic correction of queries that would otherwise return no results.
+   * When set, the component returns the suggested term without triggering a new query.
+   */
+  @property({type: Boolean, attribute: 'disable-automatic-query-correction', reflect: true})
+  public disableAutomaticQueryCorrection = false;
 
   /**
    * Define which query correction system to use
@@ -109,7 +134,7 @@ export class AtomicDidYouMean extends LitElement implements InitializableCompone
   public initialize() {
     this.didYouMean = buildDidYouMean(this.bindings.engine, {
       options: {
-        automaticallyCorrectQuery: this.automaticallyCorrectQuery,
+        automaticallyCorrectQuery: this.shouldAutomaticallyCorrectQuery,
         queryCorrectionMode: this.queryCorrectionMode,
       },
     });
@@ -198,6 +223,10 @@ export class AtomicDidYouMean extends LitElement implements InitializableCompone
     }
 
     return '';
+  }
+
+  private get shouldAutomaticallyCorrectQuery() {
+    return this.automaticallyCorrectQuery && !this.disableAutomaticQueryCorrection;
   }
 }
 

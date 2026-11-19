@@ -7,6 +7,10 @@ import {ThermidorA2UIStream, TurnSurfaces} from './surfaces.js';
 import {SessionRequestProvider} from './session-request.js';
 import {makeSurfaces} from '../test/turn-fixtures.js';
 import {requestSnapshot} from '../test/fake-session-requests.js';
+import {createFakeCartStore, type FakeCartStore} from '../test/fake-cart-store.js';
+import {CartProvider} from '../cart/CartProvider.js';
+import {renderProductCardCartActions} from '../cart/AddToCartControl/product-card-cart-actions.js';
+import {ProductCardActionsContext} from './ProductCard/product-card-actions.js';
 
 const originalScrollIntoView = Element.prototype.scrollIntoView;
 
@@ -19,7 +23,15 @@ const CATALOG = createThermidorCatalog();
 const SURFACE_ID = 'turn-surface';
 const NOTE = 'Earlier results. Ask a follow-up or search again to refine.';
 
-/** A surface holding a page size select. */
+const WETSUIT = {
+  permanentid: 'wetsuit',
+  ec_name: 'Wetsuit',
+  ec_price: 400,
+  clickUri: 'https://example.com/wetsuit',
+  additionalFields: {},
+};
+
+/** A surface holding a page size select, which acts on the surface. */
 function surfaceMessages(surfaceId: string) {
   return [
     {version: 'v0.9', createSurface: {surfaceId, catalogId: THERMIDOR_CATALOG_ID}},
@@ -38,6 +50,59 @@ function surfaceMessages(surfaceId: string) {
     },
   ] as unknown as A2uiV09Message[];
 }
+
+/** The same surface with a product carousel beside its page size select. */
+const WITH_PRODUCTS = [
+  ...surfaceMessages(SURFACE_ID),
+  {
+    version: 'v0.9',
+    updateComponents: {
+      surfaceId: SURFACE_ID,
+      components: [
+        {id: ROOT_COMPONENT_ID, component: 'LayoutStack', children: ['page-size', 'carousel']},
+        {id: 'page-size', component: 'PageSize', pageSize: {path: '/state/root/pageSize'}},
+        {
+          id: 'carousel',
+          component: 'ProductCarousel',
+          heading: 'Wetsuits',
+          products: {path: '/state/root/products'},
+        },
+      ],
+    },
+  },
+  {
+    version: 'v0.9',
+    updateDataModel: {surfaceId: SURFACE_ID, path: '/state/root/products', value: [WETSUIT]},
+  },
+] as unknown as A2uiV09Message[];
+
+/** The same surface showing a product list of one grouped product. */
+const WITH_GROUPED_LIST = [
+  ...surfaceMessages(SURFACE_ID),
+  {
+    version: 'v0.9',
+    updateComponents: {
+      surfaceId: SURFACE_ID,
+      components: [
+        {id: ROOT_COMPONENT_ID, component: 'ProductList', products: {path: '/state/root/products'}},
+      ],
+    },
+  },
+  {
+    version: 'v0.9',
+    updateDataModel: {
+      surfaceId: SURFACE_ID,
+      path: '/state/root/products',
+      value: [
+        {
+          ...WETSUIT,
+          children: [WETSUIT, {...WETSUIT, permanentid: 'wetsuit-blue', ec_name: 'Wetsuit, blue'}],
+          totalNumberOfChildren: 2,
+        },
+      ],
+    },
+  },
+] as unknown as A2uiV09Message[];
 
 const MESSAGES = surfaceMessages(SURFACE_ID);
 
@@ -60,27 +125,40 @@ function Turn({
   interactive,
   locked = false,
   isStreaming = false,
+  cart = createFakeCartStore(),
+  messages = MESSAGES,
 }: {
   interactive: boolean;
   locked?: boolean;
   isStreaming?: boolean;
+  cart?: FakeCartStore;
+  messages?: A2uiV09Message[];
 }) {
   return (
     <SessionRequestProvider value={lockedSource(locked)}>
-      <A2UIProvider catalog={CATALOG} onAction={() => {}}>
-        <ThermidorA2UIStream messages={MESSAGES} />
-        <TurnSurfaces
-          surfaces={makeSurfaces(SURFACE_ID)}
-          interactive={interactive}
-          isStreaming={isStreaming}
-        />
-      </A2UIProvider>
+      <CartProvider store={cart}>
+        <ProductCardActionsContext.Provider value={renderProductCardCartActions}>
+          <A2UIProvider catalog={CATALOG} onAction={() => {}}>
+            <ThermidorA2UIStream messages={messages} />
+            <TurnSurfaces
+              surfaces={makeSurfaces(SURFACE_ID)}
+              interactive={interactive}
+              isStreaming={isStreaming}
+            />
+          </A2UIProvider>
+        </ProductCardActionsContext.Provider>
+      </CartProvider>
     </SessionRequestProvider>
   );
 }
 
 function renderTurnSurfaces(interactive: boolean) {
   return render(<Turn interactive={interactive} />);
+}
+
+/** The fieldset that holds the turn's surfaces. */
+function turnFieldset() {
+  return screen.getByRole('region', {name: `A2-UI surface ${SURFACE_ID}`}).closest('fieldset');
 }
 
 function pageSizeSelect() {
@@ -102,12 +180,38 @@ describe('TurnSurfaces', () => {
     expect(screen.queryByRole('group')).toBeNull();
   });
 
-  it('disables the controls of an earlier turn and explains why', async () => {
+  it('disables the controls that act on an earlier turn and explains why', async () => {
     renderTurnSurfaces(false);
 
     await waitFor(() => expect(pageSizeSelect()).toBeDefined());
     expect(isDisabled(pageSizeSelect())).toBe(true);
     expect(screen.getByRole('group', {name: NOTE})).toBeDefined();
+  });
+
+  it('keeps the products of an earlier turn open to the shopper', async () => {
+    const cart = createFakeCartStore();
+    render(<Turn interactive={false} cart={cart} messages={WITH_PRODUCTS} />);
+
+    const addToCart = await screen.findByRole('button', {name: 'Add to cart, Wetsuit'});
+    expect(isDisabled(addToCart)).toBe(false);
+    addToCart.focus();
+    expect(document.activeElement).toBe(addToCart);
+    fireEvent.click(addToCart);
+    expect(cart.add).toHaveBeenCalledWith(expect.objectContaining({productId: 'wetsuit'}), 1);
+    expect(screen.getByRole('link', {name: 'Wetsuit'}).getAttribute('href')).toBe(
+      'https://example.com/wetsuit'
+    );
+    expect(isDisabled(pageSizeSelect())).toBe(true);
+  });
+
+  it('promotes a child in an earlier turn', async () => {
+    render(<Turn interactive={false} messages={WITH_GROUPED_LIST} />);
+
+    const thumbnail = await screen.findByRole('button', {name: 'Wetsuit, blue'});
+    expect(isDisabled(thumbnail)).toBe(false);
+    fireEvent.click(thumbnail);
+
+    expect(screen.getByRole('heading', {name: 'Wetsuit, blue'})).toBeDefined();
   });
 
   it('keeps an earlier turn readable by assistive technology', async () => {
@@ -136,7 +240,7 @@ describe('TurnSurfaces while a request is in flight', () => {
     rerender(<Turn interactive locked />);
 
     expect(isDisabled(pageSizeSelect())).toBe(true);
-    expect(pageSizeSelect().closest('fieldset')?.getAttribute('aria-busy')).toBe('true');
+    expect(turnFieldset()?.getAttribute('aria-busy')).toBe('true');
     expect(screen.queryByText(NOTE)).toBeNull();
   });
 
@@ -144,14 +248,14 @@ describe('TurnSurfaces while a request is in flight', () => {
     render(<Turn interactive={false} locked />);
 
     await waitFor(() => expect(pageSizeSelect()).toBeDefined());
-    expect(pageSizeSelect().closest('fieldset')?.hasAttribute('aria-busy')).toBe(false);
+    expect(turnFieldset()?.hasAttribute('aria-busy')).toBe(false);
   });
 
   it('dims the surface it disables', async () => {
     render(<Turn interactive locked />);
 
     await waitFor(() => expect(pageSizeSelect()).toBeDefined());
-    expect(pageSizeSelect().closest('fieldset')?.className).toMatch(/locked/);
+    expect(turnFieldset()?.className).toMatch(/locked/);
   });
 
   it('disables the turn that streams without dimming it', async () => {
@@ -159,7 +263,7 @@ describe('TurnSurfaces while a request is in flight', () => {
 
     await waitFor(() => expect(pageSizeSelect()).toBeDefined());
     expect(isDisabled(pageSizeSelect())).toBe(true);
-    expect(pageSizeSelect().closest('fieldset')?.className).not.toMatch(/locked/);
+    expect(turnFieldset()?.className).not.toMatch(/locked/);
   });
 
   it('enables the controls again once the request ends', async () => {
@@ -169,7 +273,7 @@ describe('TurnSurfaces while a request is in flight', () => {
     rerender(<Turn interactive />);
 
     expect(isDisabled(pageSizeSelect())).toBe(false);
-    expect(pageSizeSelect().closest('fieldset')?.hasAttribute('aria-busy')).toBe(false);
+    expect(turnFieldset()?.hasAttribute('aria-busy')).toBe(false);
   });
 
   it('gives focus back to the control the shopper used, without scrolling to it', async () => {

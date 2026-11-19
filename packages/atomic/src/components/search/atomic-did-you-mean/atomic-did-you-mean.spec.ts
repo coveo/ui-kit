@@ -28,11 +28,13 @@ describe('atomic-did-you-mean', () => {
     didYouMeanState = {},
     queryTriggerState = {},
     automaticallyCorrectQuery,
+    disableAutomaticQueryCorrection,
     queryCorrectionMode,
   }: {
     didYouMeanState?: Partial<DidYouMeanState>;
     queryTriggerState?: Partial<QueryTriggerState>;
     automaticallyCorrectQuery?: boolean;
+    disableAutomaticQueryCorrection?: boolean;
     queryCorrectionMode?: 'legacy' | 'next';
   } = {}) => {
     mockedDidYouMean = buildFakeDidYouMean({state: didYouMeanState});
@@ -44,6 +46,7 @@ describe('atomic-did-you-mean', () => {
     const {element} = await renderInAtomicSearchInterface<AtomicDidYouMean>({
       template: html`<atomic-did-you-mean
         .automaticallyCorrectQuery=${ifDefined(automaticallyCorrectQuery)}
+        ?disable-automatic-query-correction=${disableAutomaticQueryCorrection}
         .queryCorrectionMode=${ifDefined(queryCorrectionMode)}
       ></atomic-did-you-mean>`,
       selector: 'atomic-did-you-mean',
@@ -106,6 +109,19 @@ describe('atomic-did-you-mean', () => {
       expect.objectContaining({
         options: expect.objectContaining({
           automaticallyCorrectQuery: true,
+        }),
+      })
+    );
+  });
+
+  it('should call buildDidYouMean with automaticallyCorrectQuery: false when disableAutomaticQueryCorrection is true', async () => {
+    await renderDidYouMean({disableAutomaticQueryCorrection: true});
+
+    expect(buildDidYouMean).toHaveBeenCalledWith(
+      mockedEngine,
+      expect.objectContaining({
+        options: expect.objectContaining({
+          automaticallyCorrectQuery: false,
         }),
       })
     );

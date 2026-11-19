@@ -1,7 +1,6 @@
 import type {
   CategoryFacetValue,
   DateFacetValue,
-  LocationFacetValue,
   NumericFacetValue,
   RegularFacetValue,
 } from '../features/commerce/facets/facet-set/interfaces/response.js';
@@ -16,16 +15,6 @@ export function buildMockCommerceRegularFacetValue(
     isAutoSelected: false,
     isSuggested: false,
     moreValuesAvailable: false,
-    ...config,
-  };
-}
-
-export function buildMockCommerceLocationFacetValue(
-  config: Partial<LocationFacetValue> = {}
-): LocationFacetValue {
-  return {
-    value: '',
-    state: 'idle',
     ...config,
   };
 }

@@ -32,11 +32,12 @@ import {
   firstSearchExecutedSelector,
   noResultsSelector,
 } from '@/src/components/search/atomic-search-layout/search-layout';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {createBooleanConverter} from '@/src/converters/boolean-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
+import {DeprecatedPropertyWarnings, warnDeprecatedOnce} from '@/src/utils/deprecation-utils';
 import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
 import {waitForAtomicChildrenToBeDefined} from '@/src/utils/initialization-common-utils';
 import {
@@ -87,6 +88,27 @@ export class AtomicSearchInterface
     'CoveoAtomic',
     HEADLESS_VERSION
   );
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'analytics',
+      attribute: 'analytics',
+      defaultValue: true,
+      instruction: 'Use `disable-analytics` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
+    {
+      property: 'reflectStateInUrl',
+      attribute: 'reflect-state-in-url',
+      defaultValue: true,
+      instruction: 'Use `disable-state-reflection-in-url` instead, which defaults to `false`.',
+    },
+    {
+      property: 'enableRelevanceInspector',
+      attribute: 'enable-relevance-inspector',
+      defaultValue: true,
+      instruction: 'Use `disable-relevance-inspector` instead, which defaults to `false`.',
+    },
+  ]);
 
   @query('atomic-relevance-inspector')
   private relevanceInspector?: AtomicRelevanceInspector;
@@ -140,7 +162,7 @@ export class AtomicSearchInterface
    */
   @property({
     type: Boolean,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-analytics', {silent: true}),
     reflect: true,
   })
   public analytics = true;
@@ -199,7 +221,7 @@ export class AtomicSearchInterface
     type: Boolean,
     attribute: 'reflect-state-in-url',
     reflect: true,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-state-reflection-in-url', {silent: true}),
   })
   reflectStateInUrl = true;
 
@@ -250,7 +272,7 @@ export class AtomicSearchInterface
     type: Boolean,
     attribute: 'enable-relevance-inspector',
     reflect: true,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-relevance-inspector', {silent: true}),
   })
   public enableRelevanceInspector = true;
 
@@ -280,11 +302,13 @@ export class AtomicSearchInterface
 
     this.addEventListener('atomic/initializeComponent', this.handleInitialization as EventListener);
 
-    this.addEventListener('atomic/scrollToTop', this.scrollToTop as EventListener);
+    this.addEventListener('atomic/scrollToTop', this.scrollContainerIntoView);
   }
 
   public willUpdate(changedProperties: Map<string, unknown>) {
     super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.engine?.logger);
 
     if (changedProperties.has('fieldsToInclude')) {
       this.updateFieldsToInclude();
@@ -304,26 +328,37 @@ export class AtomicSearchInterface
       'atomic/initializeComponent',
       this.handleInitialization as EventListener
     );
-    this.removeEventListener('atomic/scrollToTop', this.scrollToTop as EventListener);
+    this.removeEventListener('atomic/scrollToTop', this.scrollContainerIntoView);
   }
 
-  // TODO - (v4) KIT-4991: Make private.
+  // TODO - (v4) KIT-4991: Remove.
+  /**
+   * Scrolls the element that `scroll-container` selects into view.
+   *
+   * @deprecated Call `scrollIntoView()` on the element that `scroll-container` selects instead.
+   */
   public scrollToTop() {
-    const scrollContainerElement = document.querySelector(this.scrollContainer);
-    if (!scrollContainerElement) {
-      this.bindings.engine.logger.warn(
-        `Could not find the scroll container with the selector "${this.scrollContainer}". This will prevent UX interactions that require a scroll from working correctly. Please review the CSS selector in the scrollContainer option`
+    if (this.engine) {
+      warnDeprecatedOnce(
+        this.engine.logger,
+        'The `scrollToTop` method of `atomic-search-interface`',
+        'Call `scrollIntoView()` on the element that `scroll-container` selects instead.'
       );
-      return;
     }
-
-    scrollContainerElement.scrollIntoView();
+    this.scrollContainerIntoView();
   }
 
   /**
-   * @deprecated provided for backward compatibility. set the 'open' property directly on the relevance inspector instead.
+   * @deprecated Remove the call: the relevance inspector closes from its own dialog.
    */
   public closeRelevanceInspector() {
+    if (this.engine) {
+      warnDeprecatedOnce(
+        this.engine.logger,
+        'The `closeRelevanceInspector` method of `atomic-search-interface`',
+        'Remove the call: the relevance inspector closes from its own dialog.'
+      );
+    }
     if (this.relevanceInspector) {
       this.relevanceInspector.open = false;
     }
@@ -475,6 +510,18 @@ export class AtomicSearchInterface
 
   private handleInitialization = (event: InitializeEvent) => {
     this.interfaceController.onComponentInitializing(event);
+  };
+
+  private scrollContainerIntoView = () => {
+    const scrollContainerElement = document.querySelector(this.scrollContainer);
+    if (!scrollContainerElement) {
+      this.bindings.engine.logger.warn(
+        `Could not find the scroll container with the selector "${this.scrollContainer}". This will prevent UX interactions that require a scroll from working correctly. Please review the CSS selector in the scrollContainer option`
+      );
+      return;
+    }
+
+    scrollContainerElement.scrollIntoView();
   };
 
   private getBindings(): Bindings {

@@ -64,6 +64,7 @@ describe('atomic-search-box', () => {
       minimumQueryLength?: number;
       numberOfQueries?: number;
       clearFilters?: boolean;
+      disableClearFilters?: boolean;
       enableQuerySyntax?: boolean;
       clearRecentButtonPosition?: 'top' | 'bottom';
     };
@@ -107,6 +108,7 @@ describe('atomic-search-box', () => {
       minimumQueryLength,
       numberOfQueries,
       clearFilters,
+      disableClearFilters,
       enableQuerySyntax,
       clearRecentButtonPosition,
     } = searchBoxProps || {};
@@ -117,6 +119,7 @@ describe('atomic-search-box', () => {
         minimum-query-length=${ifDefined(minimumQueryLength)}
         number-of-queries=${ifDefined(numberOfQueries)}
         clear-filters=${ifDefined(clearFilters)}
+        ?disable-clear-filters=${disableClearFilters ?? false}
         ?enable-query-syntax=${enableQuerySyntax ?? false}
         clear-recent-button-position=${ifDefined(clearRecentButtonPosition)}
       >
@@ -172,6 +175,19 @@ describe('atomic-search-box', () => {
         expect.objectContaining({
           options: expect.objectContaining({
             ...commonSearchBoxOptions,
+          }),
+        })
+      );
+    });
+
+    it('should initialize the search box controller with clearFilters set to false when disableClearFilters is true', async () => {
+      await renderSearchBox({searchBoxProps: {disableClearFilters: true}});
+
+      expect(buildSearchBox).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          options: expect.objectContaining({
+            clearFilters: false,
           }),
         })
       );

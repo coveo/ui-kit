@@ -1,12 +1,12 @@
 import {BooleanValue, Schema, StringValue} from '@coveo/bueno';
 import type {Result} from '@coveo/headless';
-import {html, LitElement, nothing} from 'lit';
+import {html, LitElement, nothing, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {createBooleanConverter} from '@/src/converters/boolean-converter';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -14,6 +14,7 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import {getStringValueFromResultOrNull} from '@/src/utils/result-utils';
 import '../atomic-html/atomic-html';
+import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils';
 
 /**
  * The `atomic-result-html` component renders the HTML value of a string result field.
@@ -28,6 +29,23 @@ export class AtomicResultHtml
   extends LightDomMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'sanitize',
+      attribute: 'sanitize',
+      defaultValue: true,
+      instruction:
+        'Use `disable-sanitization` instead. Setting the attribute to `"false"` has no effect.',
+      onlyWhenFalse: true,
+    },
+  ]);
+
+  willUpdate(changedProperties: PropertyValues) {
+    super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.bindings?.engine?.logger);
+  }
+
   private static readonly propsSchema = new Schema({
     field: new StringValue({required: true, emptyAllowed: false}),
     sanitize: new BooleanValue(),
@@ -42,13 +60,21 @@ export class AtomicResultHtml
   @property({type: String, reflect: true}) field?: string;
   /**
    * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
+   * @deprecated - Use `disable-sanitization` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
     reflect: true,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-sanitization', {ignoreFalse: true, silent: true}),
   })
   sanitize = true;
+
+  /**
+   * Whether to render the HTML content without sanitizing it.
+   * Only set this when the content comes from a trusted source.
+   */
+  @property({type: Boolean, attribute: 'disable-sanitization', reflect: true})
+  public disableSanitization = false;
 
   @state() private result?: Result;
   @state() public bindings!: Bindings;
@@ -100,7 +126,13 @@ export class AtomicResultHtml
       return nothing;
     }
 
-    return html` <atomic-html value=${resultValue} ?sanitize=${this.sanitize}></atomic-html> `;
+    return html`
+      <atomic-html
+        value=${resultValue}
+        ?sanitize=${this.sanitize}
+        ?disable-sanitization=${this.disableSanitization}
+      ></atomic-html>
+    `;
   }
 }
 

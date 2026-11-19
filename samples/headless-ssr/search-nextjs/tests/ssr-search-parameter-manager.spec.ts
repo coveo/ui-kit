@@ -65,7 +65,8 @@ routes.forEach((route) => {
             const warnings: string[] = [];
             page.on('console', (msg) => {
               if (msg.type() === 'error') errors.push(msg.text());
-              if (msg.type() === 'warning') warnings.push(msg.text());
+              if (msg.type() === 'warning' && !msg.text().startsWith('[Deprecated]'))
+                warnings.push(msg.text());
             });
             await page.waitForTimeout(1000);
             expect(errors).toEqual([]);

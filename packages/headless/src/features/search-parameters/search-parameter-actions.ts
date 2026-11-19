@@ -105,7 +105,7 @@ export const restoreSearchParameters = createAction(
 
 /**
  * Restores a tab from the search parameters.
- * @deprecated This action will be removed in V4. Use alternative tab management methods instead.
+ * @deprecated This action will be removed in V4. Use `loadTabSetActions(engine).updateActiveTab` instead. It also resets pagination and deselects the facets hidden on that tab, so dispatch it before restoring them.
  */
 export const restoreTab = createAction('searchParameters/restoreTab', (payload: TabId) =>
   validatePayload(payload, requiredNonEmptyString)

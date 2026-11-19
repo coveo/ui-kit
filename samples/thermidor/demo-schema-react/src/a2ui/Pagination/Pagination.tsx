@@ -1,8 +1,9 @@
-import {useOptimistic} from 'react';
+import {useOptimistic, useRef} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {PaginationAction} from '@coveo/thermidor-schema';
 import {PaginationPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {useGesture} from '../session-request.js';
+import {usePageChangeFocus} from '../use-page-change-focus.js';
 import styles from './Pagination.module.css';
 
 const NUMBER_OF_PAGES = 5;
@@ -15,6 +16,8 @@ export const Pagination = createReactComponent(
 
     const [heldPage, addOptimisticPage] = useOptimistic(props.page);
     const startGesture = useGesture();
+    const navigation = useRef<HTMLElement>(null);
+    const markPageChange = usePageChangeFocus(navigation, 'Pagination', 'selectPage');
 
     // An unresolved `totalPages` would slip past the `<= 1` guard and send a NaN `selectPage`.
     if (heldPage === undefined || totalPages === undefined) {
@@ -42,13 +45,16 @@ export const Pagination = createReactComponent(
         event: {name: 'selectPage', context: {page: newPage}},
       };
       startGesture(
-        () => addOptimisticPage(newPage),
+        () => {
+          markPageChange();
+          addOptimisticPage(newPage);
+        },
         () => context.dispatchAction(selectPageAction)
       );
     };
 
     return (
-      <nav className={styles.pagination} aria-label="Pagination">
+      <nav ref={navigation} className={styles.pagination} aria-label="Pagination">
         <button
           className={styles.navButton}
           onClick={() => handlePageChange(page - 1)}

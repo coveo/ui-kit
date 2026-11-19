@@ -12,18 +12,13 @@ import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import {type recommendationInternalOptionKey, SolutionType} from './controller-constants.js';
 import type {
   ListingAndStandaloneController,
-  NonRecommendationController,
-  RecommendationOnlyController,
   SearchAndListingController,
   SearchOnlyController,
   StandaloneController,
   UniversalController,
 } from './controller-scopes.js';
-import type {HydratedState} from './hydrate-static-state.js';
-import type {HasSolutionType} from './utilities.js';
 
 export type {
-  HydratedState,
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
 };
@@ -59,7 +54,6 @@ interface SolutionTypeAvailability {
   [SolutionType.search]?: boolean;
   [SolutionType.listing]?: boolean;
   [SolutionType.standalone]?: boolean;
-  [SolutionType.recommendation]?: boolean;
 }
 
 export type ControllerDefinition<TController extends Controller> = SolutionTypeAvailability &
@@ -85,26 +79,6 @@ export type BakedInControllers = {
   [K in keyof BakedInControllerDefinitions]: ReturnType<
     BakedInControllerDefinitions[K]['buildWithProps']
   >;
-};
-
-/**
- * A dynamically filtered map of baked-in controller definitions based on solution type compatibility.
- *
- * This type automatically includes only the baked-in controllers that are available for the specified
- * solution type by checking each controller's `SolutionTypeAvailability` configuration. Controllers
- * that don't support the given solution type are excluded from the resulting type.
- *
- * @template TSolutionType - The target solution type to filter controllers for
- */
-export type FilteredBakedInControllers<TSolutionType extends SolutionType> = {
-  [
-    K in keyof BakedInControllers as HasSolutionType<
-      BakedInControllerDefinitions[K],
-      TSolutionType
-    > extends true
-      ? K
-      : never
-  ]: BakedInControllers[K];
 };
 
 /**
@@ -167,13 +141,8 @@ export type SearchOnlyControllerDefinitionWithoutProps<TController extends Contr
 export type ListingAndStandaloneControllerWithoutProps<TController extends Controller> =
   ControllerDefinitionWithoutProps<TController> & ListingAndStandaloneController;
 
-export type RecommendationOnlyControllerDefinitionWithProps<
-  TController extends Controller,
-  TProps,
-> = ControllerDefinitionWithProps<TController, TProps> & RecommendationOnlyController;
-
-export type NonRecommendationControllerDefinitionWithoutProps<TController extends Controller> =
-  ControllerDefinitionWithoutProps<TController> & NonRecommendationController;
+export type UniversalControllerDefinitionWithoutProps<TController extends Controller> =
+  ControllerDefinitionWithoutProps<TController> & UniversalController;
 
 export type UniversalControllerDefinitionWithProps<
   TController extends Controller,

@@ -2,7 +2,6 @@ import {
   buildParameterSerializer,
   type ContextOptions,
 } from '@coveo/headless-react/ssr-commerce-next';
-import {headers} from 'next/headers';
 import {notFound} from 'next/navigation';
 import * as externalCartAPI from '@/actions/external-cart-api';
 import BreadcrumbManager from '@/components/breadcrumb-manager';
@@ -13,15 +12,15 @@ import Pagination from '@/components/pagination';
 import ParameterManager from '@/components/parameter-manager';
 import ProductList from '@/components/product-list';
 import ProductsPerPage from '@/components/products-per-page';
-import {ListingProvider, RecommendationProvider} from '@/components/providers/providers';
+import {ListingProvider} from '@/components/providers/providers';
 import PopularBought from '@/components/recommendations/popular-bought';
 import PopularViewed from '@/components/recommendations/popular-viewed';
 import Sort from '@/components/sort';
 import StandaloneSearchBox from '@/components/standalone-search-box';
 import Summary from '@/components/summary';
 import NotifyTrigger from '@/components/triggers/notify-trigger';
-import {listingEngineDefinition, recommendationEngineDefinition} from '@/lib/commerce-engine';
-import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
+import {listingEngineDefinition} from '@/lib/commerce-engine';
+import {getNavigatorContext} from '@/lib/navigator-context';
 import {defaultContext} from '@/utils/context';
 
 // This is a hardcoded list of categories that are available in my coveo merchandising hub.
@@ -46,8 +45,7 @@ export default async function Listing({
     notFound();
   }
 
-  // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
-  const navigatorContext = new NextJsNavigatorContext(await headers());
+  const navigatorContext = await getNavigatorContext();
 
   const {deserialize} = buildParameterSerializer();
   const parameters = deserialize(await searchParams);
@@ -65,18 +63,12 @@ export default async function Listing({
     },
   };
 
-  // Fetches the static state of the app with initial state (when applicable)
+  // One call sends the listing request and one request per recommendation slot the page shows.
   const staticState = await listingEngineDefinition.fetchStaticState({
     cart: {items},
     context,
-    navigatorContext: navigatorContext.marshal,
+    navigatorContext,
     searchParams: parameters,
-  });
-
-  const recsStaticState = await recommendationEngineDefinition.fetchStaticState({
-    cart: {items},
-    context,
-    navigatorContext: navigatorContext.marshal,
     recommendations: ['popularBought', 'popularViewed'],
   });
 
@@ -112,10 +104,8 @@ export default async function Listing({
         </div>
 
         <div style={{flex: 4}}>
-          <RecommendationProvider staticState={recsStaticState}>
-            <PopularBought />
-            <PopularViewed />
-          </RecommendationProvider>
+          <PopularBought />
+          <PopularViewed />
         </div>
       </div>
     </ListingProvider>

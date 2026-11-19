@@ -101,7 +101,7 @@ describe('atomic-commerce-interface', () => {
         language-assets-path=${ifDefined(props.languageAssetsPath)}
         ?localize-with-country=${props.localizeWithCountry}
         log-level=${ifDefined(props.logLevel)}
-        reflect-state-in-url=${props.reflectStateInUrl}
+        reflect-state-in-url=${ifDefined(props.reflectStateInUrl)}
         scroll-container=${ifDefined(props.scrollContainer)}
         type=${ifDefined(props.type)}
         >${when(props.mobileBreakpoint, () => html`<atomic-commerce-layout mobile-breakpoint=${ifDefined(props.mobileBreakpoint)}></atomic-commerce-layout>`)}<div>Interface content</div></atomic-commerce-layout></atomic-commerce-interface
@@ -1019,7 +1019,7 @@ describe('atomic-commerce-interface', () => {
         setContext: setContextMock,
       });
 
-      element.updateLocale('fr', 'FR', 'EUR');
+      element.updateLocale({language: 'fr', country: 'FR', currency: 'EUR'});
 
       expect(onLanguageChangeSpy).not.toHaveBeenCalled();
       expect(setContextMock).not.toHaveBeenCalled();
@@ -1037,7 +1037,7 @@ describe('atomic-commerce-interface', () => {
         setContext: setContextMock,
       });
 
-      element.updateLocale('fr', 'FR', 'EUR');
+      element.updateLocale({language: 'fr', country: 'FR', currency: 'EUR'});
 
       expect(onLanguageChangeSpy).not.toHaveBeenCalled();
       expect(setContextMock).not.toHaveBeenCalled();
@@ -1066,14 +1066,14 @@ describe('atomic-commerce-interface', () => {
         }));
       });
 
-      it('should call InterfaceController.onLanguageChange when the language parameter is provided', async () => {
-        element.updateLocale('fr');
+      it('should call InterfaceController.onLanguageChange when the language property is provided', async () => {
+        element.updateLocale({language: 'fr'});
 
         expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith('fr');
       });
 
-      it('should not call InterfaceController.onLanguageChange when the language parameter is not provided', async () => {
-        element.updateLocale(undefined, 'FR', 'EUR');
+      it('should not call InterfaceController.onLanguageChange when the language property is not provided', async () => {
+        element.updateLocale({country: 'FR', currency: 'EUR'});
 
         expect(onLanguageChangeSpy).not.toHaveBeenCalled();
       });
@@ -1086,20 +1086,20 @@ describe('atomic-commerce-interface', () => {
         });
 
         it('should call InterfaceController.onLanguageChange with the language and the country', () => {
-          element.updateLocale('fr', 'CA');
+          element.updateLocale({language: 'fr', country: 'CA'});
 
           expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith('fr-CA');
         });
 
         it('should call InterfaceController.onLanguageChange with the context language when only the country is provided', () => {
-          element.updateLocale(undefined, 'CA');
+          element.updateLocale({country: 'CA'});
 
           expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith('en-CA');
         });
       });
 
       it('should dispatch a setContext action with the new language when it is defined and different from the language value in the context', async () => {
-        element.updateLocale('fr');
+        element.updateLocale({language: 'fr'});
 
         expect(setContextMock).toHaveBeenCalledExactlyOnceWith({
           ...element.context.state,
@@ -1108,7 +1108,7 @@ describe('atomic-commerce-interface', () => {
       });
 
       it('should dispatch a setContext action with the new country when it is defined and different from the country value in the context', async () => {
-        element.updateLocale(undefined, 'FR');
+        element.updateLocale({country: 'FR'});
 
         expect(setContextMock).toHaveBeenCalledExactlyOnceWith({
           ...element.context.state,
@@ -1117,7 +1117,7 @@ describe('atomic-commerce-interface', () => {
       });
 
       it('should dispatch a setContext action with the new currency when it is defined and different from the currency value in the context', async () => {
-        element.updateLocale(undefined, undefined, 'EUR');
+        element.updateLocale({currency: 'EUR'});
 
         expect(setContextMock).toHaveBeenCalledExactlyOnceWith({
           ...element.context.state,
@@ -1125,8 +1125,8 @@ describe('atomic-commerce-interface', () => {
         });
       });
 
-      it('should dispatch a setContext action with all values when all parameters are provided and any of them is different from its corresponding value in the context', async () => {
-        element.updateLocale('fr', 'US', 'USD'); // Only 'fr' is different
+      it('should dispatch a setContext action with all values when all properties are provided and any of them is different from its corresponding value in the context', async () => {
+        element.updateLocale({language: 'fr', country: 'US', currency: 'USD'}); // Only 'fr' is different
 
         expect(setContextMock).toHaveBeenCalledExactlyOnceWith({
           ...element.context.state,
@@ -1136,11 +1136,33 @@ describe('atomic-commerce-interface', () => {
         });
       });
 
-      it('should not dispatch a setContext action when each provided parameters is identical to its corresponding value in the context', async () => {
-        element.updateLocale('en', 'US', 'USD');
+      it('should not dispatch a setContext action when each provided property is identical to its corresponding value in the context', async () => {
+        element.updateLocale({language: 'en', country: 'US', currency: 'USD'});
 
         expect(setContextMock).not.toHaveBeenCalled();
       });
+
+      it('should still update the locale when called with separate arguments', () => {
+        element.updateLocale('fr', 'CA', 'CAD');
+
+        expect(setContextMock).toHaveBeenCalledExactlyOnceWith({
+          ...element.context.state,
+          language: 'fr',
+          country: 'CA',
+          currency: 'CAD',
+        });
+      });
+    });
+  });
+
+  describe('#scrollToTop', () => {
+    it('should scroll the element matching the scrollContainer selector into view', async () => {
+      const element = await setupElement();
+      const scrollIntoViewSpy = vi.spyOn(element, 'scrollIntoView');
+
+      element.scrollToTop();
+
+      expect(scrollIntoViewSpy).toHaveBeenCalledExactlyOnceWith();
     });
   });
 
@@ -1372,6 +1394,98 @@ describe('atomic-commerce-interface', () => {
       await addChildElement(element);
 
       expect(within(element).queryByShadowText('test-element')).toBeTruthy();
+    });
+  });
+
+  describe('deprecation warnings', () => {
+    const deprecationWarnings = (engine: {logger: {warn: unknown}}) =>
+      vi
+        .mocked(engine.logger.warn as (message: string) => void)
+        .mock.calls.filter(([message]) => String(message).startsWith('[Deprecated]'));
+
+    it('should log one deprecation warning when reflect-state-in-url is set', async () => {
+      const element = await setupElement({reflectStateInUrl: false});
+      const engine = buildFakeCommerceEngine();
+      await element.initializeWithEngine(engine);
+      await element.updateComplete;
+
+      expect(deprecationWarnings(engine)).toEqual([
+        [
+          expect.stringContaining(
+            '[Deprecated] The `reflect-state-in-url` property of `atomic-commerce-interface` is deprecated'
+          ),
+        ],
+      ]);
+    });
+
+    it('should not log a deprecation warning when reflect-state-in-url is not set', async () => {
+      const element = await setupElement();
+      const engine = buildFakeCommerceEngine();
+      await element.initializeWithEngine(engine);
+      await element.updateComplete;
+
+      expect(deprecationWarnings(engine)).toEqual([]);
+    });
+
+    it('should log one deprecation warning when #scrollToTop is called', async () => {
+      const element = await setupElement();
+      const engine = buildFakeCommerceEngine();
+      await element.initializeWithEngine(engine);
+
+      element.scrollToTop();
+      element.scrollToTop();
+
+      expect(deprecationWarnings(engine)).toEqual([
+        [
+          expect.stringContaining(
+            '[Deprecated] The `scrollToTop` method of `atomic-commerce-interface` is deprecated'
+          ),
+        ],
+      ]);
+    });
+
+    it('should not log a deprecation warning when an "atomic/scrollToTop" event is dispatched', async () => {
+      const element = await setupElement();
+      const engine = buildFakeCommerceEngine();
+      await element.initializeWithEngine(engine);
+
+      element.dispatchEvent(new CustomEvent('atomic/scrollToTop'));
+
+      expect(deprecationWarnings(engine)).toEqual([]);
+    });
+
+    it('should log one deprecation warning when #updateLocale is called with separate arguments', async () => {
+      const element = await setupElement();
+      const engine = buildFakeCommerceEngine();
+      await element.initializeWithEngine(engine);
+
+      element.updateLocale('fr');
+      element.updateLocale('en', 'US');
+
+      expect(deprecationWarnings(engine)).toEqual([
+        [
+          expect.stringContaining(
+            '[Deprecated] Calling the `updateLocale` method of `atomic-commerce-interface` with separate arguments is deprecated'
+          ),
+        ],
+      ]);
+    });
+
+    it('should not log a deprecation warning when #updateLocale is called with an object', async () => {
+      const element = await setupElement();
+      const engine = buildFakeCommerceEngine();
+      await element.initializeWithEngine(engine);
+
+      element.updateLocale({language: 'fr'});
+
+      expect(deprecationWarnings(engine)).toEqual([]);
+    });
+
+    it('should not log a console warning when reflect-state-in-url is set to "false"', async () => {
+      const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      await setupElement({reflectStateInUrl: false});
+
+      expect(consoleWarn).not.toHaveBeenCalledWith(expect.stringContaining('boolean attribute'));
     });
   });
 });

@@ -1,10 +1,10 @@
 import type {
   CommerceEngineDefinition,
+  CommerceHydratedState,
+  CommerceStaticState,
   Controller,
   ControllerDefinitionsMap,
   InferControllerFromDefinition,
-  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
-  InferControllersMapFromDefinition,
   SolutionType,
   CommerceEngine as SSRCommerceEngine,
 } from '@coveo/headless/ssr-commerce-next';
@@ -15,7 +15,7 @@ export type ContextHydratedState<
   TSolutionType extends SolutionType,
 > = {
   engine: SSRCommerceEngine;
-  controllers: InferControllersMapFromDefinition<TControllers, TSolutionType>;
+  controllers: CommerceHydratedState<TControllers, TSolutionType>['controllers'];
   solutionType: TSolutionType;
 };
 
@@ -25,8 +25,8 @@ export type ContextState<
 > = {
   engine?: SSRCommerceEngine;
   controllers:
-    | InferControllersMapFromDefinition<TControllers, TSolutionType>
-    | InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>;
+    | CommerceHydratedState<TControllers, TSolutionType>['controllers']
+    | CommerceStaticState<TControllers, TSolutionType>['controllers'];
   solutionType: TSolutionType;
 };
 
@@ -48,11 +48,26 @@ export type ReactEngineDefinition<
   TSolutionType extends SolutionType,
 > = CommerceEngineDefinition<TControllers, TSolutionType> & {
   StateProvider: FunctionComponent<
-    PropsWithChildren<{
-      engine?: SSRCommerceEngine;
-      controllers:
-        | InferControllersMapFromDefinition<TControllers, TSolutionType>
-        | InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>;
-    }>
+    PropsWithChildren<
+      StateProviderProps<
+        CommerceStaticState<TControllers, TSolutionType>,
+        CommerceHydratedState<TControllers, TSolutionType>
+      >
+    >
   >;
+};
+
+/**
+ * The props of the `StateProvider` of an engine definition: the controllers that its hooks read (their
+ * static state, or the live controllers once hydrated) and the hydrated engine.
+ *
+ * @typeParam TStaticState - The static state of the engine definition.
+ * @typeParam THydratedState - The hydrated state of the engine definition.
+ */
+export type StateProviderProps<
+  TStaticState extends {controllers: object},
+  THydratedState extends {engine: unknown; controllers: object},
+> = {
+  engine?: THydratedState['engine'];
+  controllers: TStaticState['controllers'] | THydratedState['controllers'];
 };

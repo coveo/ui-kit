@@ -1,12 +1,10 @@
 import {
+  type CommerceHydratedState,
+  type CommerceStaticState,
   type Controller,
   type ControllerDefinition,
   type ControllerDefinitionsMap,
-  type InferControllerFromDefinition,
-  type InferControllerStaticStateMapFromDefinitionsWithSolutionType,
-  type InferControllersMapFromDefinition,
   SolutionType,
-  type CommerceEngine as SSRCommerceEngine,
 } from '@coveo/headless/ssr-commerce-next';
 import {type Context, type PropsWithChildren, useCallback, useContext, useMemo} from 'react';
 import {useSyncMemoizedStore} from '../client-utils.js';
@@ -17,6 +15,7 @@ import type {
   ContextState,
   ControllerHook,
   InferControllerHooksMapFromDefinition,
+  StateProviderProps,
 } from './types.js';
 
 function isHydratedStateContext<
@@ -28,15 +27,22 @@ function isHydratedStateContext<
   return 'engine' in ctx && !!ctx.engine;
 }
 
+/**
+ * Whether a controller found in the context is the live controller (once hydrated), rather than its
+ * static state.
+ */
+function isLiveController(controller: {readonly state: {}}): controller is Controller {
+  return 'subscribe' in controller && typeof controller.subscribe === 'function';
+}
+
 function buildControllerHook<
   TControllers extends ControllerDefinitionsMap<Controller>,
-  TKey extends keyof TControllers,
   TSolutionType extends SolutionType,
 >(
   singletonContext: SingletonGetter<Context<ContextState<TControllers, TSolutionType> | null>>,
-  key: TKey,
+  key: string,
   controllerDefinition: ControllerDefinition<Controller>
-): ControllerHook<InferControllerFromDefinition<TControllers[TKey]>> {
+): ControllerHook<Controller> {
   return () => {
     const ctx = useContext(singletonContext.get());
     if (ctx === null) {
@@ -49,31 +55,30 @@ function buildControllerHook<
       (solutionType) => controllerDefinition[solutionType] === true
     );
 
-    // TODO: KIT-3715 - Workaround to ensure that 'key' can be used as an index for 'ctx.controllers'. A more robust solution is needed.
-    type ControllerKey = Exclude<keyof typeof ctx.controllers, symbol>;
-    if (ctx.controllers[key as ControllerKey] === undefined) {
-      throw new UndefinedControllerError(key.toString(), supportedSolutionTypes);
+    // A hook exists for every controller of the definition, but each solution type builds only some of them.
+    const controllersByName: Readonly<Record<string, {readonly state: {}} | undefined>> =
+      ctx.controllers;
+    const controller = controllersByName[key];
+    if (controller === undefined) {
+      throw new UndefinedControllerError(key, supportedSolutionTypes);
     }
 
     const subscribe = useCallback(
       (listener: () => void) =>
-        isHydratedStateContext(ctx)
-          ? ctx.controllers[key as ControllerKey].subscribe(listener)
-          : () => {},
-      [ctx]
+        isLiveController(controller) ? controller.subscribe(listener) : () => {},
+      [controller]
     );
-    const getStaticState = useCallback(() => ctx.controllers[key].state, [ctx]);
+    const getStaticState = useCallback(() => controller.state, [controller]);
     const state = useSyncMemoizedStore(subscribe, getStaticState);
     const methods = useMemo(() => {
-      if (!isHydratedStateContext(ctx)) {
+      if (!isLiveController(controller)) {
         return undefined;
       }
-      const controller = ctx.controllers[key as ControllerKey];
       const {state: _, subscribe: __, ...remainder} = controller;
-      return mapObject(remainder, (member) =>
+      return mapObject<string, unknown, unknown>(remainder, (member) =>
         typeof member === 'function' ? member.bind(controller) : member
-      ) as Omit<InferControllerFromDefinition<TControllers[TKey]>, 'state' | 'subscribe'>;
-    }, [ctx]);
+      );
+    }, [controller]);
     return {state, methods};
   };
 }
@@ -121,12 +126,12 @@ export function buildStateProvider<
     engine,
     controllers,
     children,
-  }: PropsWithChildren<{
-    engine?: SSRCommerceEngine;
-    controllers:
-      | InferControllersMapFromDefinition<TControllers, TSolutionType>
-      | InferControllerStaticStateMapFromDefinitionsWithSolutionType<TControllers, TSolutionType>;
-  }>) => {
+  }: PropsWithChildren<
+    StateProviderProps<
+      CommerceStaticState<TControllers, TSolutionType>,
+      CommerceHydratedState<TControllers, TSolutionType>
+    >
+  >) => {
     const {Provider} = singletonContext.get();
     return <Provider value={{engine, controllers, solutionType}}>{children}</Provider>;
   };

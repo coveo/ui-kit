@@ -1,5 +1,15 @@
 # @coveo/thermidor
 
+## 0.10.0
+
+### Minor Changes
+
+- [#8970](https://github.com/coveo/ui-kit/pull/8970) [`bc22845`](https://github.com/coveo/ui-kit/commit/bc2284579cdc061e24a55af29be1a3b148a6d977) - `createPrivateSession` from `@coveo/thermidor/private` accepts an optional `sessionId`. It must be a UUID. The session sends it as `conversationSessionId` from its first request, whether that is `initialize`, a prompt or an action. The returned `PrivateSession` exposes the id as `sessionId` from creation. Without the option, `sessionId` is `undefined` until the endpoint sends one. If the first request ends before the endpoint sends a token, the session drops the chosen id and the endpoint assigns one. A request can end that way when the endpoint answers with a 403, when it gets no response, or when its stream ends without a token. The session keeps the id when the endpoint refuses the request with another error status, such as a 429 or a 503, or when the request is never sent, so a retry reuses it. A restored session whose id has no token drops it the same way. Passing both `sessionId` and `sessionToRestore` throws. The public `createSession` is unchanged.
+
+### Patch Changes
+
+- [#8941](https://github.com/coveo/ui-kit/pull/8941) [`4eb4e88`](https://github.com/coveo/ui-kit/commit/4eb4e88dbf53b00c225b5769e78c7ba6dc06a95d) - A surface that a later answer creates again under its live id now stays with the turn that first created it. Before, a `createSurface` that replaced a live surface moved it to the turn that recorded the replacement, so the answer to an action that opens no turn, such as `restoreState`, moved an earlier turn's surface to the latest turn. `TurnResponse.surfaces` keeps the surface, and a surface the initialization created stays in no turn. A surface created again after its `deleteSurface` still belongs to the turn that creates it. A `createSurface` without a catalog, which the renderer drops, no longer hands a live loading placeholder to the run that sent it.
+
 ## 0.9.0
 
 ### Minor Changes

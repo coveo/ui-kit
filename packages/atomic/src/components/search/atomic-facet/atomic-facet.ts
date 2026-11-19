@@ -17,7 +17,7 @@ import {
   type TabManager,
   type TabManagerState,
 } from '@coveo/headless';
-import {html, LitElement, nothing} from 'lit';
+import {html, LitElement, nothing, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
@@ -48,7 +48,7 @@ import {initializePopover} from '../../common/facets/popover/popover-type';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import '../../common/atomic-facet-placeholder/atomic-facet-placeholder';
 import {arrayConverter} from '@/src/converters/array-converter';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {booleanConverter, createBooleanConverter} from '@/src/converters/boolean-converter';
 import {bindings} from '@/src/decorators/bindings';
 import facetCommonStyles from '../../common/facets/facet-common.tw.css';
 import {FacetVisibilityController} from '../../common/facets/facet-visibility-controller';
@@ -57,6 +57,7 @@ import facetValueBoxStyles from '../../common/facets/facet-value-box/facet-value
 import facetValueCheckboxStyles from '../../common/facets/facet-value-checkbox/facet-value-checkbox.tw.css';
 import facetValueExcludeStyles from '../../common/facets/facet-value-exclude/facet-value-exclude.tw.css';
 import {ValidatePropsController} from '../../common/validate-props-controller/validate-props-controller';
+import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
@@ -103,6 +104,29 @@ import {ValidatePropsController} from '../../common/validate-props-controller/va
 @bindings()
 @withTailwindStyles
 export class AtomicFacet extends LitElement implements InitializableComponent<Bindings> {
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'withSearch',
+      attribute: 'with-search',
+      defaultValue: true,
+      instruction: 'Use `disable-facet-search` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
+    {
+      property: 'filterFacetCount',
+      attribute: 'filter-facet-count',
+      defaultValue: true,
+      instruction: 'Use `disable-facet-count-filtering` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
+  ]);
+
+  willUpdate(changedProperties: PropertyValues) {
+    super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.bindings?.engine?.logger);
+  }
+
   static styles = [
     facetCommonStyles,
     facetSearchStyles,
@@ -230,14 +254,22 @@ export class AtomicFacet extends LitElement implements InitializableComponent<Bi
   /**
    * Whether this facet should contain a search box.
    *
+   * @deprecated - Use `disable-facet-search` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-facet-search', {silent: true}),
     attribute: 'with-search',
     reflect: true,
   })
   public withSearch = true;
+
+  /**
+   * Whether to remove the search box from this facet.
+   */
+  @property({type: Boolean, attribute: 'disable-facet-search', reflect: true})
+  public disableFacetSearch = false;
+
   /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
@@ -281,14 +313,22 @@ export class AtomicFacet extends LitElement implements InitializableComponent<Bi
    * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
    * The target folding field must be a facet field with the **Use cache for nested queries** options enabled (see [Manage fields](https://docs.coveo.com/en/1833/)).
 
+   * @deprecated - Use `disable-facet-count-filtering` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-facet-count-filtering', {silent: true}),
     attribute: 'filter-facet-count',
     reflect: true,
   })
   public filterFacetCount = true;
+
+  /**
+   * Whether to stop excluding the parents of folded results when estimating the result count for each facet value.
+   */
+  @property({type: Boolean, attribute: 'disable-facet-count-filtering', reflect: true})
+  public disableFacetCountFiltering = false;
+
   /**
    * Whether to allow excluding values from the facet.
    */
@@ -503,7 +543,7 @@ export class AtomicFacet extends LitElement implements InitializableComponent<Bi
         {
           canShowMoreValues: this.facetState.canShowMoreValues,
           numberOfDisplayedValues: this.facetState.values.length,
-          withSearch: this.withSearch,
+          withSearch: this.hasSearch,
         },
         () =>
           renderFacetSearchInput({
@@ -649,7 +689,7 @@ export class AtomicFacet extends LitElement implements InitializableComponent<Bi
       sortCriteria: this.sortCriteria,
       resultsMustMatch: this.resultsMustMatch,
       facetSearch: {numberOfValues: this.numberOfValues},
-      filterFacetCount: this.filterFacetCount,
+      filterFacetCount: this.shouldFilterFacetCount,
       injectionDepth: this.injectionDepth,
       allowedValues: this.allowedValues.length ? [...this.allowedValues] : undefined,
       customSort: this.customSort.length ? [...this.customSort] : undefined,
@@ -748,5 +788,13 @@ export class AtomicFacet extends LitElement implements InitializableComponent<Bi
       showMore: this.showMoreFocus,
       header: this.headerFocus,
     };
+  }
+
+  private get shouldFilterFacetCount() {
+    return this.filterFacetCount && !this.disableFacetCountFiltering;
+  }
+
+  private get hasSearch() {
+    return this.withSearch && !this.disableFacetSearch;
   }
 }
