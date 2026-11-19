@@ -28,11 +28,16 @@ export interface ConversationStorage {
 
 const MAX_CONVERSATIONS = 20;
 
-const INDEX_KEY = 'demo-conversations';
-const ENTRY_PREFIX = 'demo-conversation:';
-const CURRENT_KEY = 'demo-current-conversation';
+const INDEX = 'demo-conversations';
+const ENTRY = 'demo-conversation:';
+const CURRENT = 'demo-current-conversation';
 
 interface ConversationStorageOptions {
+  /**
+   * Prefixes every key, so configurations served from the same origin keep their conversations
+   * apart: a session's keys only resume against the organization and agent that issued them.
+   */
+  scope?: string;
   /** Where conversations are saved. `localStorage` by default. */
   local?: () => Storage;
   /** Where the current conversation is remembered. `sessionStorage` by default. */
@@ -47,41 +52,46 @@ interface ConversationStorageOptions {
  * the page: a read finds nothing, and a write that does not fit is dropped.
  */
 export function createConversationStorage({
+  scope,
   local = () => window.localStorage,
   session = () => window.sessionStorage,
   max = MAX_CONVERSATIONS,
   now = Date.now,
 }: ConversationStorageOptions = {}): ConversationStorage {
+  const prefix = scope ? `${scope}:` : '';
+  const indexKey = prefix + INDEX;
+  const entryPrefix = prefix + ENTRY;
+  const currentKey = prefix + CURRENT;
   const read = (storage: () => Storage, key: string) => attempt(() => storage().getItem(key));
 
   function list(): ConversationSummary[] {
-    const raw = read(local, INDEX_KEY);
+    const raw = read(local, indexKey);
     const index = raw ? attempt(() => JSON.parse(raw) as unknown) : undefined;
     return Array.isArray(index) ? index.filter(isSummary) : [];
   }
 
   function writeIndex(index: readonly ConversationSummary[]) {
-    local().setItem(INDEX_KEY, JSON.stringify(index));
+    local().setItem(indexKey, JSON.stringify(index));
   }
 
   function drop(index: ConversationSummary[], id: string) {
-    attempt(() => local().removeItem(ENTRY_PREFIX + id));
+    attempt(() => local().removeItem(entryPrefix + id));
     return index.filter((entry) => entry.id !== id);
   }
 
   return {
     list,
     load(id) {
-      const raw = read(local, ENTRY_PREFIX + id);
+      const raw = read(local, entryPrefix + id);
       return raw ? attempt(() => JSON.parse(raw) as SerializedSession) : undefined;
     },
     save(id, title, serialized) {
-      const key = ENTRY_PREFIX + id;
+      const key = entryPrefix + id;
       const previous = read(local, key);
       let index = [{id, title, updatedAt: now()}, ...list().filter((entry) => entry.id !== id)];
       const evicted: [string, string][] = [];
       const evict = (staleId: string) => {
-        const staleKey = ENTRY_PREFIX + staleId;
+        const staleKey = entryPrefix + staleId;
         const staleValue = read(local, staleKey);
         if (staleValue) {
           evicted.push([staleKey, staleValue]);
@@ -127,12 +137,12 @@ export function createConversationStorage({
       });
       if (!written) return;
       for (const stale of index.slice(max)) {
-        attempt(() => local().removeItem(ENTRY_PREFIX + stale.id));
+        attempt(() => local().removeItem(entryPrefix + stale.id));
       }
     },
-    currentId: () => read(session, CURRENT_KEY) ?? undefined,
+    currentId: () => read(session, currentKey) ?? undefined,
     setCurrentId(id) {
-      attempt(() => session().setItem(CURRENT_KEY, id));
+      attempt(() => session().setItem(currentKey, id));
     },
   };
 }
