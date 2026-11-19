@@ -6,7 +6,7 @@ The decisions of record are the accepted ADRs [ADR-009](./internal/adr/ADR-009-a
 
 ## The core idea
 
-`@coveo/thermidor` is a lean client for a single, stateful, intent-routing **unified converse endpoint**. The server streams its response over AG-UI SSE — conversational messages, reasoning steps, and tool calls, alongside schema-defined A2UI components — and the client renders what the server sends. Thermidor transmits consumer input, folds the streamed result into an observable list of `Turn`s, and validates component state and actions against a consumer-injected contract — nothing more. Component state travels inline through the A2-UI data model (`/state/<id>` `updateDataModel` operations); renderers read it through `{ path }` bindings, and every action goes through the single `session.dispatchAction` entry point ([ADR-016](./internal/adr/ADR-016-inline-state-consumption-remove-remote-controller.md)).
+`@coveo/thermidor` is a lean client for a single, stateful, intent-routing **unified converse endpoint**. The server streams its response over AG-UI SSE — conversational messages and tool calls, alongside schema-defined A2UI components — and the client renders what the server sends. Thermidor transmits consumer input, folds the streamed result into an observable list of `Turn`s, and validates component state and actions against a consumer-injected contract — nothing more. Component state travels inline through the A2-UI data model (`/state/<id>` `updateDataModel` operations); renderers read it through `{ path }` bindings, and every action goes through the single `session.dispatchAction` entry point ([ADR-016](./internal/adr/ADR-016-inline-state-consumption-remove-remote-controller.md)).
 
 Everything the previous revision described (an `Engine` class, a library-agnostic `interface/` layer, Redux Toolkit slices, per-endpoint facades) has been **removed wholesale** ([ADR-010](./internal/adr/ADR-010-unified-endpoint-session-client.md)). The current package has no engine, no interface layer, no Redux/RTK, and no facades.
 
@@ -134,7 +134,7 @@ A `RUN_ERROR` also keeps the Gateway's `code` as `errorCode` (an `AGENT:<ID>` st
 The fold maps each SSE activity into the active turn's `response`:
 
 - Text-message events accumulate into `response.agent.messages` (the `agent` facet is created lazily, signaling the router invoked an agent).
-- Reasoning and tool-call events accumulate into `response.agent.reasoningSteps`.
+- Tool-call events accumulate into `response.agent.toolCalls`. Reasoning events are ignored.
 - `ACTIVITY_SNAPSHOT` events append to `response.activities` (a `replace` snapshot merges onto the activity with the same `messageId`) and re-derive the turn's surfaces from its activity list.
 - Terminal events (`RUN_FINISHED` / `turn_complete`, `RUN_ERROR`) set `status` to `complete` or `error`.
 
@@ -163,11 +163,11 @@ interface Turn {
 interface TurnResponse {
   activities: Activity[]; // raw snapshot log, latest snapshot per messageId, defaults to []
   surfaces: DiscoveredSurface[]; // the live surfaces this turn created
-  agent?: {messages: AgentMessage[]; reasoningSteps: ReasoningStep[]};
+  agent?: {messages: AgentMessage[]; toolCalls: ToolCall[]};
 }
 ```
 
-`activities` is routing-neutral and always present. Only `messages` and `reasoningSteps` are agent-specific; they live under the optional `agent` facet, whose presence signals "the router invoked an agent". Consumers read `turn.input.prompt`, `turn.response.surfaces` (where to draw the turn's blocks) and `turn.response.agent?.*`; the renderer stream and the component state live on the session.
+`activities` is routing-neutral and always present. Only `messages` and `toolCalls` are agent-specific; they live under the optional `agent` facet, whose presence signals "the router invoked an agent". Consumers read `turn.input.prompt`, `turn.response.surfaces` (where to draw the turn's blocks) and `turn.response.agent?.*`; the renderer stream and the component state live on the session.
 
 ## Validation
 
@@ -194,7 +194,7 @@ The injected contracts schema is validated against at two boundaries, both insid
 | `initialization` (activities, status, error, reason, errorCode) | yes       | session-level    |
 | `sessionId`, `sessionToken`, `activeTurnId`                     | yes       | session-level    |
 | `response.activities`                                           | yes       | all turns        |
-| `response.agent.{messages,reasoningSteps}`                      | yes       | turns with agent |
+| `response.agent.{messages,toolCalls}`                           | yes       | turns with agent |
 | `state` (validated data model)                                  | yes       | session-level    |
 | `response.surfaces`                                             | no        | derived          |
 | renderer stream (`a2uiMessages`)                                | no        | derived          |

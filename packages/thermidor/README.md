@@ -156,11 +156,11 @@ interface Turn {
 interface TurnResponse {
   activities: Activity[]; // raw snapshot log, latest snapshot per messageId, defaults to []
   surfaces: DiscoveredSurface[]; // the live surfaces this turn created
-  agent?: {messages: AgentMessage[]; reasoningSteps: ReasoningStep[]}; // present only when the router invoked an agent
+  agent?: {messages: AgentMessage[]; toolCalls: ToolCall[]}; // present only when the router invoked an agent
 }
 ```
 
-`activities` is routing-neutral and always present. `agent` appears only when the router invoked an agent for the turn. Consumers read `turn.input.prompt`, `turn.response.surfaces` (where to draw the turn's blocks) and `turn.response.agent?.messages` / `turn.response.agent?.reasoningSteps`.
+`activities` is routing-neutral and always present. `agent` appears only when the router invoked an agent for the turn. Consumers read `turn.input.prompt`, `turn.response.surfaces` (where to draw the turn's blocks) and `turn.response.agent?.messages` / `turn.response.agent?.toolCalls`.
 
 ### Stopped and failed turns
 

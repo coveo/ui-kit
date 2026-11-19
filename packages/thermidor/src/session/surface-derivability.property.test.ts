@@ -119,7 +119,6 @@ const closingSurfaceActivityArbitrary: fc.Arbitrary<NormalizedStreamEvent> = fc
 const otherActivityArbitrary: fc.Arbitrary<NormalizedStreamEvent> = fc.oneof(
   fc.record({type: fc.constant('TEXT_MESSAGE_START'), role: fc.constant('assistant')}),
   fc.record({type: fc.constant('TEXT_MESSAGE_CONTENT'), delta: shortText}),
-  fc.record({type: fc.constant('REASONING_MESSAGE_CONTENT'), delta: shortText}),
   fc.record({
     type: fc.constant('ACTIVITY_SNAPSHOT'),
     messageId: fc.string({minLength: 1, maxLength: 12}),

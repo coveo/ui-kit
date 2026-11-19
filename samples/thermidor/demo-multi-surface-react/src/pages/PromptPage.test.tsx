@@ -55,7 +55,7 @@ describe('PromptPage', () => {
 
   it('keeps the assistant layout for the conversation; a later search opens on its own page', () => {
     visit.turns = [
-      makeTurn({id: 't1', response: makeResponse({agent: {messages: [], reasoningSteps: []}})}),
+      makeTurn({id: 't1', response: makeResponse({agent: {messages: [], toolCalls: []}})}),
       {
         ...makeFollowUpTurn({id: 't2', text: 'See all kayaks', searchOption: true}),
         response: makeResponse({surfaces: [searchSurface]}),

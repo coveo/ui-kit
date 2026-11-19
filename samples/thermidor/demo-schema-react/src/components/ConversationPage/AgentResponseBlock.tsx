@@ -14,16 +14,14 @@ export interface AgentResponseBlockProps {
 export function AgentResponseBlock({response, isStreaming, children}: AgentResponseBlockProps) {
   const {agent} = response;
   const messages = agent?.messages ?? [];
-  const reasoningSteps = agent?.reasoningSteps ?? [];
+  const toolCalls = agent?.toolCalls ?? [];
 
-  const showThinkingBlock = reasoningSteps.length > 0 || isStreaming;
+  const showThinkingBlock = toolCalls.length > 0 || isStreaming;
   const showStreamingMessage = messages.some((m) => m.content.length > 0);
 
   return (
     <div className={styles.container}>
-      {showThinkingBlock && (
-        <ThinkingBlock reasoningSteps={reasoningSteps} isStreaming={isStreaming} />
-      )}
+      {showThinkingBlock && <ThinkingBlock toolCalls={toolCalls} isStreaming={isStreaming} />}
       {showStreamingMessage && <StreamingMessage messages={messages} />}
       {children}
     </div>
