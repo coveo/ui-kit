@@ -1,3 +1,5 @@
+import type {SearchEngine} from '@coveo/headless';
+import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import {
   buildFacet,
   buildFacetConditionsManager,
@@ -41,15 +43,18 @@ describe('atomic-facet', () => {
       allowedValues?: string[];
       injectionDepth?: number;
       filterFacetCount?: boolean;
+      disableFacetCountFiltering?: boolean;
       resultsMustMatch?: 'allValues' | 'atLeastOneValue';
       sortCriteria?: 'score' | 'alphanumeric' | 'occurrences';
       numberOfValues?: number;
       isCollapsed?: boolean;
       displayValuesAs?: 'checkbox' | 'link' | 'box';
       withSearch?: boolean;
+      disableFacetSearch?: boolean;
       enableExclusion?: boolean;
       facetId?: string;
       headingLevel?: number;
+      engine?: SearchEngine;
     } = {}
   ) => {
     const {element} = await renderInAtomicSearchInterface<AtomicFacet>({
@@ -68,13 +73,16 @@ describe('atomic-facet', () => {
         .tabsIncluded=${props.tabsIncluded || []}
         .tabsExcluded=${props.tabsExcluded || []}
         filter-facet-count=${ifDefined(props.filterFacetCount)}
+        ?disable-facet-count-filtering=${props.disableFacetCountFiltering}
         is-collapsed=${ifDefined(props.isCollapsed)}
         with-search=${ifDefined(props.withSearch)}
+        ?disable-facet-search=${props.disableFacetSearch}
         enable-exclusion=${ifDefined(props.enableExclusion)}
       ></atomic-facet>`,
       selector: 'atomic-facet',
       bindings: (bindings) => ({
         ...bindings,
+        engine: props.engine ?? bindings.engine,
         store: {
           ...bindings.store,
           getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
@@ -181,6 +189,12 @@ describe('atomic-facet', () => {
 
     it('should not render search parts when search is disabled', async () => {
       const {locators} = await setupElement({withSearch: false});
+      await expect.element(locators.searchWrapper).not.toBeInTheDocument();
+      await expect.element(locators.searchInput).not.toBeInTheDocument();
+    });
+
+    it('should not render search parts when disableFacetSearch is true', async () => {
+      const {locators} = await setupElement({disableFacetSearch: true});
       await expect.element(locators.searchWrapper).not.toBeInTheDocument();
       await expect.element(locators.searchInput).not.toBeInTheDocument();
     });
@@ -892,6 +906,32 @@ describe('atomic-facet', () => {
       );
     });
 
+    it('should pass filterFacetCount as false to buildFacet options when disableFacetCountFiltering is true', async () => {
+      await setupElement({disableFacetCountFiltering: true});
+
+      expect(buildFacet).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          options: expect.objectContaining({
+            filterFacetCount: false,
+          }),
+        })
+      );
+    });
+
+    it('should pass filterFacetCount as true to buildFacet options by default', async () => {
+      await setupElement();
+
+      expect(buildFacet).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          options: expect.objectContaining({
+            filterFacetCount: true,
+          }),
+        })
+      );
+    });
+
     it('should pass injectionDepth to buildFacet options', async () => {
       await setupElement({injectionDepth: 500});
 
@@ -1200,6 +1240,50 @@ describe('atomic-facet', () => {
       await element.remove();
       await new Promise((resolve) => setTimeout(resolve, 0));
       expect(stopWatching).toHaveBeenCalled();
+    });
+  });
+
+  describe('deprecation warnings', () => {
+    const deprecationWarnings = (engine: SearchEngine) =>
+      vi
+        .mocked(engine.logger.warn)
+        .mock.calls.filter(([message]) => String(message).startsWith('[Deprecated]'));
+
+    it('should log one deprecation warning when with-search is set to "false"', async () => {
+      const engine = buildFakeSearchEngine();
+      await setupElement({withSearch: false, engine});
+
+      expect(deprecationWarnings(engine)).toEqual([
+        [
+          expect.stringContaining(
+            '[Deprecated] The `with-search` property of `atomic-facet` is deprecated'
+          ),
+        ],
+      ]);
+    });
+
+    it('should log one deprecation warning when #withSearch is set to false as a property', async () => {
+      const engine = buildFakeSearchEngine();
+      const {element} = await setupElement({engine});
+
+      element.withSearch = false;
+      await element.updateComplete;
+
+      expect(deprecationWarnings(engine)).toHaveLength(1);
+    });
+
+    it('should not log a deprecation warning when the attributes keep their default values, as on a cloned facet', async () => {
+      const engine = buildFakeSearchEngine();
+      await setupElement({withSearch: true, filterFacetCount: true, engine});
+
+      expect(deprecationWarnings(engine)).toEqual([]);
+    });
+
+    it('should not log a console warning when filter-facet-count is set to "false"', async () => {
+      const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      await setupElement({filterFacetCount: false, engine: buildFakeSearchEngine()});
+
+      expect(consoleWarn).not.toHaveBeenCalledWith(expect.stringContaining('boolean attribute'));
     });
   });
 });

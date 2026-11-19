@@ -119,7 +119,7 @@ export class AtomicPopover extends LitElement implements InitializableComponent<
         .source=${this.buttonRef.value}
         .container=${this.popupRef.value}
         .active=${this.isOpen}
-        .shouldHideSelf=${false}
+        .disableHideSelf=${true}
       >
         ${this.renderPopover()} ${when(this.isOpen, () => this.renderBackdrop())}
       </atomic-focus-trap>

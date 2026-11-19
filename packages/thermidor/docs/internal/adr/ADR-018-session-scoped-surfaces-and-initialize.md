@@ -83,11 +83,12 @@ level. Option D below.
   a microtask so that a listener subscribed in the same task sees it start. On the wire it is
   `action: {name: 'initialize', context: {}}`: it has an envelope type of its own, without
   `surfaceId` and `sourceComponentId`, which stay required for every other action.
-- **At most once.** A session created with its keys (`sessionId` and `sessionToken`) sends it
-  carrying them: the Agent Gateway resumes that session and rebuilds its shell, or starts a new one
-  with new keys, which the session adopts. For a restored session, see
+- **At most once by itself.** A session created with its keys (`sessionId` and `sessionToken`)
+  sends it carrying them: the Agent Gateway resumes that session and rebuilds its shell, or starts
+  a new one with new keys, which the session adopts. For a restored session, see
   [the amendment](#amendment-restoring-a-session-through-initialize).
-- **An ordinary request.** It goes through the one-request rule and the conflict retry, and it
+- **An ordinary request.** It goes through the one-request rule and the conflict retry (both
+  amended below), and it
   adopts the session id and token from its run, like a prompt. While it is in flight,
   `session.request` is `{kind: 'initialize'}`, so an application can draw its disabled search box
   from the request it already observes.
@@ -95,8 +96,8 @@ level. Option D below.
   `status` and `error`, in the same vocabulary as turns. It is not a turn, so it never appears in
   `session.turns`.
 - **Failure.** A failed `initialize` leaves no token and no shell, and the session does not retry
-  it beyond the conflict retry. The first prompt still opens the session. An application reads
-  `session.initialization.status` to stop waiting for the shell.
+  it beyond the conflict retry (amended below). The first prompt still opens the session. An
+  application reads `session.initialization.status` to stop waiting for the shell.
 - **Opt-out.** `createSession({initialize: false})` sends nothing, for tests and for a server that
   creates a session while rendering.
 
@@ -246,6 +247,28 @@ shell and its search box stayed disabled. The Agent Gateway now resumes a sessio
   session adopts the new keys and drops the restored turns and shell, their state and
   `actionError`, in one change that subscribers see, and `a2uiMessages` gets a `deleteSurface` for
   each dropped surface. The new shell stays.
+
+## Amendment: retrying a failed initialize
+
+Accepted on 2026-11-17 (KIT-6641).
+
+Nobody sees the automatic `initialize` fail, so a brief outage on page load left the shopper on an
+empty start page for good. The failure rule above kept the EAP simple; it was not a decision
+against retries.
+
+- **Automatic retries.** A network error, `429`, `502`, `503` or `504` rejecting the automatic
+  `initialize` is retried: up to 3 attempts within 5 s, attempts included, with a doubling backoff
+  that starts at 1 s for a `429`, since browsers can't read its `Retry-After`. Any other rejection
+  fails it at once, and so does one that arrives too late to fit a retry in the budget. Before a
+  retry, the session drops a client-chosen session id the failed attempt may have reserved.
+- **Before streaming only.** Once the endpoint answers with a stream, the producer may have started
+  the session and its shell, so a retry could duplicate the opening state.
+- **Still one request at a time.** The retrying `initialize` stays the request in flight, so a
+  dispatch is withheld meanwhile, as during any request. Applications already hold dispatches back
+  while `request` is set.
+- **`retryInitialization()`.** Re-sends `initialize` when the initialization is `'error'`, a
+  restored session's included, unless a request is in flight. It carries the session's keys when
+  it has them, so the Agent Gateway resumes that session. It does not retry by itself.
 
 ## Considered Options
 

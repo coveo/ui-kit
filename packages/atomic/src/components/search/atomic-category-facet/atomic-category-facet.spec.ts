@@ -48,9 +48,11 @@ describe('atomic-category-facet', () => {
       delimitingCharacter: string;
       basePath: string[];
       filterByBasePath: boolean;
+      disableBasePathFiltering: boolean;
       isCollapsed: boolean;
       headingLevel: number;
       filterFacetCount: boolean;
+      disableFacetCountFiltering: boolean;
       injectionDepth: number;
       tabsIncluded: string[];
       tabsExcluded: string[];
@@ -94,9 +96,11 @@ describe('atomic-category-facet', () => {
         delimiting-character=${ifDefined(props?.delimitingCharacter)}
         .basePath=${props?.basePath || []}
         .filterByBasePath=${props?.filterByBasePath ?? true}
+        ?disable-base-path-filtering=${props?.disableBasePathFiltering}
         ?is-collapsed=${props?.isCollapsed}
         heading-level=${ifDefined(props?.headingLevel)}
         .filterFacetCount=${props?.filterFacetCount ?? true}
+        ?disable-facet-count-filtering=${props?.disableFacetCountFiltering}
         injection-depth=${ifDefined(props?.injectionDepth)}
         .tabsIncluded=${props?.tabsIncluded || []}
         .tabsExcluded=${props?.tabsExcluded || []}
@@ -382,6 +386,31 @@ describe('atomic-category-facet', () => {
       expect(callArgs?.options?.filterByBasePath).toBe(false);
       expect(callArgs?.options?.filterFacetCount).toBe(false);
       expect(callArgs?.options?.injectionDepth).toBe(injectionDepth);
+    });
+
+    it('should call buildCategoryFacet with filterByBasePath false when disableBasePathFiltering is true', async () => {
+      vi.mocked(buildCategoryFacet).mockClear();
+      await renderCategoryFacet({disableBasePathFiltering: true});
+
+      const callArgs = vi.mocked(buildCategoryFacet).mock.calls[0][1];
+      expect(callArgs?.options?.filterByBasePath).toBe(false);
+    });
+
+    it('should call buildCategoryFacet with filterFacetCount false when disableFacetCountFiltering is true', async () => {
+      vi.mocked(buildCategoryFacet).mockClear();
+      await renderCategoryFacet({disableFacetCountFiltering: true});
+
+      const callArgs = vi.mocked(buildCategoryFacet).mock.calls[0][1];
+      expect(callArgs?.options?.filterFacetCount).toBe(false);
+    });
+
+    it('should call buildCategoryFacet with filterByBasePath and filterFacetCount true by default', async () => {
+      vi.mocked(buildCategoryFacet).mockClear();
+      await renderCategoryFacet();
+
+      const callArgs = vi.mocked(buildCategoryFacet).mock.calls[0][1];
+      expect(callArgs?.options?.filterByBasePath).toBe(true);
+      expect(callArgs?.options?.filterFacetCount).toBe(true);
     });
 
     it('should call buildSearchStatus', async () => {

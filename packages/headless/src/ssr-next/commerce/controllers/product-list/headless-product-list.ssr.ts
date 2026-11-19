@@ -23,7 +23,7 @@ export type ProductListDefinition = SearchAndListingControllerDefinitionWithoutP
 /**
  * Options for configuring the `ProductList` controller.
  */
-interface ProductListOptions {
+export interface ProductListOptions {
   /**
    * When set to true, fills the `results` field rather than the `products` field
    * in the response. It may also include Spotlight Content in the results.

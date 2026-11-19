@@ -22,7 +22,7 @@ import {
 import type {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {provide} from '@lit/context';
 import i18next, {type i18n} from 'i18next';
-import {type CSSResultGroup, css, html, LitElement} from 'lit';
+import {type CSSResultGroup, css, html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {
   errorSelector,
@@ -37,7 +37,7 @@ import {
   InterfaceController,
 } from '@/src/components/common/interface/interface-controller';
 import {MobileBreakpointController} from '@/src/components/common/layout/mobile-breakpoint-controller';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {createBooleanConverter} from '@/src/converters/boolean-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
@@ -49,6 +49,7 @@ import {
   type StandaloneSearchBoxData,
   StorageItems,
 } from '@/src/utils/local-storage-utils';
+import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils';
 import {withCountry} from '@/src/utils/locale-utils';
 import {getAnalyticsConfig} from './analytics-config';
 import {type CommerceStore, createCommerceStore} from './store';
@@ -95,6 +96,21 @@ export class AtomicCommerceInterface
     'CoveoAtomic',
     HEADLESS_VERSION
   );
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'analytics',
+      attribute: 'analytics',
+      defaultValue: true,
+      instruction: 'Use `disable-analytics` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
+    {
+      property: 'reflectStateInUrl',
+      attribute: 'reflect-state-in-url',
+      defaultValue: true,
+      instruction: 'Use `disable-state-reflection-in-url` instead, which defaults to `false`.',
+    },
+  ]);
 
   static styles: CSSResultGroup = [
     css`
@@ -122,7 +138,7 @@ export class AtomicCommerceInterface
    */
   @property({
     type: Boolean,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-analytics', {silent: true}),
     reflect: true,
   })
   public analytics = true;
@@ -193,7 +209,7 @@ export class AtomicCommerceInterface
     type: Boolean,
     attribute: 'reflect-state-in-url',
     reflect: true,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-state-reflection-in-url', {silent: true}),
   })
   reflectStateInUrl = true;
 
@@ -418,6 +434,12 @@ export class AtomicCommerceInterface
   @watch('iconAssetsPath')
   public updateIconAssetsPath(): void {
     this.store.state.iconAssetsPath = this.iconAssetsPath;
+  }
+
+  willUpdate(changedProperties: PropertyValues) {
+    super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.engine?.logger);
   }
 
   @errorGuard()

@@ -14,12 +14,14 @@ import {
 } from '../../../test/mock-controller.js';
 import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
-import {defineMockCommerceController} from '../../../test/mock-ssr-controller-definitions.js';
+import {
+  defineMockCommerceController,
+  defineMockRecommendationDefinition,
+} from '../../../test/mock-ssr-controller-definitions.js';
 import type {ContextOptions} from '../controllers/context/headless-context.ssr.js';
 import {SolutionType} from '../types/controller-constants.js';
-import type {BakedInControllers} from '../types/controller-definitions.js';
-import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
 import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
+import type {CommerceHydratedState} from '../types/hydrate-static-state.js';
 import * as buildFactory from './build-factory.js';
 import {fetchStaticStateFactory} from './static-state-factory.js';
 
@@ -67,11 +69,10 @@ describe('fetchStaticStateFactory', () => {
         async () =>
           Promise.resolve({
             engine: mockEngine,
-            controllers: {} as InferControllersMapFromDefinition<
+            controllers: {} as CommerceHydratedState<
               CommerceControllerDefinitionsMap,
               T
-            > &
-              BakedInControllers,
+            >['controllers'],
           })
     );
 
@@ -107,7 +108,7 @@ describe('fetchStaticStateFactory', () => {
         context: mockContext,
       });
 
-      expect(staticState.navigatorContext).toBe(mockNavigatorContext);
+      expect(staticState.navigatorContext).toEqual(mockNavigatorContext);
     });
 
     it('should return the per-request access token alongside the static state', async () => {
@@ -144,7 +145,7 @@ describe('fetchStaticStateFactory', () => {
         context: mockContext,
       });
 
-      expect(staticState.context).toBe(mockContext);
+      expect(staticState.context).toEqual(mockContext);
     });
   });
 
@@ -223,6 +224,78 @@ describe('fetchStaticStateFactory', () => {
     });
   });
 
+  describe('recommendation slots', () => {
+    const definitionWithSlots = {
+      ...definition,
+      rec1: defineMockRecommendationDefinition('slot_1'),
+      rec2: defineMockRecommendationDefinition('slot_2'),
+    };
+    const refreshRec1 = vi.fn();
+    const refreshRec2 = vi.fn();
+
+    beforeEach(() => {
+      engineSpy = vi.spyOn(buildFactory, 'buildFactory').mockReturnValue(
+        <T extends SolutionType>(_: T) =>
+          async () =>
+            Promise.resolve({
+              engine: mockEngine,
+              controllers: {
+                rec1: {refresh: refreshRec1},
+                rec2: {refresh: refreshRec2},
+              } as unknown as CommerceHydratedState<
+                CommerceControllerDefinitionsMap,
+                T
+              >['controllers'],
+            })
+      );
+    });
+
+    it.each([SolutionType.listing, SolutionType.search, SolutionType.standalone])(
+      'should refresh only the requested slots for %s',
+      async (solutionType) => {
+        // @ts-expect-error: do not care about baked-in controller initial state
+        const factory = fetchStaticStateFactory(definitionWithSlots, mockEngineOptions);
+
+        await factory(solutionType)({
+          navigatorContext: mockNavigatorContext,
+          context: mockContext,
+          recommendations: ['rec1'],
+        });
+
+        expect(refreshRec1).toHaveBeenCalledTimes(1);
+        expect(refreshRec2).not.toHaveBeenCalled();
+      }
+    );
+
+    it('should refresh no slot when none is requested', async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
+      const factory = fetchStaticStateFactory(definitionWithSlots, mockEngineOptions);
+
+      await factory(SolutionType.listing)({
+        navigatorContext: mockNavigatorContext,
+        context: mockContext,
+      });
+
+      expect(refreshRec1).not.toHaveBeenCalled();
+      expect(refreshRec2).not.toHaveBeenCalled();
+    });
+
+    it('should return the requested slots and the product ID alongside the static state', async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
+      const factory = fetchStaticStateFactory(definitionWithSlots, mockEngineOptions);
+
+      const staticState = await factory(SolutionType.standalone)({
+        navigatorContext: mockNavigatorContext,
+        context: mockContext,
+        recommendations: ['rec2'],
+        productId: 'product-123',
+      });
+
+      expect(staticState.recommendations).toEqual(['rec2']);
+      expect(staticState.productId).toBe('product-123');
+    });
+  });
+
   describe('when controllers include a ProductList controller with executeFirstRequest/executeFirstSearch', () => {
     let mockProductListController: ReturnType<typeof buildMockProductListingController>;
     let mockSearchProductListController: ReturnType<typeof buildMockSearchController>;
@@ -240,11 +313,10 @@ describe('fetchStaticStateFactory', () => {
                   solutionType === SolutionType.listing
                     ? mockProductListController
                     : mockSearchProductListController,
-              } as unknown as InferControllersMapFromDefinition<
+              } as unknown as CommerceHydratedState<
                 CommerceControllerDefinitionsMap,
                 T
-              > &
-                BakedInControllers,
+              >['controllers'],
             })
       );
     });

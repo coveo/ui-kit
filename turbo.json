@@ -169,6 +169,7 @@
       "inputs": [
         "$TURBO_DEFAULT$",
         "!**/*.test.*",
+        "!**/*.test-d.*",
         "!**/*.spec.*",
         "!**/__tests__/**",
         "!**/*.md",

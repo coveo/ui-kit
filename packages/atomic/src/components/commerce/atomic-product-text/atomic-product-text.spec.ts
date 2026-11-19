@@ -1,3 +1,5 @@
+import type {CommerceEngine} from '@coveo/headless/commerce';
+import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import type {Product} from '@coveo/headless/commerce';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
@@ -50,6 +52,7 @@ describe('atomic-product-text', () => {
       shouldHighlight?: boolean;
       default?: string;
       product?: Product | null;
+      engine?: CommerceEngine;
     } = {}
   ) => {
     const productToUse = 'product' in options ? options.product : mockProduct;
@@ -62,6 +65,9 @@ describe('atomic-product-text', () => {
       selector: 'atomic-product-text',
       product: productToUse === null ? undefined : productToUse,
       bindings: (bindings) => {
+        if (options.engine) {
+          bindings.engine = options.engine;
+        }
         bindings.interfaceElement.type = 'product-listing';
         bindings.i18n = i18n;
         bindings.store = {
@@ -505,5 +511,39 @@ describe('atomic-product-text', () => {
 
     expect(element).toBeDefined();
     expect(element?.field).toBe('ec_name');
+  });
+
+  describe('deprecation warnings', () => {
+    const deprecationWarnings = (engine: {logger: {warn: unknown}}) =>
+      vi
+        .mocked(engine.logger.warn as (message: string) => void)
+        .mock.calls.filter(([message]) => String(message).startsWith('[Deprecated]'));
+
+    it('should log one deprecation warning when should-highlight is set', async () => {
+      const engine = buildFakeCommerceEngine();
+      await renderComponent({field: 'ec_name', shouldHighlight: false, engine});
+
+      expect(deprecationWarnings(engine)).toEqual([
+        [
+          expect.stringContaining(
+            '[Deprecated] The `should-highlight` property of `atomic-product-text` is deprecated'
+          ),
+        ],
+      ]);
+    });
+
+    it('should not log a deprecation warning when should-highlight is not set', async () => {
+      const engine = buildFakeCommerceEngine();
+      await renderComponent({field: 'ec_name', engine});
+
+      expect(deprecationWarnings(engine)).toEqual([]);
+    });
+
+    it('should not log a console warning when should-highlight is set to "false"', async () => {
+      const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      await renderComponent({field: 'ec_name', shouldHighlight: false});
+
+      expect(consoleWarn).not.toHaveBeenCalledWith(expect.stringContaining('boolean attribute'));
+    });
   });
 });

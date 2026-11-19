@@ -114,3 +114,10 @@ export async function readActionInFlightConflict(
   }
   return conflict;
 }
+
+const TRANSIENT_STATUSES = new Set([429, 502, 503, 504]);
+
+/** A `429`, `502`, `503` or `504`: a request worth retrying shortly. */
+export function isTransientStatus(status: number): boolean {
+  return TRANSIENT_STATUSES.has(status);
+}

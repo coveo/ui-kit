@@ -93,6 +93,7 @@ describe('atomic-timeframe-facet', () => {
       isCollapsed: boolean;
       headingLevel: number;
       filterFacetCount: boolean;
+      disableFacetCountFiltering: boolean;
       injectionDepth: number;
       dependsOn: Record<string, string>;
       min: string;
@@ -113,6 +114,7 @@ describe('atomic-timeframe-facet', () => {
         .tabsExcluded=${props?.tabsExcluded || []}
         .dependsOn=${props?.dependsOn || {}}
         ?filter-facet-count=${props?.filterFacetCount}
+        ?disable-facet-count-filtering=${props?.disableFacetCountFiltering}
         ?is-collapsed=${props?.isCollapsed}
         ?with-date-picker=${props?.withDatePicker}
         min=${ifDefined(props?.min)}
@@ -176,6 +178,23 @@ describe('atomic-timeframe-facet', () => {
     it('should register facet in store', async () => {
       await setupElement();
       expect(mockedRegisterFacet).toHaveBeenCalled();
+    });
+
+    it('should build date facet with filterFacetCount true by default', async () => {
+      const {element} = await setupElement({withDatePicker: true});
+      expect(buildDateFacet).toHaveBeenCalledWith(element.bindings.engine, {
+        options: expect.objectContaining({filterFacetCount: true}),
+      });
+    });
+
+    it('should build date facet with filterFacetCount false when disableFacetCountFiltering is true', async () => {
+      const {element} = await setupElement({
+        withDatePicker: true,
+        disableFacetCountFiltering: true,
+      });
+      expect(buildDateFacet).toHaveBeenCalledWith(element.bindings.engine, {
+        options: expect.objectContaining({filterFacetCount: false}),
+      });
     });
 
     it('should log a warning when both tabs-included and tabs-excluded are provided', async () => {

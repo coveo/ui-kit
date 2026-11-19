@@ -92,7 +92,7 @@ describe('ConversationThread', () => {
         response: {
           agent: {
             messages: [{content: 'Here are some kayaks', role: 'assistant'}],
-            reasoningSteps: [],
+            toolCalls: [],
           },
         },
       });

@@ -1,3 +1,4 @@
+import type {SearchEngine} from '@coveo/headless';
 import {
   buildHistoryManager,
   buildQuerySummary,
@@ -33,6 +34,7 @@ describe('atomic-no-results', () => {
     searchStatusState = {},
     querySummaryState = {},
     historyState = {},
+    engine = mockedEngine,
   }: {
     props?: {
       enableCancelLastAction?: boolean;
@@ -41,6 +43,7 @@ describe('atomic-no-results', () => {
     searchStatusState?: Partial<SearchStatusState>;
     querySummaryState?: Partial<QuerySummaryState>;
     historyState?: Partial<HistoryManagerState>;
+    engine?: SearchEngine;
   } = {}) => {
     mockedSearchStatus = buildFakeSearchStatus({
       hasResults: false,
@@ -74,7 +77,7 @@ describe('atomic-no-results', () => {
       template: html`<atomic-no-results></atomic-no-results>`,
       selector: 'atomic-no-results',
       bindings: (bindings) => {
-        bindings.engine = mockedEngine;
+        bindings.engine = engine;
         bindings.store.onChange = vi.fn();
         return bindings;
       },
@@ -373,6 +376,33 @@ describe('atomic-no-results', () => {
       });
 
       expect(parts(element).cancelButton).not.toBeInTheDocument();
+    });
+  });
+
+  describe('deprecation warnings', () => {
+    const deprecationWarnings = (engine: {logger: {warn: unknown}}) =>
+      vi
+        .mocked(engine.logger.warn as (message: string) => void)
+        .mock.calls.filter(([message]) => String(message).startsWith('[Deprecated]'));
+
+    it('should log one deprecation warning when enable-cancel-last-action is set', async () => {
+      const engine = buildFakeSearchEngine();
+      await renderNoResults({engine, props: {enableCancelLastAction: false}});
+
+      expect(deprecationWarnings(engine)).toEqual([
+        [
+          expect.stringContaining(
+            '[Deprecated] The `enable-cancel-last-action` property of `atomic-no-results` is deprecated'
+          ),
+        ],
+      ]);
+    });
+
+    it('should not log a deprecation warning when enable-cancel-last-action is not set', async () => {
+      const engine = buildFakeSearchEngine();
+      await renderNoResults({engine});
+
+      expect(deprecationWarnings(engine)).toEqual([]);
     });
   });
 });

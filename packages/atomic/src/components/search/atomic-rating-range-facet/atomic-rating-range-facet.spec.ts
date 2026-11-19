@@ -51,6 +51,7 @@ describe('atomic-rating-range-facet', () => {
       isCollapsed: boolean;
       headingLevel: number;
       filterFacetCount: boolean;
+      disableFacetCountFiltering: boolean;
       injectionDepth: number;
       tabsIncluded: string[];
       tabsExcluded: string[];
@@ -74,6 +75,7 @@ describe('atomic-rating-range-facet', () => {
         ?is-collapsed=${props.isCollapsed}
         heading-level=${ifDefined(props.headingLevel)}
         filter-facet-count=${props.filterFacetCount}
+        ?disable-facet-count-filtering=${props.disableFacetCountFiltering}
         injection-depth=${ifDefined(props.injectionDepth)}
         .tabsIncluded=${props.tabsIncluded || []}
         .tabsExcluded=${props.tabsExcluded || []}
@@ -147,6 +149,24 @@ describe('atomic-rating-range-facet', () => {
       });
     });
 
+    it('should call buildNumericFacet with filterFacetCount true by default', async () => {
+      const {element} = await renderRatingRangeFacet();
+
+      expect(buildNumericFacet).toHaveBeenCalledWith(element.bindings.engine, {
+        options: expect.objectContaining({filterFacetCount: true}),
+      });
+    });
+
+    it('should call buildNumericFacet with filterFacetCount false when disableFacetCountFiltering is true', async () => {
+      const {element} = await renderRatingRangeFacet({
+        props: {disableFacetCountFiltering: true},
+      });
+
+      expect(buildNumericFacet).toHaveBeenCalledWith(element.bindings.engine, {
+        options: expect.objectContaining({filterFacetCount: false}),
+      });
+    });
+
     it('should call buildSearchStatus with engine', async () => {
       const {element} = await renderRatingRangeFacet();
       expect(buildSearchStatus).toHaveBeenCalledWith(element.bindings.engine);
@@ -161,6 +181,21 @@ describe('atomic-rating-range-facet', () => {
       await renderRatingRangeFacet();
       expect(mockedRegisterFacet).toHaveBeenCalled();
     });
+  });
+
+  it('should warn when both tabsIncluded and tabsExcluded are provided', async () => {
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    await renderRatingRangeFacet({
+      props: {
+        tabsIncluded: ['tab1'],
+        tabsExcluded: ['tab2'],
+      },
+    });
+
+    expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('tabs-included'));
+
+    consoleWarnSpy.mockRestore();
   });
 
   // TODO V4: KIT-5197 - unskip
@@ -185,21 +220,6 @@ describe('atomic-rating-range-facet', () => {
 
       expect(element.error).toBeDefined();
       expect(element.error.message).toContain('minimum value of 1 not respected');
-    });
-
-    it('should warn when both tabsIncluded and tabsExcluded are provided', async () => {
-      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-
-      await renderRatingRangeFacet({
-        props: {
-          tabsIncluded: ['tab1'],
-          tabsExcluded: ['tab2'],
-        },
-      });
-
-      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('tabs-included'));
-
-      consoleWarnSpy.mockRestore();
     });
   });
 

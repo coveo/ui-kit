@@ -9,6 +9,24 @@ test.describe('default', () => {
     await expect(search.searchBox).toBeVisible();
   });
 
+  test.describe('recommendation slots', () => {
+    test('should render the requested slots from the listing static state', async ({
+      recommendations,
+    }) => {
+      await expect(recommendations.products('popularBought').first()).toBeVisible();
+      await expect(recommendations.products('popularViewed').first()).toBeVisible();
+    });
+
+    test('should keep the slots rendered once the page is hydrated', async ({
+      sort,
+      recommendations,
+    }) => {
+      await expect(sort.sortSelect).toBeEnabled();
+      await expect(recommendations.products('popularBought').first()).toBeVisible();
+      await expect(recommendations.products('popularViewed').first()).toBeVisible();
+    });
+  });
+
   test.describe('when entering a query', () => {
     test.beforeEach(async ({search}) => {
       const searchBox = search.searchBox;

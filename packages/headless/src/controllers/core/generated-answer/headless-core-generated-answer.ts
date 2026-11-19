@@ -23,6 +23,7 @@ import type {
   GeneratedAnswerSection,
   SearchSection,
 } from '../../../state/state-sections.js';
+import {warnDeprecatedOnce} from '../../../utils/deprecation.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {buildController, type Controller} from '../../controller/headless-controller.js';
 
@@ -246,6 +247,13 @@ export function buildCoreGeneratedAnswer(
 
     // TODO: SFINT-6665
     logCitationClick(citationId: string, answerId?: string) {
+      if (answerId === undefined) {
+        warnDeprecatedOnce(
+          engine.logger,
+          'Calling `logCitationClick` without an `answerId`',
+          "Pass the clicked citation's answer ID as the second argument."
+        );
+      }
       dispatch(analyticsClient.logOpenGeneratedAnswerSource(citationId, answerId));
     },
 

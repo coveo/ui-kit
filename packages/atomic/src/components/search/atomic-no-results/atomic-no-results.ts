@@ -9,7 +9,7 @@ import {
   type SearchStatus,
   type SearchStatusState,
 } from '@coveo/headless';
-import {html, LitElement} from 'lit';
+import {html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {renderCancel} from '@/src/components/common/no-items/cancel.js';
 import {renderNoItemsContainer} from '@/src/components/common/no-items/container.js';
@@ -19,7 +19,7 @@ import {renderNoItems} from '@/src/components/common/no-items/no-items.js';
 import {renderSearchTips} from '@/src/components/common/no-items/tips.js';
 import {getSummary} from '@/src/components/common/no-items/utils.js';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {createBooleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state.js';
 import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {bindings} from '@/src/decorators/bindings.js';
@@ -27,6 +27,7 @@ import {errorGuard} from '@/src/decorators/error-guard.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils.js';
+import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils.js';
 
 /**
  * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
@@ -52,7 +53,7 @@ export class AtomicNoResults extends LitElement implements InitializableComponen
     type: Boolean,
     reflect: true,
     attribute: 'enable-cancel-last-action',
-    converter: booleanConverter,
+    converter: createBooleanConverter('hide-cancel-last-action', {silent: true}),
   })
   enableCancelLastAction = true;
 
@@ -86,6 +87,16 @@ export class AtomicNoResults extends LitElement implements InitializableComponen
   @bindStateToController('querySummary')
   @state()
   private querySummaryState!: QuerySummaryState;
+
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'enableCancelLastAction',
+      attribute: 'enable-cancel-last-action',
+      defaultValue: true,
+      instruction: 'Use `hide-cancel-last-action` instead, which defaults to `false`.',
+    },
+  ]);
+
   public querySummary!: QuerySummary;
 
   protected ariaMessage = new AriaLiveRegionController(this, 'no-results');
@@ -94,6 +105,12 @@ export class AtomicNoResults extends LitElement implements InitializableComponen
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.history = buildHistoryManager(this.bindings.engine);
     this.querySummary = buildQuerySummary(this.bindings.engine);
+  }
+
+  willUpdate(changedProperties: PropertyValues) {
+    super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.bindings?.engine?.logger);
   }
 
   @bindingGuard()

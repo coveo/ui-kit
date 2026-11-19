@@ -16,7 +16,7 @@ import {
   type SearchStatus,
   type SearchStatusState,
 } from '@coveo/headless/insight';
-import {type CSSResultGroup, html, LitElement} from 'lit';
+import {type CSSResultGroup, html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
@@ -26,7 +26,7 @@ import {renderFacetPlaceholder} from '@/src/components/common/facets/facet-place
 import {TimeframeFacetCommon} from '@/src/components/common/facets/timeframe-facet-common';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {booleanConverter, createBooleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -35,6 +35,7 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {mapProperty} from '@/src/utils/props-utils';
+import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils';
 
 /**
  * The `atomic-insight-timeframe-facet` component displays a facet of results for the current query as date intervals.
@@ -66,6 +67,22 @@ export class AtomicInsightTimeframeFacet
   extends LitElement
   implements InitializableComponent<InsightBindings>
 {
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'filterFacetCount',
+      attribute: 'filter-facet-count',
+      defaultValue: true,
+      instruction: 'Use `disable-facet-count-filtering` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
+  ]);
+
+  willUpdate(changedProperties: PropertyValues) {
+    super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.bindings?.engine?.logger);
+  }
+
   private static readonly propsSchema = new Schema({
     injectionDepth: new NumberValue({min: 0, required: false}),
     headingLevel: new NumberValue({min: 0, max: 6, required: false}),
@@ -115,14 +132,22 @@ export class AtomicInsightTimeframeFacet
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    *
    * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
+   * @deprecated - Use `disable-facet-count-filtering` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
     reflect: true,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-facet-count-filtering', {silent: true}),
     attribute: 'filter-facet-count',
   })
   filterFacetCount = true;
+
+  /**
+   * Whether to stop excluding the parents of folded results when estimating the result count for each facet value.
+   */
+  @property({type: Boolean, attribute: 'disable-facet-count-filtering', reflect: true})
+  public disableFacetCountFiltering = false;
+
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    * Note: A high injectionDepth may negatively impact the facet request performance.
@@ -256,7 +281,7 @@ export class AtomicInsightTimeframeFacet
         numberOfValues: 1,
         generateAutomaticRanges: true,
         field: this.field,
-        filterFacetCount: this.filterFacetCount,
+        filterFacetCount: this.shouldFilterFacetCount,
         injectionDepth: this.injectionDepth,
       },
     });
@@ -270,7 +295,7 @@ export class AtomicInsightTimeframeFacet
         currentValues: values,
         generateAutomaticRanges: false,
         sortCriteria: this.sortCriteria,
-        filterFacetCount: this.filterFacetCount,
+        filterFacetCount: this.shouldFilterFacetCount,
         injectionDepth: this.injectionDepth,
       },
     });
@@ -317,6 +342,10 @@ export class AtomicInsightTimeframeFacet
           },
         })
     )}`;
+  }
+
+  private get shouldFilterFacetCount() {
+    return this.filterFacetCount && !this.disableFacetCountFiltering;
   }
 }
 
