@@ -564,7 +564,9 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   // While a resume streams, the restored shell stays until the resume's first activity replaces it.
   let holdsRestoredShell = false;
   // Once replaced, a restored shell takes no action, even from a turn that still names it.
-  const replacedShellIds = new Set<string>();
+  const replacedShellIds = new Set<string>(
+    config.sessionToRestore ? shellsReplacedBefore(initialState) : []
+  );
 
   let surfaceView: SessionSurfaceView | undefined;
   let surfaceViewSource:
@@ -1617,4 +1619,30 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     serialize,
   };
   return session;
+}
+
+/**
+ * The shells an earlier resume replaced: surfaces the restored turns name, through an update or the
+ * action that opened them, that neither the restored shell nor any restored turn creates.
+ */
+function shellsReplacedBefore(restored: SessionStoreState<Turn>): Set<string> {
+  const activities = restored.turns.flatMap((turn) => turn.response.activities);
+  const named = new Set(deriveNodeIdentityRegistry(activities).keys());
+  for (const turn of restored.turns) {
+    if (turn.input.action) {
+      named.add(turn.input.action.surfaceId);
+    }
+  }
+  const live = deriveNodeIdentityRegistry(restored.initialization?.activities ?? []);
+  for (const activity of activities) {
+    const messages = activity.kind === SURFACE_ACTIVITY_KIND ? activity.payload['messages'] : [];
+    for (const message of Array.isArray(messages) ? messages : []) {
+      const surfaceId = (message as {createSurface?: {surfaceId?: unknown}}).createSurface
+        ?.surfaceId;
+      if (typeof surfaceId === 'string') {
+        named.delete(surfaceId);
+      }
+    }
+  }
+  return new Set([...named].filter((surfaceId) => !live.has(surfaceId)));
 }

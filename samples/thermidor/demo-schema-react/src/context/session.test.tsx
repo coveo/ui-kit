@@ -15,6 +15,7 @@ import {
   type ConverseHandler,
 } from '../test/session.js';
 import {
+  getClientId,
   SessionProvider,
   useConversations,
   useSession,
@@ -396,5 +397,53 @@ describe('SessionProvider conversations', () => {
     expect(reloaded.conversations().currentId).not.toBe(listed);
     expect(reloaded.session().turns).toEqual([]);
     expect(tab.list()).toEqual([]);
+  });
+});
+
+describe('SessionProvider in two tabs', () => {
+  it('does not save again a conversation another tab deleted while it answered', async () => {
+    const shared = browser();
+    const first = shared.tab();
+    const a = renderConversations(first);
+    await ask(a.session(), 'surfboards');
+    const id = a.conversations().currentId;
+    const second = shared.tab();
+    second.setCurrentId(id);
+    let release = () => {};
+    const b = renderConversations(second, (request, signal) =>
+      request.message === 'wetsuits'
+        ? new Promise<Response>((resolve) => {
+            release = () => resolve(answerShell(request, signal));
+          })
+        : answerShell(request, signal)
+    );
+    await waitFor(() => expect(b.session().getSnapshot().request).toBeUndefined());
+    void b.session().dispatchAction({name: 'submitPrompt', payload: {prompt: 'wetsuits'}});
+    await waitFor(() => expect(b.session().getSnapshot().request?.kind).toBe('prompt'));
+
+    act(() => a.conversations().remove(id));
+    await act(async () => release());
+    await waitFor(() => expect(b.session().getSnapshot().request).toBeUndefined());
+
+    expect(first.list()).toEqual([]);
+    expect(first.load(id)).toBeUndefined();
+  });
+});
+
+describe('getClientId', () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it('keeps one id for the page when the tab storage is unavailable', () => {
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new DOMException('Denied', 'SecurityError');
+    });
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new DOMException('Denied', 'SecurityError');
+    });
+
+    const id = getClientId();
+
+    expect(id).toMatch(/^[0-9a-f-]{36}$/);
+    expect(getClientId()).toBe(id);
   });
 });
