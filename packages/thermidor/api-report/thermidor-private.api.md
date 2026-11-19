@@ -169,14 +169,11 @@ export interface ParseIssue {
 }
 
 // @public
-export interface PrivateSession<TContracts extends ContractsSchema = ContractsSchema> extends Session<TContracts> {
-    readonly sessionId: string | undefined;
-}
+export type PrivateSession<TContracts extends ContractsSchema = ContractsSchema> = Session<TContracts>;
 
 // @public
 export interface PrivateSessionConfig<TContracts extends ContractsSchema = ContractsSchema> extends Omit<SessionConfig<TContracts>, 'agentConfigurationId' | 'trackingId'> {
     agentConfigurationId?: string;
-    sessionId?: string;
     trackingId?: string;
 }
 
@@ -266,6 +263,8 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
     retry(turnId: string): void;
     retryInitialization(): void;
     serialize(): SerializedSession;
+    readonly sessionId: string | undefined;
+    readonly sessionToken: string | undefined;
     readonly state: A2uiState;
     subscribe(listener: () => void): () => void;
     readonly surfaces: readonly DiscoveredSurface[];
@@ -284,6 +283,8 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
     navigatorContextProvider: NavigatorContextProvider;
     // (undocumented)
     organizationId: string;
+    sessionId?: string;
+    sessionToken?: string;
     sessionToRestore?: SerializedSession;
     trackingId: string;
 }
