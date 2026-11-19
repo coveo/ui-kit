@@ -114,6 +114,52 @@ describe('AppShell with the session shell', () => {
     await screen.findByLabelText('A2-UI surface answer-1');
   });
 
+  it('shows every block of an expired conversation disabled, in a scrollable, readable log', async () => {
+    const local = memoryStorage();
+    const tab = memoryStorage();
+    const storage = createConversationStorage({local: () => local, session: () => tab});
+    let answers = 0;
+    const test = createTestSessionFactory((request, signal) =>
+      typeof request.message === 'string'
+        ? sseResponse(answerRun(`answer-${++answers}`))
+        : answerShell(request, signal)
+    );
+    const renderTab = () =>
+      render(
+        <SessionProvider createSession={test.create} storage={storage}>
+          <AppShell />
+        </SessionProvider>
+      );
+    renderTab();
+    for (const [prompt, surfaceId] of [
+      ['kayaks', 'answer-1'],
+      ['canoes', 'answer-2'],
+    ]) {
+      const textarea = await findSearchBox();
+      fireEvent.change(textarea, {target: {value: prompt}});
+      fireEvent.keyDown(textarea, {key: 'Enter', code: 'Enter'});
+      await screen.findByLabelText(`A2-UI surface ${surfaceId}`);
+    }
+    await waitFor(() => expect(storage.load(storage.list()[0].id)?.turns).toHaveLength(2));
+    cleanup();
+    storage.expire(storage.list()[0].id);
+    const sent = test.requests.length;
+
+    renderTab();
+    await screen.findByLabelText('A2-UI surface answer-2');
+
+    expect(screen.getByRole('log').closest('[inert]')).toBeNull();
+    expect(screen.getAllByText('Results of an expired conversation.')).toHaveLength(2);
+    for (const surfaceId of ['answer-1', 'answer-2']) {
+      const chip = within(screen.getByLabelText(`A2-UI surface ${surfaceId}`)).getByRole('button', {
+        name: 'Show me kayaks',
+      });
+      expect(chip.matches(':disabled')).toBe(true);
+      fireEvent.click(chip);
+    }
+    expect(test.requests).toHaveLength(sent);
+  });
+
   it("keeps a restored conversation's earlier blocks read-only, its last one and its search box live", async () => {
     const local = memoryStorage();
     const tab = memoryStorage();

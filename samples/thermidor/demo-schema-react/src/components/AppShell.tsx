@@ -1,4 +1,12 @@
-import {useCallback, useId, useMemo, useRef, useState, useSyncExternalStore} from 'react';
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import {A2UIProvider} from '@copilotkit/a2ui-renderer';
 import {useConversations, useSession} from '../context/session.js';
 import {createThermidorCatalog} from '../a2ui/components.js';
@@ -20,7 +28,7 @@ const catalog = createThermidorCatalog({
  */
 export function AppShell() {
   const session = useSession();
-  const {currentId} = useConversations();
+  const {currentId, expired, start} = useConversations();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const drawerId = useId();
   const drawerToggleRef = useRef<HTMLButtonElement>(null);
@@ -31,7 +39,7 @@ export function AppShell() {
     }
   }, []);
 
-  const {turns, a2uiMessages, request} = useSyncExternalStore(
+  const {turns, a2uiMessages, request, initialization} = useSyncExternalStore(
     session.subscribe,
     session.getSnapshot,
     session.getSnapshot
@@ -40,12 +48,27 @@ export function AppShell() {
 
   const isStreaming = useMemo(() => turns.some((turn) => turn.status === 'streaming'), [turns]);
 
+  // A prompt from an expired conversation goes to a new one once it has opened, so that it gets
+  // the session shell, and is listed while it answers.
+  const [pendingPrompt, setPendingPrompt] = useState<string>();
+  const opened = initialization !== undefined && initialization.status !== 'streaming';
+  useEffect(() => {
+    if (pendingPrompt === undefined || expired || !opened || request) return;
+    setPendingPrompt(undefined);
+    void submitQuery(session, pendingPrompt);
+  }, [pendingPrompt, expired, opened, request, session]);
+
   const handleSubmit = useCallback(
     (prompt: string) => {
       if (!prompt.trim() || isBlocking(session.getSnapshot().request)) return;
+      if (expired) {
+        setPendingPrompt(prompt);
+        start();
+        return;
+      }
       void submitQuery(session, prompt);
     },
-    [session]
+    [session, expired, start]
   );
 
   return (
@@ -76,6 +99,7 @@ export function AppShell() {
                     onSubmit={handleSubmit}
                     isStreaming={isStreaming}
                     promptDisabled={locked}
+                    expired={expired}
                     turns={[...turns]}
                   />
                 )}

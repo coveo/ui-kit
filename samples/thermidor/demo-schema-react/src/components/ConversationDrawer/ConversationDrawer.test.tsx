@@ -30,15 +30,16 @@ function renderApp(handler?: ConverseHandler) {
     session = useSession();
     return null;
   }
+  const {create, requests} = createTestSessionFactory(handler);
   render(
     <CartProvider store={createFakeCartStore()}>
-      <SessionProvider createSession={createTestSessionFactory(handler).create} storage={storage}>
+      <SessionProvider createSession={create} storage={storage}>
         <Probe />
         <AppShell />
       </SessionProvider>
     </CartProvider>
   );
-  return {storage, session: () => session!};
+  return {storage, requests, session: () => session!};
 }
 
 async function ask({session}: ReturnType<typeof renderApp>, prompt: string) {
@@ -109,6 +110,51 @@ describe('ConversationDrawer', () => {
     fireEvent.click(menuItem('wetsuits', 'Delete'));
     expect(entries().map((entry) => entry.textContent)).toEqual(['surfboards']);
     expect(document.activeElement).toBe(entries()[0]);
+  });
+
+  it('opens an expired conversation read-only, without a request, until a prompt starts a new one', async () => {
+    let finish = () => {};
+    const app = renderApp((request, signal) =>
+      request.message === 'boots'
+        ? new Promise((resolve) => (finish = () => resolve(sseResponse(run([])))))
+        : answerShell(request, signal)
+    );
+    await ask(app, 'surfboards');
+    const [expired] = app.storage.list();
+    fireEvent.click(toggle());
+    fireEvent.click(within(drawer()).getByRole('button', {name: 'New conversation'}));
+    app.storage.expire(expired.id);
+    await ask(app, 'wetsuits');
+
+    expect(entries().map((entry) => entry.textContent)).toEqual(['wetsuits', 'surfboardsExpired']);
+    const sent = app.requests.length;
+    fireEvent.click(entries()[1]);
+    await act(() => Promise.resolve());
+
+    expect(app.requests).toHaveLength(sent);
+    expect(screen.getByRole('status').textContent).toContain('This conversation expired');
+    expect(within(screen.getByRole('log')).getByRole('group').matches(':disabled')).toBe(true);
+
+    const prompt = screen.getByLabelText('Prompt');
+    fireEvent.change(prompt, {target: {value: 'boots'}});
+    fireEvent.keyDown(prompt, {key: 'Enter', code: 'Enter'});
+
+    await waitFor(() =>
+      expect(entries().map((entry) => entry.textContent)).toEqual([
+        'boots',
+        'wetsuits',
+        'surfboardsExpired',
+      ])
+    );
+    expect(app.requests.slice(sent).map(({message, action}) => message ?? action?.name)).toEqual([
+      'initialize',
+      'boots',
+    ]);
+    expect(app.session().turns.map(({input}) => input.prompt)).toEqual(['boots']);
+    expect(screen.queryByText(/This conversation expired/)).toBeNull();
+
+    await act(async () => finish());
+    expect((await findSearchBox()).disabled).toBe(false);
   });
 
   it('starts a new conversation when the current one is deleted, focusing "New conversation"', async () => {
