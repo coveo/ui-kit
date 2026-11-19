@@ -1,5 +1,5 @@
 import {HttpResponse} from 'msw';
-import {buildStreamingResponse} from './events.js';
+import {RunError, buildStreamingResponse} from './events.js';
 import {schemaBundleEvents} from './templates/schema-response-bundle.js';
 import {schemaDiscoveryEvents} from './templates/schema-response-discovery.js';
 import {schemaFallbackEvents} from './templates/schema-response-fallback.js';
@@ -231,6 +231,34 @@ const actionNotApplicableResponse = () =>
     {status: 400}
   );
 
+// A facet search for one of these words fails, so the demo can show a failed action: `fail` ends
+// the action's stream with Agent Gateway's RUN_ERROR, as when the Commerce API fails, and `reject`
+// rejects the request before the stream starts.
+const FAILING_FACET_SEARCHES = {
+  fail: () =>
+    buildStreamingResponse(
+      [
+        RunError({
+          message:
+            'An unexpected error occurred. Contact Coveo support. Documentation URL: https://docs.coveo.com/en/errors/agent/internal_error',
+          code: 'AGENT:INTERNAL_ERROR',
+        }),
+      ],
+      {delayBetweenMessages: ACTION_DELAY_MS}
+    ),
+  reject: actionNotApplicableResponse,
+};
+
+function failingFacetSearch(action: SchemaAction) {
+  if (action.name !== 'search') {
+    return undefined;
+  }
+  const query = queryOf(action).trim().toLowerCase();
+  return Object.hasOwn(FAILING_FACET_SEARCHES, query)
+    ? FAILING_FACET_SEARCHES[query as keyof typeof FAILING_FACET_SEARCHES]
+    : undefined;
+}
+
 const MAX_RECENT_QUERIES = 10;
 
 // The session's recent queries (Thermidor ADR-024), newest first, by session id.
@@ -401,6 +429,10 @@ function buildSchemaActionResponse(action: SchemaAction, session: SessionKeys) {
       ),
       {delayBetweenMessages: SUGGESTIONS_DELAY_MS}
     );
+  }
+  const failure = failingFacetSearch(action);
+  if (failure) {
+    return failure();
   }
   const sortRejection = sortActionRejection(action);
   if (sortRejection) {
