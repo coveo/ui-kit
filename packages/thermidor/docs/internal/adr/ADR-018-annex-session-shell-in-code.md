@@ -55,6 +55,11 @@ const messages = useSyncExternalStore(subscribe, () => session.a2uiMessages);
 <ThermidorA2UIStream messages={messages} onAction={session.dispatchAction} />;
 ```
 
+Since [ADR-021](./ADR-021-a2ui-1-0-renderer-stream.md), the stream carries A2-UI v1.0 messages for
+`@a2ui/react`, which takes the action handler on its message processor rather than as a prop:
+`new MessageProcessor(catalogs, session.dispatchAction)`, fed each new message of
+`session.a2uiMessages` once.
+
 A turn still says which surfaces it created, so the transcript knows where to draw them:
 
 ```tsx
