@@ -47,22 +47,10 @@ export function ConversationPage({
         aria-label="Conversation history"
       >
         <div className={styles.scrollContent}>
-          {expired ? (
-            // Every control stays readable but disabled, links included, so nothing reaches the
-            // expired session, while the log still scrolls.
-            <fieldset
-              className={styles.archived}
-              disabled
-              onClickCapture={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-              }}
-            >
-              <ConversationThread turns={turns} turnRefs={turnRefs} readOnly />
-            </fieldset>
-          ) : (
-            <ConversationThread turns={turns} turnRefs={turnRefs} />
-          )}
+          {/* Always rendered, so the turns stay mounted when the conversation turns out expired. */}
+          <fieldset className={styles.thread} disabled={expired}>
+            <ConversationThread turns={turns} turnRefs={turnRefs} readOnly={expired} />
+          </fieldset>
         </div>
       </div>
       {expired && (

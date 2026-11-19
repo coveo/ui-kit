@@ -93,7 +93,7 @@ interface TurnSurfacesProps {
  * component type, in the place its content will take. Surfaces never scroll the page: the
  * conversation keeps the turn they belong to in view.
  */
-export function TurnSurfaces({surfaces, latest, isStreaming, expired}: TurnSurfacesProps) {
+export function TurnSurfaces({surfaces, latest, isStreaming, expired = false}: TurnSurfacesProps) {
   const restored = surfaces.some((surface) => surface.readOnly);
   const interactive = latest && !restored;
   const surfaceIds = useMemo(() => surfaces.map((surface) => surface.surfaceId), [surfaces]);
@@ -151,7 +151,7 @@ export function TurnSurfaces({surfaces, latest, isStreaming, expired}: TurnSurfa
         </legend>
       )}
       <EarlierTurnContext.Provider value={!interactive}>
-        <RestoredSurfacesContext.Provider value={restored}>
+        <RestoredSurfacesContext.Provider value={restored || expired}>
           {surfaces.map(({surfaceId, rootComponentType, isLoading}) => {
             return (
               <section

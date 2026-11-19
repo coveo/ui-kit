@@ -16,16 +16,11 @@
   margin: 0 auto;
 }
 
-.archived {
+.thread {
   min-inline-size: 0;
   margin: 0;
   padding: 0;
   border: 0;
-}
-
-.archived a {
-  opacity: 0.55;
-  pointer-events: none;
 }
 
 .expired {
