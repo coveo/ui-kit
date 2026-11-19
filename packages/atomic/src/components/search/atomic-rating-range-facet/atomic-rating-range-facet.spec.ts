@@ -163,6 +163,21 @@ describe('atomic-rating-range-facet', () => {
     });
   });
 
+  it('should warn when both tabsIncluded and tabsExcluded are provided', async () => {
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    await renderRatingRangeFacet({
+      props: {
+        tabsIncluded: ['tab1'],
+        tabsExcluded: ['tab2'],
+      },
+    });
+
+    expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('tabs-included'));
+
+    consoleWarnSpy.mockRestore();
+  });
+
   // TODO V4: KIT-5197 - unskip
   describe.skip('props validation', () => {
     it('should set error when field prop is missing', async () => {
@@ -185,21 +200,6 @@ describe('atomic-rating-range-facet', () => {
 
       expect(element.error).toBeDefined();
       expect(element.error.message).toContain('minimum value of 1 not respected');
-    });
-
-    it('should warn when both tabsIncluded and tabsExcluded are provided', async () => {
-      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-
-      await renderRatingRangeFacet({
-        props: {
-          tabsIncluded: ['tab1'],
-          tabsExcluded: ['tab2'],
-        },
-      });
-
-      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('tabs-included'));
-
-      consoleWarnSpy.mockRestore();
     });
   });
 

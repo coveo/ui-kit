@@ -5,6 +5,16 @@ const test = testInsight;
 
 test.describe('Example Insight Panel E2E Tests', () => {
   test.describe('when loading the Insight Panel', () => {
+    // The one Insight test that fetches the real interface config, once per run.
+    test.use({liveInsightConfig: true});
+    // Skipping in beforeEach, before the insightPanel fixture loads the page, avoids the live call.
+    test.beforeEach(({}, testInfo) => {
+      test.skip(
+        testInfo.project.name !== 'LWS-enabled',
+        'The live Insight interface config happy path only runs in the LWS-enabled project.'
+      );
+    });
+
     test('should render correctly and load results automatically', async ({
       insightPanel,
       consoleErrors,
