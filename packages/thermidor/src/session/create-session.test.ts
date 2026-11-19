@@ -83,9 +83,21 @@ const NextActionsBarSchema = z.strictObject({
     .optional(),
 });
 
+const ProductListSchema = z.strictObject({
+  component: z.literal('ProductList'),
+  actions: z
+    .strictObject({
+      productClick: z.strictObject({
+        payload: z.strictObject({productId: z.string(), position: z.number().int().min(1)}),
+      }),
+    })
+    .optional(),
+});
+
 const contracts = z.discriminatedUnion('component', [
   PaginationSchema,
   NextActionsBarSchema,
+  ProductListSchema,
 ]) as unknown as ContractsSchema;
 
 /**
@@ -2323,6 +2335,7 @@ describe('createSession lifecycle', () => {
                 components: [
                   {id: 'root', component: 'CommerceSearch'},
                   {id: 'answer-pagination', component: 'Pagination'},
+                  {id: 'answer-products', component: 'ProductList'},
                 ],
               },
             },
@@ -2579,7 +2592,28 @@ describe('createSession lifecycle', () => {
         expect(session.serialize().state).toBeUndefined();
       });
 
-      it('never sends initialize with initialize: false, and refuses the actions of restored turns', async () => {
+      it('acts on the new shell when initialize answers with another session that reuses the shell id', async () => {
+        const {session} = await resumed(
+          await serializedConversation(),
+          {conversationSessionId: 'other-session', conversationToken: 'other-token'},
+          shellSurface
+        );
+        callMock.mockReset();
+
+        const stream = queueStream();
+        const sent = session.dispatchAction(shellSelectPage(2));
+        await stream.opened;
+        stream.emit({type: 'RUN_FINISHED'});
+        stream.close();
+        await sent;
+
+        expect(callMock.mock.calls[0][0]).toMatchObject({
+          action: {name: 'selectPage', surfaceId: SHELL_ID},
+          conversationSessionId: 'other-session',
+        });
+      });
+
+      it('never sends initialize with initialize: false, and refuses the actions of restored turns but their product clicks', async () => {
         const restored = createSession({
           ...baseConfig,
           sessionToRestore: await serializedConversation(),
@@ -2594,6 +2628,47 @@ describe('createSession lifecycle', () => {
           true,
           undefined,
         ]);
+
+        const stream = queueStream();
+        const clicked = restored.dispatchAction({
+          userAction: {
+            name: 'productClick',
+            surfaceId: ANSWER_ID,
+            sourceComponentId: 'answer-products',
+            context: {productId: 'wetsuit-1', position: 1},
+          },
+        });
+        await stream.opened;
+        stream.emit({type: 'RUN_FINISHED'});
+        stream.close();
+        await clicked;
+
+        expect(callMock).toHaveBeenCalledTimes(1);
+        expect(callMock.mock.calls[0][0]).toMatchObject({
+          action: {name: 'productClick', surfaceId: ANSWER_ID},
+        });
+      });
+
+      it('keeps live the last restored turn that created a surface, past a text-only answer', async () => {
+        const session = await initializedSession();
+        await completePrompt(session, 'wetsuits', [answerSurface]);
+        await completePrompt(session, 'which one is warmest?');
+        callMock.mockReset();
+        const restored = createSession({...baseConfig, sessionToRestore: session.serialize()});
+
+        expect(restored.surfaces.map((surface) => surface.readOnly)).toEqual([
+          undefined,
+          undefined,
+        ]);
+        const stream = queueStream();
+        const sent = restored.dispatchAction(answerSelectPage);
+        await stream.opened;
+        stream.emit({type: 'RUN_FINISHED'});
+        stream.close();
+        await sent;
+        expect(callMock.mock.calls[0][0]).toMatchObject({
+          action: {name: 'selectPage', surfaceId: ANSWER_ID},
+        });
       });
 
       it('retries a failed last restored turn, but not an earlier one opened from a read-only surface', async () => {

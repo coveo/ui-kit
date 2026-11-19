@@ -237,11 +237,12 @@ shell and its search box stayed disabled. The Agent Gateway now resumes a sessio
   is dropped and a `deleteSurface` for it reaches `a2uiMessages`.
 - **Earlier restored turns are read-only.** The transcript is redrawn from the serialized
   activities, but the earlier turns' surfaces are snapshots of an earlier page. A surface whose
-  latest `createSurface` came from a restored turn other than the last is listed with
-  `readOnly: true`, and `dispatchAction` and `retry` refuse its actions without a request. The last
-  restored turn's surfaces stay live, whatever kind of turn it is and however it ended, because the
-  gateway keeps the session's latest search state, so the shopper keeps paginating or faceting from
-  the last results. The restored initialization's surfaces stay live too: without a resume, they
+  latest `createSurface` came from a restored turn before the last one that created a surface is
+  listed with `readOnly: true`, and `dispatchAction` and `retry` refuse its actions without a
+  request, except `productClick`: the gateway still counts a click on an evicted surface. The
+  surfaces of the last restored turn that created any stay live, whatever kind of turn it is and
+  however it ended, because the gateway keeps the session's latest search state and a text-only
+  answer replaces nothing, so the shopper keeps paginating or faceting from the last results. The restored initialization's surfaces stay live too: without a resume, they
   are still the session's shell.
 - **Fallback.** When the resuming `initialize` answers with another `conversationSessionId`, the
   session adopts the new keys and drops the restored turns and shell, their state and
