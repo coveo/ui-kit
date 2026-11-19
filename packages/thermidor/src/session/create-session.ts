@@ -931,6 +931,10 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
       stream,
       signal: abortController.signal,
       onEvent: (rawEvent: RawSSEEvent) => {
+        // A read that resolved before the abort can still deliver the rest of its chunk.
+        if (abortController.signal.aborted) {
+          return;
+        }
         const event = parseSSEEvent(rawEvent);
 
         const keys = readSessionKeys(event);

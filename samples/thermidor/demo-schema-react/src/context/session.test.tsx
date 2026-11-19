@@ -4,6 +4,7 @@ import type {Cart, CartLine} from '../cart/cart-api.js';
 import {CartProvider} from '../cart/CartProvider.js';
 import {createCartStore, EMPTY_CART, type CartClient} from '../cart/cart-store.js';
 import {createConversationStorage} from '../conversations/conversation-storage.js';
+import {submitQuery} from '../a2ui/session-request.js';
 import {memoryStorage} from '../test/memory-storage.js';
 import {
   answerShell,
@@ -320,9 +321,9 @@ describe('SessionProvider conversations', () => {
     expect(tab.list()).toEqual([]);
   });
 
-  it('saves the turn a swap stops, unless its conversation was deleted', async () => {
+  it('saves the turn a swap stops, unless its conversation was deleted, and drops a prompt waiting on it', async () => {
     const tab = browser().tab();
-    const {session, conversations} = renderConversations(tab, (request, signal) =>
+    const {session, conversations, requests} = renderConversations(tab, (request, signal) =>
       request.message === 'wetsuits'
         ? new Promise<Response>((_resolve, reject) =>
             signal?.addEventListener('abort', () =>
@@ -337,6 +338,7 @@ describe('SessionProvider conversations', () => {
       const stopped = session();
       void stopped.dispatchAction({name: 'submitPrompt', payload: {prompt: 'wetsuits'}});
       await waitFor(() => expect(stopped.getSnapshot().request?.kind).toBe('prompt'));
+      void submitQuery(stopped, 'kayaks');
       act(() => swap(id));
       await waitFor(() => expect(stopped.getSnapshot().request).toBeUndefined());
       return id;
@@ -344,6 +346,9 @@ describe('SessionProvider conversations', () => {
 
     const swapped = await stop(() => conversations().start());
     const deleted = await stop((id) => conversations().remove(id));
+    await act(() => new Promise((resolve) => setTimeout(resolve, 20)));
+
+    expect(requests.map(({message}) => message)).not.toContain('kayaks');
 
     expect(tab.load(swapped)?.turns.map(({input}) => input.prompt)).toEqual([
       'surfboards',
