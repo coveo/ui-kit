@@ -182,11 +182,12 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
    * the store is seeded from the serialized session, reproducing the persisted
    * transcript and continuity keys (`sessionId`/`sessionToken`/`activeTurnId`)
    * so the restored session continues the same backend conversation. The surfaces its earlier
-   * turns created are {@link DiscoveredSurface.readOnly | read-only}; the last turn's stay live,
-   * and so does its retry. When it has a token, its `initialize` resumes the session: the restored
-   * shell stays until the endpoint answers with a new, live shell under a new id. If the endpoint
-   * answers with another session instead, the restored turns are dropped, and `a2uiMessages`
-   * deletes their surfaces.
+   * turns created are {@link DiscoveredSurface.readOnly | read-only}; those of the last turn that
+   * created one stay live, and so does the last turn's retry. When it has a token, its `initialize`
+   * resumes the session: the restored shell stays until the endpoint answers with a new, live shell
+   * under a new id. A failed turn opened from the restored shell can't be retried once that shell is
+   * replaced. If the endpoint answers with another session instead, the restored turns are dropped,
+   * and `a2uiMessages` deletes their surfaces.
    */
   sessionToRestore?: SerializedSession;
   /**
@@ -554,12 +555,11 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
       };
 
   const store: SessionStore<Turn> = createSessionStore<Turn>(initialState);
-  // The restored shell and the last restored turn stay live: the gateway keeps their state.
-  const restoredActivities: ReadonlySet<Activity> = new Set(
-    config.sessionToRestore
-      ? initialState.turns.slice(0, -1).flatMap((turn) => turn.response.activities)
-      : []
-  );
+  // The restored shell and the last restored turn that created a surface stay live: the gateway
+  // keeps their state.
+  const restoredActivities: ReadonlySet<Activity> = config.sessionToRestore
+    ? readOnlyRestoredActivities(initialState.turns)
+    : new Set();
   const lastRestoredTurnId = config.sessionToRestore ? initialState.turns.at(-1)?.id : undefined;
 
   // While a resume streams, the restored shell stays until the resume's first activity replaces it.
@@ -745,6 +745,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   function withoutTranscript(stored: SessionStoreState<Turn>): SessionStoreState<Turn> {
     const current = withoutRestoredShell(stored);
     const kept = deriveNodeIdentityRegistry(current.initialization?.activities ?? []);
+    replacedShellIds.clear();
     return {
       ...withoutSurfaces(current, (surfaceId) => !kept.has(surfaceId)),
       turns: [],
@@ -1423,7 +1424,10 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
       );
       return withhold();
     }
-    if (isReadOnly(surfaceId, 'dispatchAction') || isReplacedShell(surfaceId, 'dispatchAction')) {
+    if (
+      (name !== PRODUCT_CLICK && isReadOnly(surfaceId, 'dispatchAction')) ||
+      isReplacedShell(surfaceId, 'dispatchAction')
+    ) {
       return withhold();
     }
 
@@ -1622,6 +1626,9 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   return session;
 }
 
+/** The gateway still counts a click on a product of a read-only surface. */
+const PRODUCT_CLICK = 'productClick';
+
 /**
  * The shells an earlier resume replaced: surfaces the restored turns name, through an update or the
  * action that opened them, that neither the restored shell nor any restored turn creates.
@@ -1635,15 +1642,30 @@ function shellsReplacedBefore(restored: SessionStoreState<Turn>): Set<string> {
     }
   }
   const live = deriveNodeIdentityRegistry(restored.initialization?.activities ?? []);
-  for (const activity of activities) {
-    const messages = activity.kind === SURFACE_ACTIVITY_KIND ? activity.payload['messages'] : [];
-    for (const message of Array.isArray(messages) ? messages : []) {
-      const surfaceId = (message as {createSurface?: {surfaceId?: unknown}} | null)?.createSurface
-        ?.surfaceId;
-      if (typeof surfaceId === 'string') {
-        named.delete(surfaceId);
-      }
-    }
+  for (const surfaceId of createdSurfaceIds(activities)) {
+    named.delete(surfaceId);
   }
   return new Set([...named].filter((surfaceId) => !live.has(surfaceId)));
+}
+
+function createdSurfaceIds(activities: readonly Activity[]): string[] {
+  return activities.flatMap((activity) => {
+    const messages = activity.kind === SURFACE_ACTIVITY_KIND ? activity.payload['messages'] : [];
+    return (Array.isArray(messages) ? messages : []).flatMap((message) => {
+      const surfaceId = (message as {createSurface?: {surfaceId?: unknown}} | null)?.createSurface
+        ?.surfaceId;
+      return typeof surfaceId === 'string' ? [surfaceId] : [];
+    });
+  });
+}
+
+/**
+ * The activities of the restored turns before the last one that created a surface: the gateway
+ * keeps that turn's surfaces, and a text-only answer after it replaces nothing.
+ */
+function readOnlyRestoredActivities(turns: readonly Turn[]): Set<Activity> {
+  const live = turns.findLastIndex(
+    (turn) => createdSurfaceIds(turn.response.activities).length > 0
+  );
+  return new Set(turns.slice(0, Math.max(live, 0)).flatMap((turn) => turn.response.activities));
 }
