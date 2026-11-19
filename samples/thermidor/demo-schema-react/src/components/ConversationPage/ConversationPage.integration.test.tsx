@@ -50,7 +50,7 @@ describe('ConversationPage integration', () => {
           response: {
             agent: {
               messages: [{content: 'Here are some running shoes.', role: 'assistant'}],
-              reasoningSteps: [{type: 'reasoning', content: 'Looking up running shoes'}],
+              toolCalls: [{id: 'tc-1', name: 'product_search', args: '{}', status: 'completed'}],
             },
           },
         }),
@@ -88,7 +88,7 @@ describe('ConversationPage integration', () => {
             surfaces: makeSurfaces('agent-answer-1', 'ui-search-1'),
             agent: {
               messages: [{content: 'Here are a few directions.', role: 'assistant'}],
-              reasoningSteps: [],
+              toolCalls: [],
             },
           },
         }),
@@ -130,7 +130,7 @@ describe('ConversationPage integration', () => {
             surfaces: makeSurfaces('agent-a-1'),
             agent: {
               messages: [{content: 'Here is the safety gear.', role: 'assistant'}],
-              reasoningSteps: [],
+              toolCalls: [],
             },
           },
         }),
@@ -141,7 +141,7 @@ describe('ConversationPage integration', () => {
             surfaces: makeSurfaces('agent-b-2'),
             agent: {
               messages: [{content: 'Here are more Mustang Survival jackets.', role: 'assistant'}],
-              reasoningSteps: [],
+              toolCalls: [],
             },
           },
         }),
@@ -161,7 +161,7 @@ describe('ConversationPage integration', () => {
       expect(container.querySelectorAll('hr')).toHaveLength(0);
     });
 
-    it('shows the reasoning indicator while a follow-up streams', () => {
+    it('shows the thinking indicator while a follow-up streams', () => {
       const turns: Turn[] = [
         makeTurn({
           id: 'turn-1',
@@ -169,7 +169,7 @@ describe('ConversationPage integration', () => {
           response: {
             agent: {
               messages: [{content: 'Here is the safety gear.', role: 'assistant'}],
-              reasoningSteps: [],
+              toolCalls: [],
             },
           },
         }),
@@ -178,7 +178,7 @@ describe('ConversationPage integration', () => {
 
       renderPage({turns, isStreaming: true});
 
-      expect(screen.getByText('Working')).toBeDefined();
+      expect(screen.getByText('Thinking')).toBeDefined();
     });
 
     it('renders separators between turns but not after the last turn', () => {
@@ -187,14 +187,14 @@ describe('ConversationPage integration', () => {
           id: 'turn-1',
           prompt: 'First question',
           response: {
-            agent: {messages: [{content: 'First answer', role: 'assistant'}], reasoningSteps: []},
+            agent: {messages: [{content: 'First answer', role: 'assistant'}], toolCalls: []},
           },
         }),
         makeTurn({
           id: 'turn-2',
           prompt: 'Second question',
           response: {
-            agent: {messages: [{content: 'Second answer', role: 'assistant'}], reasoningSteps: []},
+            agent: {messages: [{content: 'Second answer', role: 'assistant'}], toolCalls: []},
           },
         }),
       ];
@@ -217,10 +217,10 @@ describe('ConversationPage integration', () => {
       fireEvent.change(await findSearchBox(), {target: {value: 'And boots?'}});
       expect((screen.getByLabelText('Submit') as HTMLButtonElement).disabled).toBe(true);
 
-      expect(screen.getByText(/Working/)).toBeDefined();
+      expect(screen.getByText(/Thinking/)).toBeDefined();
     });
 
-    it('shows thinking block with reasoning steps during streaming', () => {
+    it('shows the active tool call during streaming', () => {
       const turns: Turn[] = [
         makeTurn({
           id: 'turn-1',
@@ -229,10 +229,8 @@ describe('ConversationPage integration', () => {
           response: {
             agent: {
               messages: [],
-              reasoningSteps: [
-                {type: 'reasoning', content: 'Analyzing products...'},
+              toolCalls: [
                 {
-                  type: 'tool-call',
                   id: 'tc-1',
                   name: 'product_search',
                   args: '{"query":"shoes"}',

@@ -34,6 +34,7 @@ import type {
   SessionSnapshot,
   SubmitPromptAction,
   Turn,
+  TurnErrorReason,
   TurnAction,
   TurnResponse,
 } from '@/src/index.js';
@@ -192,11 +193,20 @@ test('exposes Session.actionError as the failed action, or undefined', () => {
   expectTypeOf<Session['actionError']>().toEqualTypeOf<ActionError | undefined>();
   expectTypeOf<ActionError>().toEqualTypeOf<{
     message: string;
+    errorCode?: string;
     component: string;
     name: string;
     surfaceId: string;
     sourceComponentId: string;
   }>();
+});
+
+test('exposes why a turn or the initialization errored', () => {
+  expectTypeOf<TurnErrorReason>().toEqualTypeOf<'cancelled' | 'failed'>();
+  expectTypeOf<Turn['reason']>().toEqualTypeOf<TurnErrorReason | undefined>();
+  expectTypeOf<Turn['errorCode']>().toEqualTypeOf<string | undefined>();
+  expectTypeOf<SessionInitialization['reason']>().toEqualTypeOf<TurnErrorReason | undefined>();
+  expectTypeOf<SessionInitialization['errorCode']>().toEqualTypeOf<string | undefined>();
 });
 
 // ── NEGATIVE: `submitPrompt` replaced `Session.submit` ──────────────────────

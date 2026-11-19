@@ -1,5 +1,6 @@
+import {toSerializableNavigatorContext} from '../../common/serializable-navigator-context.js';
 import {createStaticState} from '../controller-utils.js';
-import type {SearchCompletedAction} from '../types/build.js';
+import type {BuildParameters} from '../types/build.js';
 import type {AugmentedControllerDefinition} from '../types/controller-definition.js';
 import type {
   FetchStaticStateFunction,
@@ -21,14 +22,18 @@ export function fetchStaticStateFactory<
     engine.executeFirstSearch();
     const searchActions = [await engine.waitForSearchCompletedAction()];
 
-    const staticState = createStaticState<SearchCompletedAction, TControllerDefinitions>({
+    const staticState = createStaticState<TControllerDefinitions>({
       searchActions,
       controllers,
     });
 
+    const {controllers: controllerProps, ...restParams}: BuildParameters & typeof params = params;
+
     return {
-      ...params,
+      ...restParams,
       ...staticState,
+      navigatorContext: toSerializableNavigatorContext(params.navigatorContext),
+      ...(controllerProps && {controllerProps}),
     };
   };
 }

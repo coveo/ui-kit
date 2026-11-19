@@ -1,11 +1,11 @@
 /**
  * Utility functions to be used for Server Side Rendering.
  */
+import {validateReservedControllerNames} from '../../common/validation/controller-validation.js';
 import {defineSearchParameterManager} from '../controllers/search-parameter-manager/headless-search-parameter-manager.ssr.js';
 import {hydratedStaticStateFactory} from '../factories/hydrated-state-factory.js';
 import {fetchStandaloneStaticStateFactory} from '../factories/standalone-static-state-factory.js';
 import {fetchStaticStateFactory} from '../factories/static-state-factory.js';
-import type {SSRSearchEngine} from '../types/build.js';
 import type {AugmentedControllerDefinition} from '../types/controller-definition.js';
 import type {
   SearchControllerDefinitionsMap,
@@ -40,8 +40,8 @@ import type {
  *   navigatorContext: {/*...* /},
  * });
  *
- * type SearchStaticState = InferStaticState<typeof searchEngineDefinition>;
- * type SearchHydratedState = InferHydratedState<typeof searchEngineDefinition>;
+ * type StaticState = InferStaticState<typeof searchEngineDefinition>;
+ * type HydratedState = InferHydratedState<typeof searchEngineDefinition>;
  * ```
  *
  * @group Engine
@@ -51,12 +51,15 @@ export function defineSearchEngine<
 >(
   options: SearchEngineDefinitionOptions<TControllerDefinitions>
 ): {
-  searchEngineDefinition: SearchEngineDefinition<SSRSearchEngine, TControllerDefinitions>;
-  standaloneEngineDefinition: SearchEngineDefinition<SSRSearchEngine, TControllerDefinitions>;
+  searchEngineDefinition: SearchEngineDefinition<TControllerDefinitions>;
+  standaloneEngineDefinition: SearchEngineDefinition<TControllerDefinitions>;
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
 
   const definitionOptions = {...engineOptions};
+
+  controllerDefinitions &&
+    validateReservedControllerNames(controllerDefinitions, ['parameterManager']);
 
   const augmentedControllerDefinition = {
     ...controllerDefinitions,

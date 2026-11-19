@@ -17,6 +17,7 @@ describe('atomic-html', () => {
       html`<atomic-html
         .value=${props.value ?? '<p>Test content</p>'}
         .sanitize=${props.sanitize ?? true}
+        ?disable-sanitization=${props.disableSanitization}
       ></atomic-html>`
     );
 
@@ -67,6 +68,27 @@ describe('atomic-html', () => {
 
     expect(DOMPurify.sanitize).not.toHaveBeenCalled();
     expect(locators.span?.innerHTML).toBe(testContent);
+  });
+
+  it('should not sanitize content when disableSanitization is true', async () => {
+    const testContent = '<p>Unsafe content</p>';
+    const {locators} = await renderComponent({
+      value: testContent,
+      disableSanitization: true,
+    });
+
+    expect(DOMPurify.sanitize).not.toHaveBeenCalled();
+    expect(locators.span?.innerHTML).toBe(testContent);
+  });
+
+  it('should still sanitize content when the sanitize attribute is set to "false"', async () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const testContent = '<p>Unsafe content</p>';
+    await fixture<AtomicHtml>(
+      html`<atomic-html .value=${testContent} sanitize="false"></atomic-html>`
+    );
+
+    expect(DOMPurify.sanitize).toHaveBeenCalledWith(testContent);
   });
 
   it('should not set error when value is provided', async () => {

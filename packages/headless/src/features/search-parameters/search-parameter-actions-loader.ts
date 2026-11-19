@@ -5,6 +5,7 @@ import {facetSetReducer as facetSet} from '../facets/facet-set/facet-set-slice.j
 import {paginationReducer as pagination} from '../pagination/pagination-slice.js';
 import {queryReducer as query} from '../query/query-slice.js';
 import {querySetReducer as querySet} from '../query-set/query-set-slice.js';
+import {withDeprecationWarning} from '../../utils/deprecation.js';
 import {
   restoreSearchParameters,
   restoreTab,
@@ -33,7 +34,7 @@ export interface SearchParameterActionCreators {
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
-   * @deprecated This action will be removed in V4. Use alternative tab management methods instead.
+   * @deprecated This action will be removed in V4. Use `loadTabSetActions(engine).updateActiveTab` instead. It also resets pagination and deselects the facets hidden on that tab, so dispatch it before restoring them.
    */
   restoreTab(payload: string): PayloadAction<string>;
 }
@@ -58,6 +59,12 @@ export function loadSearchParameterActions(engine: CoreEngine): SearchParameterA
 
   return {
     restoreSearchParameters,
-    restoreTab,
+    restoreTab: withDeprecationWarning(
+      engine.logger,
+      restoreTab,
+      '`restoreTab`',
+
+      'Use `loadTabSetActions(engine).updateActiveTab` instead. It also resets pagination and deselects the facets hidden on that tab, so dispatch it before restoring them.'
+    ),
   };
 }

@@ -8,5 +8,10 @@ export default defineConfig({
     // ...
     globals: true,
     include: ['**/*.test.?(c|m)[jt]s?(x)'],
+    typecheck: {
+      enabled: true,
+      include: ['src/**/*.test-d.ts'],
+      tsconfig: './tsconfig.typecheck.json',
+    },
   },
 });

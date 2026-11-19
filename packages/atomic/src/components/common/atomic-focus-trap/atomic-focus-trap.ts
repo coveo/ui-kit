@@ -1,6 +1,6 @@
 import {LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {booleanConverter, createBooleanConverter} from '@/src/converters/boolean-converter';
 import {watch} from '@/src/decorators/watch';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import {getFirstFocusableDescendant} from '@/src/utils/accessibility-utils';
@@ -32,13 +32,20 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
 
   /**
    * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
+   * @deprecated - Use `disable-hide-self` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
     attribute: 'should-hide-self',
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-hide-self'),
   })
   shouldHideSelf = true;
+
+  /**
+   * Whether to keep the element visible to screen readers and reachable with the Tab key when the focus trap is inactive.
+   */
+  @property({type: Boolean, attribute: 'disable-hide-self', reflect: true})
+  public disableHideSelf = false;
 
   /**
    * The common ancestor of the focus trap and of all the elements that should be inaccessible when inside the focus trap.
@@ -116,7 +123,7 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
   }
 
   private hideSelf() {
-    if (this.shouldHideSelf) {
+    if (this.hidesSelf) {
       this.parentToHide.setAttribute('aria-hidden', 'true');
       this.parentToHide.setAttribute('tabindex', '-1');
     }
@@ -170,6 +177,10 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
 
   private get parentToHide(): Element {
     return this.container ?? this;
+  }
+
+  private get hidesSelf() {
+    return this.shouldHideSelf && !this.disableHideSelf;
   }
 }
 

@@ -2,7 +2,7 @@
  * The canonical runtime domain model for the session client.
  *
  * `state` and `activities` are routing-neutral and live at the top of
- * `response`; only `messages` and `reasoningSteps` are agent-specific and move
+ * `response`; only `messages` and `toolCalls` are agent-specific and move
  * under the optional `agent` facet, whose presence signals "the router invoked
  * an agent".
  */
@@ -11,6 +11,15 @@
  * The lifecycle status of a {@link Turn}.
  */
 export type TurnStatus = 'streaming' | 'complete' | 'error';
+
+/**
+ * Why a {@link Turn} or the {@link SessionInitialization} ended in `'error'`.
+ *
+ * - `'cancelled'`: `session.cancel()` stopped it while it streamed.
+ * - `'failed'`: the endpoint sent `RUN_ERROR`, the request or stream failed, or the stream ended
+ *   without a terminal event, including a run restored while it was streaming.
+ */
+export type TurnErrorReason = 'cancelled' | 'failed';
 
 /**
  * The server-authoritative UI state of the session, keyed BY SURFACE: each live
@@ -68,27 +77,14 @@ export interface DiscoveredSurface {
 export type A2uiV09Message = Record<string, unknown>;
 
 /**
- * A single step in the agent's reasoning process — either a reasoning message
- * or a tool-call invocation. The array order in
- * {@link TurnAgent.reasoningSteps} reflects the chronological order of events
- * received from the stream.
+ * The lifecycle status of a {@link ToolCall}.
  */
-export type ReasoningStep = ReasoningMessageStep | ToolCallStep;
-
-export interface ReasoningMessageStep {
-  type: 'reasoning';
-
-  /**
-   * The accumulated reasoning/thinking text for this step.
-   */
-  content: string;
-}
-
 export type ToolCallStatus = 'calling' | 'completed';
 
-export interface ToolCallStep {
-  type: 'tool-call';
-
+/**
+ * A tool the agent invoked during a turn, in the order the stream started it.
+ */
+export interface ToolCall {
   /**
    * The server-assigned tool call identifier.
    */
@@ -149,7 +145,7 @@ export interface Activity {
  */
 export interface TurnAgent {
   messages: AgentMessage[];
-  reasoningSteps: ReasoningStep[];
+  toolCalls: ToolCall[];
 }
 
 /**
@@ -195,6 +191,11 @@ export interface ActionRequest {
 export interface ActionError {
   /** Why the action failed. */
   message: string;
+  /**
+   * The code of the gateway's `RUN_ERROR` that failed the action, such as `'AGENT:UPSTREAM_TIMEOUT'`.
+   * Absent when the gateway sent none or the action failed otherwise.
+   */
+  errorCode?: string;
   /** The PascalCase `component` discriminant of the node that dispatched the action. */
   component: string;
   /** The action name declared by the dispatching component's contract. */
@@ -283,6 +284,13 @@ export interface SessionInitialization {
   status: TurnStatus;
   /** Why `initialize` failed. Present when `status === 'error'`, absent otherwise. */
   error?: string;
+  /** Why it ended in `'error'`. Present when `status === 'error'`, absent otherwise. */
+  reason?: TurnErrorReason;
+  /**
+   * The code of the gateway's `RUN_ERROR`, such as `'AGENT:UPSTREAM_TIMEOUT'`. Present only when
+   * `reason === 'failed'` and the gateway sent one.
+   */
+  errorCode?: string;
 }
 
 /**
@@ -295,4 +303,11 @@ export interface Turn {
   status: TurnStatus;
   /** Present when `status === 'error'`, absent otherwise. */
   error?: string;
+  /** Why it ended in `'error'`. Present when `status === 'error'`, absent otherwise. */
+  reason?: TurnErrorReason;
+  /**
+   * The code of the gateway's `RUN_ERROR`, such as `'AGENT:UPSTREAM_TIMEOUT'`. Present only when
+   * `reason === 'failed'` and the gateway sent one.
+   */
+  errorCode?: string;
 }

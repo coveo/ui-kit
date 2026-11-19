@@ -32,7 +32,6 @@ type SolutionTypeAvailabilities = {
   listing?: boolean;
   search?: boolean;
   standalone?: boolean;
-  recommendation?: boolean;
 };
 
 export function defineMockController(): MockControllerDefinitionWithoutProps {
@@ -61,7 +60,6 @@ export function defineMockCommerceController(options?: SolutionTypeAvailabilitie
     listing: options?.listing ?? true,
     search: options?.search ?? true,
     standalone: options?.standalone ?? true,
-    recommendation: options?.recommendation ?? true,
   };
 }
 
@@ -75,13 +73,14 @@ export function defineMockCommerceControllerWithProps(options?: SolutionTypeAvai
     listing: options?.listing ?? true,
     search: options?.search ?? true,
     standalone: options?.standalone ?? true,
-    recommendation: options?.recommendation ?? true,
   };
 }
 
 export function defineMockRecommendationDefinition(slotId: string) {
   return {
-    recommendation: true,
+    search: true,
+    listing: true,
+    standalone: true,
     [recommendationInternalOptionKey]: {
       slotId,
     },

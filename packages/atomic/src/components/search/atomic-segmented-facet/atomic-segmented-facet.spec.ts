@@ -56,6 +56,7 @@ describe('atomic-segmented-facet', () => {
       tabsIncluded: string[];
       tabsExcluded: string[];
       filterFacetCount: boolean;
+      disableFacetCountFiltering: boolean;
       injectionDepth: number;
       numberOfValues: number;
       sortCriteria: FacetSortCriterion;
@@ -100,6 +101,7 @@ describe('atomic-segmented-facet', () => {
         .tabsIncluded=${props.tabsIncluded ?? []}
         .tabsExcluded=${props.tabsExcluded ?? []}
         .filterFacetCount=${props.filterFacetCount ?? true}
+        ?disable-facet-count-filtering=${props.disableFacetCountFiltering}
         injection-depth=${ifDefined(props.injectionDepth)}
         number-of-values=${ifDefined(props.numberOfValues)}
         sort-criteria=${ifDefined(props.sortCriteria)}
@@ -333,6 +335,34 @@ describe('atomic-segmented-facet', () => {
         expect.objectContaining({
           options: expect.objectContaining({
             filterFacetCount: false,
+          }),
+        })
+      );
+    });
+
+    it('should set filterFacetCount to false when disableFacetCountFiltering is true', async () => {
+      const {element} = await renderComponent({
+        props: {disableFacetCountFiltering: true},
+      });
+
+      expect(buildFacet).toHaveBeenCalledWith(
+        element.bindings.engine,
+        expect.objectContaining({
+          options: expect.objectContaining({
+            filterFacetCount: false,
+          }),
+        })
+      );
+    });
+
+    it('should set filterFacetCount to true by default', async () => {
+      const {element} = await renderComponent();
+
+      expect(buildFacet).toHaveBeenCalledWith(
+        element.bindings.engine,
+        expect.objectContaining({
+          options: expect.objectContaining({
+            filterFacetCount: true,
           }),
         })
       );

@@ -3,8 +3,10 @@
  */
 
 import type {CommerceEngineOptions as OriginalCommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
+import {buildLogger} from '../../../app/logger.js';
 import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import {withDeprecationWarning} from '../../../utils/deprecation.js';
 import {createAccessTokenManager} from '../../common/access-token-manager.js';
 import {buildFactory, type CommerceEngineDefinitionOptions} from '../factories/build-factory.js';
 import {hydratedStaticStateFactory} from '../factories/hydrated-state-factory.js';
@@ -28,8 +30,8 @@ export interface CommerceEngineDefinition<
 /**
  * Initializes a Commerce engine definition in SSR with given controllers definitions and commerce engine config.
  * @param options - The commerce engine definition
- * @returns Three utility functions to fetch the initial state of the engine in SSR, hydrate the state in CSR,
- *  and a build function that can be used for edge cases requiring more control.
+ * @returns An engine definition for each kind of page, whose `fetchStaticState` fetches the initial state of the engine
+ *  on the server and whose `hydrateStaticState` hydrates that state in the browser.
  *
  * @group Engine
  */
@@ -50,10 +52,55 @@ export function defineCommerceEngine<
   >;
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
+  const deprecationLogger = buildLogger(options.loggerOptions);
 
-  const setNavigatorContextProvider = (navigatorContextProvider: NavigatorContextProvider) => {
-    engineOptions.navigatorContextProvider = navigatorContextProvider;
+  const deprecate = <TFunction extends (...args: never[]) => unknown>(
+    fn: TFunction,
+    api: string,
+    instruction: string
+  ) => withDeprecationWarning(deprecationLogger, fn, api, instruction);
+
+  const warnOnExtendOption = <TFunction extends (...args: never[]) => unknown>(fn: TFunction) =>
+    withDeprecationWarning(
+      deprecationLogger,
+      fn,
+      'The `extend` build option',
+      'Set the engine options, such as `middlewares` or `preprocessRequest` in the configuration, in `defineCommerceEngine()` instead.',
+      (...args) => {
+        const [buildOptions] = args as unknown[];
+        return (
+          typeof buildOptions === 'object' &&
+          buildOptions !== null &&
+          'extend' in buildOptions &&
+          buildOptions.extend !== undefined
+        );
+      }
+    );
+
+  const withStaticStateWarnings = <
+    TFunction extends ((...args: never[]) => unknown) & {
+      fromBuildResult: (...args: never[]) => unknown;
+    },
+  >(
+    fn: TFunction,
+    name: 'fetchStaticState' | 'hydrateStaticState'
+  ): TFunction => {
+    const wrapped = warnOnExtendOption(fn);
+    wrapped.fromBuildResult = deprecate(
+      fn.fromBuildResult,
+      `\`${name}.fromBuildResult\``,
+      `Use \`${name}()\` instead.`
+    );
+    return wrapped;
   };
+
+  const setNavigatorContextProvider = deprecate(
+    (navigatorContextProvider: NavigatorContextProvider) => {
+      engineOptions.navigatorContextProvider = navigatorContextProvider;
+    },
+    '`setNavigatorContextProvider`',
+    'Pass a per-request `navigatorContext` to `fetchStaticState()` and `hydrateStaticState()` instead.'
+  );
 
   const tokenManager = createAccessTokenManager(engineOptions.configuration.accessToken);
 
@@ -81,11 +128,19 @@ export function defineCommerceEngine<
   const definitionOptions = engineOptions;
   definitionOptions.onAccessTokenUpdate = onAccessTokenUpdate;
 
-  const getAccessToken = () => tokenManager.getAccessToken();
-  const setAccessToken = (accessToken: string) => {
-    engineOptions.configuration.accessToken = accessToken;
-    tokenManager.setAccessToken(accessToken);
-  };
+  const getAccessToken = deprecate(
+    () => tokenManager.getAccessToken(),
+    '`getAccessToken`',
+    'Pass the access token to `fetchStaticState()` instead of reading it from the engine definition.'
+  );
+  const setAccessToken = deprecate(
+    (accessToken: string) => {
+      engineOptions.configuration.accessToken = accessToken;
+      tokenManager.setAccessToken(accessToken);
+    },
+    '`setAccessToken`',
+    'Pass the access token to `fetchStaticState()` and `hydrateStaticState()` instead. To rotate the token of an engine that is already running, configure `renewAccessToken`.'
+  );
 
   const build = buildFactory<TControllerDefinitions>(controllerDefinitions, definitionOptions);
   const fetchStaticState = fetchStaticStateFactory<TControllerDefinitions>(
@@ -109,34 +164,71 @@ export function defineCommerceEngine<
 
   return {
     listingEngineDefinition: {
-      build: build(SolutionType.listing),
-      fetchStaticState: fetchStaticState(SolutionType.listing),
-      hydrateStaticState: hydrateStaticState(SolutionType.listing),
+      build: deprecate(
+        warnOnExtendOption(build(SolutionType.listing)),
+        '`build`',
+        'Use `fetchStaticState()` instead.'
+      ),
+      fetchStaticState: withStaticStateWarnings(
+        fetchStaticState(SolutionType.listing),
+        'fetchStaticState'
+      ),
+      hydrateStaticState: withStaticStateWarnings(
+        hydrateStaticState(SolutionType.listing),
+        'hydrateStaticState'
+      ),
       setNavigatorContextProvider,
       getAccessToken,
       setAccessToken,
     } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.listing>,
     searchEngineDefinition: {
-      build: build(SolutionType.search),
-      fetchStaticState: fetchStaticState(SolutionType.search),
-      hydrateStaticState: hydrateStaticState(SolutionType.search),
+      build: deprecate(
+        warnOnExtendOption(build(SolutionType.search)),
+        '`build`',
+        'Use `fetchStaticState()` instead.'
+      ),
+      fetchStaticState: withStaticStateWarnings(
+        fetchStaticState(SolutionType.search),
+        'fetchStaticState'
+      ),
+      hydrateStaticState: withStaticStateWarnings(
+        hydrateStaticState(SolutionType.search),
+        'hydrateStaticState'
+      ),
       setNavigatorContextProvider,
       getAccessToken,
       setAccessToken,
     } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.search>,
     recommendationEngineDefinition: {
-      build: build(SolutionType.recommendation),
-      fetchStaticState: fetchRecommendationStaticState,
-      hydrateStaticState: hydrateRecommendationStaticState,
+      build: deprecate(
+        warnOnExtendOption(build(SolutionType.recommendation)),
+        '`build`',
+        'Use `fetchStaticState()` instead.'
+      ),
+      fetchStaticState: withStaticStateWarnings(fetchRecommendationStaticState, 'fetchStaticState'),
+      hydrateStaticState: withStaticStateWarnings(
+        hydrateRecommendationStaticState,
+        'hydrateStaticState'
+      ),
       setNavigatorContextProvider,
       getAccessToken,
       setAccessToken,
     } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.recommendation>,
     // TODO KIT-3738 :  The standaloneEngineDefinition should not be async since no request is sent to the API
     standaloneEngineDefinition: {
-      build: build(SolutionType.standalone),
-      fetchStaticState: fetchStaticState(SolutionType.standalone),
-      hydrateStaticState: hydrateStaticState(SolutionType.standalone),
+      build: deprecate(
+        warnOnExtendOption(build(SolutionType.standalone)),
+        '`build`',
+        'Use `fetchStaticState()` instead.'
+      ),
+      fetchStaticState: withStaticStateWarnings(
+        fetchStaticState(SolutionType.standalone),
+        'fetchStaticState'
+      ),
+      hydrateStaticState: withStaticStateWarnings(
+        hydrateStaticState(SolutionType.standalone),
+        'hydrateStaticState'
+      ),
       setNavigatorContextProvider,
       getAccessToken,
       setAccessToken,

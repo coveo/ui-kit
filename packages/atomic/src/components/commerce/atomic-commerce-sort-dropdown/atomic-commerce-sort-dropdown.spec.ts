@@ -84,8 +84,7 @@ describe('atomic-commerce-sort-dropdown', () => {
     await expect.element(locators.select).toBeInTheDocument();
   });
 
-  // KIT-4158: TODO: This test intermittently fails and takes too long
-  it.skip('should call sort.sortBy when select is changed', async () => {
+  it('should call sort.sortBy when select is changed', async () => {
     const mockedSortBy = vi.fn();
     mockedSort.mockReturnValue(buildFakeSort({implementation: {sortBy: mockedSortBy}}));
     await setupElement();
