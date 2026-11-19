@@ -2,14 +2,14 @@ import fc from 'fast-check';
 import {describe, expect, it} from 'vitest';
 import {restoreSession, serializeSession} from './serialize.js';
 import type {SessionStoreState} from './store.js';
-import type {Activity, AgentMessage, ReasoningStep, Turn, TurnStatus} from './types.js';
+import type {Activity, AgentMessage, ToolCall, Turn, TurnStatus} from './types.js';
 
 /**
  * Serialize/restore round-trip.
  *
  * For any session store state, `restoreSession(serializeSession(s))` preserves:
  * every turn's `id`/`input`/`status`/`error`, every turn's `response.activities`
- * and `response.agent.{messages,reasoningSteps}`, the session's `state`, and
+ * and `response.agent.{messages,toolCalls}`, the session's `state`, and
  * session-level `sessionId`/`sessionToken`/`activeTurnId`.
  *
  * The `streaming` status is deliberately excluded from the generated turns: a
@@ -36,19 +36,12 @@ const agentMessageArbitrary: fc.Arbitrary<AgentMessage> = fc.record({
   role: fc.string({minLength: 1, maxLength: 12}),
 });
 
-const reasoningStepArbitrary: fc.Arbitrary<ReasoningStep> = fc.oneof(
-  fc.record({
-    type: fc.constant<'reasoning'>('reasoning'),
-    content: fc.string({maxLength: 20}),
-  }),
-  fc.record({
-    type: fc.constant<'tool-call'>('tool-call'),
-    id: fc.string({minLength: 1, maxLength: 12}),
-    name: fc.string({minLength: 1, maxLength: 12}),
-    args: fc.string({maxLength: 20}),
-    status: fc.constantFrom<'calling' | 'completed'>('calling', 'completed'),
-  })
-);
+const toolCallArbitrary: fc.Arbitrary<ToolCall> = fc.record({
+  id: fc.string({minLength: 1, maxLength: 12}),
+  name: fc.string({minLength: 1, maxLength: 12}),
+  args: fc.string({maxLength: 20}),
+  status: fc.constantFrom<'calling' | 'completed'>('calling', 'completed'),
+});
 
 /**
  * Excludes `'streaming'` on purpose: the streaming → error downgrade is the
@@ -61,7 +54,7 @@ const nonStreamingStatus: fc.Arbitrary<TurnStatus> = fc.constantFrom<TurnStatus>
 
 /**
  * Generates a single arbitrary Turn with the given `id`. A `status: 'error'`
- * turn carries an `error` string; other statuses omit it. The optional agent
+ * turn carries an `error` string, a `reason` and maybe an `errorCode`; other statuses omit them. The optional agent
  * facet is present about half the time.
  */
 function turnArbitrary(id: string): fc.Arbitrary<Turn> {
@@ -73,13 +66,15 @@ function turnArbitrary(id: string): fc.Arbitrary<Turn> {
       agent: fc.option(
         fc.record({
           messages: fc.array(agentMessageArbitrary, {maxLength: 5}),
-          reasoningSteps: fc.array(reasoningStepArbitrary, {maxLength: 5}),
+          toolCalls: fc.array(toolCallArbitrary, {maxLength: 5}),
         }),
         {nil: undefined}
       ),
       error: fc.string({maxLength: 20}),
+      reason: fc.constantFrom('cancelled' as const, 'failed' as const),
+      errorCode: fc.option(fc.string({minLength: 1, maxLength: 20}), {nil: undefined}),
     })
-    .map(({status, prompt, activities, agent, error}) => {
+    .map(({status, prompt, activities, agent, error, reason, errorCode}) => {
       const turn: Turn = {
         id,
         input: prompt === undefined ? {} : {prompt},
@@ -92,6 +87,10 @@ function turnArbitrary(id: string): fc.Arbitrary<Turn> {
       };
       if (status === 'error') {
         turn.error = error;
+        turn.reason = reason;
+        if (reason === 'failed' && errorCode !== undefined) {
+          turn.errorCode = errorCode;
+        }
       }
       return turn;
     });
@@ -131,7 +130,7 @@ const sessionStateArbitrary: fc.Arbitrary<SessionStoreState<Turn>> = fc
   });
 
 describe('serialize/restore round-trip', () => {
-  it('preserves every turn id/input/status/error across a round-trip', () => {
+  it('preserves every turn id/input/status/error/reason/errorCode across a round-trip', () => {
     fc.assert(
       fc.property(sessionStateArbitrary, (original) => {
         const restored = restoreSession(serializeSession(original));
@@ -143,6 +142,8 @@ describe('serialize/restore round-trip', () => {
           expect(roundTripped.input).toEqual(turn.input);
           expect(roundTripped.status).toBe(turn.status);
           expect(roundTripped.error).toBe(turn.error);
+          expect(roundTripped.reason).toBe(turn.reason);
+          expect(roundTripped.errorCode).toBe(turn.errorCode);
         });
       }),
       {numRuns: NUM_RUNS}

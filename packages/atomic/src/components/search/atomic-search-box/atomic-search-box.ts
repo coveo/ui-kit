@@ -8,7 +8,15 @@ import {
   type StandaloneSearchBox,
   type StandaloneSearchBoxState,
 } from '@coveo/headless';
-import {type CSSResultGroup, css, html, LitElement, nothing, type TemplateResult} from 'lit';
+import {
+  type CSSResultGroup,
+  css,
+  html,
+  LitElement,
+  nothing,
+  type TemplateResult,
+  type PropertyValues,
+} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {createRef, type RefOrCallback, ref} from 'lit/directives/ref.js';
@@ -27,7 +35,7 @@ import type {
 import {elementHasQuery} from '@/src/components/common/suggestions/suggestions-utils';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {booleanConverter, createBooleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -49,6 +57,7 @@ import {isFocusingOut, once, randomID, spreadProperties} from '@/src/utils/utils
 import '@/src/components/search/atomic-search-box-query-suggestions/atomic-search-box-query-suggestions';
 import '@/src/components/search/atomic-search-box-recent-queries/atomic-search-box-recent-queries';
 import '@coveo/atomic-legacy/atomic-suggestion-renderer';
+import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -99,6 +108,16 @@ import '@coveo/atomic-legacy/atomic-suggestion-renderer';
 @bindings()
 @withTailwindStyles
 export class AtomicSearchBox extends LitElement implements InitializableComponent<Bindings> {
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'clearFilters',
+      attribute: 'clear-filters',
+      defaultValue: true,
+      instruction: 'Use `disable-clear-filters` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
+  ]);
+
   private static readonly propsSchema = new Schema({
     clearRecentButtonPosition: new StringValue({constrainTo: ['top', 'bottom']}),
   });
@@ -198,14 +217,22 @@ export class AtomicSearchBox extends LitElement implements InitializableComponen
   /**
    * Whether to clear all active query filters when the end user submits a new query from the search box.
    * Setting this option to "false" is not recommended and can lead to an increasing number of queries returning no results.
+   * @deprecated - Use `disable-clear-filters` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
     attribute: 'clear-filters',
     reflect: true,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-clear-filters', {silent: true}),
   })
   public clearFilters = true;
+
+  /**
+   * Whether to keep the active query filters when the end user submits a new query from the search box.
+   * Setting this option is not recommended and can lead to an increasing number of queries returning no results.
+   */
+  @property({type: Boolean, attribute: 'disable-clear-filters', reflect: true})
+  public disableClearFilters = false;
 
   /**
    * Whether to interpret advanced [Coveo query syntax](https://docs.coveo.com/en/1552/) in the query.
@@ -264,7 +291,10 @@ export class AtomicSearchBox extends LitElement implements InitializableComponen
     super.disconnectedCallback();
   }
 
-  willUpdate() {
+  willUpdate(changedProperties: PropertyValues) {
+    super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.bindings?.engine?.logger);
     if (!this.searchBoxState || !this.searchBox) {
       return;
     }
@@ -415,7 +445,7 @@ export class AtomicSearchBox extends LitElement implements InitializableComponen
           enumerable: true,
         },
         clearFilters: {
-          get: () => this.clearFilters,
+          get: () => this.shouldClearFilters,
           enumerable: true,
         },
       }
@@ -439,7 +469,7 @@ export class AtomicSearchBox extends LitElement implements InitializableComponen
           close: '</span>',
         },
       },
-      clearFilters: this.clearFilters,
+      clearFilters: this.shouldClearFilters,
       enableQuerySyntax: this.enableQuerySyntax,
     };
   }
@@ -853,6 +883,10 @@ export class AtomicSearchBox extends LitElement implements InitializableComponen
       )}
       ${this.renderSlotContent()}
     `;
+  }
+
+  private get shouldClearFilters() {
+    return this.clearFilters && !this.disableClearFilters;
   }
 }
 

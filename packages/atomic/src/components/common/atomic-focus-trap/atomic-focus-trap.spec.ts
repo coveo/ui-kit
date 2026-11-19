@@ -12,6 +12,7 @@ describe('atomic-focus-trap', () => {
       source?: HTMLElement;
       container?: HTMLElement;
       shouldHideSelf?: boolean;
+      disableHideSelf?: boolean;
       scope?: Element;
       children?: string;
     } = {}
@@ -22,6 +23,7 @@ describe('atomic-focus-trap', () => {
         .source=${options.source}
         .container=${options.container}
         .shouldHideSelf=${options.shouldHideSelf ?? true}
+        ?disable-hide-self=${options.disableHideSelf}
         .scope=${options.scope ?? document.body}
       >
         ${options.children ? html`${options.children}` : html`<button>Test Button</button>`}
@@ -345,6 +347,27 @@ describe('atomic-focus-trap', () => {
         expect(element.hasAttribute('aria-hidden')).toBe(true);
         expect(element.getAttribute('tabindex')).toBe('-1');
       });
+    });
+
+    it('should not hide itself again when disableHideSelf is true', async () => {
+      const source = document.createElement('button');
+      document.body.appendChild(source);
+      const focusSpy = vi.spyOn(source, 'focus');
+      const element = await renderFocusTrap({
+        active: true,
+        source,
+        disableHideSelf: true,
+      });
+
+      element.active = false;
+      await vi.waitFor(() => {
+        expect(focusSpy).toHaveBeenCalled();
+      });
+
+      expect(element.hasAttribute('aria-hidden')).toBe(false);
+      expect(element.hasAttribute('tabindex')).toBe(false);
+
+      document.body.removeChild(source);
     });
   });
 

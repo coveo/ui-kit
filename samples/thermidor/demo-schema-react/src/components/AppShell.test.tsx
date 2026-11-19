@@ -140,7 +140,7 @@ describe('AppShell', () => {
       searchTurn('turn-1'),
       makeTurn({
         id: 'turn-2',
-        response: {agent: {messages: [{content: 'Answer', role: 'assistant'}], reasoningSteps: []}},
+        response: {agent: {messages: [{content: 'Answer', role: 'assistant'}], toolCalls: []}},
       }),
     ];
 

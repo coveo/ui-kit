@@ -69,7 +69,7 @@ The conversation is a single feed: every turn keeps its blocks on the page, and 
 
 ## Loading placeholders (✅ data-model driven)
 
-While a turn streams, a skeleton marks each block that is still loading. A2-UI defines no skeleton: a loading placeholder is an ordinary surface whose **data model** declares `isLoading: true`, and it follows the A2-UI surface lifecycle. The sample infers nothing from `surfaceId`s, which the spec treats as opaque, nor from reasoning steps.
+While a turn streams, a skeleton marks each block that is still loading. A2-UI defines no skeleton: a loading placeholder is an ordinary surface whose **data model** declares `isLoading: true`, and it follows the A2-UI surface lifecycle. The sample infers nothing from `surfaceId`s, which the spec treats as opaque, nor from tool calls.
 
 | Question                   | Answer                                                                                         |
 | -------------------------- | ---------------------------------------------------------------------------------------------- |

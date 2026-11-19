@@ -32,7 +32,7 @@ import type {FacetControllerType} from '../core/facets/headless-core-commerce-fa
  * @group Buildable controllers
  * @category CategoryFieldSuggestions
  * @alpha
- * @deprecated
+ * @deprecated Use `CategoryFilterSuggestionsState` instead.
  */
 export type CategoryFieldSuggestionsState = CoreCategoryFieldSuggestionsState &
   Pick<FieldSuggestionsFacet, 'facetId' | 'displayName' | 'field'>;
@@ -47,7 +47,7 @@ export type CategoryFieldSuggestionsState = CoreCategoryFieldSuggestionsState &
  * @group Buildable controllers
  * @category CategoryFieldSuggestions
  * @alpha
- * @deprecated
+ * @deprecated Use `CategoryFilterSuggestions` instead.
  */
 export interface CategoryFieldSuggestions extends Controller, FacetControllerType<'hierarchical'> {
   /**

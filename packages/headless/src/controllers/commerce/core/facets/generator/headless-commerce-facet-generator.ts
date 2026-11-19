@@ -21,7 +21,6 @@ import type {FetchProductsActionCreator} from '../../common.js';
 import type {CategoryFacet} from '../category/headless-commerce-category-facet.js';
 import type {DateFacet} from '../date/headless-commerce-date-facet.js';
 import type {CommerceFacetOptions, CoreCommerceFacet} from '../headless-core-commerce-facet.js';
-import type {LocationFacet} from '../location/headless-commerce-location-facet.js';
 import type {NumericFacet} from '../numeric/headless-commerce-numeric-facet.js';
 import type {RegularFacet} from '../regular/headless-commerce-regular-facet.js';
 import type {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet.js';
@@ -77,9 +76,7 @@ export type MappedGeneratedFacetController = {
         ? DateFacet
         : T extends 'hierarchical'
           ? CategoryFacet
-          : T extends 'location'
-            ? LocationFacet
-            : never;
+          : never;
 };
 
 type CommerceFacetBuilder<
@@ -102,7 +99,6 @@ export interface FacetGeneratorOptions {
   buildNumericFacet: CommerceFacetBuilder<NumericFacet>;
   buildDateFacet: CommerceFacetBuilder<DateFacet>;
   buildCategoryFacet: CommerceFacetBuilder<CategoryFacet>;
-  buildLocationFacet: CommerceFacetBuilder<LocationFacet>;
   fetchProductsActionCreator: FetchProductsActionCreator;
 }
 
@@ -151,8 +147,6 @@ export function buildFacetGenerator(
           return options.buildNumericFacet(engine, {facetId});
         case 'regular':
           return options.buildRegularFacet(engine, {facetId});
-        case 'location':
-          return options.buildLocationFacet(engine, {facetId});
       }
     }
   );

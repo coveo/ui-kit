@@ -5,12 +5,11 @@ import {
   type InstantProductsProps,
   type InstantProductsState,
 } from '../../../../controllers/commerce/instant-products/headless-instant-products.js';
-import type {NonRecommendationControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
+import type {UniversalControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
 
 export type {InstantProducts, InstantProductsOptions, InstantProductsProps, InstantProductsState};
 
-export type InstantProductsDefinition =
-  NonRecommendationControllerDefinitionWithoutProps<InstantProducts>;
+export type InstantProductsDefinition = UniversalControllerDefinitionWithoutProps<InstantProducts>;
 
 /**
  * Defines the `InstantProducts` controller for the purpose of server-side rendering.

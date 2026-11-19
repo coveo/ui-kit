@@ -109,7 +109,7 @@ ConversationPage
 │       ├── UserPromptBubble (the prompt, or the text of the follow-up chip that opened the turn)
 │       ├── ErrorTurnBlock (if error)
 │       └── AgentResponseBlock
-│           ├── ThinkingBlock (reasoning steps + spinner)
+│           ├── ThinkingBlock (tool calls + spinner)
 │           ├── StreamingMessage (streamed text)
 │           └── TurnSurfaces (the turn's blocks; disabled unless it is the latest turn)
 │               ├── A2UISkeleton (in place of a loading surface)

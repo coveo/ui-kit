@@ -39,7 +39,6 @@ export function defineContext(): ContextDefinition {
     listing: true,
     search: true,
     standalone: true,
-    recommendation: true,
     buildWithProps: (engine, props: {initialState: ContextOptions}) => {
       if (props === undefined) {
         throw new MissingControllerProps('Context');

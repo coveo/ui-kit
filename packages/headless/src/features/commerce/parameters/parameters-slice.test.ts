@@ -16,7 +16,6 @@ import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
 } from '../facets/date-facet/date-facet-actions.js';
-import {toggleSelectLocationFacetValue} from '../facets/location-facet/location-facet-actions.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -281,7 +280,7 @@ describe('commerceParameters slice', () => {
       expect(finalState.page).toBeUndefined();
     });
 
-    it('sets cf, df, dfExcluded, lf, mnf, mnfExcluded, nf, nfExcluded, f, and fExcluded to undefined in state', () => {
+    it('sets cf, df, dfExcluded, mnf, mnfExcluded, nf, nfExcluded, f, and fExcluded to undefined in state', () => {
       const finalState = parametersReducer(
         {
           ...initialState,
@@ -306,7 +305,6 @@ describe('commerceParameters slice', () => {
               },
             ],
           },
-          lf: {facetId3: ['value']},
           mnf: {
             facetId4: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
           },
@@ -354,7 +352,6 @@ describe('commerceParameters slice', () => {
             },
           ],
         },
-        lf: {facetId1: ['value1']},
         mnf: {
           facetId1: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
         },
@@ -411,7 +408,6 @@ describe('commerceParameters slice', () => {
               },
             ],
           },
-          lf: {...state.lf, facetId2: ['value2']},
           mnf: {
             ...state.mnf,
             facetId2: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
@@ -599,10 +595,7 @@ describe('commerceParameters slice', () => {
   const testUnsetValueAfterRegularFacetToggle = (
     stateKey: keyof CommerceParametersState,
     payloadValueState: FacetValueState,
-    action:
-      | typeof toggleSelectFacetValue
-      | typeof toggleExcludeFacetValue
-      | typeof toggleSelectLocationFacetValue
+    action: typeof toggleSelectFacetValue | typeof toggleExcludeFacetValue
   ) => {
     describe(`when state.${stateKey}[payload.facetId] is defined`, () => {
       let state: CommerceParametersState;
@@ -1911,68 +1904,6 @@ describe('commerceParameters slice', () => {
     });
   });
 
-  describe('when #toggleSelectLocationFacetValue is dispatched', () => {
-    it('sets state.page to undefined', () => {
-      const state = {
-        ...initialState,
-        page: 5,
-      };
-      const finalState = parametersReducer(
-        state,
-        toggleSelectLocationFacetValue({
-          facetId: 'facetId',
-          selection: {
-            value: 'value',
-            state: 'selected',
-          },
-        })
-      );
-      expect(finalState.page).toBeUndefined();
-    });
-
-    describe('when payload.selection.state is "selected"', () => {
-      testUnsetValueAfterRegularFacetToggle('lf', 'selected', toggleSelectLocationFacetValue);
-    });
-
-    describe.each<{payloadValueState: FacetValueState}>([
-      {payloadValueState: 'excluded'},
-      {payloadValueState: 'idle'},
-    ])('when payload.selection.state is $payloadValueState', ({payloadValueState}) => {
-      it('when state.lf[payload.facetId] is undefined, creates it and pushes payload.selection.value to it', () => {
-        const finalState = parametersReducer(
-          initialState,
-          toggleSelectLocationFacetValue({
-            facetId: 'facetId',
-            selection: {
-              value: 'value',
-              state: payloadValueState,
-            },
-          })
-        );
-        expect(finalState).toEqual({
-          ...initialState,
-          lf: {facetId: ['value']},
-        });
-      });
-      it('when state.lf[payload.facetId] is defined, appends payload.selection.value to it', () => {
-        const finalState = parametersReducer(
-          {...initialState, lf: {facetId: ['value1']}},
-          toggleSelectLocationFacetValue({
-            facetId: 'facetId',
-            selection: {
-              value: 'value2',
-              state: payloadValueState,
-            },
-          })
-        );
-        expect(finalState).toEqual({
-          ...initialState,
-          lf: {facetId: ['value1', 'value2']},
-        });
-      });
-    });
-  });
-
   it('when #setView is dispatched, resets state', () => {
     const state: CommerceParametersState = {
       cf: {facetId1: ['value1']},
@@ -1986,7 +1917,6 @@ describe('commerceParameters slice', () => {
           },
         ],
       },
-      lf: {facetId1: ['value1']},
       mnf: {
         facetId1: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
       },
@@ -2038,7 +1968,6 @@ describe('commerceParameters slice', () => {
           },
         ],
       },
-      lf: {facetId3: ['value1']},
       mnf: {
         facetId4: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
       },
@@ -2095,7 +2024,6 @@ describe('commerceParameters slice', () => {
           },
         ],
       },
-      lf: {facetId3: ['value1']},
       mnf: {
         facetId4: [{start: 0, end: 100, endInclusive: true, state: 'selected'}],
       },

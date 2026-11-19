@@ -2,14 +2,14 @@ import fc from 'fast-check';
 import {describe, expect, it} from 'vitest';
 import {restoreSession, serializeSession, STREAM_INTERRUPTED_ERROR} from './serialize.js';
 import type {SessionStoreState} from './store.js';
-import type {Activity, AgentMessage, ReasoningStep, Turn} from './types.js';
+import type {Activity, AgentMessage, ToolCall, Turn} from './types.js';
 
 /**
  * Streaming→error downgrade preserves partial response.
  *
  * For any Turn persisted mid-stream (`status: 'streaming'`), restore yields
  * `status: 'error'` with `error === 'Stream was interrupted'`, while the partial
- * `response` (activities, `agent.{messages,reasoningSteps}`, and — for the
+ * `response` (activities, `agent.{messages,toolCalls}`, and — for the
  * active turn — `state`) is preserved unchanged from what was persisted.
  */
 
@@ -33,20 +33,16 @@ const agentMessageArbitrary: fc.Arbitrary<AgentMessage> = fc.record({
   role: fc.constantFrom('assistant', 'user', 'system'),
 });
 
-const reasoningStepArbitrary: fc.Arbitrary<ReasoningStep> = fc.oneof(
-  fc.record({type: fc.constant('reasoning' as const), content: shortText}),
-  fc.record({
-    type: fc.constant('tool-call' as const),
-    id: fc.string({minLength: 1, maxLength: 12}),
-    name: fc.string({minLength: 1, maxLength: 12}),
-    args: shortText,
-    status: fc.constantFrom('calling' as const, 'completed' as const),
-  })
-);
+const toolCallArbitrary: fc.Arbitrary<ToolCall> = fc.record({
+  id: fc.string({minLength: 1, maxLength: 12}),
+  name: fc.string({minLength: 1, maxLength: 12}),
+  args: shortText,
+  status: fc.constantFrom('calling' as const, 'completed' as const),
+});
 
 const agentArbitrary = fc.record({
   messages: fc.array(agentMessageArbitrary, {maxLength: 6}),
-  reasoningSteps: fc.array(reasoningStepArbitrary, {maxLength: 6}),
+  toolCalls: fc.array(toolCallArbitrary, {maxLength: 6}),
 });
 
 /**
@@ -109,6 +105,7 @@ describe('streaming→error downgrade preserves partial response', () => {
           // Downgrade: streaming → error with the interrupted-stream marker.
           expect(restoredTurn.status).toBe('error');
           expect(restoredTurn.error).toBe(STREAM_INTERRUPTED_ERROR);
+          expect(restoredTurn.reason).toBe('failed');
 
           // Partial response preserved unchanged from what was persisted.
           expect(restoredTurn.response.activities).toEqual(persistedTurn.response.activities);
