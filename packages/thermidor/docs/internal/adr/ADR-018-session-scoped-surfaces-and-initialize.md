@@ -83,9 +83,10 @@ level. Option D below.
   a microtask so that a listener subscribed in the same task sees it start. On the wire it is
   `action: {name: 'initialize', context: {}}`: it has an envelope type of its own, without
   `surfaceId` and `sourceComponentId`, which stay required for every other action.
-- **At most once by itself.** A restored session does not send it by itself. A session created
-  with its keys (`sessionId` and `sessionToken`) does, carrying them: the Agent Gateway resumes
-  that session and rebuilds its shell, or starts a new one with new keys, which the session adopts.
+- **At most once by itself.** A session created with its keys (`sessionId` and `sessionToken`)
+  sends it carrying them: the Agent Gateway resumes that session and rebuilds its shell, or starts
+  a new one with new keys, which the session adopts. For a restored session, see
+  [the amendment](#amendment-restoring-a-session-through-initialize).
 - **An ordinary request.** It goes through the one-request rule and the conflict retry (both
   amended below), and it
   adopts the session id and token from its run, like a prompt. While it is in flight,
@@ -194,9 +195,8 @@ unsupported version already is.
 - **One changeset** (`'@coveo/thermidor': minor`, marked **Breaking:**) covers automatic
   initialization, the session-level fields, the narrowed `TurnResponse` and serialized format
   version 2.
-- **Restore through `initialize`:** recovering a session's surfaces from the producer rather than
-  from the serialized blob is a separate decision. Until then, a restored session never sends
-  `initialize`.
+- **Restore through `initialize`:** decided in
+  [the amendment below](#amendment-restoring-a-session-through-initialize).
 - **First paint and concurrent suggestions:** if the EAP shows that the disabled box or the waiting
   suggestions hurt, revisit Option A or a queue in the producer.
 - **Surface retention:** a long session accumulates live surfaces until the producer deletes them.
@@ -219,6 +219,35 @@ replaced the turn's own error.
 - **`actionError`.** It identifies the action (`ActionError`: `message`, `component`, `name`,
   `surfaceId`, `sourceComponentId`), so a consumer shows the failure next to the block it came from, and tells a
   failed suggestion from a failed page change.
+
+## Amendment: restoring a session through `initialize`
+
+Accepted on 2026-11-17 (KIT-6651). A restored session never sent `initialize`, so it had no live
+shell and its search box stayed disabled. The Agent Gateway now resumes a session from its keys on
+`initialize`, with a new shell, or starts a new session when the keys name none.
+
+- **Resume.** A session restored with a `sessionToken` sends `initialize` with its keys, at most
+  once, unless created with `initialize: false`. Without a token there is no session to resume,
+  and it sends none, as before.
+- **The new shell replaces the old.** The resume answers with a new shell id, as the Agent Gateway
+  and the mock converse service do: the session's activity log puts the initialization first, so a
+  reused id would let the restored turns' operations win. The restored shell stays until the
+  resume's first activity, so a resume that fails or is cancelled before it leaves the old shell in
+  place. Then the run's activities replace the restored initialization's, and the old shell's state
+  is dropped and a `deleteSurface` for it reaches `a2uiMessages`.
+- **Earlier restored turns are read-only.** The transcript is redrawn from the serialized
+  activities, but the earlier turns' surfaces are snapshots of an earlier page. A surface whose
+  latest `createSurface` came from a restored turn before the last one that created a surface is
+  listed with `readOnly: true`, and `dispatchAction` and `retry` refuse its actions without a
+  request, except `productClick`: the gateway still counts a click on an evicted surface. The
+  surfaces of the last restored turn that created any stay live, whatever kind of turn it is and
+  however it ended, because the gateway keeps the session's latest search state and a text-only
+  answer replaces nothing, so the shopper keeps paginating or faceting from the last results. The restored initialization's surfaces stay live too: without a resume, they
+  are still the session's shell.
+- **Fallback.** When the resuming `initialize` answers with another `conversationSessionId`, the
+  session adopts the new keys and drops the restored turns and shell, their state and
+  `actionError`, in one change that subscribers see, and `a2uiMessages` gets a `deleteSurface` for
+  each dropped surface. The new shell stays.
 
 ## Amendment: retrying a failed initialize
 

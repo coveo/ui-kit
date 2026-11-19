@@ -2,7 +2,7 @@
   {
     "name": "@coveo/thermidor - main",
     "path": "dist/index.js",
-    "limit": "13.5 kB"
+    "limit": "14 kB"
   },
   {
     "name": "@coveo/thermidor - private",

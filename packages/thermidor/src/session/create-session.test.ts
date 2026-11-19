@@ -47,6 +47,7 @@ import {z} from 'zod/v4';
 import type {ContractsSchema} from './contracts.js';
 import type {NavigatorContext} from '@/src/internal/context/index.js';
 import {createSession, type SessionConfig} from './create-session.js';
+import type {SerializedSession} from './serialize.js';
 
 /**
  * A locally-built A2-UI contract, INJECTED as test data exactly as a real
@@ -82,9 +83,21 @@ const NextActionsBarSchema = z.strictObject({
     .optional(),
 });
 
+const ProductListSchema = z.strictObject({
+  component: z.literal('ProductList'),
+  actions: z
+    .strictObject({
+      productClick: z.strictObject({
+        payload: z.strictObject({productId: z.string(), position: z.number().int().min(1)}),
+      }),
+    })
+    .optional(),
+});
+
 const contracts = z.discriminatedUnion('component', [
   PaginationSchema,
   NextActionsBarSchema,
+  ProductListSchema,
 ]) as unknown as ContractsSchema;
 
 /**
@@ -2300,29 +2313,564 @@ describe('createSession lifecycle', () => {
       expect(session.initialization).toBeUndefined();
     });
 
-    it('never sends initialize for a session that has a token', async () => {
-      const initialized = await initializedSession();
-      callMock.mockReset();
+    describe('restoring a session (ADR-018, as amended)', () => {
+      const NEW_SHELL_ID = 'ui-shell-2';
+      const ANSWER_ID = 'answer-1';
 
-      const restored = createSession({...shellConfig, sessionToRestore: initialized.serialize()});
-      await flush();
+      const newShellSurface = JSON.parse(
+        JSON.stringify(shellSurface).replaceAll(SHELL_ID, NEW_SHELL_ID)
+      ) as typeof shellSurface;
 
-      expect(callMock).not.toHaveBeenCalled();
-      expect(restored.surfaces).toEqual(initialized.surfaces);
-    });
+      const answerSurface = {
+        type: 'ACTIVITY_SNAPSHOT',
+        messageId: 'answer-activity',
+        activityType: 'a2ui-surface',
+        content: {
+          messages: [
+            {
+              version: 'v1.0',
+              createSurface: {
+                surfaceId: ANSWER_ID,
+                catalogId: 'commerce',
+                components: [
+                  {id: 'root', component: 'CommerceSearch'},
+                  {id: 'answer-pagination', component: 'Pagination'},
+                  {id: 'answer-products', component: 'ProductList'},
+                ],
+              },
+            },
+            {
+              version: 'v1.0',
+              updateDataModel: {
+                surfaceId: ANSWER_ID,
+                path: '/state/answer-pagination',
+                value: shellPage,
+              },
+            },
+          ],
+        },
+      };
 
-    it('never sends initialize for a restored session, even without a token', async () => {
-      const initialized = await initializedSession();
-      callMock.mockReset();
+      const LATEST_ANSWER_ID = 'answer-2';
 
-      const restored = createSession({
-        ...shellConfig,
-        sessionToRestore: {...initialized.serialize(), sessionToken: undefined},
+      const latestAnswerSurface = JSON.parse(
+        JSON.stringify(answerSurface)
+          .replaceAll(ANSWER_ID, LATEST_ANSWER_ID)
+          .replace('answer-activity', 'latest-answer-activity')
+      ) as typeof answerSurface;
+
+      const answerSelectPage = {
+        userAction: {
+          name: 'selectPage',
+          surfaceId: ANSWER_ID,
+          sourceComponentId: 'answer-pagination',
+          context: {page: 2},
+        },
+      };
+
+      async function serializedConversation() {
+        const session = await initializedSession();
+        await completePrompt(session, 'first', [answerSurface]);
+        await completePrompt(session, 'latest', [latestAnswerSurface]);
+        callMock.mockReset();
+        return session.serialize();
+      }
+
+      /** Restores `serialized` and answers its `initialize` with `keys` and a new shell. */
+      async function resumed(
+        serialized: SerializedSession,
+        keys: Record<string, string>,
+        shell: typeof shellSurface = newShellSurface
+      ) {
+        const stream = queueStream();
+        const session = createSession({...shellConfig, sessionToRestore: serialized});
+        const changes: number[] = [];
+        session.subscribe(() => changes.push(session.getSnapshot().turns.length));
+        await stream.opened;
+        stream.emit({type: 'RUN_STARTED', ...keys});
+        stream.emit(shell);
+        stream.emit({type: 'RUN_FINISHED'});
+        stream.close();
+        await vi.waitFor(() => expect(session.request).toBeUndefined());
+        return {session, changes};
+      }
+
+      it('resumes a session that has a token through initialize, at most once, with a live new shell', async () => {
+        const {session} = await resumed(await serializedConversation(), {
+          conversationSessionId: 'gateway-session',
+          conversationToken: 'gateway-token',
+        });
+        await flush();
+
+        expect(callMock).toHaveBeenCalledTimes(1);
+        expect(callMock.mock.calls[0][0]).toMatchObject({
+          action: {name: 'initialize'},
+          conversationSessionId: 'gateway-session',
+          conversationToken: 'gateway-token',
+        });
+        expect(session.turns.map((turn) => turn.input.prompt)).toEqual(['first', 'latest']);
+        expect(session.surfaces).toEqual([
+          {surfaceId: NEW_SHELL_ID, rootComponentType: 'CommerceSearch', isLoading: false},
+          {
+            surfaceId: ANSWER_ID,
+            rootComponentType: 'CommerceSearch',
+            isLoading: false,
+            readOnly: true,
+          },
+          {surfaceId: LATEST_ANSWER_ID, rootComponentType: 'CommerceSearch', isLoading: false},
+        ]);
+        expect(session.turns[0].response.surfaces[0].readOnly).toBe(true);
+        expect(session.turns[1].response.surfaces[0].readOnly).toBeUndefined();
+        expect(session.a2uiMessages).toContainEqual({
+          version: 'v0.9',
+          deleteSurface: {surfaceId: SHELL_ID},
+        });
+        expect(session.state).not.toHaveProperty(SHELL_ID);
+
+        callMock.mockReset();
+        await session.dispatchAction(answerSelectPage);
+        expect(callMock).not.toHaveBeenCalled();
+        for (const userAction of [
+          {...shellSelectPage(2).userAction, surfaceId: NEW_SHELL_ID},
+          {...answerSelectPage.userAction, surfaceId: LATEST_ANSWER_ID},
+        ]) {
+          callMock.mockReset();
+          const stream = queueStream();
+          const sent = session.dispatchAction({userAction});
+          await stream.opened;
+          stream.emit({type: 'RUN_FINISHED'});
+          stream.close();
+          await sent;
+          expect(callMock.mock.calls[0][0]).toMatchObject({
+            action: {name: 'selectPage', surfaceId: userAction.surfaceId},
+          });
+        }
       });
-      await flush();
 
-      expect(callMock).not.toHaveBeenCalled();
-      expect(restored.surfaces).toEqual(initialized.surfaces);
+      it.each([
+        [
+          'fails',
+          () => {
+            callMock.mockImplementationOnce(async () => ({success: false, error: 'Unavailable'}));
+          },
+        ],
+        [
+          'is cancelled',
+          () => {
+            queueStream();
+          },
+        ],
+      ])(
+        'keeps the restored shell when the resume %s before it sends anything',
+        async (_, answer) => {
+          const serialized = await serializedConversation();
+          answer();
+          const session = createSession({...shellConfig, sessionToRestore: serialized});
+          await vi.waitFor(() => expect(callMock).toHaveBeenCalledTimes(1));
+          session.cancel();
+          await vi.waitFor(() => expect(session.request).toBeUndefined());
+
+          expect(session.initialization?.status).toBe('error');
+          expect(session.surfaces[0]).toEqual({
+            surfaceId: SHELL_ID,
+            rootComponentType: 'CommerceSearch',
+            isLoading: false,
+          });
+          expect(session.serialize().initialization?.activities).toEqual(
+            serialized.initialization?.activities
+          );
+        }
+      );
+
+      it('keeps the restored shell while a transient rejection of the resume is retried', async () => {
+        const serialized = await serializedConversation();
+        vi.useFakeTimers({toFake: ['setTimeout', 'clearTimeout', 'Date']});
+        try {
+          callMock.mockImplementationOnce(async () => ({
+            success: false,
+            error: 'Unavailable',
+            transient: {},
+          }));
+          const stream = queueStream();
+          const session = createSession({...shellConfig, sessionToRestore: serialized});
+          await vi.advanceTimersByTimeAsync(0);
+
+          expect(session.request).toEqual({kind: 'initialize'});
+          expect(session.surfaces[0].surfaceId).toBe(SHELL_ID);
+          await vi.advanceTimersByTimeAsync(2_000);
+          stream.emit({
+            type: 'RUN_STARTED',
+            conversationSessionId: serialized.sessionId,
+            conversationToken: serialized.sessionToken,
+          });
+          stream.emit(newShellSurface);
+          stream.emit({type: 'RUN_FINISHED'});
+          stream.close();
+          await vi.advanceTimersByTimeAsync(0);
+
+          expect(callMock).toHaveBeenCalledTimes(2);
+          for (const [request] of callMock.mock.calls) {
+            expect(request).toMatchObject({
+              action: {name: 'initialize'},
+              conversationSessionId: serialized.sessionId,
+              conversationToken: serialized.sessionToken,
+            });
+          }
+          expect(session.initialization?.status).toBe('complete');
+          expect(session.turns.map((turn) => turn.input.prompt)).toEqual(['first', 'latest']);
+          expect(session.surfaces[0].surfaceId).toBe(NEW_SHELL_ID);
+        } finally {
+          vi.useRealTimers();
+        }
+      });
+
+      it('keeps the restored shell when a listener cancels the resume on its keys, mid-chunk', async () => {
+        const serialized = await serializedConversation();
+        const chunk = [
+          {
+            type: 'RUN_STARTED',
+            conversationSessionId: 'gateway-session',
+            conversationToken: 'renewed',
+          },
+          newShellSurface,
+          {type: 'RUN_FINISHED'},
+        ]
+          .map((event) => `data: ${JSON.stringify(event)}\n\n`)
+          .join('');
+        callMock.mockImplementationOnce(async () => ({
+          success: true,
+          data: {
+            stream: new ReadableStream<Uint8Array>({
+              start(controller) {
+                controller.enqueue(encoder.encode(chunk));
+                controller.close();
+              },
+            }),
+          },
+        }));
+        const session = createSession({...shellConfig, sessionToRestore: serialized});
+        session.subscribe(() => {
+          if (session.sessionToken === 'renewed') {
+            session.cancel();
+          }
+        });
+        await vi.waitFor(() => expect(callMock).toHaveBeenCalledTimes(1));
+        await vi.waitFor(() => expect(session.request).toBeUndefined());
+
+        expect(session.initialization?.status).toBe('error');
+        expect(session.surfaces.map((surface) => surface.surfaceId)).toEqual([
+          SHELL_ID,
+          ANSWER_ID,
+          LATEST_ANSWER_ID,
+        ]);
+        expect(session.a2uiMessages).not.toContainEqual({
+          version: 'v0.9',
+          deleteSurface: {surfaceId: SHELL_ID},
+        });
+      });
+
+      it('drops the restored transcript when initialize answers with another session', async () => {
+        const {session, changes} = await resumed(await serializedConversation(), {
+          conversationSessionId: 'other-session',
+          conversationToken: 'other-token',
+        });
+
+        expect(changes).toContain(0);
+        expect(session.sessionId).toBe('other-session');
+        expect(session.sessionToken).toBe('other-token');
+        expect(session.turns).toEqual([]);
+        expect(session.surfaces.map((surface) => surface.surfaceId)).toEqual([NEW_SHELL_ID]);
+        expect(session.surfaces[0].readOnly).toBeUndefined();
+        for (const surfaceId of [SHELL_ID, ANSWER_ID, LATEST_ANSWER_ID]) {
+          expect(session.a2uiMessages).toContainEqual({
+            version: 'v0.9',
+            deleteSurface: {surfaceId},
+          });
+        }
+        expect(session.serialize()).toMatchObject({turns: [], sessionId: 'other-session'});
+        expect(session.serialize().activeTurnId).toBeUndefined();
+        expect(session.serialize().state).toBeUndefined();
+      });
+
+      it('acts on the new shell when initialize answers with another session that reuses the shell id', async () => {
+        const {session} = await resumed(
+          await serializedConversation(),
+          {conversationSessionId: 'other-session', conversationToken: 'other-token'},
+          shellSurface
+        );
+        callMock.mockReset();
+
+        const stream = queueStream();
+        const sent = session.dispatchAction(shellSelectPage(2));
+        await stream.opened;
+        stream.emit({type: 'RUN_FINISHED'});
+        stream.close();
+        await sent;
+
+        expect(callMock.mock.calls[0][0]).toMatchObject({
+          action: {name: 'selectPage', surfaceId: SHELL_ID},
+          conversationSessionId: 'other-session',
+        });
+      });
+
+      it('never sends initialize with initialize: false, and refuses the actions of restored turns but their product clicks', async () => {
+        const restored = createSession({
+          ...baseConfig,
+          sessionToRestore: await serializedConversation(),
+        });
+        await flush();
+        await restored.dispatchAction(answerSelectPage);
+
+        expect(callMock).not.toHaveBeenCalled();
+        expect(restored.initialization?.status).toBe('complete');
+        expect(restored.surfaces.map((surface) => surface.readOnly)).toEqual([
+          undefined,
+          true,
+          undefined,
+        ]);
+
+        const stream = queueStream();
+        const clicked = restored.dispatchAction({
+          userAction: {
+            name: 'productClick',
+            surfaceId: ANSWER_ID,
+            sourceComponentId: 'answer-products',
+            context: {productId: 'wetsuit-1', position: 1},
+          },
+        });
+        await stream.opened;
+        stream.emit({type: 'RUN_FINISHED'});
+        stream.close();
+        await clicked;
+
+        expect(callMock).toHaveBeenCalledTimes(1);
+        expect(callMock.mock.calls[0][0]).toMatchObject({
+          action: {name: 'productClick', surfaceId: ANSWER_ID},
+        });
+      });
+
+      it('keeps live the last restored turn that created a surface, past a text-only answer', async () => {
+        const session = await initializedSession();
+        await completePrompt(session, 'wetsuits', [answerSurface]);
+        await completePrompt(session, 'which one is warmest?');
+        callMock.mockReset();
+        const restored = createSession({...baseConfig, sessionToRestore: session.serialize()});
+
+        expect(restored.surfaces.map((surface) => surface.readOnly)).toEqual([
+          undefined,
+          undefined,
+        ]);
+        const stream = queueStream();
+        const sent = restored.dispatchAction(answerSelectPage);
+        await stream.opened;
+        stream.emit({type: 'RUN_FINISHED'});
+        stream.close();
+        await sent;
+        expect(callMock.mock.calls[0][0]).toMatchObject({
+          action: {name: 'selectPage', surfaceId: ANSWER_ID},
+        });
+      });
+
+      it('retries a failed last restored turn, but not an earlier one opened from a read-only surface', async () => {
+        const serialized = await serializedConversation();
+        const failedTurn = (id: string) => ({
+          id,
+          input: {
+            action: {
+              component: 'Pagination',
+              name: 'selectPage',
+              surfaceId: ANSWER_ID,
+              sourceComponentId: 'answer-pagination',
+              context: {page: 2},
+            },
+          },
+          status: 'error' as const,
+          error: 'Agent failed',
+          response: {activities: []},
+        });
+        serialized.turns.splice(1, 0, failedTurn('earlier-failed-turn'));
+        serialized.turns.push(failedTurn('last-failed-turn'));
+        const restored = createSession({...baseConfig, sessionToRestore: serialized});
+
+        restored.retry('earlier-failed-turn');
+        await flush();
+        expect(callMock).not.toHaveBeenCalled();
+
+        const stream = queueStream();
+        restored.retry('last-failed-turn');
+        await stream.opened;
+        stream.emit({type: 'RUN_FINISHED'});
+        stream.close();
+        await vi.waitFor(() => expect(restored.request).toBeUndefined());
+
+        expect(callMock).toHaveBeenCalledTimes(1);
+        expect(callMock.mock.calls[0][0]).toMatchObject({
+          action: {name: 'selectPage', surfaceId: ANSWER_ID},
+        });
+        expect(restored.turns.at(-1)?.status).toBe('complete');
+      });
+
+      it('keeps the last restored turn live after a new turn', async () => {
+        const restored = createSession({
+          ...baseConfig,
+          sessionToRestore: await serializedConversation(),
+        });
+        const newAnswerSurface = JSON.parse(
+          JSON.stringify(answerSurface)
+            .replaceAll(ANSWER_ID, 'answer-3')
+            .replace('answer-activity', 'new-answer-activity')
+        ) as typeof answerSurface;
+
+        await completePrompt(restored, 'next', [newAnswerSurface]);
+
+        expect(restored.surfaces.map(({surfaceId, readOnly}) => [surfaceId, readOnly])).toEqual([
+          [SHELL_ID, undefined],
+          [ANSWER_ID, true],
+          [LATEST_ANSWER_ID, undefined],
+          ['answer-3', undefined],
+        ]);
+      });
+
+      it('keeps the restored shell when a shell action follows a failed resume', async () => {
+        const initialized = await initializedSession();
+        callMock.mockReset();
+        callMock.mockImplementationOnce(async () => ({success: false, error: 'Unavailable'}));
+        const session = createSession({...shellConfig, sessionToRestore: initialized.serialize()});
+        await vi.waitFor(() => expect(session.initialization?.status).toBe('error'));
+
+        const stream = queueStream();
+        const sent = session.dispatchAction(shellSelectPage(2));
+        await stream.opened;
+        stream.emit(shellPageUpdate('page-2'));
+        stream.emit({type: 'RUN_FINISHED'});
+        stream.close();
+        await sent;
+
+        expect(session.surfaces.map((surface) => surface.surfaceId)).toEqual([SHELL_ID]);
+        expect(session.state).toHaveProperty(SHELL_ID);
+      });
+
+      it('keeps a placeholder the restored initialization left behind out while it resumes', async () => {
+        const serialized = (await initializedSession()).serialize();
+        callMock.mockReset();
+        serialized.initialization = {
+          status: 'streaming',
+          activities: [
+            ...(serialized.initialization?.activities ?? []),
+            {
+              id: 'placeholder-activity',
+              kind: 'a2ui-surface',
+              replace: false,
+              payload: {
+                messages: [
+                  {
+                    version: 'v1.0',
+                    createSurface: {
+                      surfaceId: 'carousel-placeholder',
+                      catalogId: 'commerce',
+                      components: [{id: 'root', component: 'ProductCarousel'}],
+                      dataModel: {isLoading: true},
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        };
+        const stream = queueStream();
+        const session = createSession({...shellConfig, sessionToRestore: serialized});
+        await stream.opened;
+
+        expect(session.surfaces.map((surface) => surface.surfaceId)).toEqual([SHELL_ID]);
+        stream.close();
+      });
+
+      it('sends nothing to a replaced shell, even from a turn that updated it or a retry it opened, across restores', async () => {
+        const initialized = await initializedSession();
+        await completePrompt(initialized, 'first');
+        const shellUpdate = queueStream();
+        const updated = initialized.dispatchAction(shellSelectPage(2));
+        await shellUpdate.opened;
+        shellUpdate.emit({
+          type: 'ACTIVITY_SNAPSHOT',
+          messageId: 'shell-components',
+          activityType: 'a2ui-surface',
+          content: {
+            messages: [
+              {
+                version: 'v1.0',
+                updateComponents: {
+                  surfaceId: SHELL_ID,
+                  components: [{id: SHELL_PAGINATION_ID, component: 'Pagination'}],
+                },
+              },
+            ],
+          },
+        });
+        shellUpdate.emit({type: 'RUN_FINISHED'});
+        shellUpdate.close();
+        await updated;
+        callMock.mockImplementationOnce(async () => ({success: false, error: 'Unavailable'}));
+        await initialized.dispatchAction(shellChip);
+        const failedTurnId = initialized.turns.at(-1)!.id;
+        expect(initialized.turns.at(-1)!.status).toBe('error');
+        callMock.mockReset();
+
+        const keys = {conversationSessionId: 'gateway-session', conversationToken: 'gateway-token'};
+        const {session} = await resumed(initialized.serialize(), keys);
+        callMock.mockReset();
+        await session.dispatchAction(shellSelectPage(3));
+        session.retry(failedTurnId);
+        await flush();
+
+        expect(callMock).not.toHaveBeenCalled();
+
+        const thirdShell = JSON.parse(
+          JSON.stringify(shellSurface).replaceAll(SHELL_ID, 'ui-shell-3')
+        ) as typeof shellSurface;
+        const {session: restoredAgain} = await resumed(session.serialize(), keys, thirdShell);
+        callMock.mockReset();
+        await restoredAgain.dispatchAction(shellSelectPage(3));
+        restoredAgain.retry(failedTurnId);
+        await flush();
+
+        expect(callMock).not.toHaveBeenCalled();
+      });
+
+      it('restores a turn whose surface activity holds a null message', async () => {
+        const initialized = await initializedSession();
+        await completePrompt(initialized, 'first');
+        const serialized = initialized.serialize();
+        serialized.turns.at(-1)!.response.activities.push({
+          id: 'null-message-activity',
+          kind: 'a2ui-surface',
+          replace: false,
+          payload: {messages: [null]},
+        });
+        callMock.mockReset();
+
+        const restored = createSession({
+          ...shellConfig,
+          initialize: false,
+          sessionToRestore: serialized,
+        });
+
+        expect(restored.turns).toHaveLength(1);
+      });
+
+      it('never sends initialize for a restored session without a token', async () => {
+        const initialized = await initializedSession();
+        callMock.mockReset();
+
+        const restored = createSession({
+          ...shellConfig,
+          sessionToRestore: {...initialized.serialize(), sessionToken: undefined},
+        });
+        await flush();
+
+        expect(callMock).not.toHaveBeenCalled();
+        expect(restored.surfaces).toEqual(initialized.surfaces);
+      });
     });
 
     it('does not send initialize after a prompt dispatched in the same task', async () => {
