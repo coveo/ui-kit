@@ -20,7 +20,7 @@ A second entry point, `@coveo/thermidor/private` (`src/private.ts`), is **for in
 graph TB
     subgraph "Public surface (src/index.ts)"
         CS["createSession(config)"]
-        SESSION["Session&lt;TContracts&gt;<br/>contracts · turns · initialization · surfaces · a2uiMessages · state · actionError · request<br/>subscribe · getSnapshot · dispatchAction<br/>cancel · retry · serialize"]
+        SESSION["Session&lt;TContracts&gt;<br/>contracts · turns · initialization · surfaces · a2uiMessages · state · actionError · request<br/>subscribe · getSnapshot · dispatchAction<br/>cancel · retry · retryInitialization · serialize"]
     end
 
     subgraph "Internal (not exported)"
@@ -61,7 +61,7 @@ src/
 ├── session/
 │   ├── create-session.ts          # createSession factory + shared runtime (dispatch/cancel/retry)
 │   ├── create-private-session.ts  # createPrivateSession: optional ids, client-chosen sessionId
-│   ├── request-retry.ts           # Bounded retry of 409 conflicts and of transient rejections
+│   ├── request-retry.ts           # Bounded retry of 409 conflicts and of transient initialize rejections
 │   ├── types.ts                   # Turn / TurnInput / TurnResponse domain model (ADR-010 model annex)
 │   ├── store.ts                   # Plain observable store + subscribe/notify
 │   ├── fold.ts                    # Pure fold + surface derivation (ADR-015 interim)
@@ -91,7 +91,7 @@ Both entry points share one runtime, `createSessionRuntime(config, requestScope)
 
 The runtime owns the initialize / dispatch / cancel / retry orchestration and the SSE-consumption loop that folds each event into the run a request streams into, its run target: a turn, or the initialization:
 
-- **`initialize`** — unless the session was restored or created with `initialize: false`, `createSession` queues a microtask that sends the `initialize` action (`{name: 'initialize', context: {}}`, with no `surfaceId` or `sourceComponentId`) through `sendRequest`, unless a prompt dispatched in the same task is already in flight. `request` is `{kind: 'initialize'}` meanwhile. Its run is folded into `session.initialization` (`foldInitialization` in `fold.ts`, which keeps only activities and status), never into a turn; it adopts the session keys like a prompt, and a failure is recorded there without a retry beyond the conflict retry ([ADR-018](./internal/adr/ADR-018-session-scoped-surfaces-and-initialize.md)).
+- **`initialize`** — unless the session was restored or created with `initialize: false`, `createSession` queues a microtask that sends the `initialize` action (`{name: 'initialize', context: {}}`, with no `surfaceId` or `sourceComponentId`) through `sendRequest`, unless a prompt dispatched in the same task is already in flight. `request` is `{kind: 'initialize'}` meanwhile. Its run is folded into `session.initialization` (`foldInitialization` in `fold.ts`, which keeps only activities and status), never into a turn; it adopts the session keys like a prompt, and a transient rejection is retried (below) before a failure is recorded there ([ADR-018, as amended](./internal/adr/ADR-018-session-scoped-surfaces-and-initialize.md)). `retryInitialization()` sends it again once it has failed, a restored session's included.
 
 - **`dispatchAction(message)`** — the single consumer-facing entry point, wired as the renderer's `onAction`. It never rejects: every refusal is a dev-only warning. A dispatch made while a request is in flight is withheld, unless the producer announced it as concurrent (see [The concurrent lane](#the-concurrent-lane)).
   - A `submitPrompt` action (`{name: 'submitPrompt', payload: {prompt}}`) needs no active turn. It opens a new `streaming` turn, builds a request (invoking both context providers fresh), POSTs to the endpoint, and folds the streamed response into that turn.
@@ -104,6 +104,8 @@ Prompts and actions reach the endpoint one at a time, through `sendRequest` in `
 The session publishes its request state in its store: `request` is the request being sent (`{kind: 'initialize'}`, `{kind: 'prompt', turnId}` or `{kind: 'action', component, name, surfaceId, sourceComponentId, turnId?}`, with no `turnId` when it streams into the initialization), or `undefined` when idle. `sendRequest` publishes it before its first `await`, so it is set as soon as the dispatch returns. Each `dispatchAction` promise resolves once its own request ends, whatever its outcome, and at once when the dispatch is withheld, which is what an optimistic update needs to end.
 
 Every request, prompt or action, is sent through a bounded retry loop (`callWithRetry` in `src/session/request-retry.ts`, called from `executeStream`): while the Gateway answers `409` with the `errorCode` `AGENT:ACTION_IN_FLIGHT` (parsed in `src/internal/api/protocol/error-handling.ts`), the request is rebuilt and resent after a doubling backoff, for up to 30 s in total (the time spent on each rejected request included), each wait capped at 4 s and the last one cut to what is left. The budget covers an aborted agent run winding down on the Gateway, which can't cancel it upstream yet (KIT-6261). A request sent the moment `RUN_FINISHED` arrives can get a 409 too, because the Gateway commits the turn a few milliseconds later; the first retry absorbs it. The retrying request stays the one in flight, so nothing touches the turn. When the budget runs out, a prompt fails its turn; an action sets the session-level `actionError` and its dispatch ends. The wait is abortable, so `cancel()` ends it like a stream; an abort during a resent request is handled the same way, since the client reports it as a failed call rather than throwing it. `executeStream` returns a request rejected before streaming to its caller, so the prompt path fails its turn while the action path sets `actionError` (cleared when the next action or prompt is sent).
+
+The same loop retries the automatic `initialize` when the client flags a rejection as `transient` (a network error, `429`, `502`, `503` or `504`; see `isTransientStatus`): up to 3 attempts within 5 s, attempts included, with a jittered doubling backoff from 500 ms, or from 1 s for a `429` to clear the Gateway's one-second rate-limit window (browsers can't read its `Retry-After`), and no retry whose wait doesn't fit the budget. Before a retry, a client-chosen session id the failed attempt may have reserved is dropped. The retrying `initialize` stays the request in flight, so dispatches are withheld meanwhile. `retryInitialization()` re-sends a failed `initialize` without these retries ([ADR-018, as amended](./internal/adr/ADR-018-session-scoped-surfaces-and-initialize.md)).
 
 ### The concurrent lane
 

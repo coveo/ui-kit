@@ -50,6 +50,7 @@ await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me r
 | `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`.                                |
 | `cancel()`                | Stops the active stream.                                                                                                                               |
 | `retry(turnId)`           | Re-submits the last turn's input when it errored: its prompt, or the action that opened it.                                                            |
+| `retryInitialization()`   | Sends `initialize` again when `initialization.status` is `'error'`. See [Opening the session](#opening-the-session).                                   |
 | `serialize()`             | Serializes the transcript into a versioned `SerializedSession`.                                                                                        |
 
 `subscribe` and `getSnapshot` do not rely on `this`, so they can be handed by reference to any store that compares snapshots by reference, such as React's `useSyncExternalStore(session.subscribe, session.getSnapshot)`. The package itself depends on no framework.
@@ -60,7 +61,7 @@ The concrete `contracts` type pinned at the `createSession` call site threads un
 
 The session opens itself: `createSession` sends an `initialize` action a microtask after it returns, so a listener subscribed in the same task sees it start. It carries no surface or source component, since no component exists yet. While it is in flight, `session.request` is `{kind: 'initialize'}`. It goes through the [one-request rule](#one-request-at-a-time) and the conflict retry, and adopts the session id and token from its run, like a prompt. The producer answers with the session's shell, such as its search box, as an ordinary surface.
 
-Its run is recorded as `session.initialization` (`activities`, `status`, `error`), never as a turn. A failed `initialize` is not retried: `initialization.status` becomes `'error'`, and the first prompt still opens the session. `cancel()` stops it like any request. A restored session never sends it, and neither does a session created with `initialize: false`, for tests or for a server that creates a session while rendering.
+Its run is recorded as `session.initialization` (`activities`, `status`, `error`), never as a turn. When the endpoint rejects it with a network error, a `429`, `502`, `503` or `504`, the session retries it, up to 3 attempts within 5 seconds, the attempts included, so a failure that takes several seconds to arrive, such as a proxy timeout, isn't retried. `request` stays `{kind: 'initialize'}` meanwhile, and a dispatch is withheld as during any request. Once it has failed, `initialization.status` is `'error'`, the first prompt still opens the session, and `retryInitialization()` sends it again, a restored session's included, while the session has no token. `cancel()` stops it like any request. A restored session never sends it by itself, and neither does a session created with `initialize: false`, for tests or for a server that creates a session while rendering.
 
 ## Dispatching actions
 
