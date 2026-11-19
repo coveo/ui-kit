@@ -2,10 +2,9 @@ import type {ConverseRequestModel} from './unified-endpoint-types.js';
 import {
   isSuccessResponse,
   readActionInFlightConflict,
-  readTransientFailure,
+  isTransientStatus,
   transformError,
   type ActionInFlightConflict,
-  type TransientFailure,
 } from '@/src/internal/api/protocol/error-handling.js';
 import {getOrganizationEndpoint} from '@/src/internal/api/organization-endpoint.js';
 
@@ -75,7 +74,7 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
         if (options?.signal?.aborted || isAbortError(error)) {
           return {success: false, error: transformError(error)};
         }
-        return {success: false, error: transformError(error), transient: {}};
+        return {success: false, error: transformError(error), transient: true};
       }
 
       if (!isSuccessResponse(response)) {
@@ -83,10 +82,12 @@ const createCallUnifiedEndpoint = (): UnifiedEndpointClient['call'] => {
         if (conflict) {
           return {success: false, error: ACTION_IN_FLIGHT_ERROR, conflict, status: response.status};
         }
-        const transient = readTransientFailure(response);
-        return transient
-          ? {success: false, error: transformError(response), status: response.status, transient}
-          : {success: false, error: transformError(response), status: response.status};
+        return {
+          success: false,
+          error: transformError(response),
+          status: response.status,
+          ...(isTransientStatus(response.status) && {transient: true as const}),
+        };
       }
 
       if (!response.body) {
@@ -146,7 +147,7 @@ type UnifiedEndpointClientResult =
       /** Set when the request was never sent, such as for a configuration error. */
       unsent?: true;
       /** Set for a network error, a `429`, `502`, `503` or `504`. */
-      transient?: TransientFailure;
+      transient?: true;
     };
 
 export interface UnifiedEndpointClient {

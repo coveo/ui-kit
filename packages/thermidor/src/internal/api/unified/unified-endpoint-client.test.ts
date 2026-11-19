@@ -351,7 +351,7 @@ describe('UnifiedEndpointClient', () => {
     expect(response).toEqual({
       success: false,
       error: 'network down',
-      transient: {},
+      transient: true,
     });
   });
 
@@ -434,31 +434,20 @@ describe('UnifiedEndpointClient', () => {
     };
 
     it.each([
-      [502, {}],
-      [503, {}],
-      [504, {}],
+      [429, true],
+      [502, true],
+      [503, true],
+      [504, true],
       [400, undefined],
       [401, undefined],
       [403, undefined],
       [404, undefined],
       [409, undefined],
       [500, undefined],
-    ])('reads a %i as transient: %o', async (status, transient) => {
+    ])('reads a %i as transient: %s', async (status, transient) => {
       const result = await callFailing(new Response(null, {status}));
 
-      expect(result.transient).toEqual(transient);
-    });
-
-    it.each([
-      ['in seconds', '3', {retryAfterMs: 3000}],
-      ['as a past HTTP date', 'Wed, 21 Oct 2015 07:28:00 GMT', {retryAfterMs: 0}],
-      ['missing', undefined, {}],
-      ['unreadable', 'soon', {}],
-    ])('reads a 429 with its Retry-After %s', async (_label, retryAfter, transient) => {
-      const headers: Record<string, string> = retryAfter ? {'Retry-After': retryAfter} : {};
-      const result = await callFailing(new Response(null, {status: 429, headers}));
-
-      expect(result.transient).toEqual(transient);
+      expect(result.transient).toBe(transient);
     });
   });
 
