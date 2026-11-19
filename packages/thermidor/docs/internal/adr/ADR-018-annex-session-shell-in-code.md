@@ -163,7 +163,7 @@ prompt's `409` is absorbed by the conflict retry.
   initialization: {activities: [/* createSurface of the shell */], status: 'complete'},
   turns: [/* as in version 1, without `response.state` */],
   state: {
-    'ui-7f3c': {state: {'query-suggestions': {query: 'hik', completions: [/* ... */]}}},
+    'ui-7f3c': {state: {query_suggestions: {query: 'hik', completions: [/* ... */]}}},
     'ui-91ab': {/* a search surface's state */},
   },
 }

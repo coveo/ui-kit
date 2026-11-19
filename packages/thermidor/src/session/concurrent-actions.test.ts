@@ -53,7 +53,7 @@ const contracts = z.discriminatedUnion('component', [
 ]) as unknown as ContractsSchema;
 
 const SHELL_ID = 'ui-shell';
-const PRODUCTS_ID = 'instant-products';
+const PRODUCTS_ID = 'instant_products';
 const CACHED = 'fetchInstantProducts';
 const UNCACHED = 'previewInstantProducts';
 const TRACKED = 'trackInstantProducts';

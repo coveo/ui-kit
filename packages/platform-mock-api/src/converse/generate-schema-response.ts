@@ -33,7 +33,7 @@ const ACTION_DELAY_MS = 200;
 // Per message (five per suggestions response): ~150ms, about a real querySuggest round trip.
 const SUGGESTIONS_DELAY_MS = 30;
 
-// Per message (five per instant-products response): ~400ms, as productSuggest takes at least twice
+// Per message (five per instant_products response): ~400ms, as productSuggest takes at least twice
 // as long as querySuggest.
 const INSTANT_PRODUCTS_DELAY_MS = 80;
 

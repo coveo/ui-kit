@@ -99,9 +99,9 @@ const surfaceActivity = (components: unknown[]): Activity => ({
 });
 
 const paginationNode = {
-  id: 'pagination-2',
+  id: 'pagination_2',
   component: 'Pagination',
-  page: {'@path': statePath('pagination-2') + '/page'},
+  page: {'@path': statePath('pagination_2') + '/page'},
 };
 
 const validWholePagination = {page: 0, pageSize: 12, totalEntries: 43, totalPages: 4};
@@ -110,7 +110,7 @@ describe('deriveNodeIdentityRegistry', () => {
   it('records id -> component discriminant per surface from createSurface', () => {
     const registry = deriveNodeIdentityRegistry([surfaceActivity([paginationNode])]);
 
-    expect(registry.get(SURFACE_ID)?.get('pagination-2')).toBe('Pagination');
+    expect(registry.get(SURFACE_ID)?.get('pagination_2')).toBe('Pagination');
   });
 
   it('records identity from updateComponents messages too', () => {
@@ -123,7 +123,7 @@ describe('deriveNodeIdentityRegistry', () => {
           {
             updateComponents: {
               surfaceId: SURFACE_ID,
-              components: [{id: 'sort-1', component: 'Sort'}],
+              components: [{id: 'sort_1', component: 'Sort'}],
             },
           },
         ],
@@ -132,15 +132,15 @@ describe('deriveNodeIdentityRegistry', () => {
 
     const registry = deriveNodeIdentityRegistry([activity]);
 
-    expect(registry.get(SURFACE_ID)?.get('sort-1')).toBe('Sort');
+    expect(registry.get(SURFACE_ID)?.get('sort_1')).toBe('Sort');
   });
 
   it('reads the NEW top-level id/component identity, not props.componentType', () => {
-    const legacyNode = {id: 'pagination-2', props: {componentType: 'commerce-pagination'}};
+    const legacyNode = {id: 'pagination_2', props: {componentType: 'commerce-pagination'}};
 
     const registry = deriveNodeIdentityRegistry([surfaceActivity([legacyNode])]);
 
-    expect(registry.get(SURFACE_ID)?.has('pagination-2')).toBe(false);
+    expect(registry.get(SURFACE_ID)?.has('pagination_2')).toBe(false);
   });
 
   it('removes a surface on deleteSurface so its identities no longer resolve', () => {
@@ -159,12 +159,12 @@ describe('deriveNodeIdentityRegistry', () => {
   it('replaces (not merges) a surface identities on a createSurface recreate', () => {
     // Recreate the same surfaceId with a DIFFERENT node set: the stale node from
     // the first createSurface must not survive.
-    const recreate = surfaceActivity([{id: 'sort-1', component: 'Sort'}]);
+    const recreate = surfaceActivity([{id: 'sort_1', component: 'Sort'}]);
 
     const registry = deriveNodeIdentityRegistry([surfaceActivity([paginationNode]), recreate]);
 
-    expect(registry.get(SURFACE_ID)?.has('pagination-2')).toBe(false);
-    expect(registry.get(SURFACE_ID)?.get('sort-1')).toBe('Sort');
+    expect(registry.get(SURFACE_ID)?.has('pagination_2')).toBe(false);
+    expect(registry.get(SURFACE_ID)?.get('sort_1')).toBe('Sort');
   });
 
   it('merges incremental identities on updateComponents (keeps prior nodes)', () => {
@@ -177,7 +177,7 @@ describe('deriveNodeIdentityRegistry', () => {
           {
             updateComponents: {
               surfaceId: SURFACE_ID,
-              components: [{id: 'sort-1', component: 'Sort'}],
+              components: [{id: 'sort_1', component: 'Sort'}],
             },
           },
         ],
@@ -186,8 +186,8 @@ describe('deriveNodeIdentityRegistry', () => {
 
     const registry = deriveNodeIdentityRegistry([surfaceActivity([paginationNode]), update]);
 
-    expect(registry.get(SURFACE_ID)?.get('pagination-2')).toBe('Pagination');
-    expect(registry.get(SURFACE_ID)?.get('sort-1')).toBe('Sort');
+    expect(registry.get(SURFACE_ID)?.get('pagination_2')).toBe('Pagination');
+    expect(registry.get(SURFACE_ID)?.get('sort_1')).toBe('Sort');
   });
 });
 
@@ -207,12 +207,12 @@ describe('findComponentContract', () => {
 describe('readUpdateDataModelOps', () => {
   it('extracts well-formed updateDataModel ops and skips others', () => {
     const ops = readUpdateDataModelOps([
-      {updateDataModel: {surfaceId: SURFACE_ID, path: statePath('pagination-2'), value: 1}},
+      {updateDataModel: {surfaceId: SURFACE_ID, path: statePath('pagination_2'), value: 1}},
       {createSurface: {surfaceId: SURFACE_ID}},
       {updateDataModel: {surfaceId: SURFACE_ID}},
     ]);
 
-    expect(ops).toEqual([{surfaceId: SURFACE_ID, path: statePath('pagination-2'), value: 1}]);
+    expect(ops).toEqual([{surfaceId: SURFACE_ID, path: statePath('pagination_2'), value: 1}]);
   });
 });
 
@@ -221,21 +221,21 @@ describe('validateInboundOp', () => {
 
   it('forwards a conforming whole-component op', () => {
     const decision = validateInboundOp(
-      {surfaceId: SURFACE_ID, path: statePath('pagination-2'), value: validWholePagination},
+      {surfaceId: SURFACE_ID, path: statePath('pagination_2'), value: validWholePagination},
       registry,
       contracts
     );
 
     expect(decision).toEqual({
       kind: 'forward',
-      path: statePath('pagination-2'),
+      path: statePath('pagination_2'),
       value: validWholePagination,
     });
   });
 
   it('drops a whole-component op missing a required field', () => {
     const decision = validateInboundOp(
-      {surfaceId: SURFACE_ID, path: statePath('pagination-2'), value: {page: 0}},
+      {surfaceId: SURFACE_ID, path: statePath('pagination_2'), value: {page: 0}},
       registry,
       contracts
     );
@@ -247,7 +247,7 @@ describe('validateInboundOp', () => {
     const decision = validateInboundOp(
       {
         surfaceId: SURFACE_ID,
-        path: statePath('pagination-2'),
+        path: statePath('pagination_2'),
         value: {...validWholePagination, surprise: true},
       },
       registry,
@@ -259,21 +259,21 @@ describe('validateInboundOp', () => {
 
   it('forwards a conforming partial op against the sub-schema', () => {
     const decision = validateInboundOp(
-      {surfaceId: SURFACE_ID, path: statePath('pagination-2') + '/page', value: 3},
+      {surfaceId: SURFACE_ID, path: statePath('pagination_2') + '/page', value: 3},
       registry,
       contracts
     );
 
     expect(decision).toEqual({
       kind: 'forward',
-      path: statePath('pagination-2') + '/page',
+      path: statePath('pagination_2') + '/page',
       value: 3,
     });
   });
 
   it('drops a partial op whose value violates the sub-schema', () => {
     const decision = validateInboundOp(
-      {surfaceId: SURFACE_ID, path: statePath('pagination-2') + '/page', value: 'nope'},
+      {surfaceId: SURFACE_ID, path: statePath('pagination_2') + '/page', value: 'nope'},
       registry,
       contracts
     );
@@ -283,7 +283,7 @@ describe('validateInboundOp', () => {
 
   it('drops a partial op targeting an undeclared field', () => {
     const decision = validateInboundOp(
-      {surfaceId: SURFACE_ID, path: statePath('pagination-2') + '/nonexistent', value: 1},
+      {surfaceId: SURFACE_ID, path: statePath('pagination_2') + '/nonexistent', value: 1},
       registry,
       contracts
     );
@@ -293,7 +293,7 @@ describe('validateInboundOp', () => {
 
   it('drops an op with an unresolved path (outside /state)', () => {
     const decision = validateInboundOp(
-      {surfaceId: SURFACE_ID, path: '/elsewhere/pagination-2', value: validWholePagination},
+      {surfaceId: SURFACE_ID, path: '/elsewhere/pagination_2', value: validWholePagination},
       registry,
       contracts
     );
@@ -315,11 +315,11 @@ describe('validateInboundOp', () => {
     // LayoutStack is a container with an empty *State object; a non-empty value
     // fails the strict object, so the op is dropped (prior UI retained).
     const containerRegistry = deriveNodeIdentityRegistry([
-      surfaceActivity([{id: 'layout-1', component: 'LayoutStack'}]),
+      surfaceActivity([{id: 'layout_1', component: 'LayoutStack'}]),
     ]);
 
     const decision = validateInboundOp(
-      {surfaceId: SURFACE_ID, path: statePath('layout-1'), value: {foo: 'bar'}},
+      {surfaceId: SURFACE_ID, path: statePath('layout_1'), value: {foo: 'bar'}},
       containerRegistry,
       contracts
     );
@@ -353,14 +353,14 @@ describe('session state integration', () => {
         {
           updateDataModel: {
             surfaceId: SURFACE_ID,
-            path: statePath('pagination-2'),
+            path: statePath('pagination_2'),
             value: validWholePagination,
           },
         },
       ]),
     ]);
 
-    expect(state).toEqual({'ui-1': {state: {'pagination-2': validWholePagination}}});
+    expect(state).toEqual({'ui-1': {state: {pagination_2: validWholePagination}}});
   });
 
   it('leaves response.state unchanged when an invalid op is dropped', () => {
@@ -370,7 +370,7 @@ describe('session state integration', () => {
         {
           updateDataModel: {
             surfaceId: SURFACE_ID,
-            path: statePath('pagination-2'),
+            path: statePath('pagination_2'),
             value: {page: 0},
           },
         },
@@ -387,7 +387,7 @@ describe('session state integration', () => {
         {
           updateDataModel: {
             surfaceId: SURFACE_ID,
-            path: statePath('pagination-2'),
+            path: statePath('pagination_2'),
             value: validWholePagination,
           },
         },
@@ -396,7 +396,7 @@ describe('session state integration', () => {
         {
           updateDataModel: {
             surfaceId: SURFACE_ID,
-            path: statePath('pagination-2') + '/page',
+            path: statePath('pagination_2') + '/page',
             value: 2,
           },
         },
@@ -404,7 +404,7 @@ describe('session state integration', () => {
     ]);
 
     expect(state).toEqual({
-      'ui-1': {state: {'pagination-2': {...validWholePagination, page: 2}}},
+      'ui-1': {state: {pagination_2: {...validWholePagination, page: 2}}},
     });
   });
 
@@ -415,7 +415,7 @@ describe('session state integration', () => {
         {
           updateDataModel: {
             surfaceId: SURFACE_ID,
-            path: statePath('pagination-2'),
+            path: statePath('pagination_2'),
             value: validWholePagination,
           },
         },
@@ -424,19 +424,19 @@ describe('session state integration', () => {
         {
           updateDataModel: {
             surfaceId: SURFACE_ID,
-            path: statePath('pagination-2') + '/page',
+            path: statePath('pagination_2') + '/page',
             value: 'bad',
           },
         },
       ]),
     ]);
 
-    expect(state).toEqual({'ui-1': {state: {'pagination-2': validWholePagination}}});
+    expect(state).toEqual({'ui-1': {state: {pagination_2: validWholePagination}}});
   });
 
   it('keeps two surfaces that share a node id from colliding in response.state', () => {
-    // Both surfaces carry a node with the SAME id (`pagination-2`). Under a flat
-    // projection they would overwrite each other at `/state/pagination-2`; the
+    // Both surfaces carry a node with the SAME id (`pagination_2`). Under a flat
+    // projection they would overwrite each other at `/state/pagination_2`; the
     // per-surface data model keeps them under distinct `state[surfaceId]` keys.
     const otherSurfaceMessage = {
       version: '1.0',
@@ -456,7 +456,7 @@ describe('session state integration', () => {
           {
             updateDataModel: {
               surfaceId: SURFACE_ID,
-              path: statePath('pagination-2'),
+              path: statePath('pagination_2'),
               value: firstValue,
             },
           },
@@ -468,7 +468,7 @@ describe('session state integration', () => {
           {
             updateDataModel: {
               surfaceId: 'ui-2',
-              path: statePath('pagination-2'),
+              path: statePath('pagination_2'),
               value: secondValue,
             },
           },
@@ -478,8 +478,8 @@ describe('session state integration', () => {
     ]);
 
     expect(state).toEqual({
-      'ui-1': {state: {'pagination-2': firstValue}},
-      'ui-2': {state: {'pagination-2': secondValue}},
+      'ui-1': {state: {pagination_2: firstValue}},
+      'ui-2': {state: {pagination_2: secondValue}},
     });
   });
 });

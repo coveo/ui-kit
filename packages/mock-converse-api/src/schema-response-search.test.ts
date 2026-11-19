@@ -84,12 +84,12 @@ const PRICE_DESC_SORT = {
 };
 
 function appliedSort(components: Record<string, unknown>): unknown {
-  return (components['sort-2'] as Record<string, unknown>).appliedSort;
+  return (components['sort_2'] as Record<string, unknown>).appliedSort;
 }
 
 function productPrices(components: Record<string, unknown>): number[] {
   return (
-    (components['product-list-2'] as Record<string, unknown>).products as Array<
+    (components['product_list_2'] as Record<string, unknown>).products as Array<
       Record<string, unknown>
     >
   ).map((product) => product.ec_price as number);
@@ -121,11 +121,11 @@ describe('schema-response-search decomposed surface structure', () => {
     it('includes individual decomposed components', () => {
       const nodes = createSurface!.components as Array<Record<string, unknown>>;
       const componentIds = nodes.map((c) => c.id);
-      expect(componentIds).toContain('query-summary-2');
-      expect(componentIds).toContain('product-list-2');
-      expect(componentIds).toContain('pagination-2');
-      expect(componentIds).toContain('sort-2');
-      expect(componentIds).toContain('page-size-2');
+      expect(componentIds).toContain('query_summary_2');
+      expect(componentIds).toContain('product_list_2');
+      expect(componentIds).toContain('pagination_2');
+      expect(componentIds).toContain('sort_2');
+      expect(componentIds).toContain('page_size_2');
     });
 
     it('composes the two-column layout from generic LayoutStack nodes', () => {
@@ -134,15 +134,15 @@ describe('schema-response-search decomposed surface structure', () => {
 
       // The CommerceSearch root composes the sidebar and main columns via named ComponentId slots.
       const root = nodeMap.get('root')!;
-      expect(root.sidebarChild).toBe('search-sidebar');
-      expect(root.mainChild).toBe('search-main');
+      expect(root.sidebarChild).toBe('search_sidebar');
+      expect(root.mainChild).toBe('search_main');
 
       // Each layout region is a LayoutStack carrying its direction as a top-level node prop.
       const layoutRegions: [string, 'column' | 'row'][] = [
-        ['search-sidebar', 'column'],
-        ['search-main', 'column'],
-        ['search-top', 'row'],
-        ['search-bottom', 'row'],
+        ['search_sidebar', 'column'],
+        ['search_main', 'column'],
+        ['search_top', 'row'],
+        ['search_bottom', 'row'],
       ];
       for (const [id, direction] of layoutRegions) {
         const entry = nodeMap.get(id);
@@ -153,19 +153,19 @@ describe('schema-response-search decomposed surface structure', () => {
 
       // The breadbox gets its own row above the top row; the top row places the summary before
       // the sort, and the bottom row pagination before page size.
-      expect(nodeMap.get('search-main')!.children as string[]).toEqual([
-        'breadbox-2',
-        'search-top',
-        'product-list-2',
-        'search-bottom',
+      expect(nodeMap.get('search_main')!.children as string[]).toEqual([
+        'breadbox_2',
+        'search_top',
+        'product_list_2',
+        'search_bottom',
       ]);
-      expect(nodeMap.get('search-top')!.children as string[]).toEqual([
-        'query-summary-2',
-        'sort-2',
+      expect(nodeMap.get('search_top')!.children as string[]).toEqual([
+        'query_summary_2',
+        'sort_2',
       ]);
-      expect(nodeMap.get('search-bottom')!.children as string[]).toEqual([
-        'pagination-2',
-        'page-size-2',
+      expect(nodeMap.get('search_bottom')!.children as string[]).toEqual([
+        'pagination_2',
+        'page_size_2',
       ]);
     });
 
@@ -174,10 +174,10 @@ describe('schema-response-search decomposed surface structure', () => {
       const nodeMap = new Map(nodes.map((c) => [c.id, c]));
 
       const expected: [string, string][] = [
-        ['facet-brand-2', 'RegularFacet'],
-        ['facet-price-2', 'NumericFacet'],
-        ['facet-category-2', 'CategoryFacet'],
-        ['facet-manager-2', 'FacetManager'],
+        ['facet_brand_2', 'RegularFacet'],
+        ['facet_price_2', 'NumericFacet'],
+        ['facet_category_2', 'CategoryFacet'],
+        ['facet_manager_2', 'FacetManager'],
       ];
       for (const [id, component] of expected) {
         const entry = nodeMap.get(id);
@@ -186,21 +186,21 @@ describe('schema-response-search decomposed surface structure', () => {
       }
 
       // The facet-manager expresses facet ordering via its children (composition plane).
-      expect(nodeMap.get('facet-manager-2')!.children as string[]).toEqual([
-        'facet-brand-2',
-        'facet-price-2',
-        'facet-category-2',
+      expect(nodeMap.get('facet_manager_2')!.children as string[]).toEqual([
+        'facet_brand_2',
+        'facet_price_2',
+        'facet_category_2',
       ]);
     });
 
     it('has the correct PascalCase component discriminant for each non-facet component', () => {
       const nodes = createSurface!.components as Array<Record<string, unknown>>;
       const nodeMap = new Map(nodes.map((c) => [c.id, c]));
-      expect(nodeMap.get('query-summary-2')!.component).toBe('QuerySummary');
-      expect(nodeMap.get('product-list-2')!.component).toBe('ProductList');
-      expect(nodeMap.get('pagination-2')!.component).toBe('Pagination');
-      expect(nodeMap.get('sort-2')!.component).toBe('Sort');
-      expect(nodeMap.get('page-size-2')!.component).toBe('PageSize');
+      expect(nodeMap.get('query_summary_2')!.component).toBe('QuerySummary');
+      expect(nodeMap.get('product_list_2')!.component).toBe('ProductList');
+      expect(nodeMap.get('pagination_2')!.component).toBe('Pagination');
+      expect(nodeMap.get('sort_2')!.component).toBe('Sort');
+      expect(nodeMap.get('page_size_2')!.component).toBe('PageSize');
     });
 
     it('does not contain a monolithic ProductSearchSurface root component', () => {
@@ -214,15 +214,15 @@ describe('schema-response-search decomposed surface structure', () => {
   describe('inline component state via updateDataModel ops', () => {
     it('writes per-component state under /state/<id> for the stateful nodes', () => {
       expect(Object.keys(components).length).toBeGreaterThan(0);
-      expect(components['query-summary-2']).toBeDefined();
-      expect(components['product-list-2']).toBeDefined();
-      expect(components['pagination-2']).toBeDefined();
-      expect(components['sort-2']).toBeDefined();
-      expect(components['page-size-2']).toBeDefined();
+      expect(components['query_summary_2']).toBeDefined();
+      expect(components['product_list_2']).toBeDefined();
+      expect(components['pagination_2']).toBeDefined();
+      expect(components['sort_2']).toBeDefined();
+      expect(components['page_size_2']).toBeDefined();
     });
 
-    it('delivers state for query-summary-2 with the result-window aggregate', () => {
-      const summaryState = components['query-summary-2'] as Record<string, unknown>;
+    it('delivers state for query_summary_2 with the result-window aggregate', () => {
+      const summaryState = components['query_summary_2'] as Record<string, unknown>;
       expect(summaryState).toBeDefined();
       expect(typeof summaryState.query).toBe('string');
       expect(typeof summaryState.firstIndex).toBe('number');
@@ -230,21 +230,21 @@ describe('schema-response-search decomposed surface structure', () => {
       expect(typeof summaryState.totalEntries).toBe('number');
     });
 
-    it('delivers state for page-size-2 with the current pageSize', () => {
-      const pageSizeState = components['page-size-2'] as Record<string, unknown>;
+    it('delivers state for page_size_2 with the current pageSize', () => {
+      const pageSizeState = components['page_size_2'] as Record<string, unknown>;
       expect(pageSizeState).toBeDefined();
       expect(typeof pageSizeState.pageSize).toBe('number');
     });
 
-    it('delivers state for product-list-2 with products array', () => {
-      const productListState = components['product-list-2'] as Record<string, unknown>;
+    it('delivers state for product_list_2 with products array', () => {
+      const productListState = components['product_list_2'] as Record<string, unknown>;
       expect(productListState).toBeDefined();
       expect(Array.isArray(productListState.products)).toBe(true);
       expect((productListState.products as unknown[]).length).toBeGreaterThan(0);
     });
 
-    it('delivers state for pagination-2 with page, pageSize, totalEntries, totalPages', () => {
-      const paginationState = components['pagination-2'] as Record<string, unknown>;
+    it('delivers state for pagination_2 with page, pageSize, totalEntries, totalPages', () => {
+      const paginationState = components['pagination_2'] as Record<string, unknown>;
       expect(paginationState).toBeDefined();
       expect(typeof paginationState.page).toBe('number');
       expect(typeof paginationState.pageSize).toBe('number');
@@ -252,21 +252,21 @@ describe('schema-response-search decomposed surface structure', () => {
       expect(typeof paginationState.totalPages).toBe('number');
     });
 
-    it('delivers the gateway sorts for sort-2, with relevance applied', () => {
-      expect(components['sort-2']).toEqual({
+    it('delivers the gateway sorts for sort_2, with relevance applied', () => {
+      expect(components['sort_2']).toEqual({
         appliedSort: RELEVANCE_SORT,
         availableSorts: [RELEVANCE_SORT, PRICE_ASC_SORT, PRICE_DESC_SORT],
       });
     });
 
     it('delivers brand facet values and writes no state for the facet manager', () => {
-      const brandFacet = components['facet-brand-2'] as Record<string, unknown>;
+      const brandFacet = components['facet_brand_2'] as Record<string, unknown>;
       expect(Array.isArray(brandFacet.values)).toBe(true);
       expect((brandFacet.values as unknown[]).length).toBeGreaterThan(0);
 
       // FacetManager owns no Component_State: ordering lives on its node `children` (asserted in
       // the createSurface block), so it emits no `/state/<id>` op.
-      expect(components['facet-manager-2']).toBeUndefined();
+      expect(components['facet_manager_2']).toBeUndefined();
     });
   });
 });
@@ -276,8 +276,8 @@ describe('schema-response-search initial response totals', () => {
   const components = collectComponentState(events);
 
   it('uses a pageSize of 12 with real product totals across 4 pages', () => {
-    const pagination = components['pagination-2'] as Record<string, unknown>;
-    const productList = components['product-list-2'] as Record<string, unknown>;
+    const pagination = components['pagination_2'] as Record<string, unknown>;
+    const productList = components['product_list_2'] as Record<string, unknown>;
     expect(pagination.page).toBe(0);
     expect(pagination.pageSize).toBe(12);
     expect(pagination.totalEntries).toBe(43);
@@ -287,7 +287,7 @@ describe('schema-response-search initial response totals', () => {
   });
 
   it('summarizes the initial window as "1-12 of 43 for Water Sports"', () => {
-    const summary = components['query-summary-2'] as Record<string, unknown>;
+    const summary = components['query_summary_2'] as Record<string, unknown>;
     expect(summary.query).toBe('Water Sports');
     expect(summary.firstIndex).toBe(1);
     expect(summary.lastIndex).toBe(12);
@@ -298,7 +298,7 @@ describe('schema-response-search initial response totals', () => {
 describe('schema-response-search product groups', () => {
   const productsFor = (prompt: string) =>
     (
-      collectComponentState(matchSchemaPrompt(prompt))['product-list-2'] as {
+      collectComponentState(matchSchemaPrompt(prompt))['product_list_2'] as {
         products: Array<Record<string, unknown>>;
       }
     ).products;
@@ -369,8 +369,8 @@ describe('schema-response-search action-driven recomputation', () => {
   it('selectPage returns the requested page and its product slice', () => {
     const events = buildSearchActionEvents({name: 'selectPage', context: {page: 3}});
     const components = collectComponentState(events);
-    const pagination = components['pagination-2'] as Record<string, unknown>;
-    const productList = components['product-list-2'] as Record<string, unknown>;
+    const pagination = components['pagination_2'] as Record<string, unknown>;
+    const productList = components['product_list_2'] as Record<string, unknown>;
     expect(pagination.page).toBe(3);
     expect(pagination.pageSize).toBe(12);
     // 43 products, page size 12 => the last page (index 3) holds the remaining 7.
@@ -381,7 +381,7 @@ describe('schema-response-search action-driven recomputation', () => {
     buildSearchActionEvents({name: 'selectPage', context: {page: 1}});
     const events = buildSearchActionEvents({name: 'selectSort', context: {sort: PRICE_ASC_SORT}});
     const components = collectComponentState(events);
-    const pagination = components['pagination-2'] as Record<string, unknown>;
+    const pagination = components['pagination_2'] as Record<string, unknown>;
     const prices = productPrices(components);
     expect(pagination.page).toBe(0);
     expect(appliedSort(components)).toEqual(PRICE_ASC_SORT);
@@ -429,8 +429,8 @@ describe('schema-response-search action-driven recomputation', () => {
   it('setPageSize recomputes pageSize and totalPages', () => {
     const events = buildSearchActionEvents({name: 'setPageSize', context: {pageSize: 6}});
     const components = collectComponentState(events);
-    const pagination = components['pagination-2'] as Record<string, unknown>;
-    const productList = components['product-list-2'] as Record<string, unknown>;
+    const pagination = components['pagination_2'] as Record<string, unknown>;
+    const productList = components['product_list_2'] as Record<string, unknown>;
     expect(pagination.page).toBe(0);
     expect(pagination.pageSize).toBe(6);
     expect(pagination.totalEntries).toBe(43);
@@ -443,11 +443,11 @@ describe('schema-response-search action-driven recomputation', () => {
     const events = buildSearchActionEvents({
       name: 'toggleSelect',
       context: {value: 'Billabong'},
-      sourceComponentId: 'facet-brand-2',
+      sourceComponentId: 'facet_brand_2',
     });
     const components = collectComponentState(events);
-    const productList = components['product-list-2'] as Record<string, unknown>;
-    const brandFacet = components['facet-brand-2'] as Record<string, unknown>;
+    const productList = components['product_list_2'] as Record<string, unknown>;
+    const brandFacet = components['facet_brand_2'] as Record<string, unknown>;
     const products = productList.products as Array<Record<string, unknown>>;
     expect(products.length).toBeGreaterThan(0);
     // Every returned product belongs to the selected brand.
@@ -476,7 +476,7 @@ describe('schema-response-search stateful surface across actions', () => {
     buildSearchActionEvents({name: 'selectSort', context: {sort: PRICE_ASC_SORT}});
     const events = buildSearchActionEvents({name: 'selectPage', context: {page: 1}});
     const components = collectComponentState(events);
-    const pagination = components['pagination-2'] as Record<string, unknown>;
+    const pagination = components['pagination_2'] as Record<string, unknown>;
     expect(appliedSort(components)).toEqual(PRICE_ASC_SORT);
     expect(pagination.page).toBe(1);
   });
@@ -485,7 +485,7 @@ describe('schema-response-search stateful surface across actions', () => {
     buildSearchActionEvents({name: 'setPageSize', context: {pageSize: 6}});
     const events = buildSearchActionEvents({name: 'selectPage', context: {page: 2}});
     const components = collectComponentState(events);
-    const pagination = components['pagination-2'] as Record<string, unknown>;
+    const pagination = components['pagination_2'] as Record<string, unknown>;
     expect(pagination.pageSize).toBe(6);
     expect(pagination.page).toBe(2);
   });
@@ -494,11 +494,11 @@ describe('schema-response-search stateful surface across actions', () => {
     buildSearchActionEvents({
       name: 'toggleSelect',
       context: {value: 'Billabong'},
-      sourceComponentId: 'facet-brand-2',
+      sourceComponentId: 'facet_brand_2',
     });
     const events = buildSearchActionEvents({name: 'selectSort', context: {sort: PRICE_DESC_SORT}});
     const components = collectComponentState(events);
-    const productList = components['product-list-2'] as Record<string, unknown>;
+    const productList = components['product_list_2'] as Record<string, unknown>;
     for (const product of productList.products as Array<Record<string, unknown>>) {
       expect(product.ec_brand).toBe('Billabong');
     }
@@ -511,11 +511,11 @@ describe('schema-response-search stateful surface across actions', () => {
     buildSearchActionEvents({
       name: 'toggleSelect',
       context: {value: 'Billabong'},
-      sourceComponentId: 'facet-brand-2',
+      sourceComponentId: 'facet_brand_2',
     });
     const events = matchSchemaPrompt('water sports');
     const components = collectComponentState(events);
-    const pagination = components['pagination-2'] as Record<string, unknown>;
+    const pagination = components['pagination_2'] as Record<string, unknown>;
     expect(pagination.page).toBe(0);
     expect(pagination.pageSize).toBe(12);
     expect(pagination.totalEntries).toBe(43);
@@ -523,7 +523,7 @@ describe('schema-response-search stateful surface across actions', () => {
   });
 });
 
-const BREADBOX_ID = 'breadbox-2';
+const BREADBOX_ID = 'breadbox_2';
 
 // The closed property sets of the thermidor-schema Breadbox definitions
 // (`additionalProperties: false`), keyed by the BreadboxFacet `type` discriminator.
@@ -571,16 +571,16 @@ function act(name: string, context: Record<string, unknown>, sourceComponentId?:
 }
 
 function brandState(components: Record<string, unknown>, brand: string): unknown {
-  const facet = components['facet-brand-2'] as Record<string, unknown>;
+  const facet = components['facet_brand_2'] as Record<string, unknown>;
   return (facet.values as Array<Record<string, unknown>>).find((v) => v.value === brand)?.state;
 }
 
 function totalEntries(components: Record<string, unknown>): number {
-  return (components['pagination-2'] as Record<string, unknown>).totalEntries as number;
+  return (components['pagination_2'] as Record<string, unknown>).totalEntries as number;
 }
 
 function page(components: Record<string, unknown>): number {
-  return (components['pagination-2'] as Record<string, unknown>).page as number;
+  return (components['pagination_2'] as Record<string, unknown>).page as number;
 }
 
 describe('schema-response-search breadbox', () => {
@@ -603,11 +603,11 @@ describe('schema-response-search breadbox', () => {
   });
 
   it('lists the selected brands in the facet order', () => {
-    act('toggleSelect', {value: 'Xcel'}, 'facet-brand-2');
-    const components = act('toggleSelect', {value: 'Billabong'}, 'facet-brand-2');
+    act('toggleSelect', {value: 'Xcel'}, 'facet_brand_2');
+    const components = act('toggleSelect', {value: 'Billabong'}, 'facet_brand_2');
     expect(breadboxFacets(components)).toEqual([
       {
-        facetId: 'facet-brand-2',
+        facetId: 'facet_brand_2',
         field: 'ec_brand',
         displayName: 'Brand',
         type: 'regular',
@@ -620,10 +620,10 @@ describe('schema-response-search breadbox', () => {
   });
 
   it('lists a selected listed price range', () => {
-    const components = act('toggleSelect', {start: 0, end: 100}, 'facet-price-2');
+    const components = act('toggleSelect', {start: 0, end: 100}, 'facet_price_2');
     expect(breadboxFacets(components)).toEqual([
       {
-        facetId: 'facet-price-2',
+        facetId: 'facet_price_2',
         field: 'ec_price',
         displayName: 'Price',
         type: 'numericalRange',
@@ -633,15 +633,15 @@ describe('schema-response-search breadbox', () => {
   });
 
   it('lists a custom price range', () => {
-    const components = act('applyCustomRange', {start: 50, end: 150}, 'facet-price-2');
+    const components = act('applyCustomRange', {start: 50, end: 150}, 'facet_price_2');
     expect(breadboxFacets(components)[0].values).toEqual([{start: 50, end: 150}]);
   });
 
   it('lists the selected category path', () => {
-    const components = act('selectPath', {path: ['Surfing', 'Surfboards']}, 'facet-category-2');
+    const components = act('selectPath', {path: ['Surfing', 'Surfboards']}, 'facet_category_2');
     expect(breadboxFacets(components)).toEqual([
       {
-        facetId: 'facet-category-2',
+        facetId: 'facet_category_2',
         field: 'ec_category',
         displayName: 'Category',
         type: 'hierarchical',
@@ -651,21 +651,21 @@ describe('schema-response-search breadbox', () => {
   });
 
   it('orders the entries as the facet manager orders the facets', () => {
-    act('selectPath', {path: ['Surfing']}, 'facet-category-2');
-    act('toggleSelect', {start: 0, end: 100}, 'facet-price-2');
-    const components = act('toggleSelect', {value: 'Hurley'}, 'facet-brand-2');
+    act('selectPath', {path: ['Surfing']}, 'facet_category_2');
+    act('toggleSelect', {start: 0, end: 100}, 'facet_price_2');
+    const components = act('toggleSelect', {value: 'Hurley'}, 'facet_brand_2');
     expect(breadboxFacets(components).map((facet) => facet.facetId)).toEqual([
-      'facet-brand-2',
-      'facet-price-2',
-      'facet-category-2',
+      'facet_brand_2',
+      'facet_price_2',
+      'facet_category_2',
     ]);
   });
 
   it('deselects a selected brand', () => {
-    act('toggleSelect', {value: 'Billabong'}, 'facet-brand-2');
+    act('toggleSelect', {value: 'Billabong'}, 'facet_brand_2');
     const components = act(
       'deselect',
-      {facetId: 'facet-brand-2', type: 'regular', value: 'Billabong'},
+      {facetId: 'facet_brand_2', type: 'regular', value: 'Billabong'},
       BREADBOX_ID
     );
     expect(breadboxFacets(components)).toEqual([]);
@@ -674,29 +674,29 @@ describe('schema-response-search breadbox', () => {
   });
 
   it('deselects one brand, keeping the other selected brands', () => {
-    act('toggleSelect', {value: 'Billabong'}, 'facet-brand-2');
-    act('toggleSelect', {value: 'Xcel'}, 'facet-brand-2');
+    act('toggleSelect', {value: 'Billabong'}, 'facet_brand_2');
+    act('toggleSelect', {value: 'Xcel'}, 'facet_brand_2');
     const components = act(
       'deselect',
-      {facetId: 'facet-brand-2', type: 'regular', value: 'Billabong'},
+      {facetId: 'facet_brand_2', type: 'regular', value: 'Billabong'},
       BREADBOX_ID
     );
     expect(breadboxFacets(components)[0].values).toEqual([{value: 'Xcel', state: 'selected'}]);
     expect(brandState(components, 'Billabong')).toBe('idle');
-    const products = (components['product-list-2'] as Record<string, unknown>).products as Array<
+    const products = (components['product_list_2'] as Record<string, unknown>).products as Array<
       Record<string, unknown>
     >;
     expect(products.every((product) => product.ec_brand === 'Xcel')).toBe(true);
   });
 
   it('deselects a custom price range', () => {
-    act('applyCustomRange', {start: 50, end: 150}, 'facet-price-2');
+    act('applyCustomRange', {start: 50, end: 150}, 'facet_price_2');
     const components = act(
       'deselect',
-      {facetId: 'facet-price-2', type: 'numericalRange', start: 50, end: 150},
+      {facetId: 'facet_price_2', type: 'numericalRange', start: 50, end: 150},
       BREADBOX_ID
     );
-    const priceFacet = components['facet-price-2'] as Record<string, unknown>;
+    const priceFacet = components['facet_price_2'] as Record<string, unknown>;
     expect(breadboxFacets(components)).toEqual([]);
     expect(priceFacet.hasActiveValues).toBe(false);
     expect(priceFacet.customRange).toBeNull();
@@ -704,40 +704,40 @@ describe('schema-response-search breadbox', () => {
   });
 
   it('deselects the category path', () => {
-    act('selectPath', {path: ['Surfing', 'Surfboards']}, 'facet-category-2');
+    act('selectPath', {path: ['Surfing', 'Surfboards']}, 'facet_category_2');
     const components = act(
       'deselect',
-      {facetId: 'facet-category-2', type: 'hierarchical', path: ['Surfing', 'Surfboards']},
+      {facetId: 'facet_category_2', type: 'hierarchical', path: ['Surfing', 'Surfboards']},
       BREADBOX_ID
     );
-    const categoryFacet = components['facet-category-2'] as Record<string, unknown>;
+    const categoryFacet = components['facet_category_2'] as Record<string, unknown>;
     expect(breadboxFacets(components)).toEqual([]);
     expect((categoryFacet.values as Record<string, unknown>).selected).toBeNull();
     expect(totalEntries(components)).toBe(43);
   });
 
   it('returns to the first page on deselect', () => {
-    act('toggleSelect', {value: 'Billabong'}, 'facet-brand-2');
+    act('toggleSelect', {value: 'Billabong'}, 'facet_brand_2');
     act('setPageSize', {pageSize: 1});
     expect(page(act('selectPage', {page: 1}))).toBe(1);
     const components = act(
       'deselect',
-      {facetId: 'facet-brand-2', type: 'regular', value: 'Billabong'},
+      {facetId: 'facet_brand_2', type: 'regular', value: 'Billabong'},
       BREADBOX_ID
     );
     expect(page(components)).toBe(0);
   });
 
   it('clears every facet', () => {
-    act('toggleSelect', {value: 'Billabong'}, 'facet-brand-2');
-    act('toggleSelect', {value: 'Xcel'}, 'facet-brand-2');
-    act('toggleSelect', {start: 0, end: 100}, 'facet-price-2');
-    act('selectPath', {path: ['Surfing']}, 'facet-category-2');
+    act('toggleSelect', {value: 'Billabong'}, 'facet_brand_2');
+    act('toggleSelect', {value: 'Xcel'}, 'facet_brand_2');
+    act('toggleSelect', {start: 0, end: 100}, 'facet_price_2');
+    act('selectPath', {path: ['Surfing']}, 'facet_category_2');
     const components = act('clearAll', {}, BREADBOX_ID);
     expect(breadboxFacets(components)).toEqual([]);
-    expect((components['facet-brand-2'] as Record<string, unknown>).hasActiveValues).toBe(false);
-    expect((components['facet-price-2'] as Record<string, unknown>).hasActiveValues).toBe(false);
-    const categoryValues = (components['facet-category-2'] as Record<string, unknown>)
+    expect((components['facet_brand_2'] as Record<string, unknown>).hasActiveValues).toBe(false);
+    expect((components['facet_price_2'] as Record<string, unknown>).hasActiveValues).toBe(false);
+    const categoryValues = (components['facet_category_2'] as Record<string, unknown>)
       .values as Record<string, unknown>;
     expect(categoryValues.selected).toBeNull();
     expect(totalEntries(components)).toBe(43);
@@ -745,11 +745,11 @@ describe('schema-response-search breadbox', () => {
 
   it('returns to the first page on clearAll, preserving the sort and page size', () => {
     act('selectSort', {sort: PRICE_ASC_SORT});
-    act('toggleSelect', {value: 'Billabong'}, 'facet-brand-2');
+    act('toggleSelect', {value: 'Billabong'}, 'facet_brand_2');
     act('setPageSize', {pageSize: 1});
     expect(page(act('selectPage', {page: 1}))).toBe(1);
     const components = act('clearAll', {}, BREADBOX_ID);
-    const pagination = components['pagination-2'] as Record<string, unknown>;
+    const pagination = components['pagination_2'] as Record<string, unknown>;
     expect(pagination.page).toBe(0);
     expect(pagination.pageSize).toBe(1);
     expect(appliedSort(components)).toEqual(PRICE_ASC_SORT);
@@ -759,7 +759,7 @@ describe('schema-response-search breadbox', () => {
 describe('schema-response-search state per surface', () => {
   const brands = (events: ConverseEvent[]) =>
     (
-      (collectComponentState(events)['product-list-2'] as Record<string, unknown>)
+      (collectComponentState(events)['product_list_2'] as Record<string, unknown>)
         .products as Array<Record<string, unknown>>
     ).map((product) => product.ec_brand);
 
@@ -767,7 +767,7 @@ describe('schema-response-search state per surface', () => {
     buildSearchActionEvents({
       name: 'toggleSelect',
       context: {value: 'Billabong'},
-      sourceComponentId: 'facet-brand-2',
+      sourceComponentId: 'facet_brand_2',
       surfaceId: 'ui-commerce-water-sports-1',
     });
     resetSurface();
@@ -790,12 +790,12 @@ describe('schema-response-search state per surface', () => {
 
 describe('schema-response-search query correction', () => {
   const summary = (events: ConverseEvent[]) =>
-    collectComponentState(events)['query-summary-2'] as Record<string, unknown>;
+    collectComponentState(events)['query_summary_2'] as Record<string, unknown>;
 
   it('declares the correction as a QuerySummary state field', () => {
     const nodes = findCreateSurface(resetSurface())!.components as Array<Record<string, unknown>>;
-    const querySummary = nodes.find((node) => node.id === 'query-summary-2')!;
-    expect(querySummary.correction).toEqual({'@path': '/state/query-summary-2/correction'});
+    const querySummary = nodes.find((node) => node.id === 'query_summary_2')!;
+    expect(querySummary.correction).toEqual({'@path': '/state/query_summary_2/correction'});
   });
 
   it('shows no correction for a query searched as typed', () => {
@@ -823,7 +823,7 @@ describe('schema-response-search query correction', () => {
     const events = buildSearchActionEvents({
       name: 'overrideCorrection',
       context: {},
-      sourceComponentId: 'query-summary-2',
+      sourceComponentId: 'query_summary_2',
     });
     expect(summary(events)).toMatchObject({query: 'swim gear', totalEntries: 0});
   });
@@ -833,7 +833,7 @@ describe('schema-response-search query correction', () => {
     const events = buildSearchActionEvents({
       name: 'overrideCorrection',
       context: {},
-      sourceComponentId: 'query-summary-2',
+      sourceComponentId: 'query_summary_2',
     });
     expect(summary(events)).toEqual({
       query: 'Water Sports',
@@ -851,8 +851,8 @@ describe('schema-response-search query', () => {
   it('searches any other prompt that finds products, for its query', () => {
     const components = state(matchSchemaPrompt('  Kayaks '));
 
-    expect(components['query-summary-2']).toMatchObject({query: 'Kayaks', totalEntries: 4});
-    const products = (components['product-list-2'] as {products: {ec_name: string}[]}).products;
+    expect(components['query_summary_2']).toMatchObject({query: 'Kayaks', totalEntries: 4});
+    const products = (components['product_list_2'] as {products: {ec_name: string}[]}).products;
     expect(products.map(({ec_name}) => ec_name)).toEqual([
       'RiverRun Sit-On Kayak',
       'LakeGlide Touring Kayak',
@@ -862,11 +862,11 @@ describe('schema-response-search query', () => {
   });
 
   it('answers a prompt that finds no products without a search', () => {
-    expect(state(matchSchemaPrompt('sailboats'))['query-summary-2']).toBeUndefined();
+    expect(state(matchSchemaPrompt('sailboats'))['query_summary_2']).toBeUndefined();
   });
 
   it('counts the facet values within the query results', () => {
-    const brand = state(matchSchemaPrompt('life jackets'))['facet-brand-2'] as {
+    const brand = state(matchSchemaPrompt('life jackets'))['facet_brand_2'] as {
       values: {value: string; numberOfResults: number}[];
     };
     expect(brand.values.reduce((total, {numberOfResults}) => total + numberOfResults, 0)).toBe(2);
@@ -885,8 +885,8 @@ describe('schema-response-search restoreState', () => {
   it('restores the query, page, page size and sort', () => {
     act('selectSort', {sort: PRICE_DESC_SORT});
     const components = restore({page: 2, pageSize: 6, sort: RELEVANCE_SORT});
-    expect((components['query-summary-2'] as Record<string, unknown>).query).toBe('surf');
-    expect(components['pagination-2']).toMatchObject({page: 2, pageSize: 6});
+    expect((components['query_summary_2'] as Record<string, unknown>).query).toBe('surf');
+    expect(components['pagination_2']).toMatchObject({page: 2, pageSize: 6});
     expect(appliedSort(components)).toEqual(RELEVANCE_SORT);
   });
 
@@ -910,7 +910,7 @@ describe('schema-response-search restoreState', () => {
   it('restores the selected values of a regular facet', () => {
     const components = restore({facets: [{facetId: 'ec_brand', values: ['Billabong']}]});
     expect(brandState(components, 'Billabong')).toBe('selected');
-    const products = (components['product-list-2'] as Record<string, unknown>).products as Array<
+    const products = (components['product_list_2'] as Record<string, unknown>).products as Array<
       Record<string, unknown>
     >;
     expect(new Set(products.map((product) => product.ec_brand))).toEqual(new Set(['Billabong']));
@@ -920,7 +920,7 @@ describe('schema-response-search restoreState', () => {
     const components = restore({
       facets: [{facetId: 'ec_price', numericRanges: [{start: 0, end: 100, endInclusive: true}]}],
     });
-    const values = (components['facet-price-2'] as Record<string, unknown>).values as Array<
+    const values = (components['facet_price_2'] as Record<string, unknown>).values as Array<
       Record<string, unknown>
     >;
     expect(values.find((value) => value.start === 0 && value.end === 100)?.state).toBe('selected');
@@ -930,7 +930,7 @@ describe('schema-response-search restoreState', () => {
     const components = restore({
       facets: [{facetId: 'ec_category', path: ['Surfing', 'Surfboards']}],
     });
-    const values = (components['facet-category-2'] as Record<string, unknown>).values as Record<
+    const values = (components['facet_category_2'] as Record<string, unknown>).values as Record<
       string,
       Record<string, unknown>
     >;
@@ -941,9 +941,9 @@ describe('schema-response-search restoreState', () => {
   });
 
   it('replaces the current search instead of merging into it', () => {
-    act('toggleSelect', {value: 'Hurley'}, 'facet-brand-2');
-    act('toggleSelect', {value: 'Xcel'}, 'facet-brand-2');
-    act('toggleSelect', {start: 0, end: 100}, 'facet-price-2');
+    act('toggleSelect', {value: 'Hurley'}, 'facet_brand_2');
+    act('toggleSelect', {value: 'Xcel'}, 'facet_brand_2');
+    act('toggleSelect', {start: 0, end: 100}, 'facet_price_2');
     act('selectSort', {sort: PRICE_DESC_SORT});
     const components = restore({});
     expect(breadboxFacets(components)).toEqual([]);
@@ -965,7 +965,7 @@ describe('schema-response-search sort rejections', () => {
 
   async function respond(name: string, context: Record<string, unknown>) {
     const response = await converseSchemaResponses.buildSchemaActionResponse(
-      {name, context, sourceComponentId: name === 'selectSort' ? 'sort-2' : 'root'},
+      {name, context, sourceComponentId: name === 'selectSort' ? 'sort_2' : 'root'},
       session
     );
     return {

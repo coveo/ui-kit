@@ -41,7 +41,7 @@ const PAGINATION_SURFACE = {
           surfaceId: 'commerce-search-surface',
           components: [
             {id: 'root', component: 'CommerceSearch'},
-            {id: 'pagination-1', component: 'Pagination'},
+            {id: 'pagination_1', component: 'Pagination'},
           ],
         },
       },
@@ -52,7 +52,7 @@ const PAGINATION_SURFACE = {
 const SELECT_PAGE = {
   name: 'selectPage',
   surfaceId: 'commerce-search-surface',
-  sourceComponentId: 'pagination-1',
+  sourceComponentId: 'pagination_1',
   context: {page: 2},
 };
 

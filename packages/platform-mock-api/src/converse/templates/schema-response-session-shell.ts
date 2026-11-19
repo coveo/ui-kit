@@ -10,9 +10,9 @@ import {
 import {ActivitySnapshot, UpdateDataModelActivity, type ConverseEvent} from '../events.js';
 import {instantProductsFor} from './schema-response-search.js';
 
-const SEARCH_BOX_ID = 'search-box';
-const QUERY_SUGGESTIONS_ID = 'query-suggestions';
-const INSTANT_PRODUCTS_ID = 'instant-products';
+const SEARCH_BOX_ID = 'search_box';
+const QUERY_SUGGESTIONS_ID = 'query_suggestions';
+const INSTANT_PRODUCTS_ID = 'instant_products';
 
 const SHELL_NODES: A2uiComponentNode[] = [
   {id: RENDERER_ROOT_ID, component: 'SessionShell', children: [SEARCH_BOX_ID]},
@@ -190,7 +190,7 @@ function buildRecentQueryRemovedEvents(): ConverseEvent[] {
 
 function buildInstantProductsEvents(action: {surfaceId: string; query: string}): ConverseEvent[] {
   const {query} = action;
-  const runId = nextRunId('instant-products');
+  const runId = nextRunId('instant_products');
   return buildConversationResponse({
     runId,
     middleEvents: [

@@ -211,7 +211,7 @@ const PAGINATION_SURFACE = {
           surfaceId: 'commerce-search-surface',
           components: [
             {id: 'root', component: 'CommerceSearch'},
-            {id: 'pagination-1', component: 'Pagination'},
+            {id: 'pagination_1', component: 'Pagination'},
           ],
         },
       },
@@ -223,14 +223,14 @@ const PAGE_ACTION = {
   component: 'Pagination',
   name: 'selectPage',
   surfaceId: 'commerce-search-surface',
-  sourceComponentId: 'pagination-1',
+  sourceComponentId: 'pagination_1',
 };
 
 function selectPageMessage(page: number) {
   return {
     name: 'selectPage',
     surfaceId: 'commerce-search-surface',
-    sourceComponentId: 'pagination-1',
+    sourceComponentId: 'pagination_1',
     context: {page},
   };
 }
@@ -525,7 +525,7 @@ describe('createSession lifecycle', () => {
                 surfaceId: 'commerce-search-surface',
                 components: [
                   {id: 'root', component: 'CommerceSearch'},
-                  {id: 'pagination-1', component: 'Pagination'},
+                  {id: 'pagination_1', component: 'Pagination'},
                 ],
               },
             },
@@ -540,7 +540,7 @@ describe('createSession lifecycle', () => {
       const actionTurn = session.dispatchAction({
         name: 'selectPage',
         surfaceId: 'commerce-search-surface',
-        sourceComponentId: 'pagination-1',
+        sourceComponentId: 'pagination_1',
         context: {page: 2},
       });
       await flush();
@@ -589,7 +589,7 @@ describe('createSession lifecycle', () => {
         surfaceId: 'next-actions-surface',
         components: [
           {id: 'root', component: 'NextActionsBar'},
-          {id: 'next-1', component: 'NextActionsBar'},
+          {id: 'next_1', component: 'NextActionsBar'},
         ],
       });
 
@@ -597,7 +597,7 @@ describe('createSession lifecycle', () => {
       const actionTurn = session.dispatchAction({
         name: 'selectAction',
         surfaceId: 'next-actions-surface',
-        sourceComponentId: 'next-1',
+        sourceComponentId: 'next_1',
         context: {actionId: 'a-42'},
       });
       await flush();
@@ -633,7 +633,7 @@ describe('createSession lifecycle', () => {
                 surfaceId: 'commerce-search-surface',
                 components: [
                   {id: 'root', component: 'CommerceSearch'},
-                  {id: 'pagination-1', component: 'Pagination'},
+                  {id: 'pagination_1', component: 'Pagination'},
                 ],
               },
             },
@@ -686,7 +686,7 @@ describe('createSession lifecycle', () => {
         surfaceId: 'commerce-search-surface',
         components: [
           {id: 'root', component: 'CommerceSearch'},
-          {id: 'pagination-1', component: 'Pagination'},
+          {id: 'pagination_1', component: 'Pagination'},
         ],
       });
 
@@ -695,7 +695,7 @@ describe('createSession lifecycle', () => {
       const dispatched = session.dispatchAction({
         name: 'selectPage',
         surfaceId: 'ghost-surface',
-        sourceComponentId: 'pagination-1',
+        sourceComponentId: 'pagination_1',
         context: {page: 2},
       });
       await flush();
@@ -721,7 +721,7 @@ describe('createSession lifecycle', () => {
           catalogId: 'catalog',
           components: [
             {id: 'root', component: 'CommerceSearch'},
-            {id: 'pagination-1', component: 'Pagination'},
+            {id: 'pagination_1', component: 'Pagination'},
           ],
         },
       },
@@ -852,7 +852,7 @@ describe('createSession lifecycle', () => {
             version: '1.0',
             updateDataModel: {
               surfaceId: 'commerce-search-surface',
-              path: '/state/pagination-1',
+              path: '/state/pagination_1',
               value: pagination,
             },
           },
@@ -860,7 +860,7 @@ describe('createSession lifecycle', () => {
       );
 
       expect(session.state).toEqual({
-        'commerce-search-surface': {state: {'pagination-1': pagination}},
+        'commerce-search-surface': {state: {pagination_1: pagination}},
       });
     });
 
@@ -869,7 +869,7 @@ describe('createSession lifecycle', () => {
         version: '1.0',
         updateDataModel: {
           surfaceId: 'commerce-search-surface',
-          path: '/state/pagination-1',
+          path: '/state/pagination_1',
           value: pagination,
         },
       },
@@ -1074,7 +1074,7 @@ describe('createSession lifecycle', () => {
             version: '1.0',
             updateDataModel: {
               surfaceId: 'commerce-search-surface',
-              path: '/state/pagination-1',
+              path: '/state/pagination_1',
               value: pagination,
             },
           },
@@ -1088,7 +1088,7 @@ describe('createSession lifecycle', () => {
       expect(session.turns[1].error).toBe('Cancelled');
       expect(session.actionError).toBeUndefined();
       expect(session.state).toEqual({
-        'commerce-search-surface': {state: {'pagination-1': pagination}},
+        'commerce-search-surface': {state: {pagination_1: pagination}},
       });
 
       const retried = queueStream();
@@ -1226,7 +1226,7 @@ describe('createSession lifecycle', () => {
         component: 'Pagination',
         name: 'selectPage',
         surfaceId: 'commerce-search-surface',
-        sourceComponentId: 'pagination-1',
+        sourceComponentId: 'pagination_1',
         turnId: session.turns[0].id,
       });
       stream.emit({type: 'RUN_FINISHED'});
@@ -1811,7 +1811,7 @@ describe('createSession lifecycle', () => {
                 surfaceId: 'commerce-search-surface',
                 components: [
                   {id: 'root', component: 'CommerceSearch'},
-                  {id: 'pagination-1', component: 'Pagination'},
+                  {id: 'pagination_1', component: 'Pagination'},
                 ],
               },
             },
@@ -1827,7 +1827,7 @@ describe('createSession lifecycle', () => {
         session.dispatchAction({
           name: 'selectPage',
           surfaceId: 'commerce-search-surface',
-          sourceComponentId: 'pagination-1',
+          sourceComponentId: 'pagination_1',
           context: {page: 2},
         })
       ).resolves.toBeUndefined();
@@ -1931,7 +1931,7 @@ describe('createSession lifecycle', () => {
     const actionMessage = (page: number) => ({
       name: 'selectPage',
       surfaceId: 'commerce-search-surface',
-      sourceComponentId: 'pagination-1',
+      sourceComponentId: 'pagination_1',
       context: {page},
     });
 
@@ -1953,7 +1953,7 @@ describe('createSession lifecycle', () => {
                 surfaceId: 'commerce-search-surface',
                 components: [
                   {id: 'root', component: 'CommerceSearch'},
-                  {id: 'pagination-1', component: 'Pagination'},
+                  {id: 'pagination_1', component: 'Pagination'},
                 ],
               },
             },
@@ -2146,8 +2146,8 @@ describe('createSession lifecycle', () => {
   describe('initialization (ADR-018)', () => {
     const shellConfig: SessionConfig = {...baseConfig, initialize: true};
     const SHELL_ID = 'ui-shell';
-    const SHELL_PAGINATION_ID = 'shell-pagination';
-    const SHELL_CHIPS_ID = 'shell-chips';
+    const SHELL_PAGINATION_ID = 'shell_pagination';
+    const SHELL_CHIPS_ID = 'shell_chips';
 
     const shellSurface = {
       type: 'ACTIVITY_SNAPSHOT',
@@ -2316,8 +2316,8 @@ describe('createSession lifecycle', () => {
                 catalogId: 'commerce',
                 components: [
                   {id: 'root', component: 'CommerceSearch'},
-                  {id: 'answer-pagination', component: 'Pagination'},
-                  {id: 'answer-products', component: 'ProductList'},
+                  {id: 'answer_pagination', component: 'Pagination'},
+                  {id: 'answer_products', component: 'ProductList'},
                 ],
               },
             },
@@ -2325,7 +2325,7 @@ describe('createSession lifecycle', () => {
               version: '1.0',
               updateDataModel: {
                 surfaceId: ANSWER_ID,
-                path: '/state/answer-pagination',
+                path: '/state/answer_pagination',
                 value: shellPage,
               },
             },
@@ -2344,7 +2344,7 @@ describe('createSession lifecycle', () => {
       const answerSelectPage = {
         name: 'selectPage',
         surfaceId: ANSWER_ID,
-        sourceComponentId: 'answer-pagination',
+        sourceComponentId: 'answer_pagination',
         context: {page: 2},
       };
 
@@ -2613,7 +2613,7 @@ describe('createSession lifecycle', () => {
         const clicked = restored.dispatchAction({
           name: 'productClick',
           surfaceId: ANSWER_ID,
-          sourceComponentId: 'answer-products',
+          sourceComponentId: 'answer_products',
           context: {productId: 'wetsuit-1', position: 1},
         });
         await stream.opened;
@@ -2658,7 +2658,7 @@ describe('createSession lifecycle', () => {
               component: 'Pagination',
               name: 'selectPage',
               surfaceId: ANSWER_ID,
-              sourceComponentId: 'answer-pagination',
+              sourceComponentId: 'answer_pagination',
               context: {page: 2},
             },
           },

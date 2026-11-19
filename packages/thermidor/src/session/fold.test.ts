@@ -433,33 +433,33 @@ describe('fold ACTIVITY_SNAPSHOT replace semantics', () => {
     // only the facet slice. The product-list slice must survive.
     const turn = foldActivities(createTurn('t1', {}), [
       surfaceSnapshotWith('update:ui-1', true, [
-        dataModelMessage('ui-1', '/state/ui-1-product-list', {products: ['a', 'b']}),
-        dataModelMessage('ui-1', '/state/ui-1-facet', {values: ['x']}),
+        dataModelMessage('ui-1', '/state/ui_1_product_list', {products: ['a', 'b']}),
+        dataModelMessage('ui-1', '/state/ui_1_facet', {values: ['x']}),
       ]),
       surfaceSnapshotWith('update:ui-1', true, [
-        dataModelMessage('ui-1', '/state/ui-1-facet', {values: ['x', 'y', 'z']}),
+        dataModelMessage('ui-1', '/state/ui_1_facet', {values: ['x', 'y', 'z']}),
       ]),
     ]);
 
     expect(turn.response.activities).toHaveLength(1);
     expect(activityPayloadMessages(turn)).toEqual([
-      dataModelMessage('ui-1', '/state/ui-1-product-list', {products: ['a', 'b']}),
-      dataModelMessage('ui-1', '/state/ui-1-facet', {values: ['x', 'y', 'z']}),
+      dataModelMessage('ui-1', '/state/ui_1_product_list', {products: ['a', 'b']}),
+      dataModelMessage('ui-1', '/state/ui_1_facet', {values: ['x', 'y', 'z']}),
     ]);
   });
 
   it('lets a later same-path op override the earlier one without duplicating the path', () => {
     const turn = foldActivities(createTurn('t1', {}), [
       surfaceSnapshotWith('update:ui-1', true, [
-        dataModelMessage('ui-1', '/state/ui-1-pagination', {page: 0}),
+        dataModelMessage('ui-1', '/state/ui_1_pagination', {page: 0}),
       ]),
       surfaceSnapshotWith('update:ui-1', true, [
-        dataModelMessage('ui-1', '/state/ui-1-pagination', {page: 1}),
+        dataModelMessage('ui-1', '/state/ui_1_pagination', {page: 1}),
       ]),
     ]);
 
     expect(activityPayloadMessages(turn)).toEqual([
-      dataModelMessage('ui-1', '/state/ui-1-pagination', {page: 1}),
+      dataModelMessage('ui-1', '/state/ui_1_pagination', {page: 1}),
     ]);
   });
 
@@ -528,22 +528,22 @@ describe('fold ACTIVITY_SNAPSHOT replace semantics', () => {
       version: '1.0',
       updateComponents: {
         surfaceId: 'ui-1',
-        components: [{id: 'ui-1-facet', component: 'RegularFacet'}],
+        components: [{id: 'ui_1_facet', component: 'RegularFacet'}],
       },
     };
     const turn = foldActivities(createTurn('t1', {}), [
       surfaceSnapshotWith('update:ui-1', true, [
         updateComponents,
-        dataModelMessage('ui-1', '/state/ui-1-facet', {values: ['x']}),
+        dataModelMessage('ui-1', '/state/ui_1_facet', {values: ['x']}),
       ]),
       surfaceSnapshotWith('update:ui-1', true, [
-        dataModelMessage('ui-1', '/state/ui-1-facet', {values: ['x', 'y']}),
+        dataModelMessage('ui-1', '/state/ui_1_facet', {values: ['x', 'y']}),
       ]),
     ]);
 
     expect(activityPayloadMessages(turn)).toEqual([
       updateComponents,
-      dataModelMessage('ui-1', '/state/ui-1-facet', {values: ['x', 'y']}),
+      dataModelMessage('ui-1', '/state/ui_1_facet', {values: ['x', 'y']}),
     ]);
   });
 });

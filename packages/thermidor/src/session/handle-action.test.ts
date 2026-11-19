@@ -134,7 +134,7 @@ function queueActionAck(): void {
 }
 
 const SURFACE_ID = 'ui-1';
-const PAGINATION_ID = 'pagination-1';
+const PAGINATION_ID = 'pagination_1';
 
 const baseConfig: SessionConfig = {
   contracts,
@@ -272,7 +272,7 @@ describe('Session.dispatchAction', () => {
         session.dispatchAction({
           name: 'selectPage',
           surfaceId: SURFACE_ID,
-          sourceComponentId: 'unknown-node',
+          sourceComponentId: 'unknown_node',
           context: {page: 1},
         })
       ).resolves.toBeUndefined();
