@@ -365,12 +365,15 @@ function buildSchemaActionResponse(action: SchemaAction, session: SessionKeys) {
   if (action.name === 'clearRecentQueries' || action.name === 'removeRecentQuery') {
     return buildRecentQueriesActionResponse(action, session);
   }
-  if (action.name === 'fetchSuggestions' && action.surfaceId && action.sourceComponentId) {
+  if (action.name === 'fetchSuggestions') {
+    if (!appliesToQuerySuggestions(action, session)) {
+      return actionNotApplicableResponse();
+    }
     return buildStreamingResponse(
       withSessionKeys(
         buildQuerySuggestionsEvents({
-          surfaceId: action.surfaceId,
-          sourceComponentId: action.sourceComponentId,
+          surfaceId: action.surfaceId!,
+          sourceComponentId: QUERY_SUGGESTIONS_ID,
           query: queryOf(action),
           sessionRecentQueries: recentQueriesBySession.get(session.conversationSessionId) ?? [],
         }),

@@ -31,25 +31,33 @@ function surfaceMessages(events: SseEvent[]): Array<Record<string, unknown>> {
     );
 }
 
-async function initialize() {
+async function initialize(keys = session) {
   return readEvents(
-    converseSchemaResponses.buildSchemaActionResponse({name: 'initialize', context: {}}, session)
+    converseSchemaResponses.buildSchemaActionResponse({name: 'initialize', context: {}}, keys)
   );
 }
 
-async function completions(query: string) {
-  const events = await readEvents(
+async function openShell(keys = session) {
+  return (surfaceMessages(await initialize(keys))[0].createSurface as {surfaceId: string})
+    .surfaceId;
+}
+
+async function fetchSuggestions(query: string) {
+  return readEvents(
     converseSchemaResponses.buildSchemaActionResponse(
       {
         name: 'fetchSuggestions',
-        surfaceId: 'session-shell-1',
+        surfaceId: await openShell(),
         sourceComponentId: 'query-suggestions',
         context: {query},
       },
       session
     )
   );
-  const [message] = surfaceMessages(events);
+}
+
+async function completions(query: string) {
+  const [message] = surfaceMessages(await fetchSuggestions(query));
   return message.updateDataModel as {
     surfaceId: string;
     path: string;
@@ -157,7 +165,7 @@ describe('initialize', () => {
 describe('fetchSuggestions', () => {
   it("writes the completions at the source component's state on the action's surface", async () => {
     expect(await completions('surf')).toEqual({
-      surfaceId: 'session-shell-1',
+      surfaceId: expect.stringMatching(/^session-shell-/),
       path: '/state/query-suggestions',
       value: {
         query: 'surf',
@@ -193,30 +201,13 @@ describe('fetchSuggestions', () => {
   });
 
   it("runs on the session's keys", async () => {
-    const events = await readEvents(
-      converseSchemaResponses.buildSchemaActionResponse(
-        {
-          name: 'fetchSuggestions',
-          surfaceId: 'session-shell-1',
-          sourceComponentId: 'query-suggestions',
-          context: {query: 'surf'},
-        },
-        session
-      )
-    );
+    const events = await fetchSuggestions('surf');
 
     expect(events[0]).toEqual({event: 'turn_started', data: session});
   });
 });
 
 describe('fetchInstantProducts', () => {
-  async function openShell(keys = session) {
-    const events = await readEvents(
-      converseSchemaResponses.buildSchemaActionResponse({name: 'initialize', context: {}}, keys)
-    );
-    return (surfaceMessages(events)[0].createSurface as {surfaceId: string}).surfaceId;
-  }
-
   function fetchInstantProducts(
     action: {surfaceId?: string; sourceComponentId?: string; query: string},
     keys = session

@@ -510,25 +510,28 @@ describe('createMockConverseServer', () => {
       expect(shellRecentQueries(await initialize(sessionKeys(chosen)))).toEqual(['water sports']);
     });
 
-    it("answers fetchSuggestions on the shell's surface, keeping the session", async () => {
+    it("answers fetchSuggestions on the shell's surface only, keeping the session", async () => {
       await startServer();
       const opened = await initialize();
       const keys = sessionKeys(opened);
       const [shellId] = createdSurfaceIds(opened);
-      const fetchSuggestions = (query: string) =>
+      const postFetchSuggestions = (query: string, surfaceId = shellId) =>
         postSchema({
           message: null,
           ...keys,
           action: {
             name: 'fetchSuggestions',
-            surfaceId: shellId,
+            surfaceId,
             sourceComponentId: 'query-suggestions',
             context: {query},
           },
-        }).then((res) => parseEvents(res.body));
+        });
+      const fetchSuggestions = (query: string) =>
+        postFetchSuggestions(query).then((res) => parseEvents(res.body));
 
       const surf = await fetchSuggestions('surf');
       const empty = await fetchSuggestions('');
+      const otherSurface = await postFetchSuggestions('surf', 'not-the-shell');
 
       expect(sessionKeys(surf)).toEqual(keys);
       expect(statesByNode(surf)[`${shellId} /state/query-suggestions`]).toMatchObject({
@@ -539,6 +542,17 @@ describe('createMockConverseServer', () => {
         query: '',
         recentQueries: [],
         completions: [],
+      });
+      expect(otherSurface.statusCode).toBe(400);
+      expect(JSON.parse(otherSurface.body)).toMatchObject({
+        errorCode: 'AGENT:ACTION_NOT_APPLICABLE',
+      });
+
+      await initialize(keys);
+      const replacedShell = await postFetchSuggestions('surf');
+      expect(replacedShell.statusCode).toBe(400);
+      expect(JSON.parse(replacedShell.body)).toMatchObject({
+        errorCode: 'AGENT:ACTION_NOT_APPLICABLE',
       });
     });
 
