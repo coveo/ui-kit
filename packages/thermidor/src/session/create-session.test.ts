@@ -2762,6 +2762,27 @@ describe('createSession lifecycle', () => {
         expect(callMock).not.toHaveBeenCalled();
       });
 
+      it('restores a turn whose surface activity holds a null message', async () => {
+        const initialized = await initializedSession();
+        await completePrompt(initialized, 'first');
+        const serialized = initialized.serialize();
+        serialized.turns.at(-1)!.response.activities.push({
+          id: 'null-message-activity',
+          kind: 'a2ui-surface',
+          replace: false,
+          payload: {messages: [null]},
+        });
+        callMock.mockReset();
+
+        const restored = createSession({
+          ...shellConfig,
+          initialize: false,
+          sessionToRestore: serialized,
+        });
+
+        expect(restored.turns).toHaveLength(1);
+      });
+
       it('never sends initialize for a restored session without a token', async () => {
         const initialized = await initializedSession();
         callMock.mockReset();

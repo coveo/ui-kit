@@ -1637,7 +1637,7 @@ function shellsReplacedBefore(restored: SessionStoreState<Turn>): Set<string> {
   for (const activity of activities) {
     const messages = activity.kind === SURFACE_ACTIVITY_KIND ? activity.payload['messages'] : [];
     for (const message of Array.isArray(messages) ? messages : []) {
-      const surfaceId = (message as {createSurface?: {surfaceId?: unknown}}).createSurface
+      const surfaceId = (message as {createSurface?: {surfaceId?: unknown}} | null)?.createSurface
         ?.surfaceId;
       if (typeof surfaceId === 'string') {
         named.delete(surfaceId);
