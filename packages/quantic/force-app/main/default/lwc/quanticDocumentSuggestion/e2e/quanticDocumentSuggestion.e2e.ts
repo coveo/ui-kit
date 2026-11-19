@@ -1,10 +1,13 @@
 /* eslint-disable no-await-in-loop */
+import {documentsSuggestResponses} from '@coveo/platform-mock-api/caseassist';
 import {test, expect} from './fixture';
 import {
   AnalyticsModeEnum,
   analyticsModeTest,
 } from '../../../../../../playwright/utils/analyticsMode';
 import {exampleTrackingId} from '../../../../../../playwright/page-object/analytics';
+
+const {documents} = documentsSuggestResponses.baseResponse;
 
 analyticsModeTest.forEach((analytics) => {
   test.describe(`quantic document suggestion ${analytics.label}`, () => {
@@ -18,9 +21,9 @@ analyticsModeTest.forEach((analytics) => {
     }) => {
       const responsePromise = caseAssist.waitForDocumentSuggestionResponse();
       await caseAssist.fetchSuggestions();
-      const response = await responsePromise;
-      const suggestions = await response.json();
+      await responsePromise;
       const clickedPosition = 2;
+      const clickedDocument = documents[clickedPosition];
 
       const analyticsPromise = documentSuggestion.waitForSuggestionClickEvent();
       await documentSuggestion.clickSuggestion(clickedPosition);
@@ -32,12 +35,8 @@ analyticsModeTest.forEach((analytics) => {
         const event = JSON.parse(payload.clickEvent);
         expect(event.actionCause).toBe('documentSuggestionClick');
         expect(event.documentPosition).toBe(clickedPosition + 1);
-        expect(event.documentTitle).toBe(
-          suggestions.documents[clickedPosition].title
-        );
-        expect(event.documentUrl).toBe(
-          suggestions.documents[clickedPosition].clickUri
-        );
+        expect(event.documentTitle).toBe(clickedDocument.title);
+        expect(event.documentUrl).toBe(clickedDocument.clickUri);
       } else {
         expect(payload).toBeDefined();
         expect(payload.length).toBe(1);
@@ -45,12 +44,10 @@ analyticsModeTest.forEach((analytics) => {
         expect(payload[0].meta.type).toBe('CaseAssist.DocumentSuggestionClick');
         expect(payload[0].responseId).toBeDefined();
         expect(payload[0].position).toBe(clickedPosition + 1);
-        expect(payload[0].itemMetadata.title).toBe(
-          suggestions.documents[clickedPosition].title
-        );
+        expect(payload[0].itemMetadata.title).toBe(clickedDocument.title);
         expect(payload[0].itemMetadata.uniqueFieldName).toBe('uniqueId');
         expect(payload[0].itemMetadata.uniqueFieldValue).toBe(
-          suggestions.documents[clickedPosition].uniqueId
+          clickedDocument.uniqueId
         );
       }
     });
@@ -68,16 +65,14 @@ analyticsModeTest.forEach((analytics) => {
         documentSuggestion,
         caseAssist,
       }) => {
+        expect(documents.length).toBeGreaterThanOrEqual(maxDocuments);
         const responsePromise = caseAssist.waitForDocumentSuggestionResponse();
         await caseAssist.fetchSuggestions();
-        const {documents} = await (await responsePromise).json();
-        const expectedSections = Math.min(documents.length, maxDocuments);
+        await responsePromise;
 
         await expect(documentSuggestion.accordion).toBeVisible();
-        await expect(documentSuggestion.sections).toHaveCount(
-          expectedSections
-        );
-        for (let index = 0; index < expectedSections; index++) {
+        await expect(documentSuggestion.sections).toHaveCount(maxDocuments);
+        for (let index = 0; index < maxDocuments; index++) {
           await expect(documentSuggestion.sectionContent(index)).toBeVisible();
         }
       });

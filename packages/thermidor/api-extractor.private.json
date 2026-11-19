@@ -1,5 +1,10 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/api-extractor/v7/api-extractor.schema.json",
   "extends": "./api-extractor.json",
-  "mainEntryPointFilePath": "./dist/private.d.ts"
+  "mainEntryPointFilePath": "./dist/private.d.ts",
+  "apiReport": {
+    "enabled": true,
+    "reportFolder": "<projectFolder>/api-report/",
+    "reportFileName": "thermidor-private.api.md"
+  }
 }

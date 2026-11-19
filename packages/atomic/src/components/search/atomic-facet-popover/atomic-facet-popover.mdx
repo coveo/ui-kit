@@ -1,0 +1,15 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import meta, { Default } from './atomic-facet-popover.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+import UsageContent from './atomic-facet-popover.usage.mdx';
+
+<Meta of={meta} />
+
+<AtomicDocTemplate
+  stories={{ Default }}
+  githubPath="search/atomic-facet-popover/atomic-facet-popover.ts"
+  tagName="atomic-facet-popover"
+  className="AtomicFacetPopover"
+>
+  <UsageContent />
+</AtomicDocTemplate>

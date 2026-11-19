@@ -30,7 +30,7 @@ export class FacetManagerPageObject extends BasePageObject {
   }
 
   get popovers() {
-    return this.page.locator('atomic-facet-manager > atomic-popover');
+    return this.page.locator('atomic-facet-manager > atomic-facet-popover');
   }
 
   get visiblePopovers() {
@@ -46,7 +46,7 @@ export class FacetManagerPageObject extends BasePageObject {
   }
 
   get facetsInPopovers() {
-    return this.page.locator('atomic-facet-manager > atomic-popover > atomic-facet');
+    return this.page.locator('atomic-facet-manager > atomic-facet-popover > atomic-facet');
   }
 
   get facetsOutsidePopovers() {

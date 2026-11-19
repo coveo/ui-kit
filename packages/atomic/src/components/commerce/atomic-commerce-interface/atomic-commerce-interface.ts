@@ -49,8 +49,8 @@ import {
   type StandaloneSearchBoxData,
   StorageItems,
 } from '@/src/utils/local-storage-utils';
-import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils';
-import {withCountry} from '@/src/utils/locale-utils';
+import {DeprecatedPropertyWarnings, warnDeprecatedOnce} from '@/src/utils/deprecation-utils';
+import {type CommerceLocale, isCommerceLocale, withCountry} from '@/src/utils/locale-utils';
 import {getAnalyticsConfig} from './analytics-config';
 import {type CommerceStore, createCommerceStore} from './store';
 
@@ -262,7 +262,7 @@ export class AtomicCommerceInterface
 
     this.addEventListener('atomic/initializeComponent', this.handleInitialization as EventListener);
 
-    this.addEventListener('atomic/scrollToTop', this.scrollToTop as EventListener);
+    this.addEventListener('atomic/scrollToTop', this.scrollContainerIntoView);
   }
 
   public disconnectedCallback() {
@@ -278,7 +278,7 @@ export class AtomicCommerceInterface
       'atomic/initializeComponent',
       this.handleInitialization as EventListener
     );
-    this.removeEventListener('atomic/scrollToTop', this.scrollToTop as EventListener);
+    this.removeEventListener('atomic/scrollToTop', this.scrollContainerIntoView);
   }
 
   /**
@@ -346,7 +346,7 @@ export class AtomicCommerceInterface
 
   /**
    * Updates the locale settings for the commerce interface and headless commerce
-   * engine. Only the provided parameters will be updated.
+   * engine. Only the provided properties will be updated.
    *
    * Calling this method affects the localization of the interface as well as
    * the catalog configuration being used by the Commerce API. If the resulting
@@ -357,19 +357,45 @@ export class AtomicCommerceInterface
    * With `localize-with-country`, the country also drives the number, currency, and
    * date formatting of the interface.
    *
-   * @param language - (Optional) The IETF language code tag (for example, `en`).
-   * @param country - (Optional) The ISO-3166-1 country tag (for example, `US`).
-   * @param currency - (Optional) The ISO-4217 currency code (for example, `USD`).
+   * @param locale - The locale settings to update: `language`, the IETF language code tag (for example, `en`), `country`, the ISO-3166-1 country tag (for example, `US`), and `currency`, the ISO-4217 currency code (for example, `USD`). Each property is optional.
    *
    * @example
    * ```typescript
-   * interface.updateLocale('fr', 'CA', 'CAD');
+   * interface.updateLocale({language: 'fr', country: 'CA', currency: 'CAD'});
    * ```
    */
-  public updateLocale(language?: string, country?: string, currency?: CurrencyCodeISO4217): void {
+  public updateLocale(locale: {
+    language?: string;
+    country?: string;
+    currency?: CurrencyCodeISO4217;
+  }): void;
+  // TODO - (v4) KIT-5079: Remove the positional overload.
+  /**
+   * @deprecated Pass an object instead, for example `updateLocale({language: 'fr', country: 'CA', currency: 'CAD'})`.
+   * @ignore The custom elements manifest keeps one entry per method: the object form.
+   */
+  public updateLocale(language?: string, country?: string, currency?: CurrencyCodeISO4217): void;
+  /** @ignore The overloads above document this method. */
+  public updateLocale(
+    languageOrLocale?: string | CommerceLocale,
+    countryArgument?: string,
+    currencyArgument?: CurrencyCodeISO4217
+  ): void {
     if (!this.interfaceController.engineIsCreated(this.engine) || !this.context) {
       return;
     }
+
+    if (!isCommerceLocale(languageOrLocale)) {
+      warnDeprecatedOnce(
+        this.engine.logger,
+        'Calling the `updateLocale` method of `atomic-commerce-interface` with separate arguments',
+        "Pass an object instead, for example `updateLocale({language: 'fr', country: 'CA', currency: 'CAD'})`."
+      );
+    }
+
+    const {language, country, currency} = isCommerceLocale(languageOrLocale)
+      ? languageOrLocale
+      : {language: languageOrLocale, country: countryArgument, currency: currencyArgument};
 
     if (language || (country && this.localizeWithCountry)) {
       this.interfaceController.onLanguageChange(
@@ -574,8 +600,24 @@ export class AtomicCommerceInterface
     this.urlManager.synchronize(this.fragment);
   };
 
-  // TODO - (v4) KIT-4991: Make private.
+  // TODO - (v4) KIT-4991: Remove.
+  /**
+   * Scrolls the element that `scroll-container` selects into view.
+   *
+   * @deprecated Call `scrollIntoView()` on the element that `scroll-container` selects instead.
+   */
   public scrollToTop() {
+    if (this.engine) {
+      warnDeprecatedOnce(
+        this.engine.logger,
+        'The `scrollToTop` method of `atomic-commerce-interface`',
+        'Call `scrollIntoView()` on the element that `scroll-container` selects instead.'
+      );
+    }
+    this.scrollContainerIntoView();
+  }
+
+  private scrollContainerIntoView = () => {
     const scrollContainerElement = document.querySelector(this.scrollContainer);
     if (!scrollContainerElement) {
       console.warn(
@@ -585,7 +627,7 @@ export class AtomicCommerceInterface
     }
 
     scrollContainerElement.scrollIntoView();
-  }
+  };
 
   private updateHash() {
     const newFragment = this.urlManager.state.fragment;
