@@ -72,11 +72,7 @@ function renderTurnContent(turn: Turn, isLatest: boolean) {
   const isStreaming = turn.status === 'streaming';
   return (
     <AgentResponseBlock response={turn.response} isStreaming={isStreaming}>
-      <TurnSurfaces
-        surfaces={turn.response.surfaces}
-        interactive={isLatest}
-        isStreaming={isStreaming}
-      />
+      <TurnSurfaces surfaces={turn.response.surfaces} latest={isLatest} isStreaming={isStreaming} />
     </AgentResponseBlock>
   );
 }

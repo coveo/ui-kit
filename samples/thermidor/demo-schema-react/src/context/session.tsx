@@ -193,7 +193,8 @@ function openCurrent(
  * Saves the conversation once the session is idle after a request that updates it. When the session drops the
  * transcript it resumed, because the endpoint answered with another session, it becomes a new
  * conversation, so the saved one keeps its transcript. Once the session is swapped out, it is still
- * saved when the request it was sending ends.
+ * saved when the request it was sending ends. A new conversation is listed from its first turn,
+ * before it is saved; if the page reloads before that, it has nothing to restore and is dropped.
  */
 function persist(
   storage: ConversationStorage,
@@ -204,11 +205,11 @@ function persist(
   onSaved: () => void
 ) {
   let id = initialId;
-  // Once listed, a conversation gone from the list was deleted, maybe in another tab.
-  let listed = isListed(storage, id);
   let boundSessionId = session.sessionId;
   let saving = savesAfter(session.getSnapshot().request);
   let swappedOut = false;
+  // Once listed, a conversation gone from the list was deleted, maybe in another tab.
+  let listed = session.turns.length > 0;
   const unsubscribe = session.subscribe(() => {
     const {request, turns} = session.getSnapshot();
     if (session.sessionId !== boundSessionId) {
@@ -220,6 +221,12 @@ function persist(
       boundSessionId = session.sessionId;
     }
     const deleted = removed.has(id) || (listed && !isListed(storage, id));
+    // Listed from its first prompt, so the drawer shows it while the answer streams.
+    if (!listed && turns.length > 0) {
+      storage.start(id, titleOf(turns[0].input));
+      listed = isListed(storage, id);
+      onSaved();
+    }
     if (saving && !request && turns.length > 0 && !deleted) {
       storage.save(id, titleOf(turns[0].input), session.serialize());
       listed = isListed(storage, id);

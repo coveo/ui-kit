@@ -1,0 +1,118 @@
+.drawer {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: var(--space-3);
+  width: 280px;
+  padding: var(--space-4);
+  overflow-y: auto;
+  background: var(--color-bg-secondary);
+  border-right: 1px solid var(--color-border);
+}
+
+@media (max-width: 767px) {
+  .drawer {
+    position: absolute;
+    inset: 0 auto 0 0;
+    /* Above the pinned search box and its suggestions. */
+    z-index: 15;
+    max-width: 85vw;
+    box-shadow: var(--shadow-md);
+    animation: slideIn 200ms ease-out;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+.start,
+.open {
+  font: inherit;
+  color: var(--color-text-primary);
+  background: none;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.start {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+}
+
+.start:is(:hover, :focus-visible),
+.row:hover .open,
+.open:focus-visible,
+.open[aria-current='true'] {
+  background: var(--color-surface-hover);
+}
+
+:is(.start, .open):focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+}
+
+.drawer [aria-disabled='true']:is(.start, .open) {
+  color: var(--color-text-muted);
+  background: none;
+  cursor: not-allowed;
+}
+
+.spinner {
+  animation: spin 800ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 3s;
+  }
+}
+
+.empty {
+  margin: 0;
+  padding: 0 var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.open {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-2) var(--space-3);
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.open[aria-current='true'] {
+  font-weight: 600;
+}

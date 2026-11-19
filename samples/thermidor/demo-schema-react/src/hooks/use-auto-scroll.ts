@@ -1,4 +1,4 @@
-import {useCallback, useEffect} from 'react';
+import {useCallback, useEffect, useRef} from 'react';
 import type {Turn} from '@coveo/thermidor';
 
 const MARGIN_TOP = 20;
@@ -7,6 +7,8 @@ interface UseAutoScrollOptions {
   containerRef: React.RefObject<HTMLDivElement | null>;
   turnRefs: React.RefObject<Map<string, HTMLDivElement>>;
   turns: readonly Turn[];
+  /** The conversation was restored: its latest turn is aligned at once, not smoothly. */
+  restored?: boolean;
 }
 
 /** The turn's offset from the top of the container's scrolled content. */
@@ -14,6 +16,31 @@ function turnOffset(container: HTMLElement, turn: HTMLElement): number {
   return (
     turn.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop
   );
+}
+
+const USER_SCROLL_EVENTS = ['wheel', 'touchstart', 'pointerdown', 'keydown'] as const;
+
+/**
+ * Keeps the start of `turn` at the top of `container` while the content changes height, as
+ * restored blocks and images do while they render, until the shopper scrolls, presses or types in
+ * it. Returns what stops it.
+ */
+function followTurn(container: HTMLElement, turn: HTMLElement): () => void {
+  let stopped = false;
+  const align = () => {
+    if (!stopped) container.scrollTo({top: turnOffset(container, turn) - MARGIN_TOP});
+  };
+  const frame = requestAnimationFrame(align);
+  const observer = new ResizeObserver(align);
+  for (const child of container.children) observer.observe(child);
+  const stop = () => {
+    stopped = true;
+    cancelAnimationFrame(frame);
+    observer.disconnect();
+    for (const type of USER_SCROLL_EVENTS) container.removeEventListener(type, stop);
+  };
+  for (const type of USER_SCROLL_EVENTS) container.addEventListener(type, stop);
+  return stop;
 }
 
 /**
@@ -24,9 +51,17 @@ function turnOffset(container: HTMLElement, turn: HTMLElement): number {
  * - Never follows the answer as it streams: what does not fit stays below the fold
  * - Makes that turn at least as tall as the container, so its start can reach the top and stays
  *   there when its answer shrinks, such as when a placeholder is dropped
+ * - When `restored`, aligns the latest turn at once, and keeps it aligned while the restored
+ *   conversation renders
  */
-export function useAutoScroll({containerRef, turnRefs, turns}: UseAutoScrollOptions): void {
+export function useAutoScroll({
+  containerRef,
+  turnRefs,
+  turns,
+  restored = false,
+}: UseAutoScrollOptions): void {
   const latestTurnId = turns.at(-1)?.id ?? null;
+  const jump = useRef(restored);
 
   const fitLatestTurn = useCallback(() => {
     const container = containerRef.current;
@@ -44,13 +79,21 @@ export function useAutoScroll({containerRef, turnRefs, turns}: UseAutoScrollOpti
     const turn = turnRefs.current.get(latestTurnId);
     fitLatestTurn();
 
-    const frame = requestAnimationFrame(() => {
-      const container = containerRef.current;
-      if (!container || !turn) return;
-      container.scrollTo({top: turnOffset(container, turn) - MARGIN_TOP, behavior: 'smooth'});
-    });
+    const atOnce = jump.current;
+    jump.current = false;
+    const container = containerRef.current;
+    let stop: () => void;
+    if (atOnce && container && turn) {
+      stop = followTurn(container, turn);
+    } else {
+      const frame = requestAnimationFrame(() => {
+        if (!container || !turn) return;
+        container.scrollTo({top: turnOffset(container, turn) - MARGIN_TOP, behavior: 'smooth'});
+      });
+      stop = () => cancelAnimationFrame(frame);
+    }
     return () => {
-      cancelAnimationFrame(frame);
+      stop();
       if (turn) turn.style.minHeight = '';
     };
   }, [latestTurnId, containerRef, turnRefs, fitLatestTurn]);

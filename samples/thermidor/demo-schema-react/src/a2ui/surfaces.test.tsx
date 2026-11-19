@@ -142,7 +142,7 @@ function Turn({
             <ThermidorA2UIStream messages={messages} />
             <TurnSurfaces
               surfaces={makeSurfaces(SURFACE_ID)}
-              interactive={interactive}
+              latest={interactive}
               isStreaming={isStreaming}
             />
           </A2UIProvider>
@@ -332,12 +332,8 @@ describe('TurnSurfaces while a request is in flight', () => {
         <SessionRequestProvider value={lockedSource(locked)}>
           <A2UIProvider catalog={CATALOG} onAction={() => {}}>
             <ThermidorA2UIStream messages={messages} />
-            <TurnSurfaces surfaces={makeSurfaces(SURFACE_ID)} interactive isStreaming={false} />
-            <TurnSurfaces
-              surfaces={makeSurfaces(OTHER_SURFACE_ID)}
-              interactive
-              isStreaming={false}
-            />
+            <TurnSurfaces surfaces={makeSurfaces(SURFACE_ID)} latest isStreaming={false} />
+            <TurnSurfaces surfaces={makeSurfaces(OTHER_SURFACE_ID)} latest isStreaming={false} />
           </A2UIProvider>
         </SessionRequestProvider>
       );
@@ -364,7 +360,7 @@ describe('TurnSurfaces loading placeholders', () => {
     return render(
       <A2UIProvider catalog={CATALOG} onAction={() => {}}>
         <ThermidorA2UIStream messages={MESSAGES}>
-          <TurnSurfaces surfaces={loading(SURFACE_ID)} interactive isStreaming />
+          <TurnSurfaces surfaces={loading(SURFACE_ID)} latest isStreaming />
         </ThermidorA2UIStream>
       </A2UIProvider>
     );
@@ -381,7 +377,7 @@ describe('TurnSurfaces loading placeholders', () => {
   it('draws nothing when the turn lists no surface', () => {
     const {container} = render(
       <A2UIProvider catalog={CATALOG} onAction={() => {}}>
-        <TurnSurfaces surfaces={[]} interactive isStreaming={false} />
+        <TurnSurfaces surfaces={[]} latest isStreaming={false} />
       </A2UIProvider>
     );
 
@@ -394,7 +390,7 @@ describe('TurnSurfaces loading placeholders', () => {
     const page = (surfaces: ReturnType<typeof makeSurfaces>) => (
       <A2UIProvider catalog={CATALOG} onAction={() => {}}>
         <ThermidorA2UIStream messages={MESSAGES}>
-          <TurnSurfaces surfaces={surfaces} interactive isStreaming />
+          <TurnSurfaces surfaces={surfaces} latest isStreaming />
         </ThermidorA2UIStream>
       </A2UIProvider>
     );
@@ -418,7 +414,7 @@ describe('ThermidorA2UIStream', () => {
           <ThermidorA2UIStream messages={messages}>
             <TurnSurfaces
               surfaces={makeSurfaces(SURFACE_ID, SECOND_ID)}
-              interactive
+              latest
               isStreaming={false}
             />
           </ThermidorA2UIStream>
@@ -456,7 +452,7 @@ describe('the failure of an action', () => {
       >
         <A2UIProvider catalog={CATALOG} onAction={() => {}}>
           <ThermidorA2UIStream messages={MESSAGES} />
-          <TurnSurfaces surfaces={makeSurfaces(SURFACE_ID)} interactive isStreaming={false} />
+          <TurnSurfaces surfaces={makeSurfaces(SURFACE_ID)} latest isStreaming={false} />
         </A2UIProvider>
       </SessionRequestProvider>
     );
