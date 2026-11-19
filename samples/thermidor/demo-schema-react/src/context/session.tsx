@@ -73,7 +73,9 @@ export function SessionProvider({
   children,
 }: PropsWithChildren<SessionProviderProps>) {
   const cart = useContext(CartStoreContext);
-  const [storage] = useState(() => givenStorage ?? createConversationStorage());
+  const [storage] = useState(
+    () => givenStorage ?? createConversationStorage({scope: storageScope()})
+  );
   const [create] = useState(() => givenFactory ?? defaultFactory(cart));
   const [current, setCurrent] = useState<Current>(() =>
     initialSession ? startWith(storage, initialSession) : openCurrent(storage, create)
@@ -289,6 +291,11 @@ function createThermidorSession(
     commerceContextProvider: () => getCartCommerceContext(cart),
     sessionToRestore,
   });
+}
+
+function storageScope() {
+  const {organizationId, agentConfigurationId} = getSampleConfiguration();
+  return `${organizationId}:${agentConfigurationId}`;
 }
 
 // The tab keeps its client id in sessionStorage; when it can't, the page keeps it in memory.
