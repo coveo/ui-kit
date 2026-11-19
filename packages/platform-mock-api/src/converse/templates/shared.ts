@@ -65,10 +65,10 @@ function stateFieldPath(id: string, field: string): string {
 }
 
 interface DataBinding {
-  path: string;
+  '@path': string;
 }
 
-// Builds the `{ path }` bindings for a stateful node's state-bound props: each state field name maps
+// Builds the `{ "@path" }` bindings for a stateful node's state-bound props: each state field name maps
 // to a Data_Binding object pointing at its `/state/<id>/<field>` sub-path. In the flat A2-UI node
 // model these bindings are spread directly onto the node top level (there is no `props` wrapper).
 // The renderer resolves them against the A2-UI data model, so identity is never needed to hydrate
@@ -76,14 +76,14 @@ interface DataBinding {
 function bindStateFields(id: string, fields: readonly string[]): Record<string, DataBinding> {
   const bindings: Record<string, DataBinding> = {};
   for (const field of fields) {
-    bindings[field] = {path: stateFieldPath(id, field)};
+    bindings[field] = {'@path': stateFieldPath(id, field)};
   }
   return bindings;
 }
 
 // A2-UI component node on the composition plane, following the A2-UI v1.0 FLAT adjacency-list shape.
 // Each node carries a SINGLE identity (`id` + PascalCase `component` discriminant) and its own
-// properties directly at the top level: presentation values, Data_Binding objects (`{ path }`) for
+// properties directly at the top level: presentation values, Data_Binding objects (`{ "@path" }`) for
 // state-bound props, and static composition links (named ComponentId slots such as
 // `sidebarChild`/`mainChild`, and homogeneous `children` ChildList arrays). There is no `props`
 // wrapper, and a node NEVER carries the removed dual-identity keys `componentId`/`componentType`.
@@ -177,7 +177,7 @@ function buildValidatedSurface({
 // creates its own, in a snapshot that replaces the placeholder's activity in place.
 function loadingSurfaceMessage(surfaceId: string, component: string): Record<string, unknown> {
   return {
-    version: 'v1.0',
+    version: '1.0',
     createSurface: {
       surfaceId,
       catalogId: CATALOG_ID,
@@ -188,7 +188,7 @@ function loadingSurfaceMessage(surfaceId: string, component: string): Record<str
 }
 
 function deleteSurfaceMessage(surfaceId: string): Record<string, unknown> {
-  return {version: 'v1.0', deleteSurface: {surfaceId}};
+  return {version: '1.0', deleteSurface: {surfaceId}};
 }
 
 export {

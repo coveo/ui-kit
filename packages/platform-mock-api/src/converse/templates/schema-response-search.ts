@@ -1363,7 +1363,7 @@ function computeComponentsState(view: SearchViewState): Record<string, unknown> 
 }
 
 // The set of state field names each stateful node binds and re-emits. These mirror the keys of
-// each entry `computeComponentsState` produces, so a node's `{ path }` bindings resolve to the
+// each entry `computeComponentsState` produces, so a node's `{ "@path" }` bindings resolve to the
 // fields of the whole-component value written at `statePath(id)`.
 const STATE_FIELDS_BY_NODE: Record<string, readonly string[]> = {
   [QUERY_SUMMARY_ID]: ['query', 'firstIndex', 'lastIndex', 'totalEntries', 'correction'],
@@ -1441,7 +1441,7 @@ const SEARCH_SURFACE_ID = 'ui-commerce-water-sports';
 
 // One node per mount target. Each node carries a SINGLE identity (top-level `id` + `component`);
 // Following the A2-UI v1.0 flat node shape, each node carries its presentation values,
-// `{ path }` state bindings, and static composition links directly at the top level (no `props`
+// `{ "@path" }` state bindings, and static composition links directly at the top level (no `props`
 // wrapper). The two-column layout is composed from generic layout-stack nodes
 // (search-sidebar/search-main and the top/bottom rows), keeping placement on the A2-UI plane. The
 // search box is intentionally absent: the surface's query input is the app-level search bar above
@@ -1453,7 +1453,7 @@ const SEARCH_SURFACE_ID = 'ui-commerce-water-sports';
 // LayoutStackPropsSchema / FacetManagerPropsSchema). Layout-stack nodes carry their `direction`
 // presentation prop and have no Component_State; FacetManager has no state either (ordering lives
 // on `children`). Every stateful node spreads its state-bound props onto the node top level as
-// `{ path: "/state/<id>/<field>" }` Data_Binding objects via `bindStateFields`.
+// `{ "@path": "/state/<id>/<field>" }` Data_Binding objects via `bindStateFields`.
 const SEARCH_SURFACE_NODES: A2uiComponentNode[] = [
   {
     id: COMMERCE_SEARCH_ROOT_ID,
@@ -1555,7 +1555,7 @@ const surfaceActivitySnapshot: ConverseEvent = ActivitySnapshot({
   content: {
     messages: [
       {
-        version: 'v1.0',
+        version: '1.0',
         createSurface: buildValidatedSearchSurface(SEARCH_SURFACE_NODES),
       },
     ],

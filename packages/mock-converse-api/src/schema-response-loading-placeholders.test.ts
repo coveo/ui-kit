@@ -61,7 +61,7 @@ describe.each(PROMPTS)('loading placeholders for "%s"', (prompt) => {
 
       expect(content?.replace).toBe(true);
       expect(content?.messages[0]).toEqual({
-        version: 'v1.0',
+        version: '1.0',
         deleteSurface: {surfaceId: createSurface.surfaceId},
       });
       expect(content?.messages.some(isLoadingCreate)).toBe(false);

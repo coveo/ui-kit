@@ -5,22 +5,22 @@
 ```ts
 
 // @public
-export interface A2uiClientMessage {
-    userAction?: {
-        name: string;
-        surfaceId: string;
-        sourceComponentId?: string;
-        context?: Record<string, unknown>;
-        timestamp?: string;
-        dataContextPath?: string;
-    };
+export interface A2uiMessage {
+    readonly [operation: string]: unknown;
+    readonly version: '1.0';
+}
+
+// @public
+export interface A2uiRendererAction {
+    context?: Record<string, unknown>;
+    name: string;
+    sourceComponentId: string;
+    surfaceId: string;
+    timestamp?: string;
 }
 
 // @public
 export type A2uiState = Record<string, unknown>;
-
-// @public
-export type A2uiV09Message = Record<string, unknown>;
 
 // @public
 export interface ActionError {
@@ -255,11 +255,11 @@ export interface SerializedTurnResponse {
 
 // @public
 export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
-    readonly a2uiMessages: readonly A2uiV09Message[];
+    readonly a2uiMessages: readonly A2uiMessage[];
     readonly actionError: ActionError | undefined;
     cancel(): void;
     readonly contracts: TContracts;
-    dispatchAction: (message: A2uiClientMessage | SubmitPromptAction) => Promise<void>;
+    dispatchAction: (message: A2uiRendererAction | SubmitPromptAction) => Promise<void>;
     getSnapshot(): SessionSnapshot;
     readonly initialization: SessionInitialization | undefined;
     readonly request: SessionRequest | undefined;
@@ -302,7 +302,7 @@ export type SessionRequest = InitializeRequest | PromptRequest | ActionRequest;
 
 // @public
 export interface SessionSnapshot {
-    readonly a2uiMessages: readonly A2uiV09Message[];
+    readonly a2uiMessages: readonly A2uiMessage[];
     readonly actionError: ActionError | undefined;
     readonly initialization: SessionInitialization | undefined;
     readonly request: SessionRequest | undefined;

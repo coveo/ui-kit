@@ -21,7 +21,7 @@ export type {
   Session,
   SessionConfig,
   SessionSnapshot,
-  A2uiClientMessage,
+  A2uiRendererAction,
   SubmitPromptAction,
 } from '@/src/session/create-session.js';
 
@@ -54,7 +54,7 @@ export type {
   TurnStatus,
   TurnAgent,
   A2uiState,
-  A2uiV09Message,
+  A2uiMessage,
   Activity,
   AgentMessage,
   ToolCall,

@@ -48,7 +48,7 @@ const SLOT_PRODUCT_SUMMARY_IDS = [
 
 // The bundle-display root composes one product-summary node per slot; each slot summary is
 // emitted as its own node. Following the A2-UI v1.0 flat node shape, each node carries its
-// composition links and `{ path }` state bindings directly at the top level (no `props` wrapper).
+// composition links and `{ "@path" }` state bindings directly at the top level (no `props` wrapper).
 // BundleDisplay is a homogeneous container: its ordered top-level `children` ChildList mounts the
 // product-summary slots, alongside its `tiers` state binding. Each ProductSummary spreads its
 // `categoryLabel`/`product` state bindings onto the node top level.
@@ -82,7 +82,7 @@ const bundleSurfaceActivity: ConverseEvent = ActivitySnapshot({
     messages: [
       deleteSurfaceMessage(PLACEHOLDER_BUNDLE_SURFACE_ID),
       {
-        version: 'v1.0',
+        version: '1.0',
         createSurface: buildValidatedBundleSurface(BUNDLE_SURFACE_NODES),
       },
     ],
@@ -97,7 +97,7 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
     messages: [
       deleteSurfaceMessage(PLACEHOLDER_NEXT_ACTIONS_SURFACE_ID),
       {
-        version: 'v1.0',
+        version: '1.0',
         createSurface: {
           surfaceId: NEXT_ACTIONS_SURFACE_ID,
           catalogId: CATALOG_ID,

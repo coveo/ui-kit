@@ -93,7 +93,7 @@ const surfaceActivity = (components: unknown[]): Activity => ({
   replace: false,
   payload: {
     messages: [
-      {version: 'v1.0', createSurface: {surfaceId: SURFACE_ID, rootId: 'root', components}},
+      {version: '1.0', createSurface: {surfaceId: SURFACE_ID, rootId: 'root', components}},
     ],
   },
 });
@@ -101,7 +101,7 @@ const surfaceActivity = (components: unknown[]): Activity => ({
 const paginationNode = {
   id: 'pagination-2',
   component: 'Pagination',
-  page: {path: statePath('pagination-2') + '/page'},
+  page: {'@path': statePath('pagination-2') + '/page'},
 };
 
 const validWholePagination = {page: 0, pageSize: 12, totalEntries: 43, totalPages: 4};
@@ -342,7 +342,7 @@ describe('session state integration', () => {
     });
 
   const createSurfaceMessage = {
-    version: 'v1.0',
+    version: '1.0',
     createSurface: {surfaceId: SURFACE_ID, rootId: 'root', components: [paginationNode]},
   };
 
@@ -439,7 +439,7 @@ describe('session state integration', () => {
     // projection they would overwrite each other at `/state/pagination-2`; the
     // per-surface data model keeps them under distinct `state[surfaceId]` keys.
     const otherSurfaceMessage = {
-      version: 'v1.0',
+      version: '1.0',
       createSurface: {
         surfaceId: 'ui-2',
         rootId: 'root',

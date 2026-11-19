@@ -27,7 +27,7 @@ const activities: Activity[] = [
     payload: {
       messages: [
         {
-          version: 'v1.0',
+          version: '1.0',
           createSurface: {
             surfaceId: 'shell',
             catalogId: 'commerce',
@@ -45,7 +45,7 @@ const activities: Activity[] = [
 const boots = {query: 'boots', products: ['boots 1']};
 
 function update(path: string, value: unknown, surfaceId = 'shell') {
-  return {version: 'v1.0', updateDataModel: {surfaceId, path, value}};
+  return {version: '1.0', updateDataModel: {surfaceId, path, value}};
 }
 
 function layer(entries: Record<string, Record<string, unknown>>): UnrecordedState {
@@ -69,9 +69,9 @@ describe('acceptUnrecordedWrites', () => {
 
   it('leaves out any other message', () => {
     const messages = [
-      {version: 'v1.0', createSurface: {surfaceId: 'other', components: []}},
+      {version: '1.0', createSurface: {surfaceId: 'other', components: []}},
       {
-        version: 'v1.0',
+        version: '1.0',
         updateComponents: {surfaceId: 'shell', components: [{id: 'ghost', component: 'Text'}]},
       },
       update('/state/ghost', {}),
@@ -140,7 +140,7 @@ describe('releaseUnrecordedState', () => {
   });
 
   it('drops the surfaces a recorded activity creates or deletes', () => {
-    expect(release([{version: 'v1.0', deleteSurface: {surfaceId: 'shell'}}])).toEqual(new Map());
+    expect(release([{version: '1.0', deleteSurface: {surfaceId: 'shell'}}])).toEqual(new Map());
   });
 
   it('returns the same layer when a recorded write leaves it be', () => {

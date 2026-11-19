@@ -8,10 +8,10 @@ import {
 import type {Activity, SessionInitialization, Turn} from './types.js';
 
 const create = (surfaceId: string, component = 'ProductCarousel') => ({
-  version: 'v1.0',
+  version: '1.0',
   createSurface: {surfaceId, catalogId: 'catalog', components: [{id: 'root', component}]},
 });
-const remove = (surfaceId: string) => ({version: 'v1.0', deleteSurface: {surfaceId}});
+const remove = (surfaceId: string) => ({version: '1.0', deleteSurface: {surfaceId}});
 
 function turn(id: string, ...messageBatches: unknown[][]): Turn {
   const activities: Activity[] = messageBatches.map((messages, index) => ({
@@ -93,24 +93,24 @@ describe('deriveSessionSurfaces', () => {
     expect(view.ownerTurnIds.get('carousel')).toBe('t2');
   });
 
-  it('gives a surface to the turn that first creates it with a catalog', () => {
+  it('gives a surface to the turn that first creates it, even without a catalog', () => {
     const view = deriveSessionSurfaces({
       turns: [
-        turn('t1', [{version: 'v1.0', createSurface: {surfaceId: 'carousel', components: []}}]),
+        turn('t1', [{version: '1.0', createSurface: {surfaceId: 'carousel', components: []}}]),
         turn('t2', [create('carousel')]),
       ],
     });
 
     expect(view.turns.map((candidate) => ids(candidate.response.surfaces))).toEqual([
-      [],
       ['carousel'],
+      [],
     ]);
   });
 
   it('records the turn that created a surface the projection leaves out', () => {
     const view = deriveSessionSurfaces({
       turns: [
-        turn('t1', [{version: 'v1.0', createSurface: {surfaceId: 'no-catalog', components: []}}]),
+        turn('t1', [{version: '1.0', createSurface: {surfaceId: 'no-catalog', components: []}}]),
       ],
     });
 
@@ -120,7 +120,7 @@ describe('deriveSessionSurfaces', () => {
 
   describe('loading placeholders', () => {
     const placeholder = (surfaceId: string) => ({
-      version: 'v1.0',
+      version: '1.0',
       createSurface: {
         surfaceId,
         catalogId: 'catalog',
@@ -181,13 +181,19 @@ describe('deriveSessionSurfaces', () => {
       expect([...abandonedPlaceholderIds(runs, T2)]).toEqual(['search']);
     });
 
-    it('leaves a placeholder with its run when a later run creates it again without a catalog', () => {
-      const noCatalog = {version: 'v1.0', createSurface: {surfaceId: 'skeleton', components: []}};
+    it('hands a placeholder to a later run that creates it again without a catalog', () => {
+      const noCatalog = {
+        version: '1.0',
+        createSurface: {
+          surfaceId: 'skeleton',
+          components: [{id: 'root', component: 'ProductCarousel'}],
+        },
+      };
       const runs = {turns: [turn('t1', [placeholder('skeleton')]), turn('t2', [noCatalog])]};
       const T2 = {kind: 'turn', turnId: 't2'} as const;
 
-      expect(ids(deriveSessionSurfaces(runs, T2).surfaces)).toEqual([]);
-      expect([...abandonedPlaceholderIds(runs, T1)]).toEqual(['skeleton']);
+      expect(ids(deriveSessionSurfaces(runs, T2).surfaces)).toEqual(['skeleton']);
+      expect([...abandonedPlaceholderIds(runs, T1)]).toEqual([]);
       expect([...abandonedPlaceholderIds(runs, T2)]).toEqual([]);
     });
   });
@@ -200,7 +206,7 @@ describe('deriveSessionSurfaces', () => {
       return {status, activities: turn('init', ...messageBatches).response.activities};
     }
     const skeleton = {
-      version: 'v1.0',
+      version: '1.0',
       createSurface: {
         surfaceId: 'shell-skeleton',
         catalogId: 'catalog',

@@ -15,15 +15,11 @@ import type {
 } from '@/src/internal/api/unified/unified-endpoint-types.js';
 import type {NavigatorContext} from '@/src/internal/context/index.js';
 import {devWarn} from '@/src/internal/utils/dev-warn.js';
-import {
-  EMPTY_RENDERER_STREAM,
-  appendToRendererStream,
-  convertA2uiMessages,
-} from './a2ui-v09-projection.js';
 import {actionCacheKey, createActionCache, type ActionOrigin} from './action-cache.js';
 import type {CachePolicy} from './announced-actions.js';
 import type {ContractsSchema} from './contracts.js';
 import {SURFACE_ACTIVITY_KIND} from './fold.js';
+import {EMPTY_RENDERER_STREAM, appendToRendererStream} from './renderer-stream.js';
 import {sessionActivities} from './session-surfaces.js';
 import {
   EMPTY_UNRECORDED_STATE,
@@ -176,7 +172,7 @@ export function createConcurrentActions({
       ),
       rendererStream: appendToRendererStream(
         latest.rendererStream ?? EMPTY_RENDERER_STREAM,
-        convertA2uiMessages(accepted.messages)
+        accepted.messages
       ),
     }));
   }

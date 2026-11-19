@@ -109,7 +109,7 @@ describe('initialize', () => {
     const [message] = surfaceMessages(await initialize());
 
     expect(message).toEqual({
-      version: 'v1.0',
+      version: '1.0',
       createSurface: {
         surfaceId: expect.stringMatching(/^session-shell-\d+$/),
         catalogId: 'https://schema.thermidor.coveo.com/a2-ui/catalog.json',
@@ -124,15 +124,15 @@ describe('initialize', () => {
           {
             id: 'query-suggestions',
             component: 'QuerySuggestions',
-            query: {path: '/state/query-suggestions/query'},
-            recentQueries: {path: '/state/query-suggestions/recentQueries'},
-            completions: {path: '/state/query-suggestions/completions'},
+            query: {'@path': '/state/query-suggestions/query'},
+            recentQueries: {'@path': '/state/query-suggestions/recentQueries'},
+            completions: {'@path': '/state/query-suggestions/completions'},
           },
           {
             id: 'instant-products',
             component: 'InstantProducts',
-            query: {path: '/state/instant-products/query'},
-            products: {path: '/state/instant-products/products'},
+            query: {'@path': '/state/instant-products/query'},
+            products: {'@path': '/state/instant-products/products'},
           },
         ],
         dataModel: {
@@ -574,7 +574,7 @@ describe('recent queries', () => {
       expect(events[0].data).toEqual(session.keys);
       expect(surfaceMessages(events)).toEqual([
         {
-          version: 'v1.0',
+          version: '1.0',
           updateDataModel: {
             surfaceId: session.shellId,
             path: '/state/query-suggestions/recentQueries',

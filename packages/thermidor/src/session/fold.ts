@@ -444,7 +444,8 @@ const LOADING_FLAG = 'isLoading';
  * Derives the ordered list of surfaces borne by a turn's activities. Every
  * entry carries a non-empty `surfaceId` and a non-empty `rootComponentType`;
  * turns with no surface-bearing activities yield an empty list. A `createSurface`
- * without a `catalogId` is ignored, as the v0.9 projection drops it.
+ * without a `catalogId` is kept: from A2-UI v1.0 the default catalog is optional, and each
+ * component of such a surface names its own.
  *
  * Messages are applied in stream order, following the A2-UI surface lifecycle:
  * `deleteSurface` removes a surface, and `isLoading` tracks the surface's
@@ -545,13 +546,6 @@ function readSurface(message: unknown): DiscoveredSurface | null {
     return null;
   }
 
-  // The v0.9 projection drops a surface without a catalog, so the renderer never draws it; a
-  // consumer must not draw a placeholder for it either.
-  const catalogId = createSurface['catalogId'];
-  if (typeof catalogId !== 'string' || catalogId.length === 0) {
-    return null;
-  }
-
   const components = createSurface['components'];
   if (!Array.isArray(components)) {
     return null;
@@ -578,9 +572,9 @@ function readSurface(message: unknown): DiscoveredSurface | null {
 }
 
 /**
- * Warns, during development, about A2-UI spec errors in the `createSurface` messages of an incoming
- * surface snapshot: a surface without a catalog, which both projections ignore, and a surface
- * created again while it still exists, which `surfaces` collapses. Only the incoming snapshot is
+ * Warns, during development, about an A2-UI spec error in the `createSurface` messages of an
+ * incoming surface snapshot: a surface created again while it still exists, which `surfaces`
+ * collapses and the renderer stream turns into a replacement. Only the incoming snapshot is
  * checked, so each error is reported once rather than on every re-derivation. A replace snapshot
  * may re-send the `createSurface` of the activity it supersedes.
  */
@@ -613,15 +607,6 @@ function warnSurfaceSpecErrors(
     if (surfaceId === null) {
       continue;
     }
-    const catalogId = (message as {createSurface: Record<string, unknown>}).createSurface[
-      'catalogId'
-    ];
-    if (typeof catalogId !== 'string' || catalogId.length === 0) {
-      devWarn(
-        `createSurface "${surfaceId}" has no catalogId (an A2-UI spec error); it is ignored.`
-      );
-      continue;
-    }
     if (liveIds.has(surfaceId)) {
       devWarn(
         `createSurface "${surfaceId}" re-creates a surface that still exists without a deleteSurface (an A2-UI spec error).`
@@ -633,8 +618,7 @@ function warnSurfaceSpecErrors(
 
 /**
  * Reads the loading flag an inline `createSurface.dataModel` seeds. The flag may be keyed plainly
- * (`isLoading`) or as its JSON Pointer (`/isLoading`); as in the v0.9 projection, the last of the
- * two wins.
+ * (`isLoading`) or as its JSON Pointer (`/isLoading`); the last of the two wins.
  */
 function readInlineLoadingFlag(dataModel: Record<string, unknown>): boolean {
   let isLoading = false;

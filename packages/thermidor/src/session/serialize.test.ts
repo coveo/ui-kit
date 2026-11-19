@@ -158,7 +158,7 @@ describe('restoreSession', () => {
               response: {
                 activities: [
                   surfaceActivity('a1', [
-                    {version: 'v1.0', createSurface: {surfaceId: 's1', catalogId: 'c'}},
+                    {version: '1.0', createSurface: {surfaceId: 's1', catalogId: 'c'}},
                   ]),
                 ],
               },
@@ -167,7 +167,7 @@ describe('restoreSession', () => {
               id: 't2',
               response: {
                 activities: [
-                  surfaceActivity('a2', [{version: 'v1.0', deleteSurface: {surfaceId: 's1'}}]),
+                  surfaceActivity('a2', [{version: '1.0', deleteSurface: {surfaceId: 's1'}}]),
                 ],
               },
             }),
@@ -177,8 +177,8 @@ describe('restoreSession', () => {
     );
 
     expect(restored.rendererStream?.messages).toEqual([
-      {version: 'v0.9', createSurface: {surfaceId: 's1', catalogId: 'c'}},
-      {version: 'v0.9', deleteSurface: {surfaceId: 's1'}},
+      {version: '1.0', createSurface: {surfaceId: 's1', catalogId: 'c'}},
+      {version: '1.0', deleteSurface: {surfaceId: 's1'}},
     ]);
   });
 

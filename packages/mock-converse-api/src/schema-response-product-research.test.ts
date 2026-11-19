@@ -109,10 +109,10 @@ describe('schema-response-product-research single-product research scenario', ()
       {
         id: 'root',
         component: 'ProductResearchCard',
-        product: {path: '/state/root/product'},
-        summary: {path: '/state/root/summary'},
-        bullets: {path: '/state/root/bullets'},
-        relatedDocuments: {path: '/state/root/relatedDocuments'},
+        product: {'@path': '/state/root/product'},
+        summary: {'@path': '/state/root/summary'},
+        bullets: {'@path': '/state/root/bullets'},
+        relatedDocuments: {'@path': '/state/root/relatedDocuments'},
       },
     ]);
   });

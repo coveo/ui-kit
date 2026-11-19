@@ -60,21 +60,19 @@ export interface DiscoveredSurface {
 }
 
 /**
- * A single A2-UI message in the **v0.9** shape a renderer consumes, exposed in
- * the session's renderer stream (`Session.a2uiMessages`).
+ * A single A2-UI v1.0 message, as Agent Gateway streamed it, exposed in the session's renderer
+ * stream (`Session.a2uiMessages`). A renderer built on `@a2ui/web_core`'s v1.0 message processor,
+ * such as `@a2ui/react`, consumes it as is.
  *
- * Agent Gateway emits A2-UI v1.0; every available renderer
- * (`@copilotkit/a2ui-renderer`, via `@a2ui/web_core/v0_9`) consumes v0.9. This
- * projection performs that downgrade so a consumer can hand the stream straight
- * to a renderer without writing version-aware code of their own.
- *
- * INTERIM: this is recorded debt, removed in a breaking change
- * once a v1.0-capable renderer exists. Kept deliberately untyped beyond
- * "record" — the per-operation shapes belong to the renderer's protocol, not to
- * thermidor's domain model, and pinning them here would deepen the coupling this
- * projection is meant to contain.
+ * Typed no further than its envelope `version`: the per-operation shapes belong to the A2-UI
+ * specification and its renderers, not to thermidor's domain model.
  */
-export type A2uiV09Message = Record<string, unknown>;
+export interface A2uiMessage {
+  /** The A2-UI protocol version of the message. */
+  readonly version: '1.0';
+  /** The message's operation (`createSurface`, `updateComponents`, ...) and its body. */
+  readonly [operation: string]: unknown;
+}
 
 /**
  * The lifecycle status of a {@link ToolCall}.

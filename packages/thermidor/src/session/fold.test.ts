@@ -1,17 +1,19 @@
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import type {NormalizedStreamEvent} from '@/src/internal/api/protocol/stream-types.js';
-import {convertA2uiMessages} from './a2ui-v09-projection.js';
 import {createTurn, deriveSurfaces, foldActivities, foldInitialization} from './fold.js';
-import type {A2uiV09Message, Activity} from './types.js';
+import {EMPTY_RENDERER_STREAM, appendToRendererStream} from './renderer-stream.js';
+import type {A2uiMessage, Activity} from './types.js';
 
-/** The v0.9 messages a renderer receives for the surface activities of a folded turn. */
-function rendererMessages(activities: readonly Activity[]): A2uiV09Message[] {
-  return activities
-    .filter((activity) => activity.kind === 'a2ui-surface')
-    .flatMap((activity) => {
-      const messages = activity.payload['messages'];
-      return Array.isArray(messages) ? convertA2uiMessages(messages) : [];
-    });
+/** The messages a renderer receives for the surface activities of a folded turn. */
+function rendererMessages(activities: readonly Activity[]): readonly A2uiMessage[] {
+  let stream = EMPTY_RENDERER_STREAM;
+  for (const activity of activities) {
+    const messages = activity.payload['messages'];
+    if (activity.kind === 'a2ui-surface' && Array.isArray(messages)) {
+      stream = appendToRendererStream(stream, messages);
+    }
+  }
+  return stream.messages;
 }
 
 /**
@@ -153,7 +155,7 @@ const surfaceMessage = (surfaceId: string, rootComponentType: string) => {
   // A2-UI v1.0: the surface root is the canonical node with `id: "root"`; the envelope carries
   // no `rootId`.
   return {
-    version: 'v1.0',
+    version: '1.0',
     createSurface: {
       catalogId: 'commerce',
       surfaceId,
@@ -265,7 +267,7 @@ describe('fold surface derivation', () => {
     const turn = foldActivities(createTurn('t1', {}), [
       surfaceSnapshot([
         {
-          version: 'v1.0',
+          version: '1.0',
           createSurface: {
             catalogId: 'commerce',
             surfaceId: 'ui-1',
@@ -288,7 +290,7 @@ describe('fold surface derivation', () => {
   // letting a commerce-search surface silently fail discovery and mis-route.
   it('discovers a single-identity commerce-search root by its top-level component discriminant', () => {
     const singleIdentitySurface = {
-      version: 'v1.0',
+      version: '1.0',
       createSurface: {
         catalogId: 'commerce',
         surfaceId: 'commerce-search-2',
@@ -419,7 +421,7 @@ describe('fold ACTIVITY_SNAPSHOT replace semantics', () => {
   });
 
   const dataModelMessage = (surfaceId: string, path: string, value: unknown) => ({
-    version: 'v1.0',
+    version: '1.0',
     updateDataModel: {surfaceId, path, value},
   });
 
@@ -484,7 +486,7 @@ describe('fold ACTIVITY_SNAPSHOT replace semantics', () => {
   // carried write replays first, so the superseding snapshot's newer write decides the state.
   const createElsewhere = surfaceSnapshotWith('create:ui-1', true, [
     {
-      version: 'v1.0',
+      version: '1.0',
       createSurface: {
         catalogId: 'commerce',
         surfaceId: 'ui-1',
@@ -523,7 +525,7 @@ describe('fold ACTIVITY_SNAPSHOT replace semantics', () => {
 
   it('carries forward the prior updateComponents when a later snapshot omits it', () => {
     const updateComponents = {
-      version: 'v1.0',
+      version: '1.0',
       updateComponents: {
         surfaceId: 'ui-1',
         components: [{id: 'ui-1-facet', component: 'RegularFacet'}],
@@ -554,7 +556,7 @@ describe('fold ACTIVITY_SNAPSHOT replace semantics', () => {
  */
 describe('fold loading placeholder lifecycle', () => {
   const loadingSurfaceMessage = (surfaceId: string, rootComponentType: string) => ({
-    version: 'v1.0',
+    version: '1.0',
     createSurface: {
       catalogId: 'commerce',
       surfaceId,
@@ -564,12 +566,12 @@ describe('fold loading placeholder lifecycle', () => {
   });
 
   const deleteSurfaceMessage = (surfaceId: string) => ({
-    version: 'v1.0',
+    version: '1.0',
     deleteSurface: {surfaceId},
   });
 
   const dataModelMessage = (surfaceId: string, path: string, value: unknown) => ({
-    version: 'v1.0',
+    version: '1.0',
     updateDataModel: {surfaceId, path, value},
   });
 
@@ -654,7 +656,7 @@ describe('fold loading placeholder lifecycle', () => {
     const turn = foldActivities(createTurn('t1', {}), [
       surfaceSnapshotWith('create:skel', true, [loadingSurfaceMessage('skel', 'ProductCarousel')]),
       surfaceSnapshotWith('update:skel', true, [
-        {version: 'v1.0', updateDataModel: {surfaceId: 'skel', path, value: {products: {}}}},
+        {version: '1.0', updateDataModel: {surfaceId: 'skel', path, value: {products: {}}}},
       ]),
     ]);
 
@@ -667,7 +669,7 @@ describe('fold loading placeholder lifecycle', () => {
     const turn = foldActivities(createTurn('t1', {}), [
       surfaceSnapshotWith('activity-1', true, [
         {
-          version: 'v1.0',
+          version: '1.0',
           createSurface: {
             catalogId: 'commerce',
             surfaceId: 'skel',
@@ -772,7 +774,7 @@ describe('fold loading placeholder lifecycle', () => {
 
     expect(turn.response.surfaces).toEqual([]);
     expect(rendererMessages(turn.response.activities)).toEqual([
-      {version: 'v0.9', deleteSurface: {surfaceId: 'earlier'}},
+      {version: '1.0', deleteSurface: {surfaceId: 'earlier'}},
     ]);
   });
 
@@ -791,18 +793,18 @@ describe('fold loading placeholder lifecycle', () => {
 });
 
 /**
- * A2-UI spec errors in surface snapshots: both projections ignore a surface without a catalog,
- * and each error is warned about once, when its snapshot arrives.
+ * A2-UI spec errors in surface snapshots, each warned about once, when its snapshot arrives. A
+ * surface without a catalog is not one: from A2-UI v1.0 the default catalog is optional.
  */
 describe('fold surface spec errors', () => {
   afterEach(() => vi.restoreAllMocks());
 
   const createSurface = (surfaceId: string, extra: Record<string, unknown> = {}) => ({
-    version: 'v1.0',
+    version: '1.0',
     createSurface: {surfaceId, components: [{id: 'root', component: 'ProductCarousel'}], ...extra},
   });
 
-  it('ignores a surface without a catalog and warns once', () => {
+  it('keeps a surface without a catalog, without a warning', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
     const turn = foldActivities(createTurn('t1', {}), [
@@ -812,9 +814,11 @@ describe('fold surface spec errors', () => {
       surfaceSnapshotWith('activity-2', true, [createSurface('other', {catalogId: 'commerce'})]),
     ]);
 
-    expect(turn.response.surfaces.map((surface) => surface.surfaceId)).toEqual(['other']);
-    expect(warn).toHaveBeenCalledTimes(1);
-    expect(warn.mock.calls[0][0]).toContain('"skel" has no catalogId');
+    expect(turn.response.surfaces).toEqual([
+      {surfaceId: 'skel', rootComponentType: 'ProductCarousel', isLoading: true},
+      {surfaceId: 'other', rootComponentType: 'ProductCarousel', isLoading: false},
+    ]);
+    expect(warn).not.toHaveBeenCalled();
   });
 
   it('warns once about a surface created again while it still exists', () => {
@@ -837,7 +841,7 @@ describe('fold surface spec errors', () => {
       surfaceSnapshotWith('activity-1', true, [createSurface('s', {catalogId: 'commerce'})]),
       surfaceSnapshotWith('activity-1', true, [createSurface('s', {catalogId: 'commerce'})]),
       surfaceSnapshotWith('activity-2', true, [
-        {version: 'v1.0', deleteSurface: {surfaceId: 's'}},
+        {version: '1.0', deleteSurface: {surfaceId: 's'}},
         createSurface('s', {catalogId: 'commerce'}),
       ]),
     ]);

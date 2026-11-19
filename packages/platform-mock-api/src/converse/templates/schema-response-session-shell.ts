@@ -94,7 +94,7 @@ function buildSessionShellEvents(
         messageId: `activity-${surfaceId}`,
         activityType: 'a2ui-surface',
         replace: true,
-        content: {messages: [{version: 'v1.0', createSurface}]},
+        content: {messages: [{version: '1.0', createSurface}]},
       }),
     ],
     includeInitialStateSnapshot: false,

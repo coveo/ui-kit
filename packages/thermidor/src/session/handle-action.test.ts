@@ -31,7 +31,7 @@ vi.mock('@/src/internal/api/unified/unified-endpoint-client.js', () => ({
 
 import {z} from 'zod/v4';
 import type {ContractsSchema} from './contracts.js';
-import {createSession, type A2uiClientMessage, type SessionConfig} from './create-session.js';
+import {createSession, type A2uiRendererAction, type SessionConfig} from './create-session.js';
 
 /**
  * A locally-built A2-UI contract, INJECTED as test data exactly as a real
@@ -96,7 +96,7 @@ function queueSurfaceThenComplete(): void {
               content: {
                 messages: [
                   {
-                    version: 'v1.0',
+                    version: '1.0',
                     createSurface: {
                       surfaceId: SURFACE_ID,
                       rootId: 'root',
@@ -166,14 +166,12 @@ async function sessionWithPaginationSurface() {
   return session;
 }
 
-function paginationMessage(name: string, context: unknown): A2uiClientMessage {
+function paginationMessage(name: string, context: unknown): A2uiRendererAction {
   return {
-    userAction: {
-      name,
-      surfaceId: SURFACE_ID,
-      sourceComponentId: PAGINATION_ID,
-      context: context as Record<string, unknown>,
-    },
+    name,
+    surfaceId: SURFACE_ID,
+    sourceComponentId: PAGINATION_ID,
+    context: context as Record<string, unknown>,
   };
 }
 
@@ -248,9 +246,11 @@ describe('Session.dispatchAction', () => {
   });
 
   describe('dispatchAction is fire-and-forget', () => {
-    it('resolves (never rejects) for a message with no userAction; nothing sent', async () => {
+    it('resolves (never rejects) for a message that is no action; nothing sent', async () => {
       const session = await sessionWithPaginationSurface();
-      await expect(session.dispatchAction({})).resolves.toBeUndefined();
+      await expect(
+        session.dispatchAction({} as unknown as A2uiRendererAction)
+      ).resolves.toBeUndefined();
       expect(callMock).not.toHaveBeenCalled();
     });
 
@@ -258,8 +258,10 @@ describe('Session.dispatchAction', () => {
       const session = await sessionWithPaginationSurface();
       await expect(
         session.dispatchAction({
-          userAction: {name: 'selectPage', surfaceId: SURFACE_ID, context: {page: 1}},
-        })
+          name: 'selectPage',
+          surfaceId: SURFACE_ID,
+          context: {page: 1},
+        } as unknown as A2uiRendererAction)
       ).resolves.toBeUndefined();
       expect(callMock).not.toHaveBeenCalled();
     });
@@ -268,12 +270,10 @@ describe('Session.dispatchAction', () => {
       const session = await sessionWithPaginationSurface();
       await expect(
         session.dispatchAction({
-          userAction: {
-            name: 'selectPage',
-            surfaceId: SURFACE_ID,
-            sourceComponentId: 'unknown-node',
-            context: {page: 1},
-          },
+          name: 'selectPage',
+          surfaceId: SURFACE_ID,
+          sourceComponentId: 'unknown-node',
+          context: {page: 1},
         })
       ).resolves.toBeUndefined();
       expect(callMock).not.toHaveBeenCalled();
@@ -330,7 +330,7 @@ describe('Session.dispatchAction', () => {
 
       // The consumer passes the standard message straight through; it runs no
       // Zod and resolves no component itself.
-      const message: A2uiClientMessage = paginationMessage('setPageSize', {pageSize: 24});
+      const message: A2uiRendererAction = paginationMessage('setPageSize', {pageSize: 24});
       await session.dispatchAction(message);
 
       expect(callMock).toHaveBeenCalledTimes(1);

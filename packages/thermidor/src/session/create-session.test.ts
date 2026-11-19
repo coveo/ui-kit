@@ -46,7 +46,7 @@ vi.mock('@/src/internal/api/unified/unified-endpoint-client.js', () => ({
 import {z} from 'zod/v4';
 import type {ContractsSchema} from './contracts.js';
 import type {NavigatorContext} from '@/src/internal/context/index.js';
-import {createSession, type SessionConfig} from './create-session.js';
+import {createSession, type A2uiRendererAction, type SessionConfig} from './create-session.js';
 
 /**
  * A locally-built A2-UI contract, INJECTED as test data exactly as a real
@@ -193,7 +193,7 @@ const PAGINATION_SURFACE = {
   content: {
     messages: [
       {
-        version: 'v1.0',
+        version: '1.0',
         createSurface: {
           surfaceId: 'commerce-search-surface',
           components: [
@@ -215,12 +215,10 @@ const PAGE_ACTION = {
 
 function selectPageMessage(page: number) {
   return {
-    userAction: {
-      name: 'selectPage',
-      surfaceId: 'commerce-search-surface',
-      sourceComponentId: 'pagination-1',
-      context: {page},
-    },
+    name: 'selectPage',
+    surfaceId: 'commerce-search-surface',
+    sourceComponentId: 'pagination-1',
+    context: {page},
   };
 }
 
@@ -509,7 +507,7 @@ describe('createSession lifecycle', () => {
         content: {
           messages: [
             {
-              version: 'v1.0',
+              version: '1.0',
               createSurface: {
                 surfaceId: 'commerce-search-surface',
                 components: [
@@ -527,12 +525,10 @@ describe('createSession lifecycle', () => {
 
       const actionStream = queueStream();
       const actionTurn = session.dispatchAction({
-        userAction: {
-          name: 'selectPage',
-          surfaceId: 'commerce-search-surface',
-          sourceComponentId: 'pagination-1',
-          context: {page: 2},
-        },
+        name: 'selectPage',
+        surfaceId: 'commerce-search-surface',
+        sourceComponentId: 'pagination-1',
+        context: {page: 2},
       });
       await flush();
       await actionStream.opened;
@@ -552,7 +548,7 @@ describe('createSession lifecycle', () => {
   describe('dispatchAction preserves the originating surfaceId', () => {
     /**
      * An action must POST to ITS OWN originating surface
-     * (`userAction.surfaceId`), not to whichever surface happens to be
+     * (the action's `surfaceId`), not to whichever surface happens to be
      * CommerceSearch. Actions from conversation-only surfaces must reach their
      * own surface rather than being dropped or misrouted.
      */
@@ -567,7 +563,7 @@ describe('createSession lifecycle', () => {
         type: 'ACTIVITY_SNAPSHOT',
         messageId: 'surface-activity',
         activityType: 'a2ui-surface',
-        content: {messages: [{version: 'v1.0', createSurface}]},
+        content: {messages: [{version: '1.0', createSurface}]},
       });
       first.emit({type: 'RUN_FINISHED'});
       first.close();
@@ -586,12 +582,10 @@ describe('createSession lifecycle', () => {
 
       const actionStream = queueStream();
       const actionTurn = session.dispatchAction({
-        userAction: {
-          name: 'selectAction',
-          surfaceId: 'next-actions-surface',
-          sourceComponentId: 'next-1',
-          context: {actionId: 'a-42'},
-        },
+        name: 'selectAction',
+        surfaceId: 'next-actions-surface',
+        sourceComponentId: 'next-1',
+        context: {actionId: 'a-42'},
       });
       await flush();
       await actionStream.opened;
@@ -621,7 +615,7 @@ describe('createSession lifecycle', () => {
         content: {
           messages: [
             {
-              version: 'v1.0',
+              version: '1.0',
               createSurface: {
                 surfaceId: 'commerce-search-surface',
                 components: [
@@ -640,7 +634,7 @@ describe('createSession lifecycle', () => {
         content: {
           messages: [
             {
-              version: 'v1.0',
+              version: '1.0',
               createSurface: {
                 surfaceId: 'next-actions-surface',
                 components: [{id: 'root', component: 'NextActionsBar'}],
@@ -655,12 +649,10 @@ describe('createSession lifecycle', () => {
 
       const actionStream = queueStream();
       const actionTurn = session.dispatchAction({
-        userAction: {
-          name: 'selectAction',
-          surfaceId: 'next-actions-surface',
-          sourceComponentId: 'root',
-          context: {actionId: 'a-7'},
-        },
+        name: 'selectAction',
+        surfaceId: 'next-actions-surface',
+        sourceComponentId: 'root',
+        context: {actionId: 'a-7'},
       });
       await flush();
       await actionStream.opened;
@@ -688,12 +680,10 @@ describe('createSession lifecycle', () => {
       // A surfaceId that does not exist on the active turn: recoverDiscriminant
       // finds no registry entry → nothing sent (drop upstream of executeAction).
       const dispatched = session.dispatchAction({
-        userAction: {
-          name: 'selectPage',
-          surfaceId: 'ghost-surface',
-          sourceComponentId: 'pagination-1',
-          context: {page: 2},
-        },
+        name: 'selectPage',
+        surfaceId: 'ghost-surface',
+        sourceComponentId: 'pagination-1',
+        context: {page: 2},
       });
       await flush();
       await dispatched;
@@ -712,7 +702,7 @@ describe('createSession lifecycle', () => {
     });
     const searchSurface = surfaceSnapshot('search', [
       {
-        version: 'v1.0',
+        version: '1.0',
         createSurface: {
           surfaceId: 'commerce-search-surface',
           catalogId: 'catalog',
@@ -725,7 +715,7 @@ describe('createSession lifecycle', () => {
     ]);
     const answerSurface = surfaceSnapshot('answer', [
       {
-        version: 'v1.0',
+        version: '1.0',
         createSurface: {
           surfaceId: 'answer-surface',
           catalogId: 'catalog',
@@ -796,13 +786,13 @@ describe('createSession lifecycle', () => {
       ).toEqual([['commerce-search-surface'], ['answer-surface']]);
     });
 
-    it('keeps a placeholder its turn left behind out when a later turn creates it without a catalog', async () => {
+    it('replaces a placeholder when a later turn creates it again without a catalog', async () => {
       const session = createSession(baseConfig);
       await prompt(
         session,
         surfaceSnapshot('placeholder', [
           {
-            version: 'v1.0',
+            version: '1.0',
             createSurface: {
               surfaceId: 'carousel-placeholder',
               catalogId: 'catalog',
@@ -819,7 +809,7 @@ describe('createSession lifecycle', () => {
       stream.emit(
         surfaceSnapshot('no-catalog', [
           {
-            version: 'v1.0',
+            version: '1.0',
             createSurface: {
               surfaceId: 'carousel-placeholder',
               components: [{id: 'root', component: 'ProductCarousel'}],
@@ -833,7 +823,10 @@ describe('createSession lifecycle', () => {
       stream.close();
       await turn;
 
-      expect(during).toEqual([]);
+      expect(during).toEqual(['carousel-placeholder']);
+      expect(session.surfaces).toEqual([
+        {surfaceId: 'carousel-placeholder', rootComponentType: 'ProductCarousel', isLoading: false},
+      ]);
     });
 
     it('applies a later turn validated write to the state of an earlier surface', async () => {
@@ -843,7 +836,7 @@ describe('createSession lifecycle', () => {
         session,
         surfaceSnapshot('update', [
           {
-            version: 'v1.0',
+            version: '1.0',
             updateDataModel: {
               surfaceId: 'commerce-search-surface',
               path: '/state/pagination-1',
@@ -860,7 +853,7 @@ describe('createSession lifecycle', () => {
 
     const paginationWrite = surfaceSnapshot('write', [
       {
-        version: 'v1.0',
+        version: '1.0',
         updateDataModel: {
           surfaceId: 'commerce-search-surface',
           path: '/state/pagination-1',
@@ -876,7 +869,7 @@ describe('createSession lifecycle', () => {
         searchSurface,
         surfaceSnapshot('placeholder', [
           {
-            version: 'v1.0',
+            version: '1.0',
             createSurface: {
               surfaceId: 'carousel-placeholder',
               catalogId: 'catalog',
@@ -915,7 +908,7 @@ describe('createSession lifecycle', () => {
       await prompt(
         session,
         surfaceSnapshot('delete', [
-          {version: 'v1.0', deleteSurface: {surfaceId: 'commerce-search-surface'}},
+          {version: '1.0', deleteSurface: {surfaceId: 'commerce-search-surface'}},
         ])
       );
 
@@ -1065,7 +1058,7 @@ describe('createSession lifecycle', () => {
       stream.emit(
         surfaceSnapshot('page', [
           {
-            version: 'v1.0',
+            version: '1.0',
             updateDataModel: {
               surfaceId: 'commerce-search-surface',
               path: '/state/pagination-1',
@@ -1239,7 +1232,7 @@ describe('createSession lifecycle', () => {
       content: {
         messages: [
           {
-            version: 'v1.0',
+            version: '1.0',
             createSurface: {
               surfaceId: 'next-actions-surface',
               components: [{id: 'root', component: 'NextActionsBar'}],
@@ -1250,12 +1243,10 @@ describe('createSession lifecycle', () => {
     };
 
     const followUp = {
-      userAction: {
-        name: 'selectAction',
-        surfaceId: 'next-actions-surface',
-        sourceComponentId: 'root',
-        context: {actionId: 'more-jackets'},
-      },
+      name: 'selectAction',
+      surfaceId: 'next-actions-surface',
+      sourceComponentId: 'root',
+      context: {actionId: 'more-jackets'},
     };
 
     async function answeredPrompt(session: ReturnType<typeof createSession>) {
@@ -1802,7 +1793,7 @@ describe('createSession lifecycle', () => {
         content: {
           messages: [
             {
-              version: 'v1.0',
+              version: '1.0',
               createSurface: {
                 surfaceId: 'commerce-search-surface',
                 components: [
@@ -1821,12 +1812,10 @@ describe('createSession lifecycle', () => {
       provider.failing = true;
       await expect(
         session.dispatchAction({
-          userAction: {
-            name: 'selectPage',
-            surfaceId: 'commerce-search-surface',
-            sourceComponentId: 'pagination-1',
-            context: {page: 2},
-          },
+          name: 'selectPage',
+          surfaceId: 'commerce-search-surface',
+          sourceComponentId: 'pagination-1',
+          context: {page: 2},
         })
       ).resolves.toBeUndefined();
 
@@ -1871,8 +1860,10 @@ describe('createSession lifecycle', () => {
       session.subscribe(() => seen.push(session.request));
 
       await session.dispatchAction({
-        userAction: {name: 'selectPage', surfaceId: 'commerce-search-surface', context: {}},
-      });
+        name: 'selectPage',
+        surfaceId: 'commerce-search-surface',
+        context: {},
+      } as unknown as A2uiRendererAction);
 
       expect(seen).toEqual([]);
     });
@@ -1925,12 +1916,10 @@ describe('createSession lifecycle', () => {
 
   describe('Gateway rejects a request as concurrent (409 AGENT:ACTION_IN_FLIGHT)', () => {
     const actionMessage = (page: number) => ({
-      userAction: {
-        name: 'selectPage',
-        surfaceId: 'commerce-search-surface',
-        sourceComponentId: 'pagination-1',
-        context: {page},
-      },
+      name: 'selectPage',
+      surfaceId: 'commerce-search-surface',
+      sourceComponentId: 'pagination-1',
+      context: {page},
     });
 
     /** Completes a first turn carrying a Pagination surface, so `selectPage` can be issued. */
@@ -1946,7 +1935,7 @@ describe('createSession lifecycle', () => {
         content: {
           messages: [
             {
-              version: 'v1.0',
+              version: '1.0',
               createSurface: {
                 surfaceId: 'commerce-search-surface',
                 components: [
@@ -2155,7 +2144,7 @@ describe('createSession lifecycle', () => {
       content: {
         messages: [
           {
-            version: 'v1.0',
+            version: '1.0',
             createSurface: {
               surfaceId: SHELL_ID,
               catalogId: 'commerce',
@@ -2180,7 +2169,7 @@ describe('createSession lifecycle', () => {
         content: {
           messages: [
             {
-              version: 'v1.0',
+              version: '1.0',
               updateDataModel: {
                 surfaceId: SHELL_ID,
                 path: `/state/${SHELL_PAGINATION_ID}`,
@@ -2194,22 +2183,18 @@ describe('createSession lifecycle', () => {
 
     function shellSelectPage(page: number) {
       return {
-        userAction: {
-          name: 'selectPage',
-          surfaceId: SHELL_ID,
-          sourceComponentId: SHELL_PAGINATION_ID,
-          context: {page},
-        },
+        name: 'selectPage',
+        surfaceId: SHELL_ID,
+        sourceComponentId: SHELL_PAGINATION_ID,
+        context: {page},
       };
     }
 
     const shellChip = {
-      userAction: {
-        name: 'selectAction',
-        surfaceId: SHELL_ID,
-        sourceComponentId: SHELL_CHIPS_ID,
-        context: {actionId: 'trending'},
-      },
+      name: 'selectAction',
+      surfaceId: SHELL_ID,
+      sourceComponentId: SHELL_CHIPS_ID,
+      context: {actionId: 'trending'},
     };
 
     /** Creates a session whose `initialize` answers with the shell, and waits for it. */
@@ -2274,10 +2259,7 @@ describe('createSession lifecycle', () => {
       expect(session.surfaces).toEqual([
         {surfaceId: SHELL_ID, rootComponentType: 'CommerceSearch', isLoading: false},
       ]);
-      expect(session.a2uiMessages[0]).toEqual({
-        version: 'v0.9',
-        createSurface: {surfaceId: SHELL_ID, catalogId: 'commerce'},
-      });
+      expect(session.a2uiMessages).toEqual(shellSurface.content.messages);
     });
 
     it('opens the next prompt with the session keys the initialization adopted', async () => {

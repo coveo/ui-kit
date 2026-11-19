@@ -48,21 +48,13 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 }
 
-function surfaceLifecycle(message: unknown): {
-  created?: string;
-  rendered?: boolean;
-  deleted?: string;
-} {
+function surfaceLifecycle(message: unknown): {created?: string; deleted?: string} {
   if (!isRecord(message)) {
     return {};
   }
   const createSurface = message['createSurface'];
   if (isRecord(createSurface) && typeof createSurface['surfaceId'] === 'string') {
-    const catalogId = createSurface['catalogId'];
-    return {
-      created: createSurface['surfaceId'],
-      rendered: typeof catalogId === 'string' && catalogId.length > 0,
-    };
+    return {created: createSurface['surfaceId']};
   }
   const deleteSurface = message['deleteSurface'];
   if (isRecord(deleteSurface) && typeof deleteSurface['surfaceId'] === 'string') {
@@ -84,11 +76,10 @@ interface SurfaceRuns {
 
 /**
  * Which turns hold each surface still alive. Follows the surface lifecycle as the node registry
- * does, so a surface the projection leaves out (no catalog, no root) still has its turns. A
- * `createSurface` for an id the renderer stream holds, such as the answer to an action recorded
- * with a later turn, keeps the surface's owner; the stream holds an id from a `createSurface` with
- * a catalog until its `deleteSurface`. One without a catalog, which the renderer drops, leaves the
- * turns of the surface the stream holds as they are.
+ * does, so a surface the projection leaves out (no root) still has its turns. A `createSurface` for
+ * an id the renderer stream holds, such as the answer to an action recorded with a later turn,
+ * keeps the surface's owner; the stream holds an id from its `createSurface` until its
+ * `deleteSurface`.
  */
 function deriveSurfaceRuns({turns, initialization}: SessionRuns): SurfaceRuns {
   const ownerTurnIds = new Map<string, string>();
@@ -103,8 +94,8 @@ function deriveSurfaceRuns({turns, initialization}: SessionRuns): SurfaceRuns {
       const messages =
         activity.kind === SURFACE_ACTIVITY_KIND ? activity.payload['messages'] : null;
       for (const message of Array.isArray(messages) ? messages : []) {
-        const {created, rendered: isRendered, deleted} = surfaceLifecycle(message);
-        if (created !== undefined && (isRendered || !live.has(created))) {
+        const {created, deleted} = surfaceLifecycle(message);
+        if (created !== undefined) {
           const runIds = live.has(created) ? [creatorTurnIds] : [ownerTurnIds, creatorTurnIds];
           for (const ids of runIds) {
             if (turnId === undefined) {
@@ -113,9 +104,7 @@ function deriveSurfaceRuns({turns, initialization}: SessionRuns): SurfaceRuns {
               ids.set(created, turnId);
             }
           }
-          if (isRendered) {
-            live.add(created);
-          }
+          live.add(created);
         } else if (deleted !== undefined) {
           ownerTurnIds.delete(deleted);
           creatorTurnIds.delete(deleted);

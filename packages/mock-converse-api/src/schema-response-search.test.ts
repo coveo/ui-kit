@@ -594,7 +594,7 @@ describe('schema-response-search breadbox', () => {
     expect(node).toEqual({
       id: BREADBOX_ID,
       component: 'Breadbox',
-      facets: {path: `/state/${BREADBOX_ID}/facets`},
+      facets: {'@path': `/state/${BREADBOX_ID}/facets`},
     });
   });
 
@@ -795,7 +795,7 @@ describe('schema-response-search query correction', () => {
   it('declares the correction as a QuerySummary state field', () => {
     const nodes = findCreateSurface(resetSurface())!.components as Array<Record<string, unknown>>;
     const querySummary = nodes.find((node) => node.id === 'query-summary-2')!;
-    expect(querySummary.correction).toEqual({path: '/state/query-summary-2/correction'});
+    expect(querySummary.correction).toEqual({'@path': '/state/query-summary-2/correction'});
   });
 
   it('shows no correction for a query searched as typed', () => {

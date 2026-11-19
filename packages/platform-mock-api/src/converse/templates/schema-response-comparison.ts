@@ -27,7 +27,7 @@ const PLACEHOLDER_NEXT_ACTIONS_SURFACE_ID = `placeholder-${runId}-next-actions`;
 const NEXT_ACTIONS_ROOT_ID = RENDERER_ROOT_ID;
 
 // The comparison surface is a single leaf node: the comparison-table owns its heading, AI summary,
-// compared products, and attribute descriptors as Component_State, bound to `{ path }` objects at
+// compared products, and attribute descriptors as Component_State, bound to `{ "@path" }` objects at
 // `/state/root/<field>`. Each product carries its own `relatedDocuments`, so they ride on the
 // `products` binding.
 const COMPARISON_SURFACE_NODES: A2uiComponentNode[] = [
@@ -54,7 +54,7 @@ const comparisonSurfaceActivity: ConverseEvent = ActivitySnapshot({
     messages: [
       deleteSurfaceMessage(PLACEHOLDER_COMPARISON_SURFACE_ID),
       {
-        version: 'v1.0',
+        version: '1.0',
         createSurface: buildValidatedComparisonSurface(COMPARISON_SURFACE_NODES),
       },
     ],
@@ -69,7 +69,7 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
     messages: [
       deleteSurfaceMessage(PLACEHOLDER_NEXT_ACTIONS_SURFACE_ID),
       {
-        version: 'v1.0',
+        version: '1.0',
         createSurface: {
           surfaceId: NEXT_ACTIONS_SURFACE_ID,
           catalogId: CATALOG_ID,
