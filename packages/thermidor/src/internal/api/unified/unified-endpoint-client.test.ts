@@ -351,6 +351,103 @@ describe('UnifiedEndpointClient', () => {
     expect(response).toEqual({
       success: false,
       error: 'network down',
+      transient: true,
+    });
+  });
+
+  /** Makes the mocked `fetch` reject a malformed URL or header as the real one does. */
+  const rejectLikeFetch = () =>
+    mockedFetch.mockImplementation(async (input, init) => {
+      new Request(input, init);
+      return new Response(null, {status: 200});
+    });
+
+  it.each([
+    [
+      'a request it cannot build',
+      () =>
+        client.call({...request, custom: {big: 1n}} as never, {
+          organizationId: 'test-org-id',
+          accessToken: 'test-token',
+        }),
+    ],
+    [
+      'a malformed endpoint',
+      () => {
+        rejectLikeFetch();
+        return client.call(request, {
+          organizationId: 'test-org-id',
+          accessToken: 'test-token',
+          endpoint: 'http://[',
+        });
+      },
+    ],
+    [
+      'an access token that is not a valid header value',
+      () => {
+        rejectLikeFetch();
+        return client.call(request, {
+          organizationId: 'test-org-id',
+          accessToken: 'token\nwith-newline',
+        });
+      },
+    ],
+    [
+      'a fetch aborted with its own reason',
+      () => {
+        const controller = new AbortController();
+        const reason = new Error('cancelled');
+        controller.abort(reason);
+        mockedFetch.mockRejectedValue(reason);
+        return client.call(
+          request,
+          {organizationId: 'test-org-id', accessToken: 'test-token'},
+          {signal: controller.signal}
+        );
+      },
+    ],
+    [
+      'an aborted fetch',
+      () => {
+        mockedFetch.mockRejectedValue(new DOMException('The operation was aborted.', 'AbortError'));
+        return client.call(request, {organizationId: 'test-org-id', accessToken: 'test-token'});
+      },
+    ],
+  ])('does not report %s as transient', async (_label, call) => {
+    const response = await call();
+
+    expect(response).toMatchObject({success: false});
+    expect(response).not.toHaveProperty('transient');
+  });
+
+  describe('transient failures', () => {
+    const callFailing = async (response: Response) => {
+      mockedFetch.mockResolvedValue(response);
+      const result = await client.call(request, {
+        organizationId: 'test-org-id',
+        accessToken: 'test-token',
+      });
+      if (result.success) {
+        throw new Error('Expected unified endpoint call to fail');
+      }
+      return result;
+    };
+
+    it.each([
+      [429, true],
+      [502, true],
+      [503, true],
+      [504, true],
+      [400, undefined],
+      [401, undefined],
+      [403, undefined],
+      [404, undefined],
+      [409, undefined],
+      [500, undefined],
+    ])('reads a %i as transient: %s', async (status, transient) => {
+      const result = await callFailing(new Response(null, {status}));
+
+      expect(result.transient).toBe(transient);
     });
   });
 
