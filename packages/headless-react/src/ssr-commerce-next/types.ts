@@ -12,6 +12,11 @@ import type {ControllerHook, StateProviderProps} from '../ssr-common/types.js';
 
 export type {ControllerHook} from '../ssr-common/types.js';
 
+/**
+ * The hooks of an engine definition: one `use<Name>` hook per controller.
+ *
+ * @group Hooks
+ */
 export type InferControllerHooksMapFromDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
 > = {
@@ -20,6 +25,11 @@ export type InferControllerHooksMapFromDefinition<
   >;
 };
 
+/**
+ * A commerce engine definition with the React `StateProvider` of its hooks.
+ *
+ * @group Engine
+ */
 export type ReactEngineDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
