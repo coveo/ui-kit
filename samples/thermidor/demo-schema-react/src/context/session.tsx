@@ -211,6 +211,7 @@ function persist(
   let boundSessionId = session.sessionId;
   let saving = savesAfter(session.getSnapshot().request);
   let swappedOut = false;
+  // Once listed, a conversation gone from the list was deleted, maybe in another tab.
   let listed = session.turns.length > 0;
   const unsubscribe = session.subscribe(() => {
     const {request, turns} = session.getSnapshot();
@@ -222,13 +223,14 @@ function persist(
       }
       boundSessionId = session.sessionId;
     }
+    const deleted = removed.has(id) || (listed && !isListed(storage, id));
     // Listed from its first prompt, so the drawer shows it while the answer streams.
     if (!listed && turns.length > 0) {
       listed = true;
       storage.start(id, titleOf(turns[0].input));
       onSaved();
     }
-    if (saving && !request && turns.length > 0 && !removed.has(id)) {
+    if (saving && !request && turns.length > 0 && !deleted) {
       storage.save(id, titleOf(turns[0].input), session.serialize());
       onSaved();
     }
@@ -244,6 +246,10 @@ function persist(
       unsubscribe();
     }
   };
+}
+
+function isListed(storage: ConversationStorage, id: string) {
+  return storage.list().some((entry) => entry.id === id);
 }
 
 function savesAfter(request: DemoSession['request']) {
@@ -295,14 +301,25 @@ function createThermidorSession(
   });
 }
 
-function getClientId() {
-  const stored = sessionStorage.getItem('demo-client-id');
-  if (stored) {
-    return stored;
+// The tab keeps its client id in sessionStorage; when it can't, the page keeps it in memory.
+let pageClientId: string | undefined;
+
+export function getClientId() {
+  try {
+    const stored = sessionStorage.getItem('demo-client-id');
+    if (stored) {
+      return stored;
+    }
+  } catch {
+    // Unavailable storage: fall back to the page's id.
   }
-  const id = crypto.randomUUID();
-  sessionStorage.setItem('demo-client-id', id);
-  return id;
+  pageClientId ??= crypto.randomUUID();
+  try {
+    sessionStorage.setItem('demo-client-id', pageClientId);
+  } catch {
+    // The page's id still identifies this page.
+  }
+  return pageClientId;
 }
 
 function getNavigatorContext(): Omit<NavigatorContext, 'language' | 'country' | 'currency'> {
