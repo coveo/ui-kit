@@ -22,19 +22,19 @@ The facet manager leverages Coveo's [Dynamic Navigation Experience](https://docs
 It also automatically selects facets to improve the user experience.
 
 ## Facets in popovers
-A facet wrapped in an [`atomic-popover`](?path=/docs/atomic-popover--docs) is managed like any other facet. The popover moves along with its facet, so the facet always stays inside it.
+A facet wrapped in an [`atomic-facet-popover`](?path=/docs/atomic-facet-popover--docs) is managed like any other facet. The popover moves along with its facet, so the facet always stays inside it.
 
 ```html
 <atomic-search-layout>
   <atomic-layout-section section="main">
     <atomic-layout-section section="horizontal-facets">
       <atomic-facet-manager>
-        <atomic-popover>
+        <atomic-facet-popover>
           <atomic-facet field="author" label="Authors"></atomic-facet>
-        </atomic-popover>
-        <atomic-popover>
+        </atomic-facet-popover>
+        <atomic-facet-popover>
           <atomic-facet field="source" label="Source"></atomic-facet>
-        </atomic-popover>
+        </atomic-facet-popover>
       </atomic-facet-manager>
     </atomic-layout-section>
   </atomic-layout-section>
