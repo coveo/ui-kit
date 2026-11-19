@@ -31,8 +31,14 @@ import {
  */
 export type DemoSession = Session<typeof ComponentContractsSchema>;
 
-/** Creates a session, restoring `saved` when given. */
-export type SessionFactory = (saved?: SerializedSession) => DemoSession;
+/**
+ * Creates a session, restoring `saved` when given. With `initialize: false`, it sends no request
+ * until it is given a prompt or an action.
+ */
+export type SessionFactory = (
+  saved?: SerializedSession,
+  options?: {initialize?: boolean}
+) => DemoSession;
 
 export interface Conversations {
   /** The saved conversations, newest first. */
@@ -155,11 +161,11 @@ export function useConversations(): Conversations {
 }
 
 function defaultFactory(cart: CartStore | null): SessionFactory {
-  return (saved) => {
+  return (saved, options) => {
     if (!cart) {
       throw new Error('SessionProvider must be used within a CartProvider, or be given a session');
     }
-    return createThermidorSession(cart, saved);
+    return createThermidorSession(cart, saved, options?.initialize);
   };
 }
 
@@ -276,7 +282,8 @@ function getCartCommerceContext(cart: CartStore) {
 
 function createThermidorSession(
   cart: CartStore,
-  sessionToRestore?: SerializedSession
+  sessionToRestore?: SerializedSession,
+  initialize?: boolean
 ): DemoSession {
   const {
     organizationId,
@@ -299,6 +306,7 @@ function createThermidorSession(
     navigatorContextProvider: () => ({...getNavigatorContext(), language, country, currency}),
     commerceContextProvider: () => getCartCommerceContext(cart),
     sessionToRestore,
+    initialize,
   });
 }
 
