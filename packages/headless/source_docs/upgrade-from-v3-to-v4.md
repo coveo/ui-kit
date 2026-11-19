@@ -154,8 +154,9 @@ const staticState = await searchEngineDefinition.fetchStaticState({
 });
 ```
 
-`buildNavigatorContext()` reads the referrer, the user agent and the `x-forwarded-for` header, and generates a client ID when none is given.
-Store that client ID in the `coveo_visitorId` cookie (exported as `CLIENT_ID_COOKIE_NAME`): your server reads the cookie on each request and sets it on the response, and the browser reports the same visitor after hydration.
+`buildNavigatorContext()` reads the referrer, the user agent and the `x-forwarded-for` header. When no valid client ID is given, it leaves the client ID empty, and the requests are sent without analytics capture.
+It works with any server framework: pass the request headers as they come (a `Headers` instance, or a plain object such as Express's `req.headers`) and, outside Next.js, pass the request URL as `location` directly instead of forwarding it in an `x-href` header.
+Store the client ID in the `coveo_visitorId` cookie (exported as `CLIENT_ID_COOKIE_NAME`): your server reads the cookie on each request and sets it on the response, and the browser reports the same visitor after hydration. <!-- client ID cookie: not yet built -->
 The static state carries the navigator context to `hydrateStaticState()`, without `forwardedFor`, so you set it once per request.
 
 #### Page inputs

@@ -272,6 +272,11 @@ export {
   MultipleRecommendationError,
   SolutionTypeMismatchError,
 } from './ssr-next/common/errors.js';
+export type {
+  BuildNavigatorContextOptions,
+  RequestHeaders,
+} from './ssr-next/common/navigator-context.js';
+export {buildNavigatorContext} from './ssr-next/common/navigator-context.js';
 export {defineCommerceEngine} from './ssr-next/commerce/engine/commerce-engine.ssr.js';
 export type {SSRCommerceEngine as CommerceEngine} from './ssr-next/commerce/factories/build-factory.js';
 // Main App
