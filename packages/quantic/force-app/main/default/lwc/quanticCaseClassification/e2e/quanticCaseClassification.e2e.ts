@@ -152,6 +152,37 @@ test.describe('quantic case classification', () => {
     });
   });
 
+  test.describe('with the live Case Assist API', () => {
+    test.use({
+      liveCaseAssistApi: true,
+      options: {
+        fetchClassificationOnChange: true,
+        fetchDocumentSuggestionOnChange: true,
+      },
+    });
+
+    test('should fetch case classifications and document suggestions when a case classification option is clicked', async ({
+      caseClassification,
+      caseAssist,
+    }, testInfo) => {
+      test.skip(
+        testInfo.project.name !== 'LWS-enabled',
+        'The live Case Assist API happy path only runs in the LWS-enabled project.'
+      );
+
+      const caseClassificationsResponsePromise =
+        caseAssist.waitForCaseClassificationsResponse();
+      const documentSuggestionResponsePromise =
+        caseAssist.waitForDocumentSuggestionResponse();
+
+      await caseClassification.clickallOptionsSelectInput();
+      await caseClassification.clickSelectInputOptionAtIndex(3);
+
+      expect((await caseClassificationsResponsePromise).ok()).toBe(true);
+      expect((await documentSuggestionResponsePromise).ok()).toBe(true);
+    });
+  });
+
   test.describe('the behaviour of the case classifications', () => {
     test.describe('when selecting a suggestion and then receiving new suggestions that include the selected suggestion', () => {
       test('should keep the suggestion by the user selected and display it as an inline option', async ({

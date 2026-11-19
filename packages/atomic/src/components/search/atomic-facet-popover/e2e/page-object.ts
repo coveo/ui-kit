@@ -3,31 +3,35 @@ import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
 export class PopoverPageObject extends BasePageObject {
   constructor(page: Page) {
-    super(page, 'atomic-popover');
+    super(page, 'atomic-facet-popover');
   }
 
   get popoverButton(): Locator {
-    return this.page.locator('atomic-popover button[part="popover-button"]');
+    return this.page.locator('atomic-facet-popover button[part="popover-button"]');
   }
 
   get backdrop(): Locator {
-    return this.page.locator('atomic-popover [part="backdrop"]');
+    return this.page.locator('atomic-facet-popover [part="backdrop"]');
   }
 
   get facetContainer(): Locator {
-    return this.page.locator('atomic-popover').locator('[part="facet"]').first();
+    return this.page.locator('atomic-facet-popover').locator('[part="facet"]').first();
   }
 
   get valueLabel(): Locator {
-    return this.page.locator('atomic-popover button[part="popover-button"] [part="value-label"]');
+    return this.page.locator(
+      'atomic-facet-popover button[part="popover-button"] [part="value-label"]'
+    );
   }
 
   get valueCount(): Locator {
-    return this.page.locator('atomic-popover button[part="popover-button"] [part="value-count"]');
+    return this.page.locator(
+      'atomic-facet-popover button[part="popover-button"] [part="value-count"]'
+    );
   }
 
   get placeholder(): Locator {
-    return this.page.locator('atomic-popover [part="placeholder"]');
+    return this.page.locator('atomic-facet-popover [part="placeholder"]');
   }
 
   async waitForVisualStability() {

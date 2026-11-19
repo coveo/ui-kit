@@ -5,7 +5,10 @@ import type {EngineDefinition} from '../../common/types/engine.js';
 import {defineResultList} from '../controllers/result-list/headless-result-list.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
 import type {InferHydratedState, InferStaticState} from '../types/controller-definition.js';
-import type {SearchControllerDefinitionsMap} from '../types/engine.js';
+import type {
+  SearchControllerDefinitionsMap,
+  SearchEngineDefinitionOptions,
+} from '../types/engine.js';
 import type {SearchStaticState as StaticStateOf} from '../types/fetch-static-state.js';
 import type {SearchHydratedState as HydratedStateOf} from '../types/hydrate-static-state.js';
 import type {SearchEngineOptions} from '../../../ssr-next.index.js';
@@ -93,6 +96,23 @@ describe('the static and hydrated states of a search engine definition', () => {
     type ControllerNames = 'searchBox' | 'resultList' | 'parameterManager';
     expectTypeOf<keyof SearchHydratedState['controllers']>().toEqualTypeOf<ControllerNames>();
     expectTypeOf<keyof SearchStaticState['controllers']>().toEqualTypeOf<ControllerNames>();
+  });
+});
+
+describe('SearchEngineDefinitionOptions', () => {
+  it('should check a configuration kept apart from the definition, with no type argument', () => {
+    const config = {
+      configuration: getSampleSearchEngineConfiguration(),
+      controllers: {searchBox: defineSearchBox()},
+    } satisfies SearchEngineDefinitionOptions;
+    const {searchEngineDefinition: definition} = defineSearchEngine(config);
+
+    expectTypeOf<keyof InferHydratedState<typeof definition>['controllers']>().toEqualTypeOf<
+      'searchBox' | 'parameterManager'
+    >();
+    expectTypeOf<{searchBox: number}>().not.toExtend<
+      NonNullable<SearchEngineDefinitionOptions['controllers']>
+    >();
   });
 });
 

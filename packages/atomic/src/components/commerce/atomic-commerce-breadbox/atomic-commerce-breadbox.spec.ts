@@ -7,8 +7,10 @@ import {
 } from '@coveo/headless/commerce';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {page, userEvent} from 'vitest/browser';
+import type {CommerceStore} from '@/src/components/commerce/atomic-commerce-interface/store';
+import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeBreadcrumbManager} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/breadcrumb-manager-subcontroller';
 import {buildFakeContext} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/context-controller';
@@ -47,6 +49,7 @@ describe('atomic-commerce-breadbox', () => {
     disableCollapse?: boolean;
     state?: Partial<BreadcrumbManagerState>;
     subscribe?: BreadcrumbManager['subscribe'];
+    store?: Partial<CommerceStore>;
   }
 
   const renderBreadbox = async ({
@@ -55,6 +58,7 @@ describe('atomic-commerce-breadbox', () => {
     disableCollapse,
     state = {},
     subscribe,
+    store,
   }: RenderBreadboxOptions = {}) => {
     mockedBreadcrumbManager = buildFakeBreadcrumbManager({
       state,
@@ -90,7 +94,7 @@ describe('atomic-commerce-breadbox', () => {
       bindings: (bindings) => {
         bindings.interfaceElement.type = interfaceElementType;
         bindings.engine = mockedEngine;
-        return bindings;
+        return store ? {...bindings, store: {...bindings.store, ...store}} : bindings;
       },
     });
 
@@ -181,10 +185,11 @@ describe('atomic-commerce-breadbox', () => {
   });
 
   it('should render nothing when there are no breadcrumbs', async () => {
-    const {element} = await renderBreadbox({
+    const {element, parts} = await renderBreadbox({
       state: {facetBreadcrumbs: []},
     });
-    expect(element.shadowRoot?.querySelector('atomic-commerce-breadbox')).toBeNull();
+    expect(parts(element).container).toBeNull();
+    expect(parts(element).clearAll).toBeNull();
   });
 
   it('should have the right text on the label', async () => {
@@ -418,11 +423,13 @@ describe('atomic-commerce-breadbox', () => {
 
   it('should hide the breadcrumbs when the viewport gets smaller', async () => {
     await page.viewport(1600, 100);
-    const {regular, hierarchical, numericalRange, dateRange, showMore} = await renderBreadbox();
+    const {element, parts, regular, hierarchical, numericalRange, dateRange, showMore} =
+      await renderBreadbox();
     await expect.element(regular()).toBeVisible();
     await expect.element(hierarchical()).toBeVisible();
     await expect.element(numericalRange()).toBeVisible();
     await expect.element(dateRange()).toBeVisible();
+    await expect.element(parts(element).showMore as HTMLElement).not.toBeVisible();
 
     await page.viewport(200, 100);
 
@@ -430,7 +437,36 @@ describe('atomic-commerce-breadbox', () => {
     await expect.element(hierarchical()).not.toBeVisible();
     await expect.element(numericalRange()).not.toBeVisible();
     await expect.element(dateRange()).not.toBeVisible();
+    await expect.element(showMore()).toBeVisible();
     await expect.element(showMore()).toHaveTextContent('Show 4 more filters');
+  });
+
+  it('should update the number of hidden breadcrumbs when the breadcrumbs change without a resize', async () => {
+    await page.viewport(200, 100);
+    const {element, showMore} = await renderBreadbox();
+    await expect.element(showMore()).toHaveTextContent('Show 4 more filters');
+
+    element.breadcrumbManagerState = {
+      ...element.breadcrumbManagerState,
+      facetBreadcrumbs: element.breadcrumbManagerState.facetBreadcrumbs.slice(0, 3),
+    };
+
+    await expect.element(showMore()).toHaveTextContent('Show 3 more filters');
+  });
+
+  it('should only show the show less button when the expanded breadcrumbs wrap', async () => {
+    await page.viewport(200, 100);
+    const {element, parts, showMore, showLess} = await renderBreadbox();
+    await userEvent.click(showMore());
+    await expect.element(showLess()).toBeVisible();
+
+    await page.viewport(1600, 100);
+
+    await expect.element(parts(element).showLess as HTMLElement).not.toBeVisible();
+
+    await page.viewport(200, 100);
+
+    await expect.element(showLess()).toBeVisible();
   });
 
   it('should not hide the breadcrumbs when they are expanded and the viewport gets smaller', async () => {
@@ -474,6 +510,158 @@ describe('atomic-commerce-breadbox', () => {
     const disconnectSpy = vi.spyOn(ResizeObserver.prototype, 'disconnect');
     element.disconnectedCallback();
     expect(disconnectSpy).toHaveBeenCalled();
+  });
+
+  describe('when removing or expanding breadcrumbs', () => {
+    const focusOnFirstResultAfterNextSearch = vi.fn();
+    let searchId: string;
+
+    const store = () =>
+      ({
+        state: {
+          loadingFlags: [],
+          resultList: {focusOnFirstResultAfterNextSearch, focusOnNextNewResult: vi.fn()},
+        } as Partial<CommerceStore['state']>,
+        getUniqueIDFromEngine: () => searchId,
+      }) as Partial<CommerceStore>;
+
+    const singleBreadcrumbState: Partial<BreadcrumbManagerState> = {
+      facetBreadcrumbs: [
+        {
+          facetId: 'brand',
+          facetDisplayName: 'Regular',
+          field: 'brand',
+          type: 'regular',
+          values: [
+            {
+              value: {value: 'Gucci', numberOfResults: 1, state: 'selected'},
+              deselect: vi.fn(),
+            },
+          ],
+        },
+      ],
+    };
+
+    const focusedElement = (element: AtomicCommerceBreadbox) => element.shadowRoot!.activeElement;
+
+    const simulateSearchWithout = (element: AtomicCommerceBreadbox, removedIndex: number) => {
+      searchId = 'after-removal';
+      element.breadcrumbManagerState = {
+        ...element.breadcrumbManagerState,
+        facetBreadcrumbs: element.breadcrumbManagerState.facetBreadcrumbs.filter(
+          (_, index) => index !== removedIndex
+        ),
+      };
+    };
+
+    beforeEach(() => {
+      searchId = 'before-removal';
+    });
+
+    it('should focus the first product after the next search when the only breadcrumb is removed', async () => {
+      const {regular} = await renderBreadbox({
+        disableCollapse: true,
+        state: singleBreadcrumbState,
+        store: store(),
+      });
+
+      await userEvent.click(regular());
+
+      expect(focusOnFirstResultAfterNextSearch).toHaveBeenCalledOnce();
+    });
+
+    it('should focus a breadcrumb after the next search when one of several breadcrumbs is removed', async () => {
+      const focusAfterSearchSpy = vi.spyOn(FocusTargetController.prototype, 'focusAfterSearch');
+      const {regular} = await renderBreadbox({disableCollapse: true, store: store()});
+
+      await userEvent.click(regular());
+
+      expect(focusAfterSearchSpy).toHaveBeenCalledOnce();
+      expect(focusOnFirstResultAfterNextSearch).not.toHaveBeenCalled();
+    });
+
+    it('should focus the breadcrumb that takes the place of the removed one', async () => {
+      const {element, regular} = await renderBreadbox({
+        disableCollapse: true,
+        store: store(),
+      });
+
+      await userEvent.click(regular());
+      simulateSearchWithout(element, 0);
+
+      await expect
+        .poll(() => focusedElement(element)?.getAttribute('title'))
+        .toMatch(/^Hierarchical:/);
+    });
+
+    it('should focus the clear all button when the breadcrumb at the end of the list is removed', async () => {
+      const {element, dateRange} = await renderBreadbox({
+        disableCollapse: true,
+        store: store(),
+      });
+
+      await userEvent.click(dateRange());
+      simulateSearchWithout(element, 3);
+
+      await expect.poll(() => focusedElement(element)?.getAttribute('part')).toBe('clear');
+    });
+
+    it('should focus the first breadcrumb that was hidden after clicking on the show more button', async () => {
+      await page.viewport(414, 896);
+      const {element, showMore} = await renderBreadbox();
+      const breadcrumbs = () =>
+        Array.from(element.shadowRoot!.querySelectorAll<HTMLElement>('li.breadcrumb'));
+      const firstHiddenIndex = breadcrumbs().findIndex((li) => li.style.display === 'none');
+      expect(firstHiddenIndex).toBeGreaterThan(0);
+      const firstHiddenTitle = breadcrumbs()
+        [firstHiddenIndex].querySelector('button')!
+        .getAttribute('title');
+
+      await userEvent.click(showMore());
+
+      await expect
+        .poll(() => focusedElement(element)?.getAttribute('title'))
+        .toBe(firstHiddenTitle);
+    });
+
+    it('should focus the show more button after clicking on the show less button', async () => {
+      await page.viewport(414, 896);
+      const {element, showMore, showLess} = await renderBreadbox();
+
+      await userEvent.click(showMore());
+      await userEvent.click(showLess());
+
+      await expect.poll(() => focusedElement(element)?.getAttribute('part')).toBe('show-more');
+    });
+
+    describe('when announcing the removal', () => {
+      const updateMessage = vi.fn();
+      const registerRegion = vi.fn();
+      const provideAriaLive = (event: Event) => {
+        (event as CustomEvent).detail.element = {updateMessage, registerRegion};
+      };
+
+      beforeEach(() => {
+        document.addEventListener('atomic/accessibility/findAriaLive', provideAriaLive);
+      });
+
+      afterEach(() => {
+        document.removeEventListener('atomic/accessibility/findAriaLive', provideAriaLive);
+      });
+
+      it('should announce the removed filter assertively in the breadbox region', async () => {
+        const {regular} = await renderBreadbox({
+          disableCollapse: true,
+          state: singleBreadcrumbState,
+          store: store(),
+        });
+
+        await userEvent.click(regular());
+
+        expect(registerRegion).toHaveBeenCalledWith('breadbox', true);
+        expect(updateMessage).toHaveBeenCalledWith('breadbox', 'Filter removed', true);
+      });
+    });
   });
 
   describe('disable-collapse', () => {

@@ -65,6 +65,7 @@ describe('the states of a commerce engine definition, as editors show them', () 
       configuration: getSampleCommerceEngineConfiguration(),
       controllers: {productList: defineProductList()},
     });
+    type ListingStaticState = InferStaticState<typeof listingEngineDefinition>;
     type ListingHydratedState = InferHydratedState<typeof listingEngineDefinition>;
 
     export async function render(
@@ -80,7 +81,7 @@ describe('the states of a commerce engine definition, as editors show them', () 
       return {staticState, hydratedState, fromProps};
     }
     `,
-    ['staticState', 'hydratedState', 'fromProps', 'ListingHydratedState']
+    ['staticState', 'hydratedState', 'fromProps', 'ListingStaticState', 'ListingHydratedState']
   );
   const controllers = '{ productList: ProductListDefinition; }';
 
@@ -90,6 +91,9 @@ describe('the states of a commerce engine definition, as editors show them', () 
     );
     expect(quickInfo.fromProps).toBe(
       `const fromProps: CommerceStaticState<${controllers}, SolutionType.listing>`
+    );
+    expect(quickInfo.ListingStaticState).toBe(
+      `type ListingStaticState = CommerceStaticState<${controllers}, SolutionType.listing>`
     );
   });
 

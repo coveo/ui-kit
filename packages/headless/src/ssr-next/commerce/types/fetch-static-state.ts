@@ -2,7 +2,7 @@ import type {Controller} from '../../../controllers/controller/headless-controll
 import type {ControllerStaticState, ControllersPropsMap} from '../../common/types/controllers.js';
 import type {EngineStaticState} from '../../common/types/engine.js';
 import type {ContextOptions} from '../controllers/context/headless-context.ssr.js';
-import type {BuildConfig} from './build.js';
+import type {BuildConfig, CommonBuildConfig} from './build.js';
 import type {SolutionType} from './controller-constants.js';
 import type {BakedInControllers, ControllerDefinitionsMap} from './controller-definitions.js';
 import type {
@@ -25,35 +25,40 @@ import type {
  * @typeParam TControllers - The controllers of the engine definition.
  * @typeParam TSolutionType - The kind of page the engine definition serves.
  */
-export type CommerceStaticState<
+export interface CommerceStaticState<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
-> = EngineStaticState<
-  {
-    [K in AvailableControllerNames<TControllers, TSolutionType>]: ControllerStaticState<
-      InferControllerFromDefinition<TControllers[K & keyof TControllers]>['state']
-    >;
-  } & {
-    [K in BakedInControllerNames<TSolutionType>]: ControllerStaticState<
-      BakedInControllers[K]['state']
-    >;
-  }
-> &
-  BuildConfig<TControllers, TSolutionType> & {
-    /**
-     * The solution type of the engine definition that fetched the static state. `hydrateStaticState()`
-     * refuses a static state fetched by another engine definition.
-     */
-    solutionType: TSolutionType;
-    /**
-     * The commerce context of the request. `fetchStaticState()` always sets the URL of the page
-     * (`view.url`), taken from `navigatorContext.location` when it was left out.
-     */
-    context: ContextOptions;
-    /**
-     * The controller props that were passed to `fetchStaticState()` through the `controllers` option.
-     * `hydrateStaticState()` reuses them to rebuild the controllers with the same props. They are sent
-     * to the browser with the static state, so they must be serializable and must not hold secrets.
-     */
-    controllerProps?: ControllersPropsMap;
-  };
+>
+  extends
+    EngineStaticState<
+      {
+        [K in AvailableControllerNames<TControllers, TSolutionType>]: ControllerStaticState<
+          InferControllerFromDefinition<TControllers[K & keyof TControllers]>['state']
+        >;
+      } & {
+        [K in BakedInControllerNames<TSolutionType>]: ControllerStaticState<
+          BakedInControllers[K]['state']
+        >;
+      }
+    >,
+    CommonBuildConfig<TControllers> {
+  // Left undocumented so that editors show the documentation of `CommonBuildConfig.searchParams`.
+  // `Exclude` keeps the interface extending `CommonBuildConfig` under `exactOptionalPropertyTypes`.
+  searchParams?: Exclude<BuildConfig<TControllers, TSolutionType>['searchParams'], undefined>;
+  /**
+   * The solution type of the engine definition that fetched the static state. `hydrateStaticState()`
+   * refuses a static state fetched by another engine definition.
+   */
+  solutionType: TSolutionType;
+  /**
+   * The commerce context of the request. `fetchStaticState()` always sets the URL of the page
+   * (`view.url`), taken from `navigatorContext.location` when it was left out.
+   */
+  context: ContextOptions;
+  /**
+   * The controller props that were passed to `fetchStaticState()` through the `controllers` option.
+   * `hydrateStaticState()` reuses them to rebuild the controllers with the same props. They are sent
+   * to the browser with the static state, so they must be serializable and must not hold secrets.
+   */
+  controllerProps?: ControllersPropsMap;
+}

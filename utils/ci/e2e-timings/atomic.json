@@ -6493,11 +6493,11 @@
       ]
     },
     {
-      "title": "components/search/atomic-popover/e2e/atomic-popover.e2e.ts",
+      "title": "components/search/atomic-facet-popover/e2e/atomic-facet-popover.e2e.ts",
       "type": "file",
       "suites": [
         {
-          "title": "atomic-popover",
+          "title": "atomic-facet-popover",
           "type": "suite",
           "tests": [
             {

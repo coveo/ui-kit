@@ -2,7 +2,8 @@ import {CaseClassificationObject} from './pageObject';
 import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
 import {
   CaseAssistObject,
-  caseAssistConfigurationsTimeoutMs,
+  demoCaseAssistId,
+  fakeCaseAssistId,
 } from '../../../../../../playwright/page-object/caseAssistObject';
 import {
   allOptions,
@@ -12,7 +13,6 @@ import {
 } from './data';
 
 const pageUrl = 's/quantic-case-classification';
-const readinessTimeoutMs = caseAssistConfigurationsTimeoutMs + 5_000;
 
 interface CaseClassificationOptions {
   fetchOnInit: boolean;
@@ -23,32 +23,46 @@ type QuanticCaseClassificationE2EFixtures = {
   caseClassification: CaseClassificationObject;
   caseAssist: CaseAssistObject;
   options: Partial<CaseClassificationOptions>;
+  /**
+   * Whether to call the live Case Assist API instead of mocking classify and
+   * documents/suggest. When true, the fixture doesn't fetch classifications.
+   */
+  liveCaseAssistApi: boolean;
 };
 
 export const test = quanticBase.extend<QuanticCaseClassificationE2EFixtures>({
   options: {},
+  liveCaseAssistApi: [false, {option: true}],
   caseAssist: async ({page}, use) => {
     await use(new CaseAssistObject(page));
   },
   caseClassification: async (
-    {page, options, configuration, caseAssist},
+    {page, options, configuration, caseAssist, liveCaseAssistApi},
     use
   ) => {
     const caseClassificationObject = new CaseClassificationObject(page);
     await page.goto(pageUrl);
-    await caseAssist.mockCaseAssistConfigurations();
     await caseClassificationObject.mockSfPicklistValues(
       sfDefaultField,
       allOptions
     );
+    if (liveCaseAssistApi) {
+      await configuration.configure({
+        caseAssistId: demoCaseAssistId,
+        ...options,
+      });
+      await caseClassificationObject.allOptionsSelectInput.waitFor();
+      await use(caseClassificationObject);
+      return;
+    }
+
+    await caseAssist.mockDocumentSuggestions();
     await caseClassificationObject.mockCaseClassification(
       coveoDefaultField,
       caseClassificationSuggestions
     );
-    await configuration.configure({...options});
-    await caseClassificationObject.allOptionsSelectInput.waitFor({
-      timeout: readinessTimeoutMs,
-    });
+    await configuration.configure({caseAssistId: fakeCaseAssistId, ...options});
+    await caseClassificationObject.allOptionsSelectInput.waitFor();
 
     const caseClassificationsResponsePromise =
       caseAssist.waitForCaseClassificationsResponse();

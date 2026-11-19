@@ -68,6 +68,12 @@
       "source": "./src/hostedpage/index.ts",
       "import": "./dist/hostedpage/index.js",
       "default": "./dist/hostedpage/index.js"
+    },
+    "./caseassist": {
+      "types": "./dist/caseassist/index.d.ts",
+      "source": "./src/caseassist/index.ts",
+      "import": "./dist/caseassist/index.js",
+      "default": "./dist/caseassist/index.js"
     }
   },
   "scripts": {
