@@ -33,3 +33,10 @@ Modified behaviors will be listed here.
 | Removed          | Replacement                                                                                                                      |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | `atomic-popover` | `atomic-facet-popover`, which takes the same slotted facet and exposes the same parts <!-- decided 2026-10-31, not yet built --> |
+
+### Search box suggestions
+
+| Removed                                                              | Replacement                                                                               |
+| -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| A Stencil `VNode` as the `content` of a `SearchBoxSuggestionElement` | An `Element`, as the built-in suggestions pass <!-- decided 2026-10-31, not yet built --> |
+| `atomic-suggestion-renderer`                                         | None: it is internal to the search boxes <!-- decided 2026-10-31, not yet built -->       |
