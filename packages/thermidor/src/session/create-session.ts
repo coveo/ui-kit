@@ -550,6 +550,8 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
 
   // While a resume streams, the restored shell stays until the resume's first activity replaces it.
   let holdsRestoredShell = false;
+  // Once replaced, a restored shell takes no action, even from a turn that still names it.
+  const replacedShellIds = new Set<string>();
 
   let surfaceView: SessionSurfaceView | undefined;
   let surfaceViewSource:
@@ -707,6 +709,9 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     }
     holdsRestoredShell = false;
     const restoredShell = deriveNodeIdentityRegistry(current.initialization.activities);
+    for (const surfaceId of restoredShell.keys()) {
+      replacedShellIds.add(surfaceId);
+    }
     return {
       ...withoutSurfaces(current, (surfaceId) => restoredShell.has(surfaceId)),
       initialization: {...current.initialization, activities: []},
@@ -1340,6 +1345,15 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     return true;
   }
 
+  /** A restored turn can still name the shell a resume replaced; nothing goes to it. */
+  function isReplacedShell(surfaceId: string, caller: 'dispatchAction' | 'retry'): boolean {
+    if (!replacedShellIds.has(surfaceId)) {
+      return false;
+    }
+    devWarn(`${caller}: surface "${surfaceId}" is a shell the resume replaced; nothing sent.`);
+    return true;
+  }
+
   /** Every refusal settles at once, so no caller is left waiting. */
   function issue(message: A2uiClientMessage): Promise<void> {
     const userAction = message.userAction;
@@ -1361,7 +1375,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
       );
       return withhold();
     }
-    if (isReadOnly(surfaceId, 'dispatchAction')) {
+    if (isReadOnly(surfaceId, 'dispatchAction') || isReplacedShell(surfaceId, 'dispatchAction')) {
       return withhold();
     }
 
@@ -1423,7 +1437,10 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
    * any surface of the session, so it is not resolved against the active turn.
    */
   function retryAction(turnId: string, action: TurnAction): void {
-    if (turnId !== lastRestoredTurnId && isReadOnly(action.surfaceId, 'retry')) {
+    if (
+      (turnId !== lastRestoredTurnId && isReadOnly(action.surfaceId, 'retry')) ||
+      isReplacedShell(action.surfaceId, 'retry')
+    ) {
       return;
     }
     const a2uiAction: A2uiAction = {

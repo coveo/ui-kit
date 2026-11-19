@@ -112,7 +112,7 @@ export function SessionProvider({
       open: (id) => {
         if (id !== current.id) {
           storage.setCurrentId(id);
-          swap(() => openCurrent(storage, create));
+          swap(() => openCurrent(storage, create, id));
         }
       },
       remove: (id) => {
@@ -169,9 +169,15 @@ function startWith(storage: ConversationStorage, session: DemoSession): Current 
   return {id, session};
 }
 
-/** The conversation the tab last showed, or a new one when it is gone or cannot be restored. */
-function openCurrent(storage: ConversationStorage, create: SessionFactory): Current {
-  const id = storage.currentId();
+/**
+ * The conversation `id`, by default the one the tab last showed, or a new one when it is gone or
+ * cannot be restored.
+ */
+function openCurrent(
+  storage: ConversationStorage,
+  create: SessionFactory,
+  id = storage.currentId()
+): Current {
   const saved = id === undefined ? undefined : storage.load(id);
   if (id !== undefined && saved) {
     try {

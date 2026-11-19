@@ -2534,6 +2534,49 @@ describe('createSession lifecycle', () => {
         stream.close();
       });
 
+      it('sends nothing to the replaced shell, even from a turn that updated it or a retry it opened', async () => {
+        const initialized = await initializedSession();
+        await completePrompt(initialized, 'first');
+        const shellUpdate = queueStream();
+        const updated = initialized.dispatchAction(shellSelectPage(2));
+        await shellUpdate.opened;
+        shellUpdate.emit({
+          type: 'ACTIVITY_SNAPSHOT',
+          messageId: 'shell-components',
+          activityType: 'a2ui-surface',
+          content: {
+            messages: [
+              {
+                version: 'v1.0',
+                updateComponents: {
+                  surfaceId: SHELL_ID,
+                  components: [{id: SHELL_PAGINATION_ID, component: 'Pagination'}],
+                },
+              },
+            ],
+          },
+        });
+        shellUpdate.emit({type: 'RUN_FINISHED'});
+        shellUpdate.close();
+        await updated;
+        callMock.mockImplementationOnce(async () => ({success: false, error: 'Unavailable'}));
+        await initialized.dispatchAction(shellChip);
+        const failedTurnId = initialized.turns.at(-1)!.id;
+        expect(initialized.turns.at(-1)!.status).toBe('error');
+        callMock.mockReset();
+
+        const {session} = await resumed(initialized.serialize(), {
+          conversationSessionId: 'gateway-session',
+          conversationToken: 'gateway-token',
+        });
+        callMock.mockReset();
+        await session.dispatchAction(shellSelectPage(3));
+        session.retry(failedTurnId);
+        await flush();
+
+        expect(callMock).not.toHaveBeenCalled();
+      });
+
       it('never sends initialize for a restored session without a token', async () => {
         const initialized = await initializedSession();
         callMock.mockReset();
