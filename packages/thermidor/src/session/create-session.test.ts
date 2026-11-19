@@ -2335,6 +2335,51 @@ describe('createSession lifecycle', () => {
         }
       );
 
+      it('keeps the restored shell when a listener cancels the resume on its keys, mid-chunk', async () => {
+        const serialized = await serializedConversation();
+        const chunk = [
+          {
+            type: 'RUN_STARTED',
+            conversationSessionId: 'gateway-session',
+            conversationToken: 'renewed',
+          },
+          newShellSurface,
+          {type: 'RUN_FINISHED'},
+        ]
+          .map((event) => `data: ${JSON.stringify(event)}\n\n`)
+          .join('');
+        callMock.mockImplementationOnce(async () => ({
+          success: true,
+          data: {
+            stream: new ReadableStream<Uint8Array>({
+              start(controller) {
+                controller.enqueue(encoder.encode(chunk));
+                controller.close();
+              },
+            }),
+          },
+        }));
+        const session = createSession({...shellConfig, sessionToRestore: serialized});
+        session.subscribe(() => {
+          if (session.sessionToken === 'renewed') {
+            session.cancel();
+          }
+        });
+        await vi.waitFor(() => expect(callMock).toHaveBeenCalledTimes(1));
+        await vi.waitFor(() => expect(session.request).toBeUndefined());
+
+        expect(session.initialization?.status).toBe('error');
+        expect(session.surfaces.map((surface) => surface.surfaceId)).toEqual([
+          SHELL_ID,
+          ANSWER_ID,
+          LATEST_ANSWER_ID,
+        ]);
+        expect(session.a2uiMessages).not.toContainEqual({
+          version: 'v0.9',
+          deleteSurface: {surfaceId: SHELL_ID},
+        });
+      });
+
       it('drops the restored transcript when initialize answers with another session', async () => {
         const {session, changes} = await resumed(await serializedConversation(), {
           conversationSessionId: 'other-session',
