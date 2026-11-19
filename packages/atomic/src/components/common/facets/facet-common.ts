@@ -96,7 +96,7 @@ function isPseudoFacet(el: Element): el is BaseFacetElement {
 }
 
 function isPopover(element: Element) {
-  return element.tagName === 'ATOMIC-POPOVER';
+  return element.tagName === 'ATOMIC-FACET-POPOVER' || element.tagName === 'ATOMIC-POPOVER';
 }
 
 export function isFacetNestedInPopover(facet: BaseFacetElement) {

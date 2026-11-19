@@ -14,7 +14,7 @@ export interface SearchBoxSuggestionElement {
    * Rendered content of the element.
    *
    * @remarks
-   * The `VNode` type will be deprecated in v4 as we are detaching from Stencil.
+   * Passing a Stencil `VNode` is deprecated and logs a warning. Use an `Element` instead: version 4 accepts only an `Element`.
    */
   content: Element | VNode;
   /**

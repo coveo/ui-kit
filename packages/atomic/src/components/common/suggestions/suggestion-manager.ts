@@ -1,6 +1,7 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import DOMPurify from 'dompurify';
 import type {LitElement} from 'lit';
+import {warnDeprecatedOnce} from '@/src/utils/deprecation-utils';
 import {debounce} from '../../../utils/debounce-utils';
 import {promiseTimeout} from '../../../utils/promise-utils';
 import type {
@@ -409,12 +410,26 @@ export class SuggestionManager<SearchBoxController> {
 
   private getSuggestionElements(suggestions: SearchBoxSuggestions[]) {
     const elements = suggestions.flatMap((suggestion) => suggestion.renderItems());
+    this.warnOnStencilContent(elements);
 
     const max =
       this.ownerSearchBoxProps.getNumberOfSuggestionsToDisplay() +
       elements.filter(elementHasNoQuery).length;
 
     return elements.slice(0, max);
+  }
+
+  // TODO - (v4) KIT-4468: Remove along with the Stencil VNode content.
+  private warnOnStencilContent(elements: SearchBoxSuggestionElement[]) {
+    if (elements.every(({content}) => content instanceof Element)) {
+      return;
+    }
+
+    warnDeprecatedOnce(
+      this.ownerSearchBoxProps.getLogger(),
+      'Stencil `VNode` content in search box suggestions',
+      'Use an `Element` as the `content` of each suggestion instead.'
+    );
   }
 
   private updateDescendants(activeDescendant = '') {

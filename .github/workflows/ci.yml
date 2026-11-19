@@ -21,6 +21,7 @@ jobs:
     outputs:
       fetch-depth: ${{ steps.publish.outputs.fetch-depth }}
       tasks: ${{ steps.publish.outputs.tasks }}
+      knip-workspaces: ${{ steps.publish.outputs.knip-workspaces }}
       projects: ${{ steps.publish.outputs.projects }}
       samples: ${{ steps.publish.outputs.samples }}
       base-sha: ${{ steps.base.outputs.sha }}
@@ -208,7 +209,7 @@ jobs:
 
   knip:
     name: 'Look for unused code or dependencies'
-    if: ${{ contains(needs.affected.outputs.tasks, '#build"') }}
+    if: ${{ needs.affected.outputs.knip-workspaces != '[]' }}
     runs-on: ubuntu-latest
     needs: [affected, build]
     steps:
@@ -225,16 +226,18 @@ jobs:
         with:
           affected-tasks: ${{ needs.affected.outputs.tasks }}
           tasks: build
+      # Knip also loads the dependents of each selected workspace, and their configs can need their build output.
+      - name: Build the dependents Knip loads
+        env:
+          KNIP_WORKSPACES: ${{ needs.affected.outputs.knip-workspaces }}
+        run: |
+          jq -r '.[] | "--filter=..." + .' <<< "${KNIP_WORKSPACES}" \
+            | xargs pnpm exec turbo run build --no-update-notifier
       - name: Run selected Knip workspaces
         env:
-          TASKS: ${{ needs.affected.outputs.tasks }}
-          JQ_QUERY: |
-            [.[] | select(contains("#build")) | split("#")[0]]
-            | unique
-            | .[]
-            | "--workspace " + (if . == "//" then "." else . end)
+          KNIP_WORKSPACES: ${{ needs.affected.outputs.knip-workspaces }}
         run: |
-          jq -r "${JQ_QUERY}" <<< "${TASKS}" \
+          jq -r '.[] | "--workspace " + .' <<< "${KNIP_WORKSPACES}" \
             | xargs pnpm exec knip --exclude catalog
 
   cdn-checks:
@@ -374,7 +377,7 @@ jobs:
   validate-dts:
     name: 'Validate DTS API surface'
     needs: [affected, build]
-    if: ${{ contains(needs.affected.outputs.tasks, '"@coveo/thermidor#validate:test:dts:ci"') }}
+    if: ${{ contains(needs.affected.outputs.tasks, '"@coveo/thermidor#test:dts:ci"') }}
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -387,7 +390,7 @@ jobs:
           fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo run validate:test:dts:ci --filter=@coveo/thermidor
+      - run: pnpm exec turbo run test:dts:ci --filter=@coveo/thermidor
   package-compatibility:
     name: 'Verify compatibility of packages'
     needs: [affected, build]

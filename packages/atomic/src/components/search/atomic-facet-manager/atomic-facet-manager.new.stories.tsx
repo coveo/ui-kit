@@ -7,7 +7,7 @@ import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-w
 import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
 import '@/src/components/search/atomic-facet/atomic-facet.js';
 import '@/src/components/search/atomic-facet-manager/atomic-facet-manager.js';
-import '@/src/components/search/atomic-popover/atomic-popover.js';
+import '@/src/components/search/atomic-facet-popover/atomic-facet-popover.js';
 import '@/src/components/search/atomic-search-layout/atomic-search-layout.js';
 
 const searchApiHarness = new MockSearchApi();
@@ -135,7 +135,7 @@ export const Default: Story = {
 };
 
 export const WithPopovers: Story = {
-  name: 'With facets inside atomic-popover',
+  name: 'With facets inside atomic-facet-popover',
   decorators: [
     (story) => html`
       <atomic-search-layout>
@@ -147,26 +147,26 @@ export const WithPopovers: Story = {
   ],
   args: {
     'default-slot': `
-      <atomic-popover>
+      <atomic-facet-popover>
         <atomic-facet field="author" label="Authors"></atomic-facet>
-      </atomic-popover>
-      <atomic-popover>
+      </atomic-facet-popover>
+      <atomic-facet-popover>
         <atomic-facet field="language" label="Language"></atomic-facet>
-      </atomic-popover>
-      <atomic-popover>
+      </atomic-facet-popover>
+      <atomic-facet-popover>
         <atomic-facet
           field="objecttype"
           label="Type"
           display-values-as="link"
         ></atomic-facet>
-      </atomic-popover>
-      <atomic-popover>
+      </atomic-facet-popover>
+      <atomic-facet-popover>
         <atomic-facet
           field="year"
           label="Year"
           display-values-as="box"
         ></atomic-facet>
-      </atomic-popover>
+      </atomic-facet-popover>
     `,
   },
   beforeEach: async () => {

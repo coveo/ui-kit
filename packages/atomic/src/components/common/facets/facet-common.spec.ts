@@ -174,7 +174,7 @@ describe('facet-common', () => {
     it('should return facets nested inside a popover', () => {
       const parent = document.createElement('div');
       const facet = buildMockFacetElement({facetId: 'f1'});
-      const popover = document.createElement('atomic-popover');
+      const popover = document.createElement('atomic-facet-popover');
       popover.appendChild(facet);
       parent.appendChild(popover);
 
@@ -185,13 +185,23 @@ describe('facet-common', () => {
       const parent = document.createElement('div');
       const facet1 = buildMockFacetElement({facetId: 'f1'});
       const facet2 = buildMockFacetElement({facetId: 'f2'});
-      const popover = document.createElement('atomic-popover');
+      const popover = document.createElement('atomic-facet-popover');
       popover.appendChild(facet2);
 
       parent.appendChild(facet1);
       parent.appendChild(popover);
 
       expect(getFacetsInChildren(parent)).toEqual([facet1, facet2]);
+    });
+
+    it('should return facets nested inside the deprecated atomic-popover', () => {
+      const parent = document.createElement('div');
+      const facet = buildMockFacetElement({facetId: 'f1'});
+      const popover = document.createElement('atomic-popover');
+      popover.appendChild(facet);
+      parent.appendChild(popover);
+
+      expect(getFacetsInChildren(parent)).toEqual([facet]);
     });
 
     it('should not look for facets inside elements that are not popovers', () => {
@@ -205,7 +215,7 @@ describe('facet-common', () => {
 
     it('should not return the content of a popover without a facet', () => {
       const parent = document.createElement('div');
-      const popover = document.createElement('atomic-popover');
+      const popover = document.createElement('atomic-facet-popover');
       popover.appendChild(document.createElement('div'));
       parent.appendChild(popover);
 
@@ -214,13 +224,16 @@ describe('facet-common', () => {
   });
 
   describe('#isFacetNestedInPopover', () => {
-    it('should return true when the facet is slotted in a popover', () => {
-      const popover = document.createElement('atomic-popover');
-      const facet = buildMockFacetElement({facetId: 'f1'});
-      popover.appendChild(facet);
+    it.each(['atomic-facet-popover', 'atomic-popover'])(
+      'should return true when the facet is slotted in a %s',
+      (popoverTag) => {
+        const popover = document.createElement(popoverTag);
+        const facet = buildMockFacetElement({facetId: 'f1'});
+        popover.appendChild(facet);
 
-      expect(isFacetNestedInPopover(facet)).toBe(true);
-    });
+        expect(isFacetNestedInPopover(facet)).toBe(true);
+      }
+    );
 
     it('should return false when the facet is not slotted in a popover', () => {
       const parent = document.createElement('div');
@@ -233,7 +246,7 @@ describe('facet-common', () => {
 
   describe('#getFacetElementToReorder', () => {
     it('should return the popover when the facet is slotted in one', () => {
-      const popover = document.createElement('atomic-popover');
+      const popover = document.createElement('atomic-facet-popover');
       const facet = buildMockFacetElement({facetId: 'f1'});
       popover.appendChild(facet);
 

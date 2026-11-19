@@ -479,4 +479,75 @@ describe('atomic-insight-interface', () => {
       expect(within(element).queryByShadowText('test-element')).toBeTruthy();
     });
   });
+
+  describe('deprecation warnings', () => {
+    const deprecationWarnings = (engine: ReturnType<typeof buildFakeInsightEngine>) =>
+      vi
+        .mocked(engine.logger.warn)
+        .mock.calls.filter(([message]) => String(message).startsWith('[Deprecated]'));
+
+    const initializeWithFreshEngine = async (element: AtomicInsightInterface) => {
+      const engine = buildFakeInsightEngine();
+      await element.initializeWithInsightEngine(engine);
+      return engine;
+    };
+
+    beforeEach(() => {
+      vi.mocked(loadFieldActions).mockReturnValue({
+        registerFieldsToInclude: vi.fn(),
+        disableFetchAllFields: vi.fn(),
+        enableFetchAllFields: vi.fn(),
+        fetchFieldsDescription: vi.fn(),
+      });
+    });
+
+    it('should not log a deprecation warning when the interface registers its fields to include', async () => {
+      const element = await setupElement({fieldsToInclude: ['fieldA']});
+      const engine = await initializeWithFreshEngine(element);
+
+      expect(loadFieldActions).toHaveBeenCalled();
+      expect(deprecationWarnings(engine)).toEqual([]);
+    });
+
+    it('should log one deprecation warning when #registerFieldsToInclude is called', async () => {
+      const element = await setupElement({fieldsToInclude: ['fieldA']});
+      const engine = await initializeWithFreshEngine(element);
+
+      element.registerFieldsToInclude();
+      element.registerFieldsToInclude();
+
+      expect(deprecationWarnings(engine)).toEqual([
+        [
+          expect.stringContaining(
+            '[Deprecated] The `registerFieldsToInclude` method of `atomic-insight-interface` is deprecated'
+          ),
+        ],
+      ]);
+    });
+
+    it('should still register the fields to include when #registerFieldsToInclude is called', async () => {
+      const element = await setupElement({fieldsToInclude: ['fieldA']});
+      await initializeWithFreshEngine(element);
+      vi.mocked(loadFieldActions).mockClear();
+
+      element.registerFieldsToInclude();
+
+      expect(loadFieldActions).toHaveBeenCalledExactlyOnceWith(element.bindings.engine);
+    });
+
+    it('should log one deprecation warning when the store property is read', async () => {
+      const element = await setupElement();
+      const engine = await initializeWithFreshEngine(element);
+
+      expect(element.store).toBe(element.bindings.store);
+      expect(element.store).toBe(element.bindings.store);
+      expect(deprecationWarnings(engine)).toEqual([
+        [
+          expect.stringContaining(
+            '[Deprecated] The `store` property of `atomic-insight-interface` is deprecated'
+          ),
+        ],
+      ]);
+    });
+  });
 });
