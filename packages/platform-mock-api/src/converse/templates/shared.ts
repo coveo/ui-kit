@@ -171,17 +171,35 @@ function buildValidatedSurface({
   };
 }
 
+// The props each placeholder's component requires. An A2-UI v1.0 renderer validates a component's
+// props against its catalog and rejects the whole message when a required one is missing, so a
+// placeholder binds them, like its content does, to `/state/root/<prop>`. Nothing is seeded there:
+// the renderer validates the bindings, not the values they resolve to.
+const PLACEHOLDER_REQUIRED_PROPS: Readonly<Record<string, readonly string[]>> = {
+  BundleDisplay: ['tiers'],
+  ComparisonTable: ['heading', 'summary', 'products', 'attributes'],
+  NextActionsBar: ['suggestedActions'],
+  ProductCarousel: ['heading', 'products'],
+  ProductResearchCard: ['product', 'summary', 'bullets'],
+};
+
 // A loading placeholder, as the agent streams it in Thermidor mode before a block's content: a
-// `createSurface` with a bare root of the block's component type (no bindings) and a data model that
-// only sets `isLoading: true`. The surface id is opaque; the content later deletes this surface and
-// creates its own, in a snapshot that replaces the placeholder's activity in place.
+// `createSurface` with a root of the block's component type, its required props bound, and a data
+// model that only sets `isLoading: true`. The surface id is opaque; the content later deletes this
+// surface and creates its own, in a snapshot that replaces the placeholder's activity in place.
 function loadingSurfaceMessage(surfaceId: string, component: string): Record<string, unknown> {
+  const requiredProps = PLACEHOLDER_REQUIRED_PROPS[component];
+  if (!requiredProps) {
+    throw new Error(`loadingSurfaceMessage: no required props are known for "${component}".`);
+  }
   return {
     version: '1.0',
     createSurface: {
       surfaceId,
       catalogId: CATALOG_ID,
-      components: [{id: RENDERER_ROOT_ID, component}],
+      components: [
+        {id: RENDERER_ROOT_ID, component, ...bindStateFields(RENDERER_ROOT_ID, requiredProps)},
+      ],
       dataModel: {isLoading: true},
     },
   };

@@ -32,18 +32,18 @@ const NEXT_ACTIONS_ROOT_ID = RENDERER_ROOT_ID;
 // then slot order within each tier). Each id is also the AG-UI state key holding that slot's
 // summarized product data.
 const SLOT_PRODUCT_SUMMARY_IDS = [
-  'ps-budget-surfboard',
-  'ps-budget-wetsuit',
-  'ps-budget-bag',
-  'ps-budget-wax',
-  'ps-midrange-surfboard',
-  'ps-midrange-wetsuit',
-  'ps-midrange-bag',
-  'ps-midrange-wax',
-  'ps-premium-surfboard',
-  'ps-premium-wetsuit',
-  'ps-premium-bag',
-  'ps-premium-wax',
+  'ps_budget_surfboard',
+  'ps_budget_wetsuit',
+  'ps_budget_bag',
+  'ps_budget_wax',
+  'ps_midrange_surfboard',
+  'ps_midrange_wetsuit',
+  'ps_midrange_bag',
+  'ps_midrange_wax',
+  'ps_premium_surfboard',
+  'ps_premium_wetsuit',
+  'ps_premium_bag',
+  'ps_premium_wax',
 ];
 
 // The bundle-display root composes one product-summary node per slot; each slot summary is
@@ -125,10 +125,10 @@ const bundleComponentState: Record<string, unknown> = {
           'Soft-top boards and essential gear perfect for learning to surf without breaking the bank.',
         total: 484.97,
         slots: [
-          {categoryLabel: 'Surfboard', childId: 'ps-budget-surfboard'},
-          {categoryLabel: 'Wetsuit', childId: 'ps-budget-wetsuit'},
-          {categoryLabel: 'Surfboard Bag', childId: 'ps-budget-bag'},
-          {categoryLabel: 'Surf Wax', childId: 'ps-budget-wax'},
+          {categoryLabel: 'Surfboard', childId: 'ps_budget_surfboard'},
+          {categoryLabel: 'Wetsuit', childId: 'ps_budget_wetsuit'},
+          {categoryLabel: 'Surfboard Bag', childId: 'ps_budget_bag'},
+          {categoryLabel: 'Surf Wax', childId: 'ps_budget_wax'},
         ],
       },
       {
@@ -137,10 +137,10 @@ const bundleComponentState: Record<string, unknown> = {
           'Hybrid boards with improved performance and quality apparel for progressing surfers.',
         total: 794.97,
         slots: [
-          {categoryLabel: 'Surfboard', childId: 'ps-midrange-surfboard'},
-          {categoryLabel: 'Wetsuit', childId: 'ps-midrange-wetsuit'},
-          {categoryLabel: 'Surfboard Bag', childId: 'ps-midrange-bag'},
-          {categoryLabel: 'Surf Wax', childId: 'ps-midrange-wax'},
+          {categoryLabel: 'Surfboard', childId: 'ps_midrange_surfboard'},
+          {categoryLabel: 'Wetsuit', childId: 'ps_midrange_wetsuit'},
+          {categoryLabel: 'Surfboard Bag', childId: 'ps_midrange_bag'},
+          {categoryLabel: 'Surf Wax', childId: 'ps_midrange_wax'},
         ],
       },
       {
@@ -149,15 +149,15 @@ const bundleComponentState: Record<string, unknown> = {
           'High-performance boards and professional-grade gear for serious beginners ready to advance.',
         total: 1164.97,
         slots: [
-          {categoryLabel: 'Surfboard', childId: 'ps-premium-surfboard'},
-          {categoryLabel: 'Wetsuit', childId: 'ps-premium-wetsuit'},
-          {categoryLabel: 'Surfboard Bag', childId: 'ps-premium-bag'},
-          {categoryLabel: 'Surf Wax', childId: 'ps-premium-wax'},
+          {categoryLabel: 'Surfboard', childId: 'ps_premium_surfboard'},
+          {categoryLabel: 'Wetsuit', childId: 'ps_premium_wetsuit'},
+          {categoryLabel: 'Surfboard Bag', childId: 'ps_premium_bag'},
+          {categoryLabel: 'Surf Wax', childId: 'ps_premium_wax'},
         ],
       },
     ],
   },
-  'ps-budget-surfboard': {
+  ps_budget_surfboard: {
     categoryLabel: 'Surfboard',
     product: {
       permanentid: 'gid://shopify/ProductVariant/50674988548370',
@@ -173,7 +173,7 @@ const bundleComponentState: Record<string, unknown> = {
       additionalFields: {},
     },
   },
-  'ps-budget-wetsuit': {
+  ps_budget_wetsuit: {
     categoryLabel: 'Wetsuit',
     product: {
       permanentid: 'gid://shopify/ProductVariant/50674590384402',
@@ -190,7 +190,7 @@ const bundleComponentState: Record<string, unknown> = {
       additionalFields: {},
     },
   },
-  'ps-budget-bag': {
+  ps_budget_bag: {
     categoryLabel: 'Surfboard Bag',
     product: {
       permanentid: 'gid://shopify/ProductVariant/50677311504658',
@@ -207,7 +207,7 @@ const bundleComponentState: Record<string, unknown> = {
       additionalFields: {},
     },
   },
-  'ps-budget-wax': {
+  ps_budget_wax: {
     categoryLabel: 'Surf Wax',
     product: {
       permanentid: 'gid://shopify/ProductVariant/50670409482514',
@@ -224,7 +224,7 @@ const bundleComponentState: Record<string, unknown> = {
       additionalFields: {},
     },
   },
-  'ps-midrange-surfboard': {
+  ps_midrange_surfboard: {
     categoryLabel: 'Surfboard',
     product: {
       permanentid: 'gid://shopify/ProductVariant/50677302952210',
@@ -241,7 +241,7 @@ const bundleComponentState: Record<string, unknown> = {
       additionalFields: {},
     },
   },
-  'ps-midrange-wetsuit': {
+  ps_midrange_wetsuit: {
     categoryLabel: 'Wetsuit',
     product: {
       permanentid: 'gid://shopify/ProductVariant/50674582290706',
@@ -258,7 +258,7 @@ const bundleComponentState: Record<string, unknown> = {
       additionalFields: {},
     },
   },
-  'ps-midrange-bag': {
+  ps_midrange_bag: {
     categoryLabel: 'Surfboard Bag',
     product: {
       permanentid: 'gid://shopify/ProductVariant/50675961954578',
@@ -274,7 +274,7 @@ const bundleComponentState: Record<string, unknown> = {
       additionalFields: {},
     },
   },
-  'ps-midrange-wax': {
+  ps_midrange_wax: {
     categoryLabel: 'Surf Wax',
     product: {
       permanentid: 'gid://shopify/ProductVariant/50670410924306',
@@ -291,7 +291,7 @@ const bundleComponentState: Record<string, unknown> = {
       additionalFields: {},
     },
   },
-  'ps-premium-surfboard': {
+  ps_premium_surfboard: {
     categoryLabel: 'Surfboard',
     product: {
       permanentid: 'gid://shopify/ProductVariant/50675335627026',
@@ -308,7 +308,7 @@ const bundleComponentState: Record<string, unknown> = {
       additionalFields: {},
     },
   },
-  'ps-premium-wetsuit': {
+  ps_premium_wetsuit: {
     categoryLabel: 'Wetsuit',
     product: {
       permanentid: 'gid://shopify/ProductVariant/50674626887954',
@@ -325,7 +325,7 @@ const bundleComponentState: Record<string, unknown> = {
       additionalFields: {},
     },
   },
-  'ps-premium-bag': {
+  ps_premium_bag: {
     categoryLabel: 'Surfboard Bag',
     product: {
       permanentid: 'gid://shopify/ProductVariant/50677311832338',
@@ -342,7 +342,7 @@ const bundleComponentState: Record<string, unknown> = {
       additionalFields: {},
     },
   },
-  'ps-premium-wax': {
+  ps_premium_wax: {
     categoryLabel: 'Surf Wax',
     product: {
       permanentid: 'gid://shopify/ProductVariant/50670411088146',
