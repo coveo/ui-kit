@@ -44,7 +44,7 @@ import {validateActionPayload} from './action-payload-validation.js';
 import {concurrentAction, type CachePolicy} from './announced-actions.js';
 import type {ContractsSchema} from './contracts.js';
 import {createConcurrentActions} from './concurrent-actions.js';
-import {callWithConflictRetry} from './conflict-retry.js';
+import {callWithRetry} from './request-retry.js';
 import {
   EMPTY_RENDERER_STREAM,
   appendToRendererStream,
@@ -903,7 +903,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   ): Promise<RequestFailure | undefined> {
     try {
       // Rebuilt on every attempt, so context providers and session keys are read fresh.
-      const result = await callWithConflictRetry(async () => {
+      const result = await callWithRetry(async () => {
         const attempt = await client.call(
           buildRequest(),
           {
