@@ -1,5 +1,5 @@
 import {HighlightUtils, type Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
-import {html, LitElement, nothing} from 'lit';
+import {html, LitElement, nothing, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/context/product-context-controller';
@@ -15,6 +15,7 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
 import '../atomic-commerce-text/atomic-commerce-text';
 import {getStringValueFromProductOrNull} from '@/src/components/commerce/product-template-component-utils/product-utils';
 import {LightDomMixin} from '@/src/mixins/light-dom';
+import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils';
 
 /**
  * The `atomic-product-text` component renders the value of a string field for a given product.
@@ -68,10 +69,25 @@ export class AtomicProductText
 
   @state() public error!: Error;
 
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'shouldHighlight',
+      attribute: 'should-highlight',
+      defaultValue: true,
+      instruction: 'Use `no-highlight` instead, which is its inverse and defaults to `false`.',
+    },
+  ]);
+
   initialize() {
     if (!this.product && this.productController.item) {
       this.product = this.productController.item;
     }
+  }
+
+  willUpdate(changedProperties: PropertyValues) {
+    super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.bindings?.engine?.logger);
   }
 
   @bindingGuard()

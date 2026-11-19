@@ -101,7 +101,7 @@ describe('atomic-commerce-interface', () => {
         language-assets-path=${ifDefined(props.languageAssetsPath)}
         ?localize-with-country=${props.localizeWithCountry}
         log-level=${ifDefined(props.logLevel)}
-        reflect-state-in-url=${props.reflectStateInUrl}
+        reflect-state-in-url=${ifDefined(props.reflectStateInUrl)}
         scroll-container=${ifDefined(props.scrollContainer)}
         type=${ifDefined(props.type)}
         >${when(props.mobileBreakpoint, () => html`<atomic-commerce-layout mobile-breakpoint=${ifDefined(props.mobileBreakpoint)}></atomic-commerce-layout>`)}<div>Interface content</div></atomic-commerce-layout></atomic-commerce-interface
@@ -1372,6 +1372,37 @@ describe('atomic-commerce-interface', () => {
       await addChildElement(element);
 
       expect(within(element).queryByShadowText('test-element')).toBeTruthy();
+    });
+  });
+
+  describe('deprecation warnings', () => {
+    const deprecationWarnings = (engine: {logger: {warn: unknown}}) =>
+      vi
+        .mocked(engine.logger.warn as (message: string) => void)
+        .mock.calls.filter(([message]) => String(message).startsWith('[Deprecated]'));
+
+    it('should log one deprecation warning when reflect-state-in-url is set', async () => {
+      const element = await setupElement({reflectStateInUrl: false});
+      const engine = buildFakeCommerceEngine();
+      await element.initializeWithEngine(engine);
+      await element.updateComplete;
+
+      expect(deprecationWarnings(engine)).toEqual([
+        [
+          expect.stringContaining(
+            '[Deprecated] The `reflect-state-in-url` property of `atomic-commerce-interface` is deprecated'
+          ),
+        ],
+      ]);
+    });
+
+    it('should not log a deprecation warning when reflect-state-in-url is not set', async () => {
+      const element = await setupElement();
+      const engine = buildFakeCommerceEngine();
+      await element.initializeWithEngine(engine);
+      await element.updateComplete;
+
+      expect(deprecationWarnings(engine)).toEqual([]);
     });
   });
 });

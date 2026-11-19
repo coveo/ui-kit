@@ -37,6 +37,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
+import {DeprecatedPropertyWarnings, warnDeprecatedOnce} from '@/src/utils/deprecation-utils';
 import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
 import {waitForAtomicChildrenToBeDefined} from '@/src/utils/initialization-common-utils';
 import {
@@ -87,6 +88,20 @@ export class AtomicSearchInterface
     'CoveoAtomic',
     HEADLESS_VERSION
   );
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'reflectStateInUrl',
+      attribute: 'reflect-state-in-url',
+      defaultValue: true,
+      instruction: 'Use `disable-state-reflection-in-url` instead, which defaults to `false`.',
+    },
+    {
+      property: 'enableRelevanceInspector',
+      attribute: 'enable-relevance-inspector',
+      defaultValue: true,
+      instruction: 'Use `disable-relevance-inspector` instead, which defaults to `false`.',
+    },
+  ]);
 
   @query('atomic-relevance-inspector')
   private relevanceInspector?: AtomicRelevanceInspector;
@@ -285,6 +300,8 @@ export class AtomicSearchInterface
 
   public willUpdate(changedProperties: Map<string, unknown>) {
     super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.engine?.logger);
 
     if (changedProperties.has('fieldsToInclude')) {
       this.updateFieldsToInclude();
@@ -321,9 +338,16 @@ export class AtomicSearchInterface
   }
 
   /**
-   * @deprecated provided for backward compatibility. set the 'open' property directly on the relevance inspector instead.
+   * @deprecated Remove the call: the relevance inspector closes from its own dialog.
    */
   public closeRelevanceInspector() {
+    if (this.engine) {
+      warnDeprecatedOnce(
+        this.engine.logger,
+        'The `closeRelevanceInspector` method of `atomic-search-interface`',
+        'Remove the call: the relevance inspector closes from its own dialog.'
+      );
+    }
     if (this.relevanceInspector) {
       this.relevanceInspector.open = false;
     }

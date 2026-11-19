@@ -1,6 +1,6 @@
 import {BooleanValue, Schema, StringValue} from '@coveo/bueno';
 import {HighlightUtils, type Result, ResultTemplatesHelpers} from '@coveo/headless';
-import {html, LitElement, nothing} from 'lit';
+import {html, LitElement, nothing, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {renderItemTextFallback} from '@/src/components/common/item-text/item-text-fallback';
@@ -17,6 +17,7 @@ import {LightDomMixin} from '@/src/mixins/light-dom';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
 import {getStringValueFromResultOrNull} from '@/src/utils/result-utils';
 import '../atomic-text/atomic-text';
+import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils';
 
 /**
  * The `atomic-result-text` component renders the value of a string field for a given result.
@@ -78,6 +79,15 @@ export class AtomicResultText
 
   @state() public error!: Error;
 
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'shouldHighlight',
+      attribute: 'should-highlight',
+      defaultValue: true,
+      instruction: 'Use `no-highlight` instead, which is its inverse and defaults to `false`.',
+    },
+  ]);
+
   constructor() {
     super();
 
@@ -101,6 +111,12 @@ export class AtomicResultText
         this.result = item;
       }
     }
+  }
+
+  willUpdate(changedProperties: PropertyValues) {
+    super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.bindings?.engine?.logger);
   }
 
   @bindingGuard()
