@@ -29,7 +29,9 @@
 }
 
 .start,
-.open {
+.open,
+.kebab,
+.menuItem {
   font: inherit;
   color: var(--color-text-primary);
   background: none;
@@ -47,19 +49,19 @@
   text-align: left;
 }
 
-.start:is(:hover, :focus-visible),
+:is(.start, .menuItem):is(:hover, :focus-visible),
 .row:hover .open,
 .open:focus-visible,
 .open[aria-current='true'] {
   background: var(--color-surface-hover);
 }
 
-:is(.start, .open):focus-visible {
+:is(.start, .open, .kebab, .menuItem, .rename):focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: -2px;
 }
 
-.drawer [aria-disabled='true']:is(.start, .open) {
+.drawer [aria-disabled='true']:is(.start, .open, .menuItem) {
   color: var(--color-text-muted);
   background: none;
   cursor: not-allowed;
@@ -106,7 +108,7 @@
 .open {
   flex: 1;
   min-width: 0;
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-2) var(--space-6) var(--space-2) var(--space-3);
   overflow: hidden;
   text-align: left;
   text-overflow: ellipsis;
@@ -115,4 +117,63 @@
 
 .open[aria-current='true'] {
   font-weight: 600;
+}
+
+.kebab {
+  position: absolute;
+  right: var(--space-1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  color: var(--color-text-muted);
+}
+
+@media (hover: hover) {
+  .row:not(:hover, :focus-within) .kebab:not([aria-expanded='true']) {
+    opacity: 0;
+  }
+}
+
+.kebab:is(:hover, :focus-visible, [aria-expanded='true']) {
+  color: var(--color-text-primary);
+  background: var(--color-border);
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 160px;
+  padding: var(--space-1);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.menuAbove {
+  top: auto;
+  bottom: 100%;
+}
+
+.menuItem {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  text-align: left;
+}
+
+.rename {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-2) var(--space-3);
+  font: inherit;
+  border: 1px solid var(--color-border-active);
+  border-radius: 999px;
 }
