@@ -459,6 +459,57 @@ describe('createMockConverseServer', () => {
       expect(sessionKeys(await initialize(keys))).toEqual(keys);
     });
 
+    it.each<[string, (keys: Keys) => Record<string, string>, number, string]>([
+      [
+        'a wrong token',
+        (keys) => ({...keys, conversationToken: randomUUID()}),
+        403,
+        'Invalid conversation token.',
+      ],
+      [
+        "an existing session's id and no token",
+        (keys) => ({conversationSessionId: keys.conversationSessionId}),
+        403,
+        'Invalid conversation token.',
+      ],
+      [
+        'an unknown session id and a token',
+        () => ({conversationSessionId: randomUUID(), conversationToken: randomUUID()}),
+        404,
+        'Conversation not found.',
+      ],
+    ])(
+      'refuses a prompt with %s, as Agent Gateway does',
+      async (_, keysToSend, status, message) => {
+        await startServer();
+        const {keys} = await openSessionWithRecentQuery();
+
+        const res = await postSchema({message: 'life jackets', ...keysToSend(keys)});
+
+        expect(res.statusCode).toBe(status);
+        expect(res.headers['access-control-allow-origin']).toBe('*');
+        expect(JSON.parse(res.body)).toEqual({message});
+        expect(shellRecentQueries(await initialize(keys))).toEqual(['water sports']);
+      }
+    );
+
+    it('opens a session on a first prompt sent without a token', async () => {
+      await startServer();
+      const conversationSessionId = randomUUID();
+
+      const chosen = parseEvents(
+        (await postSchema({message: 'water sports', conversationSessionId})).body
+      );
+      const minted = parseEvents((await postSchema({message: 'water sports'})).body);
+
+      expect(sessionKeys(chosen)).toEqual({
+        conversationSessionId,
+        conversationToken: expect.any(String),
+      });
+      expect(sessionKeys(minted).conversationSessionId).toEqual(expect.any(String));
+      expect(shellRecentQueries(await initialize(sessionKeys(chosen)))).toEqual(['water sports']);
+    });
+
     it("answers fetchSuggestions on the shell's surface, keeping the session", async () => {
       await startServer();
       const opened = await initialize();

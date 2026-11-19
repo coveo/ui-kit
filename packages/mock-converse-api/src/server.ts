@@ -54,8 +54,31 @@ const initializedSessionKeys = (sessionId?: string, sessionToken?: string) => {
   return {conversationSessionId: randomUUID(), conversationToken: randomUUID()};
 };
 
+// Agent Gateway validates the keys of every other request: an unknown session id with a token is not
+// found, and a wrong token, or an existing session's id without one, is refused.
+const continuedSessionKeys = (sessionId?: string, sessionToken?: string) => {
+  if (sessionId && sessionToken) {
+    if (!tokensBySession.has(sessionId)) {
+      return conversationNotFoundResponse();
+    }
+    return tokensBySession.get(sessionId) === sessionToken
+      ? {conversationSessionId: sessionId, conversationToken: sessionToken}
+      : invalidConversationTokenResponse();
+  }
+  if (sessionId && tokensBySession.has(sessionId)) {
+    return invalidConversationTokenResponse();
+  }
+  return {
+    conversationSessionId: sessionId ?? randomUUID(),
+    conversationToken: sessionToken ?? randomUUID(),
+  };
+};
+
 const invalidConversationTokenResponse = () =>
   HttpResponse.json({message: 'Invalid conversation token.'}, {status: 403});
+
+const conversationNotFoundResponse = () =>
+  HttpResponse.json({message: 'Conversation not found.'}, {status: 404});
 
 const actionInFlightResponse = () =>
   HttpResponse.json(
@@ -200,13 +223,10 @@ const handleSchemaConversePost = async ({request}: {request: Request}) => {
   const initializes =
     schemaAction !== undefined && converseSchemaResponses.isInitialize(schemaAction);
   const session = initializes
-    ? initializedSessionKeys(sessionId, sessionToken)
-    : {
-        conversationSessionId: sessionId ?? randomUUID(),
-        conversationToken: sessionToken ?? randomUUID(),
-      };
-  if (!session) {
-    return withCors(invalidConversationTokenResponse());
+    ? (initializedSessionKeys(sessionId, sessionToken) ?? invalidConversationTokenResponse())
+    : continuedSessionKeys(sessionId, sessionToken);
+  if (session instanceof Response) {
+    return withCors(session);
   }
   if (initializes || !tokensBySession.has(session.conversationSessionId)) {
     tokensBySession.set(session.conversationSessionId, session.conversationToken);
