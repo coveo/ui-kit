@@ -101,7 +101,7 @@ export function ConversationDrawer({id, toggleRef, onClose}: ConversationDrawerP
         {running ? <SpinnerIcon className={styles.spinner} /> : <ComposeIcon />}
         New conversation
       </button>
-      <span id={reasonId} className={styles.visuallyHidden}>
+      <span id={reasonId} hidden>
         {NOT_READY}
       </span>
       {list.length === 0 ? (
