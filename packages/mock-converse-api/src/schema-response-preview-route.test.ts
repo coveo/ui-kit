@@ -2,8 +2,8 @@ import http from 'node:http';
 import {afterAll, beforeAll, describe, expect, it} from 'vitest';
 import {createMockConverseServer} from './server.js';
 
-// The snapshot was recorded before the public route existed (KIT-6643), so it proves the preview
-// route still sends exactly what it sent then.
+// Pins what the preview route sends. KIT-6643 changed it only by adding the ProgressBlock events of
+// the agent's turns (ADR-028); searches send none.
 const PREVIEW_ROUTE =
   '/schema/api/preview/organizations/searchuisamples/agents/commerce/agui/converse';
 
@@ -84,7 +84,7 @@ afterAll(async () => {
 });
 
 describe('the preview schema route', () => {
-  it.each(PROMPTS)('sends what it sent before the public route for "%s"', (prompt) => {
+  it.each(PROMPTS)('sends the recorded stream for "%s"', (prompt) => {
     expect(streams.get(prompt)).toMatchSnapshot();
   });
 });

@@ -10,8 +10,7 @@ export interface AgentResponseBlockProps {
   /** The turn's blocks, loading placeholders included, drawn after the agent's text. */
   children?: ReactNode;
   /**
-   * Whether the turn's progress, from the public route's `ProgressBlock` surface, is drawn above
-   * this block. Such a turn shows it instead of the thinking block.
+   * Whether the turn's progress, from its `ProgressBlock` surface, is drawn above this block. Such a turn shows it instead of the thinking block.
    */
   hasProgress?: boolean;
 }

@@ -21,15 +21,9 @@ The mock API is automatically stopped when you close Vite (Ctrl+C).
 
 With `VITE_COVEO_ENDPOINT=http://localhost:3456/schema`, the sample posts to the mock's `/schema/api/preview/organizations/:orgId/agents/commerce/agui/converse` route, which serves the schema-driven templates (`schema-response-*.ts` in `@coveo/platform-mock-api`). `/schema/rest/organizations/:orgId/commerce/unstable/agentic/converse` and the short `/converse-schema` route serve the same templates. The `/converse`, `/rest/...` and `/api/preview/...` routes, without the `/schema` prefix, serve older templates this sample does not support.
 
-### The public route and the progress block
+### The progress block
 
-By default, the sample posts to the preview route, which streams the agent's tool calls, drawn in the thinking block. The public route, the preview path without `preview/`, sends no tool calls: the agent's progress comes as a `ProgressBlock` surface instead (Thermidor ADR-028), which the sample draws above the answer. To use it, add `?converseRoute=public` to the page URL, or set `VITE_COVEO_CONVERSE_ROUTE=public`:
-
-```bash
-VITE_COVEO_CONVERSE_ROUTE=public pnpm dev:mock
-```
-
-The mock's public route (`/schema/api/organizations/:orgId/agents/commerce/agui/converse`) sends a block for every prompt below. The comparison prompt runs two steps at once, and the two error prompts end their block failed. On the preview route, the same prompts send no block, and the tool calls of the templates that have them: every prompt except the searches, which send none on either route.
+Every turn the agent runs sends its progress as a `ProgressBlock` surface (Thermidor ADR-028), which the sample draws above the answer in place of the thinking block. The mock sends one for every prompt below that the agent answers, beside the tool calls its template already sends. The searches (`water sports`, its misspelled and `swim gear` variants, and any other query that finds products) are answered by the gateway, without the agent, so they get no block and no thinking block. The comparison prompt runs two steps at once, and the two error prompts end their block failed.
 
 ### Mock scenarios
 
@@ -40,8 +34,8 @@ The mock's public route (`/schema/api/organizations/:orgId/agents/commerce/agui/
 | `i like cold-water surfing. compare wetsuits for it`                       | ComparisonTable with 3 wetsuits, images, prices, annotations (Standout/Trade-off/Best for), an Additional information row with related documents (6, 2 and none), AI Summary, and NextActionsBar |
 | `boating safety`                                                           | Discovery with 2 ProductCarousels (Life Jackets + Boating Safety Gear) and NextActionsBar                                                                                                        |
 | `tell me more about the thermoflex winter wetsuit`                         | ProductResearchCard for the ThermoFlex Winter Wetsuit with a summary, 4 bullets, 6 related documents, and NextActionsBar                                                                         |
-| `simulate an agent error`                                                  | The agent fails: `RUN_ERROR` after a tool call. On the public route, the progress block ends in `error` first                                                                                    |
-| `simulate a timeout`                                                       | The gateway ends the turn: `RUN_ERROR` with `AGENT:UPSTREAM_TIMEOUT`. On the public route, the progress block is still running when it arrives                                                   |
+| `simulate an agent error`                                                  | The agent fails: `RUN_ERROR` after a tool call. The progress block ends in `error` first                                                                                                         |
+| `simulate a timeout`                                                       | The gateway ends the turn: `RUN_ERROR` with `AGENT:UPSTREAM_TIMEOUT`. The progress block is still running when it arrives                                                                        |
 | Any other text (fallback)                                                  | NextActionsBar with suggested follow-up actions                                                                                                                                                  |
 
 ## Available scripts
@@ -119,9 +113,10 @@ ConversationPage
 ├── ConversationThread (renders the list of turns)
 │   └── per Turn:
 │       ├── UserPromptBubble (the prompt, or the text of the follow-up chip that opened the turn)
+│       ├── ProgressSurfaces (the agent's ProgressBlock, if the turn has one)
 │       ├── ErrorTurnBlock (if error)
 │       └── AgentResponseBlock
-│           ├── ThinkingBlock (tool calls + spinner)
+│           ├── ThinkingBlock (tool calls + spinner, if the turn has no ProgressBlock)
 │           ├── StreamingMessage (streamed text)
 │           └── TurnSurfaces (the turn's blocks; disabled unless it is the latest turn)
 │               ├── A2UISkeleton (in place of a loading surface)

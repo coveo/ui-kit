@@ -123,11 +123,6 @@ const PRODUCT_RESEARCH_PROGRESS = sequentialPlan([
 
 const FALLBACK_PROGRESS = sequentialPlan([THINKING, SEARCHING_CATALOG, PREPARING_RESPONSE]);
 
-// The label carries the shopper's query, as the backend fills values into labels.
-function searchProgress(query: string): ProgressPlan {
-  return sequentialPlan([THINKING, {id: 'looking_for_products', label: `Looking for “${query}”`}]);
-}
-
 // Both failed turns stop while the catalog search runs.
 const AGENT_ERROR_PROGRESS: ProgressPlan = {
   ...sequentialPlan([THINKING, SEARCHING_CATALOG]),
@@ -182,20 +177,10 @@ function typeOf(event: ConverseEvent): unknown {
   return (event.data as {type?: unknown}).type ?? event.event;
 }
 
-function isToolCallEvent(event: ConverseEvent): boolean {
-  const type = typeOf(event);
-  return typeof type === 'string' && type.startsWith('TOOL_CALL_');
-}
-
-/** A turn as the public route sends it: without its `TOOL_CALL_*` events (ADR-028). */
-function withoutToolCalls(events: ConverseEvent[]): ConverseEvent[] {
-  return events.filter((event) => !isToolCallEvent(event));
-}
-
 /**
- * The public route's variant of an agent turn (ADR-028): no `TOOL_CALL_*` events, and the agent's
- * progress as a `ProgressBlock` surface instead, created once right after `RUN_STARTED` on one
- * activity id and updated with `updateDataModel` snapshots of its whole state on a second one.
+ * An agent turn with its progress as a `ProgressBlock` surface (ADR-028), created once right after
+ * `RUN_STARTED` on one activity id and updated with `updateDataModel` snapshots of its whole state
+ * on a second one. The turn keeps its `TOOL_CALL_*` events for now (KIT-6675 removes them).
  */
 function withProgressBlock(events: ConverseEvent[], plan: ProgressPlan): ConverseEvent[] {
   const [first, ...updates] = plan.snapshots;
@@ -205,7 +190,7 @@ function withProgressBlock(events: ConverseEvent[], plan: ProgressPlan): Convers
     ...updates.map((steps) => updateProgressBlock({steps, status: 'running'}, STEP_DELAY_MS)),
   ];
 
-  return withoutToolCalls(events).flatMap((event) => {
+  return events.flatMap((event) => {
     switch (typeOf(event)) {
       case 'RUN_STARTED':
         return [event, ...opening];
@@ -229,7 +214,6 @@ export {
   FALLBACK_PROGRESS,
   GATEWAY_ERROR_PROGRESS,
   PRODUCT_RESEARCH_PROGRESS,
-  searchProgress,
   withProgressBlock,
 };
 export type {ProgressPlan};

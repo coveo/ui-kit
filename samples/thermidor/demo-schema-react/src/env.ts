@@ -106,31 +106,14 @@ function getOrganizationPlatformEndpoint(
 }
 
 /**
- * The converse path the unified endpoint serves. Since the rework, the
+ * The fixed converse path the unified endpoint serves. Since the rework, the
  * Thermidor client POSTs to `endpoint` verbatim (it no longer appends this
  * path), so the sample builds the full URL itself for every flow (proxy,
- * explicit override, or derived platform host). The public route is the
- * preview path without `preview/`.
+ * explicit override, or derived platform host).
  */
 function getConverseUrl(baseUrl: string, organizationId: string): string {
   const normalizedBase = baseUrl.replace(/\/+$/, '');
-  const routePrefix = resolveConverseRoute() === 'public' ? '' : '/preview';
-  return `${normalizedBase}/api${routePrefix}/organizations/${organizationId}/agents/commerce/agui/converse`;
-}
-
-/**
- * The converse route the sample posts to: `public` sends the agent's progress as a
- * `ProgressBlock` surface instead of tool calls (Thermidor ADR-028), `preview` (the
- * default) sends tool calls. Set by the `converseRoute` URL parameter
- * (`?converseRoute=public`), else by `VITE_COVEO_CONVERSE_ROUTE`.
- */
-function resolveConverseRoute(): 'preview' | 'public' {
-  const fromUrl =
-    typeof window === 'undefined'
-      ? null
-      : new URLSearchParams(window.location.search).get('converseRoute');
-  const requested = fromUrl ?? getOptionalEnvValue('VITE_COVEO_CONVERSE_ROUTE');
-  return requested?.trim().toLowerCase() === 'public' ? 'public' : 'preview';
+  return `${normalizedBase}/api/preview/organizations/${organizationId}/agents/commerce/agui/converse`;
 }
 
 function shouldUseViteProxy() {

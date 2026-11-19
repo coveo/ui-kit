@@ -17,7 +17,7 @@ function failedTurn(runId: string, runError: ConverseEvent): ConverseEvent[] {
   ];
 }
 
-// The agent fails and says so: on the public route, its progress block ends `error` first.
+// The agent fails and says so: its progress block ends `error` first.
 const schemaAgentErrorEvents: ConverseEvent[] = failedTurn(
   'schema-agent-error-5d1c2e7a',
   RunError({message: 'The agent could not finish its answer.'})

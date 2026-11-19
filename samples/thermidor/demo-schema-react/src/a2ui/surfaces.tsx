@@ -191,7 +191,7 @@ function ActionErrorNote({surfaceId}: {surfaceId: string}) {
 const PROGRESS_COMPONENT = 'ProgressBlock';
 
 /**
- * Splits a turn's surfaces into its progress, the `ProgressBlock` surface the public route sends
+ * Splits a turn's surfaces into its progress, the `ProgressBlock` surface of a turn the agent runs
  * (ADR-028), and its blocks. The progress is drawn above the answer, outside the turn's blocks.
  */
 export function splitProgressSurfaces(surfaces: readonly DiscoveredSurface[]) {

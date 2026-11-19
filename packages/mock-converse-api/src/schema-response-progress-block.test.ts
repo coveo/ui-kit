@@ -7,9 +7,13 @@ import {
 } from '@coveo/thermidor-schema';
 import {createMockConverseServer} from './server.js';
 
-const PUBLIC_ROUTE = '/schema/api/organizations/searchuisamples/agents/commerce/agui/converse';
 const PREVIEW_ROUTE =
   '/schema/api/preview/organizations/searchuisamples/agents/commerce/agui/converse';
+const SCHEMA_ROUTES = [
+  '/converse-schema',
+  '/schema/rest/organizations/searchuisamples/commerce/unstable/agentic/converse',
+  PREVIEW_ROUTE,
+];
 
 const PROGRESS_ACTIVITY_ID = 'activity-progress-block';
 const PROGRESS_STATE_ACTIVITY_ID = 'activity-progress-block-state';
@@ -18,19 +22,22 @@ const AGENT_ERROR_PROMPT = 'simulate an agent error';
 const TIMEOUT_PROMPT = 'simulate a timeout';
 const COMPARISON_PROMPT = 'i like cold-water surfing. compare wetsuits for it';
 
+// Turns the agent runs and finishes.
 const COMPLETE_PROMPTS = [
   'build a beginner surfing kit with budget, mid-range, and premium options',
-  'water sports',
-  'water sprots',
-  'swim gear',
   COMPARISON_PROMPT,
   'boating safety',
   'tell me more about the thermoflex winter wetsuit',
-  'kayak',
   'something the catalog has nothing for',
 ];
 
-const ALL_PROMPTS = [...COMPLETE_PROMPTS, AGENT_ERROR_PROMPT, TIMEOUT_PROMPT];
+const AGENT_PROMPTS = [...COMPLETE_PROMPTS, AGENT_ERROR_PROMPT, TIMEOUT_PROMPT];
+
+// Searches, answered by the gateway without the agent: "kayak" is any other query that finds
+// products.
+const SEARCH_PROMPTS = ['water sports', 'water sprots', 'swim gear', 'kayak'];
+
+const ALL_PROMPTS = [...AGENT_PROMPTS, ...SEARCH_PROMPTS];
 
 interface SseEvent {
   event: string;
@@ -115,18 +122,14 @@ function progressStates(events: SseEvent[]): ProgressBlockState[] {
     .map((message) => message.updateDataModel!.value as ProgressBlockState);
 }
 
-const turns = new Map<string, {public: SseEvent[]; preview: SseEvent[]}>();
+const turns = new Map<string, SseEvent[]>();
 
 beforeAll(async () => {
   server = createMockConverseServer().listen(0);
   await new Promise<void>((resolve) => server.once('listening', () => resolve()));
   await Promise.all(
     ALL_PROMPTS.map(async (prompt) => {
-      const [publicBody, previewBody] = await Promise.all([
-        post(PUBLIC_ROUTE, {message: prompt}),
-        post(PREVIEW_ROUTE, {message: prompt}),
-      ]);
-      turns.set(prompt, {public: parseEvents(publicBody), preview: parseEvents(previewBody)});
+      turns.set(prompt, parseEvents(await post(PREVIEW_ROUTE, {message: prompt})));
     })
   );
 }, 30_000);
@@ -135,15 +138,11 @@ afterAll(async () => {
   await new Promise<void>((resolve) => server.close(() => resolve()));
 });
 
-describe('the public schema route (ADR-028)', () => {
-  it.each(ALL_PROMPTS)('sends no TOOL_CALL_* event for "%s"', (prompt) => {
-    expect(turns.get(prompt)!.public.filter(isToolCall)).toEqual([]);
-  });
-
-  it.each(ALL_PROMPTS)(
+describe('the progress block of an agent turn (ADR-028)', () => {
+  it.each(AGENT_PROMPTS)(
     'creates one ProgressBlock right after RUN_STARTED, valid against the schema, for "%s"',
     (prompt) => {
-      const events = turns.get(prompt)!.public;
+      const events = turns.get(prompt)!;
       const runStarted = events.findIndex((event) => typeOf(event) === 'RUN_STARTED');
       const create = events[runStarted + 1];
 
@@ -169,10 +168,10 @@ describe('the public schema route (ADR-028)', () => {
     }
   );
 
-  it.each(ALL_PROMPTS)(
+  it.each(AGENT_PROMPTS)(
     'updates the block with whole states on /state/root of the same surface for "%s"',
     (prompt) => {
-      const events = turns.get(prompt)!.public;
+      const events = turns.get(prompt)!;
       const [{createSurface}] = progressCreates(events);
       const updates = events
         .filter((event) => event.data.messageId === PROGRESS_STATE_ACTIVITY_ID)
@@ -192,8 +191,8 @@ describe('the public schema route (ADR-028)', () => {
     }
   );
 
-  it.each(ALL_PROMPTS)('lists the steps in the order they started for "%s"', (prompt) => {
-    const events = turns.get(prompt)!.public;
+  it.each(AGENT_PROMPTS)('lists the steps in the order they started for "%s"', (prompt) => {
+    const events = turns.get(prompt)!;
     const [{createSurface}] = progressCreates(events);
     const states = [
       createSurface!.dataModel!.state!.root as ProgressBlockState,
@@ -211,7 +210,7 @@ describe('the public schema route (ADR-028)', () => {
   it.each(COMPLETE_PROMPTS)(
     'ends the block complete, every step done, right before RUN_FINISHED for "%s"',
     (prompt) => {
-      const events = turns.get(prompt)!.public;
+      const events = turns.get(prompt)!;
       const runFinished = events.findIndex((event) => typeOf(event) === 'RUN_FINISHED');
       const lastProgress = events.findLastIndex(isProgressEvent);
       const last = progressStates(events).at(-1)!;
@@ -227,8 +226,16 @@ describe('the public schema route (ADR-028)', () => {
     }
   );
 
+  it.each(SEARCH_PROMPTS)('sends no ProgressBlock for the search "%s"', (prompt) => {
+    const events = turns.get(prompt)!;
+
+    expect(events.filter(isProgressEvent)).toEqual([]);
+    expect(progressCreates(events)).toEqual([]);
+    expect(events.map(typeOf)).toContain('RUN_FINISHED');
+  });
+
   it('runs two steps at once in the comparison turn', () => {
-    const states = progressStates(turns.get(COMPARISON_PROMPT)!.public);
+    const states = progressStates(turns.get(COMPARISON_PROMPT)!);
     const activeCounts = states.map(
       ({steps}) => steps.filter(({status}) => status === 'active').length
     );
@@ -237,7 +244,7 @@ describe('the public schema route (ADR-028)', () => {
   });
 
   it('ends the block in error right before the RUN_ERROR of a failing agent', () => {
-    const events = turns.get(AGENT_ERROR_PROMPT)!.public;
+    const events = turns.get(AGENT_ERROR_PROMPT)!;
     const runError = events.findIndex((event) => typeOf(event) === 'RUN_ERROR');
     const last = progressStates(events).at(-1)!;
 
@@ -250,7 +257,7 @@ describe('the public schema route (ADR-028)', () => {
   });
 
   it('leaves the block running when the gateway ends the turn with RUN_ERROR', () => {
-    const events = turns.get(TIMEOUT_PROMPT)!.public;
+    const events = turns.get(TIMEOUT_PROMPT)!;
     const runError = events.at(-1)!;
 
     expect(typeOf(runError)).toBe('RUN_ERROR');
@@ -259,36 +266,14 @@ describe('the public schema route (ADR-028)', () => {
   });
 });
 
-describe('the preview schema route', () => {
-  it.each(ALL_PROMPTS)('sends no ProgressBlock for "%s"', (prompt) => {
-    const events = turns.get(prompt)!.preview;
+describe('the schema routes', () => {
+  it.each(SCHEMA_ROUTES)('send the progress block of an agent turn on %s', async (route) => {
+    const events = parseEvents(await post(route, {message: AGENT_ERROR_PROMPT}));
 
-    expect(events.filter(isProgressEvent)).toEqual([]);
-    expect(progressCreates(events)).toEqual([]);
+    expect(progressCreates(events)).toHaveLength(1);
   });
 
-  it.each(ALL_PROMPTS)(
-    'differs from the public route only by its tool calls and the block for "%s"',
-    (prompt) => {
-      const {public: publicEvents, preview} = turns.get(prompt)!;
-      // Each request gets its own session keys and surface id suffix.
-      const strip = ({event, data}: SseEvent) => {
-        const {
-          timestamp: _timestamp,
-          conversationSessionId: _sessionId,
-          conversationToken: _token,
-          ...rest
-        } = data;
-        return {event, data: JSON.stringify(rest).replace(/-\d+(?=["/])/g, '-N')};
-      };
-
-      expect(publicEvents.filter((event) => !isProgressEvent(event)).map(strip)).toEqual(
-        preview.filter((event) => !isToolCall(event)).map(strip)
-      );
-    }
-  );
-
-  it('still sends the tool calls of a template that has them', () => {
-    expect(turns.get(COMPARISON_PROMPT)!.preview.filter(isToolCall).length).toBeGreaterThan(0);
+  it('keep the tool calls a template sends', () => {
+    expect(turns.get(COMPARISON_PROMPT)!.filter(isToolCall).length).toBeGreaterThan(0);
   });
 });

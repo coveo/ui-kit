@@ -21,10 +21,6 @@ const FULL_SCHEMA_CONVERSE_ROUTE =
   '/schema/rest/organizations/:orgId/commerce/unstable/agentic/converse';
 const PREVIEW_SCHEMA_CONVERSE_ROUTE =
   '/schema/api/preview/organizations/:orgId/agents/commerce/agui/converse';
-// The public route, the preview path without `preview/`, sends the agent's progress as a
-// `ProgressBlock` surface instead of tool calls (Thermidor ADR-028).
-const PUBLIC_SCHEMA_CONVERSE_ROUTE =
-  '/schema/api/organizations/:orgId/agents/commerce/agui/converse';
 
 const withCors = <T extends Response>(response: T): T => {
   for (const [headerName, headerValue] of Object.entries(CORS_HEADERS)) {
@@ -182,10 +178,7 @@ const handleConversePost = async ({request}: {request: Request}) => {
   return withCors(converseResponses.baseResponse(body));
 };
 
-const handleSchemaConversePost = async (
-  {request}: {request: Request},
-  route: converseSchemaResponses.ConverseRoute = 'preview'
-) => {
+const handleSchemaConversePost = async ({request}: {request: Request}) => {
   const rawBody = await request.text();
 
   let body: unknown;
@@ -251,7 +244,7 @@ const handleSchemaConversePost = async (
 
   const response = schemaAction
     ? converseSchemaResponses.buildSchemaActionResponse(schemaAction, session)
-    : converseSchemaResponses.schemaBaseResponse(body, session, {route});
+    : converseSchemaResponses.schemaBaseResponse(body, session);
 
   return withCors(holdSessionUntilStreamEnds(session.conversationSessionId, response));
 };
@@ -291,17 +284,12 @@ const handlers = [
   http.options(SHORT_SCHEMA_CONVERSE_ROUTE, preflightResponse),
   http.options(FULL_SCHEMA_CONVERSE_ROUTE, preflightResponse),
   http.options(PREVIEW_SCHEMA_CONVERSE_ROUTE, preflightResponse),
-  http.options(PUBLIC_SCHEMA_CONVERSE_ROUTE, preflightResponse),
   http.post(SHORT_SCHEMA_CONVERSE_ROUTE, handleSchemaConversePost),
   http.post(FULL_SCHEMA_CONVERSE_ROUTE, handleSchemaConversePost),
   http.post(PREVIEW_SCHEMA_CONVERSE_ROUTE, handleSchemaConversePost),
-  http.post(PUBLIC_SCHEMA_CONVERSE_ROUTE, (info: {request: Request}) =>
-    handleSchemaConversePost(info, 'public')
-  ),
   http.all(SHORT_SCHEMA_CONVERSE_ROUTE, methodNotAllowedResponse),
   http.all(FULL_SCHEMA_CONVERSE_ROUTE, methodNotAllowedResponse),
   http.all(PREVIEW_SCHEMA_CONVERSE_ROUTE, methodNotAllowedResponse),
-  http.all(PUBLIC_SCHEMA_CONVERSE_ROUTE, methodNotAllowedResponse),
   http.all(/.*/, notFoundResponse),
 ] as unknown as Parameters<typeof createHttpMiddlewareServer>;
 

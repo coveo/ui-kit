@@ -17,7 +17,6 @@ import {
   FALLBACK_PROGRESS,
   GATEWAY_ERROR_PROGRESS,
   PRODUCT_RESEARCH_PROGRESS,
-  searchProgress,
   withProgressBlock,
   type ProgressPlan,
 } from './templates/schema-progress-block.js';
@@ -77,25 +76,19 @@ function isInitialize(action: SchemaAction): boolean {
   return action.name === 'initialize' && !action.surfaceId && !action.sourceComponentId;
 }
 
-/**
- * The converse route a prompt came in on. The public route (the path without `preview/`) sends the
- * agent's progress as a `ProgressBlock` surface instead of tool calls (Thermidor ADR-028); the
- * others send the templates as they are.
- */
-type ConverseRoute = 'preview' | 'public';
-
 interface SchemaPromptMapping {
   prompt: string;
   // A factory so the stateful "water sports" search surface can reset and rebuild its events
   // on every prompt response; static templates simply return their constant.
   buildEvents: (mintSurfaceId?: (surfaceId: string) => string) => ConverseEvent[];
-  // The agent's progress on the public route.
-  progress: ProgressPlan;
+  // The agent's progress, sent as a ProgressBlock (Thermidor ADR-028). A search is answered by the
+  // gateway, without the agent, so it has none.
+  progress?: ProgressPlan;
 }
 
 interface SchemaTurn {
   events: ConverseEvent[];
-  progress: ProgressPlan;
+  progress?: ProgressPlan;
 }
 
 const SCHEMA_PROMPT_TEMPLATE_MAP: ReadonlyArray<SchemaPromptMapping> = [
@@ -107,7 +100,6 @@ const SCHEMA_PROMPT_TEMPLATE_MAP: ReadonlyArray<SchemaPromptMapping> = [
   {
     prompt: 'water sports',
     buildEvents: (mintSurfaceId) => buildWaterSportsInitialEvents(null, mintSurfaceId),
-    progress: searchProgress('water sports'),
   },
   {
     prompt: 'water sprots',
@@ -116,7 +108,6 @@ const SCHEMA_PROMPT_TEMPLATE_MAP: ReadonlyArray<SchemaPromptMapping> = [
         {originalQuery: 'water sprots', cause: 'correction', canOverride: false},
         mintSurfaceId
       ),
-    progress: searchProgress('water sports'),
   },
   {
     prompt: 'swim gear',
@@ -125,7 +116,6 @@ const SCHEMA_PROMPT_TEMPLATE_MAP: ReadonlyArray<SchemaPromptMapping> = [
         {originalQuery: 'swim gear', cause: 'trigger', canOverride: true},
         mintSurfaceId
       ),
-    progress: searchProgress('swim gear'),
   },
   {
     prompt: 'i like cold-water surfing. compare wetsuits for it',
@@ -350,10 +340,7 @@ function matchSchemaTurn(
   }
   // Any other prompt that finds products searches for it.
   return searchProductsFor(normalized).length > 0
-    ? {
-        events: buildWaterSportsInitialEvents(null, mintSurfaceId, message.trim()),
-        progress: searchProgress(message.trim()),
-      }
+    ? {events: buildWaterSportsInitialEvents(null, mintSurfaceId, message.trim())}
     : {events: schemaFallbackEvents, progress: FALLBACK_PROGRESS};
 }
 
@@ -364,11 +351,7 @@ function matchSchemaPrompt(
   return matchSchemaTurn(message, mintSurfaceId).events;
 }
 
-const schemaBaseResponse = (
-  body: unknown,
-  session: SessionKeys,
-  {route = 'preview'}: {route?: ConverseRoute} = {}
-) => {
+const schemaBaseResponse = (body: unknown, session: SessionKeys) => {
   promptSequence += 1;
   const suffix = promptSequence;
   const mintSurfaceId = (surfaceId: string) => `${surfaceId}-${suffix}`;
@@ -381,7 +364,7 @@ const schemaBaseResponse = (
   ) {
     turn = matchSchemaTurn((body as Record<string, unknown>).message as string, mintSurfaceId);
   }
-  let events = route === 'public' ? withProgressBlock(turn.events, turn.progress) : turn.events;
+  let events = turn.progress ? withProgressBlock(turn.events, turn.progress) : turn.events;
   events = withSurfaceIds(events, mintSurfaceId);
   events = withTurnOpeningAnnouncements(events);
   recordRecentQuery(
@@ -480,4 +463,4 @@ export {
   isConcurrentAction,
   isInitialize,
 };
-export type {ConverseRoute, SchemaAction, SessionKeys};
+export type {SchemaAction, SessionKeys};

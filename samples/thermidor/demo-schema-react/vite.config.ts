@@ -127,13 +127,6 @@ export default defineConfig(({mode}) => {
                 secure: true,
                 ...(agentRuntimeHeaders ? {headers: agentRuntimeHeaders} : {}),
               },
-              // The public route (`?converseRoute=public`), the preview path without `preview/`.
-              [`/api/organizations/${orgId}/agents/commerce/agui`]: {
-                target: targets.agentGateway,
-                changeOrigin: true,
-                secure: true,
-                ...(agentRuntimeHeaders ? {headers: agentRuntimeHeaders} : {}),
-              },
               '/rest': {
                 target: targets.platform,
                 changeOrigin: true,

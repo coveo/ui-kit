@@ -1,9 +1,9 @@
 import {describe, expect, it, vi, afterEach} from 'vitest';
 import {PUBLIC_SAMPLE_CONFIGURATION} from './public-sample-configuration.js';
 
-const load = async (env: Record<string, string | undefined>, search = '') => {
+const load = async (env: Record<string, string | undefined>) => {
   vi.resetModules();
-  vi.stubGlobal('window', {location: {origin: 'http://localhost:5173', search}});
+  vi.stubGlobal('window', {location: {origin: 'http://localhost:5173'}});
   vi.stubEnv('DEV', false as never);
   for (const [k, v] of Object.entries(env)) vi.stubEnv(k, v as string);
   const {getSampleConfiguration} = await import('./env.js');
@@ -107,33 +107,5 @@ describe('an organization of your own', () => {
         [key]: '',
       })
     ).rejects.toThrow(key);
-  });
-});
-
-describe('the converse route', () => {
-  const MOCK_ENDPOINT = 'http://localhost:3456/schema';
-
-  it('posts to the preview route by default', async () => {
-    const c = await load({VITE_COVEO_ENDPOINT: MOCK_ENDPOINT});
-    expect(c.endpoint).toBe(
-      `${MOCK_ENDPOINT}/api/preview/organizations/searchuisamples/agents/commerce/agui/converse`
-    );
-  });
-
-  it('posts to the public route when VITE_COVEO_CONVERSE_ROUTE is public', async () => {
-    const c = await load({VITE_COVEO_ENDPOINT: MOCK_ENDPOINT, VITE_COVEO_CONVERSE_ROUTE: 'public'});
-    expect(c.endpoint).toBe(
-      `${MOCK_ENDPOINT}/api/organizations/searchuisamples/agents/commerce/agui/converse`
-    );
-  });
-
-  it('lets the converseRoute URL parameter override the environment', async () => {
-    const toPublic = await load({VITE_COVEO_ENDPOINT: MOCK_ENDPOINT}, '?converseRoute=public');
-    const toPreview = await load(
-      {VITE_COVEO_ENDPOINT: MOCK_ENDPOINT, VITE_COVEO_CONVERSE_ROUTE: 'public'},
-      '?converseRoute=preview'
-    );
-    expect(toPublic.endpoint).toContain('/api/organizations/searchuisamples/');
-    expect(toPreview.endpoint).toContain('/api/preview/organizations/searchuisamples/');
   });
 });

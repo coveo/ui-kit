@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`the preview schema route > sends what it sent before the public route for "boating safety" 1`] = `
+exports[`the preview schema route > sends the recorded stream for "boating safety" 1`] = `
 [
   {
     "data": {},
@@ -13,6 +13,172 @@ exports[`the preview schema route > sends what it sent before the public route f
       "type": "RUN_STARTED",
     },
     "event": "RUN_STARTED",
+  },
+  {
+    "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "createSurface": {
+              "catalogId": "https://schema.thermidor.coveo.com/a2-ui/catalog.json",
+              "components": [
+                {
+                  "component": "ProgressBlock",
+                  "id": "root",
+                  "status": {
+                    "path": "/state/root/status",
+                  },
+                  "steps": {
+                    "path": "/state/root/steps",
+                  },
+                },
+              ],
+              "dataModel": {
+                "state": {
+                  "root": {
+                    "status": "running",
+                    "steps": [
+                      {
+                        "id": "thinking",
+                        "label": "Thinking",
+                        "status": "active",
+                      },
+                    ],
+                  },
+                },
+              },
+              "surfaceId": "progress-block-N",
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
+  },
+  {
+    "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "updateDataModel": {
+              "path": "/state/root",
+              "surfaceId": "progress-block-N",
+              "value": {
+                "status": "running",
+                "steps": [
+                  {
+                    "id": "thinking",
+                    "label": "Thinking",
+                    "status": "done",
+                  },
+                  {
+                    "id": "exploring_catalog",
+                    "label": "Exploring boating safety gear",
+                    "status": "active",
+                  },
+                ],
+              },
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block-state",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
+  },
+  {
+    "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "updateDataModel": {
+              "path": "/state/root",
+              "surfaceId": "progress-block-N",
+              "value": {
+                "status": "running",
+                "steps": [
+                  {
+                    "id": "thinking",
+                    "label": "Thinking",
+                    "status": "done",
+                  },
+                  {
+                    "id": "exploring_catalog",
+                    "label": "Exploring boating safety gear",
+                    "status": "done",
+                  },
+                  {
+                    "id": "searching_products",
+                    "label": "Searching the catalog",
+                    "status": "active",
+                  },
+                ],
+              },
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block-state",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
+  },
+  {
+    "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "updateDataModel": {
+              "path": "/state/root",
+              "surfaceId": "progress-block-N",
+              "value": {
+                "status": "running",
+                "steps": [
+                  {
+                    "id": "thinking",
+                    "label": "Thinking",
+                    "status": "done",
+                  },
+                  {
+                    "id": "exploring_catalog",
+                    "label": "Exploring boating safety gear",
+                    "status": "done",
+                  },
+                  {
+                    "id": "searching_products",
+                    "label": "Searching the catalog",
+                    "status": "done",
+                  },
+                  {
+                    "id": "preparing_response",
+                    "label": "Putting it together",
+                    "status": "active",
+                  },
+                ],
+              },
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block-state",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
   },
   {
     "data": {
@@ -803,6 +969,51 @@ exports[`the preview schema route > sends what it sent before the public route f
   },
   {
     "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "updateDataModel": {
+              "path": "/state/root",
+              "surfaceId": "progress-block-N",
+              "value": {
+                "status": "complete",
+                "steps": [
+                  {
+                    "id": "thinking",
+                    "label": "Thinking",
+                    "status": "done",
+                  },
+                  {
+                    "id": "exploring_catalog",
+                    "label": "Exploring boating safety gear",
+                    "status": "done",
+                  },
+                  {
+                    "id": "searching_products",
+                    "label": "Searching the catalog",
+                    "status": "done",
+                  },
+                  {
+                    "id": "preparing_response",
+                    "label": "Putting it together",
+                    "status": "done",
+                  },
+                ],
+              },
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block-state",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
+  },
+  {
+    "data": {
       "runId": "schema-discovery-d8d8e15c",
       "threadId": "1df9f18c-785d-4ace-9642-678a7fd9fc5a",
       "type": "RUN_FINISHED",
@@ -816,7 +1027,7 @@ exports[`the preview schema route > sends what it sent before the public route f
 ]
 `;
 
-exports[`the preview schema route > sends what it sent before the public route for "build a beginner surfing kit with budget, mid-range, and premium options" 1`] = `
+exports[`the preview schema route > sends the recorded stream for "build a beginner surfing kit with budget, mid-range, and premium options" 1`] = `
 [
   {
     "data": {},
@@ -829,6 +1040,172 @@ exports[`the preview schema route > sends what it sent before the public route f
       "type": "RUN_STARTED",
     },
     "event": "RUN_STARTED",
+  },
+  {
+    "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "createSurface": {
+              "catalogId": "https://schema.thermidor.coveo.com/a2-ui/catalog.json",
+              "components": [
+                {
+                  "component": "ProgressBlock",
+                  "id": "root",
+                  "status": {
+                    "path": "/state/root/status",
+                  },
+                  "steps": {
+                    "path": "/state/root/steps",
+                  },
+                },
+              ],
+              "dataModel": {
+                "state": {
+                  "root": {
+                    "status": "running",
+                    "steps": [
+                      {
+                        "id": "thinking",
+                        "label": "Thinking",
+                        "status": "active",
+                      },
+                    ],
+                  },
+                },
+              },
+              "surfaceId": "progress-block-N",
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
+  },
+  {
+    "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "updateDataModel": {
+              "path": "/state/root",
+              "surfaceId": "progress-block-N",
+              "value": {
+                "status": "running",
+                "steps": [
+                  {
+                    "id": "thinking",
+                    "label": "Thinking",
+                    "status": "done",
+                  },
+                  {
+                    "id": "building_bundle",
+                    "label": "Building your kit",
+                    "status": "active",
+                  },
+                ],
+              },
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block-state",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
+  },
+  {
+    "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "updateDataModel": {
+              "path": "/state/root",
+              "surfaceId": "progress-block-N",
+              "value": {
+                "status": "running",
+                "steps": [
+                  {
+                    "id": "thinking",
+                    "label": "Thinking",
+                    "status": "done",
+                  },
+                  {
+                    "id": "building_bundle",
+                    "label": "Building your kit",
+                    "status": "done",
+                  },
+                  {
+                    "id": "searching_products",
+                    "label": "Searching the catalog",
+                    "status": "active",
+                  },
+                ],
+              },
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block-state",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
+  },
+  {
+    "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "updateDataModel": {
+              "path": "/state/root",
+              "surfaceId": "progress-block-N",
+              "value": {
+                "status": "running",
+                "steps": [
+                  {
+                    "id": "thinking",
+                    "label": "Thinking",
+                    "status": "done",
+                  },
+                  {
+                    "id": "building_bundle",
+                    "label": "Building your kit",
+                    "status": "done",
+                  },
+                  {
+                    "id": "searching_products",
+                    "label": "Searching the catalog",
+                    "status": "done",
+                  },
+                  {
+                    "id": "preparing_response",
+                    "label": "Putting it together",
+                    "status": "active",
+                  },
+                ],
+              },
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block-state",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
   },
   {
     "data": {
@@ -1686,6 +2063,51 @@ Pick",
   },
   {
     "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "updateDataModel": {
+              "path": "/state/root",
+              "surfaceId": "progress-block-N",
+              "value": {
+                "status": "complete",
+                "steps": [
+                  {
+                    "id": "thinking",
+                    "label": "Thinking",
+                    "status": "done",
+                  },
+                  {
+                    "id": "building_bundle",
+                    "label": "Building your kit",
+                    "status": "done",
+                  },
+                  {
+                    "id": "searching_products",
+                    "label": "Searching the catalog",
+                    "status": "done",
+                  },
+                  {
+                    "id": "preparing_response",
+                    "label": "Putting it together",
+                    "status": "done",
+                  },
+                ],
+              },
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block-state",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
+  },
+  {
+    "data": {
       "runId": "schema-bundle-4957b383",
       "threadId": "1df9f18c-785d-4ace-9642-678a7fd9fc5a",
       "type": "RUN_FINISHED",
@@ -1699,7 +2121,7 @@ Pick",
 ]
 `;
 
-exports[`the preview schema route > sends what it sent before the public route for "i like cold-water surfing. compare wetsuits for it" 1`] = `
+exports[`the preview schema route > sends the recorded stream for "i like cold-water surfing. compare wetsuits for it" 1`] = `
 [
   {
     "data": {},
@@ -1712,6 +2134,282 @@ exports[`the preview schema route > sends what it sent before the public route f
       "type": "RUN_STARTED",
     },
     "event": "RUN_STARTED",
+  },
+  {
+    "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "createSurface": {
+              "catalogId": "https://schema.thermidor.coveo.com/a2-ui/catalog.json",
+              "components": [
+                {
+                  "component": "ProgressBlock",
+                  "id": "root",
+                  "status": {
+                    "path": "/state/root/status",
+                  },
+                  "steps": {
+                    "path": "/state/root/steps",
+                  },
+                },
+              ],
+              "dataModel": {
+                "state": {
+                  "root": {
+                    "status": "running",
+                    "steps": [
+                      {
+                        "id": "thinking",
+                        "label": "Thinking",
+                        "status": "active",
+                      },
+                    ],
+                  },
+                },
+              },
+              "surfaceId": "progress-block-N",
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
+  },
+  {
+    "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "updateDataModel": {
+              "path": "/state/root",
+              "surfaceId": "progress-block-N",
+              "value": {
+                "status": "running",
+                "steps": [
+                  {
+                    "id": "thinking",
+                    "label": "Thinking",
+                    "status": "done",
+                  },
+                  {
+                    "id": "comparing_products",
+                    "label": "Comparing products",
+                    "status": "active",
+                  },
+                ],
+              },
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block-state",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
+  },
+  {
+    "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "updateDataModel": {
+              "path": "/state/root",
+              "surfaceId": "progress-block-N",
+              "value": {
+                "status": "running",
+                "steps": [
+                  {
+                    "id": "thinking",
+                    "label": "Thinking",
+                    "status": "done",
+                  },
+                  {
+                    "id": "comparing_products",
+                    "label": "Comparing products",
+                    "status": "done",
+                  },
+                  {
+                    "id": "searching_products",
+                    "label": "Searching the catalog",
+                    "status": "active",
+                  },
+                ],
+              },
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block-state",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
+  },
+  {
+    "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "updateDataModel": {
+              "path": "/state/root",
+              "surfaceId": "progress-block-N",
+              "value": {
+                "status": "running",
+                "steps": [
+                  {
+                    "id": "thinking",
+                    "label": "Thinking",
+                    "status": "done",
+                  },
+                  {
+                    "id": "comparing_products",
+                    "label": "Comparing products",
+                    "status": "done",
+                  },
+                  {
+                    "id": "searching_products",
+                    "label": "Searching the catalog",
+                    "status": "done",
+                  },
+                  {
+                    "id": "checking_details",
+                    "label": "Checking product details",
+                    "status": "active",
+                  },
+                  {
+                    "id": "reading_reviews",
+                    "label": "Reading reviews",
+                    "status": "active",
+                  },
+                ],
+              },
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block-state",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
+  },
+  {
+    "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "updateDataModel": {
+              "path": "/state/root",
+              "surfaceId": "progress-block-N",
+              "value": {
+                "status": "running",
+                "steps": [
+                  {
+                    "id": "thinking",
+                    "label": "Thinking",
+                    "status": "done",
+                  },
+                  {
+                    "id": "comparing_products",
+                    "label": "Comparing products",
+                    "status": "done",
+                  },
+                  {
+                    "id": "searching_products",
+                    "label": "Searching the catalog",
+                    "status": "done",
+                  },
+                  {
+                    "id": "checking_details",
+                    "label": "Checking product details",
+                    "status": "done",
+                  },
+                  {
+                    "id": "reading_reviews",
+                    "label": "Reading reviews",
+                    "status": "active",
+                  },
+                ],
+              },
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block-state",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
+  },
+  {
+    "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "updateDataModel": {
+              "path": "/state/root",
+              "surfaceId": "progress-block-N",
+              "value": {
+                "status": "running",
+                "steps": [
+                  {
+                    "id": "thinking",
+                    "label": "Thinking",
+                    "status": "done",
+                  },
+                  {
+                    "id": "comparing_products",
+                    "label": "Comparing products",
+                    "status": "done",
+                  },
+                  {
+                    "id": "searching_products",
+                    "label": "Searching the catalog",
+                    "status": "done",
+                  },
+                  {
+                    "id": "checking_details",
+                    "label": "Checking product details",
+                    "status": "done",
+                  },
+                  {
+                    "id": "reading_reviews",
+                    "label": "Reading reviews",
+                    "status": "done",
+                  },
+                  {
+                    "id": "preparing_response",
+                    "label": "Putting it together",
+                    "status": "active",
+                  },
+                ],
+              },
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block-state",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
   },
   {
     "data": {
@@ -2198,6 +2896,61 @@ exports[`the preview schema route > sends what it sent before the public route f
   },
   {
     "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "updateDataModel": {
+              "path": "/state/root",
+              "surfaceId": "progress-block-N",
+              "value": {
+                "status": "complete",
+                "steps": [
+                  {
+                    "id": "thinking",
+                    "label": "Thinking",
+                    "status": "done",
+                  },
+                  {
+                    "id": "comparing_products",
+                    "label": "Comparing products",
+                    "status": "done",
+                  },
+                  {
+                    "id": "searching_products",
+                    "label": "Searching the catalog",
+                    "status": "done",
+                  },
+                  {
+                    "id": "checking_details",
+                    "label": "Checking product details",
+                    "status": "done",
+                  },
+                  {
+                    "id": "reading_reviews",
+                    "label": "Reading reviews",
+                    "status": "done",
+                  },
+                  {
+                    "id": "preparing_response",
+                    "label": "Putting it together",
+                    "status": "done",
+                  },
+                ],
+              },
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block-state",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
+  },
+  {
+    "data": {
       "runId": "schema-comparison-462287cc",
       "threadId": "1df9f18c-785d-4ace-9642-678a7fd9fc5a",
       "type": "RUN_FINISHED",
@@ -2211,7 +2964,7 @@ exports[`the preview schema route > sends what it sent before the public route f
 ]
 `;
 
-exports[`the preview schema route > sends what it sent before the public route for "kayak" 1`] = `
+exports[`the preview schema route > sends the recorded stream for "kayak" 1`] = `
 [
   {
     "data": {},
@@ -2840,7 +3593,7 @@ exports[`the preview schema route > sends what it sent before the public route f
 ]
 `;
 
-exports[`the preview schema route > sends what it sent before the public route for "something the catalog has nothing for" 1`] = `
+exports[`the preview schema route > sends the recorded stream for "something the catalog has nothing for" 1`] = `
 [
   {
     "data": {},
@@ -2853,6 +3606,127 @@ exports[`the preview schema route > sends what it sent before the public route f
       "type": "RUN_STARTED",
     },
     "event": "RUN_STARTED",
+  },
+  {
+    "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "createSurface": {
+              "catalogId": "https://schema.thermidor.coveo.com/a2-ui/catalog.json",
+              "components": [
+                {
+                  "component": "ProgressBlock",
+                  "id": "root",
+                  "status": {
+                    "path": "/state/root/status",
+                  },
+                  "steps": {
+                    "path": "/state/root/steps",
+                  },
+                },
+              ],
+              "dataModel": {
+                "state": {
+                  "root": {
+                    "status": "running",
+                    "steps": [
+                      {
+                        "id": "thinking",
+                        "label": "Thinking",
+                        "status": "active",
+                      },
+                    ],
+                  },
+                },
+              },
+              "surfaceId": "progress-block-N",
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
+  },
+  {
+    "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "updateDataModel": {
+              "path": "/state/root",
+              "surfaceId": "progress-block-N",
+              "value": {
+                "status": "running",
+                "steps": [
+                  {
+                    "id": "thinking",
+                    "label": "Thinking",
+                    "status": "done",
+                  },
+                  {
+                    "id": "searching_products",
+                    "label": "Searching the catalog",
+                    "status": "active",
+                  },
+                ],
+              },
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block-state",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
+  },
+  {
+    "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "updateDataModel": {
+              "path": "/state/root",
+              "surfaceId": "progress-block-N",
+              "value": {
+                "status": "running",
+                "steps": [
+                  {
+                    "id": "thinking",
+                    "label": "Thinking",
+                    "status": "done",
+                  },
+                  {
+                    "id": "searching_products",
+                    "label": "Searching the catalog",
+                    "status": "done",
+                  },
+                  {
+                    "id": "preparing_response",
+                    "label": "Putting it together",
+                    "status": "active",
+                  },
+                ],
+              },
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block-state",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
   },
   {
     "data": {
@@ -3016,6 +3890,46 @@ exports[`the preview schema route > sends what it sent before the public route f
   },
   {
     "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "updateDataModel": {
+              "path": "/state/root",
+              "surfaceId": "progress-block-N",
+              "value": {
+                "status": "complete",
+                "steps": [
+                  {
+                    "id": "thinking",
+                    "label": "Thinking",
+                    "status": "done",
+                  },
+                  {
+                    "id": "searching_products",
+                    "label": "Searching the catalog",
+                    "status": "done",
+                  },
+                  {
+                    "id": "preparing_response",
+                    "label": "Putting it together",
+                    "status": "done",
+                  },
+                ],
+              },
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block-state",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
+  },
+  {
+    "data": {
       "runId": "schema-fallback-4b5562da",
       "threadId": "1df9f18c-785d-4ace-9642-678a7fd9fc5a",
       "type": "RUN_FINISHED",
@@ -3029,7 +3943,7 @@ exports[`the preview schema route > sends what it sent before the public route f
 ]
 `;
 
-exports[`the preview schema route > sends what it sent before the public route for "swim gear" 1`] = `
+exports[`the preview schema route > sends the recorded stream for "swim gear" 1`] = `
 [
   {
     "data": {},
@@ -4170,7 +5084,7 @@ exports[`the preview schema route > sends what it sent before the public route f
 ]
 `;
 
-exports[`the preview schema route > sends what it sent before the public route for "tell me more about the thermoflex winter wetsuit" 1`] = `
+exports[`the preview schema route > sends the recorded stream for "tell me more about the thermoflex winter wetsuit" 1`] = `
 [
   {
     "data": {},
@@ -4183,6 +5097,172 @@ exports[`the preview schema route > sends what it sent before the public route f
       "type": "RUN_STARTED",
     },
     "event": "RUN_STARTED",
+  },
+  {
+    "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "createSurface": {
+              "catalogId": "https://schema.thermidor.coveo.com/a2-ui/catalog.json",
+              "components": [
+                {
+                  "component": "ProgressBlock",
+                  "id": "root",
+                  "status": {
+                    "path": "/state/root/status",
+                  },
+                  "steps": {
+                    "path": "/state/root/steps",
+                  },
+                },
+              ],
+              "dataModel": {
+                "state": {
+                  "root": {
+                    "status": "running",
+                    "steps": [
+                      {
+                        "id": "thinking",
+                        "label": "Thinking",
+                        "status": "active",
+                      },
+                    ],
+                  },
+                },
+              },
+              "surfaceId": "progress-block-N",
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
+  },
+  {
+    "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "updateDataModel": {
+              "path": "/state/root",
+              "surfaceId": "progress-block-N",
+              "value": {
+                "status": "running",
+                "steps": [
+                  {
+                    "id": "thinking",
+                    "label": "Thinking",
+                    "status": "done",
+                  },
+                  {
+                    "id": "researching_product",
+                    "label": "Researching the ThermoFlex Winter Wetsuit",
+                    "status": "active",
+                  },
+                ],
+              },
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block-state",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
+  },
+  {
+    "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "updateDataModel": {
+              "path": "/state/root",
+              "surfaceId": "progress-block-N",
+              "value": {
+                "status": "running",
+                "steps": [
+                  {
+                    "id": "thinking",
+                    "label": "Thinking",
+                    "status": "done",
+                  },
+                  {
+                    "id": "researching_product",
+                    "label": "Researching the ThermoFlex Winter Wetsuit",
+                    "status": "done",
+                  },
+                  {
+                    "id": "reading_articles",
+                    "label": "Reading articles",
+                    "status": "active",
+                  },
+                ],
+              },
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block-state",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
+  },
+  {
+    "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "updateDataModel": {
+              "path": "/state/root",
+              "surfaceId": "progress-block-N",
+              "value": {
+                "status": "running",
+                "steps": [
+                  {
+                    "id": "thinking",
+                    "label": "Thinking",
+                    "status": "done",
+                  },
+                  {
+                    "id": "researching_product",
+                    "label": "Researching the ThermoFlex Winter Wetsuit",
+                    "status": "done",
+                  },
+                  {
+                    "id": "reading_articles",
+                    "label": "Reading articles",
+                    "status": "done",
+                  },
+                  {
+                    "id": "preparing_response",
+                    "label": "Putting it together",
+                    "status": "active",
+                  },
+                ],
+              },
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block-state",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
   },
   {
     "data": {
@@ -4618,6 +5698,51 @@ exports[`the preview schema route > sends what it sent before the public route f
   },
   {
     "data": {
+      "activityType": "a2ui-surface",
+      "content": {
+        "messages": [
+          {
+            "updateDataModel": {
+              "path": "/state/root",
+              "surfaceId": "progress-block-N",
+              "value": {
+                "status": "complete",
+                "steps": [
+                  {
+                    "id": "thinking",
+                    "label": "Thinking",
+                    "status": "done",
+                  },
+                  {
+                    "id": "researching_product",
+                    "label": "Researching the ThermoFlex Winter Wetsuit",
+                    "status": "done",
+                  },
+                  {
+                    "id": "reading_articles",
+                    "label": "Reading articles",
+                    "status": "done",
+                  },
+                  {
+                    "id": "preparing_response",
+                    "label": "Putting it together",
+                    "status": "done",
+                  },
+                ],
+              },
+            },
+            "version": "v1.0",
+          },
+        ],
+      },
+      "messageId": "activity-progress-block-state",
+      "replace": true,
+      "type": "ACTIVITY_SNAPSHOT",
+    },
+    "event": "ACTIVITY_SNAPSHOT",
+  },
+  {
+    "data": {
       "runId": "schema-research-7f3a91c2",
       "threadId": "1df9f18c-785d-4ace-9642-678a7fd9fc5a",
       "type": "RUN_FINISHED",
@@ -4631,7 +5756,7 @@ exports[`the preview schema route > sends what it sent before the public route f
 ]
 `;
 
-exports[`the preview schema route > sends what it sent before the public route for "water sports" 1`] = `
+exports[`the preview schema route > sends the recorded stream for "water sports" 1`] = `
 [
   {
     "data": {},
@@ -5767,7 +6892,7 @@ exports[`the preview schema route > sends what it sent before the public route f
 ]
 `;
 
-exports[`the preview schema route > sends what it sent before the public route for "water sprots" 1`] = `
+exports[`the preview schema route > sends the recorded stream for "water sprots" 1`] = `
 [
   {
     "data": {},
