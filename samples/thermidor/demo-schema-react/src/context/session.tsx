@@ -188,7 +188,7 @@ function openCurrent(
 }
 
 /**
- * Saves the conversation each time a request that updates it ends. When the session drops the
+ * Saves the conversation once the session is idle after a request that updates it. When the session drops the
  * transcript it resumed, because the endpoint answered with another session, it becomes a new
  * conversation, so the saved one keeps its transcript. Once the session is swapped out, it is still
  * saved when the request it was sending ends.
@@ -223,7 +223,8 @@ function persist(
       listed = isListed(storage, id);
       onSaved();
     }
-    saving = savesAfter(request);
+    // A request another listener started as this one ended keeps the save pending until idle.
+    saving = savesAfter(request) || (saving && request !== undefined);
     if (swappedOut && !request) {
       unsubscribe();
     }

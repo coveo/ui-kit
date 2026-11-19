@@ -10,6 +10,7 @@ import {
   answerShell,
   createTestSessionFactory,
   run,
+  SHELL_SURFACE_ID,
   shellRun,
   sseResponse,
   type ConverseHandler,
@@ -376,6 +377,63 @@ describe('SessionProvider conversations', () => {
     ]);
     expect(tab.list().map(({id}) => id)).toEqual([swapped]);
     expect(tab.load(deleted)).toBeUndefined();
+  });
+});
+
+describe('SessionProvider saving', () => {
+  it('saves a turn whose end starts a queued suggestion, once the suggestion ends', async () => {
+    const tab = browser().tab();
+    let release = () => {};
+    const {create} = createTestSessionFactory((request, signal) =>
+      request.action?.name === 'fetchSuggestions'
+        ? new Promise<Response>((resolve) => {
+            release = () => resolve(answerShell(request, signal));
+          })
+        : answerShell(request, signal)
+    );
+    const createQueuing = (sessionToRestore?: Parameters<typeof create>[0]) => {
+      const session = create(sessionToRestore);
+      let prompting = false;
+      session.subscribe(() => {
+        const {request} = session.getSnapshot();
+        const ended = prompting && !request;
+        prompting = request?.kind === 'prompt';
+        if (ended) {
+          void session.dispatchAction({
+            userAction: {
+              name: 'fetchSuggestions',
+              surfaceId: SHELL_SURFACE_ID,
+              sourceComponentId: 'query-suggestions',
+              timestamp: new Date().toISOString(),
+              context: {query: 'su'},
+            },
+          });
+        }
+      });
+      return session;
+    };
+    let session: DemoSession | undefined;
+    function Probe() {
+      session = useSession();
+      return null;
+    }
+    render(
+      <SessionProvider createSession={createQueuing} storage={tab}>
+        <Probe />
+      </SessionProvider>
+    );
+    await waitFor(() => expect(session!.getSnapshot().request).toBeUndefined());
+
+    await ask(session!, 'surfboards');
+    await waitFor(() =>
+      expect(session!.getSnapshot().request).toMatchObject({name: 'fetchSuggestions'})
+    );
+    await act(async () => release());
+    await waitFor(() => expect(session!.getSnapshot().request).toBeUndefined());
+
+    expect(tab.load(tab.currentId()!)?.turns.map(({input}) => input.prompt)).toEqual([
+      'surfboards',
+    ]);
   });
 });
 
