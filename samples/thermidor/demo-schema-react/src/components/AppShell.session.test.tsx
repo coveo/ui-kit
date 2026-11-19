@@ -114,6 +114,106 @@ describe('AppShell with the session shell', () => {
     await screen.findByLabelText('A2-UI surface answer-1');
   });
 
+  it('keeps an expired conversation readable, its turns mounted, and sends it nothing', async () => {
+    const local = memoryStorage();
+    const tab = memoryStorage();
+    const storage = createConversationStorage({local: () => local, session: () => tab});
+    const searchRun = [
+      {type: 'RUN_STARTED', threadId: 'session-1', runId: 'search', ...SESSION_KEYS},
+      {type: 'TOOL_CALL_START', toolCallId: 'call-1', toolCallName: 'search_products'},
+      {type: 'TOOL_CALL_ARGS', toolCallId: 'call-1', delta: '{"query":"kayaks"}'},
+      {type: 'TOOL_CALL_END', toolCallId: 'call-1'},
+      {
+        type: 'ACTIVITY_SNAPSHOT',
+        messageId: 'activity-search-1',
+        activityType: 'a2ui-surface',
+        content: {
+          messages: [
+            {
+              version: 'v1.0',
+              createSurface: {
+                surfaceId: 'search-1',
+                catalogId: 'https://schema.thermidor.coveo.com/a2-ui/catalog.json',
+                components: [
+                  {id: 'root', component: 'CommerceSearch', mainChild: 'pagination'},
+                  {
+                    id: 'pagination',
+                    component: 'Pagination',
+                    page: {path: '/state/pagination/page'},
+                    pageSize: {path: '/state/pagination/pageSize'},
+                    totalEntries: {path: '/state/pagination/totalEntries'},
+                    totalPages: {path: '/state/pagination/totalPages'},
+                  },
+                ],
+              },
+            },
+            {
+              version: 'v1.0',
+              updateDataModel: {
+                surfaceId: 'search-1',
+                path: '/state/pagination',
+                value: {page: 0, pageSize: 12, totalEntries: 43, totalPages: 4},
+              },
+            },
+          ],
+        },
+      },
+      {type: 'RUN_FINISHED', threadId: 'session-1', runId: 'search', ...SESSION_KEYS},
+    ];
+    const answerSearch: ConverseHandler = (request, signal) =>
+      typeof request.message === 'string' ? sseResponse(searchRun) : answerShell(request, signal);
+    const renderTab = (handler: ConverseHandler) => {
+      const test = createTestSessionFactory(handler);
+      render(
+        <SessionProvider createSession={test.create} storage={storage}>
+          <AppShell />
+        </SessionProvider>
+      );
+      return test;
+    };
+    renderTab(answerSearch);
+    const textarea = await findSearchBox();
+    fireEvent.change(textarea, {target: {value: 'kayaks'}});
+    fireEvent.keyDown(textarea, {key: 'Enter', code: 'Enter'});
+    await screen.findByLabelText('A2-UI surface search-1');
+    await waitFor(() => expect(storage.list()[0]).toBeDefined());
+    await waitFor(() => expect(storage.load(storage.list()[0].id)?.turns).toHaveLength(1));
+    cleanup();
+
+    const replacedKeys = {conversationSessionId: 'session-2', conversationToken: 'token-2'};
+    let expire = () => {};
+    const {requests} = renderTab((request, signal) =>
+      request.action?.name === 'initialize'
+        ? new Promise((resolve) => {
+            expire = () =>
+              resolve(
+                sseResponse(
+                  shellRun().map((event) =>
+                    'threadId' in event ? {...event, ...replacedKeys} : event
+                  )
+                )
+              );
+          })
+        : answerSearch(request, signal)
+    );
+    const surface = await screen.findByLabelText('A2-UI surface search-1');
+    expire();
+    await screen.findByText(/This conversation expired/);
+    const sent = requests.length;
+
+    expect(surface.isConnected).toBe(true);
+    const progress = screen.getByRole('group', {name: 'Agent progress'}) as HTMLDetailsElement;
+    fireEvent.click(within(progress).getByText('1 tool call'));
+    expect(progress.open).toBe(true);
+    const state = {
+      thermidorSearch: {surfaceId: 'search-1', snapshot: {query: '', page: 2, pageSize: 12}},
+    };
+    window.history.replaceState(state, '');
+    window.dispatchEvent(new PopStateEvent('popstate', {state}));
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(requests.slice(sent).map(({action}) => action?.name)).toEqual([]);
+  });
+
   it("keeps a restored conversation's earlier blocks read-only, its last one and its search box live", async () => {
     const local = memoryStorage();
     const tab = memoryStorage();

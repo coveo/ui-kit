@@ -10,9 +10,11 @@ import styles from './ConversationThread.module.css';
 interface ConversationThreadProps {
   turns: Turn[];
   turnRefs: React.RefObject<Map<string, HTMLDivElement>>;
+  /** Draws every turn as an earlier one, the latest included. */
+  readOnly?: boolean;
 }
 
-export function ConversationThread({turns, turnRefs}: ConversationThreadProps) {
+export function ConversationThread({turns, turnRefs, readOnly = false}: ConversationThreadProps) {
   return (
     <div className={styles.thread}>
       {turns.map((turn, index) => {
@@ -37,7 +39,7 @@ export function ConversationThread({turns, turnRefs}: ConversationThreadProps) {
             >
               {prompt && <UserPromptBubble prompt={prompt} />}
               <div className={styles.agentContent}>
-                {renderTurnContent(turn, index === turns.length - 1)}
+                {renderTurnContent(turn, !readOnly && index === turns.length - 1, readOnly)}
               </div>
             </div>
             {next !== undefined && !next.input.action && <TurnSeparator />}
@@ -64,7 +66,7 @@ function shopperPrompt({input}: Turn): string | undefined {
  * A turn shows the agent's tool calls and text when an agent answered, then every block the
  * server produced for it, search blocks included. Only the latest turn's blocks are interactive.
  */
-function renderTurnContent(turn: Turn, isLatest: boolean) {
+function renderTurnContent(turn: Turn, isLatest: boolean, expired: boolean) {
   if (turn.status === 'error') {
     return <ErrorTurnBlock error={turn.error} />;
   }
@@ -72,7 +74,12 @@ function renderTurnContent(turn: Turn, isLatest: boolean) {
   const isStreaming = turn.status === 'streaming';
   return (
     <AgentResponseBlock response={turn.response} isStreaming={isStreaming}>
-      <TurnSurfaces surfaces={turn.response.surfaces} latest={isLatest} isStreaming={isStreaming} />
+      <TurnSurfaces
+        surfaces={turn.response.surfaces}
+        latest={isLatest}
+        isStreaming={isStreaming}
+        expired={expired}
+      />
     </AgentResponseBlock>
   );
 }

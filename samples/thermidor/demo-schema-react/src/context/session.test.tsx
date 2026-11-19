@@ -301,7 +301,7 @@ describe('SessionProvider conversations', () => {
     expect(session().turns.map(({input}) => input.prompt)).toEqual(['surfboards']);
   });
 
-  it('saves a resumed conversation the server replaced as a new one', async () => {
+  it('shows a conversation the server no longer knows as expired, and sends it nothing', async () => {
     const tab = browser().tab();
     const first = renderConversations(tab);
     await ask(first.session(), 'surfboards');
@@ -313,14 +313,40 @@ describe('SessionProvider conversations', () => {
       sseResponse(
         events.map((event) => ('threadId' in event ? {...event, ...replacedKeys} : event))
       );
-    const {session, conversations} = renderConversations(tab, (request) =>
+    const expiring = renderConversations(tab, (request) =>
       replaced(request.action?.name === 'initialize' ? shellRun() : run([]))
     );
-    await waitFor(() => expect(conversations().currentId).not.toBe(original));
-    await ask(session(), 'wetsuits');
+    await waitFor(() => expect(expiring.conversations().expired).toBe(true));
+    expect(expiring.conversations().currentId).toBe(original);
+    expect(expiring.session().turns.map(({input}) => input.prompt)).toEqual(['surfboards']);
+    expect(tab.list()).toEqual([expect.objectContaining({id: original, expired: true})]);
+    expiring.view.unmount();
 
-    expect(conversations().list.map(({title}) => title)).toEqual(['wetsuits', 'surfboards']);
+    const reloaded = renderConversations(tab);
+    await Promise.resolve();
+    expect(reloaded.requests).toEqual([]);
+    expect(reloaded.conversations().expired).toBe(true);
     expect(tab.load(original)?.turns.map(({input}) => input.prompt)).toEqual(['surfboards']);
+  });
+
+  it('shows a conversation as expired even when storage cannot mark it', async () => {
+    const tab = browser().tab();
+    const first = renderConversations(tab);
+    await ask(first.session(), 'surfboards');
+    first.view.unmount();
+
+    const replacedKeys = {conversationSessionId: 'session-2', conversationToken: 'token-2'};
+    const {conversations, requests} = renderConversations({...tab, expire() {}}, (request) =>
+      sseResponse(
+        (request.action?.name === 'initialize' ? shellRun() : run([])).map((event) =>
+          'threadId' in event ? {...event, ...replacedKeys} : event
+        )
+      )
+    );
+    await waitFor(() => expect(conversations().expired).toBe(true));
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
+    expect(requests.filter(({action}) => action?.name === 'initialize')).toHaveLength(1);
   });
 
   it('keeps saving a resumed conversation under its id when a prompt answers with new keys', async () => {

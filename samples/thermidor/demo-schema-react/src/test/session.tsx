@@ -237,7 +237,10 @@ export function createTestSessionFactory(handler: ConverseHandler = answerShell)
       return handler(request, init.signal ?? undefined);
     })
   );
-  const create = (sessionToRestore?: SerializedSession): DemoSession =>
+  const create = (
+    sessionToRestore?: SerializedSession,
+    {initialize}: {initialize?: boolean} = {}
+  ): DemoSession =>
     createSession({
       contracts: ComponentContractsSchema,
       organizationId: 'test-org',
@@ -255,6 +258,7 @@ export function createTestSessionFactory(handler: ConverseHandler = answerShell)
         currency: 'USD',
       }),
       sessionToRestore,
+      initialize,
     });
   const actions = (name: string) =>
     requests.filter((request) => request.action?.name === name).map(({action}) => action!);

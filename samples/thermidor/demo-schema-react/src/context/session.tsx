@@ -31,14 +31,25 @@ import {
  */
 export type DemoSession = Session<typeof ComponentContractsSchema>;
 
-/** Creates a session, restoring `saved` when given. */
-export type SessionFactory = (saved?: SerializedSession) => DemoSession;
+/**
+ * Creates a session, restoring `saved` when given. With `initialize: false`, it sends no request
+ * until it is given a prompt or an action.
+ */
+export type SessionFactory = (
+  saved?: SerializedSession,
+  options?: {initialize?: boolean}
+) => DemoSession;
 
 export interface Conversations {
   /** The saved conversations, newest first. */
   list: readonly ConversationSummary[];
   /** The conversation the page shows. Saved once its first turn completes. */
   currentId: string;
+  /**
+   * Whether the current conversation expired: the endpoint no longer knows its session. It shows
+   * its saved transcript, and sends nothing.
+   */
+  expired: boolean;
   start(): void;
   open(id: string): void;
   remove(id: string): void;
@@ -48,6 +59,7 @@ export interface Conversations {
 interface Current {
   id: string;
   session: DemoSession;
+  expired?: boolean;
 }
 
 const SessionContext = createContext<DemoSession | null>(null);
@@ -78,8 +90,10 @@ export function SessionProvider({
     () => givenStorage ?? createConversationStorage({scope: storageScope()})
   );
   const [create] = useState(() => givenFactory ?? defaultFactory(cart));
+  // Expired conversations, even when storage could not mark them.
+  const [expiredIds] = useState(() => new Set<string>());
   const [current, setCurrent] = useState<Current>(() =>
-    initialSession ? startWith(storage, initialSession) : openCurrent(storage, create)
+    initialSession ? startWith(storage, initialSession) : openCurrent(storage, create, expiredIds)
   );
   const [list, setList] = useState(storage.list);
   // A conversation removed while its request runs is not saved again when the request ends.
@@ -94,10 +108,18 @@ export function SessionProvider({
         current.session,
         currentRef.current.id,
         removed,
-        (id) => setCurrent((previous) => ({...previous, id})),
+        () => {
+          const {id, session} = currentRef.current;
+          expiredIds.add(id);
+          storage.expire(id);
+          retire(session);
+          session.cancel();
+          setCurrent(openCurrent(storage, create, expiredIds));
+          setList(storage.list());
+        },
         () => setList(storage.list())
       ),
-    [storage, removed, current.session]
+    [storage, create, removed, expiredIds, current.session]
   );
 
   const conversations = useMemo<Conversations>(() => {
@@ -110,11 +132,12 @@ export function SessionProvider({
     return {
       list,
       currentId: current.id,
+      expired: current.expired === true,
       start: () => swap(() => startWith(storage, create())),
       open: (id) => {
         if (id !== current.id) {
           storage.setCurrentId(id);
-          swap(() => openCurrent(storage, create, id));
+          swap(() => openCurrent(storage, create, expiredIds, id));
         }
       },
       remove: (id) => {
@@ -131,7 +154,7 @@ export function SessionProvider({
         setList(storage.list());
       },
     };
-  }, [list, current, storage, create, removed]);
+  }, [list, current, storage, create, removed, expiredIds]);
 
   return (
     <ConversationsContext.Provider value={conversations}>
@@ -157,11 +180,11 @@ export function useConversations(): Conversations {
 }
 
 function defaultFactory(cart: CartStore | null): SessionFactory {
-  return (saved) => {
+  return (saved, options) => {
     if (!cart) {
       throw new Error('SessionProvider must be used within a CartProvider, or be given a session');
     }
-    return createThermidorSession(cart, saved);
+    return createThermidorSession(cart, saved, options?.initialize);
   };
 }
 
@@ -173,17 +196,21 @@ function startWith(storage: ConversationStorage, session: DemoSession): Current 
 
 /**
  * The conversation `id`, by default the one the tab last showed, or a new one when it is gone or
- * cannot be restored.
+ * cannot be restored. An expired conversation is restored without resuming its session, so it
+ * sends nothing.
  */
 function openCurrent(
   storage: ConversationStorage,
   create: SessionFactory,
+  expiredIds: ReadonlySet<string>,
   id = storage.currentId()
 ): Current {
   const saved = id === undefined ? undefined : storage.load(id);
   if (id !== undefined && saved) {
+    const expired =
+      expiredIds.has(id) || storage.list().find((entry) => entry.id === id)?.expired === true;
     try {
-      return {id, session: create(saved)};
+      return {id, session: create(saved, {initialize: !expired}), expired};
     } catch {
       // Dropped below.
     }
@@ -195,21 +222,21 @@ function openCurrent(
 }
 
 /**
- * Saves the conversation once the session is idle after a request that updates it. When the session drops the
- * transcript it resumed, because the endpoint answered with another session, it becomes a new
- * conversation, so the saved one keeps its transcript. Once the session is swapped out, it is still
- * saved when the request it was sending ends. A new conversation is listed from its first turn,
- * before it is saved; if the page reloads before that, it has nothing to restore and is dropped.
+ * Saves the conversation once the session is idle after a request that updates it. When the
+ * session drops the transcript it resumed, because the endpoint answered with another session, the
+ * conversation expired: `onExpired` swaps the session out, and the saved one keeps its transcript.
+ * Once the session is swapped out, it is still saved when the request it was sending ends. A new
+ * conversation is listed from its first turn, before it is saved; if the page reloads before that,
+ * it has nothing to restore and is dropped.
  */
 function persist(
   storage: ConversationStorage,
   session: DemoSession,
-  initialId: string,
+  id: string,
   removed: ReadonlySet<string>,
-  onNewId: (id: string) => void,
+  onExpired: () => void,
   onSaved: () => void
 ) {
-  let id = initialId;
   let boundSessionId = session.sessionId;
   let saving = savesAfter(session.getSnapshot().request);
   let swappedOut = false;
@@ -219,9 +246,9 @@ function persist(
     const {request, turns} = session.getSnapshot();
     if (session.sessionId !== boundSessionId) {
       if (boundSessionId !== undefined && turns.length === 0 && !swappedOut) {
-        id = startWith(storage, session).id;
-        listed = false;
-        onNewId(id);
+        swappedOut = true;
+        onExpired();
+        return;
       }
       boundSessionId = session.sessionId;
     }
@@ -279,7 +306,8 @@ function getCartCommerceContext(cart: CartStore) {
 
 function createThermidorSession(
   cart: CartStore,
-  sessionToRestore?: SerializedSession
+  sessionToRestore?: SerializedSession,
+  initialize?: boolean
 ): DemoSession {
   const {
     organizationId,
@@ -302,6 +330,7 @@ function createThermidorSession(
     navigatorContextProvider: () => ({...getNavigatorContext(), language, country, currency}),
     commerceContextProvider: () => getCartCommerceContext(cart),
     sessionToRestore,
+    initialize,
   });
 }
 

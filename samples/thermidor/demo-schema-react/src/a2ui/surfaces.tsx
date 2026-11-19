@@ -84,6 +84,8 @@ interface TurnSurfacesProps {
   latest: boolean;
   /** Whether the turn these surfaces belong to is still streaming. */
   isStreaming: boolean;
+  /** These surfaces belong to an expired conversation, which can be read but not continued. */
+  expired?: boolean;
 }
 
 /**
@@ -91,7 +93,7 @@ interface TurnSurfacesProps {
  * component type, in the place its content will take. Surfaces never scroll the page: the
  * conversation keeps the turn they belong to in view.
  */
-export function TurnSurfaces({surfaces, latest, isStreaming}: TurnSurfacesProps) {
+export function TurnSurfaces({surfaces, latest, isStreaming, expired = false}: TurnSurfacesProps) {
   const restored = surfaces.some((surface) => surface.readOnly);
   const interactive = latest && !restored;
   const surfaceIds = useMemo(() => surfaces.map((surface) => surface.surfaceId), [surfaces]);
@@ -141,13 +143,15 @@ export function TurnSurfaces({surfaces, latest, isStreaming}: TurnSurfacesProps)
     >
       {!interactive && (
         <legend className={styles.readOnlyNote}>
-          {restored
-            ? 'Restored results. Search again to refine.'
-            : 'Earlier results. Ask a follow-up or search again to refine.'}
+          {expired
+            ? 'Results of an expired conversation.'
+            : restored
+              ? 'Restored results. Search again to refine.'
+              : 'Earlier results. Ask a follow-up or search again to refine.'}
         </legend>
       )}
       <EarlierTurnContext.Provider value={!interactive}>
-        <RestoredSurfacesContext.Provider value={restored}>
+        <RestoredSurfacesContext.Provider value={restored || expired}>
           {surfaces.map(({surfaceId, rootComponentType, isLoading}) => {
             return (
               <section
