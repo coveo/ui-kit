@@ -105,12 +105,11 @@ describe('SearchEngineDefinitionOptions', () => {
       configuration: getSampleSearchEngineConfiguration(),
       controllers: {searchBox: defineSearchBox()},
     } satisfies SearchEngineDefinitionOptions;
+    const {searchEngineDefinition: definition} = defineSearchEngine(config);
 
-    expectTypeOf<
-      keyof InferHydratedState<
-        ReturnType<typeof defineSearchEngine<typeof config.controllers>>['searchEngineDefinition']
-      >['controllers']
-    >().toEqualTypeOf<'searchBox' | 'parameterManager'>();
+    expectTypeOf<keyof InferHydratedState<typeof definition>['controllers']>().toEqualTypeOf<
+      'searchBox' | 'parameterManager'
+    >();
     expectTypeOf<{searchBox: number}>().not.toExtend<
       NonNullable<SearchEngineDefinitionOptions['controllers']>
     >();
