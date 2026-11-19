@@ -17,7 +17,7 @@ import {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
 import {getSampleConfiguration} from '../env.js';
 import {CartStoreContext} from '../cart/CartProvider.js';
 import type {CartStore} from '../cart/cart-store.js';
-import {isBlocking} from '../a2ui/session-request.js';
+import {isBlocking, retire} from '../a2ui/session-request.js';
 import {
   createConversationStorage,
   type ConversationStorage,
@@ -100,6 +100,7 @@ export function SessionProvider({
 
   const conversations = useMemo<Conversations>(() => {
     const swap = (next: () => Current) => {
+      retire(current.session);
       current.session.cancel();
       setCurrent(next());
       setList(storage.list());
