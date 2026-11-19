@@ -232,6 +232,8 @@ pnpm --filter @coveo/thermidor test       # run unit + property tests
 pnpm --filter @coveo/thermidor test:dts   # validate public API surface (incl. DX type test)
 ```
 
+The API report lives in `api-report/`. When the public API changes, run `pnpm turbo run test:dts --filter=@coveo/thermidor` and commit the updated reports; CI fails otherwise.
+
 ## Architecture
 
 See the [Architecture Guide](./docs/architecture.md) for the internal structure, and the accepted decisions of record in [`docs/internal/adr`](./docs/internal/adr).
