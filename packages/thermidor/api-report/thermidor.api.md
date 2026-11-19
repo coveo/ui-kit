@@ -126,6 +126,7 @@ export function createSession<TContracts extends ContractsSchema>(config: Sessio
 // @public
 export interface DiscoveredSurface {
     isLoading: boolean;
+    readOnly?: true;
     rootComponentType: string;
     // (undocumented)
     surfaceId: string;
