@@ -185,14 +185,15 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
    * The conversation session id the session opens with. It must be a UUID, and it is sent as
    * `conversationSessionId` from the first request. Alone, it opens a new session under that id;
    * if the first request ends before the endpoint sends a token, the session drops the id and the
-   * endpoint assigns one (it keeps it after an error status other than 403, or a request never
-   * sent). It can't be combined with `sessionToRestore`.
+   * endpoint assigns one (it keeps it after an error status other than 403, 502 or 504, or a
+   * request never sent). It can't be combined with `sessionToRestore`.
    */
   sessionId?: string;
   /**
    * The token of the session {@link SessionConfig.sessionId} names, to continue it. Requires
-   * `sessionId`. The endpoint may answer with new keys, for instance when the session expired;
-   * {@link Session.sessionId} and {@link Session.sessionToken} then return them.
+   * `sessionId`. When the session expired, its `initialize` starts a new one, and
+   * {@link Session.sessionId} and {@link Session.sessionToken} return the new keys; with
+   * `initialize: false`, the first prompt or action fails instead.
    */
   sessionToken?: string;
   /**
