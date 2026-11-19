@@ -83,10 +83,6 @@
   }
 }
 
-.visuallyHidden {
-  composes: visuallyHidden from '../../cart/QuantityStepper/QuantityStepper.module.css';
-}
-
 .empty {
   margin: 0;
   padding: 0 var(--space-3);

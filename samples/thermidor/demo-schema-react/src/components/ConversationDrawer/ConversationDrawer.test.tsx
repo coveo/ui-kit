@@ -48,12 +48,16 @@ async function ask({session}: ReturnType<typeof renderApp>, prompt: string) {
 
 const NOT_READY = 'Available once the conversation is ready';
 
-/** Whether "New conversation" shows that it waits: busy, and described by why, out of sight. */
+/**
+ * Whether "New conversation" shows that it waits: busy, and described by why. The reason is
+ * `hidden`, so browse mode doesn't read it; a reason left in the page reads as "visible".
+ */
 function waits(newConversation: HTMLElement) {
-  const reason = newConversation.getAttribute('aria-describedby');
+  const id = newConversation.getAttribute('aria-describedby');
+  const reason = id && document.getElementById(id);
   return {
     busy: newConversation.getAttribute('aria-busy') === 'true',
-    reason: reason && document.getElementById(reason)?.textContent,
+    reason: reason && (reason.hidden ? reason.textContent : 'visible'),
   };
 }
 

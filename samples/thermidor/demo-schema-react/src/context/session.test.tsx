@@ -228,6 +228,28 @@ describe('SessionProvider conversations', () => {
     expect(fresh.conversations().list.map(({title}) => title)).toEqual(['surfboards']);
   });
 
+  it('saves a new conversation when storage is nearly full, dropping the oldest to make room', async () => {
+    const quota = 20_000;
+    const local = memoryStorage(quota);
+    const tab = createConversationStorage({local: () => local, session: () => memoryStorage()});
+    const used = () =>
+      Array.from({length: local.length}, (_, index) => local.getItem(local.key(index)!)!).join('')
+        .length;
+    tab.save('old', 'surfboards', {version: 4, sessionId: '', turns: []});
+    tab.save('old', 'surfboards', {
+      version: 4,
+      sessionId: 'x'.repeat(quota - used() - 20),
+      turns: [],
+    });
+    const {session, conversations} = renderConversations(tab);
+
+    await ask(session(), 'wetsuits');
+
+    const id = conversations().currentId;
+    expect(tab.list().map((entry) => entry.id)).toEqual([id]);
+    expect(tab.load(id)?.turns).toHaveLength(1);
+  });
+
   it('starts a new conversation, and drops the current one, when it cannot be restored', () => {
     const tab = browser().tab();
     tab.save('broken', 'surfboards', {version: 999, turns: []});
