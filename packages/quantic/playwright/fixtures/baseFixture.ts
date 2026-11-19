@@ -21,10 +21,10 @@ export const quanticBase = base.extend<QuanticBaseE2EFixtures>({
   pageUrl: '',
   analyticsMode: AnalyticsModeEnum.legacy,
   liveInsightConfig: [false, {option: true}],
-  // Overriding `page` registers the route before any fixture can call `page.goto`.
-  page: async ({page, liveInsightConfig}, use) => {
+  // Routing on the context covers every page of the test and is registered before any `page.goto`.
+  context: async ({context, liveInsightConfig}, use) => {
     if (!liveInsightConfig) {
-      await page.route(insightInterfaceRequestRegex, async (route) => {
+      await context.route(insightInterfaceRequestRegex, async (route) => {
         await route.fulfill({
           body: JSON.stringify(interfaceConfigResponses.baseResponse),
           status: 200,
@@ -34,7 +34,7 @@ export const quanticBase = base.extend<QuanticBaseE2EFixtures>({
         });
       });
     }
-    await use(page);
+    await use(context);
   },
   configuration: async ({page}, use) => {
     await use(new ConfigurationObject(page));

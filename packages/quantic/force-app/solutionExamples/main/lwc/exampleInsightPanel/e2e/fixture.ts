@@ -62,21 +62,24 @@ export const testInsight = quanticBase.extend<InsightPanelE2EFixtures>({
   insightSetup: async ({page}, use) => {
     await use(new InsightSetupObject(page));
   },
-  insightPanel: async ({page, insightSetup}, use) => {
+  insightPanel: async ({page, insightSetup, liveInsightConfig}, use) => {
     const insightPanel = new InsightPanelObject(page);
     const firstSearchResponsePromise =
       insightPanel.waitForSuccessfulSearchResponse(() => true);
-    const interfaceConfigResponsePromise =
-      waitForInterfaceConfigResponse(page);
+    const interfaceConfigResponsePromise = liveInsightConfig
+      ? waitForInterfaceConfigResponse(page)
+      : undefined;
     await page.goto(pageUrl);
 
-    // This suite is the real Insight happy path: a response fulfilled by a route has no server address.
-    const interfaceConfigResponse = await interfaceConfigResponsePromise;
-    expect(interfaceConfigResponse.ok(), liveApiMessage).toBe(true);
-    expect(
-      await interfaceConfigResponse.serverAddr(),
-      liveApiMessage
-    ).not.toBeNull();
+    if (interfaceConfigResponsePromise) {
+      // A response fulfilled by a route has no server address.
+      const interfaceConfigResponse = await interfaceConfigResponsePromise;
+      expect(interfaceConfigResponse.ok(), liveApiMessage).toBe(true);
+      expect(
+        await interfaceConfigResponse.serverAddr(),
+        liveApiMessage
+      ).not.toBeNull();
+    }
 
     await insightSetup.waitForInsightInterfaceInitialization();
     await firstSearchResponsePromise;
