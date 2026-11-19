@@ -1,5 +1,5 @@
 import {getSampleSearchEngineConfiguration} from '@coveo/headless/ssr-next';
-import {render} from '@testing-library/react';
+import {render, waitFor} from '@testing-library/react';
 import {Component, type PropsWithChildren} from 'react';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {createMockNavigatorContextProvider} from '../__tests__/mock-navigator-context-provider.js';
@@ -33,7 +33,7 @@ describe('buildProviderWithDefinition', () => {
     configuration: getSampleSearchEngineConfiguration(),
     controllers: {searchBox: defineMockSearchController()},
   });
-  const {useEngine} = engineDefinition;
+  const {useEngine, useHydration} = engineDefinition;
 
   let hydrateStaticState: ReturnType<typeof vi.fn>;
   let definition: typeof engineDefinition.searchEngineDefinition;
@@ -59,7 +59,12 @@ describe('buildProviderWithDefinition', () => {
 
   function Status() {
     const engine = useEngine() as {id?: string} | undefined;
-    return <div data-testid="status">{engine?.id ?? 'none'}</div>;
+    const hydration = useHydration();
+    return (
+      <div data-testid="status">
+        {hydration.status}:{engine?.id ?? 'none'}
+      </div>
+    );
   }
 
   beforeEach(() => {
@@ -98,11 +103,11 @@ describe('buildProviderWithDefinition', () => {
       </Provider>
     );
 
-    expect(getByTestId('status').textContent).toBe('none');
+    expect(getByTestId('status').textContent).toBe('static:none');
 
     await waitForAsyncUpdates();
 
-    expect(getByTestId('status').textContent).toBe('hydrated');
+    expect(getByTestId('status').textContent).toBe('hydrated:hydrated');
   });
 
   it('should rethrow a hydration failure during render so that an error boundary reports it', async () => {
@@ -122,5 +127,81 @@ describe('buildProviderWithDefinition', () => {
     await waitForAsyncUpdates();
 
     expect(onError).toHaveBeenCalledWith(failure);
+  });
+
+  it('should keep rendering the static state and report the error when onHydrationError handles it', async () => {
+    const failure = new Error('hydration failed');
+    hydrateStaticState.mockRejectedValue(failure);
+    const onHydrationError = vi.fn();
+    const Provider = buildProviderWithDefinition(definition);
+
+    const {getByTestId} = render(
+      <Provider staticState={buildStaticState()} onHydrationError={onHydrationError}>
+        <Status />
+      </Provider>
+    );
+
+    await waitFor(() => expect(onHydrationError).toHaveBeenCalledWith(failure));
+    expect(getByTestId('status').textContent).toBe('error:none');
+  });
+
+  it('should report a hydration failure whose reason is undefined', async () => {
+    hydrateStaticState.mockRejectedValue(undefined);
+    const onHydrationError = vi.fn();
+    const Provider = buildProviderWithDefinition(definition);
+
+    const {getByTestId} = render(
+      <Provider staticState={buildStaticState()} onHydrationError={onHydrationError}>
+        <Status />
+      </Provider>
+    );
+
+    await waitFor(() => expect(onHydrationError).toHaveBeenCalledWith(undefined));
+    expect(getByTestId('status').textContent).toBe('error:none');
+  });
+
+  it('should report a hydration failure once, even when the callback changes on every render', async () => {
+    hydrateStaticState.mockRejectedValue(new Error('hydration failed'));
+    const staticState = buildStaticState();
+    const onHydrationError = vi.fn();
+    const Provider = buildProviderWithDefinition(definition);
+
+    const {rerender} = render(
+      <Provider staticState={staticState} onHydrationError={(error) => onHydrationError(error)}>
+        <Status />
+      </Provider>
+    );
+    await waitFor(() => expect(onHydrationError).toHaveBeenCalledOnce());
+
+    rerender(
+      <Provider staticState={staticState} onHydrationError={(error) => onHydrationError(error)}>
+        <Status />
+      </Provider>
+    );
+    await waitForAsyncUpdates();
+
+    expect(onHydrationError).toHaveBeenCalledOnce();
+  });
+
+  it('should clear the hydration error once a newer static state hydrates', async () => {
+    hydrateStaticState.mockRejectedValueOnce(new Error('hydration failed'));
+    const onHydrationError = vi.fn();
+    const Provider = buildProviderWithDefinition(definition);
+
+    const {getByTestId, rerender} = render(
+      <Provider staticState={buildStaticState()} onHydrationError={onHydrationError}>
+        <Status />
+      </Provider>
+    );
+    await waitFor(() => expect(getByTestId('status').textContent).toBe('error:none'));
+
+    rerender(
+      <Provider staticState={buildStaticState()} onHydrationError={onHydrationError}>
+        <Status />
+      </Provider>
+    );
+    await waitForAsyncUpdates();
+
+    expect(getByTestId('status').textContent).toBe('hydrated:hydrated');
   });
 });

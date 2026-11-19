@@ -10,10 +10,11 @@ import React from 'react';
 import {
   buildControllerHooks,
   buildEngineHook,
+  buildHydrationHook,
   buildStateProvider,
   type EngineContext,
 } from '../ssr-common/hooks.js';
-import type {EngineContextState} from '../ssr-common/types.js';
+import type {EngineContextState, Hydration} from '../ssr-common/types.js';
 import {singleton} from '../utils.js';
 import type {
   InferControllerHooksMapFromDefinition,
@@ -37,6 +38,7 @@ function createSingletonContext(): EngineContext<SearchEngine> {
  *   searchEngineDefinition,
  *   standaloneEngineDefinition,
  *   useEngine,
+ *   useHydration,
  *   controllers: {useSearchBox, useResultList, useParameterManager},
  * } = defineSearchEngine({
  *   configuration: {organizationId: '...', accessToken: '...'},
@@ -47,7 +49,7 @@ function createSingletonContext(): EngineContext<SearchEngine> {
  * @param options - The engine configuration and the controllers to define.
  * @returns The `searchEngineDefinition` (executes a search on the server) and the
  * `standaloneEngineDefinition` (no server-side search), each with a `StateProvider`; `useEngine`;
- * and one `use<Name>` hook per controller, including `useParameterManager`.
+ * `useHydration`; and one `use<Name>` hook per controller, including `useParameterManager`.
  *
  * @group Engine
  */
@@ -58,6 +60,10 @@ export function defineSearchEngine<TControllers extends SearchControllerDefiniti
    * Returns the engine once the static state is hydrated, and `undefined` before.
    */
   useEngine: () => SearchEngine | undefined;
+  /**
+   * Returns whether the components render the static state, the hydrated engine, or a hydration error.
+   */
+  useHydration: () => Hydration;
   controllers: InferControllerHooksMapFromDefinition<AugmentedControllerDefinition<TControllers>>;
   searchEngineDefinition: ReactSearchEngineDefinition<TControllers>;
   standaloneEngineDefinition: ReactSearchEngineDefinition<TControllers>;
@@ -75,6 +81,7 @@ export function defineSearchEngine<TControllers extends SearchControllerDefiniti
 
   return {
     useEngine: buildEngineHook(singletonContext),
+    useHydration: buildHydrationHook(singletonContext),
     controllers: buildControllerHooks(
       singletonContext,
       controllerDefinitions

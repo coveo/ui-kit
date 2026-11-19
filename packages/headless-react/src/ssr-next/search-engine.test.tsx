@@ -47,11 +47,15 @@ describe('defineSearchEngine', () => {
 
   const wrapperWith = (
     StateProvider: DefinitionStateProvider,
-    props: {engine?: SearchEngine; controllers: object}
+    props: {engine?: SearchEngine; controllers: object; hydrationFailure?: {error: unknown}}
   ) =>
     function Wrapper({children}: PropsWithChildren) {
       return (
-        <StateProvider engine={props.engine} controllers={props.controllers as never}>
+        <StateProvider
+          engine={props.engine}
+          controllers={props.controllers as never}
+          hydrationFailure={props.hydrationFailure}
+        >
           {children}
         </StateProvider>
       );
@@ -107,13 +111,17 @@ describe('defineSearchEngine', () => {
       expect(result.current.methods).toBeUndefined();
     });
 
-    it('should report no engine', () => {
-      const {useEngine, searchEngineDefinition} = defineSearchEngine(definitionOptions);
+    it('should report no engine and a static hydration status', () => {
+      const {useEngine, useHydration, searchEngineDefinition} =
+        defineSearchEngine(definitionOptions);
       const wrapper = wrapperWith(searchEngineDefinition.StateProvider, {
         controllers: staticControllers,
       });
 
       expect(renderHook(() => useEngine(), {wrapper}).result.current).toBeUndefined();
+      expect(renderHook(() => useHydration(), {wrapper}).result.current).toEqual({
+        status: 'static',
+      });
     });
   });
 
@@ -135,15 +143,33 @@ describe('defineSearchEngine', () => {
       expect(liveControllers.searchBox.updateText).toHaveBeenCalledWith('new query');
     });
 
-    it('should report the engine', () => {
-      const {useEngine, searchEngineDefinition} = defineSearchEngine(definitionOptions);
+    it('should report the engine and a hydrated status', () => {
+      const {useEngine, useHydration, searchEngineDefinition} =
+        defineSearchEngine(definitionOptions);
       const wrapper = wrapperWith(searchEngineDefinition.StateProvider, {
         engine,
         controllers: liveControllers,
       });
 
       expect(renderHook(() => useEngine(), {wrapper}).result.current).toBe(engine);
+      expect(renderHook(() => useHydration(), {wrapper}).result.current).toEqual({
+        status: 'hydrated',
+      });
     });
+  });
+
+  it('should report a hydration error through useHydration', () => {
+    const {useHydration, searchEngineDefinition} = defineSearchEngine(definitionOptions);
+    const error = new Error('hydration failed');
+
+    const {result} = renderHook(() => useHydration(), {
+      wrapper: wrapperWith(searchEngineDefinition.StateProvider, {
+        controllers: staticControllers,
+        hydrationFailure: {error},
+      }),
+    });
+
+    expect(result.current).toEqual({status: 'error', error});
   });
 
   it('should render children inside the StateProvider', () => {

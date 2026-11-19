@@ -10,7 +10,7 @@ import type {
 import type {FunctionComponent, PropsWithChildren} from 'react';
 import type {ControllerHook, StateProviderProps} from '../ssr-common/types.js';
 
-export type {ControllerHook} from '../ssr-common/types.js';
+export type {ControllerHook, Hydration, HydrationStatus} from '../ssr-common/types.js';
 
 export type SearchControllerDefinitionsMap = ControllerDefinitionsMap<SearchEngine, Controller>;
 
