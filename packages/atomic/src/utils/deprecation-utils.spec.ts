@@ -2,7 +2,7 @@ import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {describe, expect, it, vi} from 'vitest';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {booleanConverter, createBooleanConverter} from '@/src/converters/boolean-converter';
 import {
   DeprecatedPropertyWarnings,
   warnDeprecatedOnce,
@@ -29,6 +29,50 @@ class TestDeprecatedPropertyElement extends LitElement {
       attribute: 'old-flag',
       defaultValue: true,
       instruction: 'Use `new-flag` instead.',
+    },
+  ]);
+
+  willUpdate(changedProperties: PropertyValues) {
+    super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.logger);
+  }
+}
+
+@customElement('test-deprecated-false-element')
+class TestDeprecatedFalseElement extends LitElement {
+  @property({
+    type: Boolean,
+    attribute: 'opt-flag',
+    reflect: true,
+    converter: createBooleanConverter('disable-opt', {silent: true}),
+  })
+  optFlag = true;
+
+  @property({
+    type: Boolean,
+    attribute: 'ignored-flag',
+    reflect: true,
+    converter: createBooleanConverter('disable-ignored', {ignoreFalse: true, silent: true}),
+  })
+  ignoredFlag = true;
+
+  logger?: ReturnType<typeof buildLogger>;
+
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'optFlag',
+      attribute: 'opt-flag',
+      defaultValue: true,
+      instruction: 'Use `disable-opt` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
+    {
+      property: 'ignoredFlag',
+      attribute: 'ignored-flag',
+      defaultValue: true,
+      instruction: 'Use `disable-ignored` instead.',
+      onlyWhenFalse: true,
     },
   ]);
 
@@ -156,6 +200,71 @@ describe('deprecation-utils', () => {
       await element.updateComplete;
 
       expect(logger.warn).toHaveBeenCalledOnce();
+    });
+  });
+
+  describe('DeprecatedPropertyWarnings with #onlyWhenFalse', () => {
+    const setupElement = async (template: ReturnType<typeof html>) => {
+      const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const element = await fixture<TestDeprecatedFalseElement>(template);
+      const logger = buildLogger();
+      element.logger = logger;
+      element.requestUpdate();
+      await element.updateComplete;
+      return {element, logger, consoleWarn};
+    };
+
+    it('should not log a warning when the attribute is present without a value', async () => {
+      const {logger} = await setupElement(
+        html`<test-deprecated-false-element opt-flag ignored-flag></test-deprecated-false-element>`
+      );
+
+      expect(logger.warn).not.toHaveBeenCalled();
+    });
+
+    it('should log a warning once when the attribute is set to "false"', async () => {
+      const {element, logger} = await setupElement(
+        html`<test-deprecated-false-element opt-flag="false"></test-deprecated-false-element>`
+      );
+      element.requestUpdate();
+      await element.updateComplete;
+
+      expect(logger.warn).toHaveBeenCalledExactlyOnceWith(
+        '[Deprecated] The `opt-flag` property of `test-deprecated-false-element` is deprecated and will be removed in Atomic v4. Use `disable-opt` instead of setting it to `false`.'
+      );
+    });
+
+    it('should log a warning when the property is set to false', async () => {
+      const {element, logger} = await setupElement(
+        html`<test-deprecated-false-element></test-deprecated-false-element>`
+      );
+
+      element.optFlag = false;
+      await element.updateComplete;
+
+      expect(logger.warn).toHaveBeenCalledOnce();
+    });
+
+    it('should log a warning when an ignored "false" attribute keeps the property true', async () => {
+      const {element, logger} = await setupElement(
+        html`<test-deprecated-false-element ignored-flag="false"></test-deprecated-false-element>`
+      );
+
+      expect(element.ignoredFlag).toBe(true);
+      expect(logger.warn).toHaveBeenCalledExactlyOnceWith(
+        expect.stringContaining('The `ignored-flag` property')
+      );
+    });
+
+    it('should not log a console warning from the silent converters', async () => {
+      const {consoleWarn} = await setupElement(
+        html`<test-deprecated-false-element
+          opt-flag="false"
+          ignored-flag="false"
+        ></test-deprecated-false-element>`
+      );
+
+      expect(consoleWarn).not.toHaveBeenCalled();
     });
   });
 

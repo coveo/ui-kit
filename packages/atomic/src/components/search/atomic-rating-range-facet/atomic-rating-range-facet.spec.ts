@@ -51,6 +51,7 @@ describe('atomic-rating-range-facet', () => {
       isCollapsed: boolean;
       headingLevel: number;
       filterFacetCount: boolean;
+      disableFacetCountFiltering: boolean;
       injectionDepth: number;
       tabsIncluded: string[];
       tabsExcluded: string[];
@@ -74,6 +75,7 @@ describe('atomic-rating-range-facet', () => {
         ?is-collapsed=${props.isCollapsed}
         heading-level=${ifDefined(props.headingLevel)}
         filter-facet-count=${props.filterFacetCount}
+        ?disable-facet-count-filtering=${props.disableFacetCountFiltering}
         injection-depth=${ifDefined(props.injectionDepth)}
         .tabsIncluded=${props.tabsIncluded || []}
         .tabsExcluded=${props.tabsExcluded || []}
@@ -144,6 +146,24 @@ describe('atomic-rating-range-facet', () => {
           generateAutomaticRanges: false,
           sortCriteria: 'descending',
         }),
+      });
+    });
+
+    it('should call buildNumericFacet with filterFacetCount true by default', async () => {
+      const {element} = await renderRatingRangeFacet();
+
+      expect(buildNumericFacet).toHaveBeenCalledWith(element.bindings.engine, {
+        options: expect.objectContaining({filterFacetCount: true}),
+      });
+    });
+
+    it('should call buildNumericFacet with filterFacetCount false when disableFacetCountFiltering is true', async () => {
+      const {element} = await renderRatingRangeFacet({
+        props: {disableFacetCountFiltering: true},
+      });
+
+      expect(buildNumericFacet).toHaveBeenCalledWith(element.bindings.engine, {
+        options: expect.objectContaining({filterFacetCount: false}),
       });
     });
 

@@ -19,7 +19,7 @@ import {renderNoItems} from '@/src/components/common/no-items/no-items.js';
 import {renderSearchTips} from '@/src/components/common/no-items/tips.js';
 import {getSummary} from '@/src/components/common/no-items/utils.js';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {createBooleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state.js';
 import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {bindings} from '@/src/decorators/bindings.js';
@@ -53,7 +53,7 @@ export class AtomicNoResults extends LitElement implements InitializableComponen
     type: Boolean,
     reflect: true,
     attribute: 'enable-cancel-last-action',
-    converter: booleanConverter,
+    converter: createBooleanConverter('hide-cancel-last-action', {silent: true}),
   })
   enableCancelLastAction = true;
 

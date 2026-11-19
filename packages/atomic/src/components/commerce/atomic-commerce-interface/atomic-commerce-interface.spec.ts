@@ -1404,5 +1404,12 @@ describe('atomic-commerce-interface', () => {
 
       expect(deprecationWarnings(engine)).toEqual([]);
     });
+
+    it('should not log a console warning when reflect-state-in-url is set to "false"', async () => {
+      const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      await setupElement({reflectStateInUrl: false});
+
+      expect(consoleWarn).not.toHaveBeenCalledWith(expect.stringContaining('boolean attribute'));
+    });
   });
 });

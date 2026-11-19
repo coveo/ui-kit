@@ -32,7 +32,7 @@ import {
   firstSearchExecutedSelector,
   noResultsSelector,
 } from '@/src/components/search/atomic-search-layout/search-layout';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {createBooleanConverter} from '@/src/converters/boolean-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
@@ -89,6 +89,13 @@ export class AtomicSearchInterface
     HEADLESS_VERSION
   );
   private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'analytics',
+      attribute: 'analytics',
+      defaultValue: true,
+      instruction: 'Use `disable-analytics` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
     {
       property: 'reflectStateInUrl',
       attribute: 'reflect-state-in-url',
@@ -155,7 +162,7 @@ export class AtomicSearchInterface
    */
   @property({
     type: Boolean,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-analytics', {silent: true}),
     reflect: true,
   })
   public analytics = true;
@@ -214,7 +221,7 @@ export class AtomicSearchInterface
     type: Boolean,
     attribute: 'reflect-state-in-url',
     reflect: true,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-state-reflection-in-url', {silent: true}),
   })
   reflectStateInUrl = true;
 
@@ -265,7 +272,7 @@ export class AtomicSearchInterface
     type: Boolean,
     attribute: 'enable-relevance-inspector',
     reflect: true,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-relevance-inspector', {silent: true}),
   })
   public enableRelevanceInspector = true;
 

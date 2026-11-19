@@ -1291,5 +1291,19 @@ describe('atomic-search-interface', () => {
           .mock.calls.filter(([message]) => String(message).includes('`closeRelevanceInspector`'))
       ).toHaveLength(1);
     });
+
+    it('should not log a console warning when reflect-state-in-url is set to "false"', async () => {
+      const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      await setupElement({reflectStateInUrl: false});
+
+      expect(consoleWarn).not.toHaveBeenCalledWith(expect.stringContaining('boolean attribute'));
+    });
+
+    it('should not log a console warning when enable-relevance-inspector is set to "false"', async () => {
+      const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      await setupElement({enableRelevanceInspector: false});
+
+      expect(consoleWarn).not.toHaveBeenCalledWith(expect.stringContaining('boolean attribute'));
+    });
   });
 });

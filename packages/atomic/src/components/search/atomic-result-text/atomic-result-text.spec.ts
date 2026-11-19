@@ -405,5 +405,12 @@ describe('atomic-result-text', () => {
 
       expect(deprecationWarnings(engine)).toEqual([]);
     });
+
+    it('should not log a console warning when should-highlight is set to "false"', async () => {
+      const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      await renderComponent({field: 'title', shouldHighlight: false});
+
+      expect(consoleWarn).not.toHaveBeenCalledWith(expect.stringContaining('boolean attribute'));
+    });
   });
 });

@@ -13,7 +13,7 @@ import {
   type SearchStatus as InsightSearchStatus,
   type SearchStatusState as InsightSearchStatusState,
 } from '@coveo/headless/insight';
-import {html, LitElement, nothing} from 'lit';
+import {html, LitElement, nothing, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
@@ -44,6 +44,8 @@ import facetValueBoxStyles from '@/src/components/common/facets/facet-value-box/
 import facetValueCheckboxStyles from '@/src/components/common/facets/facet-value-checkbox/facet-value-checkbox.tw.css';
 import facetValueExcludeStyles from '@/src/components/common/facets/facet-value-exclude/facet-value-exclude.tw.css';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
+import {createBooleanConverter} from '@/src/converters/boolean-converter';
+import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils';
 
 /**
  * The `atomic-insight-facet` component displays a facet of the results for the current query in an Insight interface.
@@ -77,6 +79,23 @@ export class AtomicInsightFacet
   extends LitElement
   implements InitializableComponent<InsightBindings>
 {
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'filterFacetCount',
+      attribute: 'filter-facet-count',
+      defaultValue: true,
+      instruction:
+        'Use `disable-facet-count-filtering` instead. Setting the attribute to `"false"` has no effect.',
+      onlyWhenFalse: true,
+    },
+  ]);
+
+  willUpdate(changedProperties: PropertyValues) {
+    super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.bindings?.engine?.logger);
+  }
+
   private static readonly propsSchema = new Schema({
     field: new StringValue({required: true, emptyAllowed: false}),
     numberOfValues: new NumberValue({min: 1}),
@@ -137,9 +156,24 @@ export class AtomicInsightFacet
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    *
    * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
+   * @deprecated - Use `disable-facet-count-filtering` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
-  @property({type: Boolean, reflect: true, attribute: 'filter-facet-count'})
+  @property({
+    type: Boolean,
+    reflect: true,
+    attribute: 'filter-facet-count',
+    converter: createBooleanConverter('disable-facet-count-filtering', {
+      ignoreFalse: true,
+      silent: true,
+    }),
+  })
   filterFacetCount = true;
+
+  /**
+   * Whether to stop excluding the parents of folded results when estimating the result count for each facet value.
+   */
+  @property({type: Boolean, attribute: 'disable-facet-count-filtering', reflect: true})
+  public disableFacetCountFiltering = false;
 
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
@@ -206,7 +240,7 @@ export class AtomicInsightFacet
       numberOfValues: this.numberOfValues,
       sortCriteria: this.sortCriteria,
       facetSearch: {numberOfValues: this.numberOfValues},
-      filterFacetCount: this.filterFacetCount,
+      filterFacetCount: this.shouldFilterFacetCount,
       injectionDepth: this.injectionDepth,
     };
 
@@ -425,6 +459,10 @@ export class AtomicInsightFacet
 
   private registerFacet() {
     this.bindings.store.registerFacet('facets', this.facetInfo);
+  }
+
+  private get shouldFilterFacetCount() {
+    return this.filterFacetCount && !this.disableFacetCountFiltering;
   }
 }
 

@@ -24,6 +24,12 @@ export interface DeprecatedProperty {
    * What to do instead, as a full sentence.
    */
   instruction: string;
+  /**
+   * Whether only turning the property off is deprecated, for options that default to `true` and have an opposite
+   * attribute. The property then counts as set whenever its value is `false` or its attribute is `"false"`, however
+   * it was set, so that an element cloned with its reflected attributes doesn't count as set.
+   */
+  onlyWhenFalse?: boolean;
 }
 
 const warnedApisByLogger = new WeakMap<DeprecationLogger, Set<string>>();
@@ -72,11 +78,13 @@ export class DeprecatedPropertyWarnings {
    */
   public track(changedProperties: PropertyValues) {
     for (const deprecatedProperty of this.properties) {
-      const {property, attribute, defaultValue} = deprecatedProperty;
-      const isSet = this.host.hasUpdated
-        ? changedProperties.has(property)
-        : this.host.hasAttribute(attribute) ||
-          (this.host as unknown as Record<string, unknown>)[property] !== defaultValue;
+      const {property, attribute, defaultValue, onlyWhenFalse} = deprecatedProperty;
+      const value = (this.host as unknown as Record<string, unknown>)[property];
+      const isSet = onlyWhenFalse
+        ? value === false || this.host.getAttribute(attribute) === 'false'
+        : this.host.hasUpdated
+          ? changedProperties.has(property)
+          : this.host.hasAttribute(attribute) || value !== defaultValue;
 
       if (isSet) {
         this.setProperties.add(deprecatedProperty);

@@ -18,7 +18,7 @@ import {
   buildSearchStatus,
   buildTabManager,
 } from '@coveo/headless';
-import {type CSSResultGroup, html, LitElement} from 'lit';
+import {type CSSResultGroup, html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
@@ -28,7 +28,7 @@ import type {Bindings} from '@/src/components/search/atomic-search-interface/ato
 import {renderFacetSegmentedValue} from '@/src/components/search/facets/facet-segmented-value/facet-segmented-value';
 import facetSegmentedValueStyles from '@/src/components/search/facets/facet-segmented-value/facet-segmented-value.tw.css.js';
 import {arrayConverter} from '@/src/converters/array-converter';
-import {booleanConverter} from '@/src/converters/boolean-converter';
+import {createBooleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -37,6 +37,7 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
 import {mapProperty} from '@/src/utils/props-utils';
+import {DeprecatedPropertyWarnings} from '@/src/utils/deprecation-utils';
 
 /**
  * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
@@ -51,6 +52,22 @@ import {mapProperty} from '@/src/utils/props-utils';
 @bindings()
 @withTailwindStyles
 export class AtomicSegmentedFacet extends LitElement implements InitializableComponent<Bindings> {
+  private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
+    {
+      property: 'filterFacetCount',
+      attribute: 'filter-facet-count',
+      defaultValue: true,
+      instruction: 'Use `disable-facet-count-filtering` instead of setting it to `false`.',
+      onlyWhenFalse: true,
+    },
+  ]);
+
+  willUpdate(changedProperties: PropertyValues) {
+    super.willUpdate(changedProperties);
+    this.deprecatedPropertyWarnings.track(changedProperties);
+    this.deprecatedPropertyWarnings.warn(this.bindings?.engine?.logger);
+  }
+
   @state() bindings!: Bindings;
 
   /**
@@ -141,14 +158,21 @@ export class AtomicSegmentedFacet extends LitElement implements InitializableCom
    *
    * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
    * The target folding field must be a facet field with the **Use cache for nested queries** options enabled (see [Manage fields](https://docs.coveo.com/en/1833/)).
+   * @deprecated - Use `disable-facet-count-filtering` instead (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
-    converter: booleanConverter,
+    converter: createBooleanConverter('disable-facet-count-filtering', {silent: true}),
     attribute: 'filter-facet-count',
     reflect: true,
   })
   filterFacetCount = true;
+
+  /**
+   * Whether to stop excluding the parents of folded results when estimating the result count for each facet value.
+   */
+  @property({type: Boolean, attribute: 'disable-facet-count-filtering', reflect: true})
+  public disableFacetCountFiltering = false;
 
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
@@ -352,7 +376,7 @@ export class AtomicSegmentedFacet extends LitElement implements InitializableCom
       numberOfValues: this.numberOfValues,
       sortCriteria: this.sortCriteria,
       facetSearch: {numberOfValues: this.numberOfValues},
-      filterFacetCount: this.filterFacetCount,
+      filterFacetCount: this.shouldFilterFacetCount,
       injectionDepth: this.injectionDepth,
       hasBreadcrumbs: false,
       allowedValues: this.allowedValues.length ? this.allowedValues : undefined,
@@ -362,6 +386,10 @@ export class AtomicSegmentedFacet extends LitElement implements InitializableCom
         excluded: this.tabsExcluded,
       },
     };
+  }
+
+  private get shouldFilterFacetCount() {
+    return this.filterFacetCount && !this.disableFacetCountFiltering;
   }
 }
 

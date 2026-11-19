@@ -71,6 +71,7 @@ describe('atomic-commerce-search-box', () => {
       minimumQueryLength?: number;
       numberOfQueries?: number;
       clearFilters?: boolean;
+      disableClearFilters?: boolean;
       clearRecentButtonPosition?: 'top' | 'bottom';
     };
     suggestionCount?: number;
@@ -117,6 +118,7 @@ describe('atomic-commerce-search-box', () => {
       minimumQueryLength,
       numberOfQueries,
       clearFilters,
+      disableClearFilters,
       clearRecentButtonPosition,
     } = searchBoxProps || {};
     const {element} = await renderInAtomicCommerceInterface<AtomicCommerceSearchBox>({
@@ -126,6 +128,7 @@ describe('atomic-commerce-search-box', () => {
         minimum-query-length=${ifDefined(minimumQueryLength)}
         number-of-queries=${ifDefined(numberOfQueries)}
         clear-filters=${ifDefined(clearFilters)}
+        ?disable-clear-filters=${disableClearFilters ?? false}
         clear-recent-button-position=${ifDefined(clearRecentButtonPosition)}
       >
         ${suggestions} ${additionalChildren}
@@ -775,6 +778,19 @@ describe('atomic-commerce-search-box', () => {
     vi.spyOn(console, 'warn').mockImplementation(() => {});
     await renderSearchBox({
       searchBoxProps: {clearFilters: false},
+    });
+
+    expect(buildSearchBox).toHaveBeenCalledWith(mockedEngine, {
+      options: {
+        ...commonSearchBoxOptions,
+        clearFilters: false,
+      },
+    });
+  });
+
+  it('should call buildSearchBox with clearFilters set to false when disableClearFilters is set to true', async () => {
+    await renderSearchBox({
+      searchBoxProps: {disableClearFilters: true},
     });
 
     expect(buildSearchBox).toHaveBeenCalledWith(mockedEngine, {
