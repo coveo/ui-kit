@@ -2462,88 +2462,28 @@ describe('createSession lifecycle', () => {
       });
 
       it.each([
-        ['during the wait', 100, () => {}],
-        ['during the retried attempt', 500, () => queueAbortableCall()],
-      ])('stops retrying and sends a prompt dispatched %s', async (_label, at, queueRetry) => {
-        queueTransient();
-        queueRetry();
-        const session = createSession(shellConfig);
-        await vi.advanceTimersByTimeAsync(at);
-
-        const stream = queueStream();
-        const turn = dispatchPrompt(session);
-        await vi.advanceTimersByTimeAsync(0);
-
-        expect(session.initialization).toMatchObject({status: 'error', error: 'Cancelled'});
-        expect(session.request).toMatchObject({kind: 'prompt'});
-        stream.emit({type: 'RUN_FINISHED'});
-        stream.close();
-        await turn;
-        await vi.advanceTimersByTimeAsync(10_000);
-        expect(session.turns[0].status).toBe('complete');
-        expect(callMock).toHaveBeenCalledTimes(at === 100 ? 2 : 3);
-      });
-
-      it('keeps the slot for a preempting prompt over a listener that dispatches when idle', async () => {
-        queueTransient();
-        const session = createSession(shellConfig);
-        await vi.advanceTimersByTimeAsync(100);
-        const listenerDispatch = vi.fn(() => {
-          void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'queued'}});
-        });
-        const unsubscribe = session.subscribe(() => {
-          if (session.request === undefined) {
-            unsubscribe();
-            listenerDispatch();
-          }
-        });
-
-        const stream = queueStream();
-        void dispatchPrompt(session);
-        await vi.advanceTimersByTimeAsync(0);
-
-        expect(callMock).toHaveBeenCalledTimes(2);
-        expect(callMock.mock.calls[1][0]).toMatchObject({message: 'find shoes'});
-        expect(listenerDispatch).not.toHaveBeenCalled();
-        unsubscribe();
-        stream.close();
-      });
-
-      it('cancels a preempting prompt from a listener told it is in flight', async () => {
-        queueTransient();
-        const session = createSession(shellConfig);
-        await vi.advanceTimersByTimeAsync(100);
-        const unsubscribe = session.subscribe(() => {
-          if (session.request?.kind === 'prompt') {
-            unsubscribe();
-            session.cancel();
-          }
-        });
-
-        const stream = queueStream();
-        const turn = dispatchPrompt(session);
-        await vi.advanceTimersByTimeAsync(0);
-        stream.close();
-
-        expect(callMock).toHaveBeenCalledTimes(1);
-        await turn;
-        expect(session.request).toBeUndefined();
-        expect(session.turns).toEqual([]);
-      });
-
-      it.each([
-        ['during the first attempt', () => queueAbortableCall()],
+        ['during the first attempt', 100, () => queueAbortableCall()],
+        ['during the wait', 100, () => queueTransient()],
+        [
+          'during the retried attempt',
+          500,
+          () => {
+            queueTransient();
+            queueAbortableCall();
+          },
+        ],
         [
           'once the retried initialize streams',
+          500,
           () => {
             queueTransient();
             queueStream().emit({type: 'RUN_STARTED', conversationToken: 'gateway-token'});
           },
         ],
-      ])('withholds a prompt dispatched %s', async (_label, queueInitialize) => {
+      ])('withholds a prompt dispatched %s', async (_label, at, queueInitialize) => {
         queueInitialize();
         const session = createSession(shellConfig);
-        await vi.advanceTimersByTimeAsync(500);
+        await vi.advanceTimersByTimeAsync(at);
         const calls = callMock.mock.calls.length;
 
         await dispatchPrompt(session);
@@ -2573,6 +2513,25 @@ describe('createSession lifecycle', () => {
         again.retryInitialization();
         await vi.advanceTimersByTimeAsync(10_000);
         expect(again.initialization).toMatchObject({status: 'error', error: transientError});
+      });
+
+      it('retryInitialization sends initialize from a session restored while initialize was in flight', async () => {
+        queueStream();
+        const interrupted = createSession(shellConfig);
+        await vi.advanceTimersByTimeAsync(0);
+        const session = createSession({...shellConfig, sessionToRestore: interrupted.serialize()});
+        await vi.advanceTimersByTimeAsync(0);
+        expect(session.initialization?.status).toBe('error');
+        expect(callMock).toHaveBeenCalledTimes(1);
+        const stream = queueStream();
+
+        session.retryInitialization();
+
+        expect(session.initialization).toEqual({activities: [], status: 'streaming'});
+        expect(sentActionName(1)).toBe('initialize');
+        finishShell(stream);
+        await vi.advanceTimersByTimeAsync(0);
+        expect(session.initialization?.status).toBe('complete');
       });
 
       it.each<[string, () => Promise<ReturnType<typeof createSession>>]>([

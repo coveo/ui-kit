@@ -184,7 +184,7 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
   /**
    * Whether the session opens itself with an `initialize` action, sent a microtask after
    * {@link createSession} returns so that a listener subscribed in the same task sees it start.
-   * Defaults to `true`. A restored session never sends it. Pass
+   * Defaults to `true`. A restored session never sends it by itself. Pass
    * `false` for tests, or for a server that creates a session while rendering.
    */
   initialize?: boolean;
@@ -233,7 +233,8 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * The run of the `initialize` action that opened the session, or `undefined` when the session
    * sent none. Not a turn. Only `initialize` changes its `status`; the surface snapshots of a
    * component action dispatched before the first turn are recorded here too, unless it opens one.
-   * The session briefly retries a transient rejection of the `initialize` it sent itself. Once its
+   * The session briefly retries a transient rejection of the `initialize` it sent itself, while
+   * {@link Session.request} stays `{kind: 'initialize'}`. Once its
    * `status` is `'error'`, no surface it would have created is coming: the first prompt still
    * opens the session, and {@link Session.retryInitialization} sends `initialize` again.
    */
@@ -339,7 +340,8 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
   retry(turnId: string): void;
   /**
    * Sends `initialize` again when {@link Session.initialization} is `'error'`, and resets it to a
-   * fresh `'streaming'` run while it runs. Does nothing when the initialization is `undefined`,
+   * fresh `'streaming'` run while it runs, a restored session's included. Does nothing when the
+   * initialization is `undefined`,
    * streaming or complete, once the session has a token, or while a request is in flight.
    */
   retryInitialization(): void;
@@ -567,52 +569,23 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   // The currently in-flight stream's abort controller, or null when idle. Held
   // per session instance — never module-level — so two sessions never contend.
   let activeAbortController: AbortController | null = null;
-  // The request in flight, settled once it has unwound and `request` is cleared.
-  let requestSettled: Promise<void> = Promise.resolve();
-  // Set from the automatic `initialize`'s first retry until the endpoint answers it.
-  let initializeRetrying = false;
   // Whether the request in flight reached the endpoint in a way that may have reserved its id.
   let requestMayHaveReservedSessionId = false;
-  // The dispatch that stopped the request in flight, which takes `request` over once it unwinds.
-  let handoff: {request: SessionRequest; abortController: AbortController} | undefined;
 
   // One request at a time: the endpoint handles a single request per session, and each response
   // is a whole-node snapshot, so overlapping streams would let the last to ARRIVE win over a newer
-  // action sent later. A dispatch made while a request is in flight is withheld, unless the
-  // request is an automatic `initialize` that the endpoint has rejected and that hasn't been
-  // answered since: the dispatch stops it and goes ahead.
+  // action sent later. A dispatch made while a request is in flight is withheld.
   async function sendRequest(
     request: SessionRequest,
     send: (abortController: AbortController) => Promise<void>,
     abandoned?: ReadonlySet<string>
   ): Promise<void> {
-    if (store.getState().request && initializeRetrying && !handoff) {
-      // The stopped request hands `request` straight to this one, so no other dispatch takes it.
-      const abortController = new AbortController();
-      handoff = {request, abortController};
-      cancel();
-      await requestSettled;
-      handoff = undefined;
-      if (store.getState().request === request) {
-        requestSettled = runRequest(request, send, abandoned, abortController);
-        return requestSettled;
-      }
-    }
     if (store.getState().request) {
       devWarn('dispatchAction: withheld: another request is in flight.');
       return withhold();
     }
-    requestSettled = runRequest(request, send, abandoned);
-    return requestSettled;
-  }
-
-  async function runRequest(
-    request: SessionRequest,
-    send: (abortController: AbortController) => Promise<void>,
-    abandoned: ReadonlySet<string> | undefined,
-    abortController = new AbortController()
-  ): Promise<void> {
     // Armed before it is published, so a listener's `cancel()` stops the request it was told about.
+    const abortController = new AbortController();
     activeAbortController = abortController;
     requestAbandoned = abandoned && {request, ids: abandoned};
     requestMayHaveReservedSessionId = false;
@@ -627,13 +600,9 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     if (activeAbortController === abortController) {
       activeAbortController = null;
     }
-    initializeRetrying = false;
-    if (handoff) {
-      activeAbortController = handoff.abortController;
-    }
     store.setState((current) => ({
       ...current,
-      request: handoff?.request,
+      request: undefined,
       ...(holdsUnconfirmedSessionId(current) && {sessionId: undefined}),
     }));
   }
@@ -649,7 +618,8 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   }
 
   // The endpoint stores a token for a new id only once it admits the request, and revokes it when
-  // it answers with an error, so only a 403 (id taken) or an unknown outcome may leave one behind.
+  // it answers with an error, so only a 403 (id taken) or an unknown outcome may leave one behind:
+  // no response, or a 502 or 504 from a proxy that may have cut off the endpoint's answer.
   function mayHaveReservedSessionId(attempt: {
     success: boolean;
     status?: number;
@@ -658,7 +628,10 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     if (attempt.success) {
       return true;
     }
-    return attempt.status === undefined ? !attempt.unsent : attempt.status === 403;
+    if (attempt.status === undefined) {
+      return !attempt.unsent;
+    }
+    return attempt.status === 403 || attempt.status === 502 || attempt.status === 504;
   }
 
   /** A dispatch refused before it was sent settles at once. */
@@ -964,8 +937,6 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
         abortController.signal,
         retryOptions
       );
-      // Once the endpoint has answered, a dispatch waits for the run like for any request.
-      initializeRetrying = false;
 
       if (!result.success) {
         // The client reports an abort as a failed call rather than throwing it.
@@ -1058,7 +1029,6 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
       ? {
           transient: {
             onRetry: () => {
-              initializeRetrying = true;
               // An id the failed attempt may have reserved would get the retry a 403.
               store.setState((current) =>
                 holdsUnconfirmedSessionId(current) ? {...current, sessionId: undefined} : current

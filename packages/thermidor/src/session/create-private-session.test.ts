@@ -376,6 +376,8 @@ describe('createPrivateSession', () => {
 
     it.each([
       ['drops', 'no response', undefined, 'session-1'],
+      ['drops', 'a 502', 502, 'session-1'],
+      ['drops', 'a 504', 504, 'session-1'],
       ['keeps', 'a 503', 503, SESSION_ID],
     ])(
       '%s the id before retrying an initialize that got %s',

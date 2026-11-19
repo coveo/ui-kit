@@ -83,7 +83,7 @@ level. Option D below.
   a microtask so that a listener subscribed in the same task sees it start. On the wire it is
   `action: {name: 'initialize', context: {}}`: it has an envelope type of its own, without
   `surfaceId` and `sourceComponentId`, which stay required for every other action.
-- **Never twice.** A restored session does not send it, nor does one that already has a token
+- **Never twice.** A restored session does not send it by itself, nor does one that already has a token
   (amended below).
 - **An ordinary request.** It goes through the one-request rule and the conflict retry (both
   amended below), and it
@@ -228,15 +228,18 @@ empty start page for good. The failure rule above kept the EAP simple; it was no
 against retries.
 
 - **Automatic retries.** A network error, `429`, `502`, `503` or `504` rejecting the automatic
-  `initialize` is retried: up to 3 attempts within 5 s, with a doubling backoff that waits at least
-  a `429`'s `Retry-After`. Any other rejection fails it at once. Before a retry, the session drops
-  a client-chosen session id the failed attempt may have reserved.
+  `initialize` is retried: up to 3 attempts within 5 s, attempts included, with a doubling backoff
+  that starts at 1 s for a `429`, since browsers can't read its `Retry-After`. Any other rejection
+  fails it at once, and so does one that arrives too late to fit a retry in the budget. Before a
+  retry, the session drops a client-chosen session id the failed attempt may have reserved.
 - **Before streaming only.** Once the endpoint answers with a stream, the producer may have started
   the session and its shell, so a retry could duplicate the opening state.
-- **Preempted by a dispatch.** From its first retry until the endpoint answers it, a prompt or
-  action cancels it and goes ahead instead of being withheld; the initialization ends `'error'`.
-- **`retryInitialization()`.** Re-sends `initialize` when the initialization is `'error'`, unless
-  the session has a token or a request is in flight. It does not retry by itself.
+- **Still one request at a time.** The retrying `initialize` stays the request in flight, so a
+  dispatch is withheld meanwhile, as during any request. Applications already hold dispatches back
+  while `request` is set.
+- **`retryInitialization()`.** Re-sends `initialize` when the initialization is `'error'`, a
+  restored session's included, unless the session has a token or a request is in flight. It does
+  not retry by itself.
 
 ## Considered Options
 
