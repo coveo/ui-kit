@@ -68,10 +68,10 @@ function buildControllerHook<TEngine>(
 /**
  * @internal
  */
-export function buildControllerHooks<TEngine, TDefinition extends object>(
+export function buildControllerHooks<TEngine>(
   singletonContext: EngineContext<TEngine>,
-  controllersMap: Record<string, TDefinition> = {},
-  getSupportedSolutionTypes: (definition: TDefinition) => string[] = () => []
+  controllersMap: Readonly<Record<string, unknown>> = {},
+  getSupportedSolutionTypes: (definition: unknown) => string[] = () => []
 ) {
   return Object.fromEntries(
     Object.entries(controllersMap).map(([key, definition]) => [
