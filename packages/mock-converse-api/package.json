@@ -15,9 +15,11 @@
     "msw": "catalog:"
   },
   "devDependencies": {
+    "@coveo/thermidor-schema": "catalog:",
     "@types/node": "catalog:",
     "typescript": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "zod": "catalog:"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0 || ^24.11.0"

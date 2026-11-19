@@ -6,6 +6,22 @@ import {schemaFallbackEvents} from './templates/schema-response-fallback.js';
 import {schemaComparisonEvents} from './templates/schema-response-comparison.js';
 import {schemaProductResearchEvents} from './templates/schema-response-product-research.js';
 import {
+  schemaAgentErrorEvents,
+  schemaGatewayTimeoutEvents,
+} from './templates/schema-response-error.js';
+import {
+  AGENT_ERROR_PROGRESS,
+  BUNDLE_PROGRESS,
+  COMPARISON_PROGRESS,
+  DISCOVERY_PROGRESS,
+  FALLBACK_PROGRESS,
+  GATEWAY_ERROR_PROGRESS,
+  PRODUCT_RESEARCH_PROGRESS,
+  searchProgress,
+  withProgressBlock,
+  type ProgressPlan,
+} from './templates/schema-progress-block.js';
+import {
   INSTANT_PRODUCTS_ID,
   QUERY_SUGGESTIONS_ID,
   buildInstantProductsEvents,
@@ -61,21 +77,37 @@ function isInitialize(action: SchemaAction): boolean {
   return action.name === 'initialize' && !action.surfaceId && !action.sourceComponentId;
 }
 
+/**
+ * The converse route a prompt came in on. The public route (the path without `preview/`) sends the
+ * agent's progress as a `ProgressBlock` surface instead of tool calls (Thermidor ADR-028); the
+ * others send the templates as they are.
+ */
+type ConverseRoute = 'preview' | 'public';
+
 interface SchemaPromptMapping {
   prompt: string;
   // A factory so the stateful "water sports" search surface can reset and rebuild its events
   // on every prompt response; static templates simply return their constant.
   buildEvents: (mintSurfaceId?: (surfaceId: string) => string) => ConverseEvent[];
+  // The agent's progress on the public route.
+  progress: ProgressPlan;
+}
+
+interface SchemaTurn {
+  events: ConverseEvent[];
+  progress: ProgressPlan;
 }
 
 const SCHEMA_PROMPT_TEMPLATE_MAP: ReadonlyArray<SchemaPromptMapping> = [
   {
     prompt: 'build a beginner surfing kit with budget, mid-range, and premium options',
     buildEvents: () => schemaBundleEvents,
+    progress: BUNDLE_PROGRESS,
   },
   {
     prompt: 'water sports',
     buildEvents: (mintSurfaceId) => buildWaterSportsInitialEvents(null, mintSurfaceId),
+    progress: searchProgress('water sports'),
   },
   {
     prompt: 'water sprots',
@@ -84,6 +116,7 @@ const SCHEMA_PROMPT_TEMPLATE_MAP: ReadonlyArray<SchemaPromptMapping> = [
         {originalQuery: 'water sprots', cause: 'correction', canOverride: false},
         mintSurfaceId
       ),
+    progress: searchProgress('water sports'),
   },
   {
     prompt: 'swim gear',
@@ -92,15 +125,32 @@ const SCHEMA_PROMPT_TEMPLATE_MAP: ReadonlyArray<SchemaPromptMapping> = [
         {originalQuery: 'swim gear', cause: 'trigger', canOverride: true},
         mintSurfaceId
       ),
+    progress: searchProgress('swim gear'),
   },
   {
     prompt: 'i like cold-water surfing. compare wetsuits for it',
     buildEvents: () => schemaComparisonEvents,
+    progress: COMPARISON_PROGRESS,
   },
-  {prompt: 'boating safety', buildEvents: () => schemaDiscoveryEvents},
+  {
+    prompt: 'boating safety',
+    buildEvents: () => schemaDiscoveryEvents,
+    progress: DISCOVERY_PROGRESS,
+  },
   {
     prompt: 'tell me more about the thermoflex winter wetsuit',
     buildEvents: () => schemaProductResearchEvents,
+    progress: PRODUCT_RESEARCH_PROGRESS,
+  },
+  {
+    prompt: 'simulate an agent error',
+    buildEvents: () => schemaAgentErrorEvents,
+    progress: AGENT_ERROR_PROGRESS,
+  },
+  {
+    prompt: 'simulate a timeout',
+    buildEvents: () => schemaGatewayTimeoutEvents,
+    progress: GATEWAY_ERROR_PROGRESS,
   },
 ];
 
@@ -289,34 +339,49 @@ function buildInstantProductsResponse(action: SchemaAction, session: SessionKeys
   );
 }
 
+function matchSchemaTurn(
+  message: string,
+  mintSurfaceId?: (surfaceId: string) => string
+): SchemaTurn {
+  const normalized = message.trim().toLowerCase();
+  const match = SCHEMA_PROMPT_TEMPLATE_MAP.find((entry) => entry.prompt === normalized);
+  if (match) {
+    return {events: match.buildEvents(mintSurfaceId), progress: match.progress};
+  }
+  // Any other prompt that finds products searches for it.
+  return searchProductsFor(normalized).length > 0
+    ? {
+        events: buildWaterSportsInitialEvents(null, mintSurfaceId, message.trim()),
+        progress: searchProgress(message.trim()),
+      }
+    : {events: schemaFallbackEvents, progress: FALLBACK_PROGRESS};
+}
+
 function matchSchemaPrompt(
   message: string,
   mintSurfaceId?: (surfaceId: string) => string
 ): ConverseEvent[] {
-  const normalized = message.trim().toLowerCase();
-  const match = SCHEMA_PROMPT_TEMPLATE_MAP.find((entry) => entry.prompt === normalized);
-  if (match) {
-    return match.buildEvents(mintSurfaceId);
-  }
-  // Any other prompt that finds products searches for it.
-  return searchProductsFor(normalized).length > 0
-    ? buildWaterSportsInitialEvents(null, mintSurfaceId, message.trim())
-    : schemaFallbackEvents;
+  return matchSchemaTurn(message, mintSurfaceId).events;
 }
 
-const schemaBaseResponse = (body: unknown, session: SessionKeys) => {
+const schemaBaseResponse = (
+  body: unknown,
+  session: SessionKeys,
+  {route = 'preview'}: {route?: ConverseRoute} = {}
+) => {
   promptSequence += 1;
   const suffix = promptSequence;
   const mintSurfaceId = (surfaceId: string) => `${surfaceId}-${suffix}`;
-  let events = schemaFallbackEvents;
+  let turn: SchemaTurn = {events: schemaFallbackEvents, progress: FALLBACK_PROGRESS};
   if (
     body &&
     typeof body === 'object' &&
     'message' in body &&
     typeof (body as Record<string, unknown>).message === 'string'
   ) {
-    events = matchSchemaPrompt((body as Record<string, unknown>).message as string, mintSurfaceId);
+    turn = matchSchemaTurn((body as Record<string, unknown>).message as string, mintSurfaceId);
   }
+  let events = route === 'public' ? withProgressBlock(turn.events, turn.progress) : turn.events;
   events = withSurfaceIds(events, mintSurfaceId);
   events = withTurnOpeningAnnouncements(events);
   recordRecentQuery(
@@ -409,9 +474,10 @@ function buildSchemaActionResponse(action: SchemaAction, session: SessionKeys) {
 export {
   schemaBaseResponse,
   matchSchemaPrompt,
+  matchSchemaTurn,
   buildSchemaActionResponse,
   buildSearchActionEvents,
   isConcurrentAction,
   isInitialize,
 };
-export type {SchemaAction, SessionKeys};
+export type {ConverseRoute, SchemaAction, SessionKeys};

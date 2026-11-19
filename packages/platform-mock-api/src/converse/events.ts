@@ -10,6 +10,7 @@ let runSequence = 0;
 type ConverseEventType =
   | 'RUN_STARTED'
   | 'RUN_FINISHED'
+  | 'RUN_ERROR'
   | 'ACTIVITY_SNAPSHOT'
   | 'turn_started'
   | 'turn_complete'
@@ -69,6 +70,15 @@ const RunFinished = (options: {threadId?: string; runId?: string} = {}): Convers
     type: 'RUN_FINISHED',
     threadId: options.threadId ?? DEFAULT_THREAD_ID,
     runId: options.runId ?? `run-${runSequence}-${Date.now().toString(36)}`,
+  },
+});
+
+const RunError = (options: {message: string; code?: string}): ConverseEvent => ({
+  event: 'RUN_ERROR',
+  data: {
+    type: 'RUN_ERROR',
+    message: options.message,
+    ...(options.code !== undefined && {code: options.code}),
   },
 });
 
@@ -302,6 +312,7 @@ export {
   TurnComplete,
   RunStarted,
   RunFinished,
+  RunError,
   StateSnapshot,
   TextMessageStart,
   TextMessageContent,

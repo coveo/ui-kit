@@ -19,6 +19,17 @@ PORT=4000 pnpm --filter @coveo/mock-converse-api start
 
 - `POST /converse`
 - `POST /rest/organizations/:orgId/commerce/unstable/agentic/converse`
+- `POST /api/preview/organizations/:orgId/agents/commerce/agui/converse`
+
+These serve the older templates. The schema-driven templates (`schema-response-*.ts`) are served on:
+
+- `POST /converse-schema`
+- `POST /schema/rest/organizations/:orgId/commerce/unstable/agentic/converse`
+- `POST /schema/api/preview/organizations/:orgId/agents/commerce/agui/converse`
+- `POST /schema/api/organizations/:orgId/agents/commerce/agui/converse`: the public route, the
+  preview path without `preview/`. As Thermidor ADR-028 decides, its answers to prompts send no
+  `TOOL_CALL_*` events and send the agent's progress as a `ProgressBlock` surface instead. The
+  other schema routes send the templates as they are.
 
 Supported prompts and response templates are inherited directly from
 `@coveo/platform-mock-api/converse`.

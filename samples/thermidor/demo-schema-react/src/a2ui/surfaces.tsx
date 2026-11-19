@@ -12,6 +12,7 @@ import {useEffect, useMemo, useRef, type ReactNode} from 'react';
 import {A2UIRenderer, useA2UI} from '@copilotkit/a2ui-renderer';
 import type {A2uiV09Message, DiscoveredSurface} from '@coveo/thermidor';
 import {turnSurfacesTarget} from './results-focus.js';
+import {TurnFailedContext} from './ProgressBlock/ProgressBlock.js';
 import {A2UISkeleton} from './Skeleton/Skeleton.js';
 import {useActionError, useSurfaceLocked} from './session-request.js';
 import {EarlierTurnContext, RestoredSurfacesContext} from './surface-controls.js';
@@ -184,5 +185,37 @@ function ActionErrorNote({surfaceId}: {surfaceId: string}) {
     <p role="alert" className={styles.actionError}>
       This action could not be completed: {message}
     </p>
+  );
+}
+
+const PROGRESS_COMPONENT = 'ProgressBlock';
+
+/**
+ * Splits a turn's surfaces into its progress, the `ProgressBlock` surface the public route sends
+ * (ADR-028), and its blocks. The progress is drawn above the answer, outside the turn's blocks.
+ */
+export function splitProgressSurfaces(surfaces: readonly DiscoveredSurface[]) {
+  return {
+    progress: surfaces.filter((surface) => surface.rootComponentType === PROGRESS_COMPONENT),
+    blocks: surfaces.filter((surface) => surface.rootComponentType !== PROGRESS_COMPONENT),
+  };
+}
+
+interface ProgressSurfacesProps {
+  surfaces: readonly DiscoveredSurface[];
+  /** Whether the turn failed, so that a block still running shows as failed. */
+  turnFailed: boolean;
+}
+
+/** Draws a turn's progress surfaces: display-only, so never disabled with the turn's blocks. */
+export function ProgressSurfaces({surfaces, turnFailed}: ProgressSurfacesProps) {
+  return (
+    <TurnFailedContext.Provider value={turnFailed}>
+      {surfaces.map(({surfaceId}) => (
+        <section className="catalog-surface" aria-label="Agent progress" key={surfaceId}>
+          <A2UIRenderer surfaceId={surfaceId} />
+        </section>
+      ))}
+    </TurnFailedContext.Provider>
   );
 }

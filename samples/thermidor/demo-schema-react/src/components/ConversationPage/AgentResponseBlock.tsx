@@ -9,14 +9,24 @@ export interface AgentResponseBlockProps {
   isStreaming: boolean;
   /** The turn's blocks, loading placeholders included, drawn after the agent's text. */
   children?: ReactNode;
+  /**
+   * Whether the turn's progress, from the public route's `ProgressBlock` surface, is drawn above
+   * this block. Such a turn shows it instead of the thinking block.
+   */
+  hasProgress?: boolean;
 }
 
-export function AgentResponseBlock({response, isStreaming, children}: AgentResponseBlockProps) {
+export function AgentResponseBlock({
+  response,
+  isStreaming,
+  children,
+  hasProgress = false,
+}: AgentResponseBlockProps) {
   const {agent} = response;
   const messages = agent?.messages ?? [];
   const toolCalls = agent?.toolCalls ?? [];
 
-  const showThinkingBlock = toolCalls.length > 0 || isStreaming;
+  const showThinkingBlock = !hasProgress && (toolCalls.length > 0 || isStreaming);
   const showStreamingMessage = messages.some((m) => m.content.length > 0);
 
   return (

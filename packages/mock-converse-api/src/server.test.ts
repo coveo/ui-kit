@@ -105,6 +105,26 @@ describe('createMockConverseServer', () => {
     expect(res.headers['access-control-allow-origin']).toBe('*');
   });
 
+  it('serves the public schema route, its preflight and its 405', async () => {
+    await startServer();
+    const path = '/schema/api/organizations/myorg/agents/commerce/agui/converse';
+
+    const preflight = await makeRequest(server, {method: 'OPTIONS', path});
+    const wrongMethod = await makeRequest(server, {method: 'GET', path});
+    const post = await makeRequest(
+      server,
+      {method: 'POST', path, headers: {'Content-Type': 'application/json'}},
+      JSON.stringify({message: 'kayaks'})
+    );
+
+    expect(preflight.statusCode).toBe(204);
+    expect(preflight.headers['access-control-allow-origin']).toBe('*');
+    expect(wrongMethod.statusCode).toBe(405);
+    expect(post.statusCode).toBe(200);
+    expect(post.headers['content-type']).toBe('text/event-stream');
+    expect(post.body).toContain('"component":"ProgressBlock"');
+  });
+
   it('returns an app-like server with listen()', () => {
     const app = createMockConverseServer();
     expect(typeof app.listen).toBe('function');

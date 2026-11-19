@@ -36,6 +36,7 @@ const EXPECTED_COMPONENTS = [
   'SearchBox',
   'QuerySuggestions',
   'InstantProducts',
+  'ProgressBlock',
 ] as const;
 
 describe('createThermidorCatalog (catalog build smoke)', () => {
