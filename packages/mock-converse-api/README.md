@@ -19,17 +19,6 @@ PORT=4000 pnpm --filter @coveo/mock-converse-api start
 
 - `POST /converse`
 - `POST /rest/organizations/:orgId/commerce/unstable/agentic/converse`
-- `POST /api/preview/organizations/:orgId/agents/commerce/agui/converse`
-
-These serve the older templates. The schema-driven templates (`schema-response-*.ts`) are served on:
-
-- `POST /converse-schema`
-- `POST /schema/rest/organizations/:orgId/commerce/unstable/agentic/converse`
-- `POST /schema/api/preview/organizations/:orgId/agents/commerce/agui/converse`
-
-As Thermidor ADR-028 decides, every turn the agent runs on these routes sends its progress as a
-`ProgressBlock` surface, beside the tool calls its template already sends. Searches are answered by
-the gateway, without the agent, so they send no block.
 
 Supported prompts and response templates are inherited directly from
 `@coveo/platform-mock-api/converse`.

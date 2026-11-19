@@ -293,7 +293,7 @@ describe('createMockConverseServer', () => {
         [surfaceId]: ['selectAction', 'selectSearchOption'],
       }))
     );
-    // The bundle turn streams its progress block's steps before its answer.
+    // The bundle turn streams its progress block's steps first.
   }, 15_000);
 
   describe('schema sessions', () => {

@@ -23,7 +23,7 @@ With `VITE_COVEO_ENDPOINT=http://localhost:3456/schema`, the sample posts to the
 
 ### The progress block
 
-Every turn the agent runs sends its progress as a `ProgressBlock` surface (Thermidor ADR-028), which the sample draws above the answer in place of the thinking block. The mock sends one for every prompt below that the agent answers, beside the tool calls its template already sends. The searches (`water sports`, its misspelled and `swim gear` variants, and any other query that finds products) are answered by the gateway, without the agent, so they get no block and no thinking block. The comparison prompt runs two steps at once, and the two error prompts end their block failed.
+Every turn the agent runs sends its progress as a `ProgressBlock` surface (Thermidor ADR-028), which the sample draws above the answer in place of the thinking block. In the mock, the agent's prompts below send one; searches, answered by the gateway, don't.
 
 ### Mock scenarios
 
@@ -34,8 +34,6 @@ Every turn the agent runs sends its progress as a `ProgressBlock` surface (Therm
 | `i like cold-water surfing. compare wetsuits for it`                       | ComparisonTable with 3 wetsuits, images, prices, annotations (Standout/Trade-off/Best for), an Additional information row with related documents (6, 2 and none), AI Summary, and NextActionsBar |
 | `boating safety`                                                           | Discovery with 2 ProductCarousels (Life Jackets + Boating Safety Gear) and NextActionsBar                                                                                                        |
 | `tell me more about the thermoflex winter wetsuit`                         | ProductResearchCard for the ThermoFlex Winter Wetsuit with a summary, 4 bullets, 6 related documents, and NextActionsBar                                                                         |
-| `simulate an agent error`                                                  | The agent fails: `RUN_ERROR` after a tool call. The progress block ends in `error` first                                                                                                         |
-| `simulate a timeout`                                                       | The gateway ends the turn: `RUN_ERROR` with `AGENT:UPSTREAM_TIMEOUT`. The progress block is still running when it arrives                                                                        |
 | Any other text (fallback)                                                  | NextActionsBar with suggested follow-up actions                                                                                                                                                  |
 
 ## Available scripts
