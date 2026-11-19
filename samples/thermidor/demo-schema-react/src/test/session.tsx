@@ -2,7 +2,7 @@ import {useSyncExternalStore, type ReactElement, type ReactNode} from 'react';
 import {render, screen, waitFor} from '@testing-library/react';
 import {expect, vi} from 'vitest';
 import {A2UIProvider} from '@copilotkit/a2ui-renderer';
-import {createSession} from '@coveo/thermidor';
+import {createSession, type SerializedSession} from '@coveo/thermidor';
 import {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
 import {SessionProvider, useSession, type DemoSession} from '../context/session.js';
 import {createThermidorCatalog} from '../a2ui/components.js';
@@ -247,6 +247,15 @@ const answerSuggestions: ConverseHandler = (request) => {
  * contract. The session sends `initialize` itself.
  */
 export function createTestSession(handler: ConverseHandler = answerShell) {
+  const {create, ...test} = createTestSessionFactory(handler);
+  return {session: create(), ...test};
+}
+
+/**
+ * Stubs the converse endpoint with `handler` and returns a factory of real sessions on it, with
+ * the demo's contract, for a {@link SessionProvider}.
+ */
+export function createTestSessionFactory(handler: ConverseHandler = answerShell) {
   const requests: ConverseRequest[] = [];
   vi.stubGlobal(
     'fetch',
@@ -256,26 +265,28 @@ export function createTestSession(handler: ConverseHandler = answerShell) {
       return handler(request, init.signal ?? undefined);
     })
   );
-  const session: DemoSession = createSession({
-    contracts: ComponentContractsSchema,
-    organizationId: 'test-org',
-    accessToken: 'test-token',
-    endpoint: 'https://converse.test',
-    agentConfigurationId: 'test-agent-configuration',
-    trackingId: 'test-tracking',
-    navigatorContextProvider: () => ({
-      clientId: 'test-client',
-      location: null,
-      referrer: null,
-      userAgent: null,
-      language: 'en',
-      country: 'US',
-      currency: 'USD',
-    }),
-  });
+  const create = (sessionToRestore?: SerializedSession): DemoSession =>
+    createSession({
+      contracts: ComponentContractsSchema,
+      organizationId: 'test-org',
+      accessToken: 'test-token',
+      endpoint: 'https://converse.test',
+      agentConfigurationId: 'test-agent-configuration',
+      trackingId: 'test-tracking',
+      navigatorContextProvider: () => ({
+        clientId: 'test-client',
+        location: null,
+        referrer: null,
+        userAgent: null,
+        language: 'en',
+        country: 'US',
+        currency: 'USD',
+      }),
+      sessionToRestore,
+    });
   const actions = (name: string) =>
     requests.filter((request) => request.action?.name === name).map(({action}) => action!);
-  return {session, requests, actions};
+  return {create, requests, actions};
 }
 
 /**

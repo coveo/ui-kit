@@ -200,11 +200,19 @@ function whenFree(session: QuerySubmitter): Promise<void> {
   });
 }
 
+const retiredSessions = new WeakSet<object>();
+
+/** Drops the prompts waiting on `session`, which the page no longer shows. */
+export function retire(session: object): void {
+  retiredSessions.add(session);
+}
+
 /**
  * Sends `prompt` once the session is free, first cancelling a suggestion in flight so that it never
  * holds the submit back. Only a producer that does not announce `fetchSuggestions` as concurrent
  * makes a suggestion the session's request; its cancelled request may still hold the producer's
- * turn slot, and the session's conflict retry absorbs the prompt's `409`.
+ * turn slot, and the session's conflict retry absorbs the prompt's `409`. A session retired
+ * meanwhile gets nothing.
  */
 export async function submitQuery(session: QuerySubmitter, prompt: string): Promise<void> {
   const {request} = session.getSnapshot();
@@ -213,6 +221,9 @@ export async function submitQuery(session: QuerySubmitter, prompt: string): Prom
       session.cancel();
     }
     await whenFree(session);
+    if (retiredSessions.has(session)) {
+      return;
+    }
   }
   return session.dispatchAction({name: 'submitPrompt', payload: {prompt}});
 }
