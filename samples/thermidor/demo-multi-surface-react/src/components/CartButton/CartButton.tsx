@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import type {CommerceCartItem} from '@coveo/thermidor';
 import {formatPrice} from '../../../../demo-schema-react/src/utils.js';
+import {getSampleConfiguration} from '../../env.js';
 import {useCart} from '../../session/storefront-session.js';
 import styles from './CartButton.module.css';
 
@@ -10,6 +11,9 @@ import styles from './CartButton.module.css';
  */
 export function CartButton() {
   const {items, cart} = useCart();
+  const {language, country, currency} = getSampleConfiguration();
+  const format = (price: number) =>
+    formatPrice(price, {locale: `${language}-${country}`, currency});
   const [open, setOpen] = useState(false);
   const count = items.reduce((total, item) => total + item.quantity, 0);
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -53,7 +57,7 @@ export function CartButton() {
                       </button>
                       {item.quantity}
                     </span>
-                    <span>{formatPrice(item.price * item.quantity)}</span>
+                    <span>{format(item.price * item.quantity)}</span>
                     <button
                       type="button"
                       className={styles.remove}
@@ -64,7 +68,7 @@ export function CartButton() {
                   </li>
                 ))}
               </ul>
-              <p className={styles.total}>Total {formatPrice(total)}</p>
+              <p className={styles.total}>Total {format(total)}</p>
             </>
           )}
         </div>

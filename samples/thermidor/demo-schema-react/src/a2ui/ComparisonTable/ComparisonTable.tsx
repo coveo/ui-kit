@@ -9,6 +9,7 @@ import {
   toLinkLimit,
   visibleDocuments,
 } from '../RelatedDocuments/RelatedDocumentList.js';
+import {useFormatPrice} from '../../context/use-format-price.js';
 import styles from './ComparisonTable.module.css';
 
 export interface ComparisonTableOptions {
@@ -22,10 +23,6 @@ export interface ComparisonTableOptions {
 
 const comparisonTableApi = {name: 'ComparisonTable', schema: ComparisonTablePropsSchema};
 type ComparisonTableRender = Parameters<typeof createReactComponent<typeof comparisonTableApi>>[1];
-
-function formatPrice(price: number): string {
-  return `$${price.toFixed(2)}`;
-}
 
 function ComparisonProductHeader({product}: {product: ComparisonProduct}) {
   const renderActions = useContext(ProductCardActionsContext);
@@ -65,6 +62,7 @@ function ComparisonProductHeader({product}: {product: ComparisonProduct}) {
 const renderComparisonTable =
   (linkLimit: number): ComparisonTableRender =>
   ({props}) => {
+    const formatPrice = useFormatPrice();
     const heading = props.heading ?? '';
     const summary = props.summary ?? '';
     const products = props.products ?? [];

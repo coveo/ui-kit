@@ -3,10 +3,6 @@ import {render, screen} from '@testing-library/react';
 import {A2UIProductCard} from './ProductCard.js';
 import {ProductCardActionsContext, type ProductCardProduct} from './product-card-actions.js';
 
-vi.mock('../../utils.js', () => ({
-  formatPrice: (v: number) => `$${v.toFixed(2)}`,
-}));
-
 describe('A2UIProductCard', () => {
   it('links the product name to its page', () => {
     render(

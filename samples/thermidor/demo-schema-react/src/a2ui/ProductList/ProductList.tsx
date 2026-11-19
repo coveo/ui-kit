@@ -7,11 +7,8 @@ import {ProductBadges} from '../ProductBadges/ProductBadges.js';
 import {ProductChildren} from '../ProductChildren/ProductChildren.js';
 import {usePromotedProduct} from '../ProductChildren/use-promoted-product.js';
 import {productListTarget, resultsFocusTarget} from '../results-focus.js';
+import {useFormatPrice} from '../../context/use-format-price.js';
 import styles from './ProductList.module.css';
-
-function formatPrice(value: number): string {
-  return `$${value.toFixed(2)}`;
-}
 
 function resolveProductImage(product: Product): string | null {
   const images = product.ec_images;
@@ -22,6 +19,7 @@ function resolveProductImage(product: Product): string | null {
 }
 
 function ProductCard({product: listed}: {product: Product}) {
+  const formatPrice = useFormatPrice();
   const [product, promote] = usePromotedProduct(listed);
   const imageUrl = resolveProductImage(product);
   const {ec_name: name, ec_brand: brand, ec_price: price, ec_promo_price: promoPrice} = product;

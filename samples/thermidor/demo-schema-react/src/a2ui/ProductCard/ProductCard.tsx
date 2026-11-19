@@ -1,5 +1,5 @@
 import {useContext} from 'react';
-import {formatPrice} from '../../utils.js';
+import {useFormatPrice} from '../../context/use-format-price.js';
 import {ProductCardActionsContext} from './product-card-actions.js';
 import styles from './ProductCard.module.css';
 
@@ -13,6 +13,7 @@ interface A2UIProductCardProps {
 }
 
 export function A2UIProductCard(props: A2UIProductCardProps) {
+  const formatPrice = useFormatPrice();
   const {ec_name, ec_brand, ec_price, ec_image, ec_product_id, clickUri} = props;
   const renderActions = useContext(ProductCardActionsContext);
   const actions =

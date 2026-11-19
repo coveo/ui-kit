@@ -2,7 +2,7 @@ import {useEffect, useRef, useState} from 'react';
 import type {CartLine} from '../../cart/cart-api.js';
 import {useCart} from '../../cart/CartProvider.js';
 import {QuantityStepper} from '../../cart/QuantityStepper/QuantityStepper.js';
-import {formatPrice} from '../../utils.js';
+import {useFormatPrice} from '../../context/use-format-price.js';
 import styles from './CartPanel.module.css';
 
 const ERROR_DISPLAY_MS = 5000;
@@ -15,6 +15,7 @@ interface CartLineItemProps {
 
 // `aria-disabled` rather than `disabled`, so a focused control keeps the focus while pending.
 function CartLineItem({line, pending, onFocus}: CartLineItemProps) {
+  const formatPrice = useFormatPrice();
   const {add, remove} = useCart();
   const {productId, name, imageUrl, clickUri, unitPrice, quantity, lineTotal} = line;
   const unlessPending = (action: () => void) => () => {
@@ -92,6 +93,7 @@ interface CartPanelProps {
 }
 
 export function CartPanel({id, purchasing, orderId, onPurchase}: CartPanelProps) {
+  const formatPrice = useFormatPrice();
   const {cart, status, pendingProductIds, error} = useCart();
   const panelRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);

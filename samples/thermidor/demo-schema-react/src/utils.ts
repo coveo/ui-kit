@@ -9,9 +9,24 @@ export function assembleMessages(messages: AgentMessage[]): string {
   return messages.map((m) => m.content).join('\n\n');
 }
 
-/** Format price as currency string with 2 decimals */
-export function formatPrice(price: number): string {
-  return `$${price.toFixed(2)}`;
+export interface PriceFormat {
+  /** BCP 47 locale, e.g. `en-US` or `fr-CA`. */
+  locale: string;
+  /** ISO 4217 currency code, e.g. `USD`. */
+  currency: string;
+}
+
+const numberFormats = new Map<string, Intl.NumberFormat>();
+
+/** Format a price in the given locale and currency. */
+export function formatPrice(price: number, {locale, currency}: PriceFormat): string {
+  const key = `${locale}|${currency}`;
+  let format = numberFormats.get(key);
+  if (!format) {
+    format = new Intl.NumberFormat(locale, {style: 'currency', currency, useGrouping: false});
+    numberFormats.set(key, format);
+  }
+  return format.format(price);
 }
 
 /** Render a markdown string to sanitized HTML */

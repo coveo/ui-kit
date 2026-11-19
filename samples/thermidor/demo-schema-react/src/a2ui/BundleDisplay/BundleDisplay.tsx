@@ -3,11 +3,8 @@ import {Fragment, useState} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {BundleSlot, BundleTier} from '@coveo/thermidor-schema';
 import {BundleDisplayPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {useFormatPrice} from '../../context/use-format-price.js';
 import styles from './BundleDisplay.module.css';
-
-function formatPrice(value: number): string {
-  return `$${value.toFixed(2)}`;
-}
 
 /**
  * A2-UI component for the `bundle-display` container.
@@ -23,6 +20,7 @@ export const BundleDisplay = createReactComponent(
     schema: BundleDisplayPropsSchema,
   },
   ({props, buildChild}) => {
+    const formatPrice = useFormatPrice();
     const heading = props.heading;
     const tiers = props.tiers ?? [];
     const [activeTierIndex, setActiveTierIndex] = useState(0);

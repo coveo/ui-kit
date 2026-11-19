@@ -3,11 +3,8 @@ import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {Product} from '@coveo/thermidor-schema';
 import {ProductSummaryPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {ProductCardActionsContext} from '../ProductCard/product-card-actions.js';
+import {useFormatPrice} from '../../context/use-format-price.js';
 import styles from './ProductSummary.module.css';
-
-function formatPrice(value: number): string {
-  return `$${value.toFixed(2)}`;
-}
 
 function resolveProductImage(product: Product): string | null {
   const images = product.ec_images;
@@ -38,6 +35,7 @@ export const ProductSummary = createReactComponent(
     schema: ProductSummaryPropsSchema,
   },
   ({props}) => {
+    const formatPrice = useFormatPrice();
     const renderActions = useContext(ProductCardActionsContext);
 
     if (props.categoryLabel === undefined) {
