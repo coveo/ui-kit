@@ -2364,14 +2364,18 @@ describe('createSession lifecycle', () => {
       }
 
       /** Restores `serialized` and answers its `initialize` with `keys` and a new shell. */
-      async function resumed(serialized: SerializedSession, keys: Record<string, string>) {
+      async function resumed(
+        serialized: SerializedSession,
+        keys: Record<string, string>,
+        shell: typeof shellSurface = newShellSurface
+      ) {
         const stream = queueStream();
         const session = createSession({...shellConfig, sessionToRestore: serialized});
         const changes: number[] = [];
         session.subscribe(() => changes.push(session.getSnapshot().turns.length));
         await stream.opened;
         stream.emit({type: 'RUN_STARTED', ...keys});
-        stream.emit(newShellSurface);
+        stream.emit(shell);
         stream.emit({type: 'RUN_FINISHED'});
         stream.close();
         await vi.waitFor(() => expect(session.request).toBeUndefined());
@@ -2706,7 +2710,7 @@ describe('createSession lifecycle', () => {
         stream.close();
       });
 
-      it('sends nothing to the replaced shell, even from a turn that updated it or a retry it opened', async () => {
+      it('sends nothing to a replaced shell, even from a turn that updated it or a retry it opened, across restores', async () => {
         const initialized = await initializedSession();
         await completePrompt(initialized, 'first');
         const shellUpdate = queueStream();
@@ -2737,13 +2741,22 @@ describe('createSession lifecycle', () => {
         expect(initialized.turns.at(-1)!.status).toBe('error');
         callMock.mockReset();
 
-        const {session} = await resumed(initialized.serialize(), {
-          conversationSessionId: 'gateway-session',
-          conversationToken: 'gateway-token',
-        });
+        const keys = {conversationSessionId: 'gateway-session', conversationToken: 'gateway-token'};
+        const {session} = await resumed(initialized.serialize(), keys);
         callMock.mockReset();
         await session.dispatchAction(shellSelectPage(3));
         session.retry(failedTurnId);
+        await flush();
+
+        expect(callMock).not.toHaveBeenCalled();
+
+        const thirdShell = JSON.parse(
+          JSON.stringify(shellSurface).replaceAll(SHELL_ID, 'ui-shell-3')
+        ) as typeof shellSurface;
+        const {session: restoredAgain} = await resumed(session.serialize(), keys, thirdShell);
+        callMock.mockReset();
+        await restoredAgain.dispatchAction(shellSelectPage(3));
+        restoredAgain.retry(failedTurnId);
         await flush();
 
         expect(callMock).not.toHaveBeenCalled();
