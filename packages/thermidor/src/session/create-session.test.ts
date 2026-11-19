@@ -2515,6 +2515,33 @@ describe('createSession lifecycle', () => {
         expect(again.initialization).toMatchObject({status: 'error', error: transientError});
       });
 
+      it('retries the initialize of a session created with its keys, carrying them every time', async () => {
+        const keys = {
+          sessionId: '0b5b8e0e-4f1a-4c51-9d3c-5d2f9f6e8a11',
+          sessionToken: 'token-of-session',
+        };
+        queueTransient();
+        callMock.mockImplementationOnce(async () => ({success: false, error: 'Unknown action'}));
+        const session = createSession({...shellConfig, ...keys});
+        await vi.advanceTimersByTimeAsync(10_000);
+        expect(session.initialization?.status).toBe('error');
+        const stream = queueStream();
+
+        session.retryInitialization();
+        finishShell(stream);
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(callMock).toHaveBeenCalledTimes(3);
+        for (const [request] of callMock.mock.calls) {
+          expect(request).toMatchObject({
+            action: {name: 'initialize'},
+            conversationSessionId: keys.sessionId,
+            conversationToken: keys.sessionToken,
+          });
+        }
+        expect(session.initialization?.status).toBe('complete');
+      });
+
       it('retryInitialization sends initialize from a session restored while initialize was in flight', async () => {
         queueStream();
         const interrupted = createSession(shellConfig);
@@ -2569,19 +2596,6 @@ describe('createSession lifecycle', () => {
             const session = await failedSession();
             queueStream();
             void dispatchPrompt(session);
-            return session;
-          },
-        ],
-        [
-          'once the session has a token',
-          async () => {
-            const stream = queueStream();
-            const session = createSession(shellConfig);
-            await vi.advanceTimersByTimeAsync(0);
-            stream.emit({type: 'RUN_STARTED', conversationToken: 'gateway-token'});
-            stream.emit({type: 'RUN_ERROR', message: 'Agent failed'});
-            stream.close();
-            await vi.advanceTimersByTimeAsync(0);
             return session;
           },
         ],
@@ -2827,6 +2841,368 @@ describe('createSession lifecycle', () => {
       expect(restored.a2uiMessages).toEqual(session.a2uiMessages);
       session.cancel();
       stream.close();
+    });
+  });
+});
+
+describe('createSession session keys', () => {
+  const SESSION_ID = '0b5b8e0e-4f1a-4c51-9d3c-5d2f9f6e8a11';
+  const SESSION_TOKEN = 'token-of-session';
+  const PROMPT = {name: 'submitPrompt', payload: {prompt: 'find shoes'}} as const;
+
+  /** Answers every call with a stream that sends `events` and then ends. */
+  function answerWith(...events: Record<string, unknown>[]): void {
+    callMock.mockImplementation(async () => ({
+      success: true,
+      data: {
+        stream: new ReadableStream<Uint8Array>({
+          start(controller) {
+            for (const event of events) {
+              controller.enqueue(sseFrame(event));
+            }
+            controller.close();
+          },
+        }),
+      },
+    }));
+  }
+
+  function answerWithKeys(sessionId: string, sessionToken: string): void {
+    answerWith(
+      {type: 'RUN_STARTED', conversationSessionId: sessionId, conversationToken: sessionToken},
+      PAGINATION_SURFACE,
+      {type: 'RUN_FINISHED'}
+    );
+  }
+
+  function failNextWith(failure: {error: string; status?: number; unsent?: true}): void {
+    callMock.mockImplementationOnce(async () => ({success: false, ...failure}) as never);
+  }
+
+  function sent(): Record<string, unknown>[] {
+    return callMock.mock.calls.map(([request]) => request as Record<string, unknown>);
+  }
+
+  function config(overrides: Partial<SessionConfig> = {}): SessionConfig {
+    return {...baseConfig, ...overrides};
+  }
+
+  beforeEach(() => {
+    callMock.mockReset();
+    answerWithKeys(SESSION_ID, 'token-1');
+  });
+
+  it.each<[string, Partial<SessionConfig>, string]>([
+    ['a sessionId that is not a UUID', {sessionId: 'session-1'}, 'UUID'],
+    ['a sessionToken without a sessionId', {sessionToken: SESSION_TOKEN}, 'sessionId with'],
+    ['a blank sessionToken', {sessionId: SESSION_ID, sessionToken: ' '}, 'non-blank'],
+    ['an empty sessionToken', {sessionId: SESSION_ID, sessionToken: ''}, 'non-blank'],
+    [
+      'a sessionId with a sessionToRestore',
+      {sessionId: SESSION_ID, sessionToRestore: createSession(config()).serialize()},
+      'not both',
+    ],
+  ])('throws on %s', (_, overrides, message) => {
+    expect(() => createSession(config(overrides))).toThrow(message);
+  });
+
+  describe('without keys', () => {
+    it('exposes no keys, and sends none, until the endpoint sends them', async () => {
+      answerWithKeys('session-1', 'token-1');
+      const session = createSession(config());
+
+      expect(session.sessionId).toBeUndefined();
+      expect(session.sessionToken).toBeUndefined();
+      await session.dispatchAction(PROMPT);
+      await session.dispatchAction(PROMPT);
+
+      expect(sent()[0].conversationSessionId).toBeUndefined();
+      expect(sent()[1]).toMatchObject({
+        conversationSessionId: 'session-1',
+        conversationToken: 'token-1',
+      });
+      expect(session.sessionId).toBe('session-1');
+      expect(session.sessionToken).toBe('token-1');
+    });
+
+    it('exposes the keys of a restored session, and keeps them when a request fails', async () => {
+      answerWith({type: 'RUN_ERROR', message: 'Agent failed'});
+      const session = createSession(
+        config({
+          sessionToRestore: {
+            ...createSession(config()).serialize(),
+            sessionId: 'session-1',
+            sessionToken: 'token-1',
+          },
+        })
+      );
+
+      expect(session.sessionId).toBe('session-1');
+      await session.dispatchAction(PROMPT);
+
+      expect(session.sessionId).toBe('session-1');
+      expect(session.sessionToken).toBe('token-1');
+    });
+
+    it('drops a restored id that has no token when the first request fails before the token', async () => {
+      const serialized = createSession(config({sessionId: SESSION_ID})).serialize();
+      answerWith({type: 'RUN_ERROR', message: 'Agent failed'});
+      const session = createSession(config({sessionToRestore: serialized}));
+      await session.dispatchAction(PROMPT);
+
+      expect(session.sessionId).toBeUndefined();
+      answerWithKeys('session-1', 'token-1');
+      session.retry(session.turns[0].id);
+      await flush();
+
+      expect(sent()[0]).toMatchObject({conversationSessionId: SESSION_ID});
+      expect(sent()[1].conversationSessionId).toBeUndefined();
+      expect(session.sessionId).toBe('session-1');
+    });
+  });
+
+  describe('with a sessionId alone', () => {
+    it('exposes and serializes the id right after creation, before any request', () => {
+      const session = createSession(config({sessionId: SESSION_ID}));
+
+      expect(session.sessionId).toBe(SESSION_ID);
+      expect(session.sessionToken).toBeUndefined();
+      expect(createSession(config({sessionToRestore: session.serialize()})).sessionId).toBe(
+        SESSION_ID
+      );
+      expect(callMock).not.toHaveBeenCalled();
+    });
+
+    it('sends the id on initialize and every request after it', async () => {
+      const session = createSession(config({sessionId: SESSION_ID, initialize: true}));
+      await flush();
+      await session.dispatchAction(PROMPT);
+      await session.dispatchAction(selectPageMessage(2));
+
+      expect(sent().map((request) => (request.action as {name: string} | null)?.name)).toEqual([
+        'initialize',
+        undefined,
+        'selectPage',
+      ]);
+      expect(sent()[0].conversationToken).toBeUndefined();
+      for (const request of sent()) {
+        expect(request).toMatchObject({conversationSessionId: SESSION_ID});
+      }
+    });
+
+    it('gives the id up when the first prompt fails before the token, so the retry lets the endpoint assign one', async () => {
+      answerWith({type: 'RUN_ERROR', message: 'Agent failed'});
+      const session = createSession(config({sessionId: SESSION_ID}));
+      await session.dispatchAction(PROMPT);
+
+      expect(session.sessionId).toBeUndefined();
+      answerWithKeys('session-1', 'token-1');
+      session.retry(session.turns[0].id);
+      await flush();
+
+      expect(sent()[0]).toMatchObject({conversationSessionId: SESSION_ID});
+      expect(sent()[1].conversationSessionId).toBeUndefined();
+      expect(session.sessionId).toBe('session-1');
+    });
+
+    it('gives the id up when the first prompt is cancelled before the token', async () => {
+      queueStream();
+      const session = createSession(config({sessionId: SESSION_ID}));
+      const first = session.dispatchAction(PROMPT);
+      await flush();
+      session.cancel();
+      await first;
+
+      expect(session.sessionId).toBeUndefined();
+      answerWithKeys('session-1', 'token-1');
+      await session.dispatchAction(PROMPT);
+
+      expect(sent()[1].conversationSessionId).toBeUndefined();
+      expect(session.sessionId).toBe('session-1');
+    });
+
+    it('keeps the id after a later failure once the endpoint sent the token', async () => {
+      const session = createSession(config({sessionId: SESSION_ID}));
+      await session.dispatchAction(PROMPT);
+      answerWith({type: 'RUN_ERROR', message: 'Agent failed'});
+
+      await session.dispatchAction(PROMPT);
+      await session.dispatchAction(PROMPT);
+
+      expect(session.turns[1].status).toBe('error');
+      expect(session.sessionId).toBe(SESSION_ID);
+      expect(sent()[2]).toMatchObject({
+        conversationSessionId: SESSION_ID,
+        conversationToken: 'token-1',
+      });
+    });
+
+    it.each([429, 503, 400, 409])(
+      'keeps the id when the endpoint refuses the first prompt with a %i, so the retry sends it again',
+      async (status) => {
+        failNextWith({error: `HTTP ${status}`, status});
+        const session = createSession(config({sessionId: SESSION_ID}));
+        await session.dispatchAction(PROMPT);
+
+        expect(session.sessionId).toBe(SESSION_ID);
+        session.retry(session.turns[0].id);
+        await flush();
+
+        expect(sent().at(-1)).toMatchObject({conversationSessionId: SESSION_ID});
+        expect(session.sessionId).toBe(SESSION_ID);
+      }
+    );
+
+    it.each([
+      ['drops', 'no response', undefined, 'session-1'],
+      ['drops', 'a 502', 502, 'session-1'],
+      ['drops', 'a 504', 504, 'session-1'],
+      ['keeps', 'a 503', 503, SESSION_ID],
+    ])(
+      '%s the id before retrying an initialize that got %s',
+      async (_verb, _label, status, retriedId) => {
+        vi.useFakeTimers({toFake: ['setTimeout', 'clearTimeout', 'Date']});
+        try {
+          callMock.mockImplementationOnce(
+            async () => ({success: false, error: 'Unavailable', status, transient: {}}) as never
+          );
+          answerWithKeys(retriedId, 'token-1');
+          const session = createSession(config({sessionId: SESSION_ID, initialize: true}));
+          await vi.advanceTimersByTimeAsync(1000);
+
+          expect(sent()[0]).toMatchObject({conversationSessionId: SESSION_ID});
+          expect(sent()[1].conversationSessionId).toBe(
+            retriedId === SESSION_ID ? SESSION_ID : undefined
+          );
+          expect(session.sessionId).toBe(retriedId);
+        } finally {
+          vi.useRealTimers();
+        }
+      }
+    );
+
+    it('keeps the id when the endpoint refuses initialize, so the next request sends it again', async () => {
+      failNextWith({error: 'HTTP 429', status: 429});
+      const session = createSession(config({sessionId: SESSION_ID, initialize: true}));
+      await flush();
+
+      expect(session.initialization?.status).toBe('error');
+      expect(session.sessionId).toBe(SESSION_ID);
+      await session.dispatchAction(PROMPT);
+
+      expect(sent()[1]).toMatchObject({conversationSessionId: SESSION_ID});
+    });
+
+    it.each<[string, {error: string; status?: number; unsent?: true}, string | undefined]>([
+      ['drops the id after a 403', {error: 'HTTP 403', status: 403}, undefined],
+      ['drops the id after no response', {error: 'Network error'}, undefined],
+      ['keeps the id when never sent', {error: 'Config error', unsent: true}, SESSION_ID],
+    ])('%s on the first prompt', async (_, failure, expected) => {
+      failNextWith(failure);
+      const session = createSession(config({sessionId: SESSION_ID}));
+
+      await session.dispatchAction(PROMPT);
+
+      expect(session.sessionId).toBe(expected);
+    });
+  });
+
+  describe('with a sessionId and a sessionToken', () => {
+    const keys = {sessionId: SESSION_ID, sessionToken: SESSION_TOKEN};
+
+    it('exposes and serializes both keys right after creation, before any request', () => {
+      const session = createSession(config(keys));
+
+      expect(session.sessionId).toBe(SESSION_ID);
+      expect(session.sessionToken).toBe(SESSION_TOKEN);
+      expect(session.serialize()).toMatchObject(keys);
+      expect(callMock).not.toHaveBeenCalled();
+    });
+
+    it('continues the session with a single initialize that carries both keys', async () => {
+      answerWithKeys(SESSION_ID, SESSION_TOKEN);
+      const session = createSession(config({...keys, initialize: true}));
+      await flush();
+      await flush();
+
+      expect(sent()).toHaveLength(1);
+      expect(sent()[0]).toMatchObject({
+        action: {name: 'initialize', context: {}},
+        conversationSessionId: SESSION_ID,
+        conversationToken: SESSION_TOKEN,
+      });
+      expect(session.initialization?.status).toBe('complete');
+    });
+
+    it.each([false, true])(
+      'sends both keys on a first prompt, and no initialize, with initialize: %s',
+      async (initialize) => {
+        answerWithKeys(SESSION_ID, SESSION_TOKEN);
+        const session = createSession(config({...keys, initialize}));
+
+        await session.dispatchAction(PROMPT);
+        await flush();
+
+        expect(sent()).toEqual([
+          expect.objectContaining({
+            action: null,
+            conversationSessionId: SESSION_ID,
+            conversationToken: SESSION_TOKEN,
+          }),
+        ]);
+        expect(session.initialization).toBeUndefined();
+      }
+    );
+
+    it.each([
+      ['a 403', {error: 'HTTP 403', status: 403}],
+      ['no response', {error: 'Network error'}],
+    ])('keeps both keys when the first request gets %s', async (_, failure) => {
+      failNextWith(failure);
+      const session = createSession(config(keys));
+
+      await session.dispatchAction(PROMPT);
+
+      expect(session.sessionId).toBe(SESSION_ID);
+      expect(session.sessionToken).toBe(SESSION_TOKEN);
+    });
+
+    it.each([
+      ['fails', {type: 'RUN_ERROR', message: 'Agent failed'}],
+      ['finishes', {type: 'RUN_FINISHED'}],
+    ])(
+      'drops a replacement id whose token never came when the request %s, so the endpoint assigns one',
+      async (_, end) => {
+        const newId = '7c9e6679-7425-40de-944b-e07fc1f90ae7';
+        answerWith({type: 'RUN_STARTED', conversationSessionId: newId}, end);
+        const session = createSession(config(keys));
+        await session.dispatchAction(PROMPT);
+
+        expect(session.sessionId).toBeUndefined();
+        expect(session.sessionToken).toBeUndefined();
+        answerWithKeys(SESSION_ID, 'token-1');
+        await session.dispatchAction(PROMPT);
+
+        expect(sent()[1].conversationSessionId).toBeUndefined();
+        expect(sent()[1].conversationToken).toBeUndefined();
+      }
+    );
+
+    it('adopts the new keys the endpoint answers with, and sends them next', async () => {
+      const newId = '7c9e6679-7425-40de-944b-e07fc1f90ae7';
+      answerWithKeys(newId, 'new-token');
+      const session = createSession(config({...keys, initialize: true}));
+      await flush();
+      await flush();
+
+      expect(session.sessionId).toBe(newId);
+      expect(session.sessionToken).toBe('new-token');
+      await session.dispatchAction(PROMPT);
+
+      expect(sent()[1]).toMatchObject({
+        conversationSessionId: newId,
+        conversationToken: 'new-token',
+      });
     });
   });
 });

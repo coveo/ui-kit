@@ -182,10 +182,26 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
    */
   sessionToRestore?: SerializedSession;
   /**
+   * The conversation session id the session opens with. It must be a UUID, and it is sent as
+   * `conversationSessionId` from the first request. Alone, it opens a new session under that id;
+   * if the first request ends before the endpoint sends a token, the session drops the id and the
+   * endpoint assigns one (it keeps it after an error status other than 403, 502 or 504, or a
+   * request never sent). It can't be combined with `sessionToRestore`.
+   */
+  sessionId?: string;
+  /**
+   * The token of the session {@link SessionConfig.sessionId} names, to continue it. Requires
+   * `sessionId`. When the session expired, its `initialize` starts a new one, and
+   * {@link Session.sessionId} and {@link Session.sessionToken} return the new keys; with
+   * `initialize: false`, the first prompt or action fails instead.
+   */
+  sessionToken?: string;
+  /**
    * Whether the session opens itself with an `initialize` action, sent a microtask after
    * {@link createSession} returns so that a listener subscribed in the same task sees it start.
-   * Defaults to `true`. A restored session never sends it by itself. Pass
-   * `false` for tests, or for a server that creates a session while rendering.
+   * Defaults to `true`. A restored session never sends it by itself. Pass `false` for tests, or
+   * for a server that creates a session while rendering; the session keys then go out with the
+   * first prompt or action.
    */
   initialize?: boolean;
 }
@@ -229,6 +245,15 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * are the live surfaces it created, so a transcript knows where to draw them.
    */
   readonly turns: readonly Turn[];
+  /**
+   * The conversation session id the session's requests carry: the configured or restored one,
+   * then the one the endpoint sends. `undefined` until there is one, or after the session drops
+   * an id the endpoint never confirmed. Store it with {@link Session.sessionToken} to continue
+   * the session later.
+   */
+  readonly sessionId: string | undefined;
+  /** The token the session's requests carry with {@link Session.sessionId}, once there is one. */
+  readonly sessionToken: string | undefined;
   /**
    * The run of the `initialize` action that opened the session, or `undefined` when the session
    * sent none. Not a turn. Only `initialize` changes its `status`; the surface snapshots of a
@@ -340,9 +365,9 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
   retry(turnId: string): void;
   /**
    * Sends `initialize` again when {@link Session.initialization} is `'error'`, and resets it to a
-   * fresh `'streaming'` run while it runs, a restored session's included. Does nothing when the
-   * initialization is `undefined`,
-   * streaming or complete, once the session has a token, or while a request is in flight.
+   * fresh `'streaming'` run while it runs, a restored session's included. It carries the session's
+   * keys when it has them, so the endpoint resumes that session. Does nothing when the
+   * initialization is `undefined`, streaming or complete, or while a request is in flight.
    */
   retryInitialization(): void;
   /** Serializes the session transcript for persistence. */
@@ -451,7 +476,7 @@ export function createSession<TContracts extends ContractsSchema>(
 ): Session<TContracts> {
   requireNonBlank(config, ['agentConfigurationId', 'trackingId'], 'createSession');
   const {agentConfigurationId, trackingId} = config;
-  return createSessionRuntime(config, {agentConfigurationId, trackingId}).session;
+  return createSessionRuntime(config, {agentConfigurationId, trackingId});
 }
 
 function requireNonBlank<T extends object>(
@@ -476,35 +501,46 @@ function readLocale(navigatorContext: NavigatorContext): RequestLocale {
   };
 }
 
-/** A session, with a reader for the conversation session id its requests carry. */
-export interface SessionRuntime<TContracts extends ContractsSchema = ContractsSchema> {
-  session: Session<TContracts>;
-  readSessionId(): string | undefined;
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function validateSessionKeys({sessionId, sessionToken, sessionToRestore}: SessionRuntimeConfig) {
+  if (sessionId !== undefined && !UUID.test(sessionId)) {
+    throw new Error('A session requires its sessionId to be a UUID.');
+  }
+  if (sessionToken !== undefined && !sessionToken.trim()) {
+    throw new Error('A session requires a non-blank sessionToken.');
+  }
+  if (sessionToken !== undefined && sessionId === undefined) {
+    throw new Error('A session requires a sessionId with its sessionToken.');
+  }
+  if (sessionId !== undefined && sessionToRestore !== undefined) {
+    throw new Error('A session accepts a sessionId or a sessionToRestore, not both.');
+  }
 }
 
 /**
  * The session runtime both entry points share. `requestScope` holds the fields sent with
- * every request besides the ones the session builds itself. `initialSessionId` is the first
- * conversation session id the requests carry. The session drops it if a request that may have
- * reserved it ends before the endpoint sends a token, as it does `unconfirmedSessionId`, which
- * defaults to it.
+ * every request besides the ones the session builds itself.
  */
 export function createSessionRuntime<TContracts extends ContractsSchema>(
   config: SessionRuntimeConfig<TContracts>,
-  requestScope: Readonly<RequestScopeFields>,
-  initialSessionId?: string,
-  unconfirmedSessionId = initialSessionId
-): SessionRuntime<TContracts> {
+  requestScope: Readonly<RequestScopeFields>
+): Session<TContracts> {
   if (typeof config.navigatorContextProvider !== 'function') {
     throw new Error('A session requires a navigatorContextProvider.');
   }
+  validateSessionKeys(config);
+  // An id without a token may not be the endpoint's: the session drops it if a request that may
+  // have reserved it ends before the endpoint sends a token.
+  const seed = config.sessionToRestore ?? config;
+  let unconfirmedSessionId = seed.sessionToken === undefined ? seed.sessionId : undefined;
   const initialState: SessionStoreState<Turn> = config.sessionToRestore
     ? restoreSession(config.sessionToRestore)
     : {
         turns: [],
         activeTurnId: undefined,
-        sessionId: initialSessionId,
-        sessionToken: undefined,
+        sessionId: config.sessionId,
+        sessionToken: config.sessionToken,
         state: {},
         rendererStream: EMPTY_RENDERER_STREAM,
       };
@@ -846,11 +882,17 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
 
         const keys = readSessionKeys(event);
         if (keys) {
-          store.setState((current) => ({
-            ...current,
-            sessionId: keys.sessionId ?? current.sessionId,
-            sessionToken: keys.sessionToken ?? current.sessionToken,
-          }));
+          // A new id is a new session: the old token is not its token, and the id is unconfirmed
+          // until its own token arrives.
+          const sessionId = keys.sessionId ?? store.getState().sessionId;
+          if (sessionId !== store.getState().sessionId && keys.sessionToken === undefined) {
+            unconfirmedSessionId = sessionId;
+          }
+          store.setState((current) =>
+            sessionId === current.sessionId
+              ? {...current, sessionToken: keys.sessionToken ?? current.sessionToken}
+              : {...current, sessionId, sessionToken: keys.sessionToken}
+          );
         }
 
         // The run an action streams into keeps its own status and response (ADR-018).
@@ -1355,8 +1397,8 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   }
 
   function retryInitialization(): void {
-    const {initialization, sessionToken, request} = store.getState();
-    if (initialization?.status !== 'error' || sessionToken || request) {
+    const {initialization, request} = store.getState();
+    if (initialization?.status !== 'error' || request) {
       return;
     }
     void initialize(false);
@@ -1397,9 +1439,8 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
 
   if (config.initialize !== false && !config.sessionToRestore) {
     queueMicrotask(() => {
-      const {sessionToken, request} = store.getState();
       // A prompt dispatched in the same task already opens the session.
-      if (!sessionToken && !request) {
+      if (!store.getState().request) {
         void initialize(true);
       }
     });
@@ -1409,6 +1450,12 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     contracts: config.contracts,
     get turns() {
       return readSurfaceView().turns;
+    },
+    get sessionId() {
+      return store.getState().sessionId;
+    },
+    get sessionToken() {
+      return store.getState().sessionToken;
     },
     get initialization() {
       return store.getState().initialization;
@@ -1438,5 +1485,5 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     retryInitialization,
     serialize,
   };
-  return {session, readSessionId: () => store.getState().sessionId};
+  return session;
 }
