@@ -10,7 +10,9 @@
   },
 
   "apiReport": {
-    "enabled": false
+    "enabled": true,
+    "reportFolder": "<projectFolder>/api-report/",
+    "reportFileName": "thermidor.api.md"
   },
 
   "docModel": {
