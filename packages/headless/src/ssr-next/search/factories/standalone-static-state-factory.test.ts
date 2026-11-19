@@ -84,7 +84,7 @@ describe('fetchStandaloneStaticStateFactory', () => {
       navigatorContext: mockNavigatorContext,
       searchParams: {q: 'test'},
     });
-    expect(result.navigatorContext).toBe(mockNavigatorContext);
+    expect(result.navigatorContext).toEqual(mockNavigatorContext);
     expect(result.searchParams).toEqual({q: 'test'});
   });
 
@@ -139,7 +139,7 @@ describe('fetchStandaloneStaticStateFactory', () => {
       navigatorContext: mockNavigatorContext,
     });
 
-    expect(result.navigatorContext).toBe(mockNavigatorContext);
+    expect(result.navigatorContext).toEqual(mockNavigatorContext);
     expect(result.searchActions).toEqual([]);
     expect(mockEngine.executeFirstSearch).not.toHaveBeenCalled();
   });

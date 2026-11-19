@@ -1,3 +1,4 @@
+import {toSerializableNavigatorContext} from '../../common/serializable-navigator-context.js';
 import {createStaticState} from '../controller-utils.js';
 import type {BuildParameters} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
@@ -47,6 +48,8 @@ export function fetchRecommendationStaticStateFactory<
     return {
       ...restParams,
       ...staticState,
+      navigatorContext: toSerializableNavigatorContext(params.navigatorContext),
+      solutionType: SolutionType.recommendation as const,
       ...(controllerProps && {controllerProps}),
     };
   };
