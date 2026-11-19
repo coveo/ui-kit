@@ -118,6 +118,28 @@ describe('deriveSessionSurfaces', () => {
     expect(view.ownerTurnIds.get('no-catalog')).toBe('t1');
   });
 
+  it('marks read-only a surface a restored activity created, until a later run creates it again', () => {
+    const restored = turn('t1', [create('answer')]);
+    const restoredActivities = new Set(restored.response.activities);
+
+    const view = deriveSessionSurfaces(
+      {turns: [restored]},
+      undefined,
+      undefined,
+      restoredActivities
+    );
+    const recreated = deriveSessionSurfaces(
+      {turns: [restored, turn('t2', [create('answer')])]},
+      undefined,
+      undefined,
+      restoredActivities
+    );
+
+    expect(view.surfaces[0].readOnly).toBe(true);
+    expect(recreated.surfaces[0].readOnly).toBeUndefined();
+    expect(recreated.readOnlySurfaceIds.size).toBe(0);
+  });
+
   describe('loading placeholders', () => {
     const placeholder = (surfaceId: string) => ({
       version: '1.0',

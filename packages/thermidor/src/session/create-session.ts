@@ -44,7 +44,12 @@ import {validateActionPayload} from './action-payload-validation.js';
 import {concurrentAction, type CachePolicy} from './announced-actions.js';
 import type {ContractsSchema} from './contracts.js';
 import {createConcurrentActions} from './concurrent-actions.js';
-import {EMPTY_RENDERER_STREAM, appendToRendererStream} from './renderer-stream.js';
+import {
+  EMPTY_RENDERER_STREAM,
+  RENDERER_PROTOCOL_VERSION,
+  appendToRendererStream,
+  type RendererStream,
+} from './renderer-stream.js';
 import {callWithRetry, type RetryOptions} from './request-retry.js';
 import {createTurn, foldActivity, foldInitialization, SURFACE_ACTIVITY_KIND} from './fold.js';
 import {deriveNodeIdentityRegistry} from './in-transit-validation.js';
@@ -71,6 +76,7 @@ import type {
   A2uiState,
   A2uiMessage,
   ActionError,
+  Activity,
   DiscoveredSurface,
   SessionInitialization,
   SessionRequest,
@@ -166,14 +172,36 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
    * A previously-serialized session to restore at construction. When provided,
    * the store is seeded from the serialized session, reproducing the persisted
    * transcript and continuity keys (`sessionId`/`sessionToken`/`activeTurnId`)
-   * so the restored session continues the same backend conversation.
+   * so the restored session continues the same backend conversation. The surfaces its earlier
+   * turns created are {@link DiscoveredSurface.readOnly | read-only}; those of the last turn that
+   * created one stay live, and so does the last turn's retry. When it has a token, its `initialize`
+   * resumes the session: the restored shell stays until the endpoint answers with a new, live shell
+   * under a new id. A failed turn opened from the restored shell can't be retried once that shell is
+   * replaced. If the endpoint answers with another session instead, the restored turns are dropped,
+   * and `a2uiMessages` deletes their surfaces.
    */
   sessionToRestore?: SerializedSession;
   /**
+   * The conversation session id the session opens with. It must be a UUID, and it is sent as
+   * `conversationSessionId` from the first request. Alone, it opens a new session under that id;
+   * if the first request ends before the endpoint sends a token, the session drops the id and the
+   * endpoint assigns one (it keeps it after an error status other than 403, 502 or 504, or a
+   * request never sent). It can't be combined with `sessionToRestore`.
+   */
+  sessionId?: string;
+  /**
+   * The token of the session {@link SessionConfig.sessionId} names, to continue it. Requires
+   * `sessionId`. When the session expired, its `initialize` starts a new one, and
+   * {@link Session.sessionId} and {@link Session.sessionToken} return the new keys; with
+   * `initialize: false`, the first prompt or action fails instead.
+   */
+  sessionToken?: string;
+  /**
    * Whether the session opens itself with an `initialize` action, sent a microtask after
    * {@link createSession} returns so that a listener subscribed in the same task sees it start.
-   * Defaults to `true`. A restored session never sends it by itself. Pass
-   * `false` for tests, or for a server that creates a session while rendering.
+   * Defaults to `true`. A restored session sends it only when it has a token. Pass `false` for
+   * tests, or for a server that creates a session while rendering; the session keys then go out
+   * with the first prompt or action.
    */
   initialize?: boolean;
 }
@@ -217,6 +245,15 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * are the live surfaces it created, so a transcript knows where to draw them.
    */
   readonly turns: readonly Turn[];
+  /**
+   * The conversation session id the session's requests carry: the configured or restored one,
+   * then the one the endpoint sends. `undefined` until there is one, or after the session drops
+   * an id the endpoint never confirmed. Store it with {@link Session.sessionToken} to continue
+   * the session later.
+   */
+  readonly sessionId: string | undefined;
+  /** The token the session's requests carry with {@link Session.sessionId}, once there is one. */
+  readonly sessionToken: string | undefined;
   /**
    * The run of the `initialize` action that opened the session, or `undefined` when the session
    * sent none. Not a turn. Only `initialize` changes its `status`; the surface snapshots of a
@@ -328,9 +365,9 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
   retry(turnId: string): void;
   /**
    * Sends `initialize` again when {@link Session.initialization} is `'error'`, and resets it to a
-   * fresh `'streaming'` run while it runs, a restored session's included. Does nothing when the
-   * initialization is `undefined`,
-   * streaming or complete, once the session has a token, or while a request is in flight.
+   * fresh `'streaming'` run while it runs, a restored session's included. It carries the session's
+   * keys when it has them, so the endpoint resumes that session. Does nothing when the
+   * initialization is `undefined`, streaming or complete, or while a request is in flight.
    */
   retryInitialization(): void;
   /** Serializes the session transcript for persistence. */
@@ -439,7 +476,7 @@ export function createSession<TContracts extends ContractsSchema>(
 ): Session<TContracts> {
   requireNonBlank(config, ['agentConfigurationId', 'trackingId'], 'createSession');
   const {agentConfigurationId, trackingId} = config;
-  return createSessionRuntime(config, {agentConfigurationId, trackingId}).session;
+  return createSessionRuntime(config, {agentConfigurationId, trackingId});
 }
 
 function requireNonBlank<T extends object>(
@@ -464,40 +501,64 @@ function readLocale(navigatorContext: NavigatorContext): RequestLocale {
   };
 }
 
-/** A session, with a reader for the conversation session id its requests carry. */
-export interface SessionRuntime<TContracts extends ContractsSchema = ContractsSchema> {
-  session: Session<TContracts>;
-  readSessionId(): string | undefined;
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function validateSessionKeys({sessionId, sessionToken, sessionToRestore}: SessionRuntimeConfig) {
+  if (sessionId !== undefined && !UUID.test(sessionId)) {
+    throw new Error('A session requires its sessionId to be a UUID.');
+  }
+  if (sessionToken !== undefined && !sessionToken.trim()) {
+    throw new Error('A session requires a non-blank sessionToken.');
+  }
+  if (sessionToken !== undefined && sessionId === undefined) {
+    throw new Error('A session requires a sessionId with its sessionToken.');
+  }
+  if (sessionId !== undefined && sessionToRestore !== undefined) {
+    throw new Error('A session accepts a sessionId or a sessionToRestore, not both.');
+  }
 }
 
 /**
  * The session runtime both entry points share. `requestScope` holds the fields sent with
- * every request besides the ones the session builds itself. `initialSessionId` is the first
- * conversation session id the requests carry. The session drops it if a request that may have
- * reserved it ends before the endpoint sends a token, as it does `unconfirmedSessionId`, which
- * defaults to it.
+ * every request besides the ones the session builds itself.
  */
 export function createSessionRuntime<TContracts extends ContractsSchema>(
   config: SessionRuntimeConfig<TContracts>,
-  requestScope: Readonly<RequestScopeFields>,
-  initialSessionId?: string,
-  unconfirmedSessionId = initialSessionId
-): SessionRuntime<TContracts> {
+  requestScope: Readonly<RequestScopeFields>
+): Session<TContracts> {
   if (typeof config.navigatorContextProvider !== 'function') {
     throw new Error('A session requires a navigatorContextProvider.');
   }
+  validateSessionKeys(config);
+  // An id without a token may not be the endpoint's: the session drops it if a request that may
+  // have reserved it ends before the endpoint sends a token.
+  const seed = config.sessionToRestore ?? config;
+  let unconfirmedSessionId = seed.sessionToken === undefined ? seed.sessionId : undefined;
   const initialState: SessionStoreState<Turn> = config.sessionToRestore
     ? restoreSession(config.sessionToRestore)
     : {
         turns: [],
         activeTurnId: undefined,
-        sessionId: initialSessionId,
-        sessionToken: undefined,
+        sessionId: config.sessionId,
+        sessionToken: config.sessionToken,
         state: {},
         rendererStream: EMPTY_RENDERER_STREAM,
       };
 
   const store: SessionStore<Turn> = createSessionStore<Turn>(initialState);
+  // The restored shell and the last restored turn that created a surface stay live: the gateway
+  // keeps their state.
+  const restoredActivities: ReadonlySet<Activity> = config.sessionToRestore
+    ? readOnlyRestoredActivities(initialState.turns)
+    : new Set();
+  const lastRestoredTurnId = config.sessionToRestore ? initialState.turns.at(-1)?.id : undefined;
+
+  // While a resume streams, the restored shell stays until the resume's first activity replaces it.
+  let holdsRestoredShell = false;
+  // Once replaced, a restored shell takes no action, even from a turn that still names it.
+  const replacedShellIds = new Set<string>(
+    config.sessionToRestore ? shellsReplacedBefore(initialState) : []
+  );
 
   let surfaceView: SessionSurfaceView | undefined;
   let surfaceViewSource:
@@ -518,7 +579,8 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
       surfaceView = deriveSessionSurfaces(
         {turns, initialization},
         request && requestTarget(request),
-        abandoned
+        abandoned,
+        restoredActivities
       );
       surfaceViewSource = {turns, initialization, request};
     }
@@ -633,6 +695,57 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     }
   }
 
+  /** Drops the `dropped` surfaces' state, and deletes them from the renderer stream. */
+  function withoutSurfaces(
+    current: SessionStoreState<Turn>,
+    dropped: (surfaceId: string) => boolean
+  ): SessionStoreState<Turn> {
+    const stream: RendererStream = current.rendererStream ?? EMPTY_RENDERER_STREAM;
+    const deletions = [...stream.liveSurfaceIds]
+      .filter(dropped)
+      .map((surfaceId) => ({version: RENDERER_PROTOCOL_VERSION, deleteSurface: {surfaceId}}));
+    return {
+      ...current,
+      state: Object.fromEntries(
+        Object.entries(current.state ?? {}).filter(([surfaceId]) => !dropped(surfaceId))
+      ),
+      rendererStream: appendToRendererStream(stream, deletions),
+    };
+  }
+
+  /** Replaces the restored shell, held while the resume streams, with what the resume sends. */
+  function withoutRestoredShell(current: SessionStoreState<Turn>): SessionStoreState<Turn> {
+    if (!holdsRestoredShell || !current.initialization) {
+      return current;
+    }
+    holdsRestoredShell = false;
+    const restoredShell = deriveNodeIdentityRegistry(current.initialization.activities);
+    for (const surfaceId of restoredShell.keys()) {
+      replacedShellIds.add(surfaceId);
+    }
+    return {
+      ...withoutSurfaces(current, (surfaceId) => restoredShell.has(surfaceId)),
+      initialization: {...current.initialization, activities: []},
+    };
+  }
+
+  /**
+   * The state once the `initialize` that resumes a session is answered by another session: the
+   * turns, the restored shell, and their surfaces' state and renderer surfaces belong to the old one.
+   */
+  function withoutTranscript(stored: SessionStoreState<Turn>): SessionStoreState<Turn> {
+    const current = withoutRestoredShell(stored);
+    const kept = deriveNodeIdentityRegistry(current.initialization?.activities ?? []);
+    replacedShellIds.clear();
+    return {
+      ...withoutSurfaces(current, (surfaceId) => !kept.has(surfaceId)),
+      turns: [],
+      activeTurnId: undefined,
+      unrecordedState: undefined,
+      actionError: undefined,
+    };
+  }
+
   function replaceTurn(turnId: string, update: (turn: Turn) => Turn): void {
     store.setState((current) => {
       const index = current.turns.findIndex((turn) => turn.id === turnId);
@@ -670,10 +783,14 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
    * session's state and appends its messages to the renderer stream, in one change.
    */
   function foldEvent(target: RunTarget, event: NormalizedStreamEvent): void {
-    store.setState((current) => {
+    store.setState((stored) => {
+      const current =
+        target.kind === 'initialization' && event.type === 'ACTIVITY_SNAPSHOT'
+          ? withoutRestoredShell(stored)
+          : stored;
       const next = foldIntoRun(current, target, event);
       if (next === current) {
-        return current;
+        return stored;
       }
       const snapshot = event as unknown as {activityType?: string; content?: unknown};
       const content = snapshot.content as Record<string, unknown> | undefined;
@@ -830,15 +947,32 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
       stream,
       signal: abortController.signal,
       onEvent: (rawEvent: RawSSEEvent) => {
+        // A read that resolved before the abort can still deliver the rest of its chunk.
+        if (abortController.signal.aborted) {
+          return;
+        }
         const event = parseSSEEvent(rawEvent);
 
         const keys = readSessionKeys(event);
         if (keys) {
-          store.setState((current) => ({
-            ...current,
-            sessionId: keys.sessionId ?? current.sessionId,
-            sessionToken: keys.sessionToken ?? current.sessionToken,
-          }));
+          // A new id is a new session: the old token is not its token, and the id is unconfirmed
+          // until its own token arrives.
+          const sessionId = keys.sessionId ?? store.getState().sessionId;
+          if (sessionId !== store.getState().sessionId && keys.sessionToken === undefined) {
+            unconfirmedSessionId = sessionId;
+          }
+          store.setState((current) => {
+            if (sessionId === current.sessionId) {
+              return {...current, sessionToken: keys.sessionToken ?? current.sessionToken};
+            }
+            const resumedAnotherSession =
+              target.kind === 'initialization' && !action && current.sessionToken !== undefined;
+            return {
+              ...(resumedAnotherSession ? withoutTranscript(current) : current),
+              sessionId,
+              sessionToken: keys.sessionToken,
+            };
+          });
         }
 
         // The run an action streams into keeps its own status and response (ADR-018).
@@ -1025,27 +1159,43 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
           },
         }
       : undefined;
-    return sendRequest({kind: 'initialize'}, async (abortController) => {
-      store.setState((current) => ({
-        ...current,
-        initialization: {activities: [], status: 'streaming'},
-      }));
-      const failure = await executeStream(
-        INITIALIZATION,
-        () =>
-          buildActionRequest({
-            name: 'initialize',
-            timestamp: new Date().toISOString(),
-            context: {},
-          }),
-        abortController,
-        undefined,
-        retryOptions
-      );
-      if (failure) {
-        failRun(INITIALIZATION, failure.error);
-      }
-    });
+    // Resuming must not bring back a placeholder the restored initialization left behind.
+    const abandoned = abandonedPlaceholderIds(store.getState(), INITIALIZATION);
+    return sendRequest(
+      {kind: 'initialize'},
+      async (abortController) => {
+        // A resume that fails or is cancelled before it sends anything leaves the restored shell.
+        const restoredShell = config.sessionToRestore
+          ? (store.getState().initialization?.activities ?? [])
+          : [];
+        holdsRestoredShell = restoredShell.length > 0;
+        store.setState((current) => ({
+          ...current,
+          initialization: {activities: restoredShell, status: 'streaming'},
+        }));
+        try {
+          const failure = await executeStream(
+            INITIALIZATION,
+            () =>
+              buildActionRequest({
+                name: 'initialize',
+                timestamp: new Date().toISOString(),
+                context: {},
+              }),
+            abortController,
+            undefined,
+            retryOptions
+          );
+          if (failure) {
+            failRun(INITIALIZATION, failure.error);
+          }
+        } finally {
+          // Only the resume replaces the shell; a later action into the initialization keeps it.
+          holdsRestoredShell = false;
+        }
+      },
+      abandoned
+    );
   }
 
   /**
@@ -1227,6 +1377,23 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     return registry.get(surfaceId)?.get(sourceComponentId);
   }
 
+  function isReadOnly(surfaceId: string, caller: 'dispatchAction' | 'retry'): boolean {
+    if (!readSurfaceView().readOnlySurfaceIds.has(surfaceId)) {
+      return false;
+    }
+    devWarn(`${caller}: surface "${surfaceId}" is a restored, read-only one; nothing sent.`);
+    return true;
+  }
+
+  /** A restored turn can still name the shell a resume replaced; nothing goes to it. */
+  function isReplacedShell(surfaceId: string, caller: 'dispatchAction' | 'retry'): boolean {
+    if (!replacedShellIds.has(surfaceId)) {
+      return false;
+    }
+    devWarn(`${caller}: surface "${surfaceId}" is a shell the resume replaced; nothing sent.`);
+    return true;
+  }
+
   /** Every refusal settles at once, so no caller is left waiting. */
   function issue(action: A2uiRendererAction): Promise<void> {
     const {name, surfaceId, sourceComponentId, context} = action;
@@ -1240,6 +1407,12 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
       devWarn(
         `dispatchAction: node "${sourceComponentId}" on surface "${surfaceId}" resolves to no component; nothing sent.`
       );
+      return withhold();
+    }
+    if (
+      (name !== PRODUCT_CLICK && isReadOnly(surfaceId, 'dispatchAction')) ||
+      isReplacedShell(surfaceId, 'dispatchAction')
+    ) {
       return withhold();
     }
 
@@ -1303,6 +1476,12 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
    * any surface of the session, so it is not resolved against the active turn.
    */
   function retryAction(turnId: string, action: TurnAction): void {
+    if (
+      (turnId !== lastRestoredTurnId && isReadOnly(action.surfaceId, 'retry')) ||
+      isReplacedShell(action.surfaceId, 'retry')
+    ) {
+      return;
+    }
     const a2uiAction: A2uiAction = {
       surfaceId: action.surfaceId,
       name: action.name,
@@ -1339,8 +1518,8 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   }
 
   function retryInitialization(): void {
-    const {initialization, sessionToken, request} = store.getState();
-    if (initialization?.status !== 'error' || sessionToken || request) {
+    const {initialization, request} = store.getState();
+    if (initialization?.status !== 'error' || request) {
       return;
     }
     void initialize(false);
@@ -1379,11 +1558,14 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     return snapshot;
   }
 
-  if (config.initialize !== false && !config.sessionToRestore) {
+  // A restored session without a token has no session to resume.
+  if (
+    config.initialize !== false &&
+    (!config.sessionToRestore || config.sessionToRestore.sessionToken !== undefined)
+  ) {
     queueMicrotask(() => {
-      const {sessionToken, request} = store.getState();
       // A prompt dispatched in the same task already opens the session.
-      if (!sessionToken && !request) {
+      if (!store.getState().request) {
         void initialize(true);
       }
     });
@@ -1393,6 +1575,12 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     contracts: config.contracts,
     get turns() {
       return readSurfaceView().turns;
+    },
+    get sessionId() {
+      return store.getState().sessionId;
+    },
+    get sessionToken() {
+      return store.getState().sessionToken;
     },
     get initialization() {
       return store.getState().initialization;
@@ -1422,5 +1610,49 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     retryInitialization,
     serialize,
   };
-  return {session, readSessionId: () => store.getState().sessionId};
+  return session;
+}
+
+/** The gateway still counts a click on a product of a read-only surface. */
+const PRODUCT_CLICK = 'productClick';
+
+/**
+ * The shells an earlier resume replaced: surfaces the restored turns name, through an update or the
+ * action that opened them, that neither the restored shell nor any restored turn creates.
+ */
+function shellsReplacedBefore(restored: SessionStoreState<Turn>): Set<string> {
+  const activities = restored.turns.flatMap((turn) => turn.response.activities);
+  const named = new Set(deriveNodeIdentityRegistry(activities).keys());
+  for (const turn of restored.turns) {
+    if (turn.input.action) {
+      named.add(turn.input.action.surfaceId);
+    }
+  }
+  const live = deriveNodeIdentityRegistry(restored.initialization?.activities ?? []);
+  for (const surfaceId of createdSurfaceIds(activities)) {
+    named.delete(surfaceId);
+  }
+  return new Set([...named].filter((surfaceId) => !live.has(surfaceId)));
+}
+
+function createdSurfaceIds(activities: readonly Activity[]): string[] {
+  return activities.flatMap((activity) => {
+    const messages = activity.kind === SURFACE_ACTIVITY_KIND ? activity.payload['messages'] : [];
+    return (Array.isArray(messages) ? messages : []).flatMap((message) => {
+      const surfaceId = (message as {createSurface?: {surfaceId?: unknown}} | null)?.createSurface
+        ?.surfaceId;
+      return typeof surfaceId === 'string' ? [surfaceId] : [];
+    });
+  });
+}
+
+/**
+ * The activities of the restored turns before the last one that created a surface: the gateway
+ * keeps that turn's surfaces, and a text-only answer after it replaces nothing.
+ */
+function readOnlyRestoredActivities(turns: readonly Turn[]): Set<Activity> {
+  const live = turns.findLastIndex(
+    (turn) => createdSurfaceIds(turn.response.activities).length > 0
+  );
+  return new Set(turns.slice(0, Math.max(live, 0)).flatMap((turn) => turn.response.activities));
 }

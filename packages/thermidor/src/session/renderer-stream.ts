@@ -32,7 +32,7 @@ import {devWarn} from '@/src/internal/utils/dev-warn.js';
 import type {A2uiMessage} from './types.js';
 
 /** The A2-UI protocol version Agent Gateway emits and the renderer stream carries. */
-const PROTOCOL_VERSION = '1.0';
+export const RENDERER_PROTOCOL_VERSION = '1.0';
 
 /** The session's renderer stream, and the surfaces live at its end. */
 export interface RendererStream {
@@ -50,7 +50,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function isA2uiMessage(message: unknown): message is A2uiMessage {
-  return isRecord(message) && message['version'] === PROTOCOL_VERSION;
+  return isRecord(message) && message['version'] === RENDERER_PROTOCOL_VERSION;
 }
 
 function operationSurfaceId(message: A2uiMessage, operation: string): string | null {
@@ -72,14 +72,14 @@ export function appendToRendererStream(
   for (const message of messages) {
     if (!isA2uiMessage(message)) {
       devWarn(
-        `A2-UI message dropped from the renderer stream: its version is not "${PROTOCOL_VERSION}".`
+        `A2-UI message dropped from the renderer stream: its version is not "${RENDERER_PROTOCOL_VERSION}".`
       );
       continue;
     }
     const createdId = operationSurfaceId(message, 'createSurface');
     if (createdId !== null) {
       if (live.has(createdId)) {
-        appended.push({version: PROTOCOL_VERSION, deleteSurface: {surfaceId: createdId}});
+        appended.push({version: RENDERER_PROTOCOL_VERSION, deleteSurface: {surfaceId: createdId}});
       }
       live.add(createdId);
       appended.push(message);

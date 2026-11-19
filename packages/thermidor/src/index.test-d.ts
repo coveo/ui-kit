@@ -62,6 +62,14 @@ test('exposes the request in flight on Session', () => {
   expectTypeOf<SessionRequest['kind']>().toEqualTypeOf<'initialize' | 'prompt' | 'action'>();
 });
 
+// ── POSITIVE: the session takes and exposes its keys ──────────────────────
+test('takes optional session keys and exposes them on Session', () => {
+  expectTypeOf<SessionConfig['sessionId']>().toEqualTypeOf<string | undefined>();
+  expectTypeOf<SessionConfig['sessionToken']>().toEqualTypeOf<string | undefined>();
+  expectTypeOf<Session['sessionId']>().toEqualTypeOf<string | undefined>();
+  expectTypeOf<Session['sessionToken']>().toEqualTypeOf<string | undefined>();
+});
+
 // ── POSITIVE: the session exposes its surfaces, renderer stream and state ──
 test('exposes session-scoped surfaces, renderer stream and state on Session', () => {
   expectTypeOf<Session['surfaces']>().toEqualTypeOf<readonly DiscoveredSurface[]>();
