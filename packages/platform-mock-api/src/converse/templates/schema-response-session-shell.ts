@@ -74,12 +74,15 @@ function nextRunId(kind: string): string {
   return `schema-${kind}-${runSequence}`;
 }
 
-function buildSessionShellEvents(surfaceId: string): ConverseEvent[] {
+function buildSessionShellEvents(
+  surfaceId: string,
+  sessionRecentQueries: readonly string[] = []
+): ConverseEvent[] {
   const createSurface = {
     ...buildValidatedSurface({templateName: 'Mock_Session_Shell', surfaceId, nodes: SHELL_NODES}),
     dataModel: {
       state: {
-        [QUERY_SUGGESTIONS_ID]: {query: '', recentQueries: [], completions: []},
+        [QUERY_SUGGESTIONS_ID]: querySuggestionsFor('', sessionRecentQueries),
         [INSTANT_PRODUCTS_ID]: {query: '', products: []},
       },
     },

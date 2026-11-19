@@ -14,6 +14,9 @@ outputs:
   tasks:
     description: Affected Turbo task identifiers as a single-line JSON array of strings.
     value: ${{ steps.calculate.outputs.tasks }}
+  knip-workspaces:
+    description: Packages Knip checks, as a single-line JSON array of strings.
+    value: ${{ steps.calculate.outputs.knip-workspaces }}
   projects:
     description: Affected project identifiers as a single-line JSON array of strings.
     value: ${{ steps.calculate.outputs.projects }}

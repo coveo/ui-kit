@@ -16,9 +16,10 @@ import {errorGuard} from '@/src/decorators/error-guard.js';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin.js';
+import {warnDeprecatedOnce} from '@/src/utils/deprecation-utils';
 import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
 import {waitForAtomicChildrenToBeDefined} from '@/src/utils/initialization-common-utils';
-import {withCountry} from '@/src/utils/locale-utils';
+import {type CommerceLocale, isCommerceLocale, withCountry} from '@/src/utils/locale-utils';
 import {bindingsContext} from '../../common/context/bindings-context.js';
 import {augmentAnalyticsConfigWithAtomicVersion} from '../../common/interface/analytics-config.js';
 import type {CommonBindings} from '../../common/interface/bindings.js';
@@ -206,7 +207,7 @@ export class AtomicCommerceRecommendationInterface
 
   /**
    * Updates the locale settings for the commerce recommendation interface and
-   * headless commerce engine. Only the provided parameters will be updated.
+   * headless commerce engine. Only the provided properties will be updated.
    *
    * Calling this method affects the localization of the interface as well as
    * the catalog configuration being used by the Commerce API. If the resulting
@@ -217,19 +218,45 @@ export class AtomicCommerceRecommendationInterface
    * With `localize-with-country`, the country also drives the number, currency, and
    * date formatting of the interface.
    *
-   * @param language - (Optional) The IETF language code tag (for example, `en`).
-   * @param country - (Optional) The ISO-3166-1 country tag (for example, `US`).
-   * @param currency - (Optional) The ISO-4217 currency code (for example, `USD`).
+   * @param locale - The locale settings to update: `language`, the IETF language code tag (for example, `en`), `country`, the ISO-3166-1 country tag (for example, `US`), and `currency`, the ISO-4217 currency code (for example, `USD`). Each property is optional.
    *
    * @example
    * ```typescript
-   * recommendationInterface.updateLocale('fr', 'CA', 'CAD');
+   * recommendationInterface.updateLocale({language: 'fr', country: 'CA', currency: 'CAD'});
    * ```
    */
-  public updateLocale(language?: string, country?: string, currency?: CurrencyCodeISO4217): void {
+  public updateLocale(locale: {
+    language?: string;
+    country?: string;
+    currency?: CurrencyCodeISO4217;
+  }): void;
+  // TODO - (v4) KIT-5079: Remove the positional overload.
+  /**
+   * @deprecated Pass an object instead, for example `updateLocale({language: 'fr', country: 'CA', currency: 'CAD'})`.
+   * @ignore The custom elements manifest keeps one entry per method: the object form.
+   */
+  public updateLocale(language?: string, country?: string, currency?: CurrencyCodeISO4217): void;
+  /** @ignore The overloads above document this method. */
+  public updateLocale(
+    languageOrLocale?: string | CommerceLocale,
+    countryArgument?: string,
+    currencyArgument?: CurrencyCodeISO4217
+  ): void {
     if (!this.interfaceController.engineIsCreated(this.engine) || !this.context) {
       return;
     }
+
+    if (!isCommerceLocale(languageOrLocale)) {
+      warnDeprecatedOnce(
+        this.engine.logger,
+        'Calling the `updateLocale` method of `atomic-commerce-recommendation-interface` with separate arguments',
+        "Pass an object instead, for example `updateLocale({language: 'fr', country: 'CA', currency: 'CAD'})`."
+      );
+    }
+
+    const {language, country, currency} = isCommerceLocale(languageOrLocale)
+      ? languageOrLocale
+      : {language: languageOrLocale, country: countryArgument, currency: currencyArgument};
 
     if (language || (country && this.localizeWithCountry)) {
       this.interfaceController.onLanguageChange(

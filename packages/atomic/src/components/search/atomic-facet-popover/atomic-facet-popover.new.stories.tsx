@@ -4,7 +4,7 @@ import {MockSearchApi} from '@coveo/platform-mock-api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-facet/atomic-facet.js';
-import '@/src/components/search/atomic-popover/atomic-popover.js';
+import '@/src/components/search/atomic-facet-popover/atomic-facet-popover.js';
 
 const searchApiHarness = new MockSearchApi();
 
@@ -59,14 +59,14 @@ searchApiHarness.searchEndpoint.mock((response) => ({
 }));
 
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers('atomic-popover', {
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-facet-popover', {
   excludeCategories: ['methods'],
 });
 
 const meta: Meta = {
-  component: 'atomic-popover',
-  title: 'Search/Popover',
-  id: 'atomic-popover',
+  component: 'atomic-facet-popover',
+  title: 'Search/Facet Popover',
+  id: 'atomic-facet-popover',
   render: (args) => template(args),
   decorators: [decorator],
   parameters: {

@@ -95,11 +95,15 @@ const styles = css`
       }
 
       & > atomic-segmented-facet,
+      & > atomic-facet-popover,
+      & > atomic-facet-manager > atomic-facet-popover,
       & > atomic-popover,
       & > atomic-facet-manager > atomic-popover {
         margin-right: 0.5rem;
       }
 
+      & > atomic-facet-popover,
+      & > atomic-facet-manager > atomic-facet-popover,
       & > atomic-popover,
       & > atomic-facet-manager > atomic-popover {
         display: none;
