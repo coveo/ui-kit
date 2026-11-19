@@ -62,29 +62,45 @@ export function run(messages: readonly object[], metadata?: Record<string, unkno
   ];
 }
 
-/** The run a producer answers `initialize` with: the session shell and the session's keys. */
-export function shellRun(surfaceId = SHELL_SURFACE_ID): object[] {
-  return run([
-    {
-      version: 'v1.0',
-      createSurface: {
-        surfaceId,
-        catalogId: 'https://schema.thermidor.coveo.com/a2-ui/catalog.json',
-        components: [
-          {id: 'root', component: 'SessionShell', children: ['search-box']},
-          {id: 'search-box', component: 'SearchBox', suggestionsChild: 'query-suggestions'},
-          {
-            id: 'query-suggestions',
-            component: 'QuerySuggestions',
-            query: {path: '/state/query-suggestions/query'},
-            recentQueries: {path: '/state/query-suggestions/recentQueries'},
-            completions: {path: '/state/query-suggestions/completions'},
+/**
+ * The run a producer answers `initialize` with: the session shell and the session's keys, with the
+ * AG-UI `metadata` given.
+ */
+export function shellRun(
+  surfaceId = SHELL_SURFACE_ID,
+  metadata?: Record<string, unknown>
+): object[] {
+  return run(
+    [
+      {
+        version: 'v1.0',
+        createSurface: {
+          surfaceId,
+          catalogId: 'https://schema.thermidor.coveo.com/a2-ui/catalog.json',
+          components: [
+            {id: 'root', component: 'SessionShell', children: ['search-box']},
+            {id: 'search-box', component: 'SearchBox', suggestionsChild: 'query-suggestions'},
+            {
+              id: 'query-suggestions',
+              component: 'QuerySuggestions',
+              query: {path: '/state/query-suggestions/query'},
+              recentQueries: {path: '/state/query-suggestions/recentQueries'},
+              completions: {path: '/state/query-suggestions/completions'},
+            },
+          ],
+          dataModel: {
+            state: {'query-suggestions': {query: '', recentQueries: [], completions: []}},
           },
-        ],
-        dataModel: {state: {'query-suggestions': {query: '', recentQueries: [], completions: []}}},
+        },
       },
-    },
-  ]);
+    ],
+    metadata
+  );
+}
+
+/** The `metadata` of a producer announcing `fetchSuggestions` on `surfaceId` as concurrent. */
+export function concurrentSuggestions(surfaceId = SHELL_SURFACE_ID): Record<string, unknown> {
+  return {concurrentActions: {[surfaceId]: {fetchSuggestions: {}}}};
 }
 
 export const INSTANT_PRODUCTS_ID = 'instant-products';
@@ -201,6 +217,18 @@ export const answerShell: ConverseHandler = (request) => {
   if (request.action?.name === 'initialize') {
     return sseResponse(shellRun());
   }
+  return answerSuggestions(request);
+};
+
+/** Answers as {@link answerShell}, with the shell announcing `fetchSuggestions` as concurrent. */
+export const answerConcurrentSuggestionsShell: ConverseHandler = (request) => {
+  if (request.action?.name === 'initialize') {
+    return sseResponse(shellRun(SHELL_SURFACE_ID, concurrentSuggestions()));
+  }
+  return answerSuggestions(request);
+};
+
+const answerSuggestions: ConverseHandler = (request) => {
   if (request.action?.name === 'fetchSuggestions') {
     const query = String(request.action.context['query']);
     return sseResponse(

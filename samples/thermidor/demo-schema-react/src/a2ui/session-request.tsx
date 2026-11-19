@@ -101,13 +101,51 @@ export function useActionFailed(): (component: string, name: string) => boolean 
   );
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+/**
+ * Whether the producer's latest `concurrentActions` announcement for a surface lists `name`, read
+ * from the session's activity log as the session reads it (ADR-020). The session sends such an
+ * action at once, whatever request is in flight, and never makes it the session's request.
+ */
+export function announcesConcurrent(
+  {initialization, turns}: Pick<SessionSnapshot, 'initialization' | 'turns'>,
+  name: string
+): boolean {
+  const latest = new Map<string, Record<string, unknown>>();
+  const activities = [
+    ...(initialization?.activities ?? []),
+    ...turns.flatMap((turn) => turn.response.activities),
+  ];
+  for (const {metadata} of activities) {
+    const announcements = metadata?.['concurrentActions'];
+    if (isRecord(announcements)) {
+      for (const [surfaceId, actions] of Object.entries(announcements)) {
+        if (isRecord(actions)) {
+          latest.set(surfaceId, actions);
+        }
+      }
+    }
+  }
+  return [...latest.values()].some((actions) => Object.hasOwn(actions, name));
+}
+
 /**
  * Sends the latest `value` once the session is free, unless it was already sent. The session
  * withholds a dispatch made while another request is in flight, so a value that changes meanwhile
  * replaces the one waiting. A falsy value is never sent, and lets the next value be sent even when
  * it repeats the last one.
+ *
+ * When the producer announces `concurrentAction` as concurrent, the session sends it whatever is
+ * in flight, so the value is sent at once.
  */
-export function useLatestWhenFree<T>(value: T, send: (value: NonNullable<T>) => void): void {
+export function useLatestWhenFree<T>(
+  value: T,
+  send: (value: NonNullable<T>) => void,
+  concurrentAction?: string
+): void {
   const source = useContext(SessionRequestContext);
   const lastSent = useRef<T | undefined>(undefined);
   const latestSend = useRef(send);
@@ -119,14 +157,24 @@ export function useLatestWhenFree<T>(value: T, send: (value: NonNullable<T>) => 
       return;
     }
     const flush = () => {
-      if (source.getSnapshot().request === undefined && value !== lastSent.current) {
+      const snapshot = source.getSnapshot();
+      const free =
+        snapshot.request === undefined ||
+        (concurrentAction !== undefined && announcesConcurrent(snapshot, concurrentAction));
+      if (free && value !== lastSent.current) {
         lastSent.current = value;
         latestSend.current(value as NonNullable<T>);
       }
     };
     flush();
     return source.subscribe(flush);
-  }, [source, value]);
+  }, [source, value, concurrentAction]);
+}
+
+/** Reads the session's current snapshot, outside of rendering. */
+export function useReadSnapshot(): () => SessionSnapshot {
+  const source = useContext(SessionRequestContext);
+  return source.getSnapshot;
 }
 
 /** What {@link submitQuery} needs from the session. */
@@ -154,8 +202,9 @@ function whenFree(session: QuerySubmitter): Promise<void> {
 
 /**
  * Sends `prompt` once the session is free, first cancelling a suggestion in flight so that it never
- * holds the submit back. The cancelled request may still hold the producer's turn slot; the
- * session's conflict retry absorbs the prompt's `409`.
+ * holds the submit back. Only a producer that does not announce `fetchSuggestions` as concurrent
+ * makes a suggestion the session's request; its cancelled request may still hold the producer's
+ * turn slot, and the session's conflict retry absorbs the prompt's `409`.
  */
 export async function submitQuery(session: QuerySubmitter, prompt: string): Promise<void> {
   const {request} = session.getSnapshot();

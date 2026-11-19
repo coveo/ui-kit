@@ -1,8 +1,9 @@
 import {act, render, renderHook} from '@testing-library/react';
 import type {ReactNode} from 'react';
 import {describe, expect, it, vi} from 'vitest';
-import type {ActionError, SessionRequest} from '@coveo/thermidor';
+import type {Activity, ActionError, SessionRequest, SessionSnapshot, Turn} from '@coveo/thermidor';
 import {
+  announcesConcurrent,
   isBlocking,
   SessionRequestProvider,
   submitQuery,
@@ -13,9 +14,9 @@ import {
 } from './session-request.js';
 import {requestSnapshot} from '../test/fake-session-requests.js';
 
-function fakeSession() {
+function fakeSession(initialization?: SessionSnapshot['initialization']) {
   const listeners = new Set<() => void>();
-  let snapshot = requestSnapshot(undefined);
+  let snapshot = {...requestSnapshot(undefined), initialization};
   const session = {
     getSnapshot: () => snapshot,
     subscribe(listener: () => void) {
@@ -26,7 +27,7 @@ function fakeSession() {
     dispatchAction: vi.fn(async () => {}),
   };
   const setRequest = (next: SessionRequest | undefined) => {
-    snapshot = requestSnapshot(next);
+    snapshot = {...requestSnapshot(next), initialization};
     for (const listener of [...listeners]) {
       listener();
     }
@@ -93,12 +94,81 @@ describe('useActionError', () => {
   });
 });
 
+function announcing(concurrentActions: unknown): Activity {
+  return {
+    id: 'shell',
+    kind: 'a2ui-surface',
+    replace: true,
+    payload: {},
+    metadata: {concurrentActions},
+  };
+}
+
+function initializedWith(...activities: Activity[]): SessionSnapshot['initialization'] {
+  return {activities} as unknown as SessionSnapshot['initialization'];
+}
+
+describe('announcesConcurrent', () => {
+  const SUGGESTIONS = {shell: {fetchSuggestions: {}}};
+
+  it('is true when a surface announces the action, with or without a cache', () => {
+    expect(
+      announcesConcurrent(
+        {initialization: initializedWith(announcing(SUGGESTIONS)), turns: []},
+        'fetchSuggestions'
+      )
+    ).toBe(true);
+    expect(
+      announcesConcurrent(
+        {
+          initialization: initializedWith(
+            announcing({shell: {fetchInstantProducts: {cache: {ttlMs: 60_000}}}})
+          ),
+          turns: [],
+        },
+        'fetchInstantProducts'
+      )
+    ).toBe(true);
+  });
+
+  it('is false when nothing announces the action', () => {
+    expect(announcesConcurrent({initialization: undefined, turns: []}, 'fetchSuggestions')).toBe(
+      false
+    );
+    expect(
+      announcesConcurrent(
+        {
+          initialization: initializedWith(announcing({shell: {fetchInstantProducts: {}}})),
+          turns: [],
+        },
+        'fetchSuggestions'
+      )
+    ).toBe(false);
+  });
+
+  it("reads a surface's latest announcement, a turn's included", () => {
+    const revoking = {response: {activities: [announcing({shell: {}})]}} as unknown as Turn;
+    expect(
+      announcesConcurrent(
+        {initialization: initializedWith(announcing(SUGGESTIONS)), turns: [revoking]},
+        'fetchSuggestions'
+      )
+    ).toBe(false);
+  });
+});
+
 describe('useLatestWhenFree', () => {
-  function mount(initial: string) {
-    const {session, setRequest} = fakeSession();
+  function mount(
+    initial: string,
+    {
+      concurrentAction,
+      initialization,
+    }: {concurrentAction?: string; initialization?: SessionSnapshot['initialization']} = {}
+  ) {
+    const {session, setRequest} = fakeSession(initialization);
     const send = vi.fn();
     function Consumer({value}: {value: string}) {
-      useLatestWhenFree(value, send);
+      useLatestWhenFree(value, send, concurrentAction);
       return null;
     }
     const view = render(
@@ -136,6 +206,30 @@ describe('useLatestWhenFree', () => {
 
     view.setRequest(undefined);
     expect(view.send.mock.calls).toEqual([['kay']]);
+  });
+
+  it('sends each value at once while the session is busy when the action is announced as concurrent', () => {
+    const view = mount('', {
+      concurrentAction: 'fetchSuggestions',
+      initialization: initializedWith(announcing({shell: {fetchSuggestions: {}}})),
+    });
+    view.setRequest({kind: 'prompt', turnId: 'turn'});
+
+    view.change('k');
+    view.change('ka');
+
+    expect(view.send.mock.calls).toEqual([['k'], ['ka']]);
+  });
+
+  it('holds values back while the session is busy when the action is not announced', () => {
+    const view = mount('', {concurrentAction: 'fetchSuggestions'});
+    view.setRequest({kind: 'prompt', turnId: 'turn'});
+
+    view.change('k');
+    expect(view.send).not.toHaveBeenCalled();
+
+    view.setRequest(undefined);
+    expect(view.send.mock.calls).toEqual([['k']]);
   });
 
   it('does not send the value last sent again', () => {

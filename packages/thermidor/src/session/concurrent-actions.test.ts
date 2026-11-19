@@ -400,6 +400,20 @@ describe('concurrent and cached actions (ADR-020)', () => {
     expect(warned('failed')).toBe(false);
   });
 
+  it('sends an uncached action again for the same payload, never answering it from a cache', async () => {
+    const session = shellSession();
+    const first = dispatch(session, 'boots', UNCACHED);
+    answer(calls[0], 'boots');
+    await first;
+
+    const second = dispatch(session, 'boots', UNCACHED);
+
+    expect(sentQueries()).toEqual(['boots', 'boots']);
+    answer(calls[1], 'boots');
+    await second;
+    expect(shownQuery(session)).toBe('boots');
+  });
+
   it('never aborts a cached miss: its late answer is cached but not applied', async () => {
     const session = shellSession();
     const boots = dispatch(session, 'boots');
