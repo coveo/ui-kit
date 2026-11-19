@@ -1,12 +1,13 @@
+import type {ComponentProps} from 'react';
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import {A2UIProvider, ROOT_COMPONENT_ID} from '@copilotkit/a2ui-renderer';
-import type {A2uiV09Message} from '@coveo/thermidor';
+import type {A2uiV09Message, ActionError} from '@coveo/thermidor';
 import {createThermidorCatalog, THERMIDOR_CATALOG_ID} from './components.js';
 import {ThermidorA2UIStream, TurnSurfaces} from './surfaces.js';
-import {SessionRequestProvider} from './session-request.js';
+import {SessionRequestProvider, type SessionRequestSource} from './session-request.js';
 import {makeSurfaces} from '../test/turn-fixtures.js';
-import {requestSnapshot} from '../test/fake-session-requests.js';
+import {createFakeSessionRequests, requestSnapshot} from '../test/fake-session-requests.js';
 import {createFakeCartStore, type FakeCartStore} from '../test/fake-cart-store.js';
 import {CartProvider} from '../cart/CartProvider.js';
 import {renderProductCardCartActions} from '../cart/AddToCartControl/product-card-cart-actions.js';
@@ -432,41 +433,113 @@ describe('ThermidorA2UIStream', () => {
 });
 
 describe('the failure of an action', () => {
-  function renderWithActionError(surfaceId: string) {
-    const snapshot = {
-      ...UNLOCKED,
-      actionError: {
-        message: 'Bad gateway',
-        component: 'PageSize',
-        name: 'setPageSize',
-        surfaceId,
-        sourceComponentId: ROOT_COMPONENT_ID,
+  /** A block with two page size selects, so a failure can show at one and not at the other. */
+  const TWO_CONTROLS = [
+    {version: 'v0.9', createSurface: {surfaceId: SURFACE_ID, catalogId: THERMIDOR_CATALOG_ID}},
+    {
+      version: 'v0.9',
+      updateComponents: {
+        surfaceId: SURFACE_ID,
+        components: [
+          {id: ROOT_COMPONENT_ID, component: 'LayoutStack', children: ['first', 'second']},
+          {id: 'first', component: 'PageSize', pageSize: {path: '/state/first/pageSize'}},
+          {id: 'second', component: 'PageSize', pageSize: {path: '/state/second/pageSize'}},
+        ],
       },
-    };
-    return render(
-      <SessionRequestProvider
-        value={{
-          ...lockedSource(false),
-          getSnapshot: () => snapshot,
-        }}
-      >
-        <A2UIProvider catalog={CATALOG} onAction={() => {}}>
-          <ThermidorA2UIStream messages={MESSAGES} />
+    },
+    {
+      version: 'v0.9',
+      updateDataModel: {surfaceId: SURFACE_ID, path: '/state/first/pageSize', value: 24},
+    },
+    {
+      version: 'v0.9',
+      updateDataModel: {surfaceId: SURFACE_ID, path: '/state/second/pageSize', value: 24},
+    },
+  ] as unknown as A2uiV09Message[];
+
+  const failedPageSize = (overrides: Partial<ActionError> = {}): ActionError => ({
+    message: 'Bad gateway',
+    component: 'PageSize',
+    name: 'setPageSize',
+    surfaceId: SURFACE_ID,
+    sourceComponentId: 'first',
+    ...overrides,
+  });
+
+  function Block({
+    source,
+    onAction = () => {},
+  }: {
+    source: SessionRequestSource;
+    onAction?: ComponentProps<typeof A2UIProvider>['onAction'];
+  }) {
+    return (
+      <SessionRequestProvider value={source}>
+        <A2UIProvider catalog={CATALOG} onAction={onAction}>
+          <ThermidorA2UIStream messages={TWO_CONTROLS} />
           <TurnSurfaces surfaces={makeSurfaces(SURFACE_ID)} latest isStreaming={false} />
         </A2UIProvider>
       </SessionRequestProvider>
     );
   }
 
-  it('shows under the block the action came from', () => {
-    renderWithActionError(SURFACE_ID);
+  async function renderWithActionError(actionError: ActionError) {
+    const snapshot = {...UNLOCKED, actionError};
+    render(<Block source={{...lockedSource(false), getSnapshot: () => snapshot}} />);
+    await waitFor(() => expect(pageSizeSelects()).toHaveLength(2));
+  }
 
-    expect(screen.getByRole('alert').textContent).toContain('Bad gateway');
+  const pageSizeSelects = () => screen.queryAllByLabelText('Products per page:');
+
+  /** The controls of the component that holds `element`. */
+  const componentOf = (element: Element) => element.closest('[data-surface-controls]');
+
+  it('shows next to the component the action came from, and only there', async () => {
+    await renderWithActionError(failedPageSize());
+    const [first, second] = pageSizeSelects();
+
+    const alert = screen.getByRole('alert');
+    expect(alert.textContent).toContain('Bad gateway');
+    expect(componentOf(alert)).toBe(componentOf(first));
+    expect(componentOf(alert)).not.toBe(componentOf(second));
   });
 
-  it('does not show under another block', () => {
-    renderWithActionError('another-surface');
+  it('shows under the block when the component the action came from is not drawn', async () => {
+    await renderWithActionError(failedPageSize({sourceComponentId: 'removed'}));
+
+    const alert = screen.getByRole('alert');
+    expect(alert.textContent).toContain('Bad gateway');
+    expect(componentOf(alert)).toBeNull();
+    expect(alert.parentElement).toBe(
+      screen.getByRole('region', {name: `A2-UI surface ${SURFACE_ID}`})
+    );
+  });
+
+  it('does not show for an action from another block', async () => {
+    await renderWithActionError(failedPageSize({surfaceId: 'another-surface'}));
 
     expect(screen.queryByRole('alert')).toBeNull();
+  });
+
+  it('leaves the other components usable, and clears once the next action is answered', async () => {
+    const send = vi
+      .fn<(message: unknown) => Promise<void>>()
+      .mockRejectedValueOnce(new Error('Bad gateway'))
+      .mockResolvedValue(undefined);
+    const requests = createFakeSessionRequests(send as never, () => 'PageSize');
+    render(<Block source={requests.source} onAction={(message) => requests.dispatch(message)} />);
+    await waitFor(() => expect(pageSizeSelects()).toHaveLength(2));
+
+    fireEvent.change(pageSizeSelects()[0], {target: {value: '48'}});
+
+    const alert = await screen.findByRole('alert');
+    expect(alert.textContent).toContain('Bad gateway');
+    expect(componentOf(alert)).toBe(componentOf(pageSizeSelects()[0]));
+    expect(isDisabled(pageSizeSelects()[1])).toBe(false);
+
+    fireEvent.change(pageSizeSelects()[1], {target: {value: '12'}});
+
+    await waitFor(() => expect(screen.queryByRole('alert')).toBeNull());
+    expect(send).toHaveBeenCalledTimes(2);
   });
 });

@@ -51,4 +51,5 @@
   margin: var(--space-2) 0 0;
   font-size: var(--font-size-sm);
   color: var(--color-error-text);
+  overflow-wrap: anywhere;
 }

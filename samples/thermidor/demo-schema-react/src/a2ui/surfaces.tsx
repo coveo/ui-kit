@@ -8,14 +8,21 @@
  * projection inside `@coveo/thermidor`, read off `session.a2uiMessages`. See that package's
  * `session/a2ui-v09-projection.ts` for the conversion and the recorded interim debt.
  */
-import {useEffect, useMemo, useRef, type ReactNode} from 'react';
+import {useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode} from 'react';
 import {A2UIRenderer, useA2UI} from '@copilotkit/a2ui-renderer';
 import type {A2uiV09Message, DiscoveredSurface} from '@coveo/thermidor';
 import {turnSurfacesTarget} from './results-focus.js';
 import {TurnFailedContext} from './ProgressBlock/ProgressBlock.js';
 import {A2UISkeleton} from './Skeleton/Skeleton.js';
-import {useActionError, useSurfaceLocked} from './session-request.js';
-import {EarlierTurnContext, RestoredSurfacesContext} from './surface-controls.js';
+import {useReportedActionError, useSurfaceLocked} from './session-request.js';
+import {
+  ActionErrorMessage,
+  ActionErrorNotesContext,
+  createActionErrorNotes,
+  EarlierTurnContext,
+  RestoredSurfacesContext,
+  type ActionErrorNotes,
+} from './surface-controls.js';
 import styles from './surfaces.module.css';
 
 /** The control a pointer press lands on, through its label when the press is on one. */
@@ -153,38 +160,52 @@ export function TurnSurfaces({surfaces, latest, isStreaming, expired = false}: T
       )}
       <EarlierTurnContext.Provider value={!interactive}>
         <RestoredSurfacesContext.Provider value={restored || expired}>
-          {surfaces.map(({surfaceId, rootComponentType, isLoading}) => {
-            return (
-              <section
-                className="catalog-surface"
-                aria-label={`A2-UI surface ${surfaceId}`}
-                key={surfaceId}
-              >
-                {isLoading ? (
-                  <A2UISkeleton componentType={rootComponentType} />
-                ) : (
-                  <A2UIRenderer surfaceId={surfaceId} />
-                )}
-                <ActionErrorNote surfaceId={surfaceId} />
-              </section>
-            );
-          })}
+          {surfaces.map(({surfaceId, rootComponentType, isLoading}) => (
+            <Surface
+              key={surfaceId}
+              surfaceId={surfaceId}
+              rootComponentType={rootComponentType}
+              isLoading={isLoading}
+            />
+          ))}
         </RestoredSurfacesContext.Provider>
       </EarlierTurnContext.Provider>
     </fieldset>
   );
 }
 
-/** Says that the last action from this block failed, as the session's `actionError` reports it. */
-function ActionErrorNote({surfaceId}: {surfaceId: string}) {
-  const message = useActionError(surfaceId);
-  if (message === undefined) {
-    return null;
-  }
+/** One block: its content, or the skeleton of its root while it loads. */
+function Surface({surfaceId, rootComponentType, isLoading}: DiscoveredSurface) {
+  const [notes] = useState(createActionErrorNotes);
   return (
-    <p role="alert" className={styles.actionError}>
-      This action could not be completed: {message}
-    </p>
+    <section className="catalog-surface" aria-label={`A2-UI surface ${surfaceId}`}>
+      <ActionErrorNotesContext.Provider value={notes}>
+        {isLoading ? (
+          <A2UISkeleton componentType={rootComponentType} />
+        ) : (
+          <A2UIRenderer surfaceId={surfaceId} />
+        )}
+      </ActionErrorNotesContext.Provider>
+      <BlockActionErrorNote surfaceId={surfaceId} notes={notes} />
+    </section>
+  );
+}
+
+/**
+ * Says, under the block, that the last action from it failed, when the node that dispatched it
+ * does not say so itself: a node no longer drawn, or one not marked with `actsOnSurface`, such as
+ * the search block when it restores a search from the browser history.
+ */
+function BlockActionErrorNote({surfaceId, notes}: {surfaceId: string; notes: ActionErrorNotes}) {
+  const actionError = useReportedActionError();
+  const failed = actionError?.surfaceId === surfaceId ? actionError : undefined;
+  const shownByNode = useSyncExternalStore(
+    notes.subscribe,
+    () => failed !== undefined && notes.has(failed.sourceComponentId),
+    () => false
+  );
+  return failed === undefined || shownByNode ? null : (
+    <ActionErrorMessage message={failed.message} />
   );
 }
 
