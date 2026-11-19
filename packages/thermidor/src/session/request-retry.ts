@@ -1,7 +1,4 @@
-import type {
-  ActionInFlightConflict,
-  TransientFailure,
-} from '@/src/internal/api/protocol/error-handling.js';
+import type {ActionInFlightConflict} from '@/src/internal/api/protocol/error-handling.js';
 
 // Long enough for an aborted agent run to wind down: the Gateway can't cancel it upstream, so it
 // keeps the session's slot until the run's next event or its end.
@@ -13,11 +10,14 @@ const CONFLICT_BASE_DELAY_MS = 250;
 const TRANSIENT_RETRY_BUDGET_MS = 5_000;
 const MAX_TRANSIENT_ATTEMPTS = 3;
 const TRANSIENT_BASE_DELAY_MS = 500;
+// Past the Gateway's one-second rate-limit window; browsers can't read a `429`'s `Retry-After`.
+const THROTTLED_BASE_DELAY_MS = 1_000;
 
 interface AttemptResult {
   success: boolean;
   conflict?: ActionInFlightConflict;
-  transient?: TransientFailure;
+  status?: number;
+  transient?: true;
 }
 
 export interface RetryOptions {
@@ -63,7 +63,7 @@ export async function callWithRetry<TResult extends AttemptResult>(
     if (!options.transient || !result.transient || transientAttempts >= MAX_TRANSIENT_ATTEMPTS) {
       return result;
     }
-    const delay = transientDelay(transientAttempts - 1, result.transient);
+    const delay = transientDelay(transientAttempts - 1, result.status);
     if (delay > transientDeadline - Date.now()) {
       return result;
     }
@@ -77,9 +77,9 @@ function conflictDelay(retry: number): number {
   return Math.min(CONFLICT_BASE_DELAY_MS * 2 ** retry * jitter(), MAX_CONFLICT_DELAY_MS);
 }
 
-// A `429` waits at least as long as its `Retry-After` asks.
-function transientDelay(retry: number, failure: TransientFailure): number {
-  return Math.max(TRANSIENT_BASE_DELAY_MS * 2 ** retry * jitter(), failure.retryAfterMs ?? 0);
+function transientDelay(retry: number, status: number | undefined): number {
+  const base = status === 429 ? THROTTLED_BASE_DELAY_MS : TRANSIENT_BASE_DELAY_MS;
+  return base * 2 ** retry * jitter();
 }
 
 function jitter(): number {

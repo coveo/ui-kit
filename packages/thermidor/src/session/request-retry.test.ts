@@ -3,15 +3,12 @@ import {callWithRetry} from './request-retry.js';
 
 type Result =
   | {success: true}
-  | {success: false; conflict?: object; transient?: {retryAfterMs?: number}};
+  | {success: false; conflict?: object; status?: number; transient?: true};
 
 const success: Result = {success: true};
 const failure: Result = {success: false};
 const conflict = (): Result => ({success: false, conflict: {}});
-const transient = (retryAfterMs?: number): Result => ({
-  success: false,
-  transient: retryAfterMs === undefined ? {} : {retryAfterMs},
-});
+const transient = (status?: number): Result => ({success: false, status, transient: true});
 
 describe('callWithRetry', () => {
   let attempt: ReturnType<typeof vi.fn<() => Promise<Result>>>;
@@ -161,24 +158,13 @@ describe('callWithRetry', () => {
       expect(onRetry).toHaveBeenCalledTimes(2);
     });
 
-    it.each([
-      ['longer than the backoff, waits for it', 2000, 1999],
-      ['shorter than the backoff, keeps the backoff', 100, 499],
-    ])('with a Retry-After %s', async (_label, retryAfterMs, waited) => {
-      respondWith(transient(retryAfterMs), success);
+    it('starts the backoff of a 429 at 1 s, then 2 s', async () => {
+      respondWith(transient(429), transient(429), success);
 
       const result = call();
 
-      expect(await attemptsAfter(waited, 1)).toEqual([1, 2]);
+      expect(await attemptsAfter(999, 1, 1999, 1)).toEqual([1, 2, 2, 3]);
       await expect(result).resolves.toBe(success);
-    });
-
-    it('gives up when Retry-After asks for more than what is left of 5 s', async () => {
-      const failed = transient(6000);
-      respondWith(failed, success);
-
-      await expect(call()).resolves.toBe(failed);
-      expect(attempt).toHaveBeenCalledTimes(1);
     });
 
     it('counts the time spent on each attempt against the budget', async () => {
