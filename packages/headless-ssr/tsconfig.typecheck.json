@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": "../",
+    "paths": {
+      "@coveo/headless": ["../headless/src/index.ts"],
+      "@coveo/headless/commerce": ["../headless/src/commerce.index.ts"],
+      "@coveo/headless/ssr-internal": ["../headless/src/ssr-internal.index.ts"],
+      "@coveo/headless-src/*": ["../headless/src/*"]
+    }
+  },
+  "include": ["src/**/*.test-d.ts"]
+}

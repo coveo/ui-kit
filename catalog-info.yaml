@@ -21,6 +21,7 @@ spec:
     - ./packages/create-atomic/catalog-info.yaml
     - ./packages/create-ui/catalog-info.yaml
     - ./packages/headless-react/catalog-info.yaml
+    - ./packages/headless-ssr/catalog-info.yaml
     - ./packages/headless/catalog-info.yaml
     - ./packages/quantic/catalog-info.yaml
     - ./packages/relay/catalog-info.yaml

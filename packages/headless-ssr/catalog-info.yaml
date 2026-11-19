@@ -1,0 +1,16 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: headless-ssr
+  title: '@coveo/headless-ssr'
+  description: Server-side rendering (SSR) utilities for Coveo Headless, with optional React bindings
+spec:
+  type: library
+  lifecycle: production
+  owner: group:default/dxui
+  system: ui-kit
+  dependsOn:
+    - component:bueno
+    - component:coveo.analytics
+    - component:headless
+    - component:relay

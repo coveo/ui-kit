@@ -1,4 +1,4 @@
-import {buildNavigatorContext} from '@coveo/headless-react/ssr-commerce-next';
+import {buildNavigatorContext} from '@coveo/headless-ssr/react/commerce';
 import {headers} from 'next/headers';
 
 /**

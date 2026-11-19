@@ -49,8 +49,6 @@ function getUmdGlobalName(useCase) {
     insight: 'CoveoHeadlessInsight',
     ssr: 'CoveoHeadlessSSR',
     'ssr-commerce': 'CoveoHeadlessCommerceSSR',
-    'ssr-next': 'CoveoHeadlessSSRNext',
-    'ssr-commerce-next': 'CoveoHeadlessCommerceSSRNext',
     commerce: 'CoveoHeadlessCommerce',
   };
 

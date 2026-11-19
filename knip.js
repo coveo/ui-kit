@@ -67,8 +67,7 @@ export default {
       ignoreDependencies: ['@playwright/mcp', 'size-limit'],
     },
     'packages/headless': {
-      // Type tests run through Vitest's typecheck, which Knip's Vitest plugin does not follow.
-      entry: ['src/*index.ts', 'src/**/*.test-d.ts', 'ponyfills/*.js'],
+      entry: ['src/*index.ts', 'ponyfills/*.js'],
       ignoreDependencies: ['reselect', 'node-fetch'],
     },
     'packages/atomic-hosted-page': {
@@ -106,6 +105,12 @@ export default {
       // @types/react is an optional peer dep but referenced in source — consumers
       // provide it, so we suppress the knip warning.
       ignoreDependencies: ['@types/react'],
+    },
+    'packages/headless-ssr': {
+      // Type tests run through Vitest's typecheck, which Knip's Vitest plugin does not follow.
+      entry: ['src/**/*.test-d.ts'],
+      // react and @types/react are optional peer deps: only the ./react subpaths need them.
+      ignoreDependencies: ['@types/react', 'react'],
     },
     'packages/relay': {
       entry: ['src/relay.ts', 'config/rollup.config.mjs'],

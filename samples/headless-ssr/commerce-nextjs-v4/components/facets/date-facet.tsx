@@ -3,7 +3,7 @@
 import type {
   DateFacetState,
   DateFacet as HeadlessDateFacet,
-} from '@coveo/headless-react/ssr-commerce-next';
+} from '@coveo/headless-ssr/react/commerce';
 import {useEffect, useState} from 'react';
 
 interface IDateFacetProps {

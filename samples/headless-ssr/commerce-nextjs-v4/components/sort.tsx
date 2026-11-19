@@ -1,7 +1,7 @@
 'use client';
 
-import {SortBy, type SortCriterion} from '@coveo/headless-react/ssr-commerce-next';
-// import {SortBy, SortCriterion} from '@coveo/headless-react/ssr-commerce-next';
+import {SortBy, type SortCriterion} from '@coveo/headless-ssr/react/commerce';
+// import {SortBy, SortCriterion} from '@coveo/headless-ssr/react/commerce';
 import {useSort} from '@/lib/commerce-engine';
 
 export default function Sort() {

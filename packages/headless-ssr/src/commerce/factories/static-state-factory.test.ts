@@ -1,0 +1,284 @@
+import type {Mock, MockInstance} from 'vitest';
+import {getSampleCommerceEngineConfiguration} from '@coveo/headless-src/app/commerce-engine/commerce-engine-configuration.js';
+import type {NavigatorContext} from '@coveo/headless-src/app/navigator-context-provider.js';
+import {
+  buildProductListing,
+  type ProductListing,
+} from '@coveo/headless-src/controllers/commerce/product-listing/headless-product-listing.js';
+import {
+  buildSearch,
+  type Search,
+} from '@coveo/headless-src/controllers/commerce/search/headless-search.js';
+import {buildMockCommerceState} from '@coveo/headless-src/test/mock-commerce-state.js';
+import {buildMockCommerceContext} from '@coveo/headless-src/test/mock-context.js';
+import {
+  buildMockProductListingController,
+  buildMockSearchController,
+} from '@coveo/headless-src/test/mock-controller.js';
+import {buildMockSSRCommerceEngine} from '@coveo/headless-src/test/mock-engine-v2.js';
+import {buildMockNavigatorContext} from '@coveo/headless-src/test/mock-navigator-context.js';
+import {defineMockCommerceController} from '../../test/mock-ssr-controller-definitions.js';
+import type {ContextOptions} from '../controllers/context/headless-context.ssr.js';
+import {SolutionType} from '../types/controller-constants.js';
+import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
+import type {CommerceHydratedState} from '../types/hydrate-static-state.js';
+import * as buildFactory from './build-factory.js';
+import {fetchStaticStateFactory} from './static-state-factory.js';
+
+vi.mock('../utils/controller-wiring.js');
+vi.mock('@coveo/headless-src/controllers/commerce/product-listing/headless-product-listing.js');
+vi.mock('@coveo/headless-src/controllers/commerce/search/headless-search.js');
+
+describe('fetchStaticStateFactory', () => {
+  let mockNavigatorContext: NavigatorContext;
+  let mockContext: ContextOptions;
+  let engineSpy: MockInstance;
+  const mockBuildProductListing = vi.mocked(buildProductListing);
+  const mockBuildSearch = vi.mocked(buildSearch);
+  const mockExecuteFirstRequest = vi.fn();
+  const mockedExecuteFirstSearch = vi.fn();
+  const mockEngine = buildMockSSRCommerceEngine(buildMockCommerceState());
+  const mockEngineOptions = {
+    configuration: getSampleCommerceEngineConfiguration(),
+  };
+
+  const definition = {
+    controller1: defineMockCommerceController(),
+    controller2: defineMockCommerceController(),
+  };
+
+  beforeEach(() => {
+    mockContext = buildMockCommerceContext();
+    mockNavigatorContext = buildMockNavigatorContext();
+    mockBuildProductListing.mockImplementation(
+      () =>
+        ({
+          executeFirstRequest: mockExecuteFirstRequest,
+        }) as unknown as ProductListing
+    );
+
+    mockBuildSearch.mockImplementation(
+      () =>
+        ({
+          executeFirstSearch: mockedExecuteFirstSearch,
+        }) as unknown as Search
+    );
+
+    engineSpy = vi.spyOn(buildFactory, 'buildFactory').mockReturnValue(
+      <T extends SolutionType>(_: T) =>
+        async () =>
+          Promise.resolve({
+            engine: mockEngine,
+            controllers: {} as CommerceHydratedState<
+              CommerceControllerDefinitionsMap,
+              T
+            >['controllers'],
+          })
+    );
+
+    mockExecuteFirstRequest.mockReturnValue(Promise.resolve());
+    mockedExecuteFirstSearch.mockReturnValue(Promise.resolve());
+    (mockEngine.waitForRequestCompletedAction as Mock).mockReturnValue([]);
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should call buildFactory with the correct parameters', async () => {
+    // @ts-expect-error: do not care about baked-in controller initial state
+    const factory = fetchStaticStateFactory(definition, mockEngineOptions);
+    await factory(SolutionType.listing)({
+      navigatorContext: mockNavigatorContext,
+      context: mockContext,
+    });
+    expect(engineSpy.mock.calls[0][0]).toStrictEqual(definition);
+  });
+
+  describe('build config round-trip', () => {
+    // The static state carries the build config back to the caller so that passing it straight to
+    // hydrateStaticState() reapplies the same navigator context and access token on the client.
+    // Hydration depends on this, so the returned shape must keep these fields.
+    it('should return the navigator context alongside the static state', async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
+      const factory = fetchStaticStateFactory(definition, mockEngineOptions);
+
+      const staticState = await factory(SolutionType.listing)({
+        navigatorContext: mockNavigatorContext,
+        context: mockContext,
+      });
+
+      expect(staticState.navigatorContext).toEqual(mockNavigatorContext);
+    });
+
+    it('should return the per-request access token alongside the static state', async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
+      const factory = fetchStaticStateFactory(definition, mockEngineOptions);
+
+      const staticState = await factory(SolutionType.listing)({
+        navigatorContext: mockNavigatorContext,
+        context: mockContext,
+        accessToken: 'per-request-token',
+      });
+
+      expect(staticState.accessToken).toBe('per-request-token');
+    });
+
+    it('should omit the access token when none was provided', async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
+      const factory = fetchStaticStateFactory(definition, mockEngineOptions);
+
+      const staticState = await factory(SolutionType.listing)({
+        navigatorContext: mockNavigatorContext,
+        context: mockContext,
+      });
+
+      expect(staticState.accessToken).toBeUndefined();
+    });
+
+    it('should return the context alongside the static state', async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
+      const factory = fetchStaticStateFactory(definition, mockEngineOptions);
+
+      const staticState = await factory(SolutionType.listing)({
+        navigatorContext: mockNavigatorContext,
+        context: mockContext,
+      });
+
+      expect(staticState.context).toBe(mockContext);
+    });
+  });
+
+  describe('when solution type is listing', () => {
+    beforeEach(async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
+      const factory = fetchStaticStateFactory(definition, mockEngineOptions);
+      await factory(SolutionType.listing)({
+        navigatorContext: mockNavigatorContext,
+        context: mockContext,
+      });
+    });
+
+    it('should build a product listing controller', async () => {
+      expect(buildProductListing).toHaveBeenCalledTimes(1);
+    });
+
+    it('should perform a listing request ', async () => {
+      expect(mockExecuteFirstRequest).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not perform a search request ', async () => {
+      expect(mockedExecuteFirstSearch).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('when solution type is search', () => {
+    beforeEach(async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
+      const factory = fetchStaticStateFactory(definition, mockEngineOptions);
+      await factory(SolutionType.search)({
+        navigatorContext: mockNavigatorContext,
+        context: {
+          country: 'CA',
+          currency: 'USD',
+          language: 'en',
+          view: {url: 'https://example.com'},
+        },
+        searchParams: {
+          q: 'test',
+        },
+      });
+    });
+
+    it('should build a search controller', async () => {
+      expect(buildSearch).toHaveBeenCalledTimes(1);
+    });
+
+    it('should perform a search request ', async () => {
+      expect(mockedExecuteFirstSearch).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not perform a listing request ', async () => {
+      expect(mockExecuteFirstRequest).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('when solution type is standalone', () => {
+    beforeEach(async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
+      const factory = fetchStaticStateFactory(definition, mockEngineOptions);
+      await factory(SolutionType.standalone)({
+        navigatorContext: mockNavigatorContext,
+        context: mockContext,
+      });
+    });
+
+    it('should not build search or listing controllers', async () => {
+      expect(buildSearch).toHaveBeenCalledTimes(0);
+      expect(buildProductListing).toHaveBeenCalledTimes(0);
+    });
+
+    it('should not perform any request ', async () => {
+      expect(mockedExecuteFirstSearch).toHaveBeenCalledTimes(0);
+      expect(mockExecuteFirstRequest).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('when controllers include a ProductList controller with executeFirstRequest/executeFirstSearch', () => {
+    let mockProductListController: ReturnType<typeof buildMockProductListingController>;
+    let mockSearchProductListController: ReturnType<typeof buildMockSearchController>;
+
+    beforeEach(() => {
+      mockProductListController = buildMockProductListingController();
+      mockSearchProductListController = buildMockSearchController();
+      engineSpy = vi.spyOn(buildFactory, 'buildFactory').mockReturnValue(
+        <T extends SolutionType>(solutionType: T) =>
+          async () =>
+            Promise.resolve({
+              engine: mockEngine,
+              controllers: {
+                productList:
+                  solutionType === SolutionType.listing
+                    ? mockProductListController
+                    : mockSearchProductListController,
+              } as unknown as CommerceHydratedState<
+                CommerceControllerDefinitionsMap,
+                T
+              >['controllers'],
+            })
+      );
+    });
+
+    it('should request using the existing controller and not build a fallback, for the Listing solution type', async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
+      const factory = fetchStaticStateFactory(definition, mockEngineOptions);
+      await factory(SolutionType.listing)({
+        navigatorContext: mockNavigatorContext,
+        context: mockContext,
+      });
+
+      expect(mockProductListController.executeFirstRequest).toHaveBeenCalledTimes(1);
+      expect(buildProductListing).not.toHaveBeenCalled();
+    });
+
+    it('should request using the existing controller and not build a fallback, for the Search solution type', async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
+      const factory = fetchStaticStateFactory(definition, mockEngineOptions);
+      await factory(SolutionType.search)({
+        navigatorContext: mockNavigatorContext,
+        context: {
+          country: 'CA',
+          currency: 'USD',
+          language: 'en',
+          view: {url: 'https://example.com'},
+        },
+        searchParams: {
+          q: 'test',
+        },
+      });
+
+      expect(mockSearchProductListController.executeFirstSearch).toHaveBeenCalledTimes(1);
+      expect(buildSearch).not.toHaveBeenCalled();
+    });
+  });
+});

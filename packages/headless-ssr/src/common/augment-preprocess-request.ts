@@ -1,0 +1,58 @@
+import type {
+  PlatformClientOrigin,
+  PlatformRequestOptions,
+  PreprocessRequest,
+  RequestMetadata,
+} from '@coveo/headless/ssr-internal';
+import {buildLogger} from '@coveo/headless/ssr-internal';
+import type {LoggerOptions} from '@coveo/headless';
+import type {NavigatorContext} from '@coveo/headless';
+import {isBrowser} from '@coveo/headless/ssr-internal';
+
+export interface AugmentPreprocessRequestOptions {
+  navigatorContext: NavigatorContext;
+  preprocessRequest?: PreprocessRequest;
+  loggerOptions?: LoggerOptions;
+}
+
+const AUGMENTED_MARKER = Symbol('augmentedWithForwardedFor');
+
+interface AugmentedPreprocessRequest extends PreprocessRequest {
+  [AUGMENTED_MARKER]?: boolean;
+}
+
+export function augmentPreprocessRequestWithForwardedFor(options: AugmentPreprocessRequestOptions) {
+  const originalPreprocessRequest = options.preprocessRequest as AugmentedPreprocessRequest;
+
+  if (originalPreprocessRequest?.[AUGMENTED_MARKER]) {
+    return originalPreprocessRequest;
+  }
+
+  const augmentedFunction: AugmentedPreprocessRequest = async (
+    request: PlatformRequestOptions,
+    clientOrigin: PlatformClientOrigin,
+    metadata?: RequestMetadata
+  ) => {
+    if (!isBrowser()) {
+      const headers = new Headers(request.headers);
+      const forwardedFor = options.navigatorContext?.forwardedFor;
+      if (forwardedFor) {
+        headers.set('x-forwarded-for', forwardedFor as string);
+      } else {
+        const logger = buildLogger(options.loggerOptions);
+        logger.warn(
+          "[WARNING] Unable to set x-forwarded-for header. Set the 'forwardedFor' property of the navigator context passed to fetchStaticState()."
+        );
+      }
+      request.headers = headers;
+    }
+    if (originalPreprocessRequest) {
+      return originalPreprocessRequest(request, clientOrigin, metadata);
+    }
+    return request;
+  };
+
+  augmentedFunction[AUGMENTED_MARKER] = true;
+
+  return augmentedFunction;
+}

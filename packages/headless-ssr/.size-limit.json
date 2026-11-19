@@ -1,0 +1,23 @@
+[
+  {
+    "name": "@coveo/headless-ssr - search",
+    "path": "dist/index.js",
+    "import": "{ defineSearchEngine, defineResultList, defineSearchBox }",
+    "ignore": ["@coveo/headless"],
+    "limit": "4 kB"
+  },
+  {
+    "name": "@coveo/headless-ssr - commerce",
+    "path": "dist/commerce.index.js",
+    "import": "{ defineCommerceEngine, defineProductList }",
+    "ignore": ["@coveo/headless"],
+    "limit": "6 kB"
+  },
+  {
+    "name": "@coveo/headless-ssr - react commerce",
+    "path": "dist/react/commerce/index.js",
+    "import": "{ defineCommerceEngine, defineProductList }",
+    "ignore": ["@coveo/headless", "react", "react-dom"],
+    "limit": "7 kB"
+  }
+]

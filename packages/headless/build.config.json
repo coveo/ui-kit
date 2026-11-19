@@ -6,9 +6,7 @@
     "insight": "src/insight.index.ts",
     "commerce": "src/commerce.index.ts",
     "ssr": "src/ssr.index.ts",
-    "ssr-next": "src/ssr-next.index.ts",
-    "ssr-commerce": "src/ssr-commerce.index.ts",
-    "ssr-commerce-next": "src/ssr-commerce-next.index.ts"
+    "ssr-commerce": "src/ssr-commerce.index.ts"
   },
   "quanticUseCaseEntries": {
     "search": "src/index.ts",

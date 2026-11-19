@@ -6,6 +6,7 @@ packages:
   - packages/thermidor
   - packages/quantic
   - packages/headless-react
+  - packages/headless-ssr
   - packages/atomic-hosted-page
   - packages/atomic-react
   - packages/atomic-angular

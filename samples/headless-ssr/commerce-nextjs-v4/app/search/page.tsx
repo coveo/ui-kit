@@ -1,7 +1,4 @@
-import {
-  buildParameterSerializer,
-  type ContextOptions,
-} from '@coveo/headless-react/ssr-commerce-next';
+import {buildParameterSerializer, type ContextOptions} from '@coveo/headless-ssr/react/commerce';
 import * as externalCartAPI from '@/actions/external-cart-api';
 import BreadcrumbManager from '@/components/breadcrumb-manager';
 import ContextDropdown from '@/components/context-dropdown';

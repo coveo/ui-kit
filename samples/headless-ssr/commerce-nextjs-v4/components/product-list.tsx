@@ -1,6 +1,6 @@
 'use client';
 
-import {ResultType} from '@coveo/headless-react/ssr-commerce-next';
+import {ResultType} from '@coveo/headless-ssr/react/commerce';
 import {useCart, useProductList} from '@/lib/commerce-engine';
 import {addToCart} from '@/utils/cart';
 import ProductButtonWithImage from './product-button-with-image';

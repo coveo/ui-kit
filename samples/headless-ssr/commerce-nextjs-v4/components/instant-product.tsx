@@ -1,4 +1,4 @@
-import type {Product} from '@coveo/headless-react/ssr-commerce-next';
+import type {Product} from '@coveo/headless-ssr/react/commerce';
 import {useRouter} from 'next/navigation';
 import {useCart, useInstantProducts} from '@/lib/commerce-engine';
 import {addToCart} from '@/utils/cart';

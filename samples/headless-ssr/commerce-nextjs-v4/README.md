@@ -3,7 +3,7 @@
 Sample e-commerce application demonstrating Coveo Headless with Server-Side Rendering using Next.js App Router. Features include search, product listings, faceted navigation, recommendations, and cart management.
 
 > **Preview Version Notice**  
-> This project uses `@coveo/headless-react/ssr-commerce-next` - the next version of Coveo's SSR framework that will be officially available in Headless V4. APIs may change before the final release.
+> This project uses `@coveo/headless-ssr/react/commerce` - the next version of Coveo's SSR framework that will be officially available in Headless V4. APIs may change before the final release.
 
 ## Getting Started
 

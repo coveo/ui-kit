@@ -5,7 +5,7 @@ import type {
   DateFacetValue,
   NumericFacetValue,
   RegularFacetValue,
-} from '@coveo/headless-react/ssr-commerce-next';
+} from '@coveo/headless-ssr/react/commerce';
 import {useBreadcrumbManager} from '@/lib/commerce-engine';
 
 type FacetBreadcrumbValue =

@@ -5,7 +5,7 @@ import type {
   CategoryFacetState,
   CategoryFacetValue,
   CategoryFacet as HeadlessCategoryFacet,
-} from '@coveo/headless-react/ssr-commerce-next';
+} from '@coveo/headless-ssr/react/commerce';
 import {useEffect, useRef, useState} from 'react';
 
 interface ICategoryFacetProps {

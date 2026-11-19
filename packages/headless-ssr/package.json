@@ -1,0 +1,92 @@
+{
+  "name": "@coveo/headless-ssr",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Server-side rendering (SSR) utilities for Coveo Headless, with optional React bindings",
+  "keywords": [
+    "headless",
+    "nextjs",
+    "react",
+    "ssr"
+  ],
+  "homepage": "https://docs.coveo.com/en/headless/latest/",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "packages/headless-ssr"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./commerce": {
+      "types": "./dist/commerce.index.d.ts",
+      "default": "./dist/commerce.index.js"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "default": "./dist/react/index.js"
+    },
+    "./react/commerce": {
+      "types": "./dist/react/commerce/index.d.ts",
+      "default": "./dist/react/commerce/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "publint": "publint",
+    "build": "tsc --project ./tsconfig.build.json",
+    "clean": "node ../../utils/ci/rm-rf.mjs dist",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "size": "node ../../scripts/size-limit.mjs run"
+  },
+  "dependencies": {
+    "@coveo/bueno": "workspace:*",
+    "@coveo/headless": "workspace:*",
+    "@coveo/relay": "workspace:*",
+    "@reduxjs/toolkit": "catalog:",
+    "coveo.analytics": "workspace:*"
+  },
+  "devDependencies": {
+    "@coveo/relay-event-types": "catalog:",
+    "@size-limit/preset-small-lib": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@types/node": "catalog:",
+    "jsdom": "catalog:",
+    "pino": "10.4.0",
+    "publint": "catalog:",
+    "size-limit": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "@types/react": "catalog:peer-compatibility",
+    "@types/react-dom": "catalog:peer-compatibility",
+    "react": "catalog:peer-compatibility",
+    "react-dom": "catalog:peer-compatibility"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    },
+    "@types/react-dom": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
+  }
+}

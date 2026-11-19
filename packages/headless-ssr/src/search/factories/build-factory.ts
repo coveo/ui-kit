@@ -1,0 +1,61 @@
+import type {UnknownAction} from '@reduxjs/toolkit';
+import {buildSearchEngine, type SearchEngineOptions} from '@coveo/headless';
+import {createWaitForActionMiddleware} from '@coveo/headless/ssr-internal';
+import {buildControllerDefinitions} from '../controller-utils.js';
+import type {BuildParameters, SearchCompletedAction, SSRSearchEngine} from '../types/build.js';
+import type {
+  SearchControllerDefinitionsMap,
+  SearchEngineDefinitionOptions,
+} from '../types/engine.js';
+import type {SearchHydratedState} from '../types/hydrate-static-state.js';
+import {wireControllerParams} from '../utils/controller-wiring.js';
+import {augmentSearchEngineOptions} from '../utils/engine-wiring.js';
+
+function isSearchCompletedAction(action: unknown): action is SearchCompletedAction {
+  return /^search\/executeSearch\/(fulfilled|rejected)$/.test((action as UnknownAction).type);
+}
+
+function buildSSRSearchEngine(options: SearchEngineOptions): SSRSearchEngine {
+  const {middleware, promise} = createWaitForActionMiddleware(isSearchCompletedAction);
+  const searchEngine = buildSearchEngine({
+    ...options,
+    middlewares: [...(options.middlewares ?? []), middleware],
+  });
+  return {
+    ...searchEngine,
+    get state() {
+      return searchEngine.state;
+    },
+    waitForSearchCompletedAction() {
+      return promise;
+    },
+  };
+}
+
+export const buildFactory =
+  <TControllerDefinitions extends SearchControllerDefinitionsMap>(
+    controllerDefinitions: TControllerDefinitions,
+    options: SearchEngineDefinitionOptions<TControllerDefinitions>
+  ) =>
+  async (buildOptions: BuildParameters) => {
+    const controllerProps = wireControllerParams(controllerDefinitions, buildOptions);
+
+    const engineOptions = augmentSearchEngineOptions(options, buildOptions);
+
+    const engine = buildSSRSearchEngine(engineOptions);
+
+    const controllers = buildControllerDefinitions({
+      definitionsMap: controllerDefinitions,
+      engine,
+      propsMap: controllerProps,
+    });
+
+    buildOptions.searchActions?.forEach((action) => {
+      engine.dispatch(action);
+    });
+
+    return {
+      engine,
+      controllers: controllers as SearchHydratedState<TControllerDefinitions>['controllers'],
+    };
+  };

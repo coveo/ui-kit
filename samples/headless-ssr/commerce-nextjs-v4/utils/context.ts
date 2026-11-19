@@ -1,4 +1,4 @@
-import type {ContextState} from '@coveo/headless-react/ssr-commerce-next';
+import type {ContextState} from '@coveo/headless-ssr/react/commerce';
 
 export const defaultContext: {
   language: string;

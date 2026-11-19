@@ -5,7 +5,7 @@ import type {
   Product as HeadlessProduct,
   InstantProducts,
   ProductList,
-} from '@coveo/headless-react/ssr-commerce-next';
+} from '@coveo/headless-ssr/react/commerce';
 import * as externalCartAPI from '@/actions/external-cart-api';
 
 type HeadlessSSRCart = Omit<HeadlessCart, 'state' | 'subscribe'>;

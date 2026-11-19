@@ -56,6 +56,7 @@
 - [`@coveo/atomic-theming-e2e`](packages/atomic-theming-e2e/): End-to-end tests validating Atomic theme customization and shadow DOM style encapsulation
 - [`@coveo/create-atomic-template`](packages/create-atomic-template/): Template project scaffolded by @coveo/create-atomic when generating a new Atomic search page
 - [`@coveo/documentation`](packages/documentation/): Typedoc plugin enforcing Coveo's documentation styling and navigation conventions across the monorepo
+- [`@coveo/headless-ssr`](packages/headless-ssr/): Server-side rendering (SSR) utilities for Coveo Headless, with optional React bindings
 - [`@coveo/mock-converse-api`](packages/mock-converse-api/): HTTP server exposing mock Converse API endpoints, built on @coveo/platform-mock-api, for local development and testing
 - [`@coveo/pkg-new-template`](packages/pkg-new-template/): Preview app used by pkg.pr.new to let reviewers try out Atomic and Headless builds from a pull request
 - [`@coveo/platform-mock-api`](packages/platform-mock-api/): Coveo Platform API mock layer for testing (search, commerce, insight, recommendations)

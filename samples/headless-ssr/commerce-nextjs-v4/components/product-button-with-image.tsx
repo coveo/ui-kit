@@ -1,4 +1,4 @@
-import type {Product, ProductList, Recommendations} from '@coveo/headless-react/ssr-commerce-next';
+import type {Product, ProductList, Recommendations} from '@coveo/headless-ssr/react/commerce';
 import Image from 'next/image';
 import {useRouter} from 'next/navigation';
 
