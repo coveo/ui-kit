@@ -17,6 +17,8 @@ export const NextActionsBar = createComponentImplementation(
     name: 'NextActionsBar',
     schema: NextActionsBarPropsSchema,
   },
+  // TODO(a2ui-react context): `context` is deprecated in @a2ui/react 0.16. Dispatch with
+  // `useA2uiSurface()?.dispatchAction(action, componentId)` once a component can read its own id.
   ({props, context}) => {
     const actions = props.suggestedActions ?? [];
 

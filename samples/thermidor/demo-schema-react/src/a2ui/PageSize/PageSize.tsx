@@ -11,6 +11,8 @@ const DEFAULT_PAGE_SIZE_OPTIONS = [12, 24, 48];
 /** A2-UI component for the `page-size` selector. */
 export const PageSize = createComponentImplementation(
   {name: 'PageSize', schema: PageSizePropsSchema},
+  // TODO(a2ui-react context): `context` is deprecated in @a2ui/react 0.16. Dispatch with
+  // `useA2uiSurface()?.dispatchAction(action, componentId)` once a component can read its own id.
   ({props, context}) => {
     const selectId = useId();
 

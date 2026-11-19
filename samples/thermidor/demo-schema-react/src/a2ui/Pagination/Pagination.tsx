@@ -11,6 +11,8 @@ const NUMBER_OF_PAGES = 5;
 /** A2-UI component for the `pagination` controls. */
 export const Pagination = createComponentImplementation(
   {name: 'Pagination', schema: PaginationPropsSchema},
+  // TODO(a2ui-react context): `context` is deprecated in @a2ui/react 0.16. Dispatch with
+  // `useA2uiSurface()?.dispatchAction(action, componentId)` once a component can read its own id.
   ({props, context}) => {
     const {totalPages} = props;
 

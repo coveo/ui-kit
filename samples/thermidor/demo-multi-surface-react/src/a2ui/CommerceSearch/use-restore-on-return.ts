@@ -4,6 +4,9 @@ import {buildRestoreSnapshot} from '../../../../demo-schema-react/src/a2ui/Comme
 import type {SearchSurfaceContext} from '../../../../demo-schema-react/src/a2ui/CommerceSearch/use-search-history.js';
 import {useReturnedVisit} from './returned-visit.js';
 
+// TODO(a2ui-react context): `context` is deprecated in @a2ui/react 0.16. Read the surface's
+// `dataModel`, `componentsModel` and `id` from `useA2uiSurface()`, and dispatch with its
+// `dispatchAction(action, componentId)` once a component can read its own id.
 function snapshotOf(context: SearchSurfaceContext): RestoreStatePayload | undefined {
   const nodes = Array.from(context.surfaceComponents.entries, ([id, {type}]) => ({id, type}));
   return buildRestoreSnapshot(nodes, (id) => context.dataContext.dataModel.get(`/state/${id}`));
