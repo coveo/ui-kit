@@ -108,9 +108,9 @@ const tasksGraph = getTasksGraph(dryRun);
  * This is important because Turbo doesn't return tasks without a "command" in the output of affectedTasks.
  * You must attempt to call the tasks to know which dependencies are actually called.
  */
-const expandAffectedTasks = (tasksGraph, affectedTasks) => {
+const expandAffectedTasks = (tasksGraph, affectedTasks, changedTasks) => {
   const affected = new Set(affectedTasks);
-  const queue = [...affectedTasks];
+  const queue = [...changedTasks];
 
   while (queue.length > 0) {
     const task = queue.shift();
@@ -128,6 +128,9 @@ const expandAffectedTasks = (tasksGraph, affectedTasks) => {
   return [...affected].sort();
 };
 
+const isRequiredByAffectedTask = ({reason}) =>
+  reason.__typename === 'TaskAllChanged' && reason.description === 'required by an affected task';
+
 const packagesFromTasks = (taskIds) => {
   const packageNames = taskIds.map((taskId) => taskId.split('#')[0]);
 
@@ -135,9 +138,11 @@ const packagesFromTasks = (taskIds) => {
 };
 
 const affectedTasks = [...queryOutput.data.affectedTasks.items].sort(sortBy('fullName'));
+// Prerequisites ("required by an affected task") must run but didn't change, so their dependents aren't expanded.
 const affectedTaskNames = expandAffectedTasks(
   tasksGraph,
-  affectedTasks.map(({fullName}) => fullName)
+  affectedTasks.map(({fullName}) => fullName),
+  affectedTasks.filter((task) => !isRequiredByAffectedTask(task)).map(({fullName}) => fullName)
 );
 const affectedPackageNames = packagesFromTasks(affectedTaskNames);
 const affectedSamples = affectedTaskNames.filter((fullName) =>
