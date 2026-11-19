@@ -185,12 +185,18 @@ describe('ConversationDrawer', () => {
     expect(app.storage.list().map(({title}) => title)).toEqual(['Board shopping']);
   });
 
-  it('cancels a rename on Escape, leaving the drawer open', async () => {
+  it('cancels a rename on Escape, leaving the drawer open, but not while an IME composes', async () => {
     const app = renderApp();
     await ask(app, 'surfboards');
     fireEvent.click(toggle());
 
-    rename('surfboards', 'Board shopping', (input) => fireEvent.keyDown(input, {key: 'Escape'}));
+    rename('surfboards', 'Board shopping', (input) => {
+      fireEvent.keyDown(input, {key: 'Enter', isComposing: true});
+      fireEvent.keyDown(input, {key: 'Escape', isComposing: true});
+      expect(screen.getByRole('textbox', {name: 'Conversation title'})).toBe(input);
+      expect(drawer()).toBeTruthy();
+      fireEvent.keyDown(input, {key: 'Escape'});
+    });
 
     expect(entries().map((entry) => entry.textContent)).toEqual(['surfboards']);
     expect(app.storage.list().map(({title}) => title)).toEqual(['surfboards']);

@@ -116,6 +116,8 @@ export function ConversationRow({
               // Escape cancels the rename only, leaving the drawer open, and Enter must not reach
               // the menu button that gets the focus back.
               event.stopPropagation();
+              // While an IME composes, both keys belong to its candidates.
+              if (event.nativeEvent.isComposing) return;
               event.preventDefault();
               endRename(event.key === 'Enter' ? event.currentTarget.value : undefined, true);
             }
