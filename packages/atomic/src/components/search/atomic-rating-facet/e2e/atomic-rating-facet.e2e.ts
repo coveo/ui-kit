@@ -53,8 +53,7 @@ test.describe('atomic-rating-facet', () => {
     });
   });
 
-  // TODO: Issue #6691: Unskip visual tests after fixing CI snapshot issues
-  test.skip('should match baseline in default state', async ({facet}) => {
+  test('should match baseline in default state', async ({facet}) => {
     await test.step('Load facet and capture screenshot', async () => {
       await facet.load({story: 'default'});
       await facet.hydrated.waitFor();
@@ -67,8 +66,7 @@ test.describe('atomic-rating-facet', () => {
     });
   });
 
-  // TODO: Issue #6691: Unskip visual tests after fixing CI snapshot issues
-  test.skip('should match baseline with display-as-link', async ({facet}) => {
+  test('should match baseline with display-as-link', async ({facet}) => {
     await test.step('Load facet with display-as-link and capture screenshot', async () => {
       await facet.load({story: 'display-as-link'});
       await facet.hydrated.waitFor();
@@ -81,8 +79,7 @@ test.describe('atomic-rating-facet', () => {
     });
   });
 
-  // TODO: Issue #6691: Unskip visual tests after fixing CI snapshot issues
-  test.skip('should match baseline after selecting a value', async ({facet}) => {
+  test('should match baseline after selecting a value', async ({facet}) => {
     await test.step('Load facet and select a value', async () => {
       await facet.load({story: 'default'});
       await facet.hydrated.waitFor();

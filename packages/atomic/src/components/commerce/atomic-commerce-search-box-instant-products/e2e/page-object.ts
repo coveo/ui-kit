@@ -10,6 +10,10 @@ export class InstantProductPageObject extends BasePageObject {
     return this.page.getByLabel('instant product');
   }
 
+  get instantProductItems() {
+    return this.page.locator('[part~="instant-results-item"]');
+  }
+
   get productRoots() {
     return this.page.locator('.result-root');
   }
