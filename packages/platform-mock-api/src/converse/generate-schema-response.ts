@@ -18,6 +18,7 @@ import {
   SEARCH_SURFACE_ID,
   buildWaterSportsInitialEvents,
   buildWaterSportsActionEvents,
+  pageActionRejection,
   productSearchQuery,
   rerunsSearch,
   searchProductsFor,
@@ -434,9 +435,10 @@ function buildSchemaActionResponse(action: SchemaAction, session: SessionKeys) {
   if (failure) {
     return failure();
   }
-  const sortRejection = sortActionRejection(action);
-  if (sortRejection) {
-    return HttpResponse.json(sortRejection, {status: 400});
+  const rejection =
+    sortActionRejection(action) ?? pageActionRejection(action, action.surfaceId ?? undefined);
+  if (rejection) {
+    return HttpResponse.json(rejection, {status: 400});
   }
   // The search surface's answer targets the surface the action came from, under the id its prompt
   // minted for it.
