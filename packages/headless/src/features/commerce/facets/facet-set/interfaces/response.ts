@@ -24,6 +24,10 @@ export interface CategoryFacetValue extends BaseFacetValue, SharedFacetValueProp
 
 export type DateFacetResponse = BaseFacetResponse<DateFacetValue, 'dateRange'>;
 
+/**
+ * @deprecated The Commerce API removes date range facets in June 2027, with no replacement. This type will be
+ * removed in the next major version.
+ */
 export type DateFacetValue = RangeFacetValue<string>;
 
 export type NumericFacetResponse = BaseFacetResponse<NumericFacetValue, 'numericalRange'> &

@@ -1,4 +1,4 @@
-import type {DateRangeRequest} from '../../facets/range-facets/date-facet-set/interfaces/request.js';
+import type {DateRangeRequest} from '../../../controllers/commerce/core/facets/headless-core-commerce-facet.js';
 import type {NumericRangeRequest} from '../../facets/range-facets/numeric-facet-set/interfaces/request.js';
 import type {SortCriterion} from '../sort/sort.js';
 
@@ -20,11 +20,17 @@ export interface Parameters {
 
   /**
    * A record of the date facets, where the key is the facet id, and the value is an array containing the selected date ranges.
+   *
+   * @deprecated The Commerce API removes date range facets in June 2027, with no replacement. This parameter will be
+   * removed in the next major version.
    */
   df?: Record<string, DateRangeRequest[]>;
 
   /**
    * A record of the date facets, where the key is the facet id, and the value is an array containing the excluded date ranges.
+   *
+   * @deprecated The Commerce API removes date range facets in June 2027, with no replacement. This parameter will be
+   * removed in the next major version.
    */
   dfExcluded?: Record<string, DateRangeRequest[]>;
 
