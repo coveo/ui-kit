@@ -266,6 +266,19 @@ describe('Commerce Engine SSR', () => {
       vi.unstubAllGlobals();
     });
 
+    it('should send neither a client ID nor capture for a visitor without a client ID, even when the navigator context captures', async () => {
+      const {listingEngineDefinition} = defineCommerceEngine(definitionOptions);
+
+      await listingEngineDefinition.fetchStaticState({
+        navigatorContext: buildMockNavigatorContext({clientId: '', capture: true}),
+        context,
+      });
+
+      expect(commerceRequests).toHaveLength(1);
+      expect(commerceRequests[0].body).not.toHaveProperty('clientId');
+      expect(commerceRequests[0].body.context).toMatchObject({capture: false});
+    });
+
     it('should send each request its own x-forwarded-for header', async () => {
       const {listingEngineDefinition} = defineCommerceEngine(definitionOptions);
 

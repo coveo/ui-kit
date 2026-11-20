@@ -157,6 +157,20 @@ describe('#augmentCommerceEngineOptions', () => {
       expect(engineOptions.configuration.analytics?.enabled).toBe(false);
     });
 
+    it('should turn capture off for a visitor without a client ID, even when the navigator context captures', () => {
+      const navigatorContext = createNavigatorContext({clientId: '', capture: true});
+
+      const engineOptions = augmentCommerceEngineOptions(sampleCommerceConfig, {
+        navigatorContext,
+        context: buildMockCommerceContext(),
+      });
+
+      expect(engineOptions.navigatorContextProvider?.()).toEqual({
+        ...navigatorContext,
+        capture: false,
+      });
+    });
+
     it('should turn analytics off when no navigator context is provided', () => {
       const buildConfigWithout: BuildConfigWithout = {
         context: buildMockCommerceContext(),
