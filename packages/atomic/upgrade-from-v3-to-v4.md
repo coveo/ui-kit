@@ -30,9 +30,10 @@ Modified behaviors will be listed here.
 
 ### Facets
 
-| Removed          | Replacement                                                                                                                      |
-| ---------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `atomic-popover` | `atomic-facet-popover`, which takes the same slotted facet and exposes the same parts <!-- decided 2026-10-31, not yet built --> |
+| Removed                           | Replacement                                                                                                                      |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `atomic-popover`                  | `atomic-facet-popover`, which takes the same slotted facet and exposes the same parts <!-- decided 2026-10-31, not yet built --> |
+| `atomic-commerce-timeframe-facet` | None: the Commerce API removes date range facets in June 2027 <!-- decided 2026-11-18, not yet built -->                         |
 
 ### Search box suggestions
 
