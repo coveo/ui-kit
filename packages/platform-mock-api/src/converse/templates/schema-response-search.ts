@@ -935,8 +935,9 @@ function pageActionRejection(
       message: `selectPage requires a page of 0 or more: ${page}`,
     };
   }
+  // An unregistered surface starts from the defaults, like buildWaterSportsActionEvents does.
   const view =
-    (surfaceId !== undefined ? viewsBySurfaceId.get(surfaceId) : undefined) ?? currentView;
+    surfaceId === undefined ? currentView : (viewsBySurfaceId.get(surfaceId) ?? DEFAULT_VIEW);
   const totalPages = Math.ceil(filterProducts(view).length / view.pageSize);
   if (page >= totalPages) {
     return {

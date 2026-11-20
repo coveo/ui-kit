@@ -1006,6 +1006,8 @@ describe('schema-response-search sort rejections', () => {
   });
 });
 
+const SEARCH_SURFACE = 'ui-commerce-water-sports';
+
 describe('schema-response-search empty and out-of-range searches', () => {
   const session = {conversationSessionId: 'page-session', conversationToken: 'page-token'};
   const NO_MATCH = {query: 'zzzqqq', page: 0, pageSize: 12};
@@ -1067,13 +1069,34 @@ describe('schema-response-search empty and out-of-range searches', () => {
 
   it('rejects the page count as a page, and leaves the page unchanged', async () => {
     act('restoreState', {query: 'surf', page: 0, pageSize: 12});
-    const pages = totalPages(act('selectPage', {page: 0}));
+    const pages = totalPages(act('selectPage', {page: 1}));
     expect(await selectPage(pages)).toEqual(
       notApplicable(
         `selectPage page ${pages} is past the last page: the search has ${pages} page(s)`
       )
     );
-    expect(page(act('selectPage', {page: 0}))).toBe(0);
+    // showMoreValues leaves the page alone, so it reads the state the rejection left behind.
+    expect(page(act('showMoreValues', {}, 'facet-brand-2'))).toBe(1);
+  });
+
+  it('validates a page on an untouched surface against the default search', async () => {
+    const surfaceA = `${SEARCH_SURFACE}-a`;
+    buildSearchActionEvents({
+      name: 'restoreState',
+      context: NO_MATCH,
+      sourceComponentId: 'root',
+      surfaceId: surfaceA,
+    });
+    const response = await converseSchemaResponses.buildSchemaActionResponse(
+      {
+        name: 'selectPage',
+        context: {page: 0},
+        sourceComponentId: 'pagination-2',
+        surfaceId: `${SEARCH_SURFACE}-b`,
+      },
+      session
+    );
+    expect(response.status).toBe(200);
   });
 
   it('rejects every page of a search without results', async () => {
