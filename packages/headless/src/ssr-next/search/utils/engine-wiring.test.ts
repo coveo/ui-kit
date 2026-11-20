@@ -192,7 +192,7 @@ describe('#augmentSearchEngineOptions', () => {
 
       expect(engineOptions.navigatorContextProvider?.()).toBeUndefined();
       expect(mockLogger.error).toHaveBeenCalledWith(
-        'No navigatorContext was provided. This may impact analytics accuracy, personalization, and session tracking. Refer to the Coveo documentation on server-side navigation context for implementation guidance.'
+        'No navigatorContext was provided, so this request sends no analytics, on the server or in the browser after hydration. Refer to the Coveo documentation on server-side navigation context for implementation guidance.'
       );
     });
 
