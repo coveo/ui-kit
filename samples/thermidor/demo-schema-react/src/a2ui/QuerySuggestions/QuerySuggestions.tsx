@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {FetchSuggestionsPayload} from '@coveo/thermidor-schema';
 import {QuerySuggestionsPropsSchema} from '@coveo/thermidor-schema/zod3';
@@ -6,8 +6,10 @@ import type {SuggestionSection} from '../../components/SuggestionsDropdown/index
 import {useDebouncedValue} from '../../hooks/use-debounced-value.js';
 import {useSearchBoxQuery} from '../SearchBox/search-box-context.js';
 import {
+  nodeState,
   useActionFailed,
   useLatestWhenFree,
+  useReadSnapshot,
   useSessionBusy,
   useSurfaceLocked,
 } from '../session-request.js';
@@ -20,7 +22,8 @@ export const SUGGESTIONS_DEBOUNCE_MS = 150;
 /**
  * A2-UI component for `QuerySuggestions`: the session's recent queries, under "Recent searches",
  * above the completions of its `SearchBox`'s query. The query is sent with `fetchSuggestions` once
- * typing pauses and the session is free, and an empty one while the input has the focus.
+ * typing pauses, and an empty one while the input has the focus. It waits for the session to be
+ * free unless the producer announces `fetchSuggestions` as concurrent (ADR-020).
  */
 export const QuerySuggestions = createReactComponent(
   {name: 'QuerySuggestions', schema: QuerySuggestionsPropsSchema},
@@ -29,6 +32,7 @@ export const QuerySuggestions = createReactComponent(
     const locked = useSurfaceLocked();
     const busy = useSessionBusy();
     const actionFailed = useActionFailed();
+    const readSnapshot = useReadSnapshot();
     const typed = query.trim() ? query : '';
     const debouncedQuery = useDebouncedValue(typed, SUGGESTIONS_DEBOUNCE_MS);
 
@@ -56,20 +60,42 @@ export const QuerySuggestions = createReactComponent(
       () => (wanted ? {query: debouncedQuery, answered, epoch} : undefined),
       [wanted, debouncedQuery, answered, epoch]
     );
-    useLatestWhenFree(request, (latest) => {
-      const payload: FetchSuggestionsPayload = {query: latest.query};
-      void Promise.resolve(
-        context.dispatchAction({event: {name: 'fetchSuggestions', context: payload}})
-      ).then(() => {
-        if (actionFailed('QuerySuggestions', 'fetchSuggestions')) {
-          return;
-        }
-        refreshed(latest.answered);
-        if (latest.epoch !== undefined) {
-          setFreshEmptyEpoch(latest.epoch);
-        }
-      });
-    });
+    // A concurrent suggestion is not the session's request, so its dispatches in flight are counted.
+    const [inFlight, setInFlight] = useState(0);
+    const lastDispatch = useRef(0);
+    const surfaceId = context.dataContext.surface?.id;
+    const nodeId = context.componentModel.id;
+    const ownState = () =>
+      surfaceId === undefined ? undefined : nodeState(readSnapshot().state, surfaceId, nodeId);
+    useLatestWhenFree(
+      request,
+      (latest) => {
+        const payload: FetchSuggestionsPayload = {query: latest.query};
+        const dispatch = ++lastDispatch.current;
+        const stateBefore = ownState();
+        setInFlight((count) => count + 1);
+        void Promise.resolve(
+          context.dispatchAction({event: {name: 'fetchSuggestions', context: payload}})
+        ).then(() => {
+          setInFlight((count) => count - 1);
+          // A concurrent suggestion that fails, or that a newer one supersedes, resolves quietly
+          // without writing this node's state, which a streaming answer or the instant products
+          // leave as it was; only an applied answer shows what the edits left.
+          if (
+            dispatch !== lastDispatch.current ||
+            ownState() === stateBefore ||
+            actionFailed('QuerySuggestions', 'fetchSuggestions')
+          ) {
+            return;
+          }
+          refreshed(latest.answered);
+          if (latest.epoch !== undefined) {
+            setFreshEmptyEpoch(latest.epoch);
+          }
+        });
+      },
+      surfaceId === undefined ? undefined : {surfaceId, name: 'fetchSuggestions'}
+    );
 
     const discarding = submitted || (typed === '' && props.query !== '');
     const [discardedQuery, setDiscardedQuery] = useState<string>();
@@ -77,7 +103,7 @@ export const QuerySuggestions = createReactComponent(
       setDiscardedQuery(props.query);
     }
 
-    const awaitingNewer = busy || debouncedQuery !== typed;
+    const awaitingNewer = busy || inFlight > 0 || debouncedQuery !== typed;
     // The answer for the empty input never stands in for typed text, which it does not filter.
     const current =
       typed === ''

@@ -2,12 +2,17 @@ import {act, fireEvent, screen, waitFor} from '@testing-library/react';
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import {SessionSearchBox} from '../../components/SessionSearchBox/SessionSearchBox.js';
 import {
+  answerConcurrentInstantProductsShell,
+  answerConcurrentSuggestionsShell,
   answerShell,
   createTestSession,
   findSearchBox,
+  INSTANT_PRODUCTS_ID,
+  instantProductsRun,
   renderWithSession,
   run,
   sseResponse,
+  streamingResponse,
   suggestionsRun,
   SHELL_SURFACE_ID,
   type ConverseHandler,
@@ -286,7 +291,7 @@ describe('QuerySuggestions', () => {
  * answers those that start with its query, and one completion; `removeRecentQuery` and
  * `clearRecentQueries` edit them.
  */
-function recentQueriesProducer(recent: string[]) {
+function recentQueriesProducer(recent: string[], shell: ConverseHandler = answerShell) {
   const handler: ConverseHandler = (request) => {
     const action = request.action;
     switch (action?.name) {
@@ -316,7 +321,7 @@ function recentQueriesProducer(recent: string[]) {
           ])
         );
       default:
-        return answerShell(request);
+        return shell(request);
     }
   };
   return handler;
@@ -493,5 +498,231 @@ describe('QuerySuggestions recent queries', () => {
     await waitFor(() => expect(queriesSent()).toEqual(['', 'h', 'hi', 'hi']));
     expect(actions('removeRecentQuery').map(({context}) => context)).toEqual([{query: 'hats'}]);
     await waitFor(() => expect(options()).toEqual(['hiking boots', 'hi poles']));
+  });
+});
+
+/** A response `release` sends: `respond()`, or nothing once the request was aborted. */
+function held(respond: () => Response | Promise<Response>, signal?: AbortSignal) {
+  let release!: () => void;
+  const response = new Promise<Response>((resolve, reject) => {
+    release = () => resolve(respond());
+    signal?.addEventListener('abort', () => reject(new DOMException('Aborted', 'AbortError')));
+  });
+  return {response, release: () => release()};
+}
+
+describe('QuerySuggestions when the producer announces fetchSuggestions as concurrent', () => {
+  it('sends each query at once while an older one is in flight, and shows only the latest', async () => {
+    let releaseK!: () => void;
+    const {type, queriesSent, session} = await renderSearchBox((request, signal) => {
+      if (request.action?.name === 'fetchSuggestions' && request.action.context['query'] === 'k') {
+        const hold = held(
+          () => sseResponse(suggestionsRun(SHELL_SURFACE_ID, 'k', ['kayaks'])),
+          signal
+        );
+        releaseK = hold.release;
+        return hold.response;
+      }
+      return answerConcurrentSuggestionsShell(request, signal);
+    });
+
+    type('k');
+    await pause();
+    expect(session.getSnapshot().request).toBeUndefined();
+    type('kay');
+    await pause();
+
+    expect(queriesSent()).toEqual(['', 'k', 'kay']);
+    await waitFor(() => expect(options()).toEqual(['kay boards', 'kay wax']));
+    await act(async () => releaseK());
+    expect(options()).toEqual(['kay boards', 'kay wax']);
+  });
+
+  it('sends the query at once while a recent-query edit is in flight', async () => {
+    let releaseRemove!: () => void;
+    const producer = recentQueriesProducer(
+      ['hiking boots', 'hats'],
+      answerConcurrentSuggestionsShell
+    );
+    const {type, queriesSent, session} = await renderSearchBox((request, signal) => {
+      if (request.action?.name === 'removeRecentQuery') {
+        const hold = held(() => producer(request, signal), signal);
+        releaseRemove = hold.release;
+        return hold.response;
+      }
+      return producer(request, signal);
+    });
+    type('h');
+    await waitFor(() => expect(options()).toEqual(['hiking boots', 'hats', 'h poles']));
+    fireEvent.click(screen.getByRole('button', {name: 'Remove hats from recent searches'}));
+    await waitFor(() => expect(session.getSnapshot().request?.kind).toBe('action'));
+
+    type('hi');
+    await pause();
+
+    expect(queriesSent()).toEqual(['', 'h', 'hi']);
+    await waitFor(() => expect(options()).toEqual(['hiking boots', 'hi poles']));
+    await act(async () => releaseRemove());
+  });
+
+  it('keeps the last completions shown while the next ones are in flight', async () => {
+    let releaseSurfx!: () => void;
+    const {type} = await renderSearchBox((request, signal) => {
+      if (
+        request.action?.name === 'fetchSuggestions' &&
+        request.action.context['query'] === 'surfx'
+      ) {
+        const hold = held(() => answerConcurrentSuggestionsShell(request) as Response, signal);
+        releaseSurfx = hold.release;
+        return hold.response;
+      }
+      return answerConcurrentSuggestionsShell(request, signal);
+    });
+    type('surf');
+    await waitFor(() => expect(options()).toEqual(['surf boards', 'surf wax']));
+
+    type('surfx');
+    await pause();
+
+    expect(options()).toEqual(['surf boards', 'surf wax']);
+    await act(async () => releaseSurfx());
+    await waitFor(() => expect(options()).toEqual(['surfx boards', 'surfx wax']));
+  });
+
+  it('submits the prompt at once while a suggestion is in flight, without cancelling it', async () => {
+    const {type, textarea, requests, session, queriesSent} = await renderSearchBox(
+      (request, signal) =>
+        request.action?.name === 'fetchSuggestions' && request.action.context['query'] === 'kay'
+          ? held(() => answerConcurrentSuggestionsShell(request) as Response, signal).response
+          : answerConcurrentSuggestionsShell(request, signal)
+    );
+    const cancel = vi.spyOn(session, 'cancel');
+    type('kay');
+    await pause();
+    expect(queriesSent()).toEqual(['', 'kay']);
+
+    await act(() => submitQuery(session, textarea.value));
+
+    expect(cancel).not.toHaveBeenCalled();
+    expect(requests.filter(({message}) => message !== null).map(({message}) => message)).toEqual([
+      'kay',
+    ]);
+  });
+
+  it('refreshes the suggestions once a clear is answered, superseding an older answer', async () => {
+    const recent = ['tents', 'trail shoes'];
+    const producer = recentQueriesProducer(recent, answerConcurrentSuggestionsShell);
+    let holdNext = false;
+    let releaseHeld!: () => void;
+    const {type, queriesSent} = await renderSearchBox((request, signal) => {
+      if (holdNext && request.action?.name === 'fetchSuggestions') {
+        holdNext = false;
+        const snapshot = [...recent];
+        const hold = held(
+          () =>
+            sseResponse(suggestionsRun(SHELL_SURFACE_ID, 'tr', ['tr poles'], snapshot.slice(0, 1))),
+          signal
+        );
+        releaseHeld = hold.release;
+        return hold.response;
+      }
+      return producer(request, signal);
+    });
+    type('t');
+    await waitFor(() => expect(options()).toEqual(['tents', 'trail shoes', 't poles']));
+    holdNext = true;
+    type('tr');
+    await pause();
+
+    fireEvent.click(screen.getByRole('option', {name: 'Clear recent searches'}));
+
+    await waitFor(() => expect(queriesSent()).toEqual(['', 't', 'tr', 'tr']));
+    await waitFor(() => expect(options()).toEqual(['tr poles']));
+    await act(async () => releaseHeld());
+    expect(options()).toEqual(['tr poles']);
+  });
+
+  it('keeps a removed recent query hidden when the suggestions fetched after it fail', async () => {
+    const producer = recentQueriesProducer(
+      ['tents', 'hiking boots'],
+      answerConcurrentSuggestionsShell
+    );
+    let failSuggestions = false;
+    const {queriesSent} = await renderSearchBox((request, signal) =>
+      failSuggestions && request.action?.name === 'fetchSuggestions'
+        ? new Response('', {status: 500})
+        : producer(request, signal)
+    );
+    await waitFor(() => expect(options()).toEqual(['tents', 'hiking boots', 'backpack']));
+    failSuggestions = true;
+
+    fireEvent.click(screen.getByRole('button', {name: 'Remove tents from recent searches'}));
+
+    await waitFor(() => expect(queriesSent()).toEqual(['', '']));
+    await pause();
+    expect(options()).toEqual(['hiking boots', 'backpack']);
+  });
+
+  /**
+   * The producer of {@link recentQueriesProducer}, whose shell also holds `InstantProducts`, and
+   * whose `fetchSuggestions` fails once `holdRefresh` is set, when `failRefresh` is called.
+   */
+  async function renderWithFailingRefresh(answerPrompt: ConverseHandler = answerShell) {
+    const producer = recentQueriesProducer(
+      ['tents', 'hiking boots'],
+      answerConcurrentInstantProductsShell
+    );
+    const refresh = {hold: false, fail: () => {}};
+    const view = await renderSearchBox((request, signal) => {
+      if (request.message !== null) {
+        return answerPrompt(request, signal);
+      }
+      if (refresh.hold && request.action?.name === 'fetchSuggestions') {
+        const hold = held(() => new Response('', {status: 500}), signal);
+        refresh.fail = hold.release;
+        return hold.response;
+      }
+      return producer(request, signal);
+    });
+    await waitFor(() => expect(options()).toEqual(['tents', 'hiking boots', 'backpack']));
+    refresh.hold = true;
+    fireEvent.click(screen.getByRole('button', {name: 'Remove tents from recent searches'}));
+    await waitFor(() => expect(view.queriesSent()).toEqual(['', '']));
+    return {...view, failRefresh: () => act(async () => refresh.fail())};
+  }
+
+  it('keeps a removed recent query hidden when its refresh fails while an answer streams', async () => {
+    const stream = streamingResponse(instantProductsRun(SHELL_SURFACE_ID, 'paddles', ['paddle']));
+    const {session, failRefresh} = await renderWithFailingRefresh(() => stream.response);
+    const stateBefore = session.getSnapshot().state;
+
+    act(() => void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'paddles'}}));
+    await waitFor(() => expect(session.getSnapshot().state).not.toBe(stateBefore));
+    await failRefresh();
+    await act(async () => stream.finish());
+
+    await waitFor(() => expect(session.getSnapshot().request).toBeUndefined());
+    expect(options()).toEqual(['hiking boots', 'backpack']);
+  });
+
+  it('keeps a removed recent query hidden when its refresh fails after instant products are answered', async () => {
+    const {session, failRefresh} = await renderWithFailingRefresh();
+    const stateBefore = session.getSnapshot().state;
+
+    await act(() =>
+      session.dispatchAction({
+        userAction: {
+          name: 'fetchInstantProducts',
+          surfaceId: SHELL_SURFACE_ID,
+          sourceComponentId: INSTANT_PRODUCTS_ID,
+          context: {query: 'hiking boots'},
+        },
+      })
+    );
+    expect(session.getSnapshot().state).not.toBe(stateBefore);
+    await failRefresh();
+
+    await pause();
+    expect(options()).toEqual(['hiking boots', 'backpack']);
   });
 });

@@ -120,17 +120,82 @@ export function useActionFailed(): (component: string, name: string) => boolean 
   );
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function isCachePolicy(policy: unknown): boolean {
+  return (
+    isRecord(policy) &&
+    typeof policy['ttlMs'] === 'number' &&
+    Number.isFinite(policy['ttlMs']) &&
+    policy['ttlMs'] > 0
+  );
+}
+
+/** Whether `actions` is a valid announcement: every entry a record, its `cache` absent or valid. */
+function isValidAnnouncement(actions: unknown): actions is Record<string, unknown> {
+  return (
+    isRecord(actions) &&
+    Object.values(actions).every(
+      (action) =>
+        isRecord(action) && (action['cache'] === undefined || isCachePolicy(action['cache']))
+    )
+  );
+}
+
+/**
+ * Whether the producer's latest valid `concurrentActions` announcement for `surfaceId` lists
+ * `name`, read from the session's activity log as the session reads it (ADR-020): a malformed
+ * announcement leaves the previous one in force. The session sends such an
+ * action dispatched from that surface at once, whatever request is in flight, and never makes it
+ * the session's request.
+ */
+export function announcesConcurrent(
+  {initialization, turns}: Pick<SessionSnapshot, 'initialization' | 'turns'>,
+  surfaceId: string,
+  name: string
+): boolean {
+  let latest: Record<string, unknown> | undefined;
+  const activities = [
+    ...(initialization?.activities ?? []),
+    ...turns.flatMap((turn) => turn.response.activities),
+  ];
+  for (const {metadata} of activities) {
+    const announcements = metadata?.['concurrentActions'];
+    if (isRecord(announcements) && isValidAnnouncement(announcements[surfaceId])) {
+      latest = announcements[surfaceId];
+    }
+  }
+  return latest !== undefined && Object.hasOwn(latest, name);
+}
+
+/** An action that `useLatestWhenFree` sends from a surface. */
+export interface SurfaceAction {
+  surfaceId: string;
+  name: string;
+}
+
 /**
  * Sends the latest `value` once the session is free, unless it was already sent. The session
  * withholds a dispatch made while another request is in flight, so a value that changes meanwhile
  * replaces the one waiting. A falsy value is never sent, and lets the next value be sent even when
  * it repeats the last one.
+ *
+ * When the producer announces `concurrent`'s action as concurrent on its surface, the session sends
+ * it whatever is in flight, so the value is sent at once.
  */
-export function useLatestWhenFree<T>(value: T, send: (value: NonNullable<T>) => void): void {
+export function useLatestWhenFree<T>(
+  value: T,
+  send: (value: NonNullable<T>) => void,
+  concurrent?: SurfaceAction
+): void {
   const source = useContext(SessionRequestContext);
   const lastSent = useRef<T | undefined>(undefined);
   const latestSend = useRef(send);
   latestSend.current = send;
+  const surfaceId = concurrent?.surfaceId;
+  const concurrentName = concurrent?.name;
 
   useEffect(() => {
     if (!value) {
@@ -138,14 +203,40 @@ export function useLatestWhenFree<T>(value: T, send: (value: NonNullable<T>) => 
       return;
     }
     const flush = () => {
-      if (source.getSnapshot().request === undefined && value !== lastSent.current) {
+      const snapshot = source.getSnapshot();
+      const free =
+        snapshot.request === undefined ||
+        (surfaceId !== undefined &&
+          concurrentName !== undefined &&
+          announcesConcurrent(snapshot, surfaceId, concurrentName));
+      if (free && value !== lastSent.current) {
         lastSent.current = value;
         latestSend.current(value as NonNullable<T>);
       }
     };
     flush();
     return source.subscribe(flush);
-  }, [source, value]);
+  }, [source, value, surfaceId, concurrentName]);
+}
+
+/**
+ * The state of node `nodeId` on surface `surfaceId`, at its `/state/<nodeId>` pointer. A write
+ * elsewhere in the session state keeps its identity.
+ */
+export function nodeState(
+  state: SessionSnapshot['state'],
+  surfaceId: string,
+  nodeId: string
+): unknown {
+  const surfaceState = state[surfaceId];
+  const nodes = isRecord(surfaceState) ? surfaceState['state'] : undefined;
+  return isRecord(nodes) ? nodes[nodeId] : undefined;
+}
+
+/** Reads the session's current snapshot, outside of rendering. */
+export function useReadSnapshot(): () => SessionSnapshot {
+  const source = useContext(SessionRequestContext);
+  return source.getSnapshot;
 }
 
 /** What {@link submitQuery} needs from the session. */
@@ -180,8 +271,10 @@ export function retire(session: object): void {
 
 /**
  * Sends `prompt` once the session is free, first cancelling a suggestion in flight so that it never
- * holds the submit back. The cancelled request may still hold the producer's turn slot; the
- * session's conflict retry absorbs the prompt's `409`. A session retired meanwhile gets nothing.
+ * holds the submit back. Only a producer that does not announce `fetchSuggestions` as concurrent
+ * makes a suggestion the session's request; its cancelled request may still hold the producer's
+ * turn slot, and the session's conflict retry absorbs the prompt's `409`. A session retired
+ * meanwhile gets nothing.
  */
 export async function submitQuery(session: QuerySubmitter, prompt: string): Promise<void> {
   const {request} = session.getSnapshot();
