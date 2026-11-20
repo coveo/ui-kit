@@ -2,13 +2,14 @@
 
 import {CLIENT_ID_COOKIE_NAME} from '@coveo/headless-react/ssr-commerce-next';
 import {useRouter} from 'next/navigation';
-import {ANALYTICS_CONSENT_COOKIE_NAME} from '@/lib/analytics-consent';
+import {ANALYTICS_CONSENT_COOKIE_NAME, CLIENT_ID_COOKIE_DOMAIN} from '@/lib/analytics-consent';
 
 const ONE_YEAR_IN_SECONDS = 60 * 60 * 24 * 365;
 
-const setCookie = (name: string, value: string) => {
+const setCookie = (name: string, value: string, domain?: string) => {
+  const domainAttribute = domain ? `;domain=${domain}` : '';
   // oxlint-disable-next-line no-document-cookie -- the Cookie Store API is not available in every browser
-  document.cookie = `${name}=${value};path=/;max-age=${ONE_YEAR_IN_SECONDS};SameSite=Lax`;
+  document.cookie = `${name}=${value};path=/${domainAttribute};max-age=${ONE_YEAR_IN_SECONDS};SameSite=Lax`;
 };
 
 /**
@@ -23,7 +24,7 @@ export default function AnalyticsConsentBanner() {
     if (consent === 'granted') {
       // The refresh below sends several requests at once. Creating the client ID here gives them all
       // the same one, where the proxy would mint one per request.
-      setCookie(CLIENT_ID_COOKIE_NAME, crypto.randomUUID());
+      setCookie(CLIENT_ID_COOKIE_NAME, crypto.randomUUID(), CLIENT_ID_COOKIE_DOMAIN);
     }
     // Renders the page again on the server, so an accepted visitor is tracked from this page on.
     router.refresh();

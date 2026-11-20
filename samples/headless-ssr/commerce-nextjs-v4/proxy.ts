@@ -1,5 +1,5 @@
 import {type NextRequest, NextResponse} from 'next/server';
-import {ANALYTICS_CONSENT_COOKIE_NAME} from '@/lib/analytics-consent';
+import {ANALYTICS_CONSENT_COOKIE_NAME, CLIENT_ID_COOKIE_DOMAIN} from '@/lib/analytics-consent';
 
 // The cookie Coveo uses for the client ID. `@coveo/headless-react/ssr-commerce-next` exports it as
 // `CLIENT_ID_COOKIE_NAME`; it is spelled out here to keep the proxy bundle free of the library.
@@ -34,7 +34,11 @@ export default function proxy(request: NextRequest) {
     requestHeaders.delete('x-coveo-client-id');
     const response = NextResponse.next({request: {headers: requestHeaders}});
     if (request.cookies.has(CLIENT_ID_COOKIE_NAME)) {
-      response.cookies.delete(CLIENT_ID_COOKIE_NAME);
+      response.cookies.delete({
+        name: CLIENT_ID_COOKIE_NAME,
+        domain: CLIENT_ID_COOKIE_DOMAIN,
+        path: '/',
+      });
     }
     return response;
   }
@@ -45,10 +49,8 @@ export default function proxy(request: NextRequest) {
   requestHeaders.set('x-coveo-client-id', clientId);
 
   const response = NextResponse.next({request: {headers: requestHeaders}});
-  // Coveo's browser libraries store this cookie on the parent domain. On a site that spans subdomains
-  // (www.example.com and help.example.com), add `domain: 'example.com'` here, from your configuration,
-  // so every subdomain reads the same client ID.
   response.cookies.set(CLIENT_ID_COOKIE_NAME, clientId, {
+    domain: CLIENT_ID_COOKIE_DOMAIN,
     maxAge: ONE_YEAR_IN_SECONDS,
     path: '/',
     sameSite: 'lax',
