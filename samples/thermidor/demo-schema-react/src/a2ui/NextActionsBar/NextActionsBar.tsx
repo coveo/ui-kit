@@ -1,4 +1,4 @@
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react';
 import type {ActionItem, NextActionsBarAction} from '@coveo/thermidor-schema';
 import {NextActionsBarPropsSchema} from '@coveo/thermidor-schema/zod3';
 import styles from './NextActionsBar.module.css';
@@ -12,7 +12,7 @@ import styles from './NextActionsBar.module.css';
  *   search saved under `optionId` and opens it as a new commerce-search surface; the text is what
  *   the shopper selected.
  */
-export const NextActionsBar = createReactComponent(
+export const NextActionsBar = createComponentImplementation(
   {
     name: 'NextActionsBar',
     schema: NextActionsBarPropsSchema,

@@ -7,7 +7,6 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react';
-import {A2UIProvider} from '@copilotkit/a2ui-renderer';
 import {useConversations, useSession} from '../context/session.js';
 import {createThermidorCatalog} from '../a2ui/components.js';
 import {ThermidorA2UIStream} from '../a2ui/surfaces.js';
@@ -73,41 +72,39 @@ export function AppShell() {
 
   return (
     <SessionRequestProvider value={session}>
-      <A2UIProvider catalog={catalog} onAction={session.dispatchAction}>
-        <ThermidorA2UIStream messages={a2uiMessages}>
-          <div className="view-shell">
-            <TopBar
-              drawerId={drawerId}
-              drawerOpen={drawerOpen}
-              onToggleDrawer={() => setDrawerOpen((open) => !open)}
-              drawerToggleRef={drawerToggleRef}
-            />
-            <div className="view-body">
-              {drawerOpen && (
-                <ConversationDrawer
-                  id={drawerId}
-                  toggleRef={drawerToggleRef}
-                  onClose={closeDrawer}
+      <ThermidorA2UIStream
+        catalog={catalog}
+        messages={a2uiMessages}
+        onAction={session.dispatchAction}
+      >
+        <div className="view-shell">
+          <TopBar
+            drawerId={drawerId}
+            drawerOpen={drawerOpen}
+            onToggleDrawer={() => setDrawerOpen((open) => !open)}
+            drawerToggleRef={drawerToggleRef}
+          />
+          <div className="view-body">
+            {drawerOpen && (
+              <ConversationDrawer id={drawerId} toggleRef={drawerToggleRef} onClose={closeDrawer} />
+            )}
+            {/* Keyed by conversation, so another conversation starts with a fresh page. */}
+            <div className="view-panel view-panel--active" key={currentId}>
+              {turns.length === 0 ? (
+                <LandingPage onSubmit={handleSubmit} isStreaming={locked} />
+              ) : (
+                <ConversationPage
+                  onSubmit={handleSubmit}
+                  isStreaming={isStreaming}
+                  promptDisabled={locked}
+                  expired={expired}
+                  turns={[...turns]}
                 />
               )}
-              {/* Keyed by conversation, so another conversation starts with a fresh page. */}
-              <div className="view-panel view-panel--active" key={currentId}>
-                {turns.length === 0 ? (
-                  <LandingPage onSubmit={handleSubmit} isStreaming={locked} />
-                ) : (
-                  <ConversationPage
-                    onSubmit={handleSubmit}
-                    isStreaming={isStreaming}
-                    promptDisabled={locked}
-                    expired={expired}
-                    turns={[...turns]}
-                  />
-                )}
-              </div>
             </div>
           </div>
-        </ThermidorA2UIStream>
-      </A2UIProvider>
+        </div>
+      </ThermidorA2UIStream>
     </SessionRequestProvider>
   );
 }

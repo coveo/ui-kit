@@ -8,9 +8,9 @@ import type {
 import {mountSurface} from './mount-surface.harness.js';
 
 /**
- * The facet components are `createReactComponent` implementations driven by the generic binder,
+ * The facet components are `createComponentImplementation` implementations driven by the generic binder,
  * mounted end-to-end through the real thermidor catalog: resolved state is written to the surface
- * data model via `{path}` bindings, and every gesture dispatches an action that surfaces
+ * data model via `{"@path"}` bindings, and every gesture dispatches an action that surfaces
  * (unwrapped) on `lastAction()` as `{name, context}`. FacetManager mounts its ordered children by
  * id via `buildChild`; the tests assert the observable mounted DOM order.
  */
@@ -51,13 +51,13 @@ describe('RegularFacet', () => {
   };
 
   const BINDINGS = {
-    field: {path: '/state/root/field'},
-    displayName: {path: '/state/root/displayName'},
-    hasActiveValues: {path: '/state/root/hasActiveValues'},
-    canShowMoreValues: {path: '/state/root/canShowMoreValues'},
-    canShowLessValues: {path: '/state/root/canShowLessValues'},
-    values: {path: '/state/root/values'},
-    facetSearch: {path: '/state/root/facetSearch'},
+    field: {'@path': '/state/root/field'},
+    displayName: {'@path': '/state/root/displayName'},
+    hasActiveValues: {'@path': '/state/root/hasActiveValues'},
+    canShowMoreValues: {'@path': '/state/root/canShowMoreValues'},
+    canShowLessValues: {'@path': '/state/root/canShowLessValues'},
+    values: {'@path': '/state/root/values'},
+    facetSearch: {'@path': '/state/root/facetSearch'},
   };
 
   function mountFacet(state: RegularFacetProps, dispatchGate?: () => Promise<void> | void) {
@@ -378,7 +378,9 @@ describe('NumericFacet', () => {
     return mountSurface({
       component: {
         component: 'NumericFacet',
-        ...Object.fromEntries(Object.keys(state).map((key) => [key, {path: `/state/root/${key}`}])),
+        ...Object.fromEntries(
+          Object.keys(state).map((key) => [key, {'@path': `/state/root/${key}`}])
+        ),
       },
       dispatchGate,
       dataModel: (Object.keys(state) as Array<keyof NumericFacetProps>).map((key) => ({
@@ -616,7 +618,9 @@ describe('CategoryFacet', () => {
     return mountSurface({
       component: {
         component: 'CategoryFacet',
-        ...Object.fromEntries(Object.keys(state).map((key) => [key, {path: `/state/root/${key}`}])),
+        ...Object.fromEntries(
+          Object.keys(state).map((key) => [key, {'@path': `/state/root/${key}`}])
+        ),
       },
       dispatchGate,
       dataModel: (Object.keys(state) as Array<keyof CategoryFacetProps>).map((key) => ({
@@ -1019,9 +1023,9 @@ describe('FacetManager', () => {
   }
 
   const CHILD_FIELDS: Record<string, string> = {
-    'facet-brand-1': 'brand',
-    'facet-price-1': 'price',
-    'facet-category-1': 'category',
+    facet_brand_1: 'brand',
+    facet_price_1: 'price',
+    facet_category_1: 'category',
   };
 
   function mountManager(childIds: string[]) {
@@ -1044,7 +1048,7 @@ describe('FacetManager', () => {
   }
 
   it('mounts each facet child id in declared order via buildChild', async () => {
-    const childIds = ['facet-category-1', 'facet-brand-1', 'facet-price-1'];
+    const childIds = ['facet_category_1', 'facet_brand_1', 'facet_price_1'];
     const {container} = mountManager(childIds);
 
     await waitFor(() => expect(screen.getByTestId('facet-manager')).toBeDefined());
@@ -1055,10 +1059,10 @@ describe('FacetManager', () => {
   });
 
   it.each([
-    ['facet-brand-1', 'facet-price-1', 'facet-category-1'],
-    ['facet-price-1', 'facet-category-1', 'facet-brand-1'],
-    ['facet-category-1', 'facet-brand-1', 'facet-price-1'],
-    ['facet-price-1', 'facet-brand-1', 'facet-category-1'],
+    ['facet_brand_1', 'facet_price_1', 'facet_category_1'],
+    ['facet_price_1', 'facet_category_1', 'facet_brand_1'],
+    ['facet_category_1', 'facet_brand_1', 'facet_price_1'],
+    ['facet_price_1', 'facet_brand_1', 'facet_category_1'],
   ])('mounts DOM order equal to the children list for permutation %#', async (...childIds) => {
     const {container} = mountManager(childIds);
 
@@ -1068,7 +1072,7 @@ describe('FacetManager', () => {
   });
 
   it('skips a declared child id with no corresponding component, keeping the rest in order', async () => {
-    const childIds = ['facet-brand-1', 'facet-unknown-1', 'facet-price-1'];
+    const childIds = ['facet_brand_1', 'facet_unknown_1', 'facet_price_1'];
     const {container} = mountManager(childIds);
 
     await waitFor(() => expect(screen.getByTestId('facet-manager')).toBeDefined());

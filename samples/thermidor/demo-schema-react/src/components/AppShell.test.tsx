@@ -45,22 +45,17 @@ async function createMockSession(): Promise<Session> {
   } as unknown as Session;
 }
 
-vi.mock('@copilotkit/a2ui-renderer', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@copilotkit/a2ui-renderer')>()),
-  A2UIProvider: ({
+vi.mock('../a2ui/surfaces.js', () => ({
+  ThermidorA2UIStream: ({
     onAction,
     children,
   }: {
     onAction: (message: unknown) => unknown;
-    children: React.ReactNode;
+    children?: React.ReactNode;
   }) => {
     capturedOnAction = onAction;
     return <>{children}</>;
   },
-}));
-
-vi.mock('../a2ui/surfaces.js', () => ({
-  ThermidorA2UIStream: ({children}: {children?: React.ReactNode}) => <>{children}</>,
 }));
 
 vi.mock('./TopBar/TopBar.js', () => ({
@@ -156,37 +151,28 @@ describe('AppShell', () => {
     render(<AppShell />);
     act(() => {
       capturedOnAction?.({
-        version: 'v0.9',
-        userAction: {
-          name: 'toggleSelect',
-          surfaceId: SEARCH_SURFACE_ID,
-          sourceComponentId: `${SEARCH_SURFACE_ID}-facet-brand`,
-          context: {value: 'Nike'},
-        },
+        name: 'toggleSelect',
+        surfaceId: SEARCH_SURFACE_ID,
+        sourceComponentId: 'facet_brand',
+        context: {value: 'Nike'},
       });
     });
 
     expect(mockDispatchAction).toHaveBeenCalledWith({
-      version: 'v0.9',
-      userAction: {
-        name: 'toggleSelect',
-        surfaceId: SEARCH_SURFACE_ID,
-        sourceComponentId: `${SEARCH_SURFACE_ID}-facet-brand`,
-        context: {value: 'Nike'},
-      },
+      name: 'toggleSelect',
+      surfaceId: SEARCH_SURFACE_ID,
+      sourceComponentId: 'facet_brand',
+      context: {value: 'Nike'},
     });
   });
 
   describe('surface lock', () => {
     function rendererAction(name: string, context: Record<string, unknown> = {}) {
       return {
-        version: 'v0.9',
-        userAction: {
-          name,
-          surfaceId: SEARCH_SURFACE_ID,
-          sourceComponentId: `${SEARCH_SURFACE_ID}-facet-brand`,
-          context,
-        },
+        name,
+        surfaceId: SEARCH_SURFACE_ID,
+        sourceComponentId: 'facet_brand',
+        context,
       };
     }
 

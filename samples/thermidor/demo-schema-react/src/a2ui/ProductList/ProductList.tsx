@@ -1,4 +1,4 @@
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react';
 import {useContext} from 'react';
 import type {Product} from '@coveo/thermidor-schema';
 import {ProductListPropsSchema} from '@coveo/thermidor-schema/zod3';
@@ -78,7 +78,7 @@ function ProductCard({product: listed}: {product: Product}) {
  * While a gesture is in flight, an optimistic control already shows the new choice (page 3) while
  * this grid still holds the previous results (page 2); the surface lock dims the grid meanwhile.
  */
-export const ProductList = createReactComponent(
+export const ProductList = createComponentImplementation(
   {name: 'ProductList', schema: ProductListPropsSchema},
   ({props}) => {
     const products = props.products;

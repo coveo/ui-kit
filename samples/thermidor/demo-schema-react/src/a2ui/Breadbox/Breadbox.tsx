@@ -1,5 +1,5 @@
 import {useRef} from 'react';
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react';
 import {type BreadboxAction, BreadboxPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {CloseIcon} from '../icons/index.js';
 import {breadboxValues} from './breadbox-values.js';
@@ -13,7 +13,7 @@ import styles from './Breadbox.module.css';
  * is active. Removals are optimistic: the value leaves the breadbox at once while the facets and
  * the results catch up with the response.
  */
-export const Breadbox = createReactComponent(
+export const Breadbox = createComponentImplementation(
   {
     name: 'Breadbox',
     schema: BreadboxPropsSchema,

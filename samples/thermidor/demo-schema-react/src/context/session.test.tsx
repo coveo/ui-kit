@@ -469,13 +469,11 @@ describe('SessionProvider saving', () => {
         prompting = request?.kind === 'prompt';
         if (ended) {
           void session.dispatchAction({
-            userAction: {
-              name: 'fetchSuggestions',
-              surfaceId: SHELL_SURFACE_ID,
-              sourceComponentId: 'query-suggestions',
-              timestamp: new Date().toISOString(),
-              context: {query: 'su'},
-            },
+            name: 'fetchSuggestions',
+            surfaceId: SHELL_SURFACE_ID,
+            sourceComponentId: 'query_suggestions',
+            timestamp: new Date().toISOString(),
+            context: {query: 'su'},
           });
         }
       });

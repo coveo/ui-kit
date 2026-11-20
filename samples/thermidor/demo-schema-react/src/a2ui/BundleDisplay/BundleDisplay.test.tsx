@@ -20,7 +20,7 @@ const BOARD = {
 };
 const WAX = {permanentid: 'wax', ec_name: 'Wax', additionalFields: {}};
 const PRO_BOARD = {
-  permanentid: 'pro-board',
+  permanentid: 'pro_board',
   ec_name: 'Pro board',
   ec_price: 900,
   ec_promo_price: 950,
@@ -33,15 +33,15 @@ const TIERS = [
     description: 'The basics.',
     total: 350,
     slots: [
-      {categoryLabel: 'Board', childId: 'starter-board'},
-      {categoryLabel: 'Wax', childId: 'starter-wax'},
+      {categoryLabel: 'Board', childId: 'starter_board'},
+      {categoryLabel: 'Wax', childId: 'starter_wax'},
     ],
   },
   {
     label: 'Pro',
     description: 'The best.',
     total: 900,
-    slots: [{categoryLabel: 'Board', childId: 'pro-board'}],
+    slots: [{categoryLabel: 'Board', childId: 'pro_board'}],
   },
 ];
 
@@ -61,9 +61,9 @@ function mountBundle(store?: FakeCartStore) {
   mountSurface({
     component: {component: 'BundleDisplay', heading: 'Surf kit', tiers: TIERS},
     children: [
-      {id: 'starter-board', component: 'ProductSummary', categoryLabel: 'Board', product: BOARD},
-      {id: 'starter-wax', component: 'ProductSummary', categoryLabel: 'Wax', product: WAX},
-      {id: 'pro-board', component: 'ProductSummary', categoryLabel: 'Board', product: PRO_BOARD},
+      {id: 'starter_board', component: 'ProductSummary', categoryLabel: 'Board', product: BOARD},
+      {id: 'starter_wax', component: 'ProductSummary', categoryLabel: 'Wax', product: WAX},
+      {id: 'pro_board', component: 'ProductSummary', categoryLabel: 'Board', product: PRO_BOARD},
     ],
     wrapper: store ? cartWrapper(store) : undefined,
   });
@@ -98,7 +98,7 @@ describe('BundleDisplay cart controls', () => {
 
     expect(screen.queryByText('$950.00')).toBeNull();
     expect(store.add).toHaveBeenCalledWith(
-      expect.objectContaining({productId: 'pro-board', unitPrice: 900}),
+      expect.objectContaining({productId: 'pro_board', unitPrice: 900}),
       1
     );
   });

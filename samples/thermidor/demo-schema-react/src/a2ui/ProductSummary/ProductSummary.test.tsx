@@ -3,8 +3,8 @@ import {screen, cleanup, waitFor} from '@testing-library/react';
 import {mountSurface} from '../mount-surface.harness.js';
 
 /**
- * ProductSummary is a `createReactComponent` implementation driven by the generic binder, mounted
- * end-to-end through the real thermidor catalog: `categoryLabel` / `product` are `{path}` bindings
+ * ProductSummary is a `createComponentImplementation` implementation driven by the generic binder, mounted
+ * end-to-end through the real thermidor catalog: `categoryLabel` / `product` are `{"@path"}` bindings
  * resolved from the surface data model. Presentational — no actions. An unresolved binding (no
  * data-model write) leaves the field `undefined`, exercising the loading guard.
  */
@@ -12,8 +12,8 @@ import {mountSurface} from '../mount-surface.harness.js';
 afterEach(() => cleanup());
 
 const BINDINGS = {
-  categoryLabel: {path: '/state/root/categoryLabel'},
-  product: {path: '/state/root/product'},
+  categoryLabel: {'@path': '/state/root/categoryLabel'},
+  product: {'@path': '/state/root/product'},
 };
 
 describe('ProductSummary', () => {

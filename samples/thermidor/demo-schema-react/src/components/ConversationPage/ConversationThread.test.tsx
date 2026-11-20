@@ -1,7 +1,6 @@
 import {render, screen} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import type {Turn} from '@coveo/thermidor';
-import {A2UIProvider} from '@copilotkit/a2ui-renderer';
 import {ConversationThread} from './ConversationThread.js';
 import {makeFollowUpTurn, makeSurfaces, makeTurn} from '../../test/turn-fixtures.js';
 import {createThermidorCatalog} from '../../a2ui/components.js';
@@ -125,14 +124,12 @@ describe('ConversationThread', () => {
   describe('progress', () => {
     function renderWithRenderer(turns: Turn[]) {
       return render(
-        <A2UIProvider catalog={createThermidorCatalog()} onAction={() => {}}>
-          <ThermidorA2UIStream messages={[]}>
-            <ConversationThread
-              turns={turns}
-              turnRefs={{current: new Map<string, HTMLDivElement>()}}
-            />
-          </ThermidorA2UIStream>
-        </A2UIProvider>
+        <ThermidorA2UIStream catalog={createThermidorCatalog()} messages={[]} onAction={() => {}}>
+          <ConversationThread
+            turns={turns}
+            turnRefs={{current: new Map<string, HTMLDivElement>()}}
+          />
+        </ThermidorA2UIStream>
       );
     }
 
@@ -175,14 +172,12 @@ describe('ConversationThread', () => {
       const region = screen.getByRole('region', {name: 'Agent progress'});
 
       rerender(
-        <A2UIProvider catalog={createThermidorCatalog()} onAction={() => {}}>
-          <ThermidorA2UIStream messages={[]}>
-            <ConversationThread
-              turns={[{...streaming, status: 'error', error: 'The agent took too long to answer.'}]}
-              turnRefs={{current: new Map<string, HTMLDivElement>()}}
-            />
-          </ThermidorA2UIStream>
-        </A2UIProvider>
+        <ThermidorA2UIStream catalog={createThermidorCatalog()} messages={[]} onAction={() => {}}>
+          <ConversationThread
+            turns={[{...streaming, status: 'error', error: 'The agent took too long to answer.'}]}
+            turnRefs={{current: new Map<string, HTMLDivElement>()}}
+          />
+        </ThermidorA2UIStream>
       );
 
       expect(screen.getByRole('region', {name: 'Agent progress'})).toBe(region);
@@ -242,14 +237,12 @@ describe('ConversationThread', () => {
   describe('loading placeholders', () => {
     function renderPlaceholders(turns: Turn[]) {
       return render(
-        <A2UIProvider catalog={createThermidorCatalog()} onAction={() => {}}>
-          <ThermidorA2UIStream messages={[]}>
-            <ConversationThread
-              turns={turns}
-              turnRefs={{current: new Map<string, HTMLDivElement>()}}
-            />
-          </ThermidorA2UIStream>
-        </A2UIProvider>
+        <ThermidorA2UIStream catalog={createThermidorCatalog()} messages={[]} onAction={() => {}}>
+          <ConversationThread
+            turns={turns}
+            turnRefs={{current: new Map<string, HTMLDivElement>()}}
+          />
+        </ThermidorA2UIStream>
       );
     }
 

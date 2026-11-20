@@ -1,5 +1,5 @@
 import {useOptimistic, useRef} from 'react';
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react';
 import type {PaginationAction} from '@coveo/thermidor-schema';
 import {PaginationPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {useGesture} from '../session-request.js';
@@ -9,7 +9,7 @@ import styles from './Pagination.module.css';
 const NUMBER_OF_PAGES = 5;
 
 /** A2-UI component for the `pagination` controls. */
-export const Pagination = createReactComponent(
+export const Pagination = createComponentImplementation(
   {name: 'Pagination', schema: PaginationPropsSchema},
   ({props, context}) => {
     const {totalPages} = props;

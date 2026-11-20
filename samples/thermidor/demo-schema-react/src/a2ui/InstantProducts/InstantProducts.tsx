@@ -1,5 +1,5 @@
 import {useContext, useEffect, useState} from 'react';
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react';
 import type {FetchInstantProductsPayload, InstantProductsState} from '@coveo/thermidor-schema';
 import {InstantProductsPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {
@@ -54,7 +54,7 @@ function useShowProductsPanel(): boolean {
  * the highlighted query's answer. Products answering another query than the highlighted one are never
  * shown as current.
  */
-export const InstantProducts = createReactComponent(
+export const InstantProducts = createComponentImplementation(
   {name: 'InstantProducts', schema: InstantProductsPropsSchema},
   ({props, context}) => {
     const {highlightedQuery, submitted} = useSearchBoxQuery();

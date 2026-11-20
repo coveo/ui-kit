@@ -1,6 +1,5 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
-import {A2UIProvider, type A2UIClientEventMessage} from '@copilotkit/a2ui-renderer';
-import type {A2uiClientMessage} from '@coveo/thermidor';
+import type {A2uiRendererAction} from '@coveo/thermidor';
 import {
   ProductCardActionsContext,
   type ProductCardProduct,
@@ -176,27 +175,23 @@ export function StorefrontApp() {
   );
 
   const handleAction = useCallback(
-    (message: A2UIClientEventMessage) => {
-      const userAction = (message as A2uiClientMessage).userAction;
-      if (!userAction) {
-        return;
-      }
+    (action: A2uiRendererAction) => {
       const page = visitRef.current;
       // An action goes on the view that draws its surface: the search page's results or its chat
       // panel, which share the visit. The conversation goes on where it is shown: an action of a
       // turn asked on an earlier page of the conversation goes on this page.
-      const drawnBy = viewSurfacesRef.current.viewOfSurface(userAction.surfaceId);
+      const drawnBy = viewSurfacesRef.current.viewOfSurface(action.surfaceId);
       const inConversation = viewSurfacesRef.current
         .conversationOf(visitsOfThread(visitThreads.current, threadOf(page)))
         .some(({response}) =>
-          response.surfaces.some(({surfaceId}) => surfaceId === userAction.surfaceId)
+          response.surfaces.some(({surfaceId}) => surfaceId === action.surfaceId)
         );
       const view =
         drawnBy && !inConversation
           ? drawnBy
           : {visitId: page.id, view: drawnBy?.view ?? pageView(page)};
-      const text = userAction.context?.['text'];
-      if (userAction.name === FOLLOW_UP_ACTION && typeof text === 'string') {
+      const text = action.context?.['text'];
+      if (action.name === FOLLOW_UP_ACTION && typeof text === 'string') {
         if (inConversation) {
           sendPrompt(ASSISTANT_VIEW, text, page.id);
         } else {
@@ -204,7 +199,7 @@ export function StorefrontApp() {
         }
         return;
       }
-      sendAction(view.view, message as A2uiClientMessage, view.visitId);
+      return sendAction(view.view, action, view.visitId);
     },
     [sendPrompt, sendAction, openAssistant]
   );
@@ -221,38 +216,36 @@ export function StorefrontApp() {
   );
 
   return (
-    <A2UIProvider catalog={catalog} onAction={handleAction}>
-      <ProductCardActionsContext.Provider value={renderCardActions}>
-        <ThermidorA2UIStream messages={a2uiMessages}>
-          <TopBar
-            currentListing={visit.page === 'listing' ? visit.slug : undefined}
+    <ProductCardActionsContext.Provider value={renderCardActions}>
+      <ThermidorA2UIStream catalog={catalog} messages={a2uiMessages} onAction={handleAction}>
+        <TopBar
+          currentListing={visit.page === 'listing' ? visit.slug : undefined}
+          onHome={() => navigate(visitHome())}
+          onListing={(slug) => navigate(visitListing(slug))}
+          // A search from the conversation's pages keeps the conversation in its panel.
+          onSearch={(query) => navigate(visitPrompt(query, undefined, threadOf(visit)))}
+          searchDisabled={request !== undefined}
+        />
+        <ReturnedVisitContext.Provider
+          value={
+            settledReturn === returned && returned?.visitId === visit.id
+              ? returned.count
+              : undefined
+          }
+        >
+          <Page
+            visit={visit}
+            conversationVisits={visitsOfThread(visitThreads.current, threadOf(visit))}
+            busy={request !== undefined}
+            onSend={sendPrompt}
             onHome={() => navigate(visitHome())}
-            onListing={(slug) => navigate(visitListing(slug))}
-            // A search from the conversation's pages keeps the conversation in its panel.
-            onSearch={(query) => navigate(visitPrompt(query, undefined, threadOf(visit)))}
-            searchDisabled={request !== undefined}
+            onBack={history.length > 1 ? goBack : undefined}
+            onShowResults={showResults}
           />
-          <ReturnedVisitContext.Provider
-            value={
-              settledReturn === returned && returned?.visitId === visit.id
-                ? returned.count
-                : undefined
-            }
-          >
-            <Page
-              visit={visit}
-              conversationVisits={visitsOfThread(visitThreads.current, threadOf(visit))}
-              busy={request !== undefined}
-              onSend={sendPrompt}
-              onHome={() => navigate(visitHome())}
-              onBack={history.length > 1 ? goBack : undefined}
-              onShowResults={showResults}
-            />
-          </ReturnedVisitContext.Provider>
-          <SessionInspector />
-        </ThermidorA2UIStream>
-      </ProductCardActionsContext.Provider>
-    </A2UIProvider>
+        </ReturnedVisitContext.Provider>
+        <SessionInspector />
+      </ThermidorA2UIStream>
+    </ProductCardActionsContext.Provider>
   );
 }
 

@@ -1,5 +1,5 @@
 import {useId} from 'react';
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react';
 import {type CategoryFacetAction, CategoryFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {HighlightedText} from '../../components/HighlightedText/HighlightedText.js';
 import {FacetSearchMoreMatches} from '../FacetSearchMoreMatches/FacetSearchMoreMatches.js';
@@ -34,7 +34,7 @@ const ellipsePath = (path: string[]): string[] =>
  * only the facet value list), while descending, clearing the selected path and selecting an
  * ancestor rebuild the result set, so each carries `invalidates: ['results']`.
  */
-export const CategoryFacet = createReactComponent(
+export const CategoryFacet = createComponentImplementation(
   {
     name: 'CategoryFacet',
     schema: CategoryFacetPropsSchema,

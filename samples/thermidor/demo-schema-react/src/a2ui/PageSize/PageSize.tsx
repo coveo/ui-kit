@@ -1,5 +1,5 @@
 import {useId, useOptimistic, useRef} from 'react';
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react';
 import type {PageSizeAction} from '@coveo/thermidor-schema';
 import {PageSizePropsSchema} from '@coveo/thermidor-schema/zod3';
 import {useGesture} from '../session-request.js';
@@ -9,7 +9,7 @@ import styles from './PageSize.module.css';
 const DEFAULT_PAGE_SIZE_OPTIONS = [12, 24, 48];
 
 /** A2-UI component for the `page-size` selector. */
-export const PageSize = createReactComponent(
+export const PageSize = createComponentImplementation(
   {name: 'PageSize', schema: PageSizePropsSchema},
   ({props, context}) => {
     const selectId = useId();

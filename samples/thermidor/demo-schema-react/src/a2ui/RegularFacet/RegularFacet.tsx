@@ -1,4 +1,4 @@
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react';
 import {type RegularFacetAction, RegularFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {HighlightedText} from '../../components/HighlightedText/HighlightedText.js';
 import {FacetSearchMoreMatches} from '../FacetSearchMoreMatches/FacetSearchMoreMatches.js';
@@ -17,7 +17,7 @@ import styles from './RegularFacet.module.css';
  * value pair declare NOTHING: the producer answers them by rebuilding the facet value list alone,
  * not the result set the grid and summary read, so they dispatch plainly and mark no stale region.
  */
-export const RegularFacet = createReactComponent(
+export const RegularFacet = createComponentImplementation(
   {
     name: 'RegularFacet',
     schema: RegularFacetPropsSchema,

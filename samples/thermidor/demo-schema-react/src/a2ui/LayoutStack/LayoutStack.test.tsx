@@ -3,7 +3,7 @@ import {screen, cleanup, waitFor} from '@testing-library/react';
 import {mountSurface} from '../mount-surface.harness.js';
 
 /**
- * LayoutStack is a `createReactComponent` container driven by the generic binder. It mounts its
+ * LayoutStack is a `createComponentImplementation` container driven by the generic binder. It mounts its
  * ordered `children` id list via `buildChild` and reads its `direction` presentation prop. Mounted
  * root end-to-end, it asserts the observable effects: the declared child nodes render in declared
  * order, and `data-direction` reflects the resolved `direction`. Children are QuerySummary leaves
@@ -31,7 +31,7 @@ function mountLayout(childIds: string[], direction?: 'column' | 'row') {
 function mountedChildIds(container: HTMLElement): string[] {
   return Array.from(container.querySelectorAll('[data-testid="layout-stack"] p strong'))
     .map((node) => node.textContent)
-    .filter((text): text is string => text !== null && text.startsWith('child-'));
+    .filter((text): text is string => text !== null && text.startsWith('child_'));
 }
 
 describe('LayoutStack', () => {
@@ -43,7 +43,7 @@ describe('LayoutStack', () => {
   });
 
   it('mounts each declared child exactly once, in declared order', async () => {
-    const childIds = ['child-query-summary-2', 'child-product-list-2', 'child-pagination-2'];
+    const childIds = ['child_query_summary_2', 'child_product_list_2', 'child_pagination_2'];
     const {container} = mountLayout(childIds);
 
     await waitFor(() => expect(screen.getByTestId('layout-stack')).toBeDefined());
@@ -63,7 +63,7 @@ describe('LayoutStack', () => {
   });
 
   it('mounts solely from the resolved props composition', async () => {
-    const childIds = ['child-facet-manager-2'];
+    const childIds = ['child_facet_manager_2'];
     const {container} = mountLayout(childIds);
     await waitFor(() => expect(screen.getByTestId('layout-stack')).toBeDefined());
     await waitFor(() => expect(mountedChildIds(container)).toEqual(childIds));

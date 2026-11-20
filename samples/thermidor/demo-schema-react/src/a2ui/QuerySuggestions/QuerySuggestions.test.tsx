@@ -62,7 +62,7 @@ describe('QuerySuggestions', () => {
       expect.objectContaining({
         name: 'fetchSuggestions',
         surfaceId: SHELL_SURFACE_ID,
-        sourceComponentId: 'query-suggestions',
+        sourceComponentId: 'query_suggestions',
         context: {query: 'surf'},
       }),
     ]);
@@ -306,10 +306,10 @@ function recentQueriesProducer(recent: string[]) {
         return sseResponse(
           run([
             {
-              version: 'v1.0',
+              version: '1.0',
               updateDataModel: {
                 surfaceId: action.surfaceId,
-                path: '/state/query-suggestions/recentQueries',
+                path: '/state/query_suggestions/recentQueries',
                 value: [],
               },
             },
@@ -412,7 +412,7 @@ describe('QuerySuggestions recent queries', () => {
     expect(announced()).toBe('tents removed from recent searches.');
     await waitFor(() => expect(queriesSent()).toEqual(['', '']));
     expect(actions('removeRecentQuery')).toEqual([
-      expect.objectContaining({sourceComponentId: 'query-suggestions', context: {query: 'tents'}}),
+      expect.objectContaining({sourceComponentId: 'query_suggestions', context: {query: 'tents'}}),
     ]);
     expect(options()).toEqual(['hiking boots', 'backpack']);
 

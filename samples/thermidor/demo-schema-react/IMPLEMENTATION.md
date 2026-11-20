@@ -4,33 +4,36 @@ Technical decisions, workarounds, and known limitations for `demo-schema-react`.
 
 ## State and validation model
 
-This sample implements the inline component-state model recorded in [ADR-012](https://github.com/coveo-platform/thermidor-schema/blob/beta/docs/ADR-012-inline-component-state-a2-ui-data-model.md) of `@coveo/thermidor-schema` (which supersedes ADR-002's AG-UI state transport). Component state travels inline through the A2-UI data model via `/state/<id>` `updateDataModel` operations, and node props resolve from it through A2-UI Data_Binding objects `{ "path": <JSON Pointer> }`. Four points define the model:
+This sample implements the inline component-state model recorded in [ADR-012](https://github.com/coveo-platform/thermidor-schema/blob/beta/docs/ADR-012-inline-component-state-a2-ui-data-model.md) of `@coveo/thermidor-schema` (which supersedes ADR-002's AG-UI state transport). Component state travels inline through the A2-UI data model via `/state/<id>` `updateDataModel` operations, and node props resolve from it through A2-UI v1.0 Data_Binding objects `{ "@path": <JSON Pointer> }`. Four points define the model:
 
 - **Validation runs inside `@coveo/thermidor`.** The sample injects the contract once (`ComponentContractsSchema`, passed as `contracts` to `createSession` in `src/context/session.tsx`) and never calls a validator itself. The session validates outbound action payloads before it sends them, and inbound `updateDataModel` ops before it applies them to `session.state`. The renderer is fed from `session.a2uiMessages` instead, which is not filtered; see [Known limitations](#inbound-component-state-reaches-the-renderer-without-validation).
 - **Display text comes from the agent; prices and counts are formatted locally.** Labels, headings, and summaries are rendered as the agent wrote them. Prices are formatted with `Intl.NumberFormat` through `formatPrice` and `useFormatPrice`, using the configured language, country and currency (`$12.34` for `en`/`US`/`USD`) and result counts by `toLocaleString()`.
 - **A2-UI is the only supported source of component state.** The sample obtains component state solely through A2-UI (the `/state` data-model bindings); component state obtained through any non-A2-UI source is unsupported.
 - **Intentional divergence from A2-UI bidirectional input binding.** The sample deliberately does not use A2-UI standard bidirectional input components. In-progress user input (for example a facet search box being typed) is held in the sample's local React state and is never written to the shared A2-UI data model, and component actions are dispatched over the non-bidirectional HTTP Action_Channel.
 
-## v1.0 → v0.9 downgrade (owned by `@coveo/thermidor`)
+## A2-UI v1.0 renderer
 
-Agent Gateway emits A2-UI **v1.0** exclusively. Every available renderer consumes **v0.9**:
-`@copilotkit/a2ui-renderer` builds its `MessageProcessor` from `@a2ui/web_core/v0_9`, and
-`@a2ui/web_core@0.9.0` publishes no `v1_0` subpath.
+Agent Gateway emits A2-UI **v1.0**, and the sample renders it as is with `@a2ui/react`, on
+`@a2ui/web_core`'s v1.0 message processor. `@coveo/thermidor` exposes the whole session's stream
+as `session.a2uiMessages`, unchanged; `ThermidorA2UIStream` (`src/a2ui/surfaces.tsx`) owns one
+`MessageProcessor`, feeds it the new tail of that stream, and passes the processor's actions to
+`session.dispatchAction`. `A2UISurface` draws one of its surfaces with `@a2ui/react`'s
+`A2uiSurface` (see [Rendering every turn on one page](#rendering-every-turn-on-one-page)).
 
-**The sample does not perform this conversion.** `@coveo/thermidor` converts the stream to
-v0.9 and exposes it for the whole session as `session.a2uiMessages`, which the sample feeds
-to one renderer through `ThermidorA2UIStream` (see
-[Rendering every turn on one page](#rendering-every-turn-on-one-page)). Consumers write no
-version-aware code of their own.
+Three rules of the v1.0 renderer shape what the producer and the catalog must do:
 
-The conversion, its rationale, and its retirement condition live in the package:
-`packages/thermidor/src/session/a2ui-v09-projection.ts`, recorded as interim debt in the
-ADR-015 addendum. In short: splitting v1.0's single `createSurface` into `createSurface` +
-`updateComponents` is the only load-bearing transformation, because the v0.9
-`processCreateSurfaceMessage` reads only `{ surfaceId, catalogId, theme, sendDataModel }` and
-silently discards inline `components[]`. Flat v1.0 nodes are forwarded byte-for-byte, so every
-`{ "path": ... }` binding and composition link survives; `updateDataModel` and `deleteSurface`
-pass through.
+- **Component ids are UAX #31 identifiers.** A v1.0 catalog makes the processor reject a component
+  whose `id` is not one, such as `facet-brand-2`, and with it the whole message. Ids are
+  `facet_brand_2` or `facetBrand2`. The `/state/<id>` data paths are JSON Pointers and are not
+  affected.
+- **Child references are marked in the schema.** `@a2ui/react` builds a child node only for a prop
+  its schema marks as a component id (`componentId()` from `@a2ui/web_core/v1_0`) or a child list;
+  a `children` string array counts as one. `CommerceSearch` and `SearchBox` extend their
+  `*PropsSchema` to mark their named slots.
+- **A child id carried in bound data is not a child reference.** `BundleDisplay`'s tier slots
+  name their `ProductSummary` children inside the bound `tiers`, so it draws them with `DataChild`
+  (`src/a2ui/data-child.tsx`), which renders the child's implementation against the surface's data
+  model.
 
 ## Flat component nodes (`id`/`component`)
 
@@ -41,21 +44,21 @@ the top level. There is no `props` wrapper.
 
 ```jsonc
 {
-  "id": "facet-brand-2", // A2-UI node id (adjacency-list / mount key)
+  "id": "facet_brand_2", // A2-UI node id (adjacency-list / mount key), a UAX #31 identifier
   "component": "RegularFacet", // A2-UI component type (catalog renderer key + contract discriminant)
-  "values": {"path": "/state/facet-brand-2/values"}, // Data_Binding into the surface's data model
+  "values": {"@path": "/state/facet_brand_2/values"}, // Data_Binding into the surface's data model
 }
 ```
 
 `id` drives the adjacency-list tree (the renderer mounts by id) and `component` (PascalCase) selects the catalog renderer. `@coveo/thermidor` resolves the contract from the `component` discriminant directly, so no second identity is needed. The earlier `props.componentId` / `props.componentType` pair, which existed only to join an AG-UI state slice to its node, was removed with the AG-UI state transport, and the base component contract now rejects a node carrying either.
 
-Renderers read resolved values from `props` (the renderer resolves each `{ "path": ... }` binding against the surface's data model) and never hydrate by identity.
+Renderers read resolved values from `props` (the renderer resolves each `{ "@path": ... }` binding against the surface's data model) and never hydrate by identity.
 
 ## Catalog and Zod version
 
-`@copilotkit/a2ui-renderer` is built against **Zod 3**. The sample therefore pins `zod@3` and imports every runtime schema from the Zod 3 projection, `@coveo/thermidor-schema/zod3`: the per-component `*PropsSchema`, `ComponentContractsSchema`, and `THERMIDOR_CATALOG_ID`. Types come from either entry point: some files import them from the package root (`Product`, `SortAction`), while the facets and the breadbox import theirs (`RegularFacetAction`, `RegularFacetProps`, `BreadboxFacet`, …) from `@coveo/thermidor-schema/zod3`.
+`@a2ui/react` and `@a2ui/web_core` are built against **Zod 3**. The sample therefore pins `zod@3` and imports every runtime schema from the Zod 3 projection, `@coveo/thermidor-schema/zod3`: the per-component `*PropsSchema`, `ComponentContractsSchema`, and `THERMIDOR_CATALOG_ID`. Types come from either entry point: some files import them from the package root (`Product`, `SortAction`), while the facets and the breadbox import theirs (`RegularFacetAction`, `RegularFacetProps`, `BreadboxFacet`, …) from `@coveo/thermidor-schema/zod3`.
 
-Each catalog component is declared with the renderer's `createReactComponent({name, schema}, render)`, where `name` is the node's `component` and `schema` its `*PropsSchema`. `createThermidorCatalog()` (`src/a2ui/components.tsx`) registers them as `new Catalog(THERMIDOR_CATALOG_ID, components)`. No type casts or bridge helpers are needed.
+Each catalog component is declared with `@a2ui/react`'s `createComponentImplementation({name, schema}, render)`, where `name` is the node's `component` and `schema` its `*PropsSchema`. `createThermidorCatalog()` (`src/a2ui/components.tsx`) registers them as `new Catalog(THERMIDOR_CATALOG_ID, '1.0', components)`, a catalog of protocol version 1.0.
 
 When the renderer moves to Zod 4, switch every `@coveo/thermidor-schema/zod3` import, schemas and types alike, to the package root and drop the `zod@3` pin.
 
@@ -100,11 +103,11 @@ A placeholder the agent abandons is deleted the same way. The mock templates emi
 ### How the sample draws it
 
 - `@coveo/thermidor` derives `response.surfaces` from the stream: each `DiscoveredSurface` carries `rootComponentType` and `isLoading`, and a deleted surface leaves the list. A loading placeholder is listed only while its turn streams: one the agent never deletes (a cancelled run, an error, a restored session) leaves the list once the turn ends.
-- `TurnSurfaces` takes the turn's `response.surfaces` and draws `A2UISkeleton` for a loading surface in the place its content takes, and the `A2UIRenderer` otherwise. The sample holds no placeholder rule of its own.
+- `TurnSurfaces` takes the turn's `response.surfaces` and draws `A2UISkeleton` for a loading surface in the place its content takes, and `A2UISurface` otherwise. The sample holds no placeholder rule of its own.
 
 ## Action dispatch and inline state transport
 
-A catalog component sends an action with the renderer's `context.dispatchAction(action)`. The renderer surfaces it as an A2-UI client-to-server message through the `onAction` handler of `A2UIProvider`, which `AppShell` wires to its own `handleAction`:
+A catalog component sends an action with the renderer's `context.dispatchAction(action)`. The message processor surfaces it as an action payload (`name`, `surfaceId`, `sourceComponentId`, `context`) through the action handler `ThermidorA2UIStream` gives it, which `AppShell` wires to `session.dispatchAction`:
 
 - The session sends one request at a time, withholds a dispatch made while another request is in flight, and exposes the one in flight (`request` in `session.getSnapshot()`), with the component and the action it sends. `src/a2ui/session-request.tsx` turns it into the sample's lock rule (`isBlocking`): every request locks the active surface except the facet search actions (`search`, `clearSearch`, `showMoreSearchResults` of `RegularFacet` and `CategoryFacet`) and the search box's `fetchSuggestions` (`QuerySuggestions`), which it lists in `NON_BLOCKING_ACTIONS`, typed by `ComponentActionNames`. Typing in a facet search or in the search box keeps the surface usable. The lock is the sample's choice, next to what it does with a gesture made while the session is busy. `useGesture` drops a gesture while any request is in flight, a facet search included, and reads `request` synchronously, so a double click never sends twice, even before the lock renders. A facet search that fires during a request waits until the session is free, sending the latest query.
 - A failed action that does not open a turn never fails one: `actionError` in `session.getSnapshot()` names it, and the sample shows its message in an alert next to the component that sent it, until the next action or prompt. Every component marked with `actsOnSurface` (`src/a2ui/surface-controls.tsx`) draws that alert right after itself when `actionError` matches its surface and node (`surfaceId` and `sourceComponentId`, with `useComponentActionError`). `TurnSurfaces` shows the alert under the whole block only when no drawn component of the block shows it: a component the answer removed, or one not marked with `actsOnSurface`, such as `CommerceSearch` restoring a search from the browser history. The other components stay usable. A failed `fetchSuggestions`, listed in `SILENT_FAILURES`, is not shown: the search box just shows no completions. To see it with the mock (`pnpm dev:mock`), ask `water sports` and search a facet for `fail` (a `RUN_ERROR` in the action's stream) or `reject` (a rejected request); see the [mock's README](../../../packages/mock-converse-api/README.md#making-an-action-fail).
@@ -116,18 +119,18 @@ A prompt is sent with `session.dispatchAction({name: 'submitPrompt', payload: {p
 For a component action, `@coveo/thermidor`:
 
 - recovers the dispatching component from the session's live surfaces, validates the action payload against the component's generated Zod action schema, and POSTs it over the non-bidirectional HTTP Action_Channel. It is a plain request, not A2-UI bidirectional data binding;
-- never rejects: a message with no `userAction`, an unresolved component, or a payload that fails validation is withheld with a dev-only warning and nothing is sent.
+- never rejects: an action with no `sourceComponentId`, an unresolved component, or a payload that fails validation is withheld with a dev-only warning and nothing is sent.
 
 The producer replies by writing updated component state inline through the A2-UI data model as `/state/<id>` `updateDataModel` operations:
 
-- A whole-component op targets the component's state root (`/state/<id>`); a partial op targets a sub-path beneath it and updates only the addressed fields (the incremental semantics of the A2-UI data model). The renderer owns the data model and re-resolves the affected `{ "path": ... }` bindings.
+- A whole-component op targets the component's state root (`/state/<id>`); a partial op targets a sub-path beneath it and updates only the addressed fields (the incremental semantics of the A2-UI data model). The renderer owns the data model and re-resolves the affected `{ "@path": ... }` bindings.
 - `@coveo/thermidor` validates each inbound op in transit (a whole-component op against the `*State` schema, a partial op against the sub-schema at its path) before applying it to `session.state`. The renderer stream is not filtered by that validation; see [Known limitations](#inbound-component-state-reaches-the-renderer-without-validation).
 
 ## Optimistic updates
 
 Search controls show the shopper's choice right away instead of waiting for the producer's reply:
 
-- Each control shows the value its gesture expects with React's `useOptimistic`. `useGesture` (`src/a2ui/session-request.tsx`) runs the gesture in a transition that applies the optimistic value and awaits the renderer's dispatch. The renderer returns the promise of its `onAction`, `session.dispatchAction`, which settles once the session has answered the gesture, whatever the outcome, and at once for a withheld one, so the optimistic value shows until then and gives way to the producer's. Sort, pagination and page size do it in their component; the facets and the breadbox go through a `use-optimistic-*.ts` hook next to their component, which computes the expected value. A gesture sent while the surface is locked is dropped before it changes anything.
+- Each control shows the value its gesture expects with React's `useOptimistic`. `useGesture` (`src/a2ui/session-request.tsx`) runs the gesture in a transition that applies the optimistic value and awaits the renderer's dispatch. The processor returns the promise of its action handler, `session.dispatchAction`, which settles once the session has answered the gesture, whatever the outcome, and at once for a withheld one, so the optimistic value shows until then and gives way to the producer's. Sort, pagination and page size do it in their component; the facets and the breadbox go through a `use-optimistic-*.ts` hook next to their component, which computes the expected value. A gesture sent while the surface is locked is dropped before it changes anything.
 - The surface lock dims the results while a gesture is in flight, so the product list and the query summary never read as current while a control already shows the new choice.
 - Facet search keeps the typed text in local state (`use-optimistic-facet-search.ts`) rather than as an optimistic hold, and sends one search once typing pauses (200 ms). A keystroke that never reaches the producer leaves the field untouched, and the field is never written to the shared data model.
 - The Breadbox moves focus after a removal once the surface unlocks: a locked surface's buttons are disabled and can't take focus.
@@ -142,7 +145,7 @@ Search controls show the shopper's choice right away instead of waiting for the 
 
 `@coveo/thermidor` (`packages/thermidor/docs/internal/adr/`):
 
-- **ADR-015** — Surface derivation (`response.surfaces`), with addenda for the v0.9 renderer projection and for loading placeholders.
+- **ADR-015** — Surface derivation (`response.surfaces`), with an addendum for loading placeholders.
 - **ADR-016** — Inline-state consumption: renderers read resolved props, and `session.dispatchAction` is the single dispatch entry point (the remote controller was removed).
 
 How the sample follows them:
@@ -151,10 +154,10 @@ How the sample follows them:
 | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
 | Server-owned component state, not mutated locally by the renderer  | Server writes `/state/<id>` `updateDataModel` ops; the renderer owns the data model and resolves bindings |
 | Component state is transported inline through the A2-UI data model | `/state/<id>` `updateDataModel` ops resolved into the renderer's data model (no AG-UI `StateSnapshot`)    |
-| A node carries a single identity (`id` + `component`)              | Flat nodes in `createSurface.components[]`, with `{ "path": ... }` bindings at the top level              |
-| Renderers read resolved state from `props` (no identity join)      | Each `createReactComponent` renderer reads `props`; there is no `componentId` correlation                 |
+| A node carries a single identity (`id` + `component`)              | Flat nodes in `createSurface.components[]`, with `{ "@path": ... }` bindings at the top level             |
+| Renderers read resolved state from `props` (no identity join)      | Each `createComponentImplementation` renderer reads `props`; there is no `componentId` correlation        |
 | Containers mount their children by name or ordered list            | `CommerceSearch` mounts `sidebarChild` / `mainChild`; `LayoutStack` and `FacetManager` mount `children`   |
-| Actions go through the session's single dispatch path              | `context.dispatchAction` → `onAction` → session → validated payload → HTTP Action_Channel                 |
+| Actions go through the session's single dispatch path              | `context.dispatchAction` → processor action → session → validated payload → HTTP Action_Channel           |
 
 ## Known limitations / Next steps
 
@@ -163,24 +166,25 @@ How the sample follows them:
 `@coveo/thermidor` validates inbound `updateDataModel` ops only on their way into `session.state`, and the sample never reads `session.state`. `session.a2uiMessages` is derived from the raw activities, so the renderer receives:
 
 - every `updateDataModel` op, conforming or not;
-- the state seeded inline by `createSurface.dataModel` (keys such as `/state/<nodeId>`), which the projection turns into `updateDataModel` ops and which `session.state` never reads at all.
+- the state seeded inline by `createSurface.dataModel` (keys such as `/state/<nodeId>`), which `session.state` never reads at all.
 
-Non-conforming component state from the producer therefore still changes what the sample renders. Closing this gap belongs in `@coveo/thermidor`, not in the sample, and must cover both paths: filtering only the projected `updateDataModel` ops would still let the `createSurface.dataModel` seed through.
+Non-conforming component state from the producer therefore still changes what the sample renders. Closing this gap belongs in `@coveo/thermidor`, not in the sample, and must cover both paths: filtering only the `updateDataModel` ops would still let the `createSurface.dataModel` seed through.
 
 ### Dynamic composition updates not exercised (facet reorder / add / remove)
 
-Composition is emitted **once** in the initial `createSurface` and never changed afterwards. Action responses only re-emit `/state/<id>` `updateDataModel` ops (per-component data), so the set and order of facets are fixed for the surface's lifetime: the facet-manager node's `children` (`['facet-brand-2', 'facet-price-2', 'facet-category-2']`) is a static constant. No mock scenario reorders facets, adds one, or removes one.
+Composition is emitted **once** in the initial `createSurface` and never changed afterwards. Action responses only re-emit `/state/<id>` `updateDataModel` ops (per-component data), so the set and order of facets are fixed for the surface's lifetime: the facet-manager node's `children` (for example `['facet_brand_2', 'facet_price_2', 'facet_category_2']`) is a static constant. No mock scenario reorders facets, adds one, or removes one.
 
 A real backend can reorder facets (relevance-driven) or add/remove them dynamically. Before that is supported, note the following:
 
-- **`updateComponents` is a bare pass-through.** In the projection (`packages/thermidor/src/session/a2ui-v09-projection.ts`), `createSurface` splits into `createSurface` + `updateComponents`, while an inbound `updateComponents` is forwarded as-is. Under the flat v1.0 node model that is correct, but it has never been exercised by a real dynamic composition update, so treat it as unverified rather than known-good.
-- **Reorder / add are supported by the protocol; remove is not, directly.** A2UI v0.9 defines `updateComponents` as _adding to or updating_ components in a surface (adjacency list via `children`); reordering the facet-manager `children` and adding a new facet node fit that contract, and `FacetManager` already re-renders from its resolved `children` list. There is no component-removal primitive: dropping a facet means emitting a `children` list without its id (the orphaned node lingers in the surface) or recreating the surface via `deleteSurface` + `createSurface`.
+- **`updateComponents` is untested here.** `session.a2uiMessages` forwards an inbound `updateComponents` as is, and the v1.0 processor applies it. That has never been exercised by a real dynamic composition update, so treat it as unverified rather than known-good.
+- **Reorder / add are supported by the protocol; remove is not, directly.** A2UI defines `updateComponents` as _adding to or updating_ components in a surface (adjacency list via `children`); reordering the facet-manager `children` and adding a new facet node fit that contract, and `FacetManager` already re-renders from its resolved `children` list. There is no component-removal primitive: dropping a facet means emitting a `children` list without its id (the orphaned node lingers in the surface) or recreating the surface via `deleteSurface` + `createSurface`.
 
 Capture this before wiring dynamic facet composition.
 
 ### Temporary workarounds (to remove when upstream dependencies evolve)
 
-| Item                      | Description                                                                                                    | Remove when                                                         |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| **v1.0 → v0.9 downgrade** | Owned by `@coveo/thermidor` (`session.a2uiMessages`); see the ADR-015 addendum.                                | `@a2ui/web_core` ships a `v1_0` subpath AND the renderer imports it |
-| **Zod 3 projection**      | The sample pins `zod@3` and imports runtime schemas from `@coveo/thermidor-schema/zod3` to match the renderer. | `@copilotkit/a2ui-renderer` upgrades to Zod 4                       |
+| Item                  | Description                                                                                                    | Remove when                                                        |
+| --------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| **Zod 3 projection**  | The sample pins `zod@3` and imports runtime schemas from `@coveo/thermidor-schema/zod3` to match the renderer. | `@a2ui/react` and `@a2ui/web_core` move to Zod 4                   |
+| **Slot schema marks** | `CommerceSearch` and `SearchBox` mark their named slots with `componentId()` themselves.                       | `@coveo/thermidor-schema` marks child references in `*PropsSchema` |
+| **`DataChild`**       | `BundleDisplay` draws the slot children named in its bound `tiers` itself.                                     | The bundle's slots become child references the renderer resolves   |

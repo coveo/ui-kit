@@ -1,5 +1,5 @@
 import {useId} from 'react';
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react';
 import {type NumericFacetAction, NumericFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {formatFieldNumber} from '../../context/format-configured-price.js';
 import {useOptimisticNumericFacet} from './use-optimistic-numeric-facet.js';
@@ -10,7 +10,7 @@ import styles from './NumericFacet.module.css';
  * `NumericFacetPropsSchema`; its three gestures all carry an optimistic value, so they live in
  * `useOptimisticNumericFacet` and what is left here is the rendering.
  */
-export const NumericFacet = createReactComponent(
+export const NumericFacet = createComponentImplementation(
   {
     name: 'NumericFacet',
     schema: NumericFacetPropsSchema,
