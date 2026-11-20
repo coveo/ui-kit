@@ -240,7 +240,7 @@ function createProgressBlock(active: ProgressStep[]): ConverseEvent {
     content: {
       messages: [
         {
-          version: 'v1.0',
+          version: '1.0',
           createSurface: {
             surfaceId: PROGRESS_BLOCK_SURFACE_ID,
             catalogId: CATALOG_ID,

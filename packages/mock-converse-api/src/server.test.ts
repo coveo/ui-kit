@@ -705,7 +705,7 @@ describe('createMockConverseServer', () => {
           action: {
             name: 'search',
             surfaceId,
-            sourceComponentId: 'facet-brand-2',
+            sourceComponentId: 'facet_brand_2',
             context: {query},
           },
         });
@@ -762,7 +762,7 @@ describe('createMockConverseServer', () => {
 
         const res = await searchBrands(keys, searchSurfaceId, 'o');
         const brandFacet = statesByNode(parseEvents(res.body))[
-          `${searchSurfaceId} /state/facet-brand-2`
+          `${searchSurfaceId} /state/facet_brand_2`
         ] as {facetSearch?: {query?: string}};
 
         expect(res.statusCode).toBe(200);
