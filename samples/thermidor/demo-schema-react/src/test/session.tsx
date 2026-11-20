@@ -99,7 +99,7 @@ export function shellRun(
 }
 
 /** The `metadata` of a producer announcing `fetchSuggestions` on `surfaceId` as concurrent. */
-export function concurrentSuggestions(surfaceId = SHELL_SURFACE_ID): Record<string, unknown> {
+function concurrentSuggestions(surfaceId = SHELL_SURFACE_ID): Record<string, unknown> {
   return {concurrentActions: {[surfaceId]: {fetchSuggestions: {}}}};
 }
 
