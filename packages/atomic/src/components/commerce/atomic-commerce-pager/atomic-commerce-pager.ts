@@ -25,7 +25,6 @@ import {ValidatePropsController} from '@/src/components/common/validate-props-co
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
-import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {AriaLiveRegionController, FocusTargetController} from '@/src/utils/accessibility-utils';
@@ -60,7 +59,6 @@ export class AtomicCommercePager
   });
 
   @state() public bindings!: CommerceBindings;
-  @state() public error!: Error;
   @state() private isAppLoaded = false;
 
   public pager!: Pagination;
@@ -128,7 +126,6 @@ export class AtomicCommercePager
   }
 
   @bindingGuard()
-  @errorGuard()
   render() {
     const pagesRange = getCurrentPagesRange(
       this.pagerState.page,

@@ -1,6 +1,5 @@
-import {html} from 'lit';
 import type {TemplateResultType} from 'lit/directive-helpers.js';
-import '../components/common/atomic-component-error/atomic-component-error';
+import {logComponentError, renderComponentError} from './component-error';
 import type {GenericRender, LitElementWithError, RenderGuardDecorator} from './types';
 
 /**
@@ -32,10 +31,8 @@ export function errorGuard<
     const originalMethod = descriptor.value;
     descriptor.value = function (this: Component) {
       if (this.error) {
-        return html`<atomic-component-error
-          .error=${this.error}
-          .element=${this as HTMLElement}
-        ></atomic-component-error>` as GenericRender<T>;
+        logComponentError(this.error, this);
+        return renderComponentError(this, this.error) as GenericRender<T>;
       }
       return originalMethod.call(this);
     };

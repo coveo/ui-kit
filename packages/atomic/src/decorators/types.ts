@@ -43,7 +43,7 @@ interface BaseInitializableComponent<
   /**
    * Error encountered during component setup, if any.
    */
-  error: Error;
+  error?: Error;
 }
 
 /**
@@ -59,4 +59,9 @@ export type InitializableComponent<SpecificBindings extends AnyBindings = AnyBin
 export type SearchBoxSuggestionsComponent<SpecificBindings extends AnyBindings = AnyBindings> =
   BaseInitializableComponent<SpecificBindings, SearchBoxSuggestions>;
 
-export interface LitElementWithError extends Pick<InitializableComponent, 'error'>, LitElement {}
+/**
+ * The one shape every error writer and reader agrees on: `undefined` means no error.
+ */
+export interface LitElementWithError extends LitElement {
+  error?: Error;
+}

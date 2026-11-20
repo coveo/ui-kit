@@ -14,7 +14,7 @@ import {
  * @returns ItemContextController instance configured for atomic-result
  */
 export function createResultContextController(
-  host: LitElement & {error: Error | null},
+  host: LitElement & {error?: Error},
   options: {folded?: boolean} = {}
 ): ItemContextController<Result | FoldedResult> {
   return new ItemContextController<Result | FoldedResult>(host, {

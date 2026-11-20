@@ -77,7 +77,6 @@ export class AtomicIpxButton extends LitElement implements InitializableComponen
   public isModalOpen = false;
 
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
 
   private recommendationsLoaded = false;
 

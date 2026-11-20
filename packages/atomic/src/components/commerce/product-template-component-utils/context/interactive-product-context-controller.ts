@@ -24,7 +24,7 @@ import {InteractiveItemContextController} from '@/src/components/common/item-lis
  * ```
  */
 export function createInteractiveProductContextController(
-  host: LitElement & {error: Error}
+  host: LitElement & {error?: Error}
 ): InteractiveItemContextController<InteractiveProduct> {
   return new InteractiveItemContextController<InteractiveProduct>(host);
 }

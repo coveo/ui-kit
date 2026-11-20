@@ -9,7 +9,7 @@ import {InteractiveItemContextController} from '@/src/components/common/item-lis
  * @returns InteractiveItemContextController instance
  */
 export function createInteractiveResultContextController(
-  host: LitElement & {error: Error}
+  host: LitElement & {error?: Error}
 ): InteractiveItemContextController<InteractiveResult> {
   return new InteractiveItemContextController<InteractiveResult>(host);
 }

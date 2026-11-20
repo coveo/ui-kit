@@ -1,5 +1,6 @@
 import {html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
+import {logComponentError} from '@/src/decorators/component-error';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 
 /**
@@ -12,7 +13,7 @@ export class AtomicComponentError extends LitElement {
   @property({type: Object}) error!: Error;
 
   firstUpdated() {
-    console.error(this.error, this.element);
+    logComponentError(this.error, this.element);
   }
 
   render() {

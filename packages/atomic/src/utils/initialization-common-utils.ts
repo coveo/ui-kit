@@ -18,13 +18,16 @@ export function fetchBindings<SpecificBindings extends AnyBindings>(element: Ele
       initializeEventName,
       (bindings: unknown) => resolve(bindings as SpecificBindings)
     );
-    const parent = closest(element, initializableElements.join(', '));
+    const parent = findInterfaceParent(element);
     if (!parent) {
       reject(new MissingInterfaceParentError(element.nodeName.toLowerCase()));
       return;
     }
     enqueueOrDispatchInitializationEvent(parent, event, element);
   });
+}
+export function findInterfaceParent(element: Element) {
+  return closest(element, initializableElements.join(', '));
 }
 export type InitializeEventHandler = (bindings: AnyBindings) => void;
 export class MissingInterfaceParentError extends Error {
