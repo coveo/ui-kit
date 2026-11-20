@@ -5,6 +5,9 @@ import {
   statePath,
   deleteSurfaceMessage,
   loadingSurfaceMessage,
+  createProgressBlock,
+  updateProgressBlock,
+  type ProgressStep,
 } from './shared.js';
 import {
   ActivitySnapshot,
@@ -422,7 +425,12 @@ const nextActionsPlaceholderActivity: ConverseEvent = ActivitySnapshot({
   },
 });
 
+const THINKING: ProgressStep = {id: 'thinking', label: 'Thinking'};
+const PREPARING_RESPONSE: ProgressStep = {id: 'preparing_response', label: 'Putting it together'};
+const SEARCHING_CATALOG: ProgressStep = {id: 'searching_products', label: 'Searching the catalog'};
+
 const middleEvents: ConverseEvent[] = [
+  createProgressBlock([THINKING]),
   ...toolCall({
     toolCallId: 'tc-route-discovery',
     toolCallName: 'route_discovery',
@@ -433,6 +441,7 @@ const middleEvents: ConverseEvent[] = [
   }),
   {...carousel1PlaceholderActivity, delayMs: 300},
   {...carousel2PlaceholderActivity, delayMs: 300},
+  {...updateProgressBlock([THINKING], [SEARCHING_CATALOG]), delayMs: 400},
   ...toolCall({
     toolCallId: 'tc-search-lifejackets',
     toolCallName: 'coveo_commerce_search',
@@ -449,6 +458,7 @@ const middleEvents: ConverseEvent[] = [
     resultMessageId: 'tc-search-safety-result',
     resultContent: '"Found 7 safety gear items."',
   }),
+  {...updateProgressBlock([THINKING, SEARCHING_CATALOG], [PREPARING_RESPONSE]), delayMs: 400},
   ...toolCall({
     toolCallId: 'tc-store-render-plan',
     toolCallName: 'store_render_plan',
@@ -468,6 +478,7 @@ const middleEvents: ConverseEvent[] = [
   {...nextActionsPlaceholderActivity, delayMs: 100},
   {...nextActionsSurfaceActivity, delayMs: 800},
   {...nextActionsStateActivity, delayMs: 50},
+  updateProgressBlock([THINKING, SEARCHING_CATALOG, PREPARING_RESPONSE]),
 ];
 
 const schemaDiscoveryEvents: ConverseEvent[] = buildConversationResponse({

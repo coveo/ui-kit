@@ -21,6 +21,10 @@ The mock API is automatically stopped when you close Vite (Ctrl+C).
 
 With `VITE_COVEO_ENDPOINT=http://localhost:3456/schema`, the sample posts to the mock's `/schema/api/preview/organizations/:orgId/agents/commerce/agui/converse` route, which serves the schema-driven templates (`schema-response-*.ts` in `@coveo/platform-mock-api`). `/schema/rest/organizations/:orgId/commerce/unstable/agentic/converse` and the short `/converse-schema` route serve the same templates. The `/converse`, `/rest/...` and `/api/preview/...` routes, without the `/schema` prefix, serve older templates this sample does not support.
 
+### The progress block
+
+Every turn the agent runs sends its progress as a `ProgressBlock` surface (Thermidor ADR-028), which the sample draws above the answer in place of the thinking block. In the mock, the agent's prompts below send one; searches, answered by the gateway, don't.
+
 ### Mock scenarios
 
 | Prompt                                                                     | Scenario                                                                                                                                                                                         |
@@ -107,9 +111,10 @@ ConversationPage
 ├── ConversationThread (renders the list of turns)
 │   └── per Turn:
 │       ├── UserPromptBubble (the prompt, or the text of the follow-up chip that opened the turn)
+│       ├── ProgressSurfaces (the agent's ProgressBlock, if the turn has one)
 │       ├── ErrorTurnBlock (if error)
 │       └── AgentResponseBlock
-│           ├── ThinkingBlock (tool calls + spinner)
+│           ├── ThinkingBlock (tool calls + spinner, if the turn has no ProgressBlock)
 │           ├── StreamingMessage (streamed text)
 │           └── TurnSurfaces (the turn's blocks; disabled unless it is the latest turn)
 │               ├── A2UISkeleton (in place of a loading surface)
