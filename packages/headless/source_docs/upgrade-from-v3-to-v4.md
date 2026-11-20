@@ -126,32 +126,41 @@ const staticState = await fetchStaticState({
 // proxy.ts: forward the page URL as a request header and, only for a visitor who agreed to analytics,
 // the client ID of the `coveo_visitorId` cookie (`CLIENT_ID_COOKIE_NAME`). Mint one when it is missing
 // or not a valid UUID, and store it; remove the cookie of a visitor who did not agree.
-// `hasAnalyticsConsent()` stands for your consent tool.
-const requestHeaders = new Headers(request.headers);
-requestHeaders.set('x-href', request.nextUrl.href);
-requestHeaders.delete('x-coveo-client-id');
-const response = () => NextResponse.next({request: {headers: requestHeaders}});
-
-if (!hasAnalyticsConsent(request)) {
-  const untrackedResponse = response();
-  if (request.cookies.has('coveo_visitorId')) {
-    untrackedResponse.cookies.delete({name: 'coveo_visitorId', path: '/'});
-  }
-  return untrackedResponse;
-}
+import {type NextRequest, NextResponse} from 'next/server';
 
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const cookieClientId = request.cookies.get('coveo_visitorId')?.value;
-const clientId =
-  cookieClientId && uuidPattern.test(cookieClientId) ? cookieClientId : crypto.randomUUID();
-requestHeaders.set('x-coveo-client-id', clientId);
-const trackedResponse = response();
-trackedResponse.cookies.set('coveo_visitorId', clientId, {
-  maxAge: 60 * 60 * 24 * 365,
-  path: '/',
-  sameSite: 'lax',
-});
-return trackedResponse;
+
+// Stands for your consent tool: replace it with a check of the visitor's answer.
+function hasAnalyticsConsent(request: NextRequest) {
+  return request.cookies.get('analytics_consent')?.value === 'granted';
+}
+
+export default function proxy(request: NextRequest) {
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-href', request.nextUrl.href);
+  requestHeaders.delete('x-coveo-client-id');
+  const response = () => NextResponse.next({request: {headers: requestHeaders}});
+
+  if (!hasAnalyticsConsent(request)) {
+    const untrackedResponse = response();
+    if (request.cookies.has('coveo_visitorId')) {
+      untrackedResponse.cookies.delete({name: 'coveo_visitorId', path: '/'});
+    }
+    return untrackedResponse;
+  }
+
+  const cookieClientId = request.cookies.get('coveo_visitorId')?.value;
+  const clientId =
+    cookieClientId && uuidPattern.test(cookieClientId) ? cookieClientId : crypto.randomUUID();
+  requestHeaders.set('x-coveo-client-id', clientId);
+  const trackedResponse = response();
+  trackedResponse.cookies.set('coveo_visitorId', clientId, {
+    maxAge: 60 * 60 * 24 * 365,
+    path: '/',
+    sameSite: 'lax',
+  });
+  return trackedResponse;
+}
 
 // app/search/page.tsx
 import {buildNavigatorContext} from '@coveo/headless/ssr';
