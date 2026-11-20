@@ -9,6 +9,7 @@ import {
   submitQuery,
   useActionError,
   useLatestWhenFree,
+  type SurfaceAction,
   type QuerySubmitter,
   type SessionRequestSource,
 } from './session-request.js';
@@ -115,6 +116,7 @@ describe('announcesConcurrent', () => {
     expect(
       announcesConcurrent(
         {initialization: initializedWith(announcing(SUGGESTIONS)), turns: []},
+        'shell',
         'fetchSuggestions'
       )
     ).toBe(true);
@@ -126,21 +128,33 @@ describe('announcesConcurrent', () => {
           ),
           turns: [],
         },
+        'shell',
         'fetchInstantProducts'
       )
     ).toBe(true);
   });
 
   it('is false when nothing announces the action', () => {
-    expect(announcesConcurrent({initialization: undefined, turns: []}, 'fetchSuggestions')).toBe(
-      false
-    );
+    expect(
+      announcesConcurrent({initialization: undefined, turns: []}, 'shell', 'fetchSuggestions')
+    ).toBe(false);
     expect(
       announcesConcurrent(
         {
           initialization: initializedWith(announcing({shell: {fetchInstantProducts: {}}})),
           turns: [],
         },
+        'shell',
+        'fetchSuggestions'
+      )
+    ).toBe(false);
+  });
+
+  it('is false when only another surface announces the action', () => {
+    expect(
+      announcesConcurrent(
+        {initialization: initializedWith(announcing({other: {fetchSuggestions: {}}})), turns: []},
+        'shell',
         'fetchSuggestions'
       )
     ).toBe(false);
@@ -151,6 +165,7 @@ describe('announcesConcurrent', () => {
     expect(
       announcesConcurrent(
         {initialization: initializedWith(announcing(SUGGESTIONS)), turns: [revoking]},
+        'shell',
         'fetchSuggestions'
       )
     ).toBe(false);
@@ -161,14 +176,14 @@ describe('useLatestWhenFree', () => {
   function mount(
     initial: string,
     {
-      concurrentAction,
+      concurrent,
       initialization,
-    }: {concurrentAction?: string; initialization?: SessionSnapshot['initialization']} = {}
+    }: {concurrent?: SurfaceAction; initialization?: SessionSnapshot['initialization']} = {}
   ) {
     const {session, setRequest} = fakeSession(initialization);
     const send = vi.fn();
     function Consumer({value}: {value: string}) {
-      useLatestWhenFree(value, send, concurrentAction);
+      useLatestWhenFree(value, send, concurrent);
       return null;
     }
     const view = render(
@@ -210,7 +225,7 @@ describe('useLatestWhenFree', () => {
 
   it('sends each value at once while the session is busy when the action is announced as concurrent', () => {
     const view = mount('', {
-      concurrentAction: 'fetchSuggestions',
+      concurrent: {surfaceId: 'shell', name: 'fetchSuggestions'},
       initialization: initializedWith(announcing({shell: {fetchSuggestions: {}}})),
     });
     view.setRequest({kind: 'prompt', turnId: 'turn'});
@@ -222,7 +237,21 @@ describe('useLatestWhenFree', () => {
   });
 
   it('holds values back while the session is busy when the action is not announced', () => {
-    const view = mount('', {concurrentAction: 'fetchSuggestions'});
+    const view = mount('', {concurrent: {surfaceId: 'shell', name: 'fetchSuggestions'}});
+    view.setRequest({kind: 'prompt', turnId: 'turn'});
+
+    view.change('k');
+    expect(view.send).not.toHaveBeenCalled();
+
+    view.setRequest(undefined);
+    expect(view.send.mock.calls).toEqual([['k']]);
+  });
+
+  it('holds values back while the session is busy when only another surface announces the action', () => {
+    const view = mount('', {
+      concurrent: {surfaceId: 'shell', name: 'fetchSuggestions'},
+      initialization: initializedWith(announcing({other: {fetchSuggestions: {}}})),
+    });
     view.setRequest({kind: 'prompt', turnId: 'turn'});
 
     view.change('k');

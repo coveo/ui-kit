@@ -106,30 +106,34 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 /**
- * Whether the producer's latest `concurrentActions` announcement for a surface lists `name`, read
+ * Whether the producer's latest `concurrentActions` announcement for `surfaceId` lists `name`, read
  * from the session's activity log as the session reads it (ADR-020). The session sends such an
- * action at once, whatever request is in flight, and never makes it the session's request.
+ * action dispatched from that surface at once, whatever request is in flight, and never makes it
+ * the session's request.
  */
 export function announcesConcurrent(
   {initialization, turns}: Pick<SessionSnapshot, 'initialization' | 'turns'>,
+  surfaceId: string,
   name: string
 ): boolean {
-  const latest = new Map<string, Record<string, unknown>>();
+  let latest: Record<string, unknown> | undefined;
   const activities = [
     ...(initialization?.activities ?? []),
     ...turns.flatMap((turn) => turn.response.activities),
   ];
   for (const {metadata} of activities) {
     const announcements = metadata?.['concurrentActions'];
-    if (isRecord(announcements)) {
-      for (const [surfaceId, actions] of Object.entries(announcements)) {
-        if (isRecord(actions)) {
-          latest.set(surfaceId, actions);
-        }
-      }
+    if (isRecord(announcements) && isRecord(announcements[surfaceId])) {
+      latest = announcements[surfaceId];
     }
   }
-  return [...latest.values()].some((actions) => Object.hasOwn(actions, name));
+  return latest !== undefined && Object.hasOwn(latest, name);
+}
+
+/** An action that `useLatestWhenFree` sends from a surface. */
+export interface SurfaceAction {
+  surfaceId: string;
+  name: string;
 }
 
 /**
@@ -138,18 +142,20 @@ export function announcesConcurrent(
  * replaces the one waiting. A falsy value is never sent, and lets the next value be sent even when
  * it repeats the last one.
  *
- * When the producer announces `concurrentAction` as concurrent, the session sends it whatever is
- * in flight, so the value is sent at once.
+ * When the producer announces `concurrent`'s action as concurrent on its surface, the session sends
+ * it whatever is in flight, so the value is sent at once.
  */
 export function useLatestWhenFree<T>(
   value: T,
   send: (value: NonNullable<T>) => void,
-  concurrentAction?: string
+  concurrent?: SurfaceAction
 ): void {
   const source = useContext(SessionRequestContext);
   const lastSent = useRef<T | undefined>(undefined);
   const latestSend = useRef(send);
   latestSend.current = send;
+  const surfaceId = concurrent?.surfaceId;
+  const concurrentName = concurrent?.name;
 
   useEffect(() => {
     if (!value) {
@@ -160,7 +166,9 @@ export function useLatestWhenFree<T>(
       const snapshot = source.getSnapshot();
       const free =
         snapshot.request === undefined ||
-        (concurrentAction !== undefined && announcesConcurrent(snapshot, concurrentAction));
+        (surfaceId !== undefined &&
+          concurrentName !== undefined &&
+          announcesConcurrent(snapshot, surfaceId, concurrentName));
       if (free && value !== lastSent.current) {
         lastSent.current = value;
         latestSend.current(value as NonNullable<T>);
@@ -168,7 +176,21 @@ export function useLatestWhenFree<T>(
     };
     flush();
     return source.subscribe(flush);
-  }, [source, value, concurrentAction]);
+  }, [source, value, surfaceId, concurrentName]);
+}
+
+/**
+ * The state of node `nodeId` on surface `surfaceId`, at its `/state/<nodeId>` pointer. A write
+ * elsewhere in the session state keeps its identity.
+ */
+export function nodeState(
+  state: SessionSnapshot['state'],
+  surfaceId: string,
+  nodeId: string
+): unknown {
+  const surfaceState = state[surfaceId];
+  const nodes = isRecord(surfaceState) ? surfaceState['state'] : undefined;
+  return isRecord(nodes) ? nodes[nodeId] : undefined;
 }
 
 /** Reads the session's current snapshot, outside of rendering. */

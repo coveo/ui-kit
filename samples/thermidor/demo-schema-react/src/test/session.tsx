@@ -109,7 +109,10 @@ export const INSTANT_PRODUCTS_ID = 'instant-products';
  * The session shell with `InstantProducts` beside `QuerySuggestions`, announcing
  * `fetchInstantProducts` as concurrent and cached, as the producer does.
  */
-function instantProductsShellRun(surfaceId = SHELL_SURFACE_ID): object[] {
+function instantProductsShellRun(
+  surfaceId = SHELL_SURFACE_ID,
+  announced: Record<string, unknown> = {}
+): object[] {
   return run(
     [
       {
@@ -149,7 +152,9 @@ function instantProductsShellRun(surfaceId = SHELL_SURFACE_ID): object[] {
       },
     ],
     {
-      concurrentActions: {[surfaceId]: {fetchInstantProducts: {cache: {ttlMs: 60_000}}}},
+      concurrentActions: {
+        [surfaceId]: {fetchInstantProducts: {cache: {ttlMs: 60_000}}, ...announced},
+      },
     }
   );
 }
@@ -303,6 +308,46 @@ export const answerInstantProductsShell: ConverseHandler = (request) => {
   }
   return answerShell(request);
 };
+
+/**
+ * Answers as {@link answerInstantProductsShell}, with the shell also announcing `fetchSuggestions`
+ * as concurrent.
+ */
+export const answerConcurrentInstantProductsShell: ConverseHandler = (request, signal) => {
+  if (request.action?.name === 'initialize') {
+    return sseResponse(instantProductsShellRun(SHELL_SURFACE_ID, {fetchSuggestions: {}}));
+  }
+  return answerInstantProductsShell(request, signal);
+};
+
+/**
+ * A converse response streaming `events`, then holding the last one back until `finish` is
+ * called, as a turn whose answer is still streaming.
+ */
+export function streamingResponse(events: readonly object[]): {
+  response: Response;
+  finish: () => void;
+} {
+  let finish!: () => void;
+  const finished = new Promise<void>((resolve) => {
+    finish = resolve;
+  });
+  const chunk = (event: object) => encoder.encode(`data: ${JSON.stringify(event)}\n\n`);
+  const body = new ReadableStream<Uint8Array>({
+    async start(controller) {
+      for (const event of events.slice(0, -1)) {
+        controller.enqueue(chunk(event));
+      }
+      await finished;
+      controller.enqueue(chunk(events[events.length - 1]));
+      controller.close();
+    },
+  });
+  return {
+    response: new Response(body, {headers: {'Content-Type': 'text/event-stream'}}),
+    finish,
+  };
+}
 
 const catalog = createThermidorCatalog();
 

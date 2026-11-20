@@ -2,13 +2,17 @@ import {act, fireEvent, screen, waitFor} from '@testing-library/react';
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import {SessionSearchBox} from '../../components/SessionSearchBox/SessionSearchBox.js';
 import {
+  answerConcurrentInstantProductsShell,
   answerConcurrentSuggestionsShell,
   answerShell,
   createTestSession,
   findSearchBox,
+  INSTANT_PRODUCTS_ID,
+  instantProductsRun,
   renderWithSession,
   run,
   sseResponse,
+  streamingResponse,
   suggestionsRun,
   SHELL_SURFACE_ID,
   type ConverseHandler,
@@ -655,6 +659,69 @@ describe('QuerySuggestions when the producer announces fetchSuggestions as concu
     fireEvent.click(screen.getByRole('button', {name: 'Remove tents from recent searches'}));
 
     await waitFor(() => expect(queriesSent()).toEqual(['', '']));
+    await pause();
+    expect(options()).toEqual(['hiking boots', 'backpack']);
+  });
+
+  /**
+   * The producer of {@link recentQueriesProducer}, whose shell also holds `InstantProducts`, and
+   * whose `fetchSuggestions` fails once `holdRefresh` is set, when `failRefresh` is called.
+   */
+  async function renderWithFailingRefresh(answerPrompt: ConverseHandler = answerShell) {
+    const producer = recentQueriesProducer(
+      ['tents', 'hiking boots'],
+      answerConcurrentInstantProductsShell
+    );
+    const refresh = {hold: false, fail: () => {}};
+    const view = await renderSearchBox((request, signal) => {
+      if (request.message !== null) {
+        return answerPrompt(request, signal);
+      }
+      if (refresh.hold && request.action?.name === 'fetchSuggestions') {
+        const hold = held(() => new Response('', {status: 500}), signal);
+        refresh.fail = hold.release;
+        return hold.response;
+      }
+      return producer(request, signal);
+    });
+    await waitFor(() => expect(options()).toEqual(['tents', 'hiking boots', 'backpack']));
+    refresh.hold = true;
+    fireEvent.click(screen.getByRole('button', {name: 'Remove tents from recent searches'}));
+    await waitFor(() => expect(view.queriesSent()).toEqual(['', '']));
+    return {...view, failRefresh: () => act(async () => refresh.fail())};
+  }
+
+  it('keeps a removed recent query hidden when its refresh fails while an answer streams', async () => {
+    const stream = streamingResponse(instantProductsRun(SHELL_SURFACE_ID, 'paddles', ['paddle']));
+    const {session, failRefresh} = await renderWithFailingRefresh(() => stream.response);
+    const stateBefore = session.getSnapshot().state;
+
+    act(() => void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'paddles'}}));
+    await waitFor(() => expect(session.getSnapshot().state).not.toBe(stateBefore));
+    await failRefresh();
+    await act(async () => stream.finish());
+
+    await waitFor(() => expect(session.getSnapshot().request).toBeUndefined());
+    expect(options()).toEqual(['hiking boots', 'backpack']);
+  });
+
+  it('keeps a removed recent query hidden when its refresh fails after instant products are answered', async () => {
+    const {session, failRefresh} = await renderWithFailingRefresh();
+    const stateBefore = session.getSnapshot().state;
+
+    await act(() =>
+      session.dispatchAction({
+        userAction: {
+          name: 'fetchInstantProducts',
+          surfaceId: SHELL_SURFACE_ID,
+          sourceComponentId: INSTANT_PRODUCTS_ID,
+          context: {query: 'hiking boots'},
+        },
+      })
+    );
+    expect(session.getSnapshot().state).not.toBe(stateBefore);
+    await failRefresh();
+
     await pause();
     expect(options()).toEqual(['hiking boots', 'backpack']);
   });

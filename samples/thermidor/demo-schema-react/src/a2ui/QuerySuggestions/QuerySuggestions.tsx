@@ -6,6 +6,7 @@ import type {SuggestionSection} from '../../components/SuggestionsDropdown/index
 import {useDebouncedValue} from '../../hooks/use-debounced-value.js';
 import {useSearchBoxQuery} from '../SearchBox/search-box-context.js';
 import {
+  nodeState,
   useActionFailed,
   useLatestWhenFree,
   useReadSnapshot,
@@ -62,22 +63,27 @@ export const QuerySuggestions = createReactComponent(
     // A concurrent suggestion is not the session's request, so its dispatches in flight are counted.
     const [inFlight, setInFlight] = useState(0);
     const lastDispatch = useRef(0);
+    const surfaceId = context.dataContext.surface?.id;
+    const nodeId = context.componentModel.id;
+    const ownState = () =>
+      surfaceId === undefined ? undefined : nodeState(readSnapshot().state, surfaceId, nodeId);
     useLatestWhenFree(
       request,
       (latest) => {
         const payload: FetchSuggestionsPayload = {query: latest.query};
         const dispatch = ++lastDispatch.current;
-        const stateBefore = readSnapshot().state;
+        const stateBefore = ownState();
         setInFlight((count) => count + 1);
         void Promise.resolve(
           context.dispatchAction({event: {name: 'fetchSuggestions', context: payload}})
         ).then(() => {
           setInFlight((count) => count - 1);
           // A concurrent suggestion that fails, or that a newer one supersedes, resolves quietly
-          // without changing the state; only an applied answer shows what the edits left.
+          // without writing this node's state, which a streaming answer or the instant products
+          // leave as it was; only an applied answer shows what the edits left.
           if (
             dispatch !== lastDispatch.current ||
-            readSnapshot().state === stateBefore ||
+            ownState() === stateBefore ||
             actionFailed('QuerySuggestions', 'fetchSuggestions')
           ) {
             return;
@@ -88,7 +94,7 @@ export const QuerySuggestions = createReactComponent(
           }
         });
       },
-      'fetchSuggestions'
+      surfaceId === undefined ? undefined : {surfaceId, name: 'fetchSuggestions'}
     );
 
     const discarding = submitted || (typed === '' && props.query !== '');
