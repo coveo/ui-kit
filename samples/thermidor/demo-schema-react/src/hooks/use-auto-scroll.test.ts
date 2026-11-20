@@ -51,8 +51,8 @@ function setup({clientHeight = 800, turns = {'turn-1': 100} as Record<string, nu
     current: new Map(Object.entries(turns).map(([id, top]) => [id, createElement(top)])),
   };
   const containerRef = {current: container};
-  const render = (latestTurnId: string | null) =>
-    renderHook(({turns}) => useAutoScroll({containerRef, turnRefs, turns}), {
+  const render = (latestTurnId: string | null, restored?: boolean) =>
+    renderHook(({turns}) => useAutoScroll({containerRef, turnRefs, turns, restored}), {
       initialProps: {turns: thread(latestTurnId)},
     });
   const turn = (id: string) => turnRefs.current.get(id)!;
@@ -67,6 +67,29 @@ describe('useAutoScroll', () => {
 
     expect(container.scrollTo).toHaveBeenCalledWith({top: 80, behavior: 'smooth'});
   });
+
+  it.each(['wheel', 'touchstart', 'pointerdown', 'keydown'])(
+    'aligns a restored latest turn at once, and keeps it aligned as content above grows, until a %s',
+    (type) => {
+      const {container, turn, render} = setup({turns: {'turn-1': 900, 'turn-2': 1600}});
+      container.append(document.createElement('div'));
+
+      const {rerender} = render('turn-1', true);
+      expect(container.scrollTo).toHaveBeenLastCalledWith({top: 880});
+
+      turn('turn-1').getBoundingClientRect = () => ({top: 1300}) as DOMRect;
+      resizeCallbacks.forEach((callback) => callback());
+      expect(container.scrollTo).toHaveBeenLastCalledWith({top: 1280});
+
+      container.dispatchEvent(new Event(type));
+      turn('turn-1').getBoundingClientRect = () => ({top: 1500}) as DOMRect;
+      resizeCallbacks.forEach((callback) => callback());
+      expect(container.scrollTo).toHaveBeenLastCalledWith({top: 1280});
+
+      rerender({turns: thread('turn-2')});
+      expect(container.scrollTo).toHaveBeenLastCalledWith({top: 1580, behavior: 'smooth'});
+    }
+  );
 
   it('makes the latest turn tall enough for its start to reach the top', () => {
     const {turn, render} = setup({clientHeight: 500});

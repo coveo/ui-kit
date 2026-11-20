@@ -7,7 +7,7 @@ import {
   ASIDE_LISTBOX_ID,
 } from '../../components/SuggestionsDropdown/index.js';
 import {useMediaQuery} from '../../hooks/use-media-query.js';
-import {formatPrice} from '../../utils.js';
+import {formatConfiguredPrice as formatPrice} from '../../context/format-configured-price.js';
 import {useSearchBoxQuery} from '../SearchBox/search-box-context.js';
 import {ProductChildren} from '../ProductChildren/ProductChildren.js';
 import {usePromotedProduct} from '../ProductChildren/use-promoted-product.js';

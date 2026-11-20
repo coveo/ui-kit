@@ -1,5 +1,5 @@
 import {HttpResponse} from 'msw';
-import {buildStreamingResponse} from './events.js';
+import {RunError, buildStreamingResponse} from './events.js';
 import {schemaBundleEvents} from './templates/schema-response-bundle.js';
 import {schemaDiscoveryEvents} from './templates/schema-response-discovery.js';
 import {schemaFallbackEvents} from './templates/schema-response-fallback.js';
@@ -23,6 +23,7 @@ import {
   searchProductsFor,
   sortActionRejection,
 } from './templates/schema-response-search.js';
+import {PROGRESS_BLOCK_ACTIVITY_ID, PROGRESS_BLOCK_STATE_ACTIVITY_ID} from './templates/shared.js';
 import type {ConverseEvent} from './events.js';
 
 const DEFAULT_DELAY_MS = 25;
@@ -137,6 +138,24 @@ function withSurfaceIds(
   );
 }
 
+const PROGRESS_BLOCK_ACTIVITY_IDS = [PROGRESS_BLOCK_ACTIVITY_ID, PROGRESS_BLOCK_STATE_ACTIVITY_ID];
+
+// The progress block's two activity ids are per turn, like its surface id (Thermidor ADR-028), so
+// each prompt answer suffixes them the same way.
+function withProgressBlockActivityIds(
+  events: ConverseEvent[],
+  rename: (activityId: string) => string
+): ConverseEvent[] {
+  return events.map((event) => {
+    const {messageId} = event.data as {messageId?: unknown};
+    return event.event === 'ACTIVITY_SNAPSHOT' &&
+      typeof messageId === 'string' &&
+      PROGRESS_BLOCK_ACTIVITY_IDS.includes(messageId)
+      ? {...event, data: {...event.data, messageId: rename(messageId)}}
+      : event;
+  });
+}
+
 // Agent Gateway announces, in the AG-UI metadata of a surface snapshot, the actions whose answer it
 // gives as a new turn of the conversation (Thermidor ADR-019): those of a NextActionsBar.
 const NEXT_ACTIONS_BAR_TURN_OPENING_ACTIONS = ['selectAction', 'selectSearchOption'];
@@ -211,6 +230,34 @@ const actionNotApplicableResponse = () =>
     },
     {status: 400}
   );
+
+// A facet search for one of these words fails, so the demo can show a failed action: `fail` ends
+// the action's stream with Agent Gateway's RUN_ERROR, as when the Commerce API fails, and `reject`
+// rejects the request before the stream starts.
+const FAILING_FACET_SEARCHES = {
+  fail: () =>
+    buildStreamingResponse(
+      [
+        RunError({
+          message:
+            'An unexpected error occurred. Contact Coveo support. Documentation URL: https://docs.coveo.com/en/errors/agent/internal_error',
+          code: 'AGENT:INTERNAL_ERROR',
+        }),
+      ],
+      {delayBetweenMessages: ACTION_DELAY_MS}
+    ),
+  reject: actionNotApplicableResponse,
+};
+
+function failingFacetSearch(action: SchemaAction) {
+  if (action.name !== 'search') {
+    return undefined;
+  }
+  const query = queryOf(action).trim().toLowerCase();
+  return Object.hasOwn(FAILING_FACET_SEARCHES, query)
+    ? FAILING_FACET_SEARCHES[query as keyof typeof FAILING_FACET_SEARCHES]
+    : undefined;
+}
 
 const MAX_RECENT_QUERIES = 10;
 
@@ -318,6 +365,7 @@ const schemaBaseResponse = (body: unknown, session: SessionKeys) => {
     events = matchSchemaPrompt((body as Record<string, unknown>).message as string, mintSurfaceId);
   }
   events = withSurfaceIds(events, mintSurfaceId);
+  events = withProgressBlockActivityIds(events, mintSurfaceId);
   events = withTurnOpeningAnnouncements(events);
   recordRecentQuery(
     session.conversationSessionId,
@@ -381,6 +429,10 @@ function buildSchemaActionResponse(action: SchemaAction, session: SessionKeys) {
       ),
       {delayBetweenMessages: SUGGESTIONS_DELAY_MS}
     );
+  }
+  const failure = failingFacetSearch(action);
+  if (failure) {
+    return failure();
   }
   const sortRejection = sortActionRejection(action);
   if (sortRejection) {

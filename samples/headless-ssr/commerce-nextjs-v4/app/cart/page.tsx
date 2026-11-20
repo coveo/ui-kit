@@ -9,7 +9,7 @@ import {standaloneEngineDefinition} from '@/lib/commerce-engine';
 import {getNavigatorContext} from '@/lib/navigator-context';
 import {defaultContext} from '@/utils/context';
 
-export default async function Search() {
+export default async function CartPage() {
   const navigatorContext = await getNavigatorContext();
 
   // Fetches the cart items from an external service

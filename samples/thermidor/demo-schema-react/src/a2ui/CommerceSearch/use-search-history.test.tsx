@@ -1,6 +1,7 @@
 import {describe, it, expect, afterEach, beforeEach, vi} from 'vitest';
 import {act, cleanup, waitFor} from '@testing-library/react';
 import {mountSurface} from '../mount-surface.harness.js';
+import {RestoredSurfacesContext} from '../surface-controls.js';
 
 const SURFACE_ID = 'test-surface';
 
@@ -8,9 +9,14 @@ function paginationState(page: number) {
   return {path: '/state/pagination', value: {page, pageSize: 12, totalEntries: 43, totalPages: 4}};
 }
 
-function mountSearch(dispatchGate?: () => Promise<void>) {
+function mountSearch(dispatchGate?: () => Promise<void>, restored = false) {
   return mountSurface({
     dispatchGate,
+    wrapper: ({children}) => (
+      <RestoredSurfacesContext.Provider value={restored}>
+        {children}
+      </RestoredSurfacesContext.Provider>
+    ),
     component: {component: 'CommerceSearch', mainChild: 'pagination'},
     children: [
       {
@@ -75,6 +81,19 @@ describe('useSearchHistory', () => {
       thermidorSearch: {surfaceId: 'other-surface', snapshot: {query: '', page: 0, pageSize: 12}},
     });
 
+    expect(actions).toEqual([]);
+  });
+
+  it('keeps no history for a restored surface, whose actions the session refuses', async () => {
+    const pushState = vi.spyOn(window.history, 'pushState');
+    const {actions} = mountSearch(undefined, true);
+
+    popTo({
+      thermidorSearch: {surfaceId: SURFACE_ID, snapshot: {query: 'surf', page: 2, pageSize: 12}},
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(pushState).not.toHaveBeenCalled();
     expect(actions).toEqual([]);
   });
 

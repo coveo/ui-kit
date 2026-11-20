@@ -49,8 +49,8 @@ catalogs:
       specifier: 20.7.1
       version: 20.7.1
     '@coveo/thermidor-schema':
-      specifier: 1.0.0-beta.51
-      version: 1.0.0-beta.51
+      specifier: 1.0.0-beta.54
+      version: 1.0.0-beta.54
     '@msw/playwright':
       specifier: 0.6.7
       version: 0.6.7
@@ -1313,6 +1313,9 @@ importers:
         specifier: 'catalog:'
         version: 2.15.0(@types/node@24.19.2)(typescript@6.0.3)
     devDependencies:
+      '@coveo/thermidor-schema':
+        specifier: 'catalog:'
+        version: 1.0.0-beta.54(zod@4.6.7)
       '@types/node':
         specifier: 'catalog:'
         version: 24.19.2
@@ -1322,6 +1325,9 @@ importers:
       vitest:
         specifier: 'catalog:'
         version: 4.1.12(@opentelemetry/api@1.10.0)(@types/node@24.19.2)(@vitest/browser-playwright@4.1.12)(jsdom@30.1.3(@noble/hashes@1.8.0))(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(vite@8.3.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.1)(sass@1.108.1)(terser@5.51.2)(yaml@2.9.1))
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
 
   packages/pkg-new-template:
     dependencies:
@@ -2352,7 +2358,7 @@ importers:
         version: link:../../../packages/thermidor
       '@coveo/thermidor-schema':
         specifier: 'catalog:'
-        version: 1.0.0-beta.51(zod@3.25.76)
+        version: 1.0.0-beta.54(zod@3.25.76)
       react:
         specifier: 19.3.1
         version: 19.3.1
@@ -2398,7 +2404,7 @@ importers:
         version: link:../../../packages/thermidor
       '@coveo/thermidor-schema':
         specifier: 'catalog:'
-        version: 1.0.0-beta.51(zod@3.25.76)
+        version: 1.0.0-beta.54(zod@3.25.76)
       dompurify:
         specifier: 'catalog:'
         version: 3.4.17
@@ -3765,8 +3771,8 @@ packages:
   '@coveo/semantic-monorepo-tools@2.7.1':
     resolution: {integrity: sha512-yPUdpPgoZWxX/lyhQWaskwGXS4ZFLsOK4QVUyD+1BtOk/827vqw93Q7UD4aumuYMVKTDnGjjHOEmHl07nzUvYw==}
 
-  '@coveo/thermidor-schema@1.0.0-beta.51':
-    resolution: {integrity: sha512-chkiD06oVhCr/0rYqmmC9lV/uApV14d7UDThHvfugGViOtU6j04gZPUUYCnC1x1UzTt+F6b1EYfB38XDiiaGZA==}
+  '@coveo/thermidor-schema@1.0.0-beta.54':
+    resolution: {integrity: sha512-KYgJGX8vVZAKefy4n3WmwEF3YGFsf1Qv5NobvfVMbKtE4a5H0q490VKgQJXrXFBPOfBJlHxqleUeqpuDaES/Tw==}
     engines: {node: '>=22.14.0'}
     peerDependencies:
       zod: ^3.25 || ^4.4.3
@@ -18875,9 +18881,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@coveo/thermidor-schema@1.0.0-beta.51(zod@3.25.76)':
+  '@coveo/thermidor-schema@1.0.0-beta.54(zod@3.25.76)':
     dependencies:
       zod: 3.25.76
+
+  '@coveo/thermidor-schema@1.0.0-beta.54(zod@4.6.7)':
+    dependencies:
+      zod: 4.6.7
 
   '@cspell/cspell-bundled-dicts@10.4.1':
     dependencies:

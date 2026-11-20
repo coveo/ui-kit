@@ -293,7 +293,8 @@ describe('createMockConverseServer', () => {
         [surfaceId]: ['selectAction', 'selectSearchOption'],
       }))
     );
-  });
+    // The bundle turn streams its progress block's steps first.
+  }, 15_000);
 
   describe('schema sessions', () => {
     interface SseEvent {
@@ -690,6 +691,105 @@ describe('createMockConverseServer', () => {
           interval: 200,
         })
         .toBe(200);
+    });
+
+    describe('a facet search for a failing word', () => {
+      const searchBrands = (
+        keys: {conversationSessionId: string; conversationToken: string},
+        surfaceId: string,
+        query: string
+      ) =>
+        postSchema({
+          message: null,
+          ...keys,
+          action: {
+            name: 'search',
+            surfaceId,
+            sourceComponentId: 'facet-brand-2',
+            context: {query},
+          },
+        });
+
+      const startSearch = async () => {
+        const keys = sessionKeys(await initialize());
+        const events = parseEvents((await postSchema({message: 'water sports', ...keys})).body);
+        const searchSurfaceId = createdSurfaceIds(events).find((surfaceId) =>
+          surfaceId.startsWith('ui-commerce-water-sports-')
+        )!;
+        return {keys, searchSurfaceId};
+      };
+
+      it("ends the action's stream with the gateway's RUN_ERROR for `fail`", async () => {
+        await startServer();
+        const {keys, searchSurfaceId} = await startSearch();
+
+        const res = await searchBrands(keys, searchSurfaceId, ' Fail ');
+
+        expect(res.statusCode).toBe(200);
+        expect(res.headers['content-type']).toBe('text/event-stream');
+        expect(parseEvents(res.body)).toEqual([
+          {
+            event: 'RUN_ERROR',
+            data: {
+              type: 'RUN_ERROR',
+              message:
+                'An unexpected error occurred. Contact Coveo support. Documentation URL: https://docs.coveo.com/en/errors/agent/internal_error',
+              code: 'AGENT:INTERNAL_ERROR',
+            },
+          },
+        ]);
+      });
+
+      it('rejects the request before its stream starts for `reject`', async () => {
+        await startServer();
+        const {keys, searchSurfaceId} = await startSearch();
+
+        const res = await searchBrands(keys, searchSurfaceId, 'reject');
+
+        expect(res.statusCode).toBe(400);
+        expect(res.headers['access-control-allow-origin']).toBe('*');
+        expect(JSON.parse(res.body)).toEqual({
+          errorCode: 'AGENT:ACTION_NOT_APPLICABLE',
+          message: expect.any(String),
+        });
+      });
+
+      it('leaves the session free, so the next search is answered', async () => {
+        await startServer();
+        const {keys, searchSurfaceId} = await startSearch();
+        await searchBrands(keys, searchSurfaceId, 'fail');
+        await searchBrands(keys, searchSurfaceId, 'reject');
+
+        const res = await searchBrands(keys, searchSurfaceId, 'o');
+        const brandFacet = statesByNode(parseEvents(res.body))[
+          `${searchSurfaceId} /state/facet-brand-2`
+        ] as {facetSearch?: {query?: string}};
+
+        expect(res.statusCode).toBe(200);
+        expect(brandFacet.facetSearch?.query).toBe('o');
+      });
+
+      it.each(['fail', 'reject'])(
+        'answers another action whose query is `%s` as usual',
+        async (query) => {
+          await startServer();
+          const {keys, searchSurfaceId} = await startSearch();
+
+          const res = await postSchema({
+            message: null,
+            ...keys,
+            action: {
+              name: 'restoreState',
+              surfaceId: searchSurfaceId,
+              sourceComponentId: 'root',
+              context: {query, page: 0, pageSize: 12},
+            },
+          });
+
+          expect(res.statusCode).toBe(200);
+          expect(parseEvents(res.body).map(({event}) => event)).not.toContain('RUN_ERROR');
+        }
+      );
     });
 
     it('answers 409 to a request on a session with a request in flight', async () => {

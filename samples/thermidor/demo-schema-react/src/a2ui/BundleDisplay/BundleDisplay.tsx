@@ -3,11 +3,8 @@ import {Fragment, useState} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {BundleSlot, BundleTier} from '@coveo/thermidor-schema';
 import {BundleDisplayPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {formatConfiguredPrice as formatPrice} from '../../context/format-configured-price.js';
 import styles from './BundleDisplay.module.css';
-
-function formatPrice(value: number): string {
-  return `$${value.toFixed(2)}`;
-}
 
 /**
  * A2-UI component for the `bundle-display` container.

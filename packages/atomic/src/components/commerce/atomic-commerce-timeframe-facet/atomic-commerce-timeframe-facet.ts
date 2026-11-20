@@ -24,6 +24,7 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {parseDate} from '@/src/utils/date-utils';
+import {warnDeprecatedOnce} from '@/src/utils/deprecation-utils';
 import '../../common/atomic-facet-date-input/atomic-facet-date-input';
 import {bindings} from '@/src/decorators/bindings';
 import type {FacetDateInputEventDetails} from '../../common/atomic-facet-date-input/atomic-facet-date-input';
@@ -34,6 +35,9 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
 /**
  * A facet is a list of values for a certain field occurring in the products.
  * An `atomic-commerce-timeframe-facet` displays a facet of the products for the current query as date intervals.
+ *
+ * @deprecated The Commerce API removes date range facets in June 2027, with no replacement, and Headless
+ * deprecates `DateFacet`. This component will be removed in the next major version of Atomic.
  *
  * @part facet - The wrapper for the entire facet.
  * @part label-button - The header button to expand/collapse the facet.
@@ -109,6 +113,11 @@ export class AtomicCommerceTimeframeFacet
   }
 
   public initialize() {
+    warnDeprecatedOnce(
+      this.bindings.engine.logger,
+      'The `atomic-commerce-timeframe-facet` component',
+      'Remove the date range facets from your commerce facet configuration, and any code that uses or styles this component: the Commerce API removes date range facets in June 2027, with no replacement.'
+    );
     this.validateFacet();
   }
 

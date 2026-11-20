@@ -1,12 +1,9 @@
 import {useId} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import {type NumericFacetAction, NumericFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
+import {formatFieldNumber} from '../../context/format-configured-price.js';
 import {useOptimisticNumericFacet} from './use-optimistic-numeric-facet.js';
 import styles from './NumericFacet.module.css';
-
-function formatRange(start: number, end: number): string {
-  return `$${start} - $${end}`;
-}
 
 /**
  * A2-UI component for the `numeric-facet`. The generic binder resolves the facet state from
@@ -59,7 +56,10 @@ export const NumericFacet = createReactComponent(
                   aria-pressed={isSelected}
                   onClick={() => optimisticFacet.toggleSingleSelect(value.start, value.end)}
                 >
-                  <span className={styles.valueLabel}>{formatRange(value.start, value.end)}</span>
+                  <span className={styles.valueLabel}>
+                    {formatFieldNumber(props.field, value.start)} -{' '}
+                    {formatFieldNumber(props.field, value.end)}
+                  </span>
                   <span className={styles.count}>({value.numberOfResults})</span>
                 </button>
               </li>

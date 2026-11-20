@@ -10,6 +10,7 @@ let runSequence = 0;
 type ConverseEventType =
   | 'RUN_STARTED'
   | 'RUN_FINISHED'
+  | 'RUN_ERROR'
   | 'ACTIVITY_SNAPSHOT'
   | 'turn_started'
   | 'turn_complete'
@@ -70,6 +71,13 @@ const RunFinished = (options: {threadId?: string; runId?: string} = {}): Convers
     threadId: options.threadId ?? DEFAULT_THREAD_ID,
     runId: options.runId ?? `run-${runSequence}-${Date.now().toString(36)}`,
   },
+});
+
+// Agent Gateway's `RunErrorEvent`: the code is an `AGENT:*` error code, such as
+// `AGENT:INTERNAL_ERROR`.
+const RunError = (options: {message: string; code: string}): ConverseEvent => ({
+  event: 'RUN_ERROR',
+  data: {type: 'RUN_ERROR', message: options.message, code: options.code},
 });
 
 const StateSnapshot = (snapshot: Record<string, unknown> = {}): ConverseEvent => ({
@@ -302,6 +310,7 @@ export {
   TurnComplete,
   RunStarted,
   RunFinished,
+  RunError,
   StateSnapshot,
   TextMessageStart,
   TextMessageContent,

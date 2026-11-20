@@ -8,6 +8,9 @@ import {
   type A2uiComponentNode,
   deleteSurfaceMessage,
   loadingSurfaceMessage,
+  createProgressBlock,
+  updateProgressBlock,
+  type ProgressStep,
 } from './shared.js';
 import {
   ActivitySnapshot,
@@ -246,7 +249,14 @@ const nextActionsPlaceholderActivity: ConverseEvent = ActivitySnapshot({
   },
 });
 
+const THINKING: ProgressStep = {id: 'thinking', label: 'Thinking'};
+const PREPARING_RESPONSE: ProgressStep = {id: 'preparing_response', label: 'Putting it together'};
+const CHECKING_DETAILS: ProgressStep = {id: 'checking_details', label: 'Checking product details'};
+const READING_REVIEWS: ProgressStep = {id: 'reading_reviews', label: 'Reading reviews'};
+
+// Two steps run at once, and each ends on its own (ADR-028).
 const middleEvents: ConverseEvent[] = [
+  createProgressBlock([THINKING]),
   ...toolCall({
     toolCallId: 'tc-route-comparison',
     toolCallName: 'route_comparison',
@@ -255,7 +265,9 @@ const middleEvents: ConverseEvent[] = [
     resultMessageId: 'tc-route-comparison-result',
     resultContent: '"Routed to comparison flow."',
   }),
+  {...updateProgressBlock([THINKING], [CHECKING_DETAILS, READING_REVIEWS]), delayMs: 400},
   {...comparisonPlaceholderActivity, delayMs: 300},
+  {...updateProgressBlock([THINKING, CHECKING_DETAILS], [READING_REVIEWS]), delayMs: 400},
   ...toolCall({
     toolCallId: 'tc-store-render-plan',
     toolCallName: 'store_render_plan',
@@ -264,6 +276,10 @@ const middleEvents: ConverseEvent[] = [
     resultMessageId: 'tc-store-render-plan-result',
     resultContent: '"Stored render plan for route \'comparison\' with 3 products."',
   }),
+  {
+    ...updateProgressBlock([THINKING, CHECKING_DETAILS, READING_REVIEWS], [PREPARING_RESPONSE]),
+    delayMs: 400,
+  },
   ...textMessage(
     'msg-comparison-table',
     'Your cold-water wetsuit comparison is ready. ThermoFlex ($399.99) delivers maximum warmth with 7mm thickness for extreme conditions, while ZenSurf and EcoWave (both $299.99) offer excellent durability and sustainability with lighter flexibility—all backed by 3-year warranties and premium seams.'
@@ -273,6 +289,7 @@ const middleEvents: ConverseEvent[] = [
   {...nextActionsPlaceholderActivity, delayMs: 100},
   {...nextActionsSurfaceActivity, delayMs: 800},
   {...nextActionsStateActivity, delayMs: 50},
+  updateProgressBlock([THINKING, CHECKING_DETAILS, READING_REVIEWS, PREPARING_RESPONSE]),
 ];
 
 const schemaComparisonEvents: ConverseEvent[] = buildConversationResponse({

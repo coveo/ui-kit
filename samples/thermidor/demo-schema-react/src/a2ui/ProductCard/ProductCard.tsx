@@ -1,5 +1,5 @@
 import {useContext} from 'react';
-import {formatPrice} from '../../utils.js';
+import {formatConfiguredPrice as formatPrice} from '../../context/format-configured-price.js';
 import {ProductCardActionsContext} from './product-card-actions.js';
 import styles from './ProductCard.module.css';
 

@@ -23,6 +23,19 @@ PORT=4000 pnpm --filter @coveo/mock-converse-api start
 Supported prompts and response templates are inherited directly from
 `@coveo/platform-mock-api/converse`.
 
+## Making an action fail
+
+A facet search (the `search` action of a `RegularFacet` or `CategoryFacet`) for one of these
+words fails, so a client can show a failed action. Search a facet of the `water sports` answer:
+
+| Search for | What the mock answers                                                                                                                |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `fail`     | HTTP `200` with a stream of one `RUN_ERROR` (`AGENT:INTERNAL_ERROR`), as Agent Gateway ends an action whose Commerce API call failed |
+| `reject`   | HTTP `400` `AGENT:ACTION_NOT_APPLICABLE`, as Agent Gateway rejects an action before its stream starts                                |
+
+The words match whole and ignore case and surrounding spaces. Neither failure changes the search
+surface, and the next action is answered as usual.
+
 ## CORS and method handling
 
 - `OPTIONS` on Converse routes returns `204` with permissive CORS headers.

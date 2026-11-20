@@ -18,9 +18,27 @@ function renderPage(overrides: Partial<Parameters<typeof ConversationPage>[0]> =
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
 });
 
 describe('ConversationPage shell', () => {
+  describe('scroll', () => {
+    it.each([
+      ['a restored conversation from its last prompt, at once', 'complete', {top: -20}],
+      ['a new conversation from its turn', 'streaming', {top: -20, behavior: 'smooth'}],
+    ] as const)('shows %s', (_name, status, expected) => {
+      vi.stubGlobal('requestAnimationFrame', (callback: () => void) => {
+        callback();
+        return 0;
+      });
+      const scrollTo = vi.spyOn(Element.prototype, 'scrollTo');
+
+      renderPage({turns: [makeTurn({id: 'turn-1', status})]});
+
+      expect(scrollTo).toHaveBeenCalledWith(expected);
+    });
+  });
+
   describe('search box', () => {
     it('renders the search box', async () => {
       renderPage();
