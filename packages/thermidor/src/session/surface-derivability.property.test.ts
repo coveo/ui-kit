@@ -43,7 +43,7 @@ const createSurfaceArbitrary = fc
     isLoading: fc.option(fc.boolean(), {nil: undefined}),
   })
   .map(({surfaceId, rootComponentType, isLoading}) => ({
-    version: 'v1.0',
+    version: '1.0',
     createSurface: {
       surfaceId,
       catalogId: 'commerce',
@@ -53,7 +53,7 @@ const createSurfaceArbitrary = fc
   }));
 
 const deleteSurfaceArbitrary = surfaceIdArbitrary.map((surfaceId) => ({
-  version: 'v1.0',
+  version: '1.0',
   deleteSurface: {surfaceId},
 }));
 
@@ -65,7 +65,7 @@ const updateDataModelArbitrary = fc
     isLoading: fc.boolean(),
   })
   .map(({surfaceId, path, isLoading}) => ({
-    version: 'v1.0',
+    version: '1.0',
     updateDataModel: {
       surfaceId,
       ...(path === undefined ? {} : {path}),

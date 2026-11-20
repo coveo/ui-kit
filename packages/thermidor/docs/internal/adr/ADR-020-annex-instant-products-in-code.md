@@ -200,7 +200,7 @@ function applyUnrecorded(messages: readonly unknown[]): void {
       ),
       rendererStream: appendToRendererStream(
         current.rendererStream ?? EMPTY_RENDERER_STREAM,
-        convertA2uiMessages(writes)
+        writes
       ),
     };
   });

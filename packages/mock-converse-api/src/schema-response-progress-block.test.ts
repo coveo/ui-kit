@@ -19,6 +19,7 @@ const AGENT_PROMPTS = [
 const SEARCH_PROMPTS = ['water sports', 'water sprots', 'swim gear', 'kayak'];
 
 interface SurfaceMessage {
+  version?: string;
   createSurface?: {
     surfaceId: string;
     components: Array<Record<string, unknown>>;
@@ -123,6 +124,26 @@ describe('the progress block (ADR-028)', () => {
       const last = states.at(-1)!;
       expect(last.status).toBe('complete');
       expect(last.steps.every(({status}) => status === 'done')).toBe(true);
+    }
+  );
+
+  it.each(AGENT_PROMPTS)(
+    'carries the A2-UI "1.0" envelope and UAX #31 component ids for "%s"',
+    (prompt) => {
+      const {creates, createSurface, updates} = progressBlock(bodies.get(prompt)!);
+
+      const messages = [...creates, ...updates].flatMap(({content}) => content.messages);
+      expect(messages.length).toBeGreaterThan(1);
+      for (const message of messages) {
+        expect(message.version).toBe('1.0');
+      }
+      for (const {id} of createSurface!.components) {
+        expect(id).toMatch(/^[a-z][a-z0-9_]*$/);
+      }
+      expect(createSurface!.components[0]).toMatchObject({
+        steps: {'@path': '/state/root/steps'},
+        status: {'@path': '/state/root/status'},
+      });
     }
   );
 

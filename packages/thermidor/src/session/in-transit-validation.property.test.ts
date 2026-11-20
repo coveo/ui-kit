@@ -62,7 +62,7 @@ function foldState(events: NormalizedStreamEvent[]): A2uiState {
 
 const NUM_RUNS = 200;
 
-const NODE_ID = 'pagination-2';
+const NODE_ID = 'pagination_2';
 const SURFACE_ID = 'ui-1';
 const STATE_ROOT = statePath(NODE_ID);
 const PAGINATION_FIELDS = ['page', 'pageSize', 'totalEntries', 'totalPages'] as const;

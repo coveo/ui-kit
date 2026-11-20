@@ -141,7 +141,7 @@ describe('createMockConverseServer', () => {
       action: {
         name: 'selectPage',
         context: {page: 1},
-        sourceComponentId: 'pagination-2',
+        sourceComponentId: 'pagination_2',
         surfaceId,
       },
     });
@@ -218,7 +218,7 @@ describe('createMockConverseServer', () => {
       },
       JSON.stringify({
         message: null,
-        action: {name: 'selectPage', sourceComponentId: 'pagination-1', context: {page: 1}},
+        action: {name: 'selectPage', sourceComponentId: 'pagination_1', context: {page: 1}},
       })
     );
 
@@ -252,7 +252,7 @@ describe('createMockConverseServer', () => {
       action: {
         name: 'selectPage',
         surfaceId: searchSurfaceId,
-        sourceComponentId: 'pagination-1',
+        sourceComponentId: 'pagination_1',
         context: {page: 1},
       },
     });
@@ -373,9 +373,9 @@ describe('createMockConverseServer', () => {
       expect(createSurface).toMatchObject({
         components: [
           {id: 'root', component: 'SessionShell'},
-          {id: 'search-box', component: 'SearchBox'},
-          {id: 'query-suggestions', component: 'QuerySuggestions'},
-          {id: 'instant-products', component: 'InstantProducts'},
+          {id: 'search_box', component: 'SearchBox'},
+          {id: 'query_suggestions', component: 'QuerySuggestions'},
+          {id: 'instant_products', component: 'InstantProducts'},
         ],
       });
       expect(createdSurfaceIds(second)[0]).not.toBe(createdSurfaceIds(first)[0]);
@@ -388,7 +388,7 @@ describe('createMockConverseServer', () => {
             dataModel: {state: Record<string, {recentQueries: string[]}>};
           }
       );
-      return createSurface.dataModel.state['query-suggestions'].recentQueries;
+      return createSurface.dataModel.state['query_suggestions'].recentQueries;
     };
 
     const openSessionWithRecentQuery = async () => {
@@ -523,7 +523,7 @@ describe('createMockConverseServer', () => {
           action: {
             name: 'fetchSuggestions',
             surfaceId,
-            sourceComponentId: 'query-suggestions',
+            sourceComponentId: 'query_suggestions',
             context: {query},
           },
         });
@@ -535,11 +535,11 @@ describe('createMockConverseServer', () => {
       const otherSurface = await postFetchSuggestions('surf', 'not-the-shell');
 
       expect(sessionKeys(surf)).toEqual(keys);
-      expect(statesByNode(surf)[`${shellId} /state/query-suggestions`]).toMatchObject({
+      expect(statesByNode(surf)[`${shellId} /state/query_suggestions`]).toMatchObject({
         query: 'surf',
         completions: [{expression: 'surfboards'}, {}, {}, {}, {}],
       });
-      expect(statesByNode(empty)[`${shellId} /state/query-suggestions`]).toEqual({
+      expect(statesByNode(empty)[`${shellId} /state/query_suggestions`]).toEqual({
         query: '',
         recentQueries: [],
         completions: [],
@@ -566,12 +566,12 @@ describe('createMockConverseServer', () => {
         postSchema({
           message: null,
           ...keys,
-          action: {name, surfaceId: shellId, sourceComponentId: 'query-suggestions', context},
+          action: {name, surfaceId: shellId, sourceComponentId: 'query_suggestions', context},
         });
       const recentQueries = async () =>
         (
           statesByNode(parseEvents((await act('fetchSuggestions', {query: ''})).body))[
-            `${shellId} /state/query-suggestions`
+            `${shellId} /state/query_suggestions`
           ] as {recentQueries: string[]}
         ).recentQueries;
 
@@ -603,7 +603,7 @@ describe('createMockConverseServer', () => {
         action: {
           name: 'fetchInstantProducts',
           surfaceId,
-          sourceComponentId: 'instant-products',
+          sourceComponentId: 'instant_products',
           context: {query},
         },
       });
@@ -624,7 +624,7 @@ describe('createMockConverseServer', () => {
       expect(products.statusCode).toBe(200);
       expect(products.headers['access-control-allow-origin']).toBe('*');
       expect(
-        statesByNode(parseEvents(products.body))[`${shellId} /state/instant-products`]
+        statesByNode(parseEvents(products.body))[`${shellId} /state/instant_products`]
       ).toMatchObject({query: 'surfboards', products: [{}, {}, {}, {}]});
       expect(conflict.statusCode).toBe(409);
       expect((await prompt).statusCode).toBe(200);
@@ -637,13 +637,13 @@ describe('createMockConverseServer', () => {
         action: {
           name: 'selectPage',
           surfaceId: searchSurfaceId,
-          sourceComponentId: 'pagination-2',
+          sourceComponentId: 'pagination_2',
           context: {page: 1},
         },
       });
       expect(page.statusCode).toBe(200);
       expect(
-        statesByNode(parseEvents(page.body))[`${searchSurfaceId} /state/query-summary-2`]
+        statesByNode(parseEvents(page.body))[`${searchSurfaceId} /state/query_summary_2`]
       ).toMatchObject({query: 'Water Sports'});
     });
 
@@ -705,7 +705,7 @@ describe('createMockConverseServer', () => {
           action: {
             name: 'search',
             surfaceId,
-            sourceComponentId: 'facet-brand-2',
+            sourceComponentId: 'facet_brand_2',
             context: {query},
           },
         });
@@ -762,7 +762,7 @@ describe('createMockConverseServer', () => {
 
         const res = await searchBrands(keys, searchSurfaceId, 'o');
         const brandFacet = statesByNode(parseEvents(res.body))[
-          `${searchSurfaceId} /state/facet-brand-2`
+          `${searchSurfaceId} /state/facet_brand_2`
         ] as {facetSearch?: {query?: string}};
 
         expect(res.statusCode).toBe(200);

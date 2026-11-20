@@ -12,6 +12,16 @@ const PROMPTS = [
   'tell me more about the thermoflex winter wetsuit',
 ];
 
+// The props each placeholder's component requires in the catalog. An A2-UI v1.0 renderer rejects a
+// component that misses one, so a placeholder binds them.
+const REQUIRED_PROPS: Record<string, string[]> = {
+  BundleDisplay: ['tiers'],
+  ComparisonTable: ['heading', 'summary', 'products', 'attributes'],
+  NextActionsBar: ['suggestedActions'],
+  ProductCarousel: ['heading', 'products'],
+  ProductResearchCard: ['product', 'summary', 'bullets'],
+};
+
 interface SurfaceSnapshot {
   messageId: string;
   replace: boolean;
@@ -49,7 +59,26 @@ describe.each(PROMPTS)('loading placeholders for "%s"', (prompt) => {
     for (const {messages} of placeholders) {
       expect(messages).toHaveLength(1);
       const createSurface = messages[0].createSurface as Record<string, unknown>;
-      expect(createSurface.components).toEqual([{id: 'root', component: expect.any(String)}]);
+      expect(createSurface.components).toEqual([
+        expect.objectContaining({id: 'root', component: expect.any(String)}),
+      ]);
+    }
+  });
+
+  it('binds the required props of each placeholder root', () => {
+    for (const {messages} of placeholders) {
+      const createSurface = messages[0].createSurface as Record<string, unknown>;
+      const [root] = createSurface.components as Array<Record<string, unknown>>;
+      const component = root.component as string;
+
+      expect(REQUIRED_PROPS).toHaveProperty(component);
+      expect(root).toEqual({
+        id: 'root',
+        component,
+        ...Object.fromEntries(
+          REQUIRED_PROPS[component].map((prop) => [prop, {'@path': `/state/root/${prop}`}])
+        ),
+      });
     }
   });
 
@@ -61,7 +90,7 @@ describe.each(PROMPTS)('loading placeholders for "%s"', (prompt) => {
 
       expect(content?.replace).toBe(true);
       expect(content?.messages[0]).toEqual({
-        version: 'v1.0',
+        version: '1.0',
         deleteSurface: {surfaceId: createSurface.surfaceId},
       });
       expect(content?.messages.some(isLoadingCreate)).toBe(false);

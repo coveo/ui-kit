@@ -74,10 +74,10 @@ describe('schema-response-comparison related documents', () => {
       {
         id: 'root',
         component: 'ComparisonTable',
-        heading: {path: '/state/root/heading'},
-        summary: {path: '/state/root/summary'},
-        products: {path: '/state/root/products'},
-        attributes: {path: '/state/root/attributes'},
+        heading: {'@path': '/state/root/heading'},
+        summary: {'@path': '/state/root/summary'},
+        products: {'@path': '/state/root/products'},
+        attributes: {'@path': '/state/root/attributes'},
       },
     ]);
   });

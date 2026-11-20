@@ -33,7 +33,7 @@ ADR-013 describes no longer matches the code:
 
 - State no longer arrives as an AG-UI snapshot the client indexes by `componentId`. It arrives via
   A2-UI `updateDataModel` operations under `/state/<id>` and reaches the renderer already resolved
-  through `{ path }` bindings. There is no per-node state accessor to vend.
+  through `{ "@path" }` bindings. There is no per-node state accessor to vend.
 - Dispatch is no longer a per-node controller method. It is a single session entry point,
   `Session.dispatchAction`, wired to the renderer's action binding.
 
@@ -61,14 +61,14 @@ rather than let an accepted decision silently drift from the code (charter, ADR-
   the A2-UI `/state/<id>` data model.
 - **Pros:** No public-API removal; ADR-013 stays roughly valid.
 - **Cons:** Preserves the exact indirection the new transport makes unnecessary — the renderer
-  already receives resolved state through its `{ path }` bindings, so a per-node accessor is dead
+  already receives resolved state through its `{ "@path" }` bindings, so a per-node accessor is dead
   weight. Keeps duplicated identity (`componentId` + `componentType`) as props purely to drive a
   lookup that no longer exists. Contradicts the transport it wraps.
 
 ### Option B (selected): Remove the remote controller; consume resolved state + a single dispatch entry point
 
 - **Summary:** Delete the public `RemoteController` API and its internal join. State arrives resolved
-  in the renderer's `props` via `{ path }` bindings; actions go through one framework-neutral
+  in the renderer's `props` via `{ "@path" }` bindings; actions go through one framework-neutral
   `Session.dispatchAction`. Contract validation is relocated (not removed): inbound `updateDataModel`
   ops are validated on the fold; outbound action payloads are validated in the private dispatch path.
 - **Pros:** Removes a whole layer; no duplicated identity in props; a single dispatch seam the
@@ -87,7 +87,7 @@ inline.
 - **Removed (public + internal):** `session.remoteController`, `buildRemoteController`, the
   `RemoteControllerSource` type, and `selectRemoteControllerState`. The removal is guarded by an
   import-boundary test so the symbols cannot silently reappear.
-- **State:** delivered to the renderer already resolved via A2-UI `{ path }` bindings against the
+- **State:** delivered to the renderer already resolved via A2-UI `{ "@path" }` bindings against the
   data model that `updateDataModel` populates; no per-node accessor, no `useRemoteController`.
 - **Actions:** dispatched through the single `Session.dispatchAction`, which unwraps the standard
   A2-UI client message, resolves the component discriminant from the active turn's surfaces, validates

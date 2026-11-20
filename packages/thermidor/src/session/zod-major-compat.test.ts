@@ -25,7 +25,7 @@ import {statePath} from './state-path.js';
  */
 
 const SURFACE_ID = 'ui-surface-1';
-const PAGINATION_ID = 'pagination-2';
+const PAGINATION_ID = 'pagination_2';
 
 /** Zod 4 dialect — mirrors the generated default build. */
 function buildZod4Contracts(): ContractsSchema {

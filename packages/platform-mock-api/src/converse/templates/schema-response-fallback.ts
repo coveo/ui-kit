@@ -27,7 +27,7 @@ const surfaceActivitySnapshot: ConverseEvent = ActivitySnapshot({
   content: {
     messages: [
       {
-        version: 'v1.0',
+        version: '1.0',
         createSurface: {
           surfaceId: NEXT_ACTIONS_SURFACE_ID,
           catalogId: CATALOG_ID,

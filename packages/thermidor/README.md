@@ -10,7 +10,7 @@ The package is private, experimental, and consumed only inside this monorepo (by
 
 The server streams schema-defined [A2UI](https://github.com/google/A2UI) components; the client renders what the server sends. Thermidor's job is to transmit consumer input to the endpoint and fold the streamed result into an observable list of turns — it derives no use-case behavior beyond that fold. The contracts schema, the endpoint URL, and the ambient context are all consumer-injected, so a single package build serves public, internal (private-registry schema), and proxied deployments.
 
-Component state travels **inline** through the A2-UI data model: the server sends `updateDataModel` operations under `/state/<id>`, and the frozen renderer resolves each prop through an A2-UI Data_Binding (`{ path: <JSON Pointer> }`) against that data model. Renderers are "dumb": they receive resolved state in their `props` and never hydrate a controller or join a snapshot themselves. A2-UI is the only supported state source. This inline model superseded the earlier remote-controller / AG-UI `StateSnapshot` design.
+Component state travels **inline** through the A2-UI data model: the server sends `updateDataModel` operations under `/state/<id>`, and the renderer resolves each prop through an A2-UI Data_Binding (`{ "@path": <JSON Pointer> }`) against that data model. Renderers are "dumb": they receive resolved state in their `props` and never hydrate a controller or join a snapshot themselves. A2-UI is the only supported state source. This inline model superseded the earlier remote-controller / AG-UI `StateSnapshot` design.
 
 ## Public surface
 
@@ -41,13 +41,13 @@ await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me r
 | `turns`                   | Readonly observable list of `Turn`s folded from the stream (empty initially).                                                                                                                                                                                          |
 | `initialization`          | The run of the `initialize` action that opened the session, or `undefined`. See [Opening the session](#opening-the-session).                                                                                                                                           |
 | `surfaces`                | Every live surface of the session, in creation order, whichever run created it.                                                                                                                                                                                        |
-| `a2uiMessages`            | The session's whole renderer stream, in the A2-UI v0.9 shape. It only grows: feed each new message to one renderer once.                                                                                                                                               |
+| `a2uiMessages`            | The session's whole renderer stream: Agent Gateway's A2-UI v1.0 messages, unchanged. It only grows: feed each new message to one renderer once.                                                                                                                        |
 | `state`                   | The validated data model of every live surface, keyed by surface id.                                                                                                                                                                                                   |
 | `actionError`             | The last component action that failed, unless it is concurrent or only failed the turn it opened (`ActionError`: `message`, `errorCode?`, `component`, `name`, `surfaceId`, `sourceComponentId`), or `undefined`. See [Concurrency conflicts](#concurrency-conflicts). |
 | `request`                 | The request being sent, or `undefined` when idle. See [One request at a time](#one-request-at-a-time).                                                                                                                                                                 |
 | `subscribe(listener)`     | Registers a listener called once per change to the session, such as to the turn list, the initialization, `state`, `actionError` or `request`, the answers to concurrent actions included.                                                                             |
 | `getSnapshot()`           | `turns`, `initialization`, `surfaces`, `a2uiMessages`, `state`, `request` and `actionError` as one immutable `SessionSnapshot`, replaced on change.                                                                                                                    |
-| `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's `onAction`.                                                                                                                                                |
+| `dispatchAction(message)` | The single entry point for prompts (`submitPrompt`) and component actions, wired directly as the renderer's action handler.                                                                                                                                            |
 | `cancel()`                | Stops the request in flight, but no concurrent action.                                                                                                                                                                                                                 |
 | `retry(turnId)`           | Re-submits the last turn's input when it errored: its prompt, or the action that opened it. Withheld while a request is in flight.                                                                                                                                     |
 | `retryInitialization()`   | Sends `initialize` again when `initialization.status` is `'error'`. See [Opening the session](#opening-the-session).                                                                                                                                                   |
@@ -81,19 +81,19 @@ It opens a new streaming turn, records the prompt as the turn's `input.prompt`, 
 
 ### Component actions
 
-A component action is the standard A2-UI client-to-server message (`A2uiClientMessage`) that the frozen renderer hands to its `onAction` handler, so it wires with no adapter:
+A component action is the action an A2-UI v1.0 renderer reports (`A2uiRendererAction`: `name`, `surfaceId`, `sourceComponentId`, `context`). It is the payload that `@a2ui/web_core`'s `MessageProcessor`, which `@a2ui/react` renders from, passes to its action handler, so it wires with no adapter:
 
 ```typescript
-<A2UIProvider catalog={catalog} onAction={session.dispatchAction}>{/* … */}</A2UIProvider>
+const processor = new MessageProcessor(catalogs, session.dispatchAction, {version: '1.0'});
 ```
 
-Given a message, `dispatchAction` unwraps its `userAction`, recovers the dispatching component's discriminant from the session's live surfaces, whichever run created them, validates the action payload against the component's injected contract internally, and — on success — POSTs the action to the converse endpoint.
+Given an action, `dispatchAction` recovers the dispatching component's discriminant from the session's live surfaces, whichever run created them, validates the action payload against the component's injected contract internally, and — on success — POSTs the action to the converse endpoint.
 
 An action the producer announces as opening a turn, such as a follow-up chip or a search option, is answered as a new turn of the conversation, as a prompt is. The producer announces it with the surface, in the AG-UI `metadata` of its snapshot (`metadata.turnOpeningActions`, by surface id), so the consumer declares nothing and the turn opens as soon as the shopper picks the action. Such an action opens a new streaming turn whose `input.action` records it (component, action name, surface id, source node and payload), and that turn becomes the active turn. The surfaces of the turn it was sent from keep accepting actions. It needs no active turn, so a turn-opening action on the shell opens the first turn of a session. Any other action only updates the surfaces: its surface snapshots are recorded with the active turn, or with `session.initialization` before the first turn.
 
 Whether an action opens a turn, is [concurrent](#concurrent-and-cached-actions), or neither comes from the producer's announcements, never from the integrator. An action announced as both is sent as concurrent, with a dev-only warning.
 
-It is **fire-and-forget**: the returned Promise always resolves and never rejects, so the consumer needs no `.catch`. A message with no `userAction`, no `sourceComponentId`, a node that resolves to no component, or an internal validation failure is dropped with a dev-only warning and nothing is sent.
+It is **fire-and-forget**: the returned Promise always resolves and never rejects, so the consumer needs no `.catch`. An action with no `sourceComponentId`, a node that resolves to no component, or an internal validation failure is dropped with a dev-only warning and nothing is sent.
 
 ### One request at a time
 
@@ -124,7 +124,7 @@ Each concurrent action can carry a `cache` policy, the lifetime of its answers; 
 
 ### Optimistic values
 
-To show a gesture's expected value until the session has answered it, show that value from the moment the gesture is sent until its dispatch promise resolves, then give way to the producer's value. A renderer that returns its `onAction` handler's promise from its own dispatch hands back the `session.dispatchAction` promise, so awaiting the renderer's dispatch is enough. Thermidor doesn't depend on a UI framework, so any state mechanism works. With React's `useOptimistic`, for example, a transition that awaits the dispatch lasts exactly that long:
+To show a gesture's expected value until the session has answered it, show that value from the moment the gesture is sent until its dispatch promise resolves, then give way to the producer's value. A renderer that returns its action handler's promise from its own dispatch, as `@a2ui/web_core`'s surfaces do, hands back the `session.dispatchAction` promise, so awaiting the renderer's dispatch is enough. Thermidor doesn't depend on a UI framework, so any state mechanism works. With React's `useOptimistic`, for example, a transition that awaits the dispatch lasts exactly that long:
 
 ```tsx
 const [values, addOptimisticValues] = useOptimistic(producerValues);
@@ -203,7 +203,7 @@ function TurnError({turn, session}: {turn: Turn; session: Session}) {
 Surfaces live in the session, not in the turn that created them. The session derives them from one ordered activity log: the initialization's activities, then each turn's. A surface lives from its `createSurface` until its `deleteSurface`, whichever runs carry them, and a `createSurface` for a live id replaces that surface, so a producer mints a new id for each new surface.
 
 - `session.surfaces` lists every live surface in creation order; a surface the agent deletes leaves it, and one it re-creates moves to the end. Each turn's `response.surfaces` lists the live surfaces that turn created; one a later run creates again under its live id, such as the answer to an action recorded with a later turn, stays with the turn that first created it. Find one no turn created, such as the shell, by its `rootComponentType`. A loading placeholder is listed only while the run that last created it streams: while its turn or the initialization streams, or while the request in flight streams into that run and had not found it already left behind; one the agent left behind (a cancelled run, an error, a restored session) leaves the lists, so a consumer draws a skeleton for every listed surface whose `isLoading` holds.
-- `session.a2uiMessages` is the whole session's renderer stream, in arrival order. It only grows, so a single renderer is fed each new message once. Before a `createSurface` that replaces a live surface, it carries a `deleteSurface` for it, and it leaves out an operation on a surface that is not live, since a renderer refuses both. It exists because Agent Gateway emits A2-UI v1.0 while every available renderer consumes v0.9: Thermidor downgrades the stream on the consumer's behalf (recorded interim debt, see below).
+- `session.a2uiMessages` is the whole session's renderer stream: the A2-UI v1.0 messages of every run, as Agent Gateway sent them, in arrival order. It only grows, so a single renderer, such as one `@a2ui/react` `MessageProcessor`, is fed each new message once. Before a `createSurface` that replaces a live surface, it carries a `deleteSurface` for it, and it leaves out an `updateComponents` or `updateDataModel` for a surface that is not live, since the renderer refuses both. Only messages whose `version` is `"1.0"` enter it.
 - `session.state` is the validated data model of every live surface, keyed by surface id, whichever run wrote it, with the answers to concurrent actions on top.
 - An action resolves its source component across the session's live surfaces, so the surfaces of earlier runs keep accepting actions. The run of an action that opens no turn only updates the surfaces: its surface snapshots are recorded with the active turn, or with the initialization before the first turn, and it never changes the status of a turn or of the initialization. When it fails, whether the endpoint rejects it, it streams `RUN_ERROR`, its stream ends without a terminal event or its request cannot be built, `session.actionError` identifies the action (`message`, `component`, `name`, `surfaceId`, `sourceComponentId`), so a consumer can show the failure next to the block it came from. An action that opens a turn fails that turn instead, and sets `session.actionError` only when it gives up on a [concurrency conflict](#concurrency-conflicts).
 
@@ -212,7 +212,7 @@ Each `DiscoveredSurface` carries `surfaceId`, `rootComponentType`, and `isLoadin
 ## Validation and displayed values
 
 - **Client-side validation is retained, transparently.** The injected `contracts` schema stays the sole validation source, but the consumer never runs Zod and writes no adapter glue. Inbound `updateDataModel` ops are validated before they are applied to `session.state`, against the components of every live surface; outbound action payloads are validated in the private dispatch path before the POST. Both boundaries live inside the core. `session.a2uiMessages` is derived from the raw stream, so the renderer still receives an op that validation drops from `session.state`, and the component state seeded by `createSurface.dataModel`, which is never validated.
-- **Displayed-value formatting is agent-produced.** The renderer shows the state it receives through its `{ path }` bindings; Thermidor does not reformat displayed values.
+- **Displayed-value formatting is agent-produced.** The renderer shows the state it receives through its `{ "@path" }` bindings; Thermidor does not reformat displayed values.
 
 ## Injected schema, endpoint, and context
 
@@ -231,7 +231,6 @@ A session restored with a token resumes through `initialize`; see `SessionConfig
 The following are intentionally **not yet implemented** and are recorded as debt or deferred work:
 
 - **Interim surface derivation** — `surfaces` is a typed projection derived from `activities`, annotated as interim; the core interprets no `rootComponentType`; consumers read it. It is retired once the server sends typed routing.
-- **The A2-UI v0.9 renderer projection** — `session.a2uiMessages` downgrades Agent Gateway's v1.0 stream for today's v0.9 renderers. Removed in a breaking change once a v1.0-capable renderer exists.
 - **Renderer stream bypasses validation** — inbound ops that in-transit validation drops from `session.state` still reach the renderer through `session.a2uiMessages`, and so does the component state seeded by `createSurface.dataModel`, which is never validated. A fix must cover both paths.
 - **Enforced action-payload typing at the renderer boundary** — the renderer hands `dispatchAction` a loosely typed action message, so per-component action typing is applied by convention (the consumer opts into the generated `XxxAction` types) rather than enforced at the boundary. Recoverable later if the package owns binding resolution.
 - **Package rename** — deferred as low-stakes; the package remains `@coveo/thermidor`.

@@ -973,9 +973,9 @@ let currentView: SearchViewState = {...DEFAULT_VIEW};
 const viewsBySurfaceId = new Map<string, SearchViewState>();
 
 const FACET_COMPONENT_IDS = {
-  regular: 'facet-brand-2',
-  numeric: 'facet-price-2',
-  category: 'facet-category-2',
+  regular: 'facet_brand_2',
+  numeric: 'facet_price_2',
+  category: 'facet_category_2',
 } as const;
 
 const FACET_FIELDS = {
@@ -984,9 +984,9 @@ const FACET_FIELDS = {
   category: {field: 'ec_category', displayName: 'Category'},
 } as const;
 
-const BREADBOX_ID = 'breadbox-2';
+const BREADBOX_ID = 'breadbox_2';
 
-const QUERY_SUMMARY_ID = 'query-summary-2';
+const QUERY_SUMMARY_ID = 'query_summary_2';
 
 // Relevance preserves the original catalog order; a field sort orders by each field in turn.
 function sortProducts(input: WaterSportsProduct[], sort: SortCriterion): WaterSportsProduct[] {
@@ -1321,7 +1321,7 @@ function computeComponentsState(view: SearchViewState): Record<string, unknown> 
   const pageProducts = sortedProducts.slice(start, start + pageSize);
 
   // The query-summary owns its own backend-computed aggregate (query + result window) so it does
-  // not read the search-box, pagination, and product-list state. Indices are 1-based; on an empty
+  // not read the search_box, pagination, and product-list state. Indices are 1-based; on an empty
   // result set the window collapses to 0-0 and the renderer shows the no-results/empty state.
   const {query} = view;
   const firstIndex = totalEntries === 0 ? 0 : start + 1;
@@ -1335,10 +1335,10 @@ function computeComponentsState(view: SearchViewState): Record<string, unknown> 
       totalEntries,
       ...(view.correction ? {correction: view.correction} : {}),
     },
-    'product-list-2': {
+    product_list_2: {
       products: pageProducts,
     },
-    'pagination-2': {
+    pagination_2: {
       page,
       pageSize,
       totalEntries,
@@ -1346,16 +1346,16 @@ function computeComponentsState(view: SearchViewState): Record<string, unknown> 
     },
     // The page-size selector keeps its own entry (keyed by its own componentId) with just the
     // field it needs; dispatching setPageSize updates the shared view so pagination re-renders.
-    'page-size-2': {
+    page_size_2: {
       pageSize,
     },
-    'sort-2': {
+    sort_2: {
       appliedSort,
       availableSorts,
     },
-    'facet-brand-2': deriveRegularFacetValues(view, FACET_COMPONENT_IDS.regular),
-    'facet-price-2': deriveNumericFacetValues(view),
-    'facet-category-2': deriveCategoryFacetValues(view, FACET_COMPONENT_IDS.category),
+    facet_brand_2: deriveRegularFacetValues(view, FACET_COMPONENT_IDS.regular),
+    facet_price_2: deriveNumericFacetValues(view),
+    facet_category_2: deriveCategoryFacetValues(view, FACET_COMPONENT_IDS.category),
     [BREADBOX_ID]: deriveBreadboxState(view),
     // FacetManager has NO Component_State: facet ordering lives on its `children` (A2-UI
     // composition plane), so it emits no `/state` op.
@@ -1363,15 +1363,15 @@ function computeComponentsState(view: SearchViewState): Record<string, unknown> 
 }
 
 // The set of state field names each stateful node binds and re-emits. These mirror the keys of
-// each entry `computeComponentsState` produces, so a node's `{ path }` bindings resolve to the
+// each entry `computeComponentsState` produces, so a node's `{ "@path" }` bindings resolve to the
 // fields of the whole-component value written at `statePath(id)`.
 const STATE_FIELDS_BY_NODE: Record<string, readonly string[]> = {
   [QUERY_SUMMARY_ID]: ['query', 'firstIndex', 'lastIndex', 'totalEntries', 'correction'],
-  'product-list-2': ['products'],
-  'pagination-2': ['page', 'pageSize', 'totalEntries', 'totalPages'],
-  'page-size-2': ['pageSize'],
-  'sort-2': ['appliedSort', 'availableSorts'],
-  'facet-brand-2': [
+  product_list_2: ['products'],
+  pagination_2: ['page', 'pageSize', 'totalEntries', 'totalPages'],
+  page_size_2: ['pageSize'],
+  sort_2: ['appliedSort', 'availableSorts'],
+  facet_brand_2: [
     'field',
     'displayName',
     'values',
@@ -1380,7 +1380,7 @@ const STATE_FIELDS_BY_NODE: Record<string, readonly string[]> = {
     'canShowLessValues',
     'facetSearch',
   ],
-  'facet-price-2': [
+  facet_price_2: [
     'field',
     'displayName',
     'values',
@@ -1390,7 +1390,7 @@ const STATE_FIELDS_BY_NODE: Record<string, readonly string[]> = {
     'canShowMoreValues',
     'canShowLessValues',
   ],
-  'facet-category-2': [
+  facet_category_2: [
     'field',
     'displayName',
     'values',
@@ -1419,31 +1419,31 @@ function buildStateOps(view: SearchViewState): UpdateDataModelOp[] {
 const COMMERCE_SEARCH_ROOT_ID = RENDERER_ROOT_ID;
 
 // Facet ids in emission order; the facet-manager node's `children` expresses facet ordering.
-const FACET_NODE_IDS = ['facet-brand-2', 'facet-price-2', 'facet-category-2'];
+const FACET_NODE_IDS = ['facet_brand_2', 'facet_price_2', 'facet_category_2'];
 
 // The commerce-search root composes exactly two children: the left sidebar column and the right
 // main column. Each is a layout-stack that owns its own internal layout, so the two-column
 // layout lives on the A2-UI composition plane rather than being hardcoded in the root renderer.
-const ROOT_CHILD_IDS = ['search-sidebar', 'search-main'];
+const ROOT_CHILD_IDS = ['search_sidebar', 'search_main'];
 
 // The main column stacks the breadbox, a top row (summary + sort), the product grid, and a bottom
 // row (pagination + page size), top to bottom. As in the Atomic commerce layout, the breadbox gets
 // a full-width row above the summary and sort.
-const MAIN_CHILD_IDS = [BREADBOX_ID, 'search-top', 'product-list-2', 'search-bottom'];
+const MAIN_CHILD_IDS = [BREADBOX_ID, 'search_top', 'product_list_2', 'search_bottom'];
 
 // The top row places the query summary on the left and the sort selector on the right.
-const TOP_ROW_CHILD_IDS = [QUERY_SUMMARY_ID, 'sort-2'];
+const TOP_ROW_CHILD_IDS = [QUERY_SUMMARY_ID, 'sort_2'];
 
 // The bottom row places pagination on the left and the page-size selector on the right.
-const BOTTOM_ROW_CHILD_IDS = ['pagination-2', 'page-size-2'];
+const BOTTOM_ROW_CHILD_IDS = ['pagination_2', 'page_size_2'];
 
 const SEARCH_SURFACE_ID = 'ui-commerce-water-sports';
 
 // One node per mount target. Each node carries a SINGLE identity (top-level `id` + `component`);
 // Following the A2-UI v1.0 flat node shape, each node carries its presentation values,
-// `{ path }` state bindings, and static composition links directly at the top level (no `props`
+// `{ "@path" }` state bindings, and static composition links directly at the top level (no `props`
 // wrapper). The two-column layout is composed from generic layout-stack nodes
-// (search-sidebar/search-main and the top/bottom rows), keeping placement on the A2-UI plane. The
+// (search_sidebar/search_main and the top/bottom rows), keeping placement on the A2-UI plane. The
 // search box is intentionally absent: the surface's query input is the app-level search bar above
 // this surface, so the two-column layout starts at the query-summary row.
 //
@@ -1453,7 +1453,7 @@ const SEARCH_SURFACE_ID = 'ui-commerce-water-sports';
 // LayoutStackPropsSchema / FacetManagerPropsSchema). Layout-stack nodes carry their `direction`
 // presentation prop and have no Component_State; FacetManager has no state either (ordering lives
 // on `children`). Every stateful node spreads its state-bound props onto the node top level as
-// `{ path: "/state/<id>/<field>" }` Data_Binding objects via `bindStateFields`.
+// `{ "@path": "/state/<id>/<field>" }` Data_Binding objects via `bindStateFields`.
 const SEARCH_SURFACE_NODES: A2uiComponentNode[] = [
   {
     id: COMMERCE_SEARCH_ROOT_ID,
@@ -1462,48 +1462,48 @@ const SEARCH_SURFACE_NODES: A2uiComponentNode[] = [
     mainChild: ROOT_CHILD_IDS[1],
   },
   {
-    id: 'search-sidebar',
+    id: 'search_sidebar',
     component: 'LayoutStack',
     direction: 'column',
-    children: ['facet-manager-2'],
+    children: ['facet_manager_2'],
   },
   {
-    id: 'search-main',
+    id: 'search_main',
     component: 'LayoutStack',
     direction: 'column',
     children: MAIN_CHILD_IDS,
   },
   {
-    id: 'search-top',
+    id: 'search_top',
     component: 'LayoutStack',
     direction: 'row',
     children: TOP_ROW_CHILD_IDS,
   },
   {
-    id: 'search-bottom',
+    id: 'search_bottom',
     component: 'LayoutStack',
     direction: 'row',
     children: BOTTOM_ROW_CHILD_IDS,
   },
   {
-    id: 'facet-manager-2',
+    id: 'facet_manager_2',
     component: 'FacetManager',
     children: FACET_NODE_IDS,
   },
   {
-    id: 'facet-brand-2',
+    id: 'facet_brand_2',
     component: 'RegularFacet',
-    ...bindStateFields('facet-brand-2', STATE_FIELDS_BY_NODE['facet-brand-2']),
+    ...bindStateFields('facet_brand_2', STATE_FIELDS_BY_NODE['facet_brand_2']),
   },
   {
-    id: 'facet-price-2',
+    id: 'facet_price_2',
     component: 'NumericFacet',
-    ...bindStateFields('facet-price-2', STATE_FIELDS_BY_NODE['facet-price-2']),
+    ...bindStateFields('facet_price_2', STATE_FIELDS_BY_NODE['facet_price_2']),
   },
   {
-    id: 'facet-category-2',
+    id: 'facet_category_2',
     component: 'CategoryFacet',
-    ...bindStateFields('facet-category-2', STATE_FIELDS_BY_NODE['facet-category-2']),
+    ...bindStateFields('facet_category_2', STATE_FIELDS_BY_NODE['facet_category_2']),
   },
   {
     id: BREADBOX_ID,
@@ -1516,24 +1516,24 @@ const SEARCH_SURFACE_NODES: A2uiComponentNode[] = [
     ...bindStateFields(QUERY_SUMMARY_ID, STATE_FIELDS_BY_NODE[QUERY_SUMMARY_ID]),
   },
   {
-    id: 'sort-2',
+    id: 'sort_2',
     component: 'Sort',
-    ...bindStateFields('sort-2', STATE_FIELDS_BY_NODE['sort-2']),
+    ...bindStateFields('sort_2', STATE_FIELDS_BY_NODE['sort_2']),
   },
   {
-    id: 'pagination-2',
+    id: 'pagination_2',
     component: 'Pagination',
-    ...bindStateFields('pagination-2', STATE_FIELDS_BY_NODE['pagination-2']),
+    ...bindStateFields('pagination_2', STATE_FIELDS_BY_NODE['pagination_2']),
   },
   {
-    id: 'page-size-2',
+    id: 'page_size_2',
     component: 'PageSize',
-    ...bindStateFields('page-size-2', STATE_FIELDS_BY_NODE['page-size-2']),
+    ...bindStateFields('page_size_2', STATE_FIELDS_BY_NODE['page_size_2']),
   },
   {
-    id: 'product-list-2',
+    id: 'product_list_2',
     component: 'ProductList',
-    ...bindStateFields('product-list-2', STATE_FIELDS_BY_NODE['product-list-2']),
+    ...bindStateFields('product_list_2', STATE_FIELDS_BY_NODE['product_list_2']),
   },
 ];
 
@@ -1555,7 +1555,7 @@ const surfaceActivitySnapshot: ConverseEvent = ActivitySnapshot({
   content: {
     messages: [
       {
-        version: 'v1.0',
+        version: '1.0',
         createSurface: buildValidatedSearchSurface(SEARCH_SURFACE_NODES),
       },
     ],
