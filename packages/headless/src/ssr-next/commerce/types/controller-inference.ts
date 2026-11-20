@@ -7,7 +7,6 @@ import type {
   ControllerDefinitionsMap,
   ControllerDefinitionWithoutProps,
   ControllerDefinitionWithProps,
-  InferControllerStaticStateFromController,
 } from './controller-definitions.js';
 
 export type {InferHydratedState, InferStaticState};
@@ -58,13 +57,4 @@ export type InferControllersMapFromDefinition<
   [
     K in keyof TControllers as HasKey<TControllers[K], TSolutionType> extends never ? never : K
   ]: InferControllerFromDefinition<TControllers[K]>;
-};
-
-export type InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-  TSolutionType extends SolutionType,
-> = {
-  [
-    K in keyof TControllers as HasKey<TControllers[K], TSolutionType> extends never ? never : K
-  ]: InferControllerStaticStateFromController<InferControllerFromDefinition<TControllers[K]>>;
 };

@@ -8,7 +8,7 @@ import {
 import type {ComponentProps} from 'react';
 import {describe, expectTypeOf, it} from 'vitest';
 import {defineCommerceEngine} from './commerce-engine.js';
-import {buildProviderWithDefinition} from './providers.js';
+import {buildProviderWithDefinition} from './index.js';
 
 const {listingEngineDefinition, standaloneEngineDefinition} = defineCommerceEngine({
   configuration: getSampleCommerceEngineConfiguration(),
