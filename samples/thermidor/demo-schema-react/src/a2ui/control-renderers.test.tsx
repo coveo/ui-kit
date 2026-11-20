@@ -15,7 +15,9 @@ function mountControl<TProps extends object>(
   return mountSurface({
     component: {
       component,
-      ...Object.fromEntries(Object.keys(state).map((key) => [key, {path: `/state/root/${key}`}])),
+      ...Object.fromEntries(
+        Object.keys(state).map((key) => [key, {'@path': `/state/root/${key}`}])
+      ),
     },
     dispatchGate,
     dataModel: (Object.keys(state) as Array<keyof TProps>).map((key) => ({
@@ -183,15 +185,15 @@ describe('Page change focus', () => {
         children: ['size', 'list', 'pages'],
       },
       children: [
-        {id: 'size', component: 'PageSize', pageSize: {path: '/state/pagination/pageSize'}},
-        {id: 'list', component: 'ProductList', products: {path: '/state/list/products'}},
+        {id: 'size', component: 'PageSize', pageSize: {'@path': '/state/pagination/pageSize'}},
+        {id: 'list', component: 'ProductList', products: {'@path': '/state/list/products'}},
         {
           id: 'pages',
           component: 'Pagination',
-          page: {path: '/state/pagination/page'},
-          pageSize: {path: '/state/pagination/pageSize'},
-          totalEntries: {path: '/state/pagination/totalEntries'},
-          totalPages: {path: '/state/pagination/totalPages'},
+          page: {'@path': '/state/pagination/page'},
+          pageSize: {'@path': '/state/pagination/pageSize'},
+          totalEntries: {'@path': '/state/pagination/totalEntries'},
+          totalPages: {'@path': '/state/pagination/totalPages'},
         },
       ],
       dataModel: [

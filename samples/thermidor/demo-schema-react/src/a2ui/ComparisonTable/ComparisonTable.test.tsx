@@ -37,10 +37,10 @@ function mountComparisonTable(
     wrapper,
     component: {
       component: 'ComparisonTable',
-      heading: {path: '/state/root/heading'},
-      summary: {path: '/state/root/summary'},
-      products: {path: '/state/root/products'},
-      attributes: {path: '/state/root/attributes'},
+      heading: {'@path': '/state/root/heading'},
+      summary: {'@path': '/state/root/summary'},
+      products: {'@path': '/state/root/products'},
+      attributes: {'@path': '/state/root/attributes'},
     },
     dataModel: [
       {path: '/state/root/heading', value: HEADING},

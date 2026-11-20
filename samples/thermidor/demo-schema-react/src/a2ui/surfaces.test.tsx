@@ -1,8 +1,7 @@
-import type {ComponentProps} from 'react';
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
-import {A2UIProvider, ROOT_COMPONENT_ID} from '@copilotkit/a2ui-renderer';
-import type {A2uiV09Message, ActionError} from '@coveo/thermidor';
+import type {ActionPayload} from '@a2ui/web_core';
+import type {A2uiMessage, ActionError} from '@coveo/thermidor';
 import {createThermidorCatalog, THERMIDOR_CATALOG_ID} from './components.js';
 import {ThermidorA2UIStream, TurnSurfaces} from './surfaces.js';
 import {SessionRequestProvider, type SessionRequestSource} from './session-request.js';
@@ -21,6 +20,8 @@ afterEach(() => {
 });
 
 const CATALOG = createThermidorCatalog();
+const ROOT_COMPONENT_ID = 'root';
+const ignoreAction = () => {};
 const SURFACE_ID = 'turn-surface';
 const NOTE = 'Earlier results. Ask a follow-up or search again to refine.';
 
@@ -35,62 +36,70 @@ const WETSUIT = {
 /** A surface holding a page size select, which acts on the surface. */
 function surfaceMessages(surfaceId: string) {
   return [
-    {version: 'v0.9', createSurface: {surfaceId, catalogId: THERMIDOR_CATALOG_ID}},
     {
-      version: 'v0.9',
-      updateComponents: {
+      version: '1.0',
+      createSurface: {
         surfaceId,
+        catalogId: THERMIDOR_CATALOG_ID,
         components: [
-          {id: ROOT_COMPONENT_ID, component: 'PageSize', pageSize: {path: '/state/root/pageSize'}},
+          {
+            id: ROOT_COMPONENT_ID,
+            component: 'PageSize',
+            pageSize: {'@path': '/state/root/pageSize'},
+          },
         ],
       },
     },
     {
-      version: 'v0.9',
+      version: '1.0',
       updateDataModel: {surfaceId, path: '/state/root/pageSize', value: 24},
     },
-  ] as unknown as A2uiV09Message[];
+  ] as unknown as A2uiMessage[];
 }
 
 /** The same surface with a product carousel beside its page size select. */
 const WITH_PRODUCTS = [
   ...surfaceMessages(SURFACE_ID),
   {
-    version: 'v0.9',
+    version: '1.0',
     updateComponents: {
       surfaceId: SURFACE_ID,
       components: [
-        {id: ROOT_COMPONENT_ID, component: 'LayoutStack', children: ['page-size', 'carousel']},
-        {id: 'page-size', component: 'PageSize', pageSize: {path: '/state/root/pageSize'}},
+        {id: ROOT_COMPONENT_ID, component: 'LayoutStack', children: ['page_size', 'carousel']},
+        {id: 'page_size', component: 'PageSize', pageSize: {'@path': '/state/root/pageSize'}},
         {
           id: 'carousel',
           component: 'ProductCarousel',
           heading: 'Wetsuits',
-          products: {path: '/state/root/products'},
+          products: {'@path': '/state/root/products'},
         },
       ],
     },
   },
   {
-    version: 'v0.9',
+    version: '1.0',
     updateDataModel: {surfaceId: SURFACE_ID, path: '/state/root/products', value: [WETSUIT]},
   },
-] as unknown as A2uiV09Message[];
+] as unknown as A2uiMessage[];
 
 /** The same surface showing a product list of one grouped product. */
 const WITH_GROUPED_LIST = [
   ...surfaceMessages(SURFACE_ID),
   {
-    version: 'v0.9',
+    version: '1.0',
     updateComponents: {
       surfaceId: SURFACE_ID,
       components: [
-        {id: ROOT_COMPONENT_ID, component: 'ProductList', products: {path: '/state/root/products'}},
+        {
+          id: ROOT_COMPONENT_ID,
+          component: 'ProductList',
+          products: {'@path': '/state/root/products'},
+        },
       ],
     },
   },
   {
-    version: 'v0.9',
+    version: '1.0',
     updateDataModel: {
       surfaceId: SURFACE_ID,
       path: '/state/root/products',
@@ -103,7 +112,7 @@ const WITH_GROUPED_LIST = [
       ],
     },
   },
-] as unknown as A2uiV09Message[];
+] as unknown as A2uiMessage[];
 
 const MESSAGES = surfaceMessages(SURFACE_ID);
 
@@ -133,20 +142,19 @@ function Turn({
   locked?: boolean;
   isStreaming?: boolean;
   cart?: FakeCartStore;
-  messages?: A2uiV09Message[];
+  messages?: A2uiMessage[];
 }) {
   return (
     <SessionRequestProvider value={lockedSource(locked)}>
       <CartProvider store={cart}>
         <ProductCardActionsContext.Provider value={renderProductCardCartActions}>
-          <A2UIProvider catalog={CATALOG} onAction={() => {}}>
-            <ThermidorA2UIStream messages={messages} />
+          <ThermidorA2UIStream catalog={CATALOG} messages={messages} onAction={ignoreAction}>
             <TurnSurfaces
               surfaces={makeSurfaces(SURFACE_ID)}
               latest={interactive}
               isStreaming={isStreaming}
             />
-          </A2UIProvider>
+          </ThermidorA2UIStream>
         </ProductCardActionsContext.Provider>
       </CartProvider>
     </SessionRequestProvider>
@@ -331,11 +339,10 @@ describe('TurnSurfaces while a request is in flight', () => {
     function TwoGroups({locked}: {locked: boolean}) {
       return (
         <SessionRequestProvider value={lockedSource(locked)}>
-          <A2UIProvider catalog={CATALOG} onAction={() => {}}>
-            <ThermidorA2UIStream messages={messages} />
+          <ThermidorA2UIStream catalog={CATALOG} messages={messages} onAction={ignoreAction}>
             <TurnSurfaces surfaces={makeSurfaces(SURFACE_ID)} latest isStreaming={false} />
             <TurnSurfaces surfaces={makeSurfaces(OTHER_SURFACE_ID)} latest isStreaming={false} />
-          </A2UIProvider>
+          </ThermidorA2UIStream>
         </SessionRequestProvider>
       );
     }
@@ -359,11 +366,9 @@ describe('TurnSurfaces while a request is in flight', () => {
 describe('TurnSurfaces loading placeholders', () => {
   function renderPlaceholder() {
     return render(
-      <A2UIProvider catalog={CATALOG} onAction={() => {}}>
-        <ThermidorA2UIStream messages={MESSAGES}>
-          <TurnSurfaces surfaces={loading(SURFACE_ID)} latest isStreaming />
-        </ThermidorA2UIStream>
-      </A2UIProvider>
+      <ThermidorA2UIStream catalog={CATALOG} messages={MESSAGES} onAction={ignoreAction}>
+        <TurnSurfaces surfaces={loading(SURFACE_ID)} latest isStreaming />
+      </ThermidorA2UIStream>
     );
   }
 
@@ -377,9 +382,9 @@ describe('TurnSurfaces loading placeholders', () => {
 
   it('draws nothing when the turn lists no surface', () => {
     const {container} = render(
-      <A2UIProvider catalog={CATALOG} onAction={() => {}}>
+      <ThermidorA2UIStream catalog={CATALOG} messages={[]} onAction={ignoreAction}>
         <TurnSurfaces surfaces={[]} latest isStreaming={false} />
-      </A2UIProvider>
+      </ThermidorA2UIStream>
     );
 
     expect(container.querySelector('fieldset')).toBeNull();
@@ -389,11 +394,9 @@ describe('TurnSurfaces loading placeholders', () => {
     const scrollIntoView = vi.fn();
     Element.prototype.scrollIntoView = scrollIntoView;
     const page = (surfaces: ReturnType<typeof makeSurfaces>) => (
-      <A2UIProvider catalog={CATALOG} onAction={() => {}}>
-        <ThermidorA2UIStream messages={MESSAGES}>
-          <TurnSurfaces surfaces={surfaces} latest isStreaming />
-        </ThermidorA2UIStream>
-      </A2UIProvider>
+      <ThermidorA2UIStream catalog={CATALOG} messages={MESSAGES} onAction={ignoreAction}>
+        <TurnSurfaces surfaces={surfaces} latest isStreaming />
+      </ThermidorA2UIStream>
     );
     const {rerender} = render(page([]));
 
@@ -409,17 +412,11 @@ describe('TurnSurfaces loading placeholders', () => {
 describe('ThermidorA2UIStream', () => {
   it('feeds only the new messages of a stream that grows, keeping the surfaces drawn', async () => {
     const SECOND_ID = 'second-surface';
-    const page = (messages: A2uiV09Message[]) => (
+    const page = (messages: A2uiMessage[]) => (
       <SessionRequestProvider value={lockedSource(false)}>
-        <A2UIProvider catalog={CATALOG} onAction={() => {}}>
-          <ThermidorA2UIStream messages={messages}>
-            <TurnSurfaces
-              surfaces={makeSurfaces(SURFACE_ID, SECOND_ID)}
-              latest
-              isStreaming={false}
-            />
-          </ThermidorA2UIStream>
-        </A2UIProvider>
+        <ThermidorA2UIStream catalog={CATALOG} messages={messages} onAction={ignoreAction}>
+          <TurnSurfaces surfaces={makeSurfaces(SURFACE_ID, SECOND_ID)} latest isStreaming={false} />
+        </ThermidorA2UIStream>
       </SessionRequestProvider>
     );
     const {rerender} = render(page(MESSAGES));
@@ -435,27 +432,27 @@ describe('ThermidorA2UIStream', () => {
 describe('the failure of an action', () => {
   /** A block with two page size selects, so a failure can show at one and not at the other. */
   const TWO_CONTROLS = [
-    {version: 'v0.9', createSurface: {surfaceId: SURFACE_ID, catalogId: THERMIDOR_CATALOG_ID}},
     {
-      version: 'v0.9',
-      updateComponents: {
+      version: '1.0',
+      createSurface: {
         surfaceId: SURFACE_ID,
+        catalogId: THERMIDOR_CATALOG_ID,
         components: [
           {id: ROOT_COMPONENT_ID, component: 'LayoutStack', children: ['first', 'second']},
-          {id: 'first', component: 'PageSize', pageSize: {path: '/state/first/pageSize'}},
-          {id: 'second', component: 'PageSize', pageSize: {path: '/state/second/pageSize'}},
+          {id: 'first', component: 'PageSize', pageSize: {'@path': '/state/first/pageSize'}},
+          {id: 'second', component: 'PageSize', pageSize: {'@path': '/state/second/pageSize'}},
         ],
       },
     },
     {
-      version: 'v0.9',
+      version: '1.0',
       updateDataModel: {surfaceId: SURFACE_ID, path: '/state/first/pageSize', value: 24},
     },
     {
-      version: 'v0.9',
+      version: '1.0',
       updateDataModel: {surfaceId: SURFACE_ID, path: '/state/second/pageSize', value: 24},
     },
-  ] as unknown as A2uiV09Message[];
+  ] as unknown as A2uiMessage[];
 
   const failedPageSize = (overrides: Partial<ActionError> = {}): ActionError => ({
     message: 'Bad gateway',
@@ -468,17 +465,16 @@ describe('the failure of an action', () => {
 
   function Block({
     source,
-    onAction = () => {},
+    onAction = ignoreAction,
   }: {
     source: SessionRequestSource;
-    onAction?: ComponentProps<typeof A2UIProvider>['onAction'];
+    onAction?: (action: ActionPayload) => unknown;
   }) {
     return (
       <SessionRequestProvider value={source}>
-        <A2UIProvider catalog={CATALOG} onAction={onAction}>
-          <ThermidorA2UIStream messages={TWO_CONTROLS} />
+        <ThermidorA2UIStream catalog={CATALOG} messages={TWO_CONTROLS} onAction={onAction}>
           <TurnSurfaces surfaces={makeSurfaces(SURFACE_ID)} latest isStreaming={false} />
-        </A2UIProvider>
+        </ThermidorA2UIStream>
       </SessionRequestProvider>
     );
   }

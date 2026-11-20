@@ -1,5 +1,5 @@
 import {createContext, useContext} from 'react';
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react';
 import type {ProgressBlockStatus, ProgressBlockStep} from '@coveo/thermidor-schema';
 import {ProgressBlockPropsSchema} from '@coveo/thermidor-schema/zod3';
 import styles from './ProgressBlock.module.css';
@@ -30,7 +30,7 @@ function rowState(step: ProgressBlockStep, blockFailed: boolean): RowState {
  * and never by its id: an id this app doesn't know renders like any other. A block that ended in
  * `error`, or was still `running` when its turn failed, marks its active steps failed.
  */
-export const ProgressBlock = createReactComponent(
+export const ProgressBlock = createComponentImplementation(
   {
     name: 'ProgressBlock',
     schema: ProgressBlockPropsSchema,

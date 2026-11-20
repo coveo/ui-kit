@@ -1,5 +1,6 @@
 import {useCallback, useMemo, useState} from 'react';
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react';
+import {componentId} from '@a2ui/web_core/v1_0';
 import {SearchBoxPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {PromptInput} from '../../components/PromptInput/PromptInput.js';
 import type {
@@ -18,10 +19,17 @@ const NO_SUGGESTIONS: SuggestionSection[] = [];
  * A2-UI component for the `SearchBox`: the page's prompt input. What is typed stays here and is
  * given to the `suggestionsChild`, which decides which suggestions the input's dropdown shows. The
  * suggestion the shopper highlights, else the first one, is given to the `instantProductsChild`,
- * drawn beside the suggestions. Submitting is the page's.
+ * drawn beside the suggestions. Submitting is the page's. The schema marks both children as
+ * component ids, which is how `@a2ui/react` knows to build their child nodes.
  */
-export const SearchBox = createReactComponent(
-  {name: 'SearchBox', schema: SearchBoxPropsSchema},
+export const SearchBox = createComponentImplementation(
+  {
+    name: 'SearchBox',
+    schema: SearchBoxPropsSchema.extend({
+      suggestionsChild: componentId().optional(),
+      instantProductsChild: componentId().optional(),
+    }),
+  },
   ({props, buildChild}) => {
     const {onSubmit, busy, placeholder, clearOnSubmit, suggestionsPlacement} =
       useSearchBoxOptions();

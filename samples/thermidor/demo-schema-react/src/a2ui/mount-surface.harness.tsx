@@ -1,13 +1,8 @@
-import {useEffect, useMemo, type JSXElementConstructor, type PropsWithChildren} from 'react';
+import {useMemo, useState, type JSXElementConstructor, type PropsWithChildren} from 'react';
 import {vi} from 'vitest';
 import {render, act, type RenderResult} from '@testing-library/react';
-import {
-  A2UIProvider,
-  A2UIRenderer,
-  ROOT_COMPONENT_ID,
-  useA2UI,
-  type A2UIClientEventMessage,
-} from '@copilotkit/a2ui-renderer';
+import type {ActionPayload} from '@a2ui/web_core';
+import type {A2uiMessage} from '@coveo/thermidor';
 import {
   createThermidorCatalog,
   THERMIDOR_CATALOG_ID,
@@ -15,39 +10,32 @@ import {
 } from './components.js';
 import {createFakeSessionRequests} from '../test/fake-session-requests.js';
 import {SessionRequestProvider} from './session-request.js';
+import {A2UISurface, ThermidorA2UIStream} from './surfaces.js';
 
 /**
  * Shared end-to-end mount for a component definition, through the real thermidor catalog and the
- * A2-UI message pipeline — so tests exercise the actual binder + render path rather than a bare
- * props object:
+ * A2-UI v1.0 message pipeline — so tests exercise the actual binder + render path rather than a
+ * bare props object:
  *
- *   - `component` is the ROOT node under test (its `id` is forced to `ROOT_COMPONENT_ID`, which
- *     `A2UIRenderer` mounts); scalar/array props are declared as `{ path }` bindings dereferenced
- *     against the surface data model.
+ *   - `component` is the ROOT node under test (its `id` is forced to `root`, which `A2uiSurface`
+ *     mounts); scalar/array props are declared as `{'@path'}` bindings dereferenced against the
+ *     surface data model.
  *   - `children` are additional component nodes the root mounts by id via `buildChild`.
  *   - `dataModel` are `updateDataModel` writes (`{ path, value }`) that resolve the bindings.
- *   - actions dispatched through `context.dispatchAction` surface on `onAction` inside a
- *     `{ userAction: { name, surfaceId, sourceComponentId, context, timestamp } }` envelope; this
- *     helper unwraps it so tests assert the inner `{ name, context }` via `lastAction()` / `actions`.
+ *   - actions dispatched through `context.dispatchAction` reach the session's handler as the
+ *     message processor's `{ name, surfaceId, sourceComponentId, context, timestamp }` payload;
+ *     tests assert them via `lastAction()` / `actions`.
  */
 
 const SURFACE_ID = 'test-surface';
-
-/** The inner user-action delivered on `onAction`'s `userAction` envelope. */
-interface DispatchedAction {
-  name: string;
-  surfaceId: string;
-  sourceComponentId?: string;
-  context?: Record<string, unknown>;
-  timestamp: string;
-}
+const ROOT_ID = 'root';
 
 export interface MountSurfaceConfig {
-  /** Root component node (its `id` is overridden to ROOT_COMPONENT_ID). */
+  /** Root component node (its `id` is overridden to `root`). */
   component: Record<string, unknown>;
   /** Extra component nodes the root mounts by id. */
   children?: Array<Record<string, unknown>>;
-  /** Data-model writes that resolve the `{ path }` bindings on the nodes. */
+  /** Data-model writes that resolve the `{'@path'}` bindings on the nodes. */
   dataModel?: Array<{path: string; value: unknown}>;
   /** Awaited by the action handler; lets a test hold a dispatch in flight. */
   dispatchGate?: () => Promise<void> | void;
@@ -58,57 +46,42 @@ export interface MountSurfaceConfig {
 }
 
 export interface MountSurfaceResult extends RenderResult {
-  /** Every action dispatched by the mounted tree, unwrapped from its `userAction` envelope. */
-  actions: DispatchedAction[];
+  /** Every action dispatched by the mounted tree. */
+  actions: ActionPayload[];
   /** The most recent dispatched action, or undefined if none. */
-  lastAction: () => DispatchedAction | undefined;
+  lastAction: () => ActionPayload | undefined;
   pushDataModel: (updates: Array<{path: string; value: unknown}>) => void;
 }
 
-const ROOT_ID = ROOT_COMPONENT_ID;
-
-type ProcessMessages = (messages: Array<Record<string, unknown>>) => void;
-
-function MessagePump({
-  messages,
-  processRef,
-}: {
-  messages: Array<Record<string, unknown>>;
-  processRef: {current: ProcessMessages | null};
-}) {
-  const {processMessages} = useA2UI();
-  processRef.current = processMessages as ProcessMessages;
-  useEffect(() => {
-    processMessages(messages);
-  }, [processMessages, messages]);
-  return null;
+function updateDataModel(path: string, value: unknown): A2uiMessage {
+  return {version: '1.0', updateDataModel: {surfaceId: SURFACE_ID, path, value}};
 }
 
 function Surface({
-  messages,
-  processRef,
+  initialMessages,
+  pushRef,
   dispatch,
   componentOf,
   catalogOptions,
 }: {
-  messages: Array<Record<string, unknown>>;
-  processRef: {current: ProcessMessages | null};
-  dispatch: (message: A2UIClientEventMessage) => Promise<void> | void;
+  initialMessages: readonly A2uiMessage[];
+  pushRef: {current: ((messages: readonly A2uiMessage[]) => void) | null};
+  dispatch: (action: ActionPayload) => Promise<void> | void;
   componentOf: (sourceComponentId: string) => string;
   catalogOptions?: ThermidorCatalogOptions;
 }) {
   const catalog = useMemo(() => createThermidorCatalog(catalogOptions), [catalogOptions]);
   const requests = useMemo(
-    () => createFakeSessionRequests(dispatch, componentOf),
+    () => createFakeSessionRequests(dispatch as (message: never) => void, componentOf),
     [dispatch, componentOf]
   );
-  const onAction = (message: A2UIClientEventMessage) => requests.dispatch(message);
+  const [messages, setMessages] = useState(initialMessages);
+  pushRef.current = (more) => setMessages((fed) => [...fed, ...more]);
   return (
     <SessionRequestProvider value={requests.source}>
-      <A2UIProvider catalog={catalog} onAction={onAction}>
-        <MessagePump messages={messages} processRef={processRef} />
-        <A2UIRenderer surfaceId={SURFACE_ID} />
-      </A2UIProvider>
+      <ThermidorA2UIStream catalog={catalog} messages={messages} onAction={requests.dispatch}>
+        <A2UISurface surfaceId={SURFACE_ID} />
+      </ThermidorA2UIStream>
     </SessionRequestProvider>
   );
 }
@@ -116,16 +89,13 @@ function Surface({
 /**
  * Mount a surface end-to-end and return the render result plus the captured action log.
  *
- * Awaits nothing itself — callers assert with `await waitFor(...)` as needed (the pump processes
- * messages in an effect, one microtask after mount; dispatched actions resolve asynchronously).
+ * Awaits nothing itself — callers assert with `await waitFor(...)` as needed (the stream feeds
+ * messages in an effect, after mount; dispatched actions resolve asynchronously).
  */
 export function mountSurface(config: MountSurfaceConfig): MountSurfaceResult {
-  const actions: DispatchedAction[] = [];
-  const onAction = vi.fn((message: A2UIClientEventMessage) => {
-    const {userAction} = message as unknown as {userAction?: DispatchedAction};
-    if (userAction) {
-      actions.push(userAction);
-    }
+  const actions: ActionPayload[] = [];
+  const onAction = vi.fn((action: ActionPayload) => {
+    actions.push(action);
     return config.dispatchGate?.();
   });
 
@@ -134,24 +104,20 @@ export function mountSurface(config: MountSurfaceConfig): MountSurfaceResult {
   const nodes: Array<Record<string, unknown>> = [rootNode, ...childNodes];
   const componentOf = (sourceComponentId: string) =>
     String(nodes.find((node) => node.id === sourceComponentId)?.['component']);
-  const processRef: {current: ProcessMessages | null} = {current: null};
+  const pushRef: {current: ((messages: readonly A2uiMessage[]) => void) | null} = {current: null};
 
-  const messages: Array<Record<string, unknown>> = [
-    {version: 'v0.9', createSurface: {surfaceId: SURFACE_ID, catalogId: THERMIDOR_CATALOG_ID}},
+  const messages: A2uiMessage[] = [
     {
-      version: 'v0.9',
-      updateComponents: {surfaceId: SURFACE_ID, components: [rootNode, ...childNodes]},
+      version: '1.0',
+      createSurface: {surfaceId: SURFACE_ID, catalogId: THERMIDOR_CATALOG_ID, components: nodes},
     },
-    ...(config.dataModel ?? []).map(({path, value}) => ({
-      version: 'v0.9',
-      updateDataModel: {surfaceId: SURFACE_ID, path, value},
-    })),
+    ...(config.dataModel ?? []).map(({path, value}) => updateDataModel(path, value)),
   ];
 
   const result = render(
     <Surface
-      messages={messages}
-      processRef={processRef}
+      initialMessages={messages}
+      pushRef={pushRef}
       dispatch={onAction}
       componentOf={componentOf}
       catalogOptions={config.catalogOptions}
@@ -165,12 +131,7 @@ export function mountSurface(config: MountSurfaceConfig): MountSurfaceResult {
     lastAction: () => actions.at(-1),
     pushDataModel: (updates) => {
       act(() => {
-        processRef.current?.(
-          updates.map(({path, value}) => ({
-            version: 'v0.9',
-            updateDataModel: {surfaceId: SURFACE_ID, path, value},
-          }))
-        );
+        pushRef.current?.(updates.map(({path, value}) => updateDataModel(path, value)));
       });
     },
   };

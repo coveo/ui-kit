@@ -1,7 +1,6 @@
 import {useSyncExternalStore, type ReactElement, type ReactNode} from 'react';
 import {render, screen, waitFor} from '@testing-library/react';
 import {expect, vi} from 'vitest';
-import {A2UIProvider} from '@copilotkit/a2ui-renderer';
 import {createSession, type SerializedSession} from '@coveo/thermidor';
 import {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
 import {SessionProvider, useSession, type DemoSession} from '../context/session.js';
@@ -66,28 +65,28 @@ export function run(messages: readonly object[], metadata?: Record<string, unkno
 export function shellRun(surfaceId = SHELL_SURFACE_ID): object[] {
   return run([
     {
-      version: 'v1.0',
+      version: '1.0',
       createSurface: {
         surfaceId,
         catalogId: 'https://schema.thermidor.coveo.com/a2-ui/catalog.json',
         components: [
-          {id: 'root', component: 'SessionShell', children: ['search-box']},
-          {id: 'search-box', component: 'SearchBox', suggestionsChild: 'query-suggestions'},
+          {id: 'root', component: 'SessionShell', children: ['search_box']},
+          {id: 'search_box', component: 'SearchBox', suggestionsChild: 'query_suggestions'},
           {
-            id: 'query-suggestions',
+            id: 'query_suggestions',
             component: 'QuerySuggestions',
-            query: {path: '/state/query-suggestions/query'},
-            recentQueries: {path: '/state/query-suggestions/recentQueries'},
-            completions: {path: '/state/query-suggestions/completions'},
+            query: {'@path': '/state/query_suggestions/query'},
+            recentQueries: {'@path': '/state/query_suggestions/recentQueries'},
+            completions: {'@path': '/state/query_suggestions/completions'},
           },
         ],
-        dataModel: {state: {'query-suggestions': {query: '', recentQueries: [], completions: []}}},
+        dataModel: {state: {query_suggestions: {query: '', recentQueries: [], completions: []}}},
       },
     },
   ]);
 }
 
-export const INSTANT_PRODUCTS_ID = 'instant-products';
+export const INSTANT_PRODUCTS_ID = 'instant_products';
 
 /**
  * The session shell with `InstantProducts` beside `QuerySuggestions`, announcing
@@ -97,35 +96,35 @@ function instantProductsShellRun(surfaceId = SHELL_SURFACE_ID): object[] {
   return run(
     [
       {
-        version: 'v1.0',
+        version: '1.0',
         createSurface: {
           surfaceId,
           catalogId: 'https://schema.thermidor.coveo.com/a2-ui/catalog.json',
           components: [
-            {id: 'root', component: 'SessionShell', children: ['search-box']},
+            {id: 'root', component: 'SessionShell', children: ['search_box']},
             {
-              id: 'search-box',
+              id: 'search_box',
               component: 'SearchBox',
-              suggestionsChild: 'query-suggestions',
+              suggestionsChild: 'query_suggestions',
               instantProductsChild: INSTANT_PRODUCTS_ID,
             },
             {
-              id: 'query-suggestions',
+              id: 'query_suggestions',
               component: 'QuerySuggestions',
-              query: {path: '/state/query-suggestions/query'},
-              recentQueries: {path: '/state/query-suggestions/recentQueries'},
-              completions: {path: '/state/query-suggestions/completions'},
+              query: {'@path': '/state/query_suggestions/query'},
+              recentQueries: {'@path': '/state/query_suggestions/recentQueries'},
+              completions: {'@path': '/state/query_suggestions/completions'},
             },
             {
               id: INSTANT_PRODUCTS_ID,
               component: 'InstantProducts',
-              query: {path: `/state/${INSTANT_PRODUCTS_ID}/query`},
-              products: {path: `/state/${INSTANT_PRODUCTS_ID}/products`},
+              query: {'@path': `/state/${INSTANT_PRODUCTS_ID}/query`},
+              products: {'@path': `/state/${INSTANT_PRODUCTS_ID}/products`},
             },
           ],
           dataModel: {
             state: {
-              'query-suggestions': {query: '', recentQueries: [], completions: []},
+              query_suggestions: {query: '', recentQueries: [], completions: []},
               [INSTANT_PRODUCTS_ID]: {query: '', products: []},
             },
           },
@@ -160,7 +159,7 @@ export function instantProductsRunOf(
 ): object[] {
   return run([
     {
-      version: 'v1.0',
+      version: '1.0',
       updateDataModel: {
         surfaceId,
         path: `/state/${INSTANT_PRODUCTS_ID}`,
@@ -182,10 +181,10 @@ export function suggestionsRun(
 ): object[] {
   return run([
     {
-      version: 'v1.0',
+      version: '1.0',
       updateDataModel: {
         surfaceId,
-        path: '/state/query-suggestions',
+        path: '/state/query_suggestions',
         value: {query, recentQueries, completions: expressions.map((expression) => ({expression}))},
       },
     },
@@ -291,9 +290,13 @@ function SessionStream({children}: {children: ReactNode}) {
   );
   return (
     <SessionRequestProvider value={session}>
-      <A2UIProvider catalog={catalog} onAction={session.dispatchAction}>
-        <ThermidorA2UIStream messages={a2uiMessages}>{children}</ThermidorA2UIStream>
-      </A2UIProvider>
+      <ThermidorA2UIStream
+        catalog={catalog}
+        messages={a2uiMessages}
+        onAction={session.dispatchAction}
+      >
+        {children}
+      </ThermidorA2UIStream>
     </SessionRequestProvider>
   );
 }

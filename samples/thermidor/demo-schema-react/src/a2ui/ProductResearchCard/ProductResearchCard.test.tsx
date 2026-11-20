@@ -5,9 +5,9 @@ import type {ThermidorCatalogOptions} from '../components.js';
 import {formatDocumentSize} from '../RelatedDocuments/RelatedDocumentList.js';
 
 /**
- * ProductResearchCard is a `createReactComponent` implementation driven by the generic binder,
+ * ProductResearchCard is a `createComponentImplementation` implementation driven by the generic binder,
  * mounted end-to-end through the real thermidor catalog: `product` / `summary` / `bullets` are
- * `{path}` bindings resolved from the surface data model. Presentational — no actions. An
+ * `{"@path"}` bindings resolved from the surface data model. Presentational — no actions. An
  * unresolved binding (no data-model write) leaves the field `undefined`, exercising the loading
  * guard.
  */
@@ -15,10 +15,10 @@ import {formatDocumentSize} from '../RelatedDocuments/RelatedDocumentList.js';
 afterEach(() => cleanup());
 
 const BINDINGS = {
-  product: {path: '/state/root/product'},
-  summary: {path: '/state/root/summary'},
-  bullets: {path: '/state/root/bullets'},
-  relatedDocuments: {path: '/state/root/relatedDocuments'},
+  product: {'@path': '/state/root/product'},
+  summary: {'@path': '/state/root/summary'},
+  bullets: {'@path': '/state/root/bullets'},
+  relatedDocuments: {'@path': '/state/root/relatedDocuments'},
 };
 
 const PRODUCT = {

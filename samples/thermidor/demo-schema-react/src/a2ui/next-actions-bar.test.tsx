@@ -9,7 +9,9 @@ function mountControl<TProps extends object>(component: string, state: TProps) {
   return mountSurface({
     component: {
       component,
-      ...Object.fromEntries(Object.keys(state).map((key) => [key, {path: `/state/root/${key}`}])),
+      ...Object.fromEntries(
+        Object.keys(state).map((key) => [key, {'@path': `/state/root/${key}`}])
+      ),
     },
     dataModel: (Object.keys(state) as Array<keyof TProps>).map((key) => ({
       path: `/state/root/${String(key)}`,

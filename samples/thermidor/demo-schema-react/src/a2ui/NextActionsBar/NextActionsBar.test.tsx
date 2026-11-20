@@ -3,8 +3,8 @@ import {screen, cleanup, fireEvent, waitFor} from '@testing-library/react';
 import {mountSurface} from '../mount-surface.harness.js';
 
 /**
- * NextActionsBar is a `createReactComponent` implementation driven by the generic binder, mounted
- * end-to-end through the real thermidor catalog: `suggestedActions` is a `{path}` binding resolved
+ * NextActionsBar is a `createComponentImplementation` implementation driven by the generic binder, mounted
+ * end-to-end through the real thermidor catalog: `suggestedActions` is a `{"@path"}` binding resolved
  * from the surface data model. A `searchOption` item is a search the gateway saved for an agent
  * answer; the browser only holds its `optionId`.
  */
@@ -23,7 +23,7 @@ function mountNextActionsBar() {
   return mountSurface({
     component: {
       component: 'NextActionsBar',
-      suggestedActions: {path: '/state/root/suggestedActions'},
+      suggestedActions: {'@path': '/state/root/suggestedActions'},
     },
     dataModel: [{path: '/state/root/suggestedActions', value: ACTIONS}],
   });

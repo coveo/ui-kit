@@ -42,8 +42,8 @@ function mountCarousel(store: FakeCartStore, products: unknown[]) {
   mountSurface({
     component: {
       component: 'ProductCarousel',
-      products: {path: '/state/root/products'},
-      heading: {path: '/state/root/heading'},
+      products: {'@path': '/state/root/products'},
+      heading: {'@path': '/state/root/heading'},
     },
     dataModel: [
       {path: '/state/root/products', value: products},
@@ -71,9 +71,9 @@ describe('add to cart from product cards', () => {
     mountSurface({
       component: {
         component: 'ProductResearchCard',
-        product: {path: '/state/root/product'},
-        summary: {path: '/state/root/summary'},
-        bullets: {path: '/state/root/bullets'},
+        product: {'@path': '/state/root/product'},
+        summary: {'@path': '/state/root/summary'},
+        bullets: {'@path': '/state/root/bullets'},
       },
       dataModel: [
         {path: '/state/root/product', value: WETSUIT},

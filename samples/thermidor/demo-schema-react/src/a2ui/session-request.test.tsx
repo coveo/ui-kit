@@ -40,7 +40,7 @@ const SUGGESTION: SessionRequest = {
   component: 'QuerySuggestions',
   name: 'fetchSuggestions',
   surfaceId: 'shell',
-  sourceComponentId: 'query-suggestions',
+  sourceComponentId: 'query_suggestions',
 };
 
 describe('isBlocking', () => {
@@ -80,7 +80,7 @@ const failedSuggestion: ActionError = {
   component: 'QuerySuggestions',
   name: 'fetchSuggestions',
   surfaceId: 'shell',
-  sourceComponentId: 'query-suggestions',
+  sourceComponentId: 'query_suggestions',
 };
 
 describe('useActionError', () => {
@@ -111,7 +111,7 @@ describe('useComponentActionError', () => {
   });
 
   it('does not report a failed suggestion', () => {
-    expect(actionErrorAt('shell', 'query-suggestions', failedSuggestion)).toBeUndefined();
+    expect(actionErrorAt('shell', 'query_suggestions', failedSuggestion)).toBeUndefined();
   });
 });
 

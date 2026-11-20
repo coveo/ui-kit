@@ -43,7 +43,7 @@ function mountGrid(products: unknown[], store: FakeCartStore) {
     );
   }
   mountSurface({
-    component: {component: 'ProductList', products: {path: '/state/root/products'}},
+    component: {component: 'ProductList', products: {'@path': '/state/root/products'}},
     dataModel: [{path: '/state/root/products', value: products}],
     wrapper: Wrapper,
   });

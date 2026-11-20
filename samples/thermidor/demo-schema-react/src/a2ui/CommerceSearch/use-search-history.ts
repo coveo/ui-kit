@@ -9,6 +9,9 @@ import {
 import {RestoredSurfacesContext} from '../surface-controls.js';
 import {buildRestoreSnapshot} from './restore-snapshot.js';
 
+// TODO(a2ui-react context): `context` is deprecated in @a2ui/react 0.16. Read the surface's
+// `dataModel`, `componentsModel` and `id` from `useA2uiSurface()`, and dispatch with its
+// `dispatchAction(action, componentId)` once a component can read its own id.
 /** The part of a renderer component context that the search history reads. */
 export interface SearchSurfaceContext {
   componentModel: {id: string};
