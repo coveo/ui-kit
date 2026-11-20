@@ -6,10 +6,11 @@
  * exists because the two ends of the protocol are pinned one minor version
  * apart with nothing in between:
  *
- * - Agent Gateway emits A2-UI **v1.0** exclusively — a spec Candidate
- *   (https://a2ui.org/specification/v1.0-a2ui/). `A2uiMessage.VERSION` is
- *   `"v1.0"` and it throws on any other version, on both construct and parse,
- *   and its snapshot/state path is v1.0-only by construction.
+ * - Agent Gateway emits A2-UI **v1.0** exclusively
+ *   (https://a2ui.org/specification/v1.0-a2ui/): today the spec Candidate,
+ *   with envelope `version: "v1.0"` and `{ "path" }` bindings, and soon the
+ *   final version, with envelope `version: "1.0"` and `{ "@path" }` bindings.
+ *   See "Dual input" below.
  * - Every renderer available to a consumer is **v0.9**, the Current spec
  *   (https://a2ui.org/specification/v0.9.1-a2ui/).
  *   `@copilotkit/a2ui-renderer` builds its `MessageProcessor` from
@@ -68,9 +69,30 @@
  *
  * Everything else is pass-through. Under the flat A2-UI v1.0 node model a node
  * carries a single `id`/`component` identity plus its presentation values, A2-UI
- * Data_Binding objects (`{ "path": <JSON Pointer> }`), and composition links
- * directly at the top level — there is no `props` wrapper, which is already the
- * shape the v0.9 renderer mounts. Nodes are forwarded byte-for-byte.
+ * Data_Binding objects, and composition links directly at the top level — there
+ * is no `props` wrapper, which is already the shape the v0.9 renderer mounts.
+ * Candidate nodes, whose bindings are already v0.9's `{ "path": <JSON Pointer> }`,
+ * are forwarded byte-for-byte. Component ids are never rewritten, whether
+ * snake_case (final 1.0) or hyphenated (candidate).
+ *
+ * ## Dual input (transitional)
+ *
+ * While Agent Gateway switches from the v1.0 candidate to the final v1.0, the
+ * projection reads both and produces the same v0.9 output for each, so a v0.9
+ * renderer keeps working across the switch with no change of its own:
+ *
+ * - `version: "v1.0"` (candidate) and `version: "1.0"` (final) envelopes get the
+ *   same conversion and the same surface lifecycle rules;
+ * - in component nodes (`createSurface.components`, `updateComponents.components`),
+ *   a final binding becomes a v0.9 binding: `{ "@path": x }` becomes
+ *   `{ "path": x }`, at any depth (child props, named slots, action contexts). A
+ *   binding is an object whose only key is `@path`, holding a string, the rule
+ *   Agent Gateway applies. Other `path` keys are data, not bindings, and are left
+ *   alone: `updateDataModel.path`, a ChildList template `{ componentId, path }`, and
+ *   data-model values such as a category facet's `path`.
+ *
+ * Once Agent Gateway emits only the final version, the `"v1.0"` input is dead
+ * code; it goes with the rest of this module (see "Removal trigger").
  *
  * ## Removal trigger
  *
@@ -81,16 +103,19 @@
  * 2. `@copilotkit/a2ui-renderer` (or whichever renderer consumers use) imports
  *    it.
  *
- * Then: delete this module, drop `session.a2uiMessages` and the renderer stream, and let
- * consumers read the turns' activities directly. That is
- * a breaking change to `@coveo/thermidor`, which is intended and acceptable
- * while the package is `0.x`.
+ * Then: delete this module and carry the gateway's final v1.0 messages to the
+ * renderer unchanged (https://github.com/coveo/ui-kit/pull/9017 does this for
+ * `@a2ui/react` 0.16). That is a breaking change to `@coveo/thermidor`, which is
+ * intended and acceptable while the package is `0.x`.
  */
 
 import type {A2uiV09Message} from './types.js';
 
-/** The A2-UI protocol version Agent Gateway emits. */
-const GATEWAY_PROTOCOL_VERSION = 'v1.0';
+/**
+ * The A2-UI protocol versions Agent Gateway emits: `"v1.0"`, the candidate it emits today, and
+ * `"1.0"`, the final version it switches to.
+ */
+const GATEWAY_PROTOCOL_VERSIONS: ReadonlySet<unknown> = new Set(['v1.0', '1.0']);
 
 /** The A2-UI protocol version every available renderer consumes. */
 export const RENDERER_PROTOCOL_VERSION = 'v0.9';
@@ -115,6 +140,33 @@ function toDataModelPath(key: string): string | null {
   return `/${key.replace(/~/g, '~0').replace(/\//g, '~1')}`;
 }
 
+/**
+ * Whether `value` is a final v1.0 data binding: an object whose only key is `@path`, holding a
+ * string. Agent Gateway applies the same rule.
+ */
+function isFinalBinding(value: Record<string, unknown>): value is {'@path': string} {
+  const keys = Object.keys(value);
+  return keys.length === 1 && keys[0] === '@path' && typeof value['@path'] === 'string';
+}
+
+/**
+ * Rewrites every final v1.0 data binding `{"@path": x}` in a component node, at any depth, as the
+ * v0.9 binding `{"path": x}`. Everything else is kept, including objects that merely have a `path`
+ * key among others, such as a ChildList template `{componentId, path}`. The input is never mutated.
+ */
+function toV09Bindings(value: unknown): unknown {
+  if (Array.isArray(value)) {
+    return value.map(toV09Bindings);
+  }
+  if (!isRecord(value)) {
+    return value;
+  }
+  if (isFinalBinding(value)) {
+    return {path: value['@path']};
+  }
+  return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, toV09Bindings(item)]));
+}
+
 function createdSurfaceId(message: A2uiV09Message): string | null {
   const createSurface = message['createSurface'];
   return isRecord(createSurface) && typeof createSurface['surfaceId'] === 'string'
@@ -125,14 +177,15 @@ function createdSurfaceId(message: A2uiV09Message): string | null {
 /**
  * Converts a single A2-UI v1.0 message into the equivalent v0.9 message(s).
  *
- * A message that does not declare `version: 'v1.0'` is forwarded verbatim, so an
- * already-v0.9 stream passes through untouched. A v1.0 message carrying no
+ * A message that declares neither `version: 'v1.0'` nor `version: '1.0'` is forwarded verbatim,
+ * so an already-v0.9 stream passes through untouched. Both gateway versions get the same
+ * conversion; the final version's `{"@path"}` bindings also become v0.9 `{"path"}` bindings. A v1.0 message carrying no
  * recognized operation is unconvertible and is dropped rather than forwarded, so
  * a malformed message can never mutate renderer state; the previously rendered
  * UI stays displayed.
  */
 function convertMessage(message: Record<string, unknown>): A2uiV09Message[] {
-  if (message['version'] !== GATEWAY_PROTOCOL_VERSION) {
+  if (!GATEWAY_PROTOCOL_VERSIONS.has(message['version'])) {
     return [message];
   }
 
@@ -164,7 +217,7 @@ function convertMessage(message: Record<string, unknown>): A2uiV09Message[] {
     if (Array.isArray(components) && components.length > 0) {
       converted.push({
         version: RENDERER_PROTOCOL_VERSION,
-        updateComponents: {surfaceId, components},
+        updateComponents: {surfaceId, components: toV09Bindings(components)},
       });
     }
 
@@ -190,7 +243,20 @@ function convertMessage(message: Record<string, unknown>): A2uiV09Message[] {
     return [{version: RENDERER_PROTOCOL_VERSION, updateDataModel: deletion}];
   }
 
-  for (const operation of ['updateDataModel', 'updateComponents', 'deleteSurface'] as const) {
+  const updateComponents = message['updateComponents'];
+  if (isRecord(updateComponents)) {
+    return [
+      {
+        version: RENDERER_PROTOCOL_VERSION,
+        updateComponents:
+          'components' in updateComponents
+            ? {...updateComponents, components: toV09Bindings(updateComponents['components'])}
+            : updateComponents,
+      },
+    ];
+  }
+
+  for (const operation of ['updateDataModel', 'deleteSurface'] as const) {
     const body = message[operation];
     if (isRecord(body)) {
       return [{version: RENDERER_PROTOCOL_VERSION, [operation]: body}];

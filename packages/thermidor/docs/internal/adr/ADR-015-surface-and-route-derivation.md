@@ -209,6 +209,34 @@ breaking change to `@coveo/thermidor`, which is intended and acceptable while th
 package is `0.x` — and is precisely why this compensation belongs in the package
 rather than in the server.
 
+### Dual input while Agent Gateway moves to the final v1.0 (2026-11-20)
+
+A2-UI v1.0 is now final, and Agent Gateway is switching from the candidate to it. On the
+wire, two things change: the envelope `version` goes from `"v1.0"` to `"1.0"`, and a data
+binding goes from `{ "path": <JSON Pointer> }` to `{ "@path": <JSON Pointer> }`. Component
+ids also become snake_case, which the projection never reads.
+
+Consumers such as the Coveo Admin UI still render with a v0.9 renderer (`@a2ui/web_core`
+0.12), and no v1.0 renderer is on npm yet. So that the backend can switch without breaking
+them, the projection reads **both** inputs for the length of the switch and produces the same
+v0.9 output for each:
+
+- both envelopes get the same conversion (the `createSurface` split, `value: null` as a v0.9
+  deletion, the `"v0.9"` envelope) and the same surface lifecycle rules (a `deleteSurface`
+  before a re-create);
+- in component nodes, and only there, a final binding becomes a v0.9 binding at any depth.
+  A binding is an object whose only key is `@path`, holding a string, the rule Agent Gateway
+  applies. Other `path` keys are data, not bindings, and are left alone: `updateDataModel.path`,
+  a ChildList template `{ componentId, path }`, and data-model values such as a category
+  facet's `path`;
+- component ids are forwarded as they arrive, snake_case or hyphenated.
+
+The public API doesn't change. The order is: release this, let consumers move to it, then
+switch the backend. The candidate input becomes dead code once the backend has switched, and it
+goes with the rest of the projection under the retirement condition above;
+[coveo/ui-kit#9017](https://github.com/coveo/ui-kit/pull/9017) is that retirement, for
+`@a2ui/react` 0.16.
+
 ### Coupling to serialization ([ADR-011](./ADR-011-session-serialization.md))
 
 `a2uiMessages` follows the same rule as `surfaces`: never persisted, re-derived from
