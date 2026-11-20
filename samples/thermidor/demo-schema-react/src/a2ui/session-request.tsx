@@ -8,6 +8,7 @@ import {
   useSyncExternalStore,
 } from 'react';
 import type {
+  ActionError,
   ActionRequest,
   ComponentActionNames,
   Session,
@@ -68,22 +69,40 @@ export function isBlocking(request: SessionRequest | undefined): boolean {
   );
 }
 
-/**
- * Why the last action dispatched from `surfaceId` failed, while the session still reports it. A
- * failed suggestion is not reported.
- */
-export function useActionError(surfaceId: string): string | undefined {
+/** The last failed action, while the session still reports it. A failed suggestion is not reported. */
+export function useReportedActionError(): ActionError | undefined {
   const source = useContext(SessionRequestContext);
   return useSyncExternalStore(
     source.subscribe,
     () => {
       const {actionError} = source.getSnapshot();
-      return actionError?.surfaceId === surfaceId && !lists(SILENT_FAILURES, actionError)
-        ? actionError.message
-        : undefined;
+      return actionError && !lists(SILENT_FAILURES, actionError) ? actionError : undefined;
     },
     () => undefined
   );
+}
+
+/**
+ * Why the last action dispatched from `surfaceId` failed, while the session still reports it. A
+ * failed suggestion is not reported.
+ */
+export function useActionError(surfaceId: string): string | undefined {
+  const actionError = useReportedActionError();
+  return actionError?.surfaceId === surfaceId ? actionError.message : undefined;
+}
+
+/**
+ * Why the last action dispatched from the node `componentId` of `surfaceId` failed, while the
+ * session still reports it. A failed suggestion is not reported.
+ */
+export function useComponentActionError(
+  surfaceId: string,
+  componentId: string
+): string | undefined {
+  const actionError = useReportedActionError();
+  return actionError?.surfaceId === surfaceId && actionError.sourceComponentId === componentId
+    ? actionError.message
+    : undefined;
 }
 
 /**

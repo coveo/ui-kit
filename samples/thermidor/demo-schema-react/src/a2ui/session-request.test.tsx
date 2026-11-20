@@ -7,6 +7,7 @@ import {
   SessionRequestProvider,
   submitQuery,
   useActionError,
+  useComponentActionError,
   useLatestWhenFree,
   type QuerySubmitter,
   type SessionRequestSource,
@@ -55,25 +56,36 @@ describe('isBlocking', () => {
   });
 });
 
-describe('useActionError', () => {
-  function actionErrorOn(surfaceId: string, actionError: ActionError) {
-    const source: SessionRequestSource = {
-      getSnapshot: () => ({...requestSnapshot(undefined), actionError}),
-      subscribe: () => () => {},
-    };
-    const wrapper = ({children}: {children: ReactNode}) => (
-      <SessionRequestProvider value={source}>{children}</SessionRequestProvider>
-    );
-    return renderHook(() => useActionError(surfaceId), {wrapper}).result.current;
-  }
-
-  const failedPageChange: ActionError = {
-    message: 'Bad gateway',
-    component: 'Pagination',
-    name: 'selectPage',
-    surfaceId: 'results',
-    sourceComponentId: 'pagination',
+function withActionError<T>(actionError: ActionError, hook: () => T): T {
+  const source: SessionRequestSource = {
+    getSnapshot: () => ({...requestSnapshot(undefined), actionError}),
+    subscribe: () => () => {},
   };
+  const wrapper = ({children}: {children: ReactNode}) => (
+    <SessionRequestProvider value={source}>{children}</SessionRequestProvider>
+  );
+  return renderHook(hook, {wrapper}).result.current;
+}
+
+const failedPageChange: ActionError = {
+  message: 'Bad gateway',
+  component: 'Pagination',
+  name: 'selectPage',
+  surfaceId: 'results',
+  sourceComponentId: 'pagination',
+};
+
+const failedSuggestion: ActionError = {
+  message: 'Bad gateway',
+  component: 'QuerySuggestions',
+  name: 'fetchSuggestions',
+  surfaceId: 'shell',
+  sourceComponentId: 'query-suggestions',
+};
+
+describe('useActionError', () => {
+  const actionErrorOn = (surfaceId: string, actionError: ActionError) =>
+    withActionError(actionError, () => useActionError(surfaceId));
 
   it('reports the failure of an action from the block', () => {
     expect(actionErrorOn('results', failedPageChange)).toBe('Bad gateway');
@@ -81,15 +93,25 @@ describe('useActionError', () => {
   });
 
   it('does not report a failed suggestion', () => {
-    expect(
-      actionErrorOn('shell', {
-        message: 'Bad gateway',
-        component: 'QuerySuggestions',
-        name: 'fetchSuggestions',
-        surfaceId: 'shell',
-        sourceComponentId: 'query-suggestions',
-      })
-    ).toBeUndefined();
+    expect(actionErrorOn('shell', failedSuggestion)).toBeUndefined();
+  });
+});
+
+describe('useComponentActionError', () => {
+  const actionErrorAt = (surfaceId: string, componentId: string, actionError: ActionError) =>
+    withActionError(actionError, () => useComponentActionError(surfaceId, componentId));
+
+  it('reports the failure of an action from the component', () => {
+    expect(actionErrorAt('results', 'pagination', failedPageChange)).toBe('Bad gateway');
+  });
+
+  it('does not report it for another component, or for the same id in another block', () => {
+    expect(actionErrorAt('results', 'sort', failedPageChange)).toBeUndefined();
+    expect(actionErrorAt('another-block', 'pagination', failedPageChange)).toBeUndefined();
+  });
+
+  it('does not report a failed suggestion', () => {
+    expect(actionErrorAt('shell', 'query-suggestions', failedSuggestion)).toBeUndefined();
   });
 });
 
