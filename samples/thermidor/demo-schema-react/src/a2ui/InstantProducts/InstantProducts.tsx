@@ -7,7 +7,7 @@ import {
   ASIDE_LISTBOX_ID,
 } from '../../components/SuggestionsDropdown/index.js';
 import {useMediaQuery} from '../../hooks/use-media-query.js';
-import {useFormatPrice} from '../../context/use-format-price.js';
+import {formatConfiguredPrice as formatPrice} from '../../context/format-configured-price.js';
 import {useSearchBoxQuery} from '../SearchBox/search-box-context.js';
 import {ProductChildren} from '../ProductChildren/ProductChildren.js';
 import {usePromotedProduct} from '../ProductChildren/use-promoted-product.js';
@@ -171,7 +171,6 @@ function ProductRow({
 }) {
   const [product, promote] = usePromotedProduct(listed);
   const image = product.ec_images?.[0];
-  const formatPrice = useFormatPrice();
   const price = product.ec_promo_price ?? product.ec_price;
   return (
     <div
