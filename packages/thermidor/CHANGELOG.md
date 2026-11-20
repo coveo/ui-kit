@@ -1,5 +1,36 @@
 # @coveo/thermidor
 
+## 0.11.0
+
+### Minor Changes
+
+- [#9009](https://github.com/coveo/ui-kit/pull/9009) [`74c8e21`](https://github.com/coveo/ui-kit/commit/74c8e21528ee2afb0927264dcbe998c5354402f1) - Drop the model's reasoning text from the session. `TurnAgent.reasoningSteps` becomes `toolCalls`, a `ToolCall[]` with no `type` discriminant, and `ReasoningStep`, `ReasoningMessageStep` and `ToolCallStep` are removed. `REASONING_MESSAGE_*` events are now ignored. The serialized session version moves to 6, so sessions saved by earlier versions are rejected on restore.
+
+- [`c496ad1`](https://github.com/coveo/ui-kit/commit/c496ad184080375ddb3311ec6ce238b9456ece96) - A session restored with a token now resumes through `initialize`, so it sends a request when the page loads: it sends its keys, and the endpoint answers with a new, live shell. The surfaces of the earlier restored turns are read-only snapshots: `DiscoveredSurface.readOnly` is `true` on them, and `dispatchAction` refuses their actions without a request, except `productClick`. The surfaces of the last restored turn that created any stay live. When the endpoint answers with another session instead, the session adopts its keys and drops the restored turns.
+
+- [#8973](https://github.com/coveo/ui-kit/pull/8973) [`7ccf8ad`](https://github.com/coveo/ui-kit/commit/7ccf8ad39a1e7b5f8b18a81516d5ffad269750b5) - The session now retries its automatic `initialize`, up to 3 attempts within 5 seconds, when the endpoint quickly rejects it with a network error, a `429`, `502`, `503` or `504`. A dispatch made during the retries is withheld, as during any request. The new `session.retryInitialization()` re-sends a failed `initialize`, a restored session's included.
+
+- [#8974](https://github.com/coveo/ui-kit/pull/8974) [`9270719`](https://github.com/coveo/ui-kit/commit/9270719cab391529e0d7a0d313b6060bf58ece2b) - An application can continue a session from its keys. `createSession` takes an optional `sessionId` (a UUID) and `sessionToken`, sent from the session's first request, `initialize` included, and `Session` exposes both as `sessionId` and `sessionToken`, including the new keys the endpoint answers with when an `initialize` finds the session expired. A `sessionId` alone opens a new session under that id. `createPrivateSession`'s `sessionId` is now part of `createSession`.
+
+  A session restored with a `sessionId` but no `sessionToken` now drops that id when its first request ends before the endpoint sends a token, so the endpoint assigns a new one. Only `createPrivateSession` did this before.
+
+  The automatic `initialize` of a session created with its keys is retried like any other, carrying them, and `session.retryInitialization()` now also re-sends a failed `initialize` once the session has a token, so the endpoint resumes that session.
+
+- [#8959](https://github.com/coveo/ui-kit/pull/8959) [`8ec1395`](https://github.com/coveo/ui-kit/commit/8ec13957f906cdb66c9d072ccf7b444cb29c7a74) - Tell a stopped turn from a failed one without reading its error message.
+
+  - An errored `Turn` and `SessionInitialization` carry `reason`: `'cancelled'` when `session.cancel()` stopped it, `'failed'` otherwise, including a run restored while it was streaming. The new `TurnErrorReason` type names it.
+  - A `RUN_ERROR` keeps the gateway's `code` as `errorCode` on the turn or initialization it fails, and on `ActionError` when it fails an action.
+  - `error` keeps its values, `retry` clears `reason` and `errorCode` with it, and both survive `serialize()` and `sessionToRestore`.
+  - A connection that drops after the stream's `RUN_FINISHED` or `RUN_ERROR` no longer overwrites the turn's outcome with a network error.
+
+  **Breaking:** the serialized session is now version 5, so a session serialized by an earlier version is rejected on restore.
+
+### Patch Changes
+
+- [#9016](https://github.com/coveo/ui-kit/pull/9016) [`5e87176`](https://github.com/coveo/ui-kit/commit/5e871768c188c88e677326774aa97f0d0fabebb5) - A converse request the agent gateway rejects now reports the gateway's own status, such as 412, instead of 406 Not Acceptable. Converse requests now accept a JSON answer as well as the event stream.
+
+- [#8951](https://github.com/coveo/ui-kit/pull/8951) [`f2014bc`](https://github.com/coveo/ui-kit/commit/f2014bc61ed69cd09e7e705338320dfa6ace18aa) - A concurrent action's answer taken from the cache, or applied again, now reaches the renderer stream as new objects instead of the ones it first delivered. A renderer that resets local state, such as a picked product child, when a value's identity changes now resets on every write.
+
 ## 0.10.0
 
 ### Minor Changes

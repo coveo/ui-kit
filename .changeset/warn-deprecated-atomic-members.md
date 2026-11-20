@@ -1,5 +1,0 @@
----
-'@coveo/atomic': minor
----
-
-Atomic now logs a warning through the engine logger, once per engine, when a page sets `reflect-state-in-url`, `enable-relevance-inspector`, `enable-cancel-last-action` or `should-highlight`, or calls `closeRelevanceInspector()`. Version 4 removes these members. Use `disable-state-reflection-in-url`, `disable-relevance-inspector`, `hide-cancel-last-action` and `no-highlight` instead, and remove calls to `closeRelevanceInspector()`, since the relevance inspector closes from its own dialog. The warning for a comma-separated `fields-to-include-in-citations` value now also fires when the value is set as a property, as the React and Angular wrappers do, and follows the configured log level instead of always logging to the console. Setting the property to a stringified JSON array, which the component splits on commas, now warns too. The `fieldsToIncludeInCitations` property of `atomic-generated-answer` and `atomic-insight-generated-answer` is now typed `string[] | string`, so TypeScript apps using the wrappers can pass an array of strings as the warning asks.
