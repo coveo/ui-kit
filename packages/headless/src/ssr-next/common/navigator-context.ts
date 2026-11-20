@@ -9,9 +9,10 @@ import type {NavigatorContext} from '../../app/navigator-context-provider.js';
  *
  * The cookie identifies the visitor for analytics. Create and store it only for visitors who can be
  * tracked under the privacy laws that apply to your site, for example once they have agreed in your
- * cookie banner, and pass no client ID for the others (see
+ * cookie banner; pass no client ID for the others and remove their cookie (see
  * [Data tracking](https://docs.coveo.com/en/3348/)). Coveo's browser libraries set this cookie on the
- * parent domain: on a site that spans subdomains, set the same `domain` so every subdomain reads one ID.
+ * site's registrable domain (`example.com`, not `www.example.com`): on a site that spans subdomains, set
+ * the same `domain` where you store and remove it, so every subdomain reads one ID.
  *
  * @group Navigator context
  */
@@ -85,16 +86,22 @@ function readHeader(headers: RequestHeaders, name: string): string | null {
  * @example
  * ```ts
  * // In an Express route, with the cookie-parser middleware. `hasAnalyticsConsent()` stands for your
- * // consent tool: the client ID is created and stored only for a visitor who agreed to analytics.
+ * // consent tool: a visitor who agreed to analytics keeps a valid client ID or gets a new one, and the
+ * // cookie of a visitor who did not agree is removed.
+ * const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+ *
  * app.get('/search', async (req, res) => {
- *   const clientId = hasAnalyticsConsent(req)
- *     ? (req.cookies[CLIENT_ID_COOKIE_NAME] ?? crypto.randomUUID())
- *     : null;
- *   if (clientId) {
+ *   const cookieClientId: string | undefined = req.cookies[CLIENT_ID_COOKIE_NAME];
+ *   let clientId: string | null = null;
+ *   if (hasAnalyticsConsent(req)) {
+ *     clientId =
+ *       cookieClientId && uuidPattern.test(cookieClientId) ? cookieClientId : crypto.randomUUID();
  *     res.cookie(CLIENT_ID_COOKIE_NAME, clientId, {
  *       maxAge: 365 * 24 * 60 * 60 * 1000,
  *       sameSite: 'lax',
  *     });
+ *   } else if (cookieClientId !== undefined) {
+ *     res.clearCookie(CLIENT_ID_COOKIE_NAME);
  *   }
  *
  *   const navigatorContext = buildNavigatorContext({
