@@ -160,6 +160,27 @@ describe('announcesConcurrent', () => {
     ).toBe(false);
   });
 
+  it.each([
+    ['an entry that is not a record', {fetchSuggestions: null}],
+    ['an invalid cache policy', {fetchSuggestions: {}, fetchInstantProducts: {cache: {ttlMs: 0}}}],
+  ])('ignores an announcement with %s, keeping the previous one', (_, malformed) => {
+    const after = (valid: unknown) =>
+      announcesConcurrent(
+        {
+          initialization: initializedWith(
+            announcing({shell: valid}),
+            announcing({shell: malformed})
+          ),
+          turns: [],
+        },
+        'shell',
+        'fetchSuggestions'
+      );
+
+    expect(after({fetchInstantProducts: {}})).toBe(false);
+    expect(after({fetchSuggestions: {}})).toBe(true);
+  });
+
   it("reads a surface's latest announcement, a turn's included", () => {
     const revoking = {response: {activities: [announcing({shell: {}})]}} as unknown as Turn;
     expect(

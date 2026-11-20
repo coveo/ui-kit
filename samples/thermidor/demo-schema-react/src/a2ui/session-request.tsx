@@ -105,9 +105,30 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+function isCachePolicy(policy: unknown): boolean {
+  return (
+    isRecord(policy) &&
+    typeof policy['ttlMs'] === 'number' &&
+    Number.isFinite(policy['ttlMs']) &&
+    policy['ttlMs'] > 0
+  );
+}
+
+/** Whether `actions` is a valid announcement: every entry a record, its `cache` absent or valid. */
+function isValidAnnouncement(actions: unknown): actions is Record<string, unknown> {
+  return (
+    isRecord(actions) &&
+    Object.values(actions).every(
+      (action) =>
+        isRecord(action) && (action['cache'] === undefined || isCachePolicy(action['cache']))
+    )
+  );
+}
+
 /**
- * Whether the producer's latest `concurrentActions` announcement for `surfaceId` lists `name`, read
- * from the session's activity log as the session reads it (ADR-020). The session sends such an
+ * Whether the producer's latest valid `concurrentActions` announcement for `surfaceId` lists
+ * `name`, read from the session's activity log as the session reads it (ADR-020): a malformed
+ * announcement leaves the previous one in force. The session sends such an
  * action dispatched from that surface at once, whatever request is in flight, and never makes it
  * the session's request.
  */
@@ -123,7 +144,7 @@ export function announcesConcurrent(
   ];
   for (const {metadata} of activities) {
     const announcements = metadata?.['concurrentActions'];
-    if (isRecord(announcements) && isRecord(announcements[surfaceId])) {
+    if (isRecord(announcements) && isValidAnnouncement(announcements[surfaceId])) {
       latest = announcements[surfaceId];
     }
   }
