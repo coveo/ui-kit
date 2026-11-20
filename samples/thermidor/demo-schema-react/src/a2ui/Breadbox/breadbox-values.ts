@@ -1,3 +1,4 @@
+import {formatFieldNumber} from '../../context/format-configured-price.js';
 import type {BreadboxDeselectPayload, BreadboxFacet} from '@coveo/thermidor-schema/zod3';
 
 export interface BreadboxValue {
@@ -8,14 +9,9 @@ export interface BreadboxValue {
   payload: BreadboxDeselectPayload;
 }
 
-const PRICE_FIELDS = new Set(['ec_price', 'ec_promo_price']);
 const PATH_LIMIT = 3;
 const PATH_SEPARATOR = ' / ';
 const ELLIPSIS = '...';
-
-function formatNumber(field: string, value: number): string {
-  return PRICE_FIELDS.has(field) ? `$${value}` : value.toLocaleString();
-}
 
 /** Commerce API dates are `YYYY/MM/DD@HH:mm:ss`; the breadbox shows the day only. */
 function formatDate(value: string): string {
@@ -42,7 +38,7 @@ export function breadboxValues(facet: BreadboxFacet): BreadboxValue[] {
       }));
     case 'numericalRange':
       return facet.values.map(({start, end}) => {
-        const label = `${formatNumber(facet.field, start)} – ${formatNumber(facet.field, end)}`;
+        const label = `${formatFieldNumber(facet.field, start)} – ${formatFieldNumber(facet.field, end)}`;
         return {
           key: `${start}..${end}`,
           label,
