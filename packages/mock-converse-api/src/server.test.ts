@@ -379,6 +379,15 @@ describe('createMockConverseServer', () => {
         ],
       });
       expect(createdSurfaceIds(second)[0]).not.toBe(createdSurfaceIds(first)[0]);
+      const [snapshot] = first.filter(({event}) => event === 'ACTIVITY_SNAPSHOT');
+      expect(snapshot.data.metadata).toEqual({
+        concurrentActions: {
+          [createdSurfaceIds(first)[0]]: {
+            fetchInstantProducts: {cache: {ttlMs: 60000}},
+            fetchSuggestions: {},
+          },
+        },
+      });
     });
 
     const shellRecentQueries = (events: SseEvent[]) => {
@@ -555,6 +564,71 @@ describe('createMockConverseServer', () => {
       expect(JSON.parse(replacedShell.body)).toMatchObject({
         errorCode: 'AGENT:ACTION_NOT_APPLICABLE',
       });
+    });
+
+    // Resolves once the response has started streaming, with the rest of the response.
+    const streamingSchemaRequest = (body: Record<string, unknown>) =>
+      new Promise<{completed: Promise<{statusCode: number; body: string}>}>((started, reject) => {
+        const address = server.address() as {port: number};
+        const req = http.request(
+          {
+            hostname: '127.0.0.1',
+            port: address.port,
+            method: 'POST',
+            path: '/converse-schema',
+            headers: {'Content-Type': 'application/json'},
+          },
+          (res) => {
+            let data = '';
+            const completed = new Promise<{statusCode: number; body: string}>((resolve) =>
+              res.on('end', () => resolve({statusCode: res.statusCode ?? 0, body: data}))
+            );
+            res.once('data', () => started({completed}));
+            res.on('data', (chunk) => (data += chunk));
+          }
+        );
+        req.on('error', reject);
+        req.end(JSON.stringify(body));
+      });
+
+    it('answers fetchSuggestions beside another request, and another request beside it', async () => {
+      await startServer();
+      const opened = await initialize();
+      const keys = sessionKeys(opened);
+      const [shellId] = createdSurfaceIds(opened);
+      const fetchSuggestionsBody = (query: string) => ({
+        message: null,
+        ...keys,
+        action: {
+          name: 'fetchSuggestions',
+          surfaceId: shellId,
+          sourceComponentId: 'query-suggestions',
+          context: {query},
+        },
+      });
+      const suggestionsOf = (body: string) =>
+        statesByNode(parseEvents(body))[`${shellId} /state/query-suggestions`];
+
+      const prompt = await streamingSchemaRequest({message: 'hello', ...keys});
+      const besidePrompt = await postSchema(fetchSuggestionsBody('surf'));
+      expect(besidePrompt.statusCode).toBe(200);
+      expect(sessionKeys(parseEvents(besidePrompt.body))).toEqual(keys);
+      expect(suggestionsOf(besidePrompt.body)).toMatchObject({
+        query: 'surf',
+        completions: [{expression: 'surfboards'}, {}, {}, {}, {}],
+      });
+      expect((await prompt.completed).statusCode).toBe(200);
+
+      const suggestions = await streamingSchemaRequest(fetchSuggestionsBody('kayak'));
+      const [besideSuggestions, otherSuggestions] = await Promise.all([
+        postSchema({message: 'water sports', ...keys}),
+        postSchema(fetchSuggestionsBody('wetsuit')),
+      ]);
+      expect(besideSuggestions.statusCode).toBe(200);
+      expect(otherSuggestions.statusCode).toBe(200);
+      const completed = await suggestions.completed;
+      expect(completed.statusCode).toBe(200);
+      expect(suggestionsOf(completed.body)).toMatchObject({query: 'kayak'});
     });
 
     it("answers the session's recent queries, and clears or removes them in the turn slot", async () => {
