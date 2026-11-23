@@ -158,6 +158,54 @@ describe('commerce api client', () => {
     });
   });
 
+  describe('facet responses without a #facetId', () => {
+    const mockFacetsResponse = (facets: unknown[]) =>
+      mockPlatformCall({
+        ok: true,
+        json: () => Promise.resolve({facets}),
+      });
+
+    it('#getProductListing uses the facet #field as its #facetId', async () => {
+      mockFacetsResponse([{field: 'ec_brand', type: 'regular', values: []}]);
+
+      const response = await client.getProductListing({
+        ...(await buildCommerceAPIRequest()),
+        enableResults: false,
+      });
+
+      expect(response).toMatchObject({
+        success: {facets: [{facetId: 'ec_brand', field: 'ec_brand'}]},
+      });
+    });
+
+    it('#search uses the facet #field as its #facetId', async () => {
+      mockFacetsResponse([{field: 'ec_brand', type: 'regular', values: []}]);
+
+      const response = await client.search({
+        ...(await buildCommerceAPIRequest()),
+        query: 'some query',
+        enableResults: false,
+      });
+
+      expect(response).toMatchObject({
+        success: {facets: [{facetId: 'ec_brand', field: 'ec_brand'}]},
+      });
+    });
+
+    it('keeps the #facetId that the API returns', async () => {
+      mockFacetsResponse([{facetId: 'brand', field: 'ec_brand', type: 'regular', values: []}]);
+
+      const response = await client.getProductListing({
+        ...(await buildCommerceAPIRequest()),
+        enableResults: false,
+      });
+
+      expect(response).toMatchObject({
+        success: {facets: [{facetId: 'brand', field: 'ec_brand'}]},
+      });
+    });
+  });
+
   it('#getRecommendations should call the platform endpoint with the correct arguments', async () => {
     const request = await buildRecommendationsCommerceAPIRequest();
 
