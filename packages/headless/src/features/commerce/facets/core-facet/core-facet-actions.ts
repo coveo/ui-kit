@@ -19,6 +19,10 @@ export const updateCoreFacetNumberOfValues = createAction(
     })
 );
 
+/**
+ * @deprecated Use the `showMoreValues` and `showLessValues` methods of the facet controller instead. This type will
+ * be removed in the next major version.
+ */
 export type UpdateCoreFacetIsFieldExpandedPayload = UpdateFacetIsFieldExpandedActionCreatorPayload;
 
 export const updateCoreFacetIsFieldExpanded = createAction(
@@ -73,6 +77,10 @@ export const updateCoreFacetFreezeCurrentValues = createAction(
     })
 );
 
+/**
+ * @deprecated The Commerce API has never used `preventAutoSelect`, so the action creator that takes this payload has
+ * no effect and no replacement. This type will be removed in the next major version.
+ */
 export type UpdateAutoSelectionForAllCoreFacetsPayload =
   UpdateFacetAutoSelectionActionCreatorPayload;
 

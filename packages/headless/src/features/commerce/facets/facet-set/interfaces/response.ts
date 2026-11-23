@@ -10,7 +10,15 @@ export type CategoryFacetResponse = BaseFacetResponse<CategoryFacetValue, 'hiera
 
 interface SharedFacetValueProperties {
   numberOfResults: number;
+  /**
+   * @deprecated The Commerce API stops returning this property in June 2027, with no replacement. This property will
+   * be removed in the next major version.
+   */
   isAutoSelected: boolean;
+  /**
+   * @deprecated The Commerce API stops returning this property in June 2027, with no replacement. This property will
+   * be removed in the next major version.
+   */
   isSuggested: boolean;
 }
 
