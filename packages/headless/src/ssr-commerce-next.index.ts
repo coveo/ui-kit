@@ -273,7 +273,7 @@ export type {
   BuildNavigatorContextOptions,
   RequestHeaders,
 } from './ssr-next/common/navigator-context.js';
-export {buildNavigatorContext} from './ssr-next/common/navigator-context.js';
+export {buildNavigatorContext, CLIENT_ID_COOKIE_NAME} from './ssr-next/common/navigator-context.js';
 export {defineCommerceEngine} from './ssr-next/commerce/engine/commerce-engine.ssr.js';
 export type {SSRCommerceEngine as CommerceEngine} from './ssr-next/commerce/factories/build-factory.js';
 // Main App

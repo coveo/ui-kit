@@ -1,6 +1,24 @@
 import type {NavigatorContext} from '../../app/navigator-context-provider.js';
 
 /**
+ * The name of the cookie in which Coveo stores the visitor's client ID.
+ *
+ * On the server, read the cookie where the response can still set cookies (for example in an Express
+ * route or a Next.js proxy), create and store a client ID when it is missing or invalid, and pass that ID to
+ * {@link buildNavigatorContext}, so the browser and the next requests report the same visitor.
+ *
+ * The cookie identifies the visitor for analytics. Create and store it only for visitors who can be
+ * tracked under the privacy laws that apply to your site, for example once they have agreed in your
+ * cookie banner; pass no client ID for the others and remove their cookie (see
+ * [Data tracking](https://docs.coveo.com/en/3348/)). Coveo's browser libraries set this cookie on the
+ * site's registrable domain (`example.com`, not `www.example.com`): on a site that spans subdomains, set
+ * the same `domain` where you store and remove it, so every subdomain reads one ID.
+ *
+ * @group Navigator context
+ */
+export const CLIENT_ID_COOKIE_NAME = 'coveo_visitorId';
+
+/**
  * The request headers {@link buildNavigatorContext} reads: a WHATWG `Headers` instance (Next.js
  * `headers()`, `request.headers`) or a plain object such as Node's `IncomingHttpHeaders`.
  *
@@ -25,15 +43,15 @@ export interface BuildNavigatorContextOptions {
    */
   location?: string | null;
   /**
-   * The visitor's client ID.
+   * The visitor's client ID, usually the value of the {@link CLIENT_ID_COOKIE_NAME} cookie.
    *
-   * When it is missing or is not a valid UUID, the navigator context gets an empty client ID, and the
-   * requests are sent without analytics capture.
+   * Leave it out for a visitor who must not be tracked. When it is missing or is not a valid UUID, the
+   * navigator context gets an empty client ID, and the engine built for the request sends no analytics,
+   * on the server and in the browser after hydration.
    */
   clientId?: string | null;
   /**
-   * Set to `false` to send the requests without analytics capture even though the visitor has a
-   * client ID.
+   * Set to `false` to send no analytics for this request even though the visitor has a client ID.
    */
   capture?: boolean;
 }
@@ -62,24 +80,44 @@ function readHeader(headers: RequestHeaders, name: string): string | null {
  * It does not depend on a framework: pass the request headers as they come, a `Headers` instance or a
  * plain object such as Express's `req.headers`, with the page URL and the visitor's client ID.
  *
+ * The client ID decides whether the visitor is tracked. Without a valid one, the request and the page
+ * hydrated from its static state send no analytics.
+ *
  * @example
  * ```ts
- * // In an Express route.
+ * // In an Express route, with the cookie-parser middleware. `hasAnalyticsConsent()` stands for your
+ * // consent tool: a visitor who agreed to analytics keeps a valid client ID or gets a new one, and the
+ * // cookie of a visitor who did not agree is removed.
+ * const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+ *
  * app.get('/search', async (req, res) => {
+ *   const cookieClientId: string | undefined = req.cookies[CLIENT_ID_COOKIE_NAME];
+ *   let clientId: string | null = null;
+ *   if (hasAnalyticsConsent(req)) {
+ *     clientId =
+ *       cookieClientId && uuidPattern.test(cookieClientId) ? cookieClientId : crypto.randomUUID();
+ *     res.cookie(CLIENT_ID_COOKIE_NAME, clientId, {
+ *       maxAge: 365 * 24 * 60 * 60 * 1000,
+ *       sameSite: 'lax',
+ *     });
+ *   } else if (cookieClientId !== undefined) {
+ *     res.clearCookie(CLIENT_ID_COOKIE_NAME);
+ *   }
+ *
  *   const navigatorContext = buildNavigatorContext({
  *     headers: req.headers,
  *     location: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
- *     clientId: getClientId(req),
+ *     clientId,
  *   });
- *
  *   const staticState = await searchEngineDefinition.fetchStaticState({navigatorContext, ...});
  * });
  * ```
  *
  * @example
  * ```ts
- * // In a Next.js server component. A proxy forwards the visitor's client ID and the page URL as
- * // request headers, because Next.js does not expose them to server components.
+ * // In a Next.js server component. A proxy reads the client ID cookie, creates and stores the ID for a
+ * // visitor who agreed to analytics, and forwards it and the page URL as request headers: a server
+ * // component cannot set cookies.
  * const requestHeaders = await headers();
  * const navigatorContext = buildNavigatorContext({
  *   headers: requestHeaders,

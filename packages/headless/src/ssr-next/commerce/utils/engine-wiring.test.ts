@@ -102,7 +102,7 @@ describe('#augmentCommerceEngineOptions', () => {
 
       expect(engineOptions.navigatorContextProvider?.()).toBeUndefined();
       expect(mockLogger.error).toHaveBeenCalledWith(
-        'No navigatorContext was provided. This may impact analytics accuracy, personalization, and session tracking. Refer to the Coveo documentation on server-side navigation context for implementation guidance.'
+        'No navigatorContext was provided, so this request sends no analytics, on the server or in the browser after hydration. Refer to the Coveo documentation on server-side navigation context for implementation guidance.'
       );
     });
 
@@ -121,6 +121,76 @@ describe('#augmentCommerceEngineOptions', () => {
           navigatorContext: undefined,
         })
       );
+    });
+  });
+
+  describe('analytics', () => {
+    it('should leave the analytics configuration as defined for a visitor with a client ID', () => {
+      const engineOptions = augmentCommerceEngineOptions(sampleCommerceConfig, {
+        navigatorContext: createNavigatorContext(),
+        context: buildMockCommerceContext(),
+      });
+
+      expect(engineOptions.configuration.analytics).toBe(
+        sampleCommerceConfig.configuration.analytics
+      );
+    });
+
+    it('should turn analytics off for a visitor without a client ID', () => {
+      const engineOptions = augmentCommerceEngineOptions(sampleCommerceConfig, {
+        navigatorContext: createNavigatorContext({clientId: ''}),
+        context: buildMockCommerceContext(),
+      });
+
+      expect(engineOptions.configuration.analytics).toEqual({
+        ...sampleCommerceConfig.configuration.analytics,
+        enabled: false,
+      });
+    });
+
+    it('should turn analytics off when capture is off, even with a client ID', () => {
+      const engineOptions = augmentCommerceEngineOptions(sampleCommerceConfig, {
+        navigatorContext: createNavigatorContext({capture: false}),
+        context: buildMockCommerceContext(),
+      });
+
+      expect(engineOptions.configuration.analytics?.enabled).toBe(false);
+    });
+
+    it('should turn capture off for a visitor without a client ID, even when the navigator context captures', () => {
+      const navigatorContext = createNavigatorContext({clientId: '', capture: true});
+
+      const engineOptions = augmentCommerceEngineOptions(sampleCommerceConfig, {
+        navigatorContext,
+        context: buildMockCommerceContext(),
+      });
+
+      expect(engineOptions.navigatorContextProvider?.()).toEqual({
+        ...navigatorContext,
+        capture: false,
+      });
+    });
+
+    it('should turn analytics off when no navigator context is provided', () => {
+      const buildConfigWithout: BuildConfigWithout = {
+        context: buildMockCommerceContext(),
+      };
+
+      const engineOptions = augmentCommerceEngineOptions(
+        sampleCommerceConfig,
+        buildConfigWithout as CommonBuildConfig
+      );
+
+      expect(engineOptions.configuration.analytics?.enabled).toBe(false);
+    });
+
+    it('should not change the shared definition configuration', () => {
+      augmentCommerceEngineOptions(sampleCommerceConfig, {
+        navigatorContext: createNavigatorContext({clientId: ''}),
+        context: buildMockCommerceContext(),
+      });
+
+      expect(sampleCommerceConfig.configuration.analytics?.enabled).not.toBe(false);
     });
   });
 

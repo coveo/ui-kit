@@ -459,7 +459,7 @@ export type {
   BuildNavigatorContextOptions,
   RequestHeaders,
 } from './ssr-next/common/navigator-context.js';
-export {buildNavigatorContext} from './ssr-next/common/navigator-context.js';
+export {buildNavigatorContext, CLIENT_ID_COOKIE_NAME} from './ssr-next/common/navigator-context.js';
 export {defineSearchEngine} from './ssr-next/search/engine/search-engine.ssr.js';
 export type {
   BuildConfig,
