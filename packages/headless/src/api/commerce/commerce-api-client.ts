@@ -72,7 +72,8 @@ export const isErrorResponse = <T>(r: CommerceAPIResponse<T>): r is CommerceAPIE
   return (r as CommerceAPIErrorResponse).error !== undefined;
 };
 
-// The simplified Commerce facet API stops returning `facetId`, and Headless keys facets by it.
+// The simplified Commerce facet API stops returning `facetId` in search and listing facets, and
+// Headless keys facets by it. Query suggest isn't part of that change and keeps `facetId`.
 function fillMissingFacetIds<T extends {facets: AnyFacetResponse[]}>(
   response: CommerceAPIResponse<T>
 ): CommerceAPIResponse<T> {
