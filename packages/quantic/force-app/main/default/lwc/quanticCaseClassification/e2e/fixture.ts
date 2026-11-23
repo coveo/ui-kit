@@ -47,11 +47,15 @@ export const test = quanticBase.extend<QuanticCaseClassificationE2EFixtures>({
       allOptions
     );
     if (liveCaseAssistApi) {
+      // The interface logs the case start only once every component, the case classification included, is initialized with the engine.
+      const caseStartCollectEventPromise =
+        caseClassificationObject.waitForCaseStartCollectAnalytics();
       await configuration.configure({
         caseAssistId: demoCaseAssistId,
         ...options,
       });
       await caseClassificationObject.allOptionsSelectInput.waitFor();
+      await caseStartCollectEventPromise;
       await use(caseClassificationObject);
       return;
     }
