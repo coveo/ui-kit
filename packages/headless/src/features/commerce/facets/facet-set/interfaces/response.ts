@@ -6,7 +6,12 @@ import type {
 } from './common.js';
 
 export type CategoryFacetResponse = BaseFacetResponse<CategoryFacetValue, 'hierarchical'> &
-  CategoryFacetDelimitingCharacter;
+  CategoryFacetDelimitingCharacter &
+  InitialNumberOfValuesProperty;
+
+interface InitialNumberOfValuesProperty {
+  initialNumberOfValues?: number;
+}
 
 interface SharedFacetValueProperties {
   numberOfResults: number;
@@ -31,7 +36,8 @@ export type NumericFacetResponse = BaseFacetResponse<NumericFacetValue, 'numeric
 
 export type NumericFacetValue = RangeFacetValue<number>;
 
-export type RegularFacetResponse = BaseFacetResponse<RegularFacetValue, 'regular'>;
+export type RegularFacetResponse = BaseFacetResponse<RegularFacetValue, 'regular'> &
+  InitialNumberOfValuesProperty;
 
 export interface RegularFacetValue extends BaseFacetValue, SharedFacetValueProperties {
   value: string;

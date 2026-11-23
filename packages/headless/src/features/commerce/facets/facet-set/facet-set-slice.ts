@@ -537,7 +537,12 @@ function updateStateFromFacetResponse(
     facetsToRemove.delete(facetId);
   }
 
-  if (facetRequest.initialNumberOfValues === undefined) {
+  if (
+    'initialNumberOfValues' in facetResponse &&
+    typeof facetResponse.initialNumberOfValues === 'number'
+  ) {
+    facetRequest.initialNumberOfValues = facetResponse.initialNumberOfValues;
+  } else if (facetRequest.initialNumberOfValues === undefined) {
     facetRequest.initialNumberOfValues = facetResponse.numberOfValues;
   }
 
