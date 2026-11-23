@@ -24,7 +24,7 @@ const rsbuild = await rsbuildApi.createRsbuild({
         // ⚠️  Changing these entry names affects CDN pointer files in ui-kit-cd.
         'atomic.esm': './src/cdn.ts',
         index: './src/loader.ts',
-        'index.esm': './src/index.ts',
+        'index.esm': './src/cdn-index-esm.ts',
       },
       tsconfigPath: './tsconfig.lit.json',
       decorators: {version: 'legacy'},
