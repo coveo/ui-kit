@@ -158,6 +158,54 @@ describe('commerce api client', () => {
     });
   });
 
+  describe('facet responses without a #facetId', () => {
+    const mockFacetsResponse = (facets: unknown[]) =>
+      mockPlatformCall({
+        ok: true,
+        json: () => Promise.resolve({facets}),
+      });
+
+    it('#getProductListing uses the facet #field as its #facetId', async () => {
+      mockFacetsResponse([{field: 'ec_brand', type: 'regular', values: []}]);
+
+      const response = await client.getProductListing({
+        ...(await buildCommerceAPIRequest()),
+        enableResults: false,
+      });
+
+      expect(response).toMatchObject({
+        success: {facets: [{facetId: 'ec_brand', field: 'ec_brand'}]},
+      });
+    });
+
+    it('#search uses the facet #field as its #facetId', async () => {
+      mockFacetsResponse([{field: 'ec_brand', type: 'regular', values: []}]);
+
+      const response = await client.search({
+        ...(await buildCommerceAPIRequest()),
+        query: 'some query',
+        enableResults: false,
+      });
+
+      expect(response).toMatchObject({
+        success: {facets: [{facetId: 'ec_brand', field: 'ec_brand'}]},
+      });
+    });
+
+    it('keeps the #facetId that the API returns', async () => {
+      mockFacetsResponse([{facetId: 'brand', field: 'ec_brand', type: 'regular', values: []}]);
+
+      const response = await client.getProductListing({
+        ...(await buildCommerceAPIRequest()),
+        enableResults: false,
+      });
+
+      expect(response).toMatchObject({
+        success: {facets: [{facetId: 'brand', field: 'ec_brand'}]},
+      });
+    });
+  });
+
   it('#getRecommendations should call the platform endpoint with the correct arguments', async () => {
     const request = await buildRecommendationsCommerceAPIRequest();
 
@@ -331,6 +379,45 @@ describe('commerce api client', () => {
       await client.facetSearch(await buildFacetSearchRequest(), 'SEARCH');
 
       expect(platformCallMock.mock.calls[0][0].requestParams).not.toHaveProperty('ignorePaths');
+    });
+  });
+
+  describe('#facetSearch #field', () => {
+    const buildFacetSearchRequest = async (field?: string) => ({
+      ...(await buildCommerceAPIRequest()),
+      facetId: 'some-facet-id',
+      facetQuery: 'some facet query',
+      query: 'some query',
+      numberOfValues: 5,
+      ...(field !== undefined && {field}),
+    });
+
+    beforeEach(() => {
+      mockPlatformCall({
+        ok: true,
+        json: () => Promise.resolve('some content'),
+      });
+    });
+
+    it('when the request has a field, sends it with the facet ID', async () => {
+      await client.facetSearch(await buildFacetSearchRequest('ec_brand'), 'SEARCH');
+
+      expect(platformCallMock.mock.calls[0][0].requestParams).toMatchObject({
+        facetId: 'some-facet-id',
+        field: 'ec_brand',
+      });
+    });
+
+    it('when the request has an empty field, does not send it', async () => {
+      await client.facetSearch(await buildFacetSearchRequest(''), 'SEARCH');
+
+      expect(platformCallMock.mock.calls[0][0].requestParams).not.toHaveProperty('field');
+    });
+
+    it('when the request has no field, does not send it', async () => {
+      await client.facetSearch(await buildFacetSearchRequest(), 'SEARCH');
+
+      expect(platformCallMock.mock.calls[0][0].requestParams).not.toHaveProperty('field');
     });
   });
 

@@ -191,6 +191,55 @@ describe('commerceFacetSetReducer', () => {
           expect(finalState[facetId]?.request.initialNumberOfValues).toEqual(8);
         });
 
+        describe('when the facet response has an #initialNumberOfValues', () => {
+          it('sets the facet #initialNumberOfValues to it rather than to #numberOfValues', () => {
+            const facet = buildMockCommerceRegularFacetResponse({
+              facetId,
+              numberOfValues: 15,
+              initialNumberOfValues: 5,
+            });
+
+            const action = buildQueryAction([facet]);
+            const finalState = commerceFacetSetReducer(state, action);
+
+            expect(finalState[facetId]?.request.initialNumberOfValues).toEqual(5);
+          });
+
+          it('replaces the facet #initialNumberOfValues already in the state', () => {
+            state[facetId] = buildMockCommerceFacetSlice({
+              request: buildMockCommerceFacetRequest({
+                type: 'regular',
+                facetId,
+                initialNumberOfValues: 15,
+              }),
+            });
+
+            const facet = buildMockCommerceRegularFacetResponse({
+              facetId,
+              numberOfValues: 15,
+              initialNumberOfValues: 5,
+            });
+
+            const action = buildQueryAction([facet]);
+            const finalState = commerceFacetSetReducer(state, action);
+
+            expect(finalState[facetId]?.request.initialNumberOfValues).toEqual(5);
+          });
+
+          it('sets the #initialNumberOfValues of a hierarchical facet to it', () => {
+            const facet = buildMockCategoryFacetResponse({
+              facetId,
+              numberOfValues: 15,
+              initialNumberOfValues: 5,
+            });
+
+            const action = buildQueryAction([facet]);
+            const finalState = commerceFacetSetReducer(state, action);
+
+            expect(finalState[facetId]?.request.initialNumberOfValues).toEqual(5);
+          });
+        });
+
         it('sets/updates facet request #displayName in state from response', () => {
           const facetResponse1 = buildMockCommerceRegularFacetResponse({
             facetId,
