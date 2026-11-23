@@ -476,6 +476,8 @@ export type SessionRuntimeConfig<TContracts extends ContractsSchema = ContractsS
 >;
 
 const LOCALE_KEYS = ['language', 'country', 'currency'] as const;
+const REQUIRED_REQUEST_KEYS = [...LOCALE_KEYS, 'location', 'clientId'] as const;
+const MAX_PROMPT_LENGTH = 20000;
 
 /**
  * Creates a {@link Session} over a fresh observable store + fold.
@@ -484,11 +486,14 @@ export function createSession<TContracts extends ContractsSchema>(
   config: SessionConfig<TContracts>
 ): Session<TContracts> {
   requireNonBlank(config, ['agentConfigurationId', 'trackingId'], 'createSession');
+  if (!UUID.test(config.agentConfigurationId.trim())) {
+    throw new Error('createSession requires the agentConfigurationId to be a UUID.');
+  }
   const {agentConfigurationId, trackingId} = config;
   return createSessionRuntime(config, {agentConfigurationId, trackingId});
 }
 
-function requireNonBlank<T extends object>(
+export function requireNonBlank<T extends object>(
   record: T,
   keys: readonly (keyof T & string)[],
   owner: string
@@ -502,7 +507,7 @@ function requireNonBlank<T extends object>(
 }
 
 function readLocale(navigatorContext: NavigatorContext): RequestLocale {
-  requireNonBlank(navigatorContext, LOCALE_KEYS, 'The navigator context');
+  requireNonBlank(navigatorContext, REQUIRED_REQUEST_KEYS, 'The navigator context');
   return {
     language: navigatorContext.language.trim(),
     country: navigatorContext.country.trim(),
@@ -1212,6 +1217,12 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
    * opens the first turn of a session.
    */
   function startPromptTurn(prompt: string | undefined): Promise<void> {
+    if (!prompt?.trim()) {
+      throw new Error('A prompt must not be blank.');
+    }
+    if (prompt.length > MAX_PROMPT_LENGTH) {
+      throw new Error(`A prompt must not be longer than ${MAX_PROMPT_LENGTH} characters.`);
+    }
     const turnId = generateId();
     return sendRequest({kind: 'prompt', turnId}, async (abortController) => {
       openTurn(turnId, {prompt});

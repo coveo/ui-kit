@@ -37,7 +37,7 @@ test('takes the public config with optional ids, and no locale fields', () => {
 
   const navigatorContextProvider = () => ({
     clientId: 'client-1',
-    location: null,
+    location: 'https://shop.example.com/',
     referrer: null,
     userAgent: null,
     language: 'en',

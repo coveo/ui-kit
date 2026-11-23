@@ -239,7 +239,7 @@ function selectPageMessage(page: number) {
 
 const navigatorContext: NavigatorContext = {
   clientId: 'client-1',
-  location: null,
+  location: 'https://shop.example.com/',
   referrer: null,
   userAgent: null,
   language: 'en',
@@ -251,7 +251,7 @@ const baseConfig: SessionConfig = {
   contracts,
   organizationId: 'org-1',
   accessToken: 'token-1',
-  agentConfigurationId: 'agent-configuration-1',
+  agentConfigurationId: '0b4b6a0e-6c53-4d5c-9d63-6f0f8f8a1c11',
   trackingId: 'tracking-1',
   navigatorContextProvider: () => navigatorContext,
   initialize: false,
@@ -302,7 +302,7 @@ describe('createSession lifecycle', () => {
         'currency',
       ]);
       expect(callMock.mock.calls[0][0]).toMatchObject({
-        agentConfigurationId: 'agent-configuration-1',
+        agentConfigurationId: '0b4b6a0e-6c53-4d5c-9d63-6f0f8f8a1c11',
         trackingId: 'tracking-1',
         language: 'en',
         country: 'US',
@@ -393,6 +393,84 @@ describe('createSession lifecycle', () => {
     expect(callMock).not.toHaveBeenCalled();
     expect(session.initialization).toMatchObject({status: 'error'});
     expect(session.initialization?.error).toContain('currency');
+  });
+
+  it.each([
+    ['location', null],
+    ['location', ' '],
+    ['clientId', ''],
+    ['clientId', '  '],
+  ])(
+    'fails the initialization, without a request, when the navigator %s is %j',
+    async (key, value) => {
+      const session = createSession({
+        ...baseConfig,
+        initialize: true,
+        navigatorContextProvider: () => ({...navigatorContext, [key]: value}),
+      });
+      await flush();
+
+      expect(callMock).not.toHaveBeenCalled();
+      expect(session.initialization).toMatchObject({status: 'error'});
+      expect(session.initialization?.error).toContain(`non-blank ${key}`);
+    }
+  );
+
+  it.each(['not-a-uuid', '0b4b6a0e-6c53-4d5c-9d63', 'agent-configuration-1'])(
+    'throws when the agentConfigurationId is %j',
+    (agentConfigurationId) => {
+      expect(() => createSession({...baseConfig, agentConfigurationId})).toThrow(
+        'agentConfigurationId to be a UUID'
+      );
+    }
+  );
+
+  it('accepts an agentConfigurationId with surrounding whitespace', () => {
+    expect(() =>
+      createSession({
+        ...baseConfig,
+        agentConfigurationId: ' 0b4b6a0e-6c53-4d5c-9d63-6f0f8f8a1c11 ',
+      })
+    ).not.toThrow();
+  });
+
+  describe('a prompt the endpoint would refuse', () => {
+    it.each(['', '   ', undefined])(
+      'is withheld before any request when it is %j',
+      async (prompt) => {
+        const session = createSession(baseConfig);
+
+        await session.dispatchAction({name: 'submitPrompt', payload: {prompt}} as never);
+
+        expect(callMock).not.toHaveBeenCalled();
+        expect(session.turns).toHaveLength(0);
+      }
+    );
+
+    it('is withheld before any request when it is over 20000 characters', async () => {
+      const session = createSession(baseConfig);
+
+      await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'a'.repeat(20001)}});
+
+      expect(callMock).not.toHaveBeenCalled();
+      expect(session.turns).toHaveLength(0);
+    });
+
+    it('is sent when it is exactly 20000 characters', async () => {
+      const session = createSession(baseConfig);
+      const stream = queueStream();
+
+      const turn = session.dispatchAction({
+        name: 'submitPrompt',
+        payload: {prompt: 'a'.repeat(20000)},
+      });
+      await stream.opened;
+      stream.emit({type: 'RUN_FINISHED'});
+      stream.close();
+      await turn;
+
+      expect(callMock).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('submitPrompt action', () => {

@@ -175,7 +175,7 @@ export type PrivateSession<TContracts extends ContractsSchema = ContractsSchema>
 // @public
 export interface PrivateSessionConfig<TContracts extends ContractsSchema = ContractsSchema> extends Omit<SessionConfig<TContracts>, 'agentConfigurationId' | 'trackingId'> {
     agentConfigurationId?: string;
-    trackingId?: string;
+    trackingId: string;
 }
 
 // @public

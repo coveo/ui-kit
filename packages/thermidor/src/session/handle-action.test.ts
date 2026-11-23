@@ -140,11 +140,11 @@ const baseConfig: SessionConfig = {
   contracts,
   organizationId: 'org-1',
   accessToken: 'token-1',
-  agentConfigurationId: 'agent-configuration-1',
+  agentConfigurationId: '0b4b6a0e-6c53-4d5c-9d63-6f0f8f8a1c11',
   trackingId: 'tracking-1',
   navigatorContextProvider: () => ({
     clientId: 'client-1',
-    location: null,
+    location: 'https://shop.example.com/',
     referrer: null,
     userAgent: null,
     language: 'en',
