@@ -19,6 +19,7 @@ import type {
 } from '../types/engine.js';
 import type {CommerceHydratedState} from '../types/hydrate-static-state.js';
 import {validateBuildConfig} from '../utils/controller-wiring.js';
+import {resolveEnableResults} from '../utils/enable-results.js';
 import {augmentCommerceEngineOptions} from '../utils/engine-wiring.js';
 import {withDefaultViewUrl} from '../utils/view-url.js';
 
@@ -107,6 +108,7 @@ export const buildFactory =
     const buildOptions = withDefaultViewUrl(rawBuildOptions);
     validateBuildConfig(solutionType, controllerDefinitions, buildOptions);
 
+    const enableResults = resolveEnableResults(options.enableResults);
     const enabledRecommendationControllers = new Set(buildOptions.recommendations).size;
 
     const engineOptions: CommerceEngineOptions = augmentCommerceEngineOptions(
@@ -125,6 +127,7 @@ export const buildFactory =
       engine,
       solutionType,
       buildConfig: buildOptions,
+      enableResults,
     });
 
     buildOptions.searchActions?.forEach((action) => {

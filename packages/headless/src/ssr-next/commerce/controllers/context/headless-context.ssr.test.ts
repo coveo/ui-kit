@@ -6,9 +6,8 @@ import {
 } from '../../../../controllers/commerce/context/headless-context.js';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {buildMockSSRCommerceEngine} from '../../../../test/mock-engine-v2.js';
-import {buildMockNavigatorContext} from '../../../../test/mock-navigator-context.js';
+import {buildMockCommerceBuildContext} from '../../../../test/mock-ssr-build-context.js';
 import type {SSRCommerceEngine} from '../../factories/build-factory.js';
-import {SolutionType} from '../../types/controller-constants.js';
 import {type ContextDefinition, defineContext} from './headless-context.ssr.js';
 
 vi.mock('../../../../controllers/commerce/context/headless-context.js');
@@ -57,10 +56,10 @@ describe('define commerce context', () => {
   });
 
   it('should build the context with the context passed to fetchStaticState()', () => {
-    contextDefinition.build(engine, {
-      solutionType: SolutionType.listing,
-      buildConfig: {navigatorContext: buildMockNavigatorContext(), context: options},
-    });
+    contextDefinition.build(
+      engine,
+      buildMockCommerceBuildContext({buildConfig: {context: options}})
+    );
 
     expect(buildContextMock).toHaveBeenCalledWith(engine, {options});
   });

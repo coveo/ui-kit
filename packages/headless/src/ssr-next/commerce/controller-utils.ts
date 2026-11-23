@@ -28,7 +28,7 @@ export function createStaticState<
 
 /**
  * Builds the controllers of the definition that are available for the kind of page, each with the
- * page facts of the request.
+ * page facts of the request and the results flag of the definition.
  */
 export function buildControllerDefinitions<
   TControllerDefinitionsMap extends ControllerDefinitionsMap<Controller>,
@@ -38,11 +38,13 @@ export function buildControllerDefinitions<
   engine,
   solutionType,
   buildConfig,
+  enableResults,
 }: {
   definitionsMap: TControllerDefinitionsMap;
   engine: SSRCommerceEngine;
   solutionType: TSolutionType;
   buildConfig: ControllerBuildContext['buildConfig'];
+  enableResults: ControllerBuildContext['enableResults'];
 }): InferControllersMapFromDefinition<TControllerDefinitionsMap, TSolutionType> {
   const controllerMap = mapObject(definitionsMap, (definition) => {
     const unavailableInSolutionType =
@@ -53,7 +55,7 @@ export function buildControllerDefinitions<
       return null;
     }
 
-    return definition.build(engine, {solutionType, buildConfig});
+    return definition.build(engine, {solutionType, buildConfig, enableResults});
   });
 
   return filterObject(

@@ -7,6 +7,7 @@ import {
   loadSearchActions,
 } from '@coveo/headless-react/ssr-commerce-next';
 import {useCommerceContext, useEngine} from '@/lib/commerce-engine';
+import engineConfig from '@/lib/commerce-engine-config';
 
 // A hardcoded list of storefront associations for switching app context by language, country, and currency.
 // Found in the admin console under "Storefront Associations," this list is static for demonstration purposes.
@@ -30,11 +31,17 @@ export default function ContextDropdown({useCase}: {useCase?: 'listing' | 'searc
           methods?.setCurrency(currency as ContextOptions['currency']);
           methods?.setCustom({storefrontAssociation: e.target.value});
 
+          // Action loaders don't read the engine definition, so they take its results flag here.
+          const {enableResults} = engineConfig;
           useCase === 'search'
-            ? engine?.dispatch(loadSearchActions(engine as CommerceEngine).executeSearch())
+            ? engine?.dispatch(
+                loadSearchActions(engine as CommerceEngine).executeSearch({enableResults})
+              )
             : useCase === 'listing' &&
               engine?.dispatch(
-                loadProductListingActions(engine as CommerceEngine).fetchProductListing()
+                loadProductListingActions(engine as CommerceEngine).fetchProductListing({
+                  enableResults,
+                })
               );
         }}
       >

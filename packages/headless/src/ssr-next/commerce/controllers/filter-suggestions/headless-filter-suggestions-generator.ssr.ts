@@ -38,6 +38,7 @@ export function defineFilterSuggestionsGenerator(): FilterSuggestionsGeneratorDe
     search: true,
     listing: true,
     standalone: true,
-    build: (engine) => buildFilterSuggestionsGenerator(engine),
+    build: (engine, {enableResults}) =>
+      buildFilterSuggestionsGenerator(engine, {enableResults: enableResults.search}),
   };
 }
