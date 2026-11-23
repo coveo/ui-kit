@@ -5,7 +5,7 @@ export function coveoCdnResolve() {
     resolveId(source: string) {
       if (source === '@coveo/atomic/loader') {
         return {
-          id: 'https://static.cloud.coveo.com/atomic/v3/index.js',
+          id: 'https://static.cloud.coveo.com/atomic/v3/index.esm.js',
           external: true,
         };
       }

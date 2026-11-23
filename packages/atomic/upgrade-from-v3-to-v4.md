@@ -20,6 +20,12 @@ Modified behaviors will be listed here.
 
 ## Removals
 
+### CDN
+
+| Removed                                                                                     | Replacement                                                                                                               |
+| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| The `index.js` file of the CDN, such as `https://static.cloud.coveo.com/atomic/v3/index.js` | `index.esm.js` in the same folder, which exports everything `index.js` exports <!-- decided 2026-11-23, not yet built --> |
+
 ### Interface components
 
 | Removed                                                                                                                            | Replacement                                                                                                                                                                                     |
