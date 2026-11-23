@@ -65,8 +65,11 @@ export const QuerySuggestions = createReactComponent(
     const lastDispatch = useRef(0);
     const surfaceId = context.dataContext.surface?.id;
     const nodeId = context.componentModel.id;
+    // Its content, as the session may rebuild the node of a partial write on any other update.
     const ownState = () =>
-      surfaceId === undefined ? undefined : nodeState(readSnapshot().state, surfaceId, nodeId);
+      surfaceId === undefined
+        ? undefined
+        : JSON.stringify(nodeState(readSnapshot().state, surfaceId, nodeId));
     useLatestWhenFree(
       request,
       (latest) => {
@@ -79,8 +82,9 @@ export const QuerySuggestions = createReactComponent(
         ).then(() => {
           setInFlight((count) => count - 1);
           // A concurrent suggestion that fails, or that a newer one supersedes, resolves quietly
-          // without writing this node's state, which a streaming answer or the instant products
-          // leave as it was; only an applied answer shows what the edits left.
+          // without changing this node's content, which a streaming answer or the instant products
+          // leave as it was; only an applied answer that differs shows what the edits left. An
+          // identical one keeps the edits hidden until the next answer that differs.
           if (
             dispatch !== lastDispatch.current ||
             ownState() === stateBefore ||

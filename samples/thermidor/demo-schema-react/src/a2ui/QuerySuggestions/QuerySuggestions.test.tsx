@@ -291,7 +291,11 @@ describe('QuerySuggestions', () => {
  * answers those that start with its query, and one completion; `removeRecentQuery` and
  * `clearRecentQueries` edit them.
  */
-function recentQueriesProducer(recent: string[], shell: ConverseHandler = answerShell) {
+function recentQueriesProducer(
+  recent: string[],
+  shell: ConverseHandler = answerShell,
+  {partialWrites = false} = {}
+) {
   const handler: ConverseHandler = (request) => {
     const action = request.action;
     switch (action?.name) {
@@ -301,7 +305,11 @@ function recentQueriesProducer(recent: string[], shell: ConverseHandler = answer
           .filter((recentQuery) => recentQuery.startsWith(query.toLowerCase()))
           .slice(0, query ? 3 : 8);
         const completions = query ? [`${query} poles`] : ['backpack'];
-        return sseResponse(suggestionsRun(action.surfaceId!, query, completions, matching));
+        return sseResponse(
+          partialWrites
+            ? partialSuggestionsRun(action.surfaceId!, query, completions, matching)
+            : suggestionsRun(action.surfaceId!, query, completions, matching)
+        );
       }
       case 'removeRecentQuery':
         recent.splice(recent.indexOf(String(action.context['query'])), 1);
@@ -325,6 +333,26 @@ function recentQueriesProducer(recent: string[], shell: ConverseHandler = answer
     }
   };
   return handler;
+}
+
+/** As {@link suggestionsRun}, writing each field of the node on its own path. */
+function partialSuggestionsRun(
+  surfaceId: string,
+  query: string,
+  expressions: string[],
+  recentQueries: string[]
+): object[] {
+  const fields = {
+    query,
+    recentQueries,
+    completions: expressions.map((expression) => ({expression})),
+  };
+  return run(
+    Object.entries(fields).map(([field, value]) => ({
+      version: 'v1.0',
+      updateDataModel: {surfaceId, path: `/state/query-suggestions/${field}`, value},
+    }))
+  );
 }
 
 const groups = () => screen.queryAllByRole('group').map((group) => group.textContent);
@@ -667,10 +695,14 @@ describe('QuerySuggestions when the producer announces fetchSuggestions as concu
    * The producer of {@link recentQueriesProducer}, whose shell also holds `InstantProducts`, and
    * whose `fetchSuggestions` fails once `holdRefresh` is set, when `failRefresh` is called.
    */
-  async function renderWithFailingRefresh(answerPrompt: ConverseHandler = answerShell) {
+  async function renderWithFailingRefresh(
+    answerPrompt: ConverseHandler = answerShell,
+    {partialWrites = false} = {}
+  ) {
     const producer = recentQueriesProducer(
       ['tents', 'hiking boots'],
-      answerConcurrentInstantProductsShell
+      answerConcurrentInstantProductsShell,
+      {partialWrites}
     );
     const refresh = {hold: false, fail: () => {}};
     const view = await renderSearchBox((request, signal) => {
@@ -694,6 +726,22 @@ describe('QuerySuggestions when the producer announces fetchSuggestions as concu
   it('keeps a removed recent query hidden when its refresh fails while an answer streams', async () => {
     const stream = streamingResponse(instantProductsRun(SHELL_SURFACE_ID, 'paddles', ['paddle']));
     const {session, failRefresh} = await renderWithFailingRefresh(() => stream.response);
+    const stateBefore = session.getSnapshot().state;
+
+    act(() => void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'paddles'}}));
+    await waitFor(() => expect(session.getSnapshot().state).not.toBe(stateBefore));
+    await failRefresh();
+    await act(async () => stream.finish());
+
+    await waitFor(() => expect(session.getSnapshot().request).toBeUndefined());
+    expect(options()).toEqual(['hiking boots', 'backpack']);
+  });
+
+  it('keeps a removed recent query hidden when its refresh fails while an answer streams, after suggestions written field by field', async () => {
+    const stream = streamingResponse(instantProductsRun(SHELL_SURFACE_ID, 'paddles', ['paddle']));
+    const {session, failRefresh} = await renderWithFailingRefresh(() => stream.response, {
+      partialWrites: true,
+    });
     const stateBefore = session.getSnapshot().state;
 
     act(() => void session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'paddles'}}));
