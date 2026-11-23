@@ -143,7 +143,7 @@ const atomicDefault = defineConfig({
   test: {
     name: 'atomic-default',
     css: true,
-    include: ['src/**/*.spec.ts', 'scripts/stencil-proxy.spec.mjs'],
+    include: ['src/**/*.spec.ts', 'scripts/stencil-proxy.spec.mjs', 'scripts/cdn-loader.spec.mjs'],
     setupFiles: ['./vitest-utils/setup.ts'],
     browser: {
       provider: playwright(),

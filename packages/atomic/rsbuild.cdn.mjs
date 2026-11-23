@@ -23,7 +23,10 @@ const rsbuild = await rsbuildApi.createRsbuild({
       entry: {
         // ⚠️  Changing these entry names affects CDN pointer files in ui-kit-cd.
         'atomic.esm': './src/cdn.ts',
-        index: './src/loader.ts',
+        loader: './src/loader.ts',
+        // The deprecated name of `loader.js`, which v4 removes. With `dependOn`, it is a small file
+        // that loads `loader.js` and runs in its runtime, instead of carrying a second copy of it.
+        index: {import: './src/cdn-deprecated-index.ts', dependOn: 'loader'},
         'index.esm': './src/index.ts',
       },
       tsconfigPath: './tsconfig.lit.json',
