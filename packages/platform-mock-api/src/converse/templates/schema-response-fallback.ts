@@ -1,4 +1,12 @@
-import {CATALOG_ID, bindStateFields, buildConversationResponse, statePath} from './shared.js';
+import {
+  CATALOG_ID,
+  bindStateFields,
+  buildConversationResponse,
+  createProgressBlock,
+  statePath,
+  updateProgressBlock,
+  type ProgressStep,
+} from './shared.js';
 import {
   ActivitySnapshot,
   UpdateDataModelActivity,
@@ -53,9 +61,13 @@ const stateActivity: ConverseEvent = UpdateDataModelActivity({
   ],
 });
 
+const THINKING: ProgressStep = {id: 'thinking', label: 'Thinking'};
+const PREPARING_RESPONSE: ProgressStep = {id: 'preparing_response', label: 'Putting it together'};
+
 const schemaFallbackEvents: ConverseEvent[] = buildConversationResponse({
   runId,
   middleEvents: [
+    createProgressBlock([THINKING]),
     ...toolCall({
       toolCallId: 'tc-render-next-actions',
       toolCallName: 'render_next_actions',
@@ -64,12 +76,14 @@ const schemaFallbackEvents: ConverseEvent[] = buildConversationResponse({
       resultMessageId: 'tc-render-next-actions-result',
       resultContent: '"NextActionsBar rendered."',
     }),
+    {...updateProgressBlock([THINKING], [PREPARING_RESPONSE]), delayMs: 400},
     ...textMessage(
       'msg-next-actions-fallback',
       "I couldn't find any products matching your request. Here are some suggestions to help you find what you're looking for."
     ),
     {...surfaceActivitySnapshot, delayMs: 1200},
     {...stateActivity, delayMs: 50},
+    updateProgressBlock([THINKING, PREPARING_RESPONSE]),
   ],
   includeInitialStateSnapshot: false,
   includeFinalStateSnapshot: false,

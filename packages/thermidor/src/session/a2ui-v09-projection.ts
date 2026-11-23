@@ -93,7 +93,7 @@ import type {A2uiV09Message} from './types.js';
 const GATEWAY_PROTOCOL_VERSION = 'v1.0';
 
 /** The A2-UI protocol version every available renderer consumes. */
-const RENDERER_PROTOCOL_VERSION = 'v0.9';
+export const RENDERER_PROTOCOL_VERSION = 'v0.9';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);

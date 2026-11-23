@@ -8,6 +8,9 @@ import {
   type A2uiComponentNode,
   deleteSurfaceMessage,
   loadingSurfaceMessage,
+  createProgressBlock,
+  updateProgressBlock,
+  type ProgressStep,
 } from './shared.js';
 import {
   ActivitySnapshot,
@@ -406,7 +409,12 @@ const nextActionsPlaceholderActivity: ConverseEvent = ActivitySnapshot({
   },
 });
 
+const THINKING: ProgressStep = {id: 'thinking', label: 'Thinking'};
+const PREPARING_RESPONSE: ProgressStep = {id: 'preparing_response', label: 'Putting it together'};
+const BUILDING_BUNDLE: ProgressStep = {id: 'building_bundle', label: 'Building your kit'};
+
 const middleEvents: ConverseEvent[] = [
+  createProgressBlock([THINKING]),
   ...toolCall({
     toolCallId: 'tc-route-bundle',
     toolCallName: 'route_bundle',
@@ -415,6 +423,7 @@ const middleEvents: ConverseEvent[] = [
     resultMessageId: 'tc-route-bundle-result',
     resultContent: '"Routed to bundle flow."',
   }),
+  {...updateProgressBlock([THINKING], [BUILDING_BUNDLE]), delayMs: 400},
   {...bundlePlaceholderActivity, delayMs: 300},
   ...toolCall({
     toolCallId: 'tc-store-render-plan',
@@ -424,6 +433,7 @@ const middleEvents: ConverseEvent[] = [
     resultMessageId: 'tc-store-render-plan-result',
     resultContent: '"Stored render plan for route \'bundle\' with 3 tiers."',
   }),
+  {...updateProgressBlock([THINKING, BUILDING_BUNDLE], [PREPARING_RESPONSE]), delayMs: 400},
   ...textMessage(
     'msg-bundle-intro',
     "I've built out your beginner surfing kit with three tiers—Budget ($484.97 total), Mid-Range ($794.97 total), and Premium ($1,164.97 total)—each covering board, wetsuit, bag, and wax to get you started in the water.\n\nPick the tier that fits your comfort level, and you're ready to go."
@@ -433,6 +443,7 @@ const middleEvents: ConverseEvent[] = [
   {...nextActionsPlaceholderActivity, delayMs: 100},
   {...nextActionsSurfaceActivity, delayMs: 800},
   {...nextActionsStateActivity, delayMs: 50},
+  updateProgressBlock([THINKING, BUILDING_BUNDLE, PREPARING_RESPONSE]),
 ];
 
 const schemaBundleEvents: ConverseEvent[] = buildConversationResponse({

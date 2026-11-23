@@ -7,11 +7,8 @@ import {ProductBadges} from '../ProductBadges/ProductBadges.js';
 import {ProductChildren} from '../ProductChildren/ProductChildren.js';
 import {usePromotedProduct} from '../ProductChildren/use-promoted-product.js';
 import {productListTarget, resultsFocusTarget} from '../results-focus.js';
+import {formatConfiguredPrice as formatPrice} from '../../context/format-configured-price.js';
 import styles from './ProductList.module.css';
-
-function formatPrice(value: number): string {
-  return `$${value.toFixed(2)}`;
-}
 
 function resolveProductImage(product: Product): string | null {
   const images = product.ec_images;

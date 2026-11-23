@@ -8,6 +8,9 @@ import {
   type A2uiComponentNode,
   deleteSurfaceMessage,
   loadingSurfaceMessage,
+  createProgressBlock,
+  updateProgressBlock,
+  type ProgressStep,
 } from './shared.js';
 import {
   ActivitySnapshot,
@@ -206,7 +209,15 @@ const nextActionsPlaceholderActivity: ConverseEvent = ActivitySnapshot({
   },
 });
 
+const THINKING: ProgressStep = {id: 'thinking', label: 'Thinking'};
+const PREPARING_RESPONSE: ProgressStep = {id: 'preparing_response', label: 'Putting it together'};
+const RESEARCHING_PRODUCT: ProgressStep = {
+  id: 'researching_product',
+  label: 'Researching the ThermoFlex Winter Wetsuit',
+};
+
 const middleEvents: ConverseEvent[] = [
+  createProgressBlock([THINKING]),
   ...toolCall({
     toolCallId: 'tc-route-research',
     toolCallName: 'route_research',
@@ -215,6 +226,7 @@ const middleEvents: ConverseEvent[] = [
     resultMessageId: 'tc-route-research-result',
     resultContent: '"Routed to single-product research flow."',
   }),
+  {...updateProgressBlock([THINKING], [RESEARCHING_PRODUCT]), delayMs: 400},
   {...researchPlaceholderActivity, delayMs: 300},
   ...toolCall({
     toolCallId: 'tc-store-render-plan',
@@ -224,6 +236,7 @@ const middleEvents: ConverseEvent[] = [
     resultMessageId: 'tc-store-render-plan-result',
     resultContent: '"Stored render plan for route \'research\' with 1 product."',
   }),
+  {...updateProgressBlock([THINKING, RESEARCHING_PRODUCT], [PREPARING_RESPONSE]), delayMs: 400},
   ...textMessage(
     'msg-product-research',
     'Here is what you should know about the ThermoFlex Winter Wetsuit ($399.99). It is the warmest suit in the range, made for very cold water, and it trades some flexibility for that insulation.'
@@ -233,6 +246,7 @@ const middleEvents: ConverseEvent[] = [
   {...nextActionsPlaceholderActivity, delayMs: 100},
   {...nextActionsSurfaceActivity, delayMs: 800},
   {...nextActionsStateActivity, delayMs: 50},
+  updateProgressBlock([THINKING, RESEARCHING_PRODUCT, PREPARING_RESPONSE]),
 ];
 
 const schemaProductResearchEvents: ConverseEvent[] = buildConversationResponse({

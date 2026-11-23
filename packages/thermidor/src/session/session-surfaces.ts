@@ -34,6 +34,8 @@ export interface SessionSurfaceView {
    * for the live id leaves it there. A surface the initialization created has none.
    */
   ownerTurnIds: ReadonlyMap<string, string>;
+  /** The surfaces a restored activity last created, which take no action. */
+  readOnlySurfaceIds: ReadonlySet<string>;
 }
 
 /** The initialization's activities, then every turn's, in order: the session's activity log. */
@@ -80,6 +82,8 @@ interface SurfaceRuns {
    * placeholder still streams. A surface the initialization last created has none.
    */
   creatorTurnIds: Map<string, string>;
+  /** The surfaces whose latest `createSurface` is a restored activity. */
+  restoredIds: Set<string>;
 }
 
 /**
@@ -90,9 +94,13 @@ interface SurfaceRuns {
  * a catalog until its `deleteSurface`. One without a catalog, which the renderer drops, leaves the
  * turns of the surface the stream holds as they are.
  */
-function deriveSurfaceRuns({turns, initialization}: SessionRuns): SurfaceRuns {
+function deriveSurfaceRuns(
+  {turns, initialization}: SessionRuns,
+  restored: ReadonlySet<Activity> = new Set()
+): SurfaceRuns {
   const ownerTurnIds = new Map<string, string>();
   const creatorTurnIds = new Map<string, string>();
+  const restoredIds = new Set<string>();
   const live = new Set<string>();
   const runs = [
     {turnId: undefined, activities: initialization?.activities ?? []},
@@ -113,18 +121,24 @@ function deriveSurfaceRuns({turns, initialization}: SessionRuns): SurfaceRuns {
               ids.set(created, turnId);
             }
           }
+          if (restored.has(activity)) {
+            restoredIds.add(created);
+          } else {
+            restoredIds.delete(created);
+          }
           if (isRendered) {
             live.add(created);
           }
         } else if (deleted !== undefined) {
           ownerTurnIds.delete(deleted);
           creatorTurnIds.delete(deleted);
+          restoredIds.delete(deleted);
           live.delete(deleted);
         }
       }
     }
   }
-  return {ownerTurnIds, creatorTurnIds};
+  return {ownerTurnIds, creatorTurnIds, restoredIds};
 }
 
 /** The status of the run `target` records, or `undefined` once that run is gone. */
@@ -168,15 +182,17 @@ export function abandonedPlaceholderIds(runs: SessionRuns, target: RunTarget): R
  * initialization is `streaming`, or while the request in flight streams into it (`streamingTarget`),
  * unless it was already abandoned when that request started (`abandonedIds`). One the agent left
  * behind once its run ended (a cancelled run, an error, a restored session) is abandoned and leaves
- * the lists.
+ * the lists. A surface whose latest `createSurface` is one of the `restored` activities is marked
+ * `readOnly`.
  */
 export function deriveSessionSurfaces(
   runs: SessionRuns,
   streamingTarget?: RunTarget,
-  abandonedIds: ReadonlySet<string> = new Set()
+  abandonedIds: ReadonlySet<string> = new Set(),
+  restored?: ReadonlySet<Activity>
 ): SessionSurfaceView {
   const {turns, initialization} = runs;
-  const {ownerTurnIds, creatorTurnIds} = deriveSurfaceRuns(runs);
+  const {ownerTurnIds, creatorTurnIds, restoredIds} = deriveSurfaceRuns(runs, restored);
 
   const streamingTurnIds = new Set(
     turns.filter((turn) => turn.status === 'streaming').map((turn) => turn.id)
@@ -192,10 +208,15 @@ export function deriveSessionSurfaces(
       ? initializationStreams
       : streamingTurnIds.has(creatorTurnId);
   };
-  const surfaces = deriveSurfaces(sessionActivities(runs)).filter(
-    (surface) =>
-      !surface.isLoading || (isStreaming(surface.surfaceId) && !abandonedIds.has(surface.surfaceId))
-  );
+  const surfaces = deriveSurfaces(sessionActivities(runs))
+    .filter(
+      (surface) =>
+        !surface.isLoading ||
+        (isStreaming(surface.surfaceId) && !abandonedIds.has(surface.surfaceId))
+    )
+    .map((surface) =>
+      restoredIds.has(surface.surfaceId) ? {...surface, readOnly: true as const} : surface
+    );
 
   return {
     turns: turns.map((turn) => ({
@@ -207,5 +228,6 @@ export function deriveSessionSurfaces(
     })),
     surfaces,
     ownerTurnIds,
+    readOnlySurfaceIds: restoredIds,
   };
 }

@@ -1,0 +1,197 @@
+.drawer {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: var(--space-3);
+  width: 280px;
+  padding: var(--space-4);
+  overflow-y: auto;
+  background: var(--color-bg-secondary);
+  border-right: 1px solid var(--color-border);
+}
+
+@media (max-width: 767px) {
+  .drawer {
+    position: absolute;
+    inset: 0 auto 0 0;
+    /* Above the pinned search box and its suggestions. */
+    z-index: 15;
+    max-width: 85vw;
+    box-shadow: var(--shadow-md);
+    animation: slideIn 200ms ease-out;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+.start,
+.open,
+.kebab,
+.menuItem {
+  font: inherit;
+  color: var(--color-text-primary);
+  background: none;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.start {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+}
+
+:is(.start, .menuItem):is(:hover, :focus-visible),
+.row:hover .open,
+.open:focus-visible,
+.open[aria-current='true'] {
+  background: var(--color-surface-hover);
+}
+
+:is(.start, .open, .kebab, .menuItem, .rename):focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+}
+
+.drawer [aria-disabled='true']:is(.start, .open, .menuItem) {
+  color: var(--color-text-muted);
+  background: none;
+  cursor: not-allowed;
+}
+
+.spinner {
+  animation: spin 800ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 3s;
+  }
+}
+
+.empty {
+  margin: 0;
+  padding: 0 var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.open {
+  display: flex;
+  flex: 1;
+  gap: var(--space-2);
+  align-items: center;
+  min-width: 0;
+  padding: var(--space-2) var(--space-6) var(--space-2) var(--space-3);
+  text-align: left;
+}
+
+.title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tag {
+  flex: none;
+  padding: 0 var(--space-2);
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 400;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+}
+
+.open[aria-current='true'] {
+  font-weight: 600;
+}
+
+.kebab {
+  position: absolute;
+  right: var(--space-1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  color: var(--color-text-muted);
+}
+
+@media (hover: hover) {
+  .row:not(:hover, :focus-within) .kebab:not([aria-expanded='true']) {
+    opacity: 0;
+  }
+}
+
+.kebab:is(:hover, :focus-visible, [aria-expanded='true']) {
+  color: var(--color-text-primary);
+  background: var(--color-border);
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 160px;
+  padding: var(--space-1);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.menuAbove {
+  top: auto;
+  bottom: 100%;
+}
+
+.menuItem {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  text-align: left;
+}
+
+.rename {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-2) var(--space-3);
+  font: inherit;
+  border: 1px solid var(--color-border-active);
+  border-radius: 999px;
+}

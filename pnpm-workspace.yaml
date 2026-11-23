@@ -61,7 +61,7 @@ catalog:
   '@angular/router': 22.2.5
   '@coveo/atomic-component-health-check': 2.2.19
   '@coveo/relay-event-types': 20.7.1
-  '@coveo/thermidor-schema': 1.0.0-beta.51
+  '@coveo/thermidor-schema': 1.0.0-beta.54
   '@playwright/mcp': 0.0.85
   '@playwright/test': 1.65.0
   '@react-router/dev': 8.5.1

@@ -1,10 +1,28 @@
-import {render, waitFor} from '@testing-library/react';
+import {act, render, waitFor} from '@testing-library/react';
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import type {Cart, CartLine} from '../cart/cart-api.js';
 import {CartProvider} from '../cart/CartProvider.js';
 import {createCartStore, EMPTY_CART, type CartClient} from '../cart/cart-store.js';
-import {answerShell} from '../test/session.js';
-import {SessionProvider, useSession, type DemoSession} from './session.js';
+import {createConversationStorage} from '../conversations/conversation-storage.js';
+import {submitQuery} from '../a2ui/session-request.js';
+import {memoryStorage} from '../test/memory-storage.js';
+import {
+  answerShell,
+  createTestSessionFactory,
+  run,
+  SHELL_SURFACE_ID,
+  shellRun,
+  sseResponse,
+  type ConverseHandler,
+} from '../test/session.js';
+import {
+  getClientId,
+  SessionProvider,
+  useConversations,
+  useSession,
+  type Conversations,
+  type DemoSession,
+} from './session.js';
 
 interface RequestBody {
   action: {name: string} | null;
@@ -67,6 +85,8 @@ function renderSession(client: CartClient) {
 describe('SessionProvider', () => {
   afterEach(() => {
     vi.unstubAllGlobals();
+    localStorage.clear();
+    sessionStorage.clear();
   });
 
   it("sends the cart's items with every request, in context.cart", async () => {
@@ -120,5 +140,416 @@ describe('SessionProvider', () => {
     expect(() => render(<SessionProvider />)).toThrow(
       'SessionProvider must be used within a CartProvider, or be given a session'
     );
+  });
+});
+
+/** A browser whose tabs share `localStorage` and each have their own `sessionStorage`. */
+function browser() {
+  const local = memoryStorage();
+  return {
+    local,
+    tab: () => {
+      const session = memoryStorage();
+      return createConversationStorage({local: () => local, session: () => session});
+    },
+  };
+}
+
+function renderConversations(
+  storage: ReturnType<ReturnType<typeof browser>['tab']>,
+  handler: ConverseHandler = answerShell
+) {
+  const {create, requests} = createTestSessionFactory(handler);
+  let session: DemoSession | undefined;
+  let conversations: Conversations | undefined;
+  function Probe() {
+    session = useSession();
+    conversations = useConversations();
+    return null;
+  }
+  const view = render(
+    <SessionProvider createSession={create} storage={storage}>
+      <Probe />
+    </SessionProvider>
+  );
+  return {view, requests, session: () => session!, conversations: () => conversations!};
+}
+
+async function ask(session: DemoSession, prompt: string) {
+  await act(() => session.dispatchAction({name: 'submitPrompt', payload: {prompt}}));
+}
+
+describe('SessionProvider conversations', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('saves the conversation once a turn completes, titled by its first prompt', async () => {
+    const tab = browser().tab();
+    const {session, conversations} = renderConversations(tab);
+
+    await ask(session(), 'surfboards');
+    await ask(session(), 'wetsuits');
+
+    expect(conversations().list).toEqual([
+      {id: conversations().currentId, title: 'surfboards', updatedAt: expect.any(Number)},
+    ]);
+    expect(tab.load(conversations().currentId)?.turns).toHaveLength(2);
+  });
+
+  it('resumes the current conversation on reload', async () => {
+    const tab = browser().tab();
+    const first = renderConversations(tab);
+    await ask(first.session(), 'surfboards');
+    const id = first.conversations().currentId;
+    first.view.unmount();
+
+    const reloaded = renderConversations(tab);
+
+    expect(reloaded.conversations().currentId).toBe(id);
+    expect(reloaded.session().turns.map(({input}) => input.prompt)).toEqual(['surfboards']);
+    await waitFor(() =>
+      expect(reloaded.requests.at(-1)).toMatchObject({
+        action: {name: 'initialize'},
+        conversationSessionId: 'session-1',
+      })
+    );
+  });
+
+  it('starts a new conversation in a new tab, keeping the saved ones', async () => {
+    const shared = browser();
+    const first = renderConversations(shared.tab());
+    await ask(first.session(), 'surfboards');
+    first.view.unmount();
+
+    const fresh = renderConversations(shared.tab());
+
+    expect(fresh.session().turns).toEqual([]);
+    expect(fresh.conversations().list.map(({title}) => title)).toEqual(['surfboards']);
+  });
+
+  it('saves a new conversation when storage is nearly full, dropping the oldest to make room', async () => {
+    const quota = 20_000;
+    const local = memoryStorage(quota);
+    const tab = createConversationStorage({local: () => local, session: () => memoryStorage()});
+    const used = () =>
+      Array.from({length: local.length}, (_, index) => local.getItem(local.key(index)!)!).join('')
+        .length;
+    tab.save('old', 'surfboards', {version: 4, sessionId: '', turns: []});
+    tab.save('old', 'surfboards', {
+      version: 4,
+      sessionId: 'x'.repeat(quota - used() - 20),
+      turns: [],
+    });
+    const {session, conversations} = renderConversations(tab);
+
+    await ask(session(), 'wetsuits');
+
+    const id = conversations().currentId;
+    expect(tab.list().map((entry) => entry.id)).toEqual([id]);
+    expect(tab.load(id)?.turns).toHaveLength(1);
+  });
+
+  it('starts a new conversation, and drops the current one, when it cannot be restored', () => {
+    const tab = browser().tab();
+    tab.save('broken', 'surfboards', {version: 999, turns: []});
+    tab.setCurrentId('broken');
+
+    const {session, conversations} = renderConversations(tab);
+
+    expect(session().turns).toEqual([]);
+    expect(conversations().currentId).not.toBe('broken');
+    expect(tab.list()).toEqual([]);
+  });
+
+  it('switches between new and saved conversations, and removes them', async () => {
+    const tab = browser().tab();
+    const {session, conversations} = renderConversations(tab);
+    await ask(session(), 'surfboards');
+    const saved = conversations().currentId;
+
+    act(() => conversations().start());
+    expect(session().turns).toEqual([]);
+    expect(conversations().currentId).not.toBe(saved);
+
+    act(() => conversations().open(saved));
+    expect(conversations().currentId).toBe(saved);
+    expect(session().turns).toHaveLength(1);
+
+    act(() => conversations().remove(saved));
+    expect(conversations().list).toEqual([]);
+    expect(conversations().currentId).not.toBe(saved);
+    expect(session().turns).toEqual([]);
+  });
+
+  it('opens a saved conversation when the tab cannot remember it', async () => {
+    const local = memoryStorage();
+    const full = memoryStorage();
+    full.setItem = () => {
+      throw new DOMException('Full', 'QuotaExceededError');
+    };
+    const {session, conversations} = renderConversations(
+      createConversationStorage({local: () => local, session: () => full})
+    );
+    await ask(session(), 'surfboards');
+    const saved = conversations().currentId;
+    act(() => conversations().start());
+
+    act(() => conversations().open(saved));
+
+    expect(conversations().currentId).toBe(saved);
+    expect(session().turns.map(({input}) => input.prompt)).toEqual(['surfboards']);
+  });
+
+  it('shows a conversation the server no longer knows as expired, and sends it nothing', async () => {
+    const tab = browser().tab();
+    const first = renderConversations(tab);
+    await ask(first.session(), 'surfboards');
+    const original = first.conversations().currentId;
+    first.view.unmount();
+
+    const replacedKeys = {conversationSessionId: 'session-2', conversationToken: 'token-2'};
+    const replaced = (events: object[]) =>
+      sseResponse(
+        events.map((event) => ('threadId' in event ? {...event, ...replacedKeys} : event))
+      );
+    const expiring = renderConversations(tab, (request) =>
+      replaced(request.action?.name === 'initialize' ? shellRun() : run([]))
+    );
+    await waitFor(() => expect(expiring.conversations().expired).toBe(true));
+    expect(expiring.conversations().currentId).toBe(original);
+    expect(expiring.session().turns.map(({input}) => input.prompt)).toEqual(['surfboards']);
+    expect(tab.list()).toEqual([expect.objectContaining({id: original, expired: true})]);
+    expiring.view.unmount();
+
+    const reloaded = renderConversations(tab);
+    await Promise.resolve();
+    expect(reloaded.requests).toEqual([]);
+    expect(reloaded.conversations().expired).toBe(true);
+    expect(tab.load(original)?.turns.map(({input}) => input.prompt)).toEqual(['surfboards']);
+  });
+
+  it('shows a conversation as expired even when storage cannot mark it', async () => {
+    const tab = browser().tab();
+    const first = renderConversations(tab);
+    await ask(first.session(), 'surfboards');
+    first.view.unmount();
+
+    const replacedKeys = {conversationSessionId: 'session-2', conversationToken: 'token-2'};
+    const {conversations, requests} = renderConversations({...tab, expire() {}}, (request) =>
+      sseResponse(
+        (request.action?.name === 'initialize' ? shellRun() : run([])).map((event) =>
+          'threadId' in event ? {...event, ...replacedKeys} : event
+        )
+      )
+    );
+    await waitFor(() => expect(conversations().expired).toBe(true));
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
+    expect(requests.filter(({action}) => action?.name === 'initialize')).toHaveLength(1);
+  });
+
+  it('keeps saving a resumed conversation under its id when a prompt answers with new keys', async () => {
+    const tab = browser().tab();
+    const first = renderConversations(tab);
+    await ask(first.session(), 'surfboards');
+    const original = first.conversations().currentId;
+    first.view.unmount();
+
+    const newKeys = {conversationSessionId: 'session-2', conversationToken: 'token-2'};
+    const {session, conversations, requests} = renderConversations(tab, (request, signal) =>
+      typeof request.message === 'string'
+        ? sseResponse(
+            run([]).map((event) => ('threadId' in event ? {...event, ...newKeys} : event))
+          )
+        : answerShell(request, signal)
+    );
+    await waitFor(() => expect(requests.at(-1)?.action?.name).toBe('initialize'));
+    await ask(session(), 'wetsuits');
+    await ask(session(), 'boots');
+
+    expect(conversations().currentId).toBe(original);
+    expect(tab.list().map(({id}) => id)).toEqual([original]);
+    expect(tab.load(original)?.turns.map(({input}) => input.prompt)).toEqual([
+      'surfboards',
+      'wetsuits',
+      'boots',
+    ]);
+  });
+
+  it('drops the current conversation from the list when its save is gone', () => {
+    const shared = browser();
+    const tab = shared.tab();
+    tab.save('gone', 'surfboards', {version: 4, turns: []});
+    tab.setCurrentId('gone');
+    shared.local.setItem('demo-conversation:gone', '{not json');
+
+    const {conversations} = renderConversations(tab);
+
+    expect(conversations().currentId).not.toBe('gone');
+    expect(tab.list()).toEqual([]);
+  });
+
+  it('saves the turn a swap stops, unless its conversation was deleted, and drops a prompt waiting on it', async () => {
+    const tab = browser().tab();
+    const {session, conversations, requests} = renderConversations(tab, (request, signal) =>
+      request.message === 'wetsuits'
+        ? new Promise<Response>((_resolve, reject) =>
+            signal?.addEventListener('abort', () =>
+              reject(new DOMException('The request was aborted.', 'AbortError'))
+            )
+          )
+        : answerShell(request, signal)
+    );
+    const stop = async (swap: (id: string) => void) => {
+      await ask(session(), 'surfboards');
+      const id = conversations().currentId;
+      const stopped = session();
+      void stopped.dispatchAction({name: 'submitPrompt', payload: {prompt: 'wetsuits'}});
+      await waitFor(() => expect(stopped.getSnapshot().request?.kind).toBe('prompt'));
+      void submitQuery(stopped, 'kayaks');
+      act(() => swap(id));
+      await waitFor(() => expect(stopped.getSnapshot().request).toBeUndefined());
+      return id;
+    };
+
+    const swapped = await stop(() => conversations().start());
+    const deleted = await stop((id) => conversations().remove(id));
+    await act(() => new Promise((resolve) => setTimeout(resolve, 20)));
+
+    expect(requests.map(({message}) => message)).not.toContain('kayaks');
+
+    expect(tab.load(swapped)?.turns.map(({input}) => input.prompt)).toEqual([
+      'surfboards',
+      'wetsuits',
+    ]);
+    expect(tab.list().map(({id}) => id)).toEqual([swapped]);
+    expect(tab.load(deleted)).toBeUndefined();
+  });
+
+  it('drops a conversation reloaded before its first turn was saved, and starts a new one', async () => {
+    const tab = browser().tab();
+    const first = renderConversations(tab, (request, signal) =>
+      request.message === 'surfboards'
+        ? new Promise<Response>(() => {})
+        : answerShell(request, signal)
+    );
+    void first.session().dispatchAction({name: 'submitPrompt', payload: {prompt: 'surfboards'}});
+    await waitFor(() =>
+      expect(first.conversations().list.map(({title}) => title)).toEqual(['surfboards'])
+    );
+    const listed = first.conversations().currentId;
+    first.view.unmount();
+
+    const reloaded = renderConversations(tab);
+
+    expect(reloaded.conversations().currentId).not.toBe(listed);
+    expect(reloaded.session().turns).toEqual([]);
+    expect(tab.list()).toEqual([]);
+  });
+});
+
+describe('SessionProvider saving', () => {
+  it('saves a turn whose end starts a queued suggestion, once the suggestion ends', async () => {
+    const tab = browser().tab();
+    let release = () => {};
+    const {create} = createTestSessionFactory((request, signal) =>
+      request.action?.name === 'fetchSuggestions'
+        ? new Promise<Response>((resolve) => {
+            release = () => resolve(answerShell(request, signal));
+          })
+        : answerShell(request, signal)
+    );
+    const createQueuing = (sessionToRestore?: Parameters<typeof create>[0]) => {
+      const session = create(sessionToRestore);
+      let prompting = false;
+      session.subscribe(() => {
+        const {request} = session.getSnapshot();
+        const ended = prompting && !request;
+        prompting = request?.kind === 'prompt';
+        if (ended) {
+          void session.dispatchAction({
+            userAction: {
+              name: 'fetchSuggestions',
+              surfaceId: SHELL_SURFACE_ID,
+              sourceComponentId: 'query-suggestions',
+              timestamp: new Date().toISOString(),
+              context: {query: 'su'},
+            },
+          });
+        }
+      });
+      return session;
+    };
+    let session: DemoSession | undefined;
+    function Probe() {
+      session = useSession();
+      return null;
+    }
+    render(
+      <SessionProvider createSession={createQueuing} storage={tab}>
+        <Probe />
+      </SessionProvider>
+    );
+    await waitFor(() => expect(session!.getSnapshot().request).toBeUndefined());
+
+    await ask(session!, 'surfboards');
+    await waitFor(() =>
+      expect(session!.getSnapshot().request).toMatchObject({name: 'fetchSuggestions'})
+    );
+    await act(async () => release());
+    await waitFor(() => expect(session!.getSnapshot().request).toBeUndefined());
+
+    expect(tab.load(tab.currentId()!)?.turns.map(({input}) => input.prompt)).toEqual([
+      'surfboards',
+    ]);
+  });
+});
+
+describe('SessionProvider in two tabs', () => {
+  it('does not save again a conversation another tab deleted while it answered', async () => {
+    const shared = browser();
+    const first = shared.tab();
+    const a = renderConversations(first);
+    await ask(a.session(), 'surfboards');
+    const id = a.conversations().currentId;
+    const second = shared.tab();
+    second.setCurrentId(id);
+    let release = () => {};
+    const b = renderConversations(second, (request, signal) =>
+      request.message === 'wetsuits'
+        ? new Promise<Response>((resolve) => {
+            release = () => resolve(answerShell(request, signal));
+          })
+        : answerShell(request, signal)
+    );
+    await waitFor(() => expect(b.session().getSnapshot().request).toBeUndefined());
+    void b.session().dispatchAction({name: 'submitPrompt', payload: {prompt: 'wetsuits'}});
+    await waitFor(() => expect(b.session().getSnapshot().request?.kind).toBe('prompt'));
+
+    act(() => a.conversations().remove(id));
+    await act(async () => release());
+    await waitFor(() => expect(b.session().getSnapshot().request).toBeUndefined());
+
+    expect(first.list()).toEqual([]);
+    expect(first.load(id)).toBeUndefined();
+  });
+});
+
+describe('getClientId', () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it('keeps one id for the page when the tab storage is unavailable', () => {
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new DOMException('Denied', 'SecurityError');
+    });
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new DOMException('Denied', 'SecurityError');
+    });
+
+    const id = getClientId();
+
+    expect(id).toMatch(/^[0-9a-f-]{36}$/);
+    expect(getClientId()).toBe(id);
   });
 });

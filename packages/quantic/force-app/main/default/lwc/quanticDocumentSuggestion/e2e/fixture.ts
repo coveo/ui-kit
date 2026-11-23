@@ -4,11 +4,10 @@ import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
 import {SearchObject} from '../../../../../../playwright/page-object/searchObject';
 import {
   CaseAssistObject,
-  caseAssistConfigurationsTimeoutMs,
+  fakeCaseAssistId,
 } from '../../../../../../playwright/page-object/caseAssistObject';
 
 const pageUrl = 's/quantic-document-suggestion';
-const readinessTimeoutMs = caseAssistConfigurationsTimeoutMs + 5_000;
 
 interface DocumentSuggestionOptions {
   engineId: string;
@@ -39,15 +38,13 @@ export const test = quanticBase.extend<QuanticDocumentSuggestionE2EFixtures>({
     use
   ) => {
     await page.goto(pageUrl);
-    await caseAssist.mockCaseAssistConfigurations();
-    await configuration.configure(options);
+    await caseAssist.mockDocumentSuggestions();
+    await configuration.configure({caseAssistId: fakeCaseAssistId, ...options});
     const documentSuggestion = new DocumentSuggestionObject(
       page,
       analytics.analyticsMode
     );
-    await expect(documentSuggestion.noSuggestionsMessage).toBeVisible({
-      timeout: readinessTimeoutMs,
-    });
+    await expect(documentSuggestion.noSuggestionsMessage).toBeVisible();
     await use(documentSuggestion);
   },
 });

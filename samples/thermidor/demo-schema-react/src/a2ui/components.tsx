@@ -29,6 +29,7 @@ import {SessionShell} from './SessionShell/SessionShell.js';
 import {SearchBox} from './SearchBox/SearchBox.js';
 import {QuerySuggestions} from './QuerySuggestions/QuerySuggestions.js';
 import {InstantProducts} from './InstantProducts/InstantProducts.js';
+import {ProgressBlock} from './ProgressBlock/ProgressBlock.js';
 import {actsOnSurface} from './surface-controls.js';
 
 export interface ThermidorCatalogOptions {
@@ -60,5 +61,6 @@ export function createThermidorCatalog(options: ThermidorCatalogOptions = {}) {
     SearchBox,
     actsOnSurface(QuerySuggestions),
     InstantProducts,
+    ProgressBlock,
   ]);
 }

@@ -1,6 +1,6 @@
 /* oxlint-disable @typescript-eslint/no-non-null-assertion -- For testing, locators should always exist */
 
-import type {DateFacet, Summary} from '@coveo/headless/commerce';
+import type {CommerceEngine, DateFacet, Summary} from '@coveo/headless/commerce';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import {page, userEvent} from 'vitest/browser';
@@ -9,6 +9,7 @@ import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeDateFacet} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/date-facet-subcontroller';
 import {buildFakeCommerceDateFacetValue} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/date-facet-value';
+import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
 import type {AtomicCommerceTimeframeFacet} from './atomic-commerce-timeframe-facet';
 import './atomic-commerce-timeframe-facet';
@@ -35,7 +36,9 @@ describe('atomic-commerce-timeframe-facet', () => {
     });
   });
 
-  const setupElement = async (props?: Partial<{isCollapsed: boolean; field: string}>) => {
+  const setupElement = async (
+    props?: Partial<{isCollapsed: boolean; field: string; engine: CommerceEngine}>
+  ) => {
     const {element} = await renderInAtomicCommerceInterface<AtomicCommerceTimeframeFacet>({
       template: html`<atomic-commerce-timeframe-facet
         .facet=${mockedFacet}
@@ -46,6 +49,7 @@ describe('atomic-commerce-timeframe-facet', () => {
       selector: 'atomic-commerce-timeframe-facet',
       bindings: (bindings) => {
         bindings.interfaceElement.type = 'product-listing';
+        bindings.engine = props?.engine ?? buildFakeCommerceEngine();
         bindings.store.getUniqueIDFromEngine = vi.fn().mockReturnValue('123');
         bindings.store.onChange = vi.fn();
         return bindings;
@@ -456,5 +460,22 @@ describe('atomic-commerce-timeframe-facet', () => {
   it('should validate facet on initialization', async () => {
     const {element} = await setupElement();
     expect(() => element.initialize()).not.toThrow();
+  });
+
+  it('should log one deprecation warning per engine', async () => {
+    const engine = buildFakeCommerceEngine();
+
+    await setupElement({engine});
+    await setupElement({engine});
+
+    expect(
+      vi
+        .mocked(engine.logger.warn)
+        .mock.calls.filter(([message]) => String(message).startsWith('[Deprecated]'))
+    ).toEqual([
+      [
+        '[Deprecated] The `atomic-commerce-timeframe-facet` component is deprecated and will be removed in Atomic v4. Remove the date range facets from your commerce facet configuration, and any code that uses or styles this component: the Commerce API removes date range facets in June 2027, with no replacement.',
+      ],
+    ]);
   });
 });
