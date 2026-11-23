@@ -171,12 +171,12 @@ const storybookPure = defineConfig({
   },
 });
 
-// Static analysis of the package sources (Node.js, no browser needed)
+// Static analysis of the package sources and of its build output (Node.js, no browser needed)
 const atomicNode = defineConfig({
   name: 'atomic-node',
   test: {
     name: 'atomic-node',
-    include: ['scripts/element-dependencies.spec.mjs'],
+    include: ['scripts/element-dependencies.spec.mjs', 'scripts/main-entry-imports.spec.mjs'],
     environment: 'node',
   },
 });
