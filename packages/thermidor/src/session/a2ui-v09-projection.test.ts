@@ -488,7 +488,10 @@ describe('convertA2uiMessages reads both the v1.0 candidate and the final v1.0',
   const candidate: Binding = (path) => ({path});
   const final: Binding = (path) => ({'@path': path});
 
-  /** The same gateway messages, in the candidate (`"v1.0"`, `{path}`) or final (`"1.0"`, `{"@path"}`) wire shape. */
+  /**
+   * The same gateway messages, in the candidate (`"v1.0"`, `{path}`) or final (`"1.0"`,
+   * `{"@path"}`) wire shape.
+   */
   function gatewayMessages(version: string, bind: Binding): Record<string, unknown>[] {
     return [
       {
@@ -603,35 +606,85 @@ describe('convertA2uiMessages reads both the v1.0 candidate and the final v1.0',
     });
   });
 
-  it('leaves path keys that are not bindings alone', () => {
-    const converted = project(gatewayMessages('1.0', final));
-    const [, updateComponents] = converted;
-    const list = (
-      updateComponents['updateComponents'] as {
-        components: Record<string, unknown>[];
-      }
-    ).components[2];
+  it('leaves binding-shaped data-model values alone', () => {
+    const bindingShaped = {'@path': '/x'};
+    const converted = project([
+      {
+        version: '1.0',
+        createSurface: {
+          surfaceId: 's',
+          catalogId: 'commerce',
+          components: [{id: 'root', component: 'Text'}],
+          dataModel: {'/state/root': {text: bindingShaped}},
+        },
+      },
+      {
+        version: '1.0',
+        updateDataModel: {surfaceId: 's', path: '/state/root/text', value: bindingShaped},
+      },
+    ]);
 
-    expect(list['products']).toEqual({
-      componentId: 'product_card',
-      path: '/state/search-top/products',
-    });
-    expect(dataModelWrite(converted, '/state/facet_category_2')?.['updateDataModel']).toEqual({
-      surfaceId: 'ui-commerce-water-sports-1',
-      path: '/state/facet_category_2',
-      value: {
-        values: [{value: 'Surf', path: ['Water sports', 'Surf'], state: 'idle'}],
-        path: ['Water sports'],
-      },
-    });
-    expect(dataModelWrite(converted, '/state/facet_category_2/path')).toEqual({
+    expect(dataModelWrite(converted, '/state/root')).toEqual({
       version: 'v0.9',
-      updateDataModel: {
-        surfaceId: 'ui-commerce-water-sports-1',
-        path: '/state/facet_category_2/path',
-        value: ['Water sports', 'Surf'],
-      },
+      updateDataModel: {surfaceId: 's', path: '/state/root', value: {text: {'@path': '/x'}}},
     });
+    expect(dataModelWrite(converted, '/state/root/text')).toEqual({
+      version: 'v0.9',
+      updateDataModel: {surfaceId: 's', path: '/state/root/text', value: {'@path': '/x'}},
+    });
+  });
+
+  it('leaves a final ChildList template alone', () => {
+    const template = {componentId: 'product_card', path: '/state/product_list_2/products'};
+    const [, updateComponents] = project([
+      {
+        version: '1.0',
+        createSurface: {
+          surfaceId: 's',
+          catalogId: 'commerce',
+          components: [{id: 'product_list_2', component: 'ProductList', children: template}],
+        },
+      },
+    ]);
+
+    expect(updateComponents['updateComponents']).toEqual({
+      surfaceId: 's',
+      components: [{id: 'product_list_2', component: 'ProductList', children: template}],
+    });
+  });
+
+  it.each([['v0.9'], ['2.0']])(
+    'forwards a version %s message exactly as given, @path bindings included',
+    (version) => {
+      const message = {
+        version,
+        updateComponents: {
+          surfaceId: 's',
+          components: [{id: 'root', component: 'Text', text: {'@path': '/state/root/text'}}],
+        },
+      };
+      const before = structuredClone(message);
+
+      const converted = project([message]);
+
+      expect(converted).toHaveLength(1);
+      expect(converted[0]).toBe(message);
+      expect(message).toEqual(before);
+    }
+  );
+
+  it('converts updateDataModel first when a malformed message also carries updateComponents', () => {
+    expect(
+      project([
+        {
+          version: '1.0',
+          updateDataModel: {surfaceId: 's', path: '/state/root', value: 1},
+          updateComponents: {surfaceId: 's', components: []},
+        },
+      ])
+    ).toEqual([
+      {version: 'v0.9', updateDataModel: {surfaceId: 's', path: '/state/root', value: 1}},
+    ]);
   });
 
   it.each([
