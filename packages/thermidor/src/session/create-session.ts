@@ -266,13 +266,13 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
   /** The token the session's requests carry with {@link Session.sessionId}, once there is one. */
   readonly sessionToken: string | undefined;
   /**
-   * The run of the `initialize` action that opened the session, or `undefined` when the session
-   * sent none. Not a turn. Only `initialize` changes its `status`; the surface snapshots of a
-   * component action dispatched before the first turn are recorded here too, unless it opens one.
-   * The session briefly retries a transient rejection of the `initialize` it sent itself, while
-   * {@link Session.request} stays `{kind: 'initialize'}`. Once its
-   * `status` is `'error'`, no surface it would have created is coming: the first prompt still
-   * opens the session, and {@link Session.retryInitialization} sends `initialize` again.
+   * The run of the session-opening action, or `undefined` when the session sent none. Not a turn.
+   * Only that action changes its `status`; the surface snapshots of a component action dispatched
+   * before the first turn are recorded here too, unless it opens one. The session briefly retries a
+   * transient rejection of the session-opening action it sent itself, while
+   * {@link Session.request} stays `{kind: 'initialize'}`. Once its `status` is `'error'`, no surface
+   * it would have created is coming: the first prompt still opens the session, and
+   * {@link Session.retryInitialization} sends the session-opening action again.
    */
   readonly initialization: SessionInitialization | undefined;
   /**
@@ -1162,14 +1162,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     if (!openingAction) {
       return Promise.resolve();
     }
-    const {discriminant, name} = openingAction;
-    const validation = validateActionPayload(discriminant, name, {}, config.contracts);
-    if (!validation.valid) {
-      devWarn(
-        `initialize: withheld: Invalid payload for action "${name}" on component "${discriminant}": ${validation.reason}`
-      );
-      return Promise.resolve();
-    }
+    const {name} = openingAction;
     const retryOptions: RetryOptions | undefined = automatic
       ? {
           transient: {

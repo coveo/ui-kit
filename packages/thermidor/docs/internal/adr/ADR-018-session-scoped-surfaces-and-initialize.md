@@ -280,11 +280,12 @@ session-opening action with `opensSession: true` on its envelope schema, a plain
 structurally, without Zod internals.
 
 - **The marked action is `initialize`.** Everything above applies to it: when it is sent, its run,
-  `{kind: 'initialize'}`, the retries and resuming a restored session. Its payload is `{}`,
-  validated like any action's; one the contract rejects is withheld with a dev-only warning.
+  `{kind: 'initialize'}`, the retries and resuming a restored session. Its payload is `{}`.
 - **None marked, none sent.** `initialization` stays `undefined` and the first prompt opens the
   session. With `initialize: true`, a dev-only warning says so.
-- **At most one.** `createSession` throws when the contracts mark more than one action.
+- **Contract bugs throw.** `createSession` throws when the contracts mark more than one action, or
+  when the marked action's payload rejects `{}`: no retry could fix either, and a warning would be
+  silent in production. The payload is checked once, at creation.
 
 ## Considered Options
 

@@ -96,16 +96,64 @@ function buildZod3Contracts(): ContractsSchema {
   ]) as unknown as ContractsSchema;
 }
 
+interface ShellAction {
+  readonly marked?: boolean;
+  readonly optional?: boolean;
+  readonly requiresLocale?: boolean;
+}
+
+type ShellBuilder = (actions: Record<string, ShellAction>) => ContractsSchema;
+
+/** A single `Shell` component whose actions are marked as opening the session unless told not to. */
+function buildZod4Shell(actions: Record<string, ShellAction>): ContractsSchema {
+  const envelopes = Object.fromEntries(
+    Object.entries(actions).map(([name, {marked = true, optional, requiresLocale}]) => {
+      const payload = requiresLocale ? z4.strictObject({locale: z4.string()}) : z4.strictObject({});
+      const envelope = Object.assign(
+        z4.strictObject({payload}),
+        marked ? {opensSession: true} : {}
+      );
+      return [name, optional ? envelope.optional() : envelope];
+    })
+  );
+  return z4.discriminatedUnion('component', [
+    z4.looseObject({
+      actions: z4.strictObject(envelopes).optional(),
+      component: z4.literal('Shell'),
+    }),
+  ]) as unknown as ContractsSchema;
+}
+
+function buildZod3Shell(actions: Record<string, ShellAction>): ContractsSchema {
+  const envelopes = Object.fromEntries(
+    Object.entries(actions).map(([name, {marked = true, optional, requiresLocale}]) => {
+      const payload = requiresLocale
+        ? z3.object({locale: z3.string()}).strict()
+        : z3.object({}).strict();
+      const envelope = Object.assign(
+        z3.object({payload}).strict(),
+        marked ? {opensSession: true} : {}
+      );
+      return [name, optional ? envelope.optional() : envelope];
+    })
+  );
+  return z3.discriminatedUnion('component', [
+    z3
+      .object({actions: z3.object(envelopes).strict().optional(), component: z3.literal('Shell')})
+      .passthrough(),
+  ]) as unknown as ContractsSchema;
+}
+
 const registry: NodeIdentityRegistry = new Map([
   [SURFACE_ID, new Map([[PAGINATION_ID, 'Pagination']])],
 ]);
 
-const dialects: ReadonlyArray<readonly [string, () => ContractsSchema]> = [
-  ['zod 4 (default build)', buildZod4Contracts],
-  ['zod 3 (classic build)', buildZod3Contracts],
+const dialects: ReadonlyArray<readonly [string, () => ContractsSchema, ShellBuilder]> = [
+  ['zod 4 (default build)', buildZod4Contracts, buildZod4Shell],
+  ['zod 3 (classic build)', buildZod3Contracts, buildZod3Shell],
 ];
 
-describe.each(dialects)('injected contract built with %s', (_label, build) => {
+describe.each(dialects)('injected contract built with %s', (_label, build, buildShell) => {
   const contracts = build();
 
   // .options (union members) + .shape.component.value (discriminant) + .unwrap()
@@ -151,13 +199,33 @@ describe.each(dialects)('injected contract built with %s', (_label, build) => {
   });
 
   // .options + .unwrap() + .shape entries, read for the plain opensSession mark
-  it('finds the action marked as opening the session, and validates its payload', () => {
+  it('finds the action marked as opening the session', () => {
     expect(findSessionOpeningAction(contracts)).toEqual({
       discriminant: 'SessionShell',
       name: 'initialize',
     });
-    expect(validateActionPayload('SessionShell', 'initialize', {}, contracts)).toEqual({
-      valid: true,
+  });
+
+  it('keeps the mark of an optional envelope', () => {
+    expect(findSessionOpeningAction(buildShell({open: {optional: true}}))).toEqual({
+      discriminant: 'Shell',
+      name: 'open',
     });
+  });
+
+  it('finds nothing when no action is marked', () => {
+    expect(findSessionOpeningAction(buildShell({open: {marked: false}}))).toBeUndefined();
+  });
+
+  it('throws when more than one action is marked', () => {
+    expect(() => findSessionOpeningAction(buildShell({first: {}, second: {}}))).toThrow(
+      'Shell.first, Shell.second'
+    );
+  });
+
+  it('throws when the marked payload rejects {}', () => {
+    expect(() => findSessionOpeningAction(buildShell({open: {requiresLocale: true}}))).toThrow(
+      'locale'
+    );
   });
 });

@@ -2326,21 +2326,21 @@ describe('createSession lifecycle', () => {
     });
 
     describe('the action the contracts mark as session-opening', () => {
-      function contractsMarking(...envelopes: Record<string, unknown>[]): ContractsSchema {
+      function contractsMarking(...envelopes: z.ZodType[]): ContractsSchema {
         const actions = Object.fromEntries(
           envelopes.map((envelope, index) => [`open${index}`, envelope])
         );
         return z.discriminatedUnion('component', [
           z.strictObject({
             component: z.literal('Shell'),
-            actions: z.strictObject(actions as Record<string, z.ZodType>).optional(),
+            actions: z.strictObject(actions).optional(),
           }),
           PaginationSchema,
         ]) as unknown as ContractsSchema;
       }
 
-      const marked = (payload: z.ZodType) =>
-        Object.assign(z.strictObject({payload}), {opensSession: true as const});
+      const unmarked = () => z.strictObject({payload: z.strictObject({})});
+      const marked = () => Object.assign(unmarked(), {opensSession: true as const});
 
       afterEach(() => {
         vi.restoreAllMocks();
@@ -2350,10 +2350,7 @@ describe('createSession lifecycle', () => {
         const stream = queueStream();
         const session = createSession({
           ...shellConfig,
-          contracts: contractsMarking(
-            z.strictObject({payload: z.strictObject({})}),
-            marked(z.strictObject({}))
-          ),
+          contracts: contractsMarking(unmarked(), marked()),
         });
         await stream.opened;
 
@@ -2372,7 +2369,7 @@ describe('createSession lifecycle', () => {
             ...baseConfig,
             initialize: undefined,
             ...options,
-            contracts: contractsMarking(z.strictObject({payload: z.strictObject({})})),
+            contracts: contractsMarking(unmarked()),
           });
           await flush();
 
@@ -2385,26 +2382,10 @@ describe('createSession lifecycle', () => {
         }
       );
 
-      it('throws when more than one action is marked', () => {
+      it('throws when the contracts mark more than one action', () => {
         expect(() =>
-          createSession({
-            ...baseConfig,
-            contracts: contractsMarking(marked(z.strictObject({})), marked(z.strictObject({}))),
-          })
+          createSession({...baseConfig, contracts: contractsMarking(marked(), marked())})
         ).toThrow('Shell.open0, Shell.open1');
-      });
-
-      it('withholds a marked action whose payload rejects an empty context', async () => {
-        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-        const session = createSession({
-          ...shellConfig,
-          contracts: contractsMarking(marked(z.strictObject({locale: z.string()}))),
-        });
-        await flush();
-
-        expect(callMock).not.toHaveBeenCalled();
-        expect(session.initialization).toBeUndefined();
-        expect(warn).toHaveBeenCalledWith(expect.stringContaining('open0'));
       });
     });
 

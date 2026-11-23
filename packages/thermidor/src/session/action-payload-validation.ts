@@ -28,7 +28,7 @@ import type {
 } from './contracts.js';
 
 /** The action the contracts mark as opening the session, by component and name. */
-export interface SessionOpeningAction {
+export interface SessionOpeningActionRef {
   readonly discriminant: string;
   readonly name: string;
 }
@@ -58,19 +58,20 @@ function unwrapOptional(schema: ParsableSchema): ParsableSchema {
 
 /**
  * Finds the action whose envelope schema carries `opensSession: true`, or `undefined` when the
- * contracts mark none. Throws when they mark more than one.
+ * contracts mark none. Throws when they mark more than one, or when its payload rejects `{}`, the
+ * context the session sends it with.
  */
 export function findSessionOpeningAction(
   contracts: ContractsSchema
-): SessionOpeningAction | undefined {
-  const marked: SessionOpeningAction[] = [];
+): SessionOpeningActionRef | undefined {
+  const marked: SessionOpeningActionRef[] = [];
   for (const member of contracts.options) {
     const actions = member.shape.actions && unwrapOptional(member.shape.actions);
     if (!isObjectSchema(actions)) {
       continue;
     }
     for (const [name, envelope] of Object.entries(actions.shape)) {
-      if ((envelope as ActionEnvelopeSchema | undefined)?.opensSession === true) {
+      if (envelope && (unwrapOptional(envelope) as ActionEnvelopeSchema).opensSession === true) {
         marked.push({discriminant: member.shape.component.value, name});
       }
     }
@@ -79,7 +80,16 @@ export function findSessionOpeningAction(
     const names = marked.map(({discriminant, name}) => `${discriminant}.${name}`).join(', ');
     throw new Error(`The contracts mark more than one action as opening the session: ${names}.`);
   }
-  return marked[0];
+  const [opening] = marked;
+  if (opening) {
+    const validation = validateActionPayload(opening.discriminant, opening.name, {}, contracts);
+    if (!validation.valid) {
+      throw new Error(
+        `The action ${opening.discriminant}.${opening.name} opens the session, but its payload rejects {}: ${validation.reason}`
+      );
+    }
+  }
+  return opening;
 }
 
 /**
