@@ -50,6 +50,10 @@ export interface ProviderProps<TStaticState> {
   onHydrationError?: (error: unknown) => void;
 }
 
+type HydrationOutcome<TStaticState, THydratedState> =
+  | {hydratedState: THydratedState}
+  | {staticState: TStaticState; error: unknown};
+
 /**
  * Builds the provider of an engine definition: it renders the static state fetched on the server,
  * hydrates it in the browser, and makes the controller hooks work.
@@ -83,9 +87,10 @@ export function buildProviderWithDefinition<
   definition: HydratableDefinition<TStaticState, THydratedState>
 ): FunctionComponent<PropsWithChildren<ProviderProps<TStaticState>>> {
   return function WrappedProvider({staticState, onHydrationError, children}) {
-    const [hydratedState, setHydratedState] = useState<THydratedState | undefined>(undefined);
-    const [failure, setFailure] = useState<{staticState: TStaticState; error: unknown}>();
-    const hydrationFailure = failure?.staticState === staticState ? failure : undefined;
+    const [outcome, setOutcome] = useState<HydrationOutcome<TStaticState, THydratedState>>();
+    const hydratedState = outcome && 'hydratedState' in outcome ? outcome.hydratedState : undefined;
+    const hydrationFailure =
+      outcome && 'error' in outcome && outcome.staticState === staticState ? outcome : undefined;
     const onHydrationErrorRef = useRef(onHydrationError);
 
     useEffect(() => {
@@ -98,12 +103,12 @@ export function buildProviderWithDefinition<
       definition.hydrateStaticState(staticState).then(
         (result) => {
           if (!superseded) {
-            setHydratedState(result);
+            setOutcome({hydratedState: result});
           }
         },
         (error: unknown) => {
           if (!superseded) {
-            setFailure({staticState, error});
+            setOutcome({staticState, error});
           }
         }
       );

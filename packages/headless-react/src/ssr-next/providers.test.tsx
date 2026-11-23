@@ -204,4 +204,56 @@ describe('buildProviderWithDefinition', () => {
 
     expect(getByTestId('status').textContent).toBe('hydrated:hydrated');
   });
+
+  it('should clear the hydration error of a static state that hydrates when it comes back', async () => {
+    hydrateStaticState.mockRejectedValueOnce(new Error('hydration failed'));
+    const onHydrationError = vi.fn();
+    const Provider = buildProviderWithDefinition(definition);
+    const staticState = buildStaticState();
+
+    const {getByTestId, rerender} = render(
+      <Provider staticState={staticState} onHydrationError={onHydrationError}>
+        <Status />
+      </Provider>
+    );
+    await waitFor(() => expect(getByTestId('status').textContent).toBe('error:none'));
+
+    rerender(
+      <Provider staticState={buildStaticState()} onHydrationError={onHydrationError}>
+        <Status />
+      </Provider>
+    );
+    await waitForAsyncUpdates();
+
+    rerender(
+      <Provider staticState={staticState} onHydrationError={onHydrationError}>
+        <Status />
+      </Provider>
+    );
+    await waitForAsyncUpdates();
+
+    expect(getByTestId('status').textContent).toBe('hydrated:hydrated');
+  });
+
+  it('should drop the previous engine when a newer static state fails to hydrate', async () => {
+    const onHydrationError = vi.fn();
+    const Provider = buildProviderWithDefinition(definition);
+
+    const {getByTestId, rerender} = render(
+      <Provider staticState={buildStaticState()} onHydrationError={onHydrationError}>
+        <Status />
+      </Provider>
+    );
+    await waitFor(() => expect(getByTestId('status').textContent).toBe('hydrated:hydrated'));
+
+    hydrateStaticState.mockRejectedValueOnce(new Error('hydration failed'));
+    rerender(
+      <Provider staticState={buildStaticState()} onHydrationError={onHydrationError}>
+        <Status />
+      </Provider>
+    );
+    await waitFor(() => expect(onHydrationError).toHaveBeenCalledOnce());
+
+    expect(getByTestId('status').textContent).toBe('error:none');
+  });
 });
