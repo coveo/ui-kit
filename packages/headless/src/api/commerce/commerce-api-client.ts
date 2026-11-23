@@ -151,6 +151,7 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
       requestParams: {
         ...requestOptions.requestParams,
         facetId: req?.facetId,
+        ...(!!req?.field && {field: req.field}),
         facetQuery: req?.facetQuery,
         query: req?.query,
         numberOfValues: req?.numberOfValues,

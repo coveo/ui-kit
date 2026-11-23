@@ -8,10 +8,14 @@ import type {CategoryFacetSearchResponse} from '../../../../api/search/facet-sea
 import type {SpecificFacetSearchResponse} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
 import type {AsyncThunkOptions} from '../../../../app/async-thunk-options.js';
 import type {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments.js';
+import type {FieldSuggestionsOrderSection} from '../../../../state/state-sections.js';
 import {requiredNonEmptyString} from '../../../../utils/validate-payload.js';
 import type {FieldSuggestionsOrderState} from '../field-suggestions-order/field-suggestions-order-state.js';
 import {buildCategoryFacetSearchRequest} from './category/commerce-category-facet-search-request-builder.js';
-import type {StateNeededForAnyFacetSearch} from './commerce-facet-search-state.js';
+import type {
+  CoreStateNeededForFacetSearch,
+  StateNeededForAnyFacetSearch,
+} from './commerce-facet-search-state.js';
 import {buildFacetSearchRequest} from './regular/commerce-regular-facet-search-request-builder.js';
 import type {StateNeededForRegularFacetSearch} from './regular/commerce-regular-facet-search-state.js';
 
@@ -113,4 +117,15 @@ export function getFacetIdWithCommerceFieldSuggestionNamespace(facetId: string):
   return facetId.startsWith(commerceFieldSuggestionNamespace)
     ? facetId
     : `${commerceFieldSuggestionNamespace}${facetId}`;
+}
+
+export function getFacetSearchField(
+  facetId: string,
+  state: CoreStateNeededForFacetSearch & Partial<FieldSuggestionsOrderSection>
+): string | undefined {
+  const facetIdWithoutNamespace = getFacetIdWithoutCommerceFieldSuggestionNamespace(facetId);
+  return (
+    state.commerceFacetSet[facetIdWithoutNamespace]?.request.field ||
+    state.fieldSuggestionsOrder?.find((facet) => facet.facetId === facetIdWithoutNamespace)?.field
+  );
 }

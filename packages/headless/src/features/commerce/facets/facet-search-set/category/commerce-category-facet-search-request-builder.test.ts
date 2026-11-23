@@ -57,6 +57,16 @@ describe('#buildCategoryFacetSearchRequest', () => {
     expect(request.facetQuery).toBe(`*${state.categoryFacetSearchSet[facetId].options.query}*`);
   });
 
+  it('returned object has a #field property whose value is the field of the facet', () => {
+    state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
+      request: buildMockCommerceFacetRequest({type: 'hierarchical', field: 'ec_category'}),
+    });
+
+    const request = buildCategoryFacetSearchRequest(facetId, state, false, navigatorContext);
+
+    expect(request.field).toBe('ec_category');
+  });
+
   describe.each([
     {
       facetId: 'a_non_namespaced_facet_id',

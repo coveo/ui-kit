@@ -1,4 +1,5 @@
 import type {
+  FacetFieldParam,
   FacetIdParam,
   FacetQueryParam,
   IgnorePathsParam,
@@ -8,6 +9,7 @@ import type {CommerceSearchRequest} from '../search/request.js';
 
 export type CommerceFacetSearchRequest = CommerceSearchRequest &
   FacetIdParam &
+  FacetFieldParam &
   FacetQueryParam &
   NumberOfValuesParam;
 

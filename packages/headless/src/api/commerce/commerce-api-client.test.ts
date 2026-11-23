@@ -334,6 +334,45 @@ describe('commerce api client', () => {
     });
   });
 
+  describe('#facetSearch #field', () => {
+    const buildFacetSearchRequest = async (field?: string) => ({
+      ...(await buildCommerceAPIRequest()),
+      facetId: 'some-facet-id',
+      facetQuery: 'some facet query',
+      query: 'some query',
+      numberOfValues: 5,
+      ...(field !== undefined && {field}),
+    });
+
+    beforeEach(() => {
+      mockPlatformCall({
+        ok: true,
+        json: () => Promise.resolve('some content'),
+      });
+    });
+
+    it('when the request has a field, sends it with the facet ID', async () => {
+      await client.facetSearch(await buildFacetSearchRequest('ec_brand'), 'SEARCH');
+
+      expect(platformCallMock.mock.calls[0][0].requestParams).toMatchObject({
+        facetId: 'some-facet-id',
+        field: 'ec_brand',
+      });
+    });
+
+    it('when the request has an empty field, does not send it', async () => {
+      await client.facetSearch(await buildFacetSearchRequest(''), 'SEARCH');
+
+      expect(platformCallMock.mock.calls[0][0].requestParams).not.toHaveProperty('field');
+    });
+
+    it('when the request has no field, does not send it', async () => {
+      await client.facetSearch(await buildFacetSearchRequest(), 'SEARCH');
+
+      expect(platformCallMock.mock.calls[0][0].requestParams).not.toHaveProperty('field');
+    });
+  });
+
   it('#getBadges should call the platform endpoint with the correct arguments', async () => {
     const request = {
       ...(await buildCommerceAPIRequest()),
