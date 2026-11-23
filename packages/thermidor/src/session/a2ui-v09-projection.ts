@@ -71,11 +71,13 @@
  * carries a single `id`/`component` identity plus its presentation values, A2-UI
  * Data_Binding objects, and composition links directly at the top level — there
  * is no `props` wrapper, which is already the shape the v0.9 renderer mounts.
- * Nodes are copied as they are, except that an exact `{ "@path": <JSON Pointer> }`
- * binding becomes v0.9's `{ "path": <JSON Pointer> }`, whichever of the two
- * gateway versions carries it. Candidate nodes, whose bindings are already
- * `{ "path" }`, come out equal to what arrived. Component ids are never
- * rewritten, whether snake_case (final 1.0) or hyphenated (candidate).
+ * Candidate (`"v1.0"`) nodes, whose bindings are already v0.9's
+ * `{ "path": <JSON Pointer> }`, are forwarded unchanged: there, `@path` is not a
+ * binding marker, so an `{ "@path": … }` value is a literal and stays as it is.
+ * Final (`"1.0"`) nodes are copied, except that an exact
+ * `{ "@path": <JSON Pointer> }` binding becomes `{ "path": <JSON Pointer> }`.
+ * Component ids are never rewritten, whether snake_case (final 1.0) or
+ * hyphenated (candidate).
  *
  * ## Dual input (transitional)
  *
@@ -85,13 +87,16 @@
  *
  * - `version: "v1.0"` (candidate) and `version: "1.0"` (final) envelopes get the
  *   same conversion and the same surface lifecycle rules;
- * - in component nodes (`createSurface.components`, `updateComponents.components`),
- *   a final binding becomes a v0.9 binding: `{ "@path": x }` becomes
- *   `{ "path": x }`, at any depth (child props, named slots, action contexts). A
- *   binding is an object whose only key is `@path`, holding a string, the rule
- *   Agent Gateway applies. Other `path` keys are data, not bindings, and are left
- *   alone: `updateDataModel.path`, a ChildList template `{ componentId, path }`, and
- *   data-model values such as a category facet's `path`.
+ * - in the component nodes of a `"1.0"` message only (`createSurface.components`,
+ *   `updateComponents.components`), a final binding becomes a v0.9 binding:
+ *   `{ "@path": x }` becomes `{ "path": x }`, at any depth (child props, named
+ *   slots, action contexts). A binding is an object whose only key is `@path`,
+ *   holding a string, the rule Agent Gateway applies. Other `path` keys are data,
+ *   not bindings, and are left alone: `updateDataModel.path`, a ChildList template
+ *   `{ componentId, path }`, and data-model values such as a category facet's
+ *   `path`. A candidate `"v1.0"` message is converted as before: there, `@path` is
+ *   not a binding marker. Agent Gateway switches the envelope and the bindings
+ *   together, so the two never arrive mixed.
  *
  * Once Agent Gateway emits only the final version, the `"v1.0"` input is dead
  * code; it goes with the rest of this module (see "Removal trigger").
@@ -112,6 +117,9 @@
  */
 
 import type {A2uiV09Message} from './types.js';
+
+/** The final A2-UI v1.0 version, whose data bindings are `{"@path"}`. */
+const FINAL_PROTOCOL_VERSION = '1.0';
 
 /**
  * The A2-UI protocol versions Agent Gateway emits: `"v1.0"`, the candidate it emits today, and
@@ -181,7 +189,7 @@ function createdSurfaceId(message: A2uiV09Message): string | null {
  *
  * A message that declares neither `version: 'v1.0'` nor `version: '1.0'` is forwarded verbatim,
  * so an already-v0.9 stream passes through untouched. Both gateway versions get the same
- * conversion; the final version's `{"@path"}` bindings also become v0.9 `{"path"}` bindings.
+ * conversion; in a `"1.0"` message only, `{"@path"}` bindings also become v0.9 `{"path"}` bindings.
  * A v1.0 message carrying no recognized operation is unconvertible and is dropped rather than
  * forwarded, so a malformed message can never mutate renderer state; the previously rendered UI
  * stays displayed.
@@ -190,6 +198,7 @@ function convertMessage(message: Record<string, unknown>): A2uiV09Message[] {
   if (!GATEWAY_PROTOCOL_VERSIONS.has(message['version'])) {
     return [message];
   }
+  const isFinal = message['version'] === FINAL_PROTOCOL_VERSION;
 
   const createSurface = message['createSurface'];
   if (isRecord(createSurface)) {
@@ -219,7 +228,7 @@ function convertMessage(message: Record<string, unknown>): A2uiV09Message[] {
     if (Array.isArray(components) && components.length > 0) {
       converted.push({
         version: RENDERER_PROTOCOL_VERSION,
-        updateComponents: {surfaceId, components: toV09Bindings(components)},
+        updateComponents: {surfaceId, components: isFinal ? toV09Bindings(components) : components},
       });
     }
 
@@ -254,7 +263,7 @@ function convertMessage(message: Record<string, unknown>): A2uiV09Message[] {
       {
         version: RENDERER_PROTOCOL_VERSION,
         updateComponents:
-          'components' in updateComponents
+          isFinal && 'components' in updateComponents
             ? {...updateComponents, components: toV09Bindings(updateComponents['components'])}
             : updateComponents,
       },

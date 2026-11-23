@@ -224,9 +224,11 @@ v0.9 output for each:
 - both envelopes get the same conversion (the `createSurface` split, `value: null` as a v0.9
   deletion, the `"v0.9"` envelope) and the same surface lifecycle rules (a `deleteSurface`
   before a re-create);
-- in component nodes, and only there, a final binding becomes a v0.9 binding at any depth.
-  A binding is an object whose only key is `@path`, holding a string, the rule Agent Gateway
-  applies. Other `path` keys are data, not bindings, and are left alone: `updateDataModel.path`,
+- in the component nodes of a `"1.0"` message, and only there, a final binding becomes a v0.9
+  binding at any depth. A binding is an object whose only key is `@path`, holding a string, the
+  rule Agent Gateway applies. In a candidate `"v1.0"` message `@path` is not a binding marker, so
+  its nodes are forwarded unchanged, as before. Agent Gateway switches the envelope and the
+  bindings together, so the two never arrive mixed. Other `path` keys are data, not bindings, and are left alone: `updateDataModel.path`,
   a ChildList template `{ componentId, path }`, and data-model values such as a category
   facet's `path`;
 - component ids are forwarded as they arrive, snake_case or hyphenated.

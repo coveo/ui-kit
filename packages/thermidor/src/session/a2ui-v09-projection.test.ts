@@ -687,6 +687,45 @@ describe('convertA2uiMessages reads both the v1.0 candidate and the final v1.0',
     ]);
   });
 
+  describe('converts @path only in a final 1.0 message', () => {
+    const node = {id: 'root', component: 'Document', document: {'@path': '/literal'}};
+
+    it.each([
+      [
+        'createSurface',
+        {createSurface: {surfaceId: 's', catalogId: 'commerce', components: [node]}},
+      ],
+      ['updateComponents', {updateComponents: {surfaceId: 's', components: [node]}}],
+    ])('keeps an @path literal in a candidate v1.0 %s unchanged', (_operation, operation) => {
+      const converted = project([{version: 'v1.0', ...operation}]);
+
+      expect(converted.at(-1)?.['updateComponents']).toEqual({surfaceId: 's', components: [node]});
+    });
+
+    it.each([
+      [
+        'createSurface',
+        {createSurface: {surfaceId: 's', catalogId: 'commerce', components: [node]}},
+      ],
+      ['updateComponents', {updateComponents: {surfaceId: 's', components: [node]}}],
+    ])('turns the same prop in a final 1.0 %s into a path binding', (_operation, operation) => {
+      const converted = project([{version: '1.0', ...operation}]);
+
+      expect(converted.at(-1)?.['updateComponents']).toEqual({
+        surfaceId: 's',
+        components: [{id: 'root', component: 'Document', document: {path: '/literal'}}],
+      });
+    });
+
+    it('forwards a candidate updateComponents body as it arrived', () => {
+      const updateComponents = {surfaceId: 's', components: [node]};
+
+      const [converted] = project([{version: 'v1.0', updateComponents}]);
+
+      expect(converted['updateComponents']).toBe(updateComponents);
+    });
+  });
+
   it.each([
     ['a non-string @path', {'@path': 3}],
     ['an @path beside other keys', {'@path': '/state/x', fallback: 'none'}],
