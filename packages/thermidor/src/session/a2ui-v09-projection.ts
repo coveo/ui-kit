@@ -71,9 +71,11 @@
  * carries a single `id`/`component` identity plus its presentation values, A2-UI
  * Data_Binding objects, and composition links directly at the top level — there
  * is no `props` wrapper, which is already the shape the v0.9 renderer mounts.
- * Candidate nodes, whose bindings are already v0.9's `{ "path": <JSON Pointer> }`,
- * are forwarded byte-for-byte. Component ids are never rewritten, whether
- * snake_case (final 1.0) or hyphenated (candidate).
+ * Nodes are copied as they are, except that an exact `{ "@path": <JSON Pointer> }`
+ * binding becomes v0.9's `{ "path": <JSON Pointer> }`, whichever of the two
+ * gateway versions carries it. Candidate nodes, whose bindings are already
+ * `{ "path" }`, come out equal to what arrived. Component ids are never
+ * rewritten, whether snake_case (final 1.0) or hyphenated (candidate).
  *
  * ## Dual input (transitional)
  *
@@ -179,10 +181,10 @@ function createdSurfaceId(message: A2uiV09Message): string | null {
  *
  * A message that declares neither `version: 'v1.0'` nor `version: '1.0'` is forwarded verbatim,
  * so an already-v0.9 stream passes through untouched. Both gateway versions get the same
- * conversion; the final version's `{"@path"}` bindings also become v0.9 `{"path"}` bindings. A v1.0 message carrying no
- * recognized operation is unconvertible and is dropped rather than forwarded, so
- * a malformed message can never mutate renderer state; the previously rendered
- * UI stays displayed.
+ * conversion; the final version's `{"@path"}` bindings also become v0.9 `{"path"}` bindings.
+ * A v1.0 message carrying no recognized operation is unconvertible and is dropped rather than
+ * forwarded, so a malformed message can never mutate renderer state; the previously rendered UI
+ * stays displayed.
  */
 function convertMessage(message: Record<string, unknown>): A2uiV09Message[] {
   if (!GATEWAY_PROTOCOL_VERSIONS.has(message['version'])) {
@@ -237,10 +239,13 @@ function convertMessage(message: Record<string, unknown>): A2uiV09Message[] {
   }
 
   const update = message['updateDataModel'];
-  // A2-UI v1.0 deletes a key with `value: null`; v0.9 deletes it when `value` is omitted.
-  if (isRecord(update) && update['value'] === null) {
-    const {value: _deleted, ...deletion} = update;
-    return [{version: RENDERER_PROTOCOL_VERSION, updateDataModel: deletion}];
+  if (isRecord(update)) {
+    // A2-UI v1.0 deletes a key with `value: null`; v0.9 deletes it when `value` is omitted.
+    if (update['value'] === null) {
+      const {value: _deleted, ...deletion} = update;
+      return [{version: RENDERER_PROTOCOL_VERSION, updateDataModel: deletion}];
+    }
+    return [{version: RENDERER_PROTOCOL_VERSION, updateDataModel: update}];
   }
 
   const updateComponents = message['updateComponents'];
@@ -256,11 +261,9 @@ function convertMessage(message: Record<string, unknown>): A2uiV09Message[] {
     ];
   }
 
-  for (const operation of ['updateDataModel', 'deleteSurface'] as const) {
-    const body = message[operation];
-    if (isRecord(body)) {
-      return [{version: RENDERER_PROTOCOL_VERSION, [operation]: body}];
-    }
+  const deleteSurface = message['deleteSurface'];
+  if (isRecord(deleteSurface)) {
+    return [{version: RENDERER_PROTOCOL_VERSION, deleteSurface}];
   }
 
   return [];
