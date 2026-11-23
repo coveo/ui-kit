@@ -1,142 +1,98 @@
-import type {UnknownAction} from '@reduxjs/toolkit';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {beforeEach, describe, expect, it} from 'vitest';
 import type {CoreEngine} from '../../app/engine.js';
 import {
   buildMockController,
   buildMockControllerWithInitialState,
 } from '../../test/mock-controller.js';
 import {buildMockSearchEngine} from '../../test/mock-engine-v2.js';
+import {buildMockNavigatorContext} from '../../test/mock-navigator-context.js';
 import {
-  defineMockController,
-  defineMockControllerWithProps,
+  defineMockSearchController,
+  defineMockSearchControllerReadingPageFacts,
 } from '../../test/mock-ssr-controller-definitions.js';
 import {createMockState} from '../../test/mock-state.js';
-import * as utils from '../../utils/utils.js';
-import {ControllerBuilder} from '../common/builders/controller-builder.js';
-import {createStaticControllerBuilder} from '../common/builders/static-controller-builder.js';
 import {buildControllerDefinitions, createStaticState} from './controller-utils.js';
-
-vi.mock('../../utils/utils.js', {spy: true});
-vi.mock('../common/builders/static-controller-builder.js', {spy: true});
-vi.mock('../common/builders/controller-builder.js', {spy: true});
+import type {BuildConfig} from './types/build.js';
 
 describe('controller-utils', () => {
-  let mockSearchAction: UnknownAction;
   let mockEngine: CoreEngine;
+  let buildConfig: BuildConfig;
 
   beforeEach(() => {
     mockEngine = buildMockSearchEngine(createMockState());
-  });
-
-  afterEach(() => {
-    vi.clearAllMocks();
+    buildConfig = {
+      navigatorContext: buildMockNavigatorContext(),
+      searchParams: {q: 'test'},
+      context: {ageGroup: '30-45'},
+    };
   });
 
   describe('#buildControllerDefinitions', () => {
-    const mockControllerBuilder = vi.mocked(ControllerBuilder);
-    const mockControllerBuilderBuildMethod = vi.fn();
-    beforeEach(() => {
-      mockControllerBuilderBuildMethod.mockReturnValue(buildMockController());
-      mockControllerBuilder.mockImplementation(function () {
-        this.build = mockControllerBuilderBuildMethod;
-      });
-
+    it('should build every definition once with the engine and the page facts', () => {
       const definitionsMap = {
-        controller1: defineMockController(),
-        controller2: defineMockControllerWithProps(),
+        controller1: defineMockSearchController(),
+        controller2: defineMockSearchController(),
       };
 
-      buildControllerDefinitions({
+      const controllers = buildControllerDefinitions({
         definitionsMap,
         engine: mockEngine,
-        propsMap: {
-          controller2: {initialState: {prop1: 'value1', prop2: 42}},
-        },
+        buildConfig,
+      });
+
+      expect(Object.keys(controllers)).toEqual(['controller1', 'controller2']);
+      expect(definitionsMap.controller1.build).toHaveBeenCalledExactlyOnceWith(mockEngine, {
+        buildConfig,
+      });
+      expect(definitionsMap.controller2.build).toHaveBeenCalledExactlyOnceWith(mockEngine, {
+        buildConfig,
       });
     });
 
-    it('should call #ControllerBuilder as many times as there are definitions', () => {
-      expect(ControllerBuilder).toHaveBeenCalledTimes(2);
-      expect(mockControllerBuilderBuildMethod).toHaveBeenCalledTimes(2);
-    });
+    it('should let a definition read the page facts of the request', () => {
+      const definitionsMap = {reader: defineMockSearchControllerReadingPageFacts()};
 
-    it('should call #ControllerBuilder for the controller without props with the correct arguments', () => {
-      const noProps = undefined;
-      expect(ControllerBuilder).toHaveBeenNthCalledWith(
-        1,
-        {
-          build: expect.any(Function),
-        },
-        mockEngine,
-        noProps
-      );
-    });
+      const {reader} = buildControllerDefinitions({
+        definitionsMap,
+        engine: mockEngine,
+        buildConfig,
+      });
 
-    it('should call #ControllerBuilder for the controller with props with the correct arguments', () => {
-      expect(ControllerBuilder).toHaveBeenNthCalledWith(
-        2,
-        {
-          buildWithProps: expect.any(Function),
-        },
-        mockEngine,
-        {
-          initialState: {
-            prop1: 'value1',
-            prop2: 42,
-          },
-        }
-      );
+      expect(reader.state).toEqual(buildConfig);
     });
   });
 
   describe('#createStaticState', () => {
-    beforeEach(() => {
-      mockSearchAction = {type: 'search', payload: {q: 'test'}};
-      const mockStaticBuilder = {
-        withState: vi.fn().mockReturnThis(),
-        withInitialState: vi.fn().mockReturnThis(),
-        build: vi.fn().mockReturnValue({
-          state: {},
-        }),
-      };
+    const searchActions = [{type: 'search/executeSearch/fulfilled', payload: {q: 'test'}}];
 
-      vi.mocked(createStaticControllerBuilder).mockReturnValue(mockStaticBuilder);
-
+    it('should keep the state of every controller and nothing else', () => {
       const controllers = {
         controller1: buildMockController(),
         controller2: buildMockControllerWithInitialState(mockEngine, {
           initialState: {prop1: 'value1', prop2: 42},
         }),
       };
-      createStaticState({
-        searchActions: [mockSearchAction],
-        controllers,
+
+      const staticState = createStaticState({searchActions, controllers});
+
+      expect(staticState.controllers).toEqual({
+        controller1: {state: {}},
+        controller2: {state: {prop1: 'value1', prop2: 42}},
       });
+      expect(staticState.controllers.controller2).not.toHaveProperty('initialState');
     });
 
-    it('should call #createStaticControllerBuilder as many times as there are controllers', () => {
-      expect(createStaticControllerBuilder).toHaveBeenCalledTimes(2);
-    });
+    it('should clone the controller states and the search actions', () => {
+      const controller = buildMockControllerWithInitialState(mockEngine, {
+        initialState: {nested: {value: 1}},
+      });
 
-    it('should call #createStaticControllerBuilder with the correct arguments', () => {
-      expect(createStaticControllerBuilder).toHaveBeenNthCalledWith(
-        1,
-        expect.objectContaining({
-          state: {},
-        })
-      );
+      const staticState = createStaticState({searchActions, controllers: {controller}});
 
-      expect(createStaticControllerBuilder).toHaveBeenNthCalledWith(
-        2,
-        expect.objectContaining({
-          state: {prop1: 'value1', prop2: 42},
-        })
-      );
-    });
-
-    it('should call #clone once with the proper arguments', () => {
-      expect(utils.clone).toHaveBeenCalledTimes(1);
-      expect(utils.clone).toHaveBeenCalledWith([mockSearchAction]);
+      expect(staticState.controllers.controller.state).toEqual(controller.state);
+      expect(staticState.controllers.controller.state).not.toBe(controller.state);
+      expect(staticState.searchActions).toEqual(searchActions);
+      expect(staticState.searchActions).not.toBe(searchActions);
     });
   });
 });

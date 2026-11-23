@@ -65,18 +65,6 @@ describe('fetchStandaloneStaticStateFactory', () => {
     expect(engineSpy.mock.calls[0][1]).toStrictEqual(mockEngineOptions);
   });
 
-  it('should carry the controller props in the static state', async () => {
-    const controllerProps = {controller1: {initialState: {foo: 'bar'}}};
-    // @ts-expect-error: do not care about baked-in controller initial state
-    const factory = fetchStandaloneStaticStateFactory(definition, mockEngineOptions);
-    const result = await factory({
-      navigatorContext: mockNavigatorContext,
-      searchParams: {q: 'test'},
-      controllers: controllerProps,
-    } as unknown as Parameters<typeof factory>[0]);
-    expect(result.controllerProps).toEqual(controllerProps);
-  });
-
   it('should return the navigator context and search params', async () => {
     // @ts-expect-error: do not care about baked-in controller initial state
     const factory = fetchStandaloneStaticStateFactory(definition, mockEngineOptions);

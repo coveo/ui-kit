@@ -2,7 +2,6 @@ import {buildProductListing} from '../../../controllers/commerce/product-listing
 import {buildSearch} from '../../../controllers/commerce/search/headless-search.js';
 import {toSerializableNavigatorContext} from '../../common/serializable-navigator-context.js';
 import {createStaticState} from '../controller-utils.js';
-import type {BuildParameters} from '../types/build.js';
 import {filterRecommendationControllers} from '../utils/recommendation-filter.js';
 import {withDefaultViewUrl} from '../utils/view-url.js';
 import {SolutionType} from '../types/controller-constants.js';
@@ -77,17 +76,11 @@ export function fetchStaticStateFactory<
         controllers,
       });
 
-      const {
-        controllers: controllerProps,
-        ...restParams
-      }: BuildParameters<TControllerDefinitions> & typeof params = params;
-
       return {
-        ...restParams,
+        ...params,
         ...staticState,
         navigatorContext: toSerializableNavigatorContext(params.navigatorContext),
         solutionType,
-        ...(controllerProps && {controllerProps}),
       };
     };
 }

@@ -11,7 +11,7 @@ import type {
   SearchEngineDefinitionOptions,
 } from '../types/engine.js';
 import type {SearchHydratedState} from '../types/hydrate-static-state.js';
-import {wireControllerParams} from '../utils/controller-wiring.js';
+import {validateBuildConfig} from '../utils/controller-wiring.js';
 import {augmentSearchEngineOptions} from '../utils/engine-wiring.js';
 
 function isSearchCompletedAction(action: unknown): action is SearchCompletedAction {
@@ -41,7 +41,7 @@ export const buildFactory =
     options: SearchEngineDefinitionOptions<TControllerDefinitions>
   ) =>
   async (buildOptions: BuildParameters) => {
-    const controllerProps = wireControllerParams(controllerDefinitions, buildOptions);
+    validateBuildConfig(buildOptions);
 
     const engineOptions = augmentSearchEngineOptions(options, buildOptions);
 
@@ -50,7 +50,7 @@ export const buildFactory =
     const controllers = buildControllerDefinitions({
       definitionsMap: controllerDefinitions,
       engine,
-      propsMap: controllerProps,
+      buildConfig: buildOptions,
     });
 
     buildOptions.searchActions?.forEach((action) => {

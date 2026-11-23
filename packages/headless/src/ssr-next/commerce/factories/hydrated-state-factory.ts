@@ -6,7 +6,6 @@ import type {
   CommerceEngineDefinitionOptions,
   HydrateStaticStateParameters,
 } from '../types/engine.js';
-import type {BuildParameters} from '../types/build.js';
 import {buildFactory} from './build-factory.js';
 
 /**
@@ -29,15 +28,8 @@ export function hydratedStaticStateFactory<
     async (params: HydrateStaticStateParameters<TControllerDefinitions, TSolutionType>) => {
       ensureSolutionType(solutionType, params.solutionType);
 
-      const {controllerProps, controllers: _snapshots, ...restParams} = params;
-
-      const buildParameters: BuildParameters<TControllerDefinitions> = {
-        ...restParams,
-        ...(controllerProps && {controllers: controllerProps}),
-      };
-
       const solutionTypeBuild = await buildFactory(controllerDefinitions, options)(solutionType);
-      const {engine, controllers} = await solutionTypeBuild(buildParameters);
+      const {engine, controllers} = await solutionTypeBuild(params);
 
       if (params.searchActions.length > 0) {
         await Promise.all(engine.waitForRequestCompletedAction());

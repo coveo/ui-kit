@@ -5,7 +5,7 @@ import {
 } from '../../../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch, type Search} from '../../../../controllers/commerce/search/headless-search.js';
 import {SolutionType} from '../../types/controller-constants.js';
-import type {SearchAndListingControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
+import type {SearchAndListingControllerDefinition} from '../../types/controller-definitions.js';
 
 export type {ProductListing, ProductListingState as ProductListState, Search};
 
@@ -18,7 +18,7 @@ export type ProductList = Pick<
   | 'promoteChildToParent'
 >;
 
-export type ProductListDefinition = SearchAndListingControllerDefinitionWithoutProps<ProductList>;
+export type ProductListDefinition = SearchAndListingControllerDefinition<ProductList>;
 
 /**
  * Options for configuring the `ProductList` controller.
@@ -45,7 +45,7 @@ export function defineProductList(options: ProductListOptions = {}): ProductList
   return {
     listing: true,
     search: true,
-    build: (engine, solutionType) =>
+    build: (engine, {solutionType}) =>
       solutionType === SolutionType.listing
         ? (buildProductListing(engine, {enableResults}) as ProductList)
         : (buildSearch(engine, {enableResults}) as ProductList),

@@ -1,17 +1,4 @@
 /**
- * Thrown when a controller defined with props is built without them.
- *
- * @group Errors
- */
-export class MissingControllerProps extends Error {
-  constructor(controller: string) {
-    super();
-    this.name = 'MissingControllerProps';
-    this.message = `${controller} props are required but were undefined. Pass them through the \`controllers\` option of \`fetchStaticState()\`; the returned static state carries them to \`hydrateStaticState()\`.`;
-  }
-}
-
-/**
  * Thrown when two recommendation controllers of an engine definition target the same slot.
  *
  * @group Errors

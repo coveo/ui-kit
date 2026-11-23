@@ -4,14 +4,11 @@ import {
   type SmartSnippet,
   type SmartSnippetProps,
 } from '../../../../controllers/smart-snippet/headless-smart-snippet.js';
-import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
+import type {ControllerDefinition} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/smart-snippet/headless-smart-snippet.js';
 
-export interface SmartSnippetDefinition extends ControllerDefinitionWithoutProps<
-  SearchEngine,
-  SmartSnippet
-> {}
+export interface SmartSnippetDefinition extends ControllerDefinition<SearchEngine, SmartSnippet> {}
 
 /**
  * Defines a `SmartSnippet` controller instance.

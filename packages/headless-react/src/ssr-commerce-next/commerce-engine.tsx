@@ -1,24 +1,25 @@
 import {
   type AugmentedControllerDefinition,
+  augmentCommerceControllerDefinitions,
   type CommerceEngine,
   type CommerceEngineDefinitionOptions,
   type Controller,
   type ControllerDefinitionsMap,
   defineCommerceEngine as defineBaseCommerceEngine,
-  defineCart,
-  defineContext,
-  defineParameterManager,
   SolutionType,
 } from '@coveo/headless/ssr-commerce-next';
 // Workaround to prevent Next.js erroring about importing CSR only hooks
 import React from 'react';
-import {type SingletonGetter, singleton} from '../utils.js';
-import {buildControllerHooks, buildEngineHook, buildStateProvider} from './common.js';
-import type {
-  ContextState,
-  InferControllerHooksMapFromDefinition,
-  ReactEngineDefinition,
-} from './types.js';
+import {
+  buildControllerHooks,
+  buildEngineHook,
+  buildHydrationHook,
+  buildStateProvider,
+  type EngineContext,
+} from '../ssr-common/hooks.js';
+import type {EngineContextState, Hydration} from '../ssr-common/types.js';
+import {singleton} from '../utils.js';
+import type {InferControllerHooksMapFromDefinition, ReactEngineDefinition} from './types.js';
 /**
  * A React engine definition that includes context providers for static and hydrated states.
  *
@@ -31,14 +32,20 @@ export type ReactCommerceEngineDefinition<
 
 // TODO: remove hack: KIT-5009
 // Wrapper to workaround the limitation that `createContext()` cannot be called directly during SSR in next.js
-function createSingletonContext<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-  TSolutionType extends SolutionType = SolutionType,
->() {
-  return singleton(() =>
-    React.createContext<ContextState<TControllers, TSolutionType> | null>(null)
-  );
+function createSingletonContext(): EngineContext<CommerceEngine> {
+  return singleton(() => React.createContext<EngineContextState<CommerceEngine> | null>(null));
 }
+
+function isControllerDefinition(
+  definition: unknown
+): definition is ControllerDefinitionsMap<Controller>[string] {
+  return typeof definition === 'object' && definition !== null && 'build' in definition;
+}
+
+const getSupportedSolutionTypes = (definition: unknown) =>
+  isControllerDefinition(definition)
+    ? Object.values(SolutionType).filter((solutionType) => definition[solutionType] === true)
+    : [];
 
 /**
  * Returns engine and controller hooks, and context providers.
@@ -50,48 +57,46 @@ function createSingletonContext<
 export function defineCommerceEngine<TControllers extends ControllerDefinitionsMap<Controller>>(
   options: CommerceEngineDefinitionOptions<TControllers>
 ): {
+  /**
+   * Returns the engine once the static state is hydrated, and `undefined` before.
+   */
   useEngine: () => CommerceEngine | undefined;
+  /**
+   * Returns whether the components render the static state, the hydrated engine, or a hydration error.
+   */
+  useHydration: () => Hydration;
   controllers: InferControllerHooksMapFromDefinition<AugmentedControllerDefinition<TControllers>>;
   listingEngineDefinition: ReactCommerceEngineDefinition<TControllers, SolutionType.listing>;
   searchEngineDefinition: ReactCommerceEngineDefinition<TControllers, SolutionType.search>;
   standaloneEngineDefinition: ReactCommerceEngineDefinition<TControllers, SolutionType.standalone>;
 } {
-  const singletonContext = createSingletonContext<TControllers>();
-
-  type ContextStateType<TSolutionType extends SolutionType> = SingletonGetter<
-    React.Context<ContextState<TControllers, TSolutionType> | null>
-  >;
-  type ListingContext = ContextStateType<SolutionType.listing>;
-  type SearchContext = ContextStateType<SolutionType.search>;
-  type StandaloneContext = ContextStateType<SolutionType.standalone>;
+  const singletonContext = createSingletonContext();
 
   const {listingEngineDefinition, searchEngineDefinition, standaloneEngineDefinition} =
     defineBaseCommerceEngine({...options});
 
-  const augmentedControllerDefinition = {
-    ...options.controllers,
-    parameterManager: defineParameterManager(),
-    context: defineContext(),
-    cart: defineCart(),
-  } as AugmentedControllerDefinition<TControllers>;
+  const controllerDefinitions = augmentCommerceControllerDefinitions<TControllers>(
+    options.controllers
+  );
 
   return {
     useEngine: buildEngineHook(singletonContext),
-    controllers: buildControllerHooks(singletonContext, augmentedControllerDefinition),
+    useHydration: buildHydrationHook(singletonContext),
+    controllers: buildControllerHooks(singletonContext, controllerDefinitions, {
+      getSupportedSolutionTypes,
+      hookNames: {context: 'useCommerceContext'},
+    }) as InferControllerHooksMapFromDefinition<AugmentedControllerDefinition<TControllers>>,
     listingEngineDefinition: {
       ...listingEngineDefinition,
-      StateProvider: buildStateProvider(singletonContext as ListingContext, SolutionType.listing),
+      StateProvider: buildStateProvider(singletonContext, SolutionType.listing),
     },
     searchEngineDefinition: {
       ...searchEngineDefinition,
-      StateProvider: buildStateProvider(singletonContext as SearchContext, SolutionType.search),
+      StateProvider: buildStateProvider(singletonContext, SolutionType.search),
     },
     standaloneEngineDefinition: {
       ...standaloneEngineDefinition,
-      StateProvider: buildStateProvider(
-        singletonContext as StandaloneContext,
-        SolutionType.standalone
-      ),
+      StateProvider: buildStateProvider(singletonContext, SolutionType.standalone),
     },
   };
 }

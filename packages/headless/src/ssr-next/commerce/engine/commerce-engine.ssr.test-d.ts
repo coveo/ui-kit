@@ -2,8 +2,8 @@ import {describe, expectTypeOf, it} from 'vitest';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
-import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import type {EngineDefinition, EngineStaticState} from '../../common/types/engine.js';
+import {defineProductEnrichment} from '../controllers/product-enrichment/headless-product-enrichment.ssr.js';
 import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
@@ -22,6 +22,7 @@ const controllers = {
   searchBox: defineSearchBox(),
   popularViewed: defineRecommendations({options: {slotId: 'slot-viewed'}}),
   popularBought: defineRecommendations({options: {slotId: 'slot-bought'}}),
+  productEnrichment: defineProductEnrichment({options: {placementIds: ['placement-a']}}),
 };
 
 // Types the customer relies on for IntelliSense: everything below is inferred from the controllers
@@ -97,6 +98,15 @@ describe('defineCommerceEngine', () => {
     expectTypeOf<ListingFetchOptions['recommendations']>().toEqualTypeOf<SlotNames>();
     expectTypeOf<SearchFetchOptions['recommendations']>().toEqualTypeOf<SlotNames>();
     expectTypeOf<StandaloneFetchOptions['recommendations']>().toEqualTypeOf<SlotNames>();
+  });
+
+  it('should take page facts only, with no per-request controller props', () => {
+    expectTypeOf<ListingFetchOptions>().not.toHaveProperty('controllers');
+    expectTypeOf<StandaloneFetchOptions>().not.toHaveProperty('controllers');
+    expectTypeOf<ListingStaticState>().not.toHaveProperty('controllerProps');
+    expectTypeOf<ListingStaticState['controllers']['productList']>().not.toHaveProperty(
+      'initialState'
+    );
   });
 
   it('should accept the product ID on every engine definition', () => {
@@ -210,7 +220,6 @@ describe('the static and hydrated states of a commerce engine definition', () =>
       BuildConfig<typeof controllers, TSolutionType> & {
         solutionType: TSolutionType;
         context: ContextOptions;
-        controllerProps?: ControllersPropsMap;
       };
     type Listing = CommerceStaticState<typeof controllers, SolutionType.listing>;
     type Search = CommerceStaticState<typeof controllers, SolutionType.search>;
@@ -281,7 +290,7 @@ describe('the static and hydrated states of a commerce engine definition', () =>
       'productList' | 'searchBox' | RecommendationSlots | 'parameterManager' | 'context' | 'cart'
     >();
     expectTypeOf<keyof StandaloneHydratedState['controllers']>().toEqualTypeOf<
-      RecommendationSlots | 'context' | 'cart'
+      RecommendationSlots | 'productEnrichment' | 'context' | 'cart'
     >();
     expectTypeOf<keyof ListingStaticState['controllers']>().toEqualTypeOf<
       keyof ListingHydratedState['controllers']
