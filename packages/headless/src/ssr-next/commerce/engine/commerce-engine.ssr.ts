@@ -53,7 +53,7 @@ export function augmentCommerceControllerDefinitions<
  *
  * @example
  * ```ts
- * const { listingEngineDefinition } = defineCommerceEngine(engineConfig);
+ * const {listingEngineDefinition} = defineCommerceEngine(engineConfig);
  *
  * const staticState = await listingEngineDefinition.fetchStaticState({
  *   navigatorContext: {/*...* /},
@@ -61,8 +61,8 @@ export function augmentCommerceControllerDefinitions<
  *   recommendations: ['popularViewed'],
  * });
  *
- * type SearchStaticState = InferStaticState<typeof listingEngineDefinition>;
- * type SearchHydratedState = InferHydratedState<typeof listingEngineDefinition>;
+ * type ListingStaticState = InferStaticState<typeof listingEngineDefinition>;
+ * type ListingHydratedState = InferHydratedState<typeof listingEngineDefinition>;
  * ```
  *
  * @group Engine

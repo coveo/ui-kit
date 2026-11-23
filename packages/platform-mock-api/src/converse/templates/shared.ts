@@ -1,9 +1,11 @@
 import {
+  ActivitySnapshot,
   RunFinished,
   RunStarted,
   StateSnapshot,
   TurnComplete,
   TurnStarted,
+  UpdateDataModelActivity,
   type ConverseEvent,
 } from '../events.js';
 
@@ -191,8 +193,74 @@ function deleteSurfaceMessage(surfaceId: string): Record<string, unknown> {
   return {version: 'v1.0', deleteSurface: {surfaceId}};
 }
 
+interface ProgressStep {
+  id: string;
+  label: string;
+}
+
+const PROGRESS_BLOCK_SURFACE_ID = 'progress-block';
+const PROGRESS_BLOCK_ACTIVITY_ID = 'activity-progress-block';
+const PROGRESS_BLOCK_STATE_ACTIVITY_ID = 'activity-progress-block-state';
+
+function progressBlockState(done: ProgressStep[], active: ProgressStep[]) {
+  return {
+    steps: [
+      ...done.map((step) => ({...step, status: 'done'})),
+      ...active.map((step) => ({...step, status: 'active'})),
+    ],
+    status: active.length > 0 ? 'running' : 'complete',
+  };
+}
+
+// The agent's progress (Thermidor ADR-028): a ProgressBlock created once, right after RUN_STARTED,
+// with the steps it started.
+function createProgressBlock(active: ProgressStep[]): ConverseEvent {
+  return ActivitySnapshot({
+    messageId: PROGRESS_BLOCK_ACTIVITY_ID,
+    activityType: 'a2ui-surface',
+    replace: true,
+    content: {
+      messages: [
+        {
+          version: 'v1.0',
+          createSurface: {
+            surfaceId: PROGRESS_BLOCK_SURFACE_ID,
+            catalogId: CATALOG_ID,
+            components: [
+              {
+                id: RENDERER_ROOT_ID,
+                component: 'ProgressBlock',
+                ...bindStateFields(RENDERER_ROOT_ID, ['steps', 'status']),
+              },
+            ],
+            dataModel: {state: {[RENDERER_ROOT_ID]: progressBlockState([], active)}},
+          },
+        },
+      ],
+    },
+  });
+}
+
+// Replaces the block's whole state, done steps first, in the order they started. With no active
+// step left, the block is complete.
+function updateProgressBlock(done: ProgressStep[], active: ProgressStep[] = []): ConverseEvent {
+  return UpdateDataModelActivity({
+    messageId: PROGRESS_BLOCK_STATE_ACTIVITY_ID,
+    replace: true,
+    ops: [
+      {
+        surfaceId: PROGRESS_BLOCK_SURFACE_ID,
+        path: statePath(RENDERER_ROOT_ID),
+        value: progressBlockState(done, active),
+      },
+    ],
+  });
+}
+
 export {
   CATALOG_ID,
+  PROGRESS_BLOCK_ACTIVITY_ID,
+  PROGRESS_BLOCK_STATE_ACTIVITY_ID,
   RENDERER_ROOT_ID,
   deleteSurfaceMessage,
   loadingSurfaceMessage,
@@ -202,5 +270,7 @@ export {
   buildConversationResponse,
   buildRoutedResponse,
   buildValidatedSurface,
+  createProgressBlock,
+  updateProgressBlock,
 };
-export type {A2uiComponentNode};
+export type {A2uiComponentNode, ProgressStep};

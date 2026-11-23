@@ -2,7 +2,7 @@ import {useEffect, useRef, useState} from 'react';
 import type {CartLine} from '../../cart/cart-api.js';
 import {useCart} from '../../cart/CartProvider.js';
 import {QuantityStepper} from '../../cart/QuantityStepper/QuantityStepper.js';
-import {formatPrice} from '../../utils.js';
+import {formatConfiguredPrice as formatPrice} from '../../context/format-configured-price.js';
 import styles from './CartPanel.module.css';
 
 const ERROR_DISPLAY_MS = 5000;

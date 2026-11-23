@@ -122,6 +122,90 @@ describe('ConversationThread', () => {
     });
   });
 
+  describe('progress', () => {
+    function renderWithRenderer(turns: Turn[]) {
+      return render(
+        <A2UIProvider catalog={createThermidorCatalog()} onAction={() => {}}>
+          <ThermidorA2UIStream messages={[]}>
+            <ConversationThread
+              turns={turns}
+              turnRefs={{current: new Map<string, HTMLDivElement>()}}
+            />
+          </ThermidorA2UIStream>
+        </A2UIProvider>
+      );
+    }
+
+    const progressSurface = {
+      surfaceId: 'progress-block-1',
+      rootComponentType: 'ProgressBlock',
+      isLoading: false,
+    };
+
+    it('draws the progress above the answer, outside the turn blocks', () => {
+      const turn = makeTurn({
+        status: 'complete',
+        response: {
+          agent: {
+            messages: [{content: 'Here are some kayaks', role: 'assistant'}],
+            toolCalls: [],
+          },
+          surfaces: [progressSurface, ...makeSurfaces('ui-carousel')],
+        },
+      });
+
+      renderWithRenderer([turn]);
+
+      const progress = screen.getByRole('region', {name: 'Agent progress'});
+      const answer = screen.getByText('Here are some kayaks');
+      const blocks = screen.getByRole('region', {name: 'A2-UI surface ui-carousel'});
+      expect(progress.closest('fieldset')).toBeNull();
+      expect(
+        progress.compareDocumentPosition(answer) & Node.DOCUMENT_POSITION_FOLLOWING
+      ).toBeTruthy();
+      expect(
+        answer.compareDocumentPosition(blocks) & Node.DOCUMENT_POSITION_FOLLOWING
+      ).toBeTruthy();
+      expect(screen.queryByRole('region', {name: 'A2-UI surface progress-block-1'})).toBeNull();
+    });
+
+    it('keeps the same progress region when a streaming turn fails', () => {
+      const streaming = makeTurn({status: 'streaming', response: {surfaces: [progressSurface]}});
+      const {rerender} = renderWithRenderer([streaming]);
+      const region = screen.getByRole('region', {name: 'Agent progress'});
+
+      rerender(
+        <A2UIProvider catalog={createThermidorCatalog()} onAction={() => {}}>
+          <ThermidorA2UIStream messages={[]}>
+            <ConversationThread
+              turns={[{...streaming, status: 'error', error: 'The agent took too long to answer.'}]}
+              turnRefs={{current: new Map<string, HTMLDivElement>()}}
+            />
+          </ThermidorA2UIStream>
+        </A2UIProvider>
+      );
+
+      expect(screen.getByRole('region', {name: 'Agent progress'})).toBe(region);
+      expect(screen.getByRole('alert').textContent).toBe('The agent took too long to answer.');
+    });
+
+    it('keeps the progress of a failed turn above its error', () => {
+      const failed = makeTurn({
+        status: 'error',
+        error: 'The agent took too long to answer.',
+        response: {surfaces: [progressSurface]},
+      });
+
+      renderWithRenderer([failed]);
+
+      const progress = screen.getByRole('region', {name: 'Agent progress'});
+      const alert = screen.getByRole('alert');
+      expect(
+        progress.compareDocumentPosition(alert) & Node.DOCUMENT_POSITION_FOLLOWING
+      ).toBeTruthy();
+    });
+  });
+
   describe('turns opened by an action', () => {
     it('shows the chip text of a follow-up as the shopper message', () => {
       renderThread([

@@ -388,6 +388,13 @@ describe('NumericFacet', () => {
     });
   }
 
+  it('shows plain numbers, not prices, for a non-price field', async () => {
+    mountFacet({...stateWithRanges, field: 'ec_rating', displayName: 'Rating'});
+
+    await waitFor(() => expect(screen.getByText('100 - 200')).toBeDefined());
+    expect(screen.queryByText(/\$/)).toBeNull();
+  });
+
   it('dispatches toggleSingleSelect with the range start/end when a listed range is clicked', async () => {
     const {lastAction} = mountFacet(stateWithRanges);
 

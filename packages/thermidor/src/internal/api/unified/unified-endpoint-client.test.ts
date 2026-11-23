@@ -77,11 +77,29 @@ describe('UnifiedEndpointClient', () => {
         body: JSON.stringify(request),
         headers: {
           'Content-Type': 'application/json',
-          Accept: 'text/event-stream',
+          Accept: 'text/event-stream, application/json;q=0.9',
           Authorization: 'Bearer test-token',
         },
       }
     );
+  });
+
+  it('accepts both an event stream and JSON so a gateway rejection keeps its status', async () => {
+    mockedFetch.mockResolvedValue(
+      new Response(JSON.stringify({errorCode: 'PRECONDITION_FAILED', message: 'Rejected'}), {
+        status: 412,
+        headers: {'Content-Type': 'application/json'},
+      })
+    );
+
+    const response = await client.call(request, {
+      organizationId: 'test-org-id',
+      accessToken: 'test-token',
+    });
+
+    const [, options] = mockedFetch.mock.calls[0];
+    expect(options?.headers).toHaveProperty('Accept', 'text/event-stream, application/json;q=0.9');
+    expect(response).toMatchObject({success: false, status: 412});
   });
 
   it('does not send temporary AgentCore runtime override headers', async () => {

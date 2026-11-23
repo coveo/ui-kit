@@ -1,5 +1,6 @@
 import {describe, it, expect, afterEach} from 'vitest';
 import http from 'node:http';
+import {randomUUID} from 'node:crypto';
 import {createMockConverseServer} from './server.js';
 
 function makeRequest(
@@ -292,7 +293,8 @@ describe('createMockConverseServer', () => {
         [surfaceId]: ['selectAction', 'selectSearchOption'],
       }))
     );
-  });
+    // The bundle turn streams its progress block's steps first.
+  }, 15_000);
 
   describe('schema sessions', () => {
     interface SseEvent {
@@ -348,8 +350,12 @@ describe('createMockConverseServer', () => {
           .map((op) => [`${op.surfaceId} ${op.path}`, op.value])
       );
 
-    const initialize = async () => {
-      const res = await postSchema({message: null, action: {name: 'initialize', context: {}}});
+    const initialize = async (keys: Record<string, string> = {}) => {
+      const res = await postSchema({
+        message: null,
+        ...keys,
+        action: {name: 'initialize', context: {}},
+      });
       return parseEvents(res.body);
     };
 
@@ -373,43 +379,169 @@ describe('createMockConverseServer', () => {
         ],
       });
       expect(createdSurfaceIds(second)[0]).not.toBe(createdSurfaceIds(first)[0]);
+      const [snapshot] = first.filter(({event}) => event === 'ACTIVITY_SNAPSHOT');
+      expect(snapshot.data.metadata).toEqual({
+        concurrentActions: {
+          [createdSurfaceIds(first)[0]]: {
+            fetchInstantProducts: {cache: {ttlMs: 60000}},
+            fetchSuggestions: {},
+          },
+        },
+      });
     });
 
-    it('refuses initialize with a session token', async () => {
+    const shellRecentQueries = (events: SseEvent[]) => {
+      const [createSurface] = surfaceMessages(events).map(
+        (message) =>
+          message.createSurface as {
+            dataModel: {state: Record<string, {recentQueries: string[]}>};
+          }
+      );
+      return createSurface.dataModel.state['query-suggestions'].recentQueries;
+    };
+
+    const openSessionWithRecentQuery = async () => {
+      const opened = await initialize();
+      const keys = sessionKeys(opened);
+      await postSchema({message: 'water sports', ...keys});
+      return {opened, keys};
+    };
+
+    it('resumes a session whose keys match, with its recent queries in a new shell', async () => {
       await startServer();
+      const {opened, keys} = await openSessionWithRecentQuery();
+
+      const resumed = await initialize(keys);
+      const prompted = parseEvents((await postSchema({message: 'life jackets', ...keys})).body);
+
+      expect(sessionKeys(resumed)).toEqual(keys);
+      expect(createdSurfaceIds(resumed)[0]).not.toBe(createdSurfaceIds(opened)[0]);
+      expect(shellRecentQueries(resumed)).toEqual(['water sports']);
+      expect(sessionKeys(prompted)).toEqual(keys);
+      expect(shellRecentQueries(await initialize(keys))).toEqual(['life jackets', 'water sports']);
+    });
+
+    type Keys = ReturnType<typeof sessionKeys>;
+    it.each<[string, (keys: Keys) => Keys]>([
+      [
+        'an unknown session id',
+        () => ({conversationSessionId: randomUUID(), conversationToken: randomUUID()}),
+      ],
+      ['a wrong token', (keys) => ({...keys, conversationToken: randomUUID()})],
+    ])('opens a new session with fresh keys on initialize with %s', async (_, keysToSend) => {
+      await startServer();
+      const {keys} = await openSessionWithRecentQuery();
+      const sent = keysToSend(keys);
+
+      const fallback = await initialize(sent);
+
+      expect(sessionKeys(fallback).conversationSessionId).not.toBe(sent.conversationSessionId);
+      expect(shellRecentQueries(fallback)).toEqual([]);
+      expect(sessionKeys(await initialize(keys))).toEqual(keys);
+    });
+
+    it('opens a new session under a new client-chosen session id sent without a token', async () => {
+      await startServer();
+      const conversationSessionId = randomUUID();
+
+      const opened = await initialize({conversationSessionId});
+
+      expect(sessionKeys(opened)).toEqual({
+        conversationSessionId,
+        conversationToken: expect.any(String),
+      });
+      expect(shellRecentQueries(opened)).toEqual([]);
+    });
+
+    it("refuses initialize with an existing session's id and no token", async () => {
+      await startServer();
+      const {keys} = await openSessionWithRecentQuery();
+
       const res = await postSchema({
         message: null,
-        conversationSessionId: 'session-1',
-        conversationToken: 'token-1',
+        conversationSessionId: keys.conversationSessionId,
         action: {name: 'initialize', context: {}},
       });
 
-      expect(res.statusCode).toBe(400);
+      expect(res.statusCode).toBe(403);
       expect(res.headers['access-control-allow-origin']).toBe('*');
-      expect(JSON.parse(res.body)).toEqual({
-        error: 'initialize opens a session: send it without a session token',
-      });
+      expect(JSON.parse(res.body)).toEqual({message: 'Invalid conversation token.'});
+      expect(sessionKeys(await initialize(keys))).toEqual(keys);
     });
 
-    it("answers fetchSuggestions on the shell's surface, keeping the session", async () => {
+    it.each<[string, (keys: Keys) => Record<string, string>, number, string]>([
+      [
+        'a wrong token',
+        (keys) => ({...keys, conversationToken: randomUUID()}),
+        403,
+        'Invalid conversation token.',
+      ],
+      [
+        "an existing session's id and no token",
+        (keys) => ({conversationSessionId: keys.conversationSessionId}),
+        403,
+        'Invalid conversation token.',
+      ],
+      [
+        'an unknown session id and a token',
+        () => ({conversationSessionId: randomUUID(), conversationToken: randomUUID()}),
+        404,
+        'Conversation not found.',
+      ],
+    ])(
+      'refuses a prompt with %s, as Agent Gateway does',
+      async (_, keysToSend, status, message) => {
+        await startServer();
+        const {keys} = await openSessionWithRecentQuery();
+
+        const res = await postSchema({message: 'life jackets', ...keysToSend(keys)});
+
+        expect(res.statusCode).toBe(status);
+        expect(res.headers['access-control-allow-origin']).toBe('*');
+        expect(JSON.parse(res.body)).toEqual({message});
+        expect(shellRecentQueries(await initialize(keys))).toEqual(['water sports']);
+      }
+    );
+
+    it('opens a session on a first prompt sent without a token', async () => {
+      await startServer();
+      const conversationSessionId = randomUUID();
+
+      const chosen = parseEvents(
+        (await postSchema({message: 'water sports', conversationSessionId})).body
+      );
+      const minted = parseEvents((await postSchema({message: 'water sports'})).body);
+
+      expect(sessionKeys(chosen)).toEqual({
+        conversationSessionId,
+        conversationToken: expect.any(String),
+      });
+      expect(sessionKeys(minted).conversationSessionId).toEqual(expect.any(String));
+      expect(shellRecentQueries(await initialize(sessionKeys(chosen)))).toEqual(['water sports']);
+    });
+
+    it("answers fetchSuggestions on the shell's surface only, keeping the session", async () => {
       await startServer();
       const opened = await initialize();
       const keys = sessionKeys(opened);
       const [shellId] = createdSurfaceIds(opened);
-      const fetchSuggestions = (query: string) =>
+      const postFetchSuggestions = (query: string, surfaceId = shellId) =>
         postSchema({
           message: null,
           ...keys,
           action: {
             name: 'fetchSuggestions',
-            surfaceId: shellId,
+            surfaceId,
             sourceComponentId: 'query-suggestions',
             context: {query},
           },
-        }).then((res) => parseEvents(res.body));
+        });
+      const fetchSuggestions = (query: string) =>
+        postFetchSuggestions(query).then((res) => parseEvents(res.body));
 
       const surf = await fetchSuggestions('surf');
       const empty = await fetchSuggestions('');
+      const otherSurface = await postFetchSuggestions('surf', 'not-the-shell');
 
       expect(sessionKeys(surf)).toEqual(keys);
       expect(statesByNode(surf)[`${shellId} /state/query-suggestions`]).toMatchObject({
@@ -421,6 +553,82 @@ describe('createMockConverseServer', () => {
         recentQueries: [],
         completions: [],
       });
+      expect(otherSurface.statusCode).toBe(400);
+      expect(JSON.parse(otherSurface.body)).toMatchObject({
+        errorCode: 'AGENT:ACTION_NOT_APPLICABLE',
+      });
+
+      await initialize(keys);
+      const replacedShell = await postFetchSuggestions('surf');
+      expect(replacedShell.statusCode).toBe(400);
+      expect(JSON.parse(replacedShell.body)).toMatchObject({
+        errorCode: 'AGENT:ACTION_NOT_APPLICABLE',
+      });
+    });
+
+    // Resolves once the response has started streaming, with the rest of the response.
+    const streamingSchemaRequest = (body: Record<string, unknown>) =>
+      new Promise<{completed: Promise<{statusCode: number; body: string}>}>((started, reject) => {
+        const address = server.address() as {port: number};
+        const req = http.request(
+          {
+            hostname: '127.0.0.1',
+            port: address.port,
+            method: 'POST',
+            path: '/converse-schema',
+            headers: {'Content-Type': 'application/json'},
+          },
+          (res) => {
+            let data = '';
+            const completed = new Promise<{statusCode: number; body: string}>((resolve) =>
+              res.on('end', () => resolve({statusCode: res.statusCode ?? 0, body: data}))
+            );
+            res.once('data', () => started({completed}));
+            res.on('data', (chunk) => (data += chunk));
+          }
+        );
+        req.on('error', reject);
+        req.end(JSON.stringify(body));
+      });
+
+    it('answers fetchSuggestions beside another request, and another request beside it', async () => {
+      await startServer();
+      const opened = await initialize();
+      const keys = sessionKeys(opened);
+      const [shellId] = createdSurfaceIds(opened);
+      const fetchSuggestionsBody = (query: string) => ({
+        message: null,
+        ...keys,
+        action: {
+          name: 'fetchSuggestions',
+          surfaceId: shellId,
+          sourceComponentId: 'query-suggestions',
+          context: {query},
+        },
+      });
+      const suggestionsOf = (body: string) =>
+        statesByNode(parseEvents(body))[`${shellId} /state/query-suggestions`];
+
+      const prompt = await streamingSchemaRequest({message: 'hello', ...keys});
+      const besidePrompt = await postSchema(fetchSuggestionsBody('surf'));
+      expect(besidePrompt.statusCode).toBe(200);
+      expect(sessionKeys(parseEvents(besidePrompt.body))).toEqual(keys);
+      expect(suggestionsOf(besidePrompt.body)).toMatchObject({
+        query: 'surf',
+        completions: [{expression: 'surfboards'}, {}, {}, {}, {}],
+      });
+      expect((await prompt.completed).statusCode).toBe(200);
+
+      const suggestions = await streamingSchemaRequest(fetchSuggestionsBody('kayak'));
+      const [besideSuggestions, otherSuggestions] = await Promise.all([
+        postSchema({message: 'water sports', ...keys}),
+        postSchema(fetchSuggestionsBody('wetsuit')),
+      ]);
+      expect(besideSuggestions.statusCode).toBe(200);
+      expect(otherSuggestions.statusCode).toBe(200);
+      const completed = await suggestions.completed;
+      expect(completed.statusCode).toBe(200);
+      expect(suggestionsOf(completed.body)).toMatchObject({query: 'kayak'});
     });
 
     it("answers the session's recent queries, and clears or removes them in the turn slot", async () => {
@@ -557,6 +765,105 @@ describe('createMockConverseServer', () => {
           interval: 200,
         })
         .toBe(200);
+    });
+
+    describe('a facet search for a failing word', () => {
+      const searchBrands = (
+        keys: {conversationSessionId: string; conversationToken: string},
+        surfaceId: string,
+        query: string
+      ) =>
+        postSchema({
+          message: null,
+          ...keys,
+          action: {
+            name: 'search',
+            surfaceId,
+            sourceComponentId: 'facet-brand-2',
+            context: {query},
+          },
+        });
+
+      const startSearch = async () => {
+        const keys = sessionKeys(await initialize());
+        const events = parseEvents((await postSchema({message: 'water sports', ...keys})).body);
+        const searchSurfaceId = createdSurfaceIds(events).find((surfaceId) =>
+          surfaceId.startsWith('ui-commerce-water-sports-')
+        )!;
+        return {keys, searchSurfaceId};
+      };
+
+      it("ends the action's stream with the gateway's RUN_ERROR for `fail`", async () => {
+        await startServer();
+        const {keys, searchSurfaceId} = await startSearch();
+
+        const res = await searchBrands(keys, searchSurfaceId, ' Fail ');
+
+        expect(res.statusCode).toBe(200);
+        expect(res.headers['content-type']).toBe('text/event-stream');
+        expect(parseEvents(res.body)).toEqual([
+          {
+            event: 'RUN_ERROR',
+            data: {
+              type: 'RUN_ERROR',
+              message:
+                'An unexpected error occurred. Contact Coveo support. Documentation URL: https://docs.coveo.com/en/errors/agent/internal_error',
+              code: 'AGENT:INTERNAL_ERROR',
+            },
+          },
+        ]);
+      });
+
+      it('rejects the request before its stream starts for `reject`', async () => {
+        await startServer();
+        const {keys, searchSurfaceId} = await startSearch();
+
+        const res = await searchBrands(keys, searchSurfaceId, 'reject');
+
+        expect(res.statusCode).toBe(400);
+        expect(res.headers['access-control-allow-origin']).toBe('*');
+        expect(JSON.parse(res.body)).toEqual({
+          errorCode: 'AGENT:ACTION_NOT_APPLICABLE',
+          message: expect.any(String),
+        });
+      });
+
+      it('leaves the session free, so the next search is answered', async () => {
+        await startServer();
+        const {keys, searchSurfaceId} = await startSearch();
+        await searchBrands(keys, searchSurfaceId, 'fail');
+        await searchBrands(keys, searchSurfaceId, 'reject');
+
+        const res = await searchBrands(keys, searchSurfaceId, 'o');
+        const brandFacet = statesByNode(parseEvents(res.body))[
+          `${searchSurfaceId} /state/facet-brand-2`
+        ] as {facetSearch?: {query?: string}};
+
+        expect(res.statusCode).toBe(200);
+        expect(brandFacet.facetSearch?.query).toBe('o');
+      });
+
+      it.each(['fail', 'reject'])(
+        'answers another action whose query is `%s` as usual',
+        async (query) => {
+          await startServer();
+          const {keys, searchSurfaceId} = await startSearch();
+
+          const res = await postSchema({
+            message: null,
+            ...keys,
+            action: {
+              name: 'restoreState',
+              surfaceId: searchSurfaceId,
+              sourceComponentId: 'root',
+              context: {query, page: 0, pageSize: 12},
+            },
+          });
+
+          expect(res.statusCode).toBe(200);
+          expect(parseEvents(res.body).map(({event}) => event)).not.toContain('RUN_ERROR');
+        }
+      );
     });
 
     it('answers 409 to a request on a session with a request in flight', async () => {

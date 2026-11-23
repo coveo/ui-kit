@@ -8,6 +8,7 @@ import {
   useSyncExternalStore,
 } from 'react';
 import type {
+  ActionError,
   ActionRequest,
   ComponentActionNames,
   Session,
@@ -68,22 +69,40 @@ export function isBlocking(request: SessionRequest | undefined): boolean {
   );
 }
 
-/**
- * Why the last action dispatched from `surfaceId` failed, while the session still reports it. A
- * failed suggestion is not reported.
- */
-export function useActionError(surfaceId: string): string | undefined {
+/** The last failed action, while the session still reports it. A failed suggestion is not reported. */
+export function useReportedActionError(): ActionError | undefined {
   const source = useContext(SessionRequestContext);
   return useSyncExternalStore(
     source.subscribe,
     () => {
       const {actionError} = source.getSnapshot();
-      return actionError?.surfaceId === surfaceId && !lists(SILENT_FAILURES, actionError)
-        ? actionError.message
-        : undefined;
+      return actionError && !lists(SILENT_FAILURES, actionError) ? actionError : undefined;
     },
     () => undefined
   );
+}
+
+/**
+ * Why the last action dispatched from `surfaceId` failed, while the session still reports it. A
+ * failed suggestion is not reported.
+ */
+export function useActionError(surfaceId: string): string | undefined {
+  const actionError = useReportedActionError();
+  return actionError?.surfaceId === surfaceId ? actionError.message : undefined;
+}
+
+/**
+ * Why the last action dispatched from the node `componentId` of `surfaceId` failed, while the
+ * session still reports it. A failed suggestion is not reported.
+ */
+export function useComponentActionError(
+  surfaceId: string,
+  componentId: string
+): string | undefined {
+  const actionError = useReportedActionError();
+  return actionError?.surfaceId === surfaceId && actionError.sourceComponentId === componentId
+    ? actionError.message
+    : undefined;
 }
 
 /**
@@ -152,10 +171,17 @@ function whenFree(session: QuerySubmitter): Promise<void> {
   });
 }
 
+const retiredSessions = new WeakSet<object>();
+
+/** Drops the prompts waiting on `session`, which the page no longer shows. */
+export function retire(session: object): void {
+  retiredSessions.add(session);
+}
+
 /**
  * Sends `prompt` once the session is free, first cancelling a suggestion in flight so that it never
  * holds the submit back. The cancelled request may still hold the producer's turn slot; the
- * session's conflict retry absorbs the prompt's `409`.
+ * session's conflict retry absorbs the prompt's `409`. A session retired meanwhile gets nothing.
  */
 export async function submitQuery(session: QuerySubmitter, prompt: string): Promise<void> {
   const {request} = session.getSnapshot();
@@ -164,6 +190,9 @@ export async function submitQuery(session: QuerySubmitter, prompt: string): Prom
       session.cancel();
     }
     await whenFree(session);
+    if (retiredSessions.has(session)) {
+      return;
+    }
   }
   return session.dispatchAction({name: 'submitPrompt', payload: {prompt}});
 }

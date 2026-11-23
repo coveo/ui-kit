@@ -34,6 +34,7 @@ function renderBlock(
   response: TurnResponse = makeAgentResponse(),
   overrides: Partial<{
     isStreaming: boolean;
+    hasProgress: boolean;
   }> = {}
 ) {
   const defaultProps = {
@@ -134,6 +135,25 @@ describe('AgentResponseBlock', () => {
       expect(
         message.compareDocumentPosition(blocks) & Node.DOCUMENT_POSITION_FOLLOWING
       ).toBeTruthy();
+    });
+  });
+
+  describe('progress', () => {
+    it('shows no thinking block while streaming when the progress is drawn above', () => {
+      const response = makeAgentResponse({
+        messages: [{content: 'Hello world', role: 'assistant'}],
+      });
+
+      renderBlock(response, {isStreaming: true, hasProgress: true});
+
+      expect(screen.queryByTestId('thinking-block')).toBeNull();
+      expect(screen.getByTestId('streaming-message')).toBeTruthy();
+    });
+
+    it('keeps the thinking block for a turn without progress', () => {
+      renderBlock(makeAgentResponse(), {isStreaming: true});
+
+      expect(screen.getByTestId('thinking-block')).toBeTruthy();
     });
   });
 });
