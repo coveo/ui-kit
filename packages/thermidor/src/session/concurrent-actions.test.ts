@@ -715,6 +715,36 @@ describe('concurrent and cached actions (ADR-020)', () => {
     });
   });
 
+  describe('isConcurrent', () => {
+    it('is true for an action the producer announces on the surface, cached or not', () => {
+      const session = shellSession();
+
+      expect(session.isConcurrent({surfaceId: SHELL_ID, name: CACHED})).toBe(true);
+      expect(session.isConcurrent({surfaceId: SHELL_ID, name: UNCACHED})).toBe(true);
+    });
+
+    it('is false for an action not announced, or announced on another surface only', () => {
+      const session = shellSession(
+        restoredShell({metadata: {concurrentActions: {other: {fetchSuggestions: {}}}}})
+      );
+
+      expect(session.isConcurrent({surfaceId: SHELL_ID, name: CACHED})).toBe(false);
+      expect(session.isConcurrent({surfaceId: SHELL_ID, name: 'fetchSuggestions'})).toBe(false);
+    });
+
+    it('is false before the session has a token, as such a dispatch is withheld', () => {
+      const session = shellSession(restoredShell({sessionToken: null}));
+
+      expect(session.isConcurrent({surfaceId: SHELL_ID, name: CACHED})).toBe(false);
+    });
+
+    it('can be passed by reference', () => {
+      const {isConcurrent} = shellSession();
+
+      expect(isConcurrent({surfaceId: SHELL_ID, name: UNCACHED})).toBe(true);
+    });
+  });
+
   it('withholds a concurrent action before the session has a token', async () => {
     const session = shellSession(restoredShell({sessionToken: null}));
 

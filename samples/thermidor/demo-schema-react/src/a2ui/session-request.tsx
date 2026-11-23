@@ -17,9 +17,11 @@ import type {
 import type {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
 
 /**
- * What the surfaces read from the session: its request in flight, and why the last action failed.
+ * What the surfaces read from the session: its request in flight, why the last action failed, and
+ * whether an action is sent beside the request in flight.
  */
-export type SessionRequestSource = Pick<Session, 'subscribe' | 'getSnapshot'>;
+export type SessionRequestSource = Pick<Session, 'subscribe' | 'getSnapshot'> &
+  Partial<Pick<Session, 'isConcurrent'>>;
 
 const IDLE_SNAPSHOT: SessionSnapshot = {
   turns: [],
@@ -105,52 +107,6 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-function isCachePolicy(policy: unknown): boolean {
-  return (
-    isRecord(policy) &&
-    typeof policy['ttlMs'] === 'number' &&
-    Number.isFinite(policy['ttlMs']) &&
-    policy['ttlMs'] > 0
-  );
-}
-
-/** Whether `actions` is a valid announcement: every entry a record, its `cache` absent or valid. */
-function isValidAnnouncement(actions: unknown): actions is Record<string, unknown> {
-  return (
-    isRecord(actions) &&
-    Object.values(actions).every(
-      (action) =>
-        isRecord(action) && (action['cache'] === undefined || isCachePolicy(action['cache']))
-    )
-  );
-}
-
-/**
- * Whether the producer's latest valid `concurrentActions` announcement for `surfaceId` lists
- * `name`, read from the session's activity log as the session reads it (ADR-020): a malformed
- * announcement leaves the previous one in force. The session sends such an
- * action dispatched from that surface at once, whatever request is in flight, and never makes it
- * the session's request.
- */
-export function announcesConcurrent(
-  {initialization, turns}: Pick<SessionSnapshot, 'initialization' | 'turns'>,
-  surfaceId: string,
-  name: string
-): boolean {
-  let latest: Record<string, unknown> | undefined;
-  const activities = [
-    ...(initialization?.activities ?? []),
-    ...turns.flatMap((turn) => turn.response.activities),
-  ];
-  for (const {metadata} of activities) {
-    const announcements = metadata?.['concurrentActions'];
-    if (isRecord(announcements) && isValidAnnouncement(announcements[surfaceId])) {
-      latest = announcements[surfaceId];
-    }
-  }
-  return latest !== undefined && Object.hasOwn(latest, name);
-}
-
 /** An action that `useLatestWhenFree` sends from a surface. */
 export interface SurfaceAction {
   surfaceId: string;
@@ -163,8 +119,8 @@ export interface SurfaceAction {
  * replaces the one waiting. A falsy value is never sent, and lets the next value be sent even when
  * it repeats the last one.
  *
- * When the producer announces `concurrent`'s action as concurrent on its surface, the session sends
- * it whatever is in flight, so the value is sent at once.
+ * When the session sends `concurrent`'s action from its surface at once, whatever is in flight
+ * (`session.isConcurrent`), the value is sent at once.
  */
 export function useLatestWhenFree<T>(
   value: T,
@@ -189,7 +145,7 @@ export function useLatestWhenFree<T>(
         snapshot.request === undefined ||
         (surfaceId !== undefined &&
           concurrentName !== undefined &&
-          announcesConcurrent(snapshot, surfaceId, concurrentName));
+          source.isConcurrent?.({surfaceId, name: concurrentName}) === true);
       if (free && value !== lastSent.current) {
         lastSent.current = value;
         latestSend.current(value as NonNullable<T>);
@@ -201,8 +157,8 @@ export function useLatestWhenFree<T>(
 }
 
 /**
- * The state of node `nodeId` on surface `surfaceId`, at its `/state/<nodeId>` pointer. A write
- * elsewhere in the session state keeps its identity.
+ * The state of node `nodeId` on surface `surfaceId`, at its `/state/<nodeId>` pointer. The session
+ * may rebuild the node on any update, so compare its content rather than its identity.
  */
 export function nodeState(
   state: SessionSnapshot['state'],

@@ -248,6 +248,10 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
     dispatchAction: (message: A2uiClientMessage | SubmitPromptAction) => Promise<void>;
     getSnapshot(): SessionSnapshot;
     readonly initialization: SessionInitialization | undefined;
+    isConcurrent(action: {
+        surfaceId: string;
+        name: string;
+    }): boolean;
     readonly request: SessionRequest | undefined;
     retry(turnId: string): void;
     retryInitialization(): void;
