@@ -1,5 +1,6 @@
 import type {PayloadAction} from '@reduxjs/toolkit';
 import type {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
+import {withDeprecationWarning} from '../../../../utils/deprecation.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../facet-set/facet-set-slice.js';
 import {
   clearAllCoreFacets,
@@ -56,6 +57,10 @@ export interface CoreFacetActionsCreators {
   /**
    * Updates the auto selection state of every facet.
    *
+   * @deprecated The Commerce API has never used the `preventAutoSelect` request property that this action creator
+   * sets, so it has no effect, and it has no replacement. This action creator will be removed in the next major
+   * version.
+   *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
@@ -75,6 +80,10 @@ export interface CoreFacetActionsCreators {
 
   /**
    * Updates the expanded state of a given facet.
+   *
+   * @deprecated Use the `showMoreValues` and `showLessValues` methods of the facet controller instead. The Commerce
+   * API ignores the `isFieldExpanded` request property that this action creator sets. This action creator will be
+   * removed in the next major version.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -111,9 +120,19 @@ export function loadCoreFacetActions(engine: CommerceEngine): CoreFacetActionsCr
     clearAllCoreFacets,
     deleteAllCoreFacets,
     deselectAllValuesInCoreFacet,
-    updateAutoSelectionForAllCoreFacets,
+    updateAutoSelectionForAllCoreFacets: withDeprecationWarning(
+      engine.logger,
+      updateAutoSelectionForAllCoreFacets,
+      'The commerce `updateAutoSelectionForAllCoreFacets` action creator',
+      'Remove the call: the Commerce API has never used `preventAutoSelect`, so the action has no effect.'
+    ),
     updateCoreFacetFreezeCurrentValues,
-    updateCoreFacetIsFieldExpanded,
+    updateCoreFacetIsFieldExpanded: withDeprecationWarning(
+      engine.logger,
+      updateCoreFacetIsFieldExpanded,
+      'The commerce `updateCoreFacetIsFieldExpanded` action creator',
+      'Use the `showMoreValues` and `showLessValues` methods of the facet controller instead: the Commerce API ignores `isFieldExpanded`.'
+    ),
     updateCoreFacetNumberOfValues,
   };
 }
