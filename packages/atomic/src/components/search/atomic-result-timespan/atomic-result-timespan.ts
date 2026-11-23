@@ -1,8 +1,8 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
 import dayjs from 'dayjs';
-import type {DurationUnitType} from 'dayjs/plugin/duration';
-import duration from 'dayjs/plugin/duration';
+import type {DurationUnitType} from 'dayjs/plugin/duration.js';
+import duration from 'dayjs/plugin/duration.js';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';

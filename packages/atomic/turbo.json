@@ -8,7 +8,7 @@
     },
     "build:locales": {
       "outputs": ["dist/lang/**", "src/assets/lang/**", "src/generated/**"],
-      "inputs": ["src/locales.json"]
+      "inputs": ["src/locales.json", "scripts/build-locales.mjs"]
     },
     "build:assets": {
       "outputs": ["dist/assets/**"],
