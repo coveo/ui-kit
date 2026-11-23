@@ -11,7 +11,7 @@ import {itemContext} from './common.js';
  * @param element - The element that the event is dispatched to, which must be the child of a rendered "atomic-product".
  * @returns A promise that resolves on initialization of the parent "atomic-product" element, or rejects when there is no parent "atomic-product" element.
  *
- * @deprecated should only be used for Stencil components. For Lit components, use `fetchProductContext` from \@/src/components/commerce/product-template-component-utils/context/fetch-product-context.ts
+ * @deprecated Use `fetchProductContext` from `@coveo/atomic` instead.
  */
 export function productContext<T extends Product>(element: Element) {
   return itemContext<T>(element, 'atomic-product');
