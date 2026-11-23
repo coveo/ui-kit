@@ -2,27 +2,9 @@ import type {Controller} from '../../../controllers/controller/headless-controll
 import type {EngineDefinition} from '../../common/types/engine.js';
 import type {BuildConfig, SSRCommerceEngineOptions} from './build.js';
 import type {SolutionType} from './controller-constants.js';
-import type {
-  CommerceEngineDefinitionControllersPropsOption,
-  ControllerDefinitionsMap,
-} from './controller-definitions.js';
-import type {InferControllerPropsMapFromDefinitions} from './controller-inference.js';
+import type {ControllerDefinitionsMap} from './controller-definitions.js';
 import type {CommerceStaticState} from './fetch-static-state.js';
 import type {CommerceHydratedState} from './hydrate-static-state.js';
-
-/**
- * The options of `fetchStaticState()`: the build configuration of the kind of page, and the props of
- * the controllers that take some.
- */
-type FetchStaticStateOptions<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-  TSolutionType extends SolutionType,
-> = BuildConfig<TControllers, TSolutionType> &
-  CommerceEngineDefinitionControllersPropsOption<
-    TControllers,
-    InferControllerPropsMapFromDefinitions<TControllers>,
-    TSolutionType
-  >;
 
 type ReservedControllerNames = 'context' | 'parameterManager' | 'cart';
 
@@ -64,7 +46,7 @@ export interface CommerceEngineDefinition<
 > extends EngineDefinition<
   CommerceStaticState<TControllers, TSolutionType>,
   CommerceHydratedState<TControllers, TSolutionType>,
-  FetchStaticStateOptions<TControllers, TSolutionType>
+  BuildConfig<TControllers, TSolutionType>
 > {
   /**
    * Executes the commerce request of the page (listing or search) and the requested recommendation
@@ -75,9 +57,9 @@ export interface CommerceEngineDefinition<
    *
    * The returned static state includes controller states (facets, products, pagination, etc.)
    *
-   * @param params - A configuration object containing navigation context, search parameters,
-   *                 cart state, the recommendation slots to request, the product being viewed and
-   *                 controller-specific props
+   * @param params - The page facts: the navigator context, the context, the cart, the search
+   *                 parameters, the recommendation slots to request, the product being viewed and
+   *                 the per-request access token
    * @returns A Promise that resolves to the static state containing controller states
    *
    * @example
@@ -99,7 +81,7 @@ export interface CommerceEngineDefinition<
    * ```
    */
   fetchStaticState: (
-    params: FetchStaticStateOptions<TControllers, TSolutionType>
+    params: BuildConfig<TControllers, TSolutionType>
   ) => Promise<CommerceStaticState<TControllers, TSolutionType>>;
   /**
    * Creates a commerce engine on the client side from the server-side static state.

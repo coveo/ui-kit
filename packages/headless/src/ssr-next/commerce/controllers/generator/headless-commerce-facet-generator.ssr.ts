@@ -57,7 +57,7 @@ import {specificFacetSearchStateSelector} from '../../../../features/facets/face
 import type {ManualRangeSection} from '../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {SolutionType} from '../../types/controller-constants.js';
-import type {SearchAndListingControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
+import type {SearchAndListingControllerDefinition} from '../../types/controller-definitions.js';
 
 export type {
   BaseFacetSearchResult,
@@ -96,8 +96,7 @@ export type MappedFacetState = {
           : never;
 };
 
-export type FacetGeneratorDefinition =
-  SearchAndListingControllerDefinitionWithoutProps<FacetGenerator>;
+export type FacetGeneratorDefinition = SearchAndListingControllerDefinition<FacetGenerator>;
 
 /**
  * @group Definers
@@ -106,8 +105,7 @@ export function defineFacetGenerator(): FacetGeneratorDefinition {
   return {
     listing: true,
     search: true,
-    build: (engine, solutionType) =>
-      buildFacetGenerator(engine, {props: {solutionType: solutionType!}}),
+    build: (engine, {solutionType}) => buildFacetGenerator(engine, {props: {solutionType}}),
   };
 }
 

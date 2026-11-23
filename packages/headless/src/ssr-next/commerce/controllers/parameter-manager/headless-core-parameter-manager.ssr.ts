@@ -19,7 +19,7 @@ import type {CommerceSearchParameters} from '../../../../features/commerce/searc
 import {sortReducer as commerceSort} from '../../../../features/commerce/sort/sort-slice.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {SolutionType} from '../../types/controller-constants.js';
-import type {SearchAndListingControllerDefinitionWithProps} from '../../types/controller-definitions.js';
+import type {SearchAndListingControllerDefinition} from '../../types/controller-definitions.js';
 
 export type {
   CommerceSearchParameters,
@@ -30,9 +30,8 @@ export type {
   ProductListingParameters,
 };
 
-export type ParameterManagerDefinition = SearchAndListingControllerDefinitionWithProps<
-  ParameterManager<ProductListingParameters | CommerceSearchParameters>,
-  SSRParameterManagerProps<ProductListingParameters | CommerceSearchParameters>
+export type ParameterManagerDefinition = SearchAndListingControllerDefinition<
+  ParameterManager<ProductListingParameters | CommerceSearchParameters>
 >;
 
 /**
@@ -41,39 +40,35 @@ export type ParameterManagerDefinition = SearchAndListingControllerDefinitionWit
  *
  * @returns The `ParameterManager` controller definition.
  *
- * Note: This controller is automatically included in all engine definitions. You do not need to add it manually to your engine definition configuration.
+ * Note: This controller is included in every search and listing engine definition and fed by the `searchParams` option of `fetchStaticState()`.
  */
 export function defineParameterManager(): ParameterManagerDefinition {
   return {
     listing: true,
     search: true,
-    buildWithProps: (engine, props, solutionType) => {
+    build: (engine, {solutionType, buildConfig}) => {
+      const parameters: CommerceSearchParameters = {...buildConfig.searchParams};
+
       if (solutionType === SolutionType.listing) {
         if (!loadCommerceProductListingParameterReducers(engine)) {
           throw loadReducerError;
         }
         return buildProductListing(engine).parameterManager({
-          ...props,
-          excludeDefaultParameters: true,
-        });
-      } else {
-        if (!loadCommerceSearchParameterReducers(engine)) {
-          throw loadReducerError;
-        }
-
-        return buildSearch(engine).parameterManager({
-          ...props,
+          initialState: {parameters},
           excludeDefaultParameters: true,
         });
       }
+
+      if (!loadCommerceSearchParameterReducers(engine)) {
+        throw loadReducerError;
+      }
+      return buildSearch(engine).parameterManager({
+        initialState: {parameters},
+        excludeDefaultParameters: true,
+      });
     },
   };
 }
-
-export interface SSRParameterManagerProps<T extends Parameters> extends Omit<
-  ParameterManagerProps<T>,
-  'excludeDefaultParameters'
-> {}
 
 function loadCommerceCommonParameterReducers(
   engine: CoreEngineNext

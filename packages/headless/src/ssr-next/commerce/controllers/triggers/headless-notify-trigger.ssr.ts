@@ -3,12 +3,11 @@ import type {
   NotifyTrigger,
   NotifyTriggerState,
 } from '../../../../controllers/core/triggers/headless-core-notify-trigger.js';
-import type {SearchAndListingControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
+import type {SearchAndListingControllerDefinition} from '../../types/controller-definitions.js';
 
 export type {NotifyTrigger, NotifyTriggerState};
 
-export type NotifyTriggerDefinition =
-  SearchAndListingControllerDefinitionWithoutProps<NotifyTrigger>;
+export type NotifyTriggerDefinition = SearchAndListingControllerDefinition<NotifyTrigger>;
 
 /**
  * Defines the `NotifyTrigger` controller for the purpose of server-side rendering.

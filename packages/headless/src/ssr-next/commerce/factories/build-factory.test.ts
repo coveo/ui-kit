@@ -9,6 +9,7 @@ import {buildMockCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import {
   defineMockCommerceController,
+  defineMockCommerceControllerReadingPageFacts,
   defineMockRecommendationDefinition,
 } from '../../../test/mock-ssr-controller-definitions.js';
 import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
@@ -22,7 +23,7 @@ import type {
   StandaloneBuildConfig,
 } from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
-import {wireControllerParams} from '../utils/controller-wiring.js';
+import {validateBuildConfig} from '../utils/controller-wiring.js';
 import * as augmentCommerceEngineOptions from '../utils/engine-wiring.js';
 import {buildFactory} from './build-factory.js';
 
@@ -33,7 +34,7 @@ vi.mock('../../../app/commerce-engine/commerce-engine.js');
 describe('buildFactory', () => {
   let mockNavigatorContext: NavigatorContext;
   let mockBuildOptions: Partial<CommonBuildConfig>;
-  const mockWireControllerParams = vi.mocked(wireControllerParams);
+  const mockValidateBuildConfig = vi.mocked(validateBuildConfig);
   const mockBuildCommerceEngine = vi.mocked(buildCommerceEngine);
 
   const mockLogger = {
@@ -76,7 +77,7 @@ describe('buildFactory', () => {
     vi.clearAllMocks();
   });
 
-  it('should call #wireControllerParams with the correct params', async () => {
+  it('should validate the page facts against the schema of the solution type', async () => {
     const definition = {
       controller1: defineMockCommerceController(),
       controller2: defineMockCommerceController(),
@@ -93,14 +94,15 @@ describe('buildFactory', () => {
       },
     });
 
-    expect(mockWireControllerParams.mock.calls[0][0]).toStrictEqual('listing');
-    expect(mockWireControllerParams.mock.calls[0][1]).toStrictEqual(
+    expect(mockValidateBuildConfig).toHaveBeenCalledOnce();
+    expect(mockValidateBuildConfig.mock.calls[0][0]).toStrictEqual('listing');
+    expect(mockValidateBuildConfig.mock.calls[0][1]).toStrictEqual(
       expect.objectContaining({
         controller1: expect.any(Object),
         controller2: expect.any(Object),
       })
     );
-    expect(mockWireControllerParams.mock.calls[0][2]).toStrictEqual({
+    expect(mockValidateBuildConfig.mock.calls[0][2]).toStrictEqual({
       context: {
         country: 'CA',
         currency: 'USD',
@@ -116,10 +118,6 @@ describe('buildFactory', () => {
       controller1: defineMockCommerceController(),
       controller2: defineMockCommerceController(),
     };
-
-    mockWireControllerParams.mockReturnValueOnce({
-      searchActions: ['search-action'],
-    });
 
     const factory = buildFactory(definition, mockEngineOptions);
 
@@ -172,6 +170,34 @@ describe('buildFactory', () => {
     await expect(build(mockBuildOptions as CommonBuildConfig)).rejects.toThrow(
       'Unsupported solution type'
     );
+  });
+
+  describe('page facts', () => {
+    it('should hand the page facts to every controller definition', async () => {
+      const factory = buildFactory(
+        {reader: defineMockCommerceControllerReadingPageFacts()},
+        mockEngineOptions
+      );
+
+      const {controllers} = await factory(SolutionType.listing)(
+        mockBuildOptions as ListingBuildConfig
+      );
+
+      expect(controllers.reader.state).toEqual(mockBuildOptions);
+    });
+
+    it('should seed the recommendation controllers with the product ID', async () => {
+      const controllerDefinition = {rec1: defineMockRecommendationDefinition('slot_1')};
+      const factory = buildFactory(controllerDefinition, mockEngineOptions);
+
+      const {controllers} = await factory(SolutionType.standalone)({
+        ...mockBuildOptions,
+        recommendations: ['rec1'],
+        productId: 'product-123',
+      } as StandaloneBuildConfig<typeof controllerDefinition>);
+
+      expect(controllers.rec1.state).toEqual({productId: 'product-123'});
+    });
   });
 
   describe('per-request access token', () => {
@@ -274,14 +300,10 @@ describe('buildFactory', () => {
         },
         mockEngineOptions
       );
-      await factory(SolutionType.listing)({
-        ...(mockBuildOptions as ListingBuildConfig),
-        controllers: {cart: {initialState: {items: []}}},
-      });
 
       const {controllers} = await factory(SolutionType.listing)({
         ...(mockBuildOptions as ListingBuildConfig),
-        controllers: {cart: {initialState: {items: []}}},
+        cart: {items: []},
       });
 
       expect(Object.keys(controllers)).toHaveLength(2);
@@ -312,10 +334,6 @@ describe('buildFactory', () => {
     };
 
     const factory = buildFactory(controllerDefinition, mockEngineOptions);
-
-    beforeEach(() => {
-      mockWireControllerParams.mockReturnValueOnce({rec1: {}, rec2: {}});
-    });
 
     it('should add no recommendation middleware when no slot is requested', async () => {
       await factory(SolutionType.standalone)({

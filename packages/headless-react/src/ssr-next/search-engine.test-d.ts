@@ -42,7 +42,7 @@ describe('defineSearchEngine', () => {
     type StateProviderProps = ComponentProps<typeof searchEngineDefinition.StateProvider>;
 
     expectTypeOf<keyof StateProviderProps['controllers']>().toEqualTypeOf<
-      'searchBox' | 'parameterManager'
+      'searchBox' | 'parameterManager' | 'context'
     >();
     expectTypeOf<StateProviderProps['engine']>().toEqualTypeOf<SearchEngine | undefined>();
   });

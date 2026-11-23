@@ -2,6 +2,7 @@
  * Utility functions to be used for Server Side Rendering.
  */
 import {validateReservedControllerNames} from '../../common/validation/controller-validation.js';
+import {defineContext} from '../controllers/context/headless-context.ssr.js';
 import {defineSearchParameterManager} from '../controllers/search-parameter-manager/headless-search-parameter-manager.ssr.js';
 import {hydratedStaticStateFactory} from '../factories/hydrated-state-factory.js';
 import {fetchStandaloneStaticStateFactory} from '../factories/standalone-static-state-factory.js';
@@ -12,6 +13,24 @@ import type {
   SearchEngineDefinition,
   SearchEngineDefinitionOptions,
 } from '../types/engine.js';
+
+/**
+ * Adds the baked-in `parameterManager` and `context` definitions to the controllers of an engine
+ * definition.
+ *
+ * @internal
+ */
+export function augmentSearchControllerDefinitions<
+  TControllerDefinitions extends SearchControllerDefinitionsMap,
+>(
+  controllerDefinitions: SearchEngineDefinitionOptions<TControllerDefinitions>['controllers']
+): AugmentedControllerDefinition<TControllerDefinitions> {
+  return {
+    ...controllerDefinitions,
+    parameterManager: defineSearchParameterManager(),
+    context: defineContext(),
+  } as AugmentedControllerDefinition<TControllerDefinitions>;
+}
 
 /**
  * Initializes a Search engine definition in SSR with given controllers definitions and search engine config.
@@ -59,12 +78,10 @@ export function defineSearchEngine<
   const definitionOptions = {...engineOptions};
 
   controllerDefinitions &&
-    validateReservedControllerNames(controllerDefinitions, ['parameterManager']);
+    validateReservedControllerNames(controllerDefinitions, ['parameterManager', 'context']);
 
-  const augmentedControllerDefinition = {
-    ...controllerDefinitions,
-    parameterManager: defineSearchParameterManager(),
-  } as AugmentedControllerDefinition<TControllerDefinitions>;
+  const augmentedControllerDefinition =
+    augmentSearchControllerDefinitions<TControllerDefinitions>(controllerDefinitions);
 
   const fetchStaticState = fetchStaticStateFactory<TControllerDefinitions>(
     augmentedControllerDefinition,
