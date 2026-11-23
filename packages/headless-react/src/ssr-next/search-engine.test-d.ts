@@ -21,9 +21,11 @@ const {controllers, useEngine, useHydration, searchEngineDefinition, standaloneE
 const SearchProvider = buildProviderWithDefinition(searchEngineDefinition);
 
 describe('defineSearchEngine', () => {
-  it('should derive one hook per controller, including the parameter manager', () => {
+  it('should derive one hook per controller, including the parameter manager and the context', () => {
     expectTypeOf(controllers).toHaveProperty('useSearchBox');
     expectTypeOf(controllers).toHaveProperty('useParameterManager');
+    expectTypeOf(controllers).toHaveProperty('useSearchContext');
+    expectTypeOf(controllers).not.toHaveProperty('useContext');
     expectTypeOf(controllers.useSearchBox).returns.toHaveProperty('state');
     expectTypeOf(controllers.useSearchBox).returns.toHaveProperty('methods');
   });
