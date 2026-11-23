@@ -81,20 +81,23 @@ export const QuerySuggestions = createReactComponent(
           context.dispatchAction({event: {name: 'fetchSuggestions', context: payload}})
         ).then(() => {
           setInFlight((count) => count - 1);
-          // A concurrent suggestion that fails, or that a newer one supersedes, resolves quietly
-          // without changing this node's content, which a streaming answer or the instant products
-          // leave as it was; only an applied answer that differs shows what the edits left. An
-          // identical one keeps the edits hidden until the next answer that differs.
           if (
             dispatch !== lastDispatch.current ||
-            ownState() === stateBefore ||
             actionFailed('QuerySuggestions', 'fetchSuggestions')
           ) {
             return;
           }
-          refreshed(latest.answered);
+          // A concurrent suggestion that fails resolves quietly, like one that succeeds, so the
+          // empty input's answer counts as fresh either way: a silent failure then shows the
+          // previous list, which may miss a search made since, but an identical answer must show.
           if (latest.epoch !== undefined) {
             setFreshEmptyEpoch(latest.epoch);
+          }
+          // The edits stay hidden until this node's content changes, which a streaming answer or
+          // the instant products never do: an identical answer keeps them hidden until the next
+          // one that differs.
+          if (ownState() !== stateBefore) {
+            refreshed(latest.answered);
           }
         });
       },

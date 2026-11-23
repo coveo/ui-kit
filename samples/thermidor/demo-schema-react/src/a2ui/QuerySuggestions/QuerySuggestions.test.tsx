@@ -424,6 +424,18 @@ describe('QuerySuggestions recent queries', () => {
     await waitFor(() => expect(options()).toEqual(['kayaks', 'tents', 'backpack']));
   });
 
+  it('shows them again in the refocused empty input when the fresh answer is unchanged', async () => {
+    const {textarea, queriesSent} = await renderSearchBox(recentQueriesProducer(['tents']));
+    await waitFor(() => expect(options()).toEqual(['tents', 'backpack']));
+
+    act(() => textarea.blur());
+    expect(options()).toEqual([]);
+    act(() => textarea.focus());
+
+    await waitFor(() => expect(queriesSent()).toEqual(['', '']));
+    await waitFor(() => expect(options()).toEqual(['tents', 'backpack']));
+  });
+
   it('hides the answer for the empty input once text is typed', async () => {
     const {type} = await renderSearchBox(recentQueriesProducer(['tents', 'water sports']));
     await waitFor(() => expect(options()).toEqual(['tents', 'water sports', 'backpack']));
@@ -668,6 +680,20 @@ describe('QuerySuggestions when the producer announces fetchSuggestions as concu
     await waitFor(() => expect(options()).toEqual(['tr poles']));
     await act(async () => releaseHeld());
     expect(options()).toEqual(['tr poles']);
+  });
+
+  it('shows them again in the refocused empty input when the fresh answer is unchanged', async () => {
+    const {textarea, queriesSent} = await renderSearchBox(
+      recentQueriesProducer(['tents'], answerConcurrentSuggestionsShell)
+    );
+    await waitFor(() => expect(options()).toEqual(['tents', 'backpack']));
+
+    act(() => textarea.blur());
+    expect(options()).toEqual([]);
+    act(() => textarea.focus());
+
+    await waitFor(() => expect(queriesSent()).toEqual(['', '']));
+    await waitFor(() => expect(options()).toEqual(['tents', 'backpack']));
   });
 
   it('keeps a removed recent query hidden when the suggestions fetched after it fail', async () => {
