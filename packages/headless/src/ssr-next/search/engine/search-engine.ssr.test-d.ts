@@ -1,5 +1,6 @@
 import {describe, expectTypeOf, it} from 'vitest';
 import {getSampleSearchEngineConfiguration} from '../../../app/search-engine/search-engine-configuration.js';
+import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {ContextPayload} from '../../../features/context/context-state.js';
 import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import type {EngineDefinition} from '../../common/types/engine.js';
@@ -12,7 +13,12 @@ import type {
 } from '../types/engine.js';
 import type {SearchStaticState as StaticStateOf} from '../types/fetch-static-state.js';
 import type {SearchHydratedState as HydratedStateOf} from '../types/hydrate-static-state.js';
-import type {SearchEngineOptions} from '../../../ssr-next.index.js';
+import type {
+  ControllerBuildContext,
+  ControllerDefinition as ExportedControllerDefinition,
+  SearchEngine,
+  SearchEngineOptions,
+} from '../../../ssr-next.index.js';
 import {defineSearchEngine} from './search-engine.ssr.js';
 
 const controllers = {
@@ -50,6 +56,11 @@ describe('defineSearchEngine', () => {
     defineSearchEngine(withProvider);
     expectTypeOf<SearchStaticState>().toHaveProperty('navigatorContext');
     expectTypeOf<SearchStaticState['accessToken']>().toEqualTypeOf<string | undefined>();
+  });
+
+  it('should export ControllerDefinition to type a hand-written definition built with the page facts', () => {
+    type Definition = ExportedControllerDefinition<SearchEngine, Controller>;
+    expectTypeOf<Parameters<Definition['build']>[1]>().toEqualTypeOf<ControllerBuildContext>();
   });
 
   it('should accept options typed with the SearchEngineOptions of the sub-package', () => {

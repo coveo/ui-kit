@@ -460,6 +460,7 @@ export type {
 } from './ssr-next/search/types/build.js';
 export type {
   AugmentedControllerDefinition,
+  ControllerDefinition,
   ControllerDefinitionsMap,
   InferHydratedState,
   InferStaticState,
