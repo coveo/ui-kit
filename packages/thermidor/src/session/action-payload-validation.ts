@@ -19,7 +19,19 @@
  * and `SelectPageSchema = z.strictObject({ payload: SelectPagePayloadSchema })`.)
  */
 
-import type {ContractsSchema, ObjectSchema, ParsableSchema, ParseIssue} from './contracts.js';
+import type {
+  ActionEnvelopeSchema,
+  ContractsSchema,
+  ObjectSchema,
+  ParsableSchema,
+  ParseIssue,
+} from './contracts.js';
+
+/** The action the contracts mark as opening the session, by component and name. */
+export interface SessionOpeningAction {
+  readonly discriminant: string;
+  readonly name: string;
+}
 
 /**
  * The outcome of {@link validateActionPayload}: either the action `name`+
@@ -42,6 +54,32 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 function unwrapOptional(schema: ParsableSchema): ParsableSchema {
   const candidate = schema as {unwrap?: () => ParsableSchema};
   return typeof candidate.unwrap === 'function' ? candidate.unwrap() : schema;
+}
+
+/**
+ * Finds the action whose envelope schema carries `opensSession: true`, or `undefined` when the
+ * contracts mark none. Throws when they mark more than one.
+ */
+export function findSessionOpeningAction(
+  contracts: ContractsSchema
+): SessionOpeningAction | undefined {
+  const marked: SessionOpeningAction[] = [];
+  for (const member of contracts.options) {
+    const actions = member.shape.actions && unwrapOptional(member.shape.actions);
+    if (!isObjectSchema(actions)) {
+      continue;
+    }
+    for (const [name, envelope] of Object.entries(actions.shape)) {
+      if ((envelope as ActionEnvelopeSchema | undefined)?.opensSession === true) {
+        marked.push({discriminant: member.shape.component.value, name});
+      }
+    }
+  }
+  if (marked.length > 1) {
+    const names = marked.map(({discriminant, name}) => `${discriminant}.${name}`).join(', ');
+    throw new Error(`The contracts mark more than one action as opening the session: ${names}.`);
+  }
+  return marked[0];
 }
 
 /**

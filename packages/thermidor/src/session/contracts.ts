@@ -66,6 +66,15 @@ export interface ObjectSchema extends ParsableSchema {
 }
 
 /**
+ * An action's envelope schema, as a component's `actions` object schema maps it by action name.
+ * `opensSession: true`, a plain property on the schema object, marks the action the session opens
+ * itself with; the contracts mark at most one.
+ */
+export interface ActionEnvelopeSchema extends ParsableSchema {
+  readonly opensSession?: true;
+}
+
+/**
  * A single component-contract member: a Zod object schema whose `shape`
  * exposes the PascalCase `component` discriminant literal (`{ value }`) and the
  * component's optional `state` and `actions` sub-schemas.

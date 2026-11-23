@@ -2,7 +2,7 @@ import {describe, expect, it} from 'vitest';
 import {z as z3} from 'zod/v3';
 import {z as z4} from 'zod/v4';
 import type {ContractsSchema} from './contracts.js';
-import {validateActionPayload} from './action-payload-validation.js';
+import {findSessionOpeningAction, validateActionPayload} from './action-payload-validation.js';
 import {findComponentContract, validateInboundOp} from './in-transit-validation.js';
 import type {NodeIdentityRegistry} from './in-transit-validation.js';
 import {statePath} from './state-path.js';
@@ -42,6 +42,16 @@ function buildZod4Contracts(): ContractsSchema {
       state: z4.strictObject({page: z4.number().int().min(0)}).optional(),
     }),
     z4.looseObject({component: z4.literal('LayoutStack')}),
+    z4.looseObject({
+      actions: z4
+        .strictObject({
+          initialize: Object.assign(z4.strictObject({payload: z4.strictObject({})}), {
+            opensSession: true as const,
+          }),
+        })
+        .optional(),
+      component: z4.literal('SessionShell'),
+    }),
   ]) as unknown as ContractsSchema;
 }
 
@@ -70,6 +80,19 @@ function buildZod3Contracts(): ContractsSchema {
       })
       .passthrough(),
     z3.object({component: z3.literal('LayoutStack')}).passthrough(),
+    z3
+      .object({
+        actions: z3
+          .object({
+            initialize: Object.assign(z3.object({payload: z3.object({}).strict()}).strict(), {
+              opensSession: true as const,
+            }),
+          })
+          .strict()
+          .optional(),
+        component: z3.literal('SessionShell'),
+      })
+      .passthrough(),
   ]) as unknown as ContractsSchema;
 }
 
@@ -125,5 +148,16 @@ describe.each(dialects)('injected contract built with %s', (_label, build) => {
     const rejected = validateActionPayload('Pagination', 'selectPage', {page: -5}, contracts);
     expect(rejected.valid).toBe(false);
     expect(rejected.valid === false && rejected.reason).toContain('page');
+  });
+
+  // .options + .unwrap() + .shape entries, read for the plain opensSession mark
+  it('finds the action marked as opening the session, and validates its payload', () => {
+    expect(findSessionOpeningAction(contracts)).toEqual({
+      discriminant: 'SessionShell',
+      name: 'initialize',
+    });
+    expect(validateActionPayload('SessionShell', 'initialize', {}, contracts)).toEqual({
+      valid: true,
+    });
   });
 });

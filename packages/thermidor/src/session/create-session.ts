@@ -28,9 +28,9 @@ import type {
   A2uiAction,
   ClientOwnedRequestFields,
   ConverseRequestModel,
-  InitializeAction,
   RequestLocale,
   RequestScopeFields,
+  SessionOpeningAction,
 } from '@/src/internal/api/unified/unified-endpoint-types.js';
 import type {
   CommerceContextProvider,
@@ -40,7 +40,7 @@ import type {
 import {devWarn} from '@/src/internal/utils/dev-warn.js';
 import {generateId} from '@/src/internal/utils/id-generator.js';
 import type {ActionOrigin} from './action-cache.js';
-import {validateActionPayload} from './action-payload-validation.js';
+import {findSessionOpeningAction, validateActionPayload} from './action-payload-validation.js';
 import {concurrentAction, type CachePolicy} from './announced-actions.js';
 import type {ContractsSchema} from './contracts.js';
 import {createConcurrentActions} from './concurrent-actions.js';
@@ -206,11 +206,13 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
    */
   sessionToken?: string;
   /**
-   * Whether the session opens itself with an `initialize` action, sent a microtask after
-   * {@link createSession} returns so that a listener subscribed in the same task sees it start.
-   * Defaults to `true`. A restored session sends it only when it has a token. Pass `false` for
-   * tests, or for a server that creates a session while rendering; the session keys then go out
-   * with the first prompt or action.
+   * Whether the session opens itself with the action its contracts mark as session-opening
+   * (`opensSession: true` on the action's envelope schema), called `initialize` below. It is sent a
+   * microtask after {@link createSession} returns so that a listener subscribed in the same task
+   * sees it start. Defaults to `true`. When the contracts mark no action, nothing is sent, and the
+   * first prompt opens the session. A restored session sends it only when it has a token. Pass
+   * `false` for tests, or for a server that creates a session while rendering; the session keys
+   * then go out with the first prompt or action.
    */
   initialize?: boolean;
 }
@@ -539,6 +541,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     throw new Error('A session requires a navigatorContextProvider.');
   }
   validateSessionKeys(config);
+  const openingAction = findSessionOpeningAction(config.contracts);
   // An id without a token may not be the endpoint's: the session drops it if a request that may
   // have reserved it ends before the endpoint sends a token.
   const seed = config.sessionToRestore ?? config;
@@ -919,7 +922,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   }
 
   function buildActionRequest(
-    action: A2uiAction | InitializeAction,
+    action: A2uiAction | SessionOpeningAction,
     navigatorContext?: NavigatorContext
   ): ConverseRequestModel {
     return {...requestScope, ...buildBaseRequest(navigatorContext), message: null, action};
@@ -1156,6 +1159,17 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
    * sees fail, also retries a transient rejection (ADR-018, as amended).
    */
   function initialize(automatic: boolean): Promise<void> {
+    if (!openingAction) {
+      return Promise.resolve();
+    }
+    const {discriminant, name} = openingAction;
+    const validation = validateActionPayload(discriminant, name, {}, config.contracts);
+    if (!validation.valid) {
+      devWarn(
+        `initialize: withheld: Invalid payload for action "${name}" on component "${discriminant}": ${validation.reason}`
+      );
+      return Promise.resolve();
+    }
     const retryOptions: RetryOptions | undefined = automatic
       ? {
           transient: {
@@ -1187,7 +1201,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
             INITIALIZATION,
             () =>
               buildActionRequest({
-                name: 'initialize',
+                name,
                 timestamp: new Date().toISOString(),
                 context: {},
               }),
@@ -1571,8 +1585,12 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     return snapshot;
   }
 
+  if (config.initialize === true && !openingAction) {
+    devWarn('initialize: the contracts mark no action as opening the session; nothing is sent.');
+  }
   // A restored session without a token has no session to resume.
   if (
+    openingAction &&
     config.initialize !== false &&
     (!config.sessionToRestore || config.sessionToRestore.sessionToken !== undefined)
   ) {

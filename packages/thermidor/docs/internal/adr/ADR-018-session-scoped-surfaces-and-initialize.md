@@ -271,6 +271,21 @@ against retries.
   restored session's included, unless a request is in flight. It carries the session's keys when
   it has them, so the Agent Gateway resumes that session. It does not retry by itself.
 
+## Amendment: opening with the marked action
+
+Accepted on 2026-11-23 (KIT-6699).
+
+The session no longer hard-codes the `initialize` action name. The injected contracts mark the
+session-opening action with `opensSession: true` on its envelope schema, a plain property read
+structurally, without Zod internals.
+
+- **The marked action is `initialize`.** Everything above applies to it: when it is sent, its run,
+  `{kind: 'initialize'}`, the retries and resuming a restored session. Its payload is `{}`,
+  validated like any action's; one the contract rejects is withheld with a dev-only warning.
+- **None marked, none sent.** `initialization` stays `undefined` and the first prompt opens the
+  session. With `initialize: true`, a dev-only warning says so.
+- **At most one.** `createSession` throws when the contracts mark more than one action.
+
 ## Considered Options
 
 ### Option A: surface templates and lookup actions (ADR-017)

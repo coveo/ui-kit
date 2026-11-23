@@ -163,7 +163,10 @@ export interface TurnAgent {
  */
 export type SessionRequest = InitializeRequest | PromptRequest | ActionRequest;
 
-/** The `initialize` action the session sends to open itself, recorded as `Session.initialization`. */
+/**
+ * The action the contracts mark as session-opening, which the session sends to open itself,
+ * recorded as `Session.initialization`.
+ */
 export interface InitializeRequest {
   kind: 'initialize';
 }

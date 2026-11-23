@@ -9,7 +9,7 @@ export type ClientOwnedRequestFields = {
   currency: string;
   clientId?: string;
   message: string | null;
-  action: A2uiAction | InitializeAction | null;
+  action: A2uiAction | SessionOpeningAction | null;
   conversationSessionId?: string;
   conversationToken?: string;
   context: CommerceRequestContext;
@@ -68,9 +68,12 @@ export interface A2uiAction<TContext = unknown> {
   context: TContext;
 }
 
-/** Opens the session. No component exists yet, so it names no surface or source component. */
-export interface InitializeAction {
-  name: 'initialize';
+/**
+ * The action the contracts mark as opening the session. No component exists yet, so it names no
+ * surface or source component.
+ */
+export interface SessionOpeningAction {
+  name: string;
   timestamp: string;
   context: Record<string, never>;
 }

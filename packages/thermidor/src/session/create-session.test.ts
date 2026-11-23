@@ -94,7 +94,19 @@ const ProductListSchema = z.strictObject({
     .optional(),
 });
 
+const SessionShellSchema = z.strictObject({
+  component: z.literal('SessionShell'),
+  actions: z
+    .strictObject({
+      initialize: Object.assign(z.strictObject({payload: z.strictObject({})}), {
+        opensSession: true as const,
+      }),
+    })
+    .optional(),
+});
+
 const contracts = z.discriminatedUnion('component', [
+  SessionShellSchema,
   PaginationSchema,
   NextActionsBarSchema,
   ProductListSchema,
@@ -2311,6 +2323,89 @@ describe('createSession lifecycle', () => {
 
       expect(callMock).not.toHaveBeenCalled();
       expect(session.initialization).toBeUndefined();
+    });
+
+    describe('the action the contracts mark as session-opening', () => {
+      function contractsMarking(...envelopes: Record<string, unknown>[]): ContractsSchema {
+        const actions = Object.fromEntries(
+          envelopes.map((envelope, index) => [`open${index}`, envelope])
+        );
+        return z.discriminatedUnion('component', [
+          z.strictObject({
+            component: z.literal('Shell'),
+            actions: z.strictObject(actions as Record<string, z.ZodType>).optional(),
+          }),
+          PaginationSchema,
+        ]) as unknown as ContractsSchema;
+      }
+
+      const marked = (payload: z.ZodType) =>
+        Object.assign(z.strictObject({payload}), {opensSession: true as const});
+
+      afterEach(() => {
+        vi.restoreAllMocks();
+      });
+
+      it('sends the marked action under its own name', async () => {
+        const stream = queueStream();
+        const session = createSession({
+          ...shellConfig,
+          contracts: contractsMarking(
+            z.strictObject({payload: z.strictObject({})}),
+            marked(z.strictObject({}))
+          ),
+        });
+        await stream.opened;
+
+        expect(session.request).toEqual({kind: 'initialize'});
+        expect(callMock.mock.calls[0][0]).toMatchObject({action: {name: 'open1', context: {}}});
+      });
+
+      it.each([
+        ['by default', {}],
+        ['with initialize: true', {initialize: true}],
+      ])(
+        'sends nothing when no action is marked, %s, and the first prompt opens the session',
+        async (_label, options) => {
+          const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+          const session = createSession({
+            ...baseConfig,
+            initialize: undefined,
+            ...options,
+            contracts: contractsMarking(z.strictObject({payload: z.strictObject({})})),
+          });
+          await flush();
+
+          expect(callMock).not.toHaveBeenCalled();
+          expect(session.initialization).toBeUndefined();
+          expect(warn).toHaveBeenCalledTimes('initialize' in options ? 1 : 0);
+
+          await completePrompt(session, 'find shoes');
+          expect(session.turns[0].status).toBe('complete');
+        }
+      );
+
+      it('throws when more than one action is marked', () => {
+        expect(() =>
+          createSession({
+            ...baseConfig,
+            contracts: contractsMarking(marked(z.strictObject({})), marked(z.strictObject({}))),
+          })
+        ).toThrow('Shell.open0, Shell.open1');
+      });
+
+      it('withholds a marked action whose payload rejects an empty context', async () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+        const session = createSession({
+          ...shellConfig,
+          contracts: contractsMarking(marked(z.strictObject({locale: z.string()}))),
+        });
+        await flush();
+
+        expect(callMock).not.toHaveBeenCalled();
+        expect(session.initialization).toBeUndefined();
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('open0'));
+      });
     });
 
     describe('restoring a session (ADR-018, as amended)', () => {

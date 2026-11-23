@@ -93,7 +93,7 @@ test('requires the agent configuration and tracking id, and a navigator context 
   expectTypeOf<SessionConfig>().not.toHaveProperty('currency');
 });
 
-// ── POSITIVE: the session opens itself with initialize, recorded as its initialization ──
+// ── POSITIVE: the session opens itself with its marked action, recorded as its initialization ──
 test('exposes the initialization of the session', () => {
   expectTypeOf<SessionConfig['initialize']>().toEqualTypeOf<boolean | undefined>();
   expectTypeOf<Session['initialization']>().toEqualTypeOf<SessionInitialization | undefined>();

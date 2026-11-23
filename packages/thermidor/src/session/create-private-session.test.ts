@@ -20,6 +20,16 @@ import {createSession} from './create-session.js';
 
 const contracts = z.discriminatedUnion('component', [
   z.strictObject({
+    component: z.literal('SessionShell'),
+    actions: z
+      .strictObject({
+        initialize: Object.assign(z.strictObject({payload: z.strictObject({})}), {
+          opensSession: true as const,
+        }),
+      })
+      .optional(),
+  }),
+  z.strictObject({
     component: z.literal('Pagination'),
     actions: z
       .strictObject({
