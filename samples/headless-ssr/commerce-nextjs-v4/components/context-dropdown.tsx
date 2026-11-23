@@ -6,7 +6,7 @@ import {
   loadProductListingActions,
   loadSearchActions,
 } from '@coveo/headless-react/ssr-commerce-next';
-import {useContext, useEngine} from '@/lib/commerce-engine';
+import {useCommerceContext, useEngine} from '@/lib/commerce-engine';
 
 // A hardcoded list of storefront associations for switching app context by language, country, and currency.
 // Found in the admin console under "Storefront Associations," this list is static for demonstration purposes.
@@ -14,7 +14,7 @@ import {useContext, useEngine} from '@/lib/commerce-engine';
 const storefrontAssociations = ['en-CA-CAD', 'fr-CA-CAD', 'en-GB-GBP', 'en-US-USD'];
 
 export default function ContextDropdown({useCase}: {useCase?: 'listing' | 'search'}) {
-  const {state, methods} = useContext();
+  const {state, methods} = useCommerceContext();
   const engine = useEngine();
 
   return (

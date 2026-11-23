@@ -13,14 +13,23 @@ import type {ControllerHook, StateProviderProps} from '../ssr-common/types.js';
 export type {ControllerHook, Hydration, HydrationStatus} from '../ssr-common/types.js';
 
 /**
- * The hooks of an engine definition: one `use<Name>` hook per controller.
+ * The name of a controller's hook: `use<Name>`, except for the built-in `context` controller, whose
+ * hook is `useCommerceContext` so that it does not shadow React's own `useContext`.
+ */
+type ControllerHookName<K> = K extends 'context'
+  ? 'useCommerceContext'
+  : `use${Capitalize<K extends string ? K : never>}`;
+
+/**
+ * The hooks of an engine definition: one `use<Name>` hook per controller, with `useCommerceContext`
+ * for the built-in `context` controller.
  *
  * @group Hooks
  */
 export type InferControllerHooksMapFromDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
 > = {
-  [K in keyof TControllers as `use${Capitalize<K extends string ? K : never>}`]: ControllerHook<
+  [K in keyof TControllers as ControllerHookName<K>]: ControllerHook<
     InferControllerFromDefinition<TControllers[K]>
   >;
 };

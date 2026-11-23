@@ -39,7 +39,7 @@ function createSingletonContext(): EngineContext<SearchEngine> {
  *   standaloneEngineDefinition,
  *   useEngine,
  *   useHydration,
- *   controllers: {useSearchBox, useResultList, useParameterManager},
+ *   controllers: {useSearchBox, useResultList, useParameterManager, useSearchContext},
  * } = defineSearchEngine({
  *   configuration: {organizationId: '...', accessToken: '...'},
  *   controllers: {searchBox: defineSearchBox(), resultList: defineResultList()},
@@ -49,7 +49,8 @@ function createSingletonContext(): EngineContext<SearchEngine> {
  * @param options - The engine configuration and the controllers to define.
  * @returns The `searchEngineDefinition` (executes a search on the server) and the
  * `standaloneEngineDefinition` (no server-side search), each with a `StateProvider`; `useEngine`;
- * `useHydration`; and one `use<Name>` hook per controller, including `useParameterManager`.
+ * `useHydration`; and one `use<Name>` hook per controller, including `useParameterManager` and
+ * `useSearchContext` for the built-in controllers.
  *
  * @group Engine
  */
@@ -81,10 +82,9 @@ export function defineSearchEngine<TControllers extends SearchControllerDefiniti
   return {
     useEngine: buildEngineHook(singletonContext),
     useHydration: buildHydrationHook(singletonContext),
-    controllers: buildControllerHooks(
-      singletonContext,
-      controllerDefinitions
-    ) as InferControllerHooksMapFromDefinition<AugmentedControllerDefinition<TControllers>>,
+    controllers: buildControllerHooks(singletonContext, controllerDefinitions, {
+      hookNames: {context: 'useSearchContext'},
+    }) as InferControllerHooksMapFromDefinition<AugmentedControllerDefinition<TControllers>>,
     searchEngineDefinition: {...searchEngineDefinition, StateProvider},
     standaloneEngineDefinition: {...standaloneEngineDefinition, StateProvider},
   };
