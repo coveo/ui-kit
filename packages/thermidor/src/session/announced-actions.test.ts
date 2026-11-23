@@ -71,6 +71,8 @@ describe('concurrentAction', () => {
       {shell: {fetchInstantProducts: {cache: 60_000}}},
       {shell: {fetchInstantProducts: {cache: {ttlMs: '60000'}}}},
       {shell: {fetchInstantProducts: {cache: {ttlMs: -1}}}},
+      {shell: {fetchInstantProducts: {cache: {ttlMs: 0}}}},
+      {shell: {fetchInstantProducts: {cache: {ttlMs: Infinity}}}},
       {shell: {...CACHED_PRODUCTS, other: null}},
     ]) {
       const activities = [concurrent({shell: CACHED_PRODUCTS}), concurrent(malformed)];
@@ -78,6 +80,17 @@ describe('concurrentAction', () => {
       expect(concurrentAction(activities, 'shell', 'fetchInstantProducts')).toEqual({
         cache: ONE_MINUTE,
       });
+    }
+  });
+
+  it('keeps an action out when a malformed announcement lists it after one that does not', () => {
+    for (const malformed of [
+      {shell: {fetchSuggestions: null}},
+      {shell: {fetchSuggestions: {}, fetchInstantProducts: {cache: {ttlMs: 0}}}},
+    ]) {
+      const activities = [concurrent({shell: CACHED_PRODUCTS}), concurrent(malformed)];
+
+      expect(concurrentAction(activities, 'shell', 'fetchSuggestions')).toBeUndefined();
     }
   });
 });

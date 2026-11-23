@@ -18,9 +18,11 @@ import type {
 import type {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
 
 /**
- * What the surfaces read from the session: its request in flight, and why the last action failed.
+ * What the surfaces read from the session: its request in flight, why the last action failed, and
+ * whether an action is sent beside the request in flight.
  */
-export type SessionRequestSource = Pick<Session, 'subscribe' | 'getSnapshot'>;
+export type SessionRequestSource = Pick<Session, 'subscribe' | 'getSnapshot'> &
+  Partial<Pick<Session, 'isConcurrent'>>;
 
 const IDLE_SNAPSHOT: SessionSnapshot = {
   turns: [],
@@ -120,17 +122,36 @@ export function useActionFailed(): (component: string, name: string) => boolean 
   );
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+/** An action that `useLatestWhenFree` sends from a surface. */
+export interface SurfaceAction {
+  surfaceId: string;
+  name: string;
+}
+
 /**
  * Sends the latest `value` once the session is free, unless it was already sent. The session
  * withholds a dispatch made while another request is in flight, so a value that changes meanwhile
  * replaces the one waiting. A falsy value is never sent, and lets the next value be sent even when
  * it repeats the last one.
+ *
+ * When the session sends `concurrent`'s action from its surface at once, whatever is in flight
+ * (`session.isConcurrent`), the value is sent at once.
  */
-export function useLatestWhenFree<T>(value: T, send: (value: NonNullable<T>) => void): void {
+export function useLatestWhenFree<T>(
+  value: T,
+  send: (value: NonNullable<T>) => void,
+  concurrent?: SurfaceAction
+): void {
   const source = useContext(SessionRequestContext);
   const lastSent = useRef<T | undefined>(undefined);
   const latestSend = useRef(send);
   latestSend.current = send;
+  const surfaceId = concurrent?.surfaceId;
+  const concurrentName = concurrent?.name;
 
   useEffect(() => {
     if (!value) {
@@ -138,14 +159,40 @@ export function useLatestWhenFree<T>(value: T, send: (value: NonNullable<T>) => 
       return;
     }
     const flush = () => {
-      if (source.getSnapshot().request === undefined && value !== lastSent.current) {
+      const snapshot = source.getSnapshot();
+      const free =
+        snapshot.request === undefined ||
+        (surfaceId !== undefined &&
+          concurrentName !== undefined &&
+          source.isConcurrent?.({surfaceId, name: concurrentName}) === true);
+      if (free && value !== lastSent.current) {
         lastSent.current = value;
         latestSend.current(value as NonNullable<T>);
       }
     };
     flush();
     return source.subscribe(flush);
-  }, [source, value]);
+  }, [source, value, surfaceId, concurrentName]);
+}
+
+/**
+ * The state of node `nodeId` on surface `surfaceId`, at its `/state/<nodeId>` pointer. The session
+ * may rebuild the node on any update, so compare its content rather than its identity.
+ */
+export function nodeState(
+  state: SessionSnapshot['state'],
+  surfaceId: string,
+  nodeId: string
+): unknown {
+  const surfaceState = state[surfaceId];
+  const nodes = isRecord(surfaceState) ? surfaceState['state'] : undefined;
+  return isRecord(nodes) ? nodes[nodeId] : undefined;
+}
+
+/** Reads the session's current snapshot, outside of rendering. */
+export function useReadSnapshot(): () => SessionSnapshot {
+  const source = useContext(SessionRequestContext);
+  return source.getSnapshot;
 }
 
 /** What {@link submitQuery} needs from the session. */
@@ -180,8 +227,10 @@ export function retire(session: object): void {
 
 /**
  * Sends `prompt` once the session is free, first cancelling a suggestion in flight so that it never
- * holds the submit back. The cancelled request may still hold the producer's turn slot; the
- * session's conflict retry absorbs the prompt's `409`. A session retired meanwhile gets nothing.
+ * holds the submit back. Only a producer that does not announce `fetchSuggestions` as concurrent
+ * makes a suggestion the session's request; its cancelled request may still hold the producer's
+ * turn slot, and the session's conflict retry absorbs the prompt's `409`. A session retired
+ * meanwhile gets nothing.
  */
 export async function submitQuery(session: QuerySubmitter, prompt: string): Promise<void> {
   const {request} = session.getSnapshot();
