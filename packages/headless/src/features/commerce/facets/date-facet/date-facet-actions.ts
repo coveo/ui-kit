@@ -13,6 +13,10 @@ import {
 } from '../../../facets/range-facets/date-facet-set/date-facet-actions.js';
 import {dateFacetValueDefinition} from '../../../facets/range-facets/generic/range-facet-validate-payload.js';
 
+/**
+ * @deprecated The Commerce API removes date range facets in June 2027, with no replacement. This type will be
+ * removed in the next major version.
+ */
 export type ToggleSelectDateFacetValuePayload = ToggleSelectDateFacetValueActionCreatorPayload;
 
 export const toggleSelectDateFacetValue = createAction(
@@ -24,6 +28,10 @@ export const toggleSelectDateFacetValue = createAction(
     })
 );
 
+/**
+ * @deprecated The Commerce API removes date range facets in June 2027, with no replacement. This type will be
+ * removed in the next major version.
+ */
 export type ToggleExcludeDateFacetValuePayload = ToggleSelectDateFacetValueActionCreatorPayload;
 
 export const toggleExcludeDateFacetValue = createAction(
@@ -35,6 +43,10 @@ export const toggleExcludeDateFacetValue = createAction(
     })
 );
 
+/**
+ * @deprecated The Commerce API removes date range facets in June 2027, with no replacement. This type will be
+ * removed in the next major version.
+ */
 export type UpdateDateFacetValuesPayload = UpdateDateFacetValuesActionCreatorPayload;
 
 export const updateDateFacetValues = createAction(
