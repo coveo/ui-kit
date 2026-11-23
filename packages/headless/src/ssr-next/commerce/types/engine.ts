@@ -29,8 +29,9 @@ export type CommerceEngineDefinitionOptions<
   controllers?: ValidateControllerNames<TControllers>;
   /**
    * Whether the listing and search requests fill `results` (products and spotlight content) rather
-   * than `products`: `true` for both kinds of request, or one flag per kind. The flag applies to every
-   * request of the matching kind, whichever controller triggers it, on the server and in the browser.
+   * than `products`: `true` for both kinds of request, or one flag per kind. The flag applies to the
+   * requests that the controllers of this engine definition send, on the server and in the browser.
+   * Requests dispatched through action loaders take their own `enableResults`.
    *
    * @default false
    */

@@ -17,13 +17,20 @@ import {
   type MockedCommerceEngine,
 } from '../../../../test/mock-engine-v2.js';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search.js';
+import {buildMockCommerceBuildContext} from '../../../../test/mock-ssr-build-context.js';
 import {SolutionType} from '../../types/controller-constants.js';
 import {
   buildFacetGenerator,
+  defineFacetGenerator,
   type FacetGenerator,
   type FacetGeneratorOptions,
   type FacetType,
 } from './headless-commerce-facet-generator.ssr.js';
+
+vi.mock('../../../../controllers/commerce/product-listing/headless-product-listing.js', {
+  spy: true,
+});
+vi.mock('../../../../controllers/commerce/search/headless-search.js', {spy: true});
 
 describe('SSR FacetGenerator', () => {
   let engine: MockedCommerceEngine;
@@ -79,8 +86,33 @@ describe('SSR FacetGenerator', () => {
   }
 
   beforeEach(() => {
-    vi.resetAllMocks();
+    vi.clearAllMocks();
   });
+
+  it.each([
+    {
+      solutionType: SolutionType.listing,
+      enableResults: {listing: true, search: false},
+      buildController: buildProductListing,
+    },
+    {
+      solutionType: SolutionType.search,
+      enableResults: {listing: false, search: true},
+      buildController: buildSearch,
+    },
+  ])(
+    'should build the $solutionType facets from a controller carrying the results flag',
+    ({solutionType, enableResults, buildController}) => {
+      initEngine();
+
+      defineFacetGenerator().build(
+        engine,
+        buildMockCommerceBuildContext({solutionType, enableResults})
+      );
+
+      expect(buildController).toHaveBeenCalledWith(engine, {enableResults: true});
+    }
+  );
   describe.each([
     {
       solutionType: SolutionType.listing,

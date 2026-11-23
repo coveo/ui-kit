@@ -197,6 +197,7 @@ export type {
 export {buildFilterSuggestions} from './controllers/commerce/filter-suggestions/headless-filter-suggestions.js';
 export type {
   FilterSuggestionsGenerator,
+  FilterSuggestionsGeneratorOptions,
   GeneratedFilterSuggestionsControllers,
 } from './controllers/commerce/filter-suggestions/headless-filter-suggestions-generator.js';
 export {buildFilterSuggestionsGenerator} from './controllers/commerce/filter-suggestions/headless-filter-suggestions-generator.js';
