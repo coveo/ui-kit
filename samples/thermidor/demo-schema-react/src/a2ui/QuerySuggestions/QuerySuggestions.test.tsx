@@ -605,6 +605,59 @@ describe('QuerySuggestions when the producer announces fetchSuggestions as concu
     await act(async () => releaseRemove());
   });
 
+  /** Renders a search box on `recent`, whose prompts stream until `finish` is called. */
+  async function renderWithStreamingPrompt(recent: string[]) {
+    const producer = recentQueriesProducer(recent, answerConcurrentSuggestionsShell);
+    let stream: ReturnType<typeof streamingResponse> | undefined;
+    const view = await renderSearchBox((request, signal) => {
+      if (request.message !== null) {
+        stream = streamingResponse(run([]));
+        return stream.response;
+      }
+      return producer(request, signal);
+    });
+    const prompt = async (text: string) => {
+      act(() => void view.session.dispatchAction({name: 'submitPrompt', payload: {prompt: text}}));
+      await waitFor(() => expect(stream).toBeDefined());
+      return {finish: () => act(async () => stream!.finish())};
+    };
+    return {...view, prompt};
+  }
+
+  it('sends a query typed during a turn once it ends, so it lists the recent queries the turn left', async () => {
+    const recent = ['pants'];
+    const {type, queriesSent, prompt, session} = await renderWithStreamingPrompt(recent);
+    await waitFor(() => expect(options()).toEqual(['pants', 'backpack']));
+    const turn = await prompt('paddles');
+
+    type('pa');
+    await pause();
+    expect(queriesSent()).toEqual(['']);
+    recent.unshift('paddles');
+    await turn.finish();
+
+    await waitFor(() => expect(session.getSnapshot().request).toBeUndefined());
+    await waitFor(() => expect(options()).toEqual(['paddles', 'pants', 'pa poles']));
+    expect(queriesSent()).toEqual(['', 'pa']);
+  });
+
+  it('sends the empty input refocused during a turn once it ends, so it lists the recent queries the turn left', async () => {
+    const recent = ['pants'];
+    const {textarea, queriesSent, prompt} = await renderWithStreamingPrompt(recent);
+    await waitFor(() => expect(options()).toEqual(['pants', 'backpack']));
+    const turn = await prompt('paddles');
+
+    act(() => textarea.blur());
+    act(() => textarea.focus());
+    await pause();
+    expect(queriesSent()).toEqual(['']);
+    recent.unshift('paddles');
+    await turn.finish();
+
+    await waitFor(() => expect(options()).toEqual(['paddles', 'pants', 'backpack']));
+    expect(queriesSent()).toEqual(['', '']);
+  });
+
   it('keeps the last completions shown while the next ones are in flight', async () => {
     let releaseSurfx!: () => void;
     const {type} = await renderSearchBox((request, signal) => {
@@ -649,7 +702,7 @@ describe('QuerySuggestions when the producer announces fetchSuggestions as concu
     ]);
   });
 
-  it('refreshes the suggestions once a clear is answered, superseding an older answer', async () => {
+  it('refreshes the suggestions once a clear is answered', async () => {
     const recent = ['tents', 'trail shoes'];
     const producer = recentQueriesProducer(recent, answerConcurrentSuggestionsShell);
     let holdNext = false;

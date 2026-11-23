@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useRef, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {createReactComponent} from '@copilotkit/a2ui-renderer';
 import type {FetchSuggestionsPayload} from '@coveo/thermidor-schema';
 import {QuerySuggestionsPropsSchema} from '@coveo/thermidor-schema/zod3';
@@ -53,8 +53,11 @@ export const QuerySuggestions = createReactComponent(
       }
     }
 
-    // Sent once typing pauses, so the text typed before a submit is not sent after it.
-    const wanted = !submitted && debouncedQuery === typed && (typed !== '' || focused);
+    // Sent once typing pauses, so the text typed before a submit is not sent after it. A request
+    // that locks the surface, such as a prompt's turn, holds it back even when the producer answers
+    // suggestions beside it: the turn may change the recent queries, so the query goes out when
+    // it ends, and again if it was sent before it.
+    const wanted = !submitted && !locked && debouncedQuery === typed && (typed !== '' || focused);
     const epoch = debouncedQuery === '' ? emptyEpoch : undefined;
     const request = useMemo(
       () => (wanted ? {query: debouncedQuery, answered, epoch} : undefined),
@@ -62,7 +65,6 @@ export const QuerySuggestions = createReactComponent(
     );
     // A concurrent suggestion is not the session's request, so its dispatches in flight are counted.
     const [inFlight, setInFlight] = useState(0);
-    const lastDispatch = useRef(0);
     const surfaceId = context.dataContext.surface?.id;
     const nodeId = context.componentModel.id;
     // Its content, as the session may rebuild the node of a partial write on any other update.
@@ -74,17 +76,15 @@ export const QuerySuggestions = createReactComponent(
       request,
       (latest) => {
         const payload: FetchSuggestionsPayload = {query: latest.query};
-        const dispatch = ++lastDispatch.current;
         const stateBefore = ownState();
         setInFlight((count) => count + 1);
         void Promise.resolve(
           context.dispatchAction({event: {name: 'fetchSuggestions', context: payload}})
         ).then(() => {
           setInFlight((count) => count - 1);
-          if (
-            dispatch !== lastDispatch.current ||
-            actionFailed('QuerySuggestions', 'fetchSuggestions')
-          ) {
+          // The session applies only a node's latest concurrent answer, and sends one suggestion at
+          // a time otherwise, so an older dispatch that resolves late changes nothing.
+          if (actionFailed('QuerySuggestions', 'fetchSuggestions')) {
             return;
           }
           // A concurrent suggestion that fails resolves quietly, like one that succeeds, so the
