@@ -28,6 +28,7 @@ exports[`CDN exports checks > did index.esm exports changed? 1`] = `
   "elementHasNoQuery": [Function],
   "elementHasQuery": [Function],
   "fetchProductContext": [Function],
+  "fetchResultContext": [Function],
   "initializeBindings": [Function],
   "productContext": [Function],
   "resultContext": [Function],

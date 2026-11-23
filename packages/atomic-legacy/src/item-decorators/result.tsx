@@ -39,7 +39,7 @@ export type InteractiveResultContextEvent = InteractiveItemContextEvent;
  * @param element The element that the event is dispatched to, which must be the child of a rendered "atomic-result" element.
  * @returns A promise that resolves on initialization of the parent "atomic-result" element, or rejects when there is no parent "atomic-result" element.
  * 
- * @deprecated should only be used for Stencil components. For Lit components, use `fetchResultContext` from \@/src/components/search/result-template-component-utils/context/fetch-result-context.ts
+ * @deprecated Use `fetchResultContext` from `@coveo/atomic` instead.
  */
 export function resultContext<T extends Result | FoldedResult = Result>(
   element: Element
