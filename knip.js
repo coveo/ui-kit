@@ -193,7 +193,6 @@ export default {
       entry: [
         'src/loader.ts',
         'src/cdn.ts',
-        'src/cdn-deprecated-index.ts',
         'src/**/*.e2e.ts',
         'dev/**/*.{ts,js,mjs}',
         'scripts/**/*.{mjs,js,ts}',

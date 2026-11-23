@@ -1,7 +1,7 @@
 // ⚠️  CDN OUTPUT: This build outputs to "cdn/". If you change this path,
 // you MUST also update the corresponding "source" field in ui-kit-cd
 // (.deployment.config/{commit,dev,prd}.json) and deploy-local-cdn.mjs.
-import {readFileSync} from 'node:fs';
+import {readFileSync, writeFileSync} from 'node:fs';
 import {dirname, join, resolve} from 'node:path';
 import {relative} from 'node:path/posix';
 import {fileURLToPath} from 'node:url';
@@ -24,9 +24,6 @@ const rsbuild = await rsbuildApi.createRsbuild({
         // ⚠️  Changing these entry names affects CDN pointer files in ui-kit-cd.
         'atomic.esm': './src/cdn.ts',
         loader: './src/loader.ts',
-        // The deprecated name of `loader.js`, which v4 removes. With `dependOn`, it is a small file
-        // that loads `loader.js` and runs in its runtime, instead of carrying a second copy of it.
-        index: {import: './src/cdn-deprecated-index.ts', dependOn: 'loader'},
         'index.esm': './src/index.ts',
       },
       tsconfigPath: './tsconfig.lit.json',
@@ -177,4 +174,18 @@ const rsbuild = await rsbuildApi.createRsbuild({
 });
 
 await rsbuild.build();
+
+// `index.js` is the deprecated name of `loader.js`, which v4 removes. It is a pointer to `loader.js`
+// and not a second build of the loader, so both names export the same loader. The warning is a plain
+// `console.warn`: the shared deprecation helper would make this file load the chunk that most
+// components share.
+writeFileSync(
+  join(__dirname, 'cdn', 'index.js'),
+  [
+    "console.warn('[Deprecated] The `index.js` file of the Atomic CDN is deprecated and will be removed in Atomic v4. Use `loader.js` instead, which has the same exports.');",
+    "export * from './loader.js';",
+    '',
+  ].join('\n')
+);
+
 console.log(colors.bold.blue('CDN build complete'));

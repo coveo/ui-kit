@@ -1,9 +1,5 @@
 import {beforeAll, describe, expect, it, vi} from 'vitest';
 
-/** @param {Record<string, unknown>} module */
-const publicExports = (module) =>
-  Object.fromEntries(Object.entries(module).filter(([name]) => !name.startsWith('__')));
-
 describe('CDN loader files', () => {
   let loader;
   let index;
@@ -23,29 +19,15 @@ describe('CDN loader files', () => {
     warn.mockRestore();
   });
 
-  describe('loader.js', () => {
-    it('should export the loader API', () => {
-      expect(Object.keys(publicExports(loader)).sort()).toEqual([
-        'applyPolyfills',
-        'atomicVersion',
-        'defineCustomElements',
-        'headlessVersion',
-        'setNonce',
-      ]);
-    });
-
-    it('should not log a deprecation warning', () => {
-      expect(loaderWarnings).toEqual([]);
-    });
+  it('should not log a deprecation warning when loader.js is imported', () => {
+    expect(loaderWarnings).toEqual([]);
   });
 
-  describe('index.js', () => {
-    it('should export what loader.js exports', () => {
-      expect(publicExports(index)).toEqual(publicExports(loader));
-    });
+  it('should export from index.js the same functions and values as loader.js', () => {
+    expect({...index}).toEqual({...loader});
+  });
 
-    it('should log one deprecation warning that names loader.js, however often it is imported', () => {
-      expect(indexWarnings).toEqual([expect.stringContaining('Use `loader.js` instead')]);
-    });
+  it('should log one deprecation warning that names loader.js when index.js is imported, however often', () => {
+    expect(indexWarnings).toEqual([expect.stringContaining('Use `loader.js` instead')]);
   });
 });

@@ -33,3 +33,14 @@ exports[`CDN exports checks > did index.esm exports changed? 1`] = `
   "resultContext": [Function],
 }
 `;
+
+exports[`CDN exports checks > did loader exports changed? 1`] = `
+{
+  "__webpack_require__": [Function],
+  "applyPolyfills": [Function],
+  "atomicVersion": "<version>",
+  "defineCustomElements": [Function],
+  "headlessVersion": "<version>",
+  "setNonce": [Function],
+}
+`;

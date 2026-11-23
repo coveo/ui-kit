@@ -20,6 +20,12 @@ Modified behaviors will be listed here.
 
 ## Removals
 
+### CDN
+
+| Removed                                                                                     | Replacement                                                                                           |
+| ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| The `index.js` file of the CDN, such as `https://static.cloud.coveo.com/atomic/v3/index.js` | `loader.js` in the same folder, which has the same exports <!-- decided 2026-11-23, not yet built --> |
+
 ### Interface components
 
 | Removed                                                                                                                            | Replacement                                                                                                                                                                                     |
@@ -41,9 +47,3 @@ Modified behaviors will be listed here.
 | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
 | A Stencil `VNode` as the `content` of a `SearchBoxSuggestionElement` | An `Element`, as the built-in suggestions pass <!-- decided 2026-10-31, not yet built --> |
 | `atomic-suggestion-renderer`                                         | None: it is internal to the search boxes <!-- decided 2026-10-31, not yet built -->       |
-
-### CDN
-
-| Removed                                                                                     | Replacement                                                                                           |
-| ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| The `index.js` file of the CDN, such as `https://static.cloud.coveo.com/atomic/v3/index.js` | `loader.js` in the same folder, which has the same exports <!-- decided 2026-11-23, not yet built --> |
