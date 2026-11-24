@@ -3,7 +3,7 @@
 ## Done
 
 - Baselines measured on main @ 593ab276f: `results/baseline.json`.
-- Prototype builds measured: Headless es2021, es2022, es2023, es2024, esnext and the Chrome 107/Edge 107/Firefox 104/Safari 16 list (`results/headless-*.json`). Atomic es2022, es2023, es2024 (`results/atomic-*.json`). Comparison tables are in `results/tables.md`.
+- Prototype builds measured: Headless es2021, es2022, es2023, es2024, esnext and the Chrome 107/Edge 107/Firefox 104/Safari 16 measurement snapshot (`results/headless-*.json`). Atomic es2022, es2023, es2024 (`results/atomic-*.json`). Comparison tables are in `results/tables.md`.
 - Working tree right now: Headless esbuild target is `es2022`, and Atomic is at rslib syntax `es2022` with tsconfig target `ES2022` (uncommitted).
 - `pnpm --filter @coveo/headless test` passes: 456 files, 5815 tests. `pnpm --filter @coveo/atomic test` passes: 7275 tests, 81 skipped.
 - Research workflow (ponyfills, browser baseline, TypeScript floor, Node floor, each fact-checked) is done. Its raw output is in `research-workflow-output.json`. Read it with `jq -r '.[] | .key, .report, (.verdict|tostring)'`.

@@ -6,13 +6,18 @@
 
 ## Recommendation
 
-For v4, standardize Headless and Atomic output on **ES2022** and propose this minimum desktop browser contract:
+For v4, standardize Headless and Atomic output on **ES2022** and adopt the accepted Coveo browser conformance policy rather than publishing fixed browser version minimums:
 
-```text
-chrome >= 107, edge >= 107, firefox >= 104, safari >= 16
-```
+- Desktop Chrome: latest released major and extended stable.
+- Desktop Edge: latest released major.
+- Desktop Safari: latest released major and latest minor.
+- Desktop Firefox: latest released version and ESR.
+- Older supported versions remain supported until one year after release.
+- Mobile Chrome, Safari, and Firefox follow the latest-major policy; Edge is included for completeness.
 
-This is a runtime contract, not just a compiler setting. The spike found that current Atomic code uses `Promise.withResolvers`, which in the tested feature inventory sets a higher floor: Chrome/Edge 119, Firefox 121, Safari 17.4. Before claiming the proposed lower contract, the v4 implementation must remove/replace that use (or otherwise make the affected public entry points work), then test against the stated minima. If that cannot be done, revise the contract to match the verified higher floor. Mobile browser coverage and any additional support policy should be agreed alongside that implementation.
+The Chrome 107 / Edge 107 / Firefox 104 / Safari 16 versions used during the prototype are measurement snapshots, not the v4 support promise. Fixed versions would conflict with the accepted policy and would require an outdated manual table update.
+
+This is a runtime contract, not just a compiler setting. The spike found that current Atomic code uses `Promise.withResolvers`, which in the tested feature inventory sets a higher implementation floor: Chrome/Edge 119, Firefox 121, Safari 17.4. Before release, the v4 implementation must remove/replace that use (or otherwise make the affected public entry points work), then test against the exact desktop and mobile lines in the conformance policy. If that cannot be done, revise the effective support floor and document the reason. Unsupported browser issues follow the support stance in the policy: defects on supported browsers, possible R&D review for unsupported versions, and no build-level compatibility fix when not supported.
 
 The main evidence does **not** show a meaningful size or parse-time win from raising the target. Treat ES2022 as consistency and an explicit v4 contract—not as a bundle-optimization project.
 
@@ -38,10 +43,10 @@ Headless es2023, es2024, and esnext output was byte-identical to es2022. Atomic 
 
 ### Browser/runtime baseline
 
-- The proposal is ES2022 with Chrome 107, Edge 107, Firefox 104, and Safari 16 minimums.
-- Headless's observed built-in use alone has a lower floor (Chrome/Edge 97, Firefox 104, Safari 15.4), but Atomic's `Promise.withResolvers` use currently sets a much higher observed floor (Chrome/Edge 119, Firefox 121, Safari 17.4).
+- The recommendation is ES2022 under the accepted Coveo rolling browser conformance policy.
+- Headless's observed built-in use alone has a lower feature floor (Chrome/Edge 97, Firefox 104, Safari 15.4), but Atomic's `Promise.withResolvers` use currently sets a much higher observed floor (Chrome/Edge 119, Firefox 121, Safari 17.4).
 - Atomic already depends on `Promise.withResolvers`; changing `tsconfig` alone cannot lower that runtime requirement. This is a material gap and a release gate for the proposed contract.
-- No repository-wide browser support declaration or browserslist was found. The v4 story should add a pinned, explicit compatibility check rather than a moving “latest” baseline.
+- No repository-wide browser support declaration or browserslist was found. The v4 story should add a pinned release-test matrix derived from the accepted policy rather than freezing a single unsupported version set.
 
 ### Ponyfills: keep this separate from the target decision
 
@@ -75,8 +80,8 @@ Several packages already target ES2022. `coveo-analytics`, `atomic-legacy`, Quan
 **Acceptance criteria:**
 
 1. Headless and Atomic publish ES2022 output, with wrappers and package-specific exceptions audited and documented.
-2. The v4 browser contract is explicitly approved and pinned. If the proposed Chrome 107 / Edge 107 / Firefox 104 / Safari 16 contract is retained, Atomic's current `Promise.withResolvers` requirement is removed/replaced or otherwise made compatible with those minimums.
-3. CI exercises the public package entry points on the browser minimums and checks that dependencies do not introduce syntax or built-ins above the contract. Any unsupported APIs are replaced, polyfilled, or the contract is deliberately raised.
+2. The v4 browser contract follows the accepted Coveo conformance policy. At release, publish the exact versions exercised by the pinned test matrix and document the support stance.
+3. CI exercises the public package entry points on the supported desktop and mobile browser lines and checks that dependencies do not introduce syntax or built-ins above the policy. Atomic's `Promise.withResolvers` requirement is removed or polyfilled, or the effective floor is deliberately documented.
 4. TypeScript peer metadata is raised to `>=5.9.0` only after a packed-consumer type-check at 5.9 with `skipLibCheck: false` passes; publish the migration guidance.
 5. Node engines are aligned with the approved KIT-6387 decision (recommended input: `^22.12.0 || ^24.11.0 || ^26.0.0`), and the CommonJS `require` defect is tracked independently.
 6. Quantic's Lightning Locker ponyfills remain isolated to the Quantic compatibility output and have explicit regression coverage; any removal is separately approved and tested.
