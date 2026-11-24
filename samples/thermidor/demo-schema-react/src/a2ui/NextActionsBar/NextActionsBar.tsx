@@ -1,4 +1,4 @@
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react/v0_9';
 import type {ActionItem, NextActionsBarAction} from '@coveo/thermidor-schema';
 import {NextActionsBarPropsSchema} from '@coveo/thermidor-schema/zod3';
 import styles from './NextActionsBar.module.css';
@@ -12,11 +12,13 @@ import styles from './NextActionsBar.module.css';
  *   search saved under `optionId` and opens it as a new commerce-search surface; the text is what
  *   the shopper selected.
  */
-export const NextActionsBar = createReactComponent(
+export const NextActionsBar = createComponentImplementation(
   {
     name: 'NextActionsBar',
     schema: NextActionsBarPropsSchema,
   },
+  // TODO(a2ui-react context): `context` is deprecated in @a2ui/react 0.16. Dispatch with
+  // `useA2uiSurface()?.dispatchAction(action, componentId)` once a component can read its own id.
   ({props, context}) => {
     const actions = props.suggestedActions ?? [];
 

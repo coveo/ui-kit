@@ -9,8 +9,8 @@ import {
 } from './ProductCard/product-card-actions.js';
 
 /**
- * Pagination / Sort / ProductList are `createReactComponent` implementations driven by the generic
- * binder, mounted end-to-end through the real thermidor catalog: props are `{path}` bindings
+ * Pagination / Sort / ProductList are `createComponentImplementation` implementations driven by the generic
+ * binder, mounted end-to-end through the real thermidor catalog: props are `{ path }` bindings
  * resolved from the surface data model, and user gestures dispatch actions that surface on
  * `onAction` (flattened `{name, context, ...}`). See `./mount-surface.harness.tsx`.
  */
@@ -233,7 +233,7 @@ describe('Sort', () => {
 
 describe('ProductList', () => {
   it('renders loading state when products are unresolved', async () => {
-    // No data-model write for `products` → the `{path}` binding resolves to undefined → loading.
+    // No data-model write for `products` → the `{ path }` binding resolves to undefined → loading.
     mountSurface({
       component: {component: 'ProductList', products: {path: '/state/root/products'}},
     });
@@ -312,7 +312,7 @@ describe('ProductList', () => {
 });
 
 // A product with children, as producers send it: the product first among its children.
-function trailShoe() {
+function trailShoe(totalNumberOfChildren = 4) {
   const children = [
     {
       permanentid: 'shoe-red',
@@ -333,15 +333,17 @@ function trailShoe() {
       additionalFields: {},
     },
   ];
-  return {...children[0], children, totalNumberOfChildren: 4};
+  return {...children[0], children, totalNumberOfChildren};
 }
 
 const roadShoe = {permanentid: 'road', ec_name: 'Road shoe', ec_price: 90, additionalFields: {}};
 
 describe('ProductList children', () => {
-  it('shows the picked child, hands it to the card actions, and keeps it until the products are sent again', async () => {
+  it('shows the picked child, hands it to the card actions, and keeps it until the product changes', async () => {
     const renderActions = vi.fn((_: ProductCardProduct) => null as ReactNode);
-    const products = () => [{path: '/state/root/products', value: [trailShoe(), roadShoe]}];
+    const products = (trail = trailShoe()) => [
+      {path: '/state/root/products', value: [trail, roadShoe]},
+    ];
     const {pushDataModel} = mountSurface({
       component: {component: 'ProductList', products: {path: '/state/root/products'}},
       dataModel: products(),
@@ -368,6 +370,9 @@ describe('ProductList children', () => {
     expect(screen.getByText('$110.00')).toBeDefined();
 
     pushDataModel(products());
+    expect(screen.getByText('$110.00')).toBeDefined();
+
+    pushDataModel(products(trailShoe(5)));
     await screen.findByText('$120.00');
   });
 });

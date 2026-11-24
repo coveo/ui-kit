@@ -1,10 +1,10 @@
 import {useSyncExternalStore} from 'react';
-import {A2UIRenderer} from '@copilotkit/a2ui-renderer';
 import {useSession} from '../../context/session.js';
 import {
   SearchBoxOptionsContext,
   type SearchBoxOptions,
 } from '../../a2ui/SearchBox/search-box-context.js';
+import {A2UISurface} from '../../a2ui/surfaces.js';
 import {PromptInput} from '../PromptInput/PromptInput.js';
 
 /**
@@ -31,7 +31,7 @@ export function SessionSearchBox(options: SearchBoxOptions) {
   if (shellId !== undefined) {
     return (
       <SearchBoxOptionsContext.Provider value={options}>
-        <A2UIRenderer surfaceId={shellId} fallback={placeholderInput} />
+        <A2UISurface surfaceId={shellId} fallback={placeholderInput} />
       </SearchBoxOptionsContext.Provider>
     );
   }

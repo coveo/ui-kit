@@ -1,6 +1,6 @@
 import {useState, useRef, useEffect, useCallback} from 'react';
 
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react/v0_9';
 import type {Product} from '@coveo/thermidor-schema';
 import {ProductCarouselPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {A2UIProductCard} from '../ProductCard/ProductCard.js';
@@ -12,7 +12,7 @@ import styles from './ProductCarousel.module.css';
  * scroll-affordance nav buttons driven by local scroll state. The app may add actions to each card
  * through `ProductCardActionsContext`.
  */
-export const ProductCarousel = createReactComponent(
+export const ProductCarousel = createComponentImplementation(
   {
     name: 'ProductCarousel',
     schema: ProductCarouselPropsSchema,

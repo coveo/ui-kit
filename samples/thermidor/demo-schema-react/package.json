@@ -15,7 +15,8 @@
     "e2e:watch": "playwright test --ui"
   },
   "dependencies": {
-    "@copilotkit/a2ui-renderer": "1.88.0",
+    "@a2ui/react": "0.16.1",
+    "@a2ui/web_core": "0.16.1",
     "@coveo/thermidor": "workspace:*",
     "@coveo/thermidor-schema": "catalog:",
     "dompurify": "catalog:",

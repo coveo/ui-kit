@@ -45,22 +45,17 @@ async function createMockSession(): Promise<Session> {
   } as unknown as Session;
 }
 
-vi.mock('@copilotkit/a2ui-renderer', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@copilotkit/a2ui-renderer')>()),
-  A2UIProvider: ({
+vi.mock('../a2ui/surfaces.js', () => ({
+  ThermidorA2UIStream: ({
     onAction,
     children,
   }: {
     onAction: (message: unknown) => unknown;
-    children: React.ReactNode;
+    children?: React.ReactNode;
   }) => {
     capturedOnAction = onAction;
     return <>{children}</>;
   },
-}));
-
-vi.mock('../a2ui/surfaces.js', () => ({
-  ThermidorA2UIStream: ({children}: {children?: React.ReactNode}) => <>{children}</>,
 }));
 
 vi.mock('./TopBar/TopBar.js', () => ({

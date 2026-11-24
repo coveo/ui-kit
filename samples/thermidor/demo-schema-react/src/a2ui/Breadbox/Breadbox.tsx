@@ -1,5 +1,5 @@
 import {useRef} from 'react';
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react/v0_9';
 import {type BreadboxAction, BreadboxPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {CloseIcon} from '../icons/index.js';
 import {breadboxValues} from './breadbox-values.js';
@@ -13,11 +13,13 @@ import styles from './Breadbox.module.css';
  * is active. Removals are optimistic: the value leaves the breadbox at once while the facets and
  * the results catch up with the response.
  */
-export const Breadbox = createReactComponent(
+export const Breadbox = createComponentImplementation(
   {
     name: 'Breadbox',
     schema: BreadboxPropsSchema,
   },
+  // TODO(a2ui-react context): `context` is deprecated in @a2ui/react 0.16. Dispatch with
+  // `useA2uiSurface()?.dispatchAction(action, componentId)` once a component can read its own id.
   ({props, context}) => {
     const dispatch = (action: BreadboxAction) => context.dispatchAction(action);
     const {facets, deselect, clearAll} = useOptimisticBreadbox(props, dispatch);

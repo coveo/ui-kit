@@ -1,5 +1,5 @@
 import {useId} from 'react';
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react/v0_9';
 import {type CategoryFacetAction, CategoryFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {HighlightedText} from '../../components/HighlightedText/HighlightedText.js';
 import {FacetSearchMoreMatches} from '../FacetSearchMoreMatches/FacetSearchMoreMatches.js';
@@ -34,11 +34,13 @@ const ellipsePath = (path: string[]): string[] =>
  * only the facet value list), while descending, clearing the selected path and selecting an
  * ancestor rebuild the result set, so each carries `invalidates: ['results']`.
  */
-export const CategoryFacet = createReactComponent(
+export const CategoryFacet = createComponentImplementation(
   {
     name: 'CategoryFacet',
     schema: CategoryFacetPropsSchema,
   },
+  // TODO(a2ui-react context): `context` is deprecated in @a2ui/react 0.16. Dispatch with
+  // `useA2uiSurface()?.dispatchAction(action, componentId)` once a component can read its own id.
   ({props, context}) => {
     const labelId = useId();
     const searchInputId = useId();

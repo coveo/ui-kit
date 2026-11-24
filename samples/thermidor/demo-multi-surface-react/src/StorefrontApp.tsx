@@ -1,5 +1,4 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
-import {A2UIProvider, type A2UIClientEventMessage} from '@copilotkit/a2ui-renderer';
 import type {A2uiClientMessage} from '@coveo/thermidor';
 import {
   ProductCardActionsContext,
@@ -176,8 +175,8 @@ export function StorefrontApp() {
   );
 
   const handleAction = useCallback(
-    (message: A2UIClientEventMessage) => {
-      const userAction = (message as A2uiClientMessage).userAction;
+    (message: A2uiClientMessage) => {
+      const userAction = message.userAction;
       if (!userAction) {
         return;
       }
@@ -204,7 +203,7 @@ export function StorefrontApp() {
         }
         return;
       }
-      sendAction(view.view, message as A2uiClientMessage, view.visitId);
+      return sendAction(view.view, message, view.visitId);
     },
     [sendPrompt, sendAction, openAssistant]
   );
@@ -221,38 +220,36 @@ export function StorefrontApp() {
   );
 
   return (
-    <A2UIProvider catalog={catalog} onAction={handleAction}>
-      <ProductCardActionsContext.Provider value={renderCardActions}>
-        <ThermidorA2UIStream messages={a2uiMessages}>
-          <TopBar
-            currentListing={visit.page === 'listing' ? visit.slug : undefined}
+    <ProductCardActionsContext.Provider value={renderCardActions}>
+      <ThermidorA2UIStream catalog={catalog} messages={a2uiMessages} onAction={handleAction}>
+        <TopBar
+          currentListing={visit.page === 'listing' ? visit.slug : undefined}
+          onHome={() => navigate(visitHome())}
+          onListing={(slug) => navigate(visitListing(slug))}
+          // A search from the conversation's pages keeps the conversation in its panel.
+          onSearch={(query) => navigate(visitPrompt(query, undefined, threadOf(visit)))}
+          searchDisabled={request !== undefined}
+        />
+        <ReturnedVisitContext.Provider
+          value={
+            settledReturn === returned && returned?.visitId === visit.id
+              ? returned.count
+              : undefined
+          }
+        >
+          <Page
+            visit={visit}
+            conversationVisits={visitsOfThread(visitThreads.current, threadOf(visit))}
+            busy={request !== undefined}
+            onSend={sendPrompt}
             onHome={() => navigate(visitHome())}
-            onListing={(slug) => navigate(visitListing(slug))}
-            // A search from the conversation's pages keeps the conversation in its panel.
-            onSearch={(query) => navigate(visitPrompt(query, undefined, threadOf(visit)))}
-            searchDisabled={request !== undefined}
+            onBack={history.length > 1 ? goBack : undefined}
+            onShowResults={showResults}
           />
-          <ReturnedVisitContext.Provider
-            value={
-              settledReturn === returned && returned?.visitId === visit.id
-                ? returned.count
-                : undefined
-            }
-          >
-            <Page
-              visit={visit}
-              conversationVisits={visitsOfThread(visitThreads.current, threadOf(visit))}
-              busy={request !== undefined}
-              onSend={sendPrompt}
-              onHome={() => navigate(visitHome())}
-              onBack={history.length > 1 ? goBack : undefined}
-              onShowResults={showResults}
-            />
-          </ReturnedVisitContext.Provider>
-          <SessionInspector />
-        </ThermidorA2UIStream>
-      </ProductCardActionsContext.Provider>
-    </A2UIProvider>
+        </ReturnedVisitContext.Provider>
+        <SessionInspector />
+      </ThermidorA2UIStream>
+    </ProductCardActionsContext.Provider>
   );
 }
 

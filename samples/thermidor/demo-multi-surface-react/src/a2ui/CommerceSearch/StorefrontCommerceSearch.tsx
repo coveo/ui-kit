@@ -1,4 +1,4 @@
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react/v0_9';
 import {CommerceSearch} from '../../../../demo-schema-react/src/a2ui/CommerceSearch/CommerceSearch.js';
 import styles from '../../../../demo-schema-react/src/a2ui/CommerceSearch/CommerceSearch.module.css';
 import {useRestoreOnReturn} from './use-restore-on-return.js';
@@ -8,7 +8,7 @@ import {useRestoreOnReturn} from './use-restore-on-return.js';
  * browser history of its pages, so the layout records no history entries of its own: returning
  * to its page restores it instead (see `useRestoreOnReturn`).
  */
-export const StorefrontCommerceSearch = createReactComponent(
+export const StorefrontCommerceSearch = createComponentImplementation(
   // demo-schema-react's schema: this sample resolves `@coveo/thermidor-schema/zod3` against
   // another zod, whose props type is too deep for the renderer's binder to infer.
   {name: CommerceSearch.name, schema: CommerceSearch.schema},

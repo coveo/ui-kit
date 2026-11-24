@@ -1,5 +1,7 @@
-import {Catalog} from '@copilotkit/a2ui-renderer';
+import type {ReactComponentImplementation} from '@a2ui/react/v0_9';
+import {Catalog} from '@a2ui/web_core/v0_9';
 import {THERMIDOR_CATALOG_ID} from '@coveo/thermidor-schema/zod3';
+import {A2UI_PROTOCOL_VERSION} from '../../../demo-schema-react/src/a2ui/components.js';
 import {Breadbox} from '../../../demo-schema-react/src/a2ui/Breadbox/Breadbox.js';
 import {BundleDisplay} from '../../../demo-schema-react/src/a2ui/BundleDisplay/BundleDisplay.js';
 import {CategoryFacet} from '../../../demo-schema-react/src/a2ui/CategoryFacet/CategoryFacet.js';
@@ -29,8 +31,8 @@ import {StorefrontCommerceSearch} from './CommerceSearch/StorefrontCommerceSearc
  * the one the private `storefront-preview-search` surface allows, plus the `Breadbox` it mounts. Its
  * root is the storefront's own `CommerceSearch`, restored on Back.
  */
-export function createStorefrontCatalog() {
-  return new Catalog(THERMIDOR_CATALOG_ID, [
+export function createStorefrontCatalog(): Catalog<ReactComponentImplementation> {
+  return new Catalog<ReactComponentImplementation>(THERMIDOR_CATALOG_ID, A2UI_PROTOCOL_VERSION, [
     ProductCarousel,
     NextActionsBar,
     createComparisonTable(),

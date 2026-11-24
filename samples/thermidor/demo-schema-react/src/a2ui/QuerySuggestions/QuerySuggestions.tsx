@@ -1,5 +1,5 @@
 import {useEffect, useMemo, useState} from 'react';
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react/v0_9';
 import type {FetchSuggestionsPayload} from '@coveo/thermidor-schema';
 import {QuerySuggestionsPropsSchema} from '@coveo/thermidor-schema/zod3';
 import type {SuggestionSection} from '../../components/SuggestionsDropdown/index.js';
@@ -25,8 +25,10 @@ export const SUGGESTIONS_DEBOUNCE_MS = 150;
  * typing pauses, and an empty one while the input has the focus. It waits for the session to be
  * free unless the producer announces `fetchSuggestions` as concurrent (ADR-020).
  */
-export const QuerySuggestions = createReactComponent(
+export const QuerySuggestions = createComponentImplementation(
   {name: 'QuerySuggestions', schema: QuerySuggestionsPropsSchema},
+  // TODO(a2ui-react context): `context` is deprecated in @a2ui/react 0.16. Dispatch with
+  // `useA2uiSurface()?.dispatchAction(action, componentId)` once a component can read its own id.
   ({props, context}) => {
     const {query, submitted, focused, showSuggestions} = useSearchBoxQuery();
     const locked = useSurfaceLocked();

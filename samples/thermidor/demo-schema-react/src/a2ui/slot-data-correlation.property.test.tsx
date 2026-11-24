@@ -5,9 +5,9 @@ import {mountSurface} from './mount-surface.harness.js';
 
 /**
  * Under the inline-state model each leaf receives its OWN resolved state on `props` (bound from the
- * A2-UI data model), with no identity join. ProductList / ProductSummary are `createReactComponent`
+ * A2-UI data model), with no identity join. ProductList / ProductSummary are `createComponentImplementation`
  * implementations; these property tests mount each generated slot end-to-end through the real
- * thermidor catalog (its products/summary written to the data model via a `{path}` binding) and
+ * thermidor catalog (its products/summary written to the data model via a `{ path }` binding) and
  * assert the leaf renders exactly its resolved state — empty/loading otherwise.
  *
  * Each generated case is mounted independently (one leaf per surface): a slot's "own resolved

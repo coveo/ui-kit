@@ -1,4 +1,4 @@
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react/v0_9';
 
 import {FacetManagerPropsSchema} from '@coveo/thermidor-schema/zod3';
 import styles from './FacetManager.module.css';
@@ -10,7 +10,7 @@ import styles from './FacetManager.module.css';
  * `ChildList` (a `string[]` of ids passed through untouched) from `FacetManagerPropsSchema`; each
  * id is mounted by name via `buildChild(id)` — no positional read.
  */
-export const FacetManager = createReactComponent(
+export const FacetManager = createComponentImplementation(
   {
     name: 'FacetManager',
     schema: FacetManagerPropsSchema,

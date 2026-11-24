@@ -3,7 +3,7 @@ import {screen, cleanup, waitFor} from '@testing-library/react';
 import {mountSurface} from '../mount-surface.harness.js';
 
 /**
- * CommerceSearch is a `createReactComponent` container driven by the generic binder. It mounts its
+ * CommerceSearch is a `createComponentImplementation` container driven by the generic binder. It mounts its
  * named `sidebarChild` / `mainChild` slots by id via `buildChild`. Mounted root end-to-end, it
  * asserts the observable effect: the referenced child nodes render inside the container, and an
  * absent/dangling slot mounts nothing. Children are LayoutStack leaves keyed by a distinguishing
@@ -37,12 +37,12 @@ describe('CommerceSearch', () => {
     mountSurface({
       component: {
         component: 'CommerceSearch',
-        sidebarChild: 'search-sidebar',
-        mainChild: 'search-main',
+        sidebarChild: 'search_sidebar',
+        mainChild: 'search_main',
       },
       children: [
-        summaryChild('search-sidebar', 'SidebarQuery'),
-        summaryChild('search-main', 'MainQuery'),
+        summaryChild('search_sidebar', 'SidebarQuery'),
+        summaryChild('search_main', 'MainQuery'),
       ],
     });
 
@@ -53,8 +53,8 @@ describe('CommerceSearch', () => {
 
   it('mounts only the sidebar slot when only sidebarChild is set', async () => {
     mountSurface({
-      component: {component: 'CommerceSearch', sidebarChild: 'search-sidebar'},
-      children: [summaryChild('search-sidebar', 'SidebarQuery')],
+      component: {component: 'CommerceSearch', sidebarChild: 'search_sidebar'},
+      children: [summaryChild('search_sidebar', 'SidebarQuery')],
     });
 
     await waitFor(() => expect(screen.getByText('SidebarQuery')).toBeDefined());
@@ -63,8 +63,8 @@ describe('CommerceSearch', () => {
 
   it('mounts only the main slot when only mainChild is set', async () => {
     mountSurface({
-      component: {component: 'CommerceSearch', mainChild: 'search-main'},
-      children: [summaryChild('search-main', 'MainQuery')],
+      component: {component: 'CommerceSearch', mainChild: 'search_main'},
+      children: [summaryChild('search_main', 'MainQuery')],
     });
 
     await waitFor(() => expect(screen.getByText('MainQuery')).toBeDefined());
@@ -75,14 +75,14 @@ describe('CommerceSearch', () => {
     mountSurface({
       component: {
         component: 'CommerceSearch',
-        sidebarChild: 'search-sidebar',
-        mainChild: 'missing-main',
+        sidebarChild: 'search_sidebar',
+        mainChild: 'missing_main',
       },
-      children: [summaryChild('search-sidebar', 'SidebarQuery')],
+      children: [summaryChild('search_sidebar', 'SidebarQuery')],
     });
 
     await waitFor(() => expect(screen.getByText('SidebarQuery')).toBeDefined());
-    // `missing-main` names no component node → nothing mounted for it.
+    // `missing_main` names no component node → nothing mounted for it.
     expect(screen.queryByText('MainQuery')).toBeNull();
   });
 });

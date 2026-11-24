@@ -1,7 +1,6 @@
 import {useSyncExternalStore, type ReactElement, type ReactNode} from 'react';
 import {render, screen, waitFor} from '@testing-library/react';
 import {expect, vi} from 'vitest';
-import {A2UIProvider} from '@copilotkit/a2ui-renderer';
 import {createSession, type SerializedSession} from '@coveo/thermidor';
 import {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
 import {SessionProvider, useSession, type DemoSession} from '../context/session.js';
@@ -364,9 +363,13 @@ function SessionStream({children}: {children: ReactNode}) {
   );
   return (
     <SessionRequestProvider value={session}>
-      <A2UIProvider catalog={catalog} onAction={session.dispatchAction}>
-        <ThermidorA2UIStream messages={a2uiMessages}>{children}</ThermidorA2UIStream>
-      </A2UIProvider>
+      <ThermidorA2UIStream
+        catalog={catalog}
+        messages={a2uiMessages}
+        onAction={session.dispatchAction}
+      >
+        {children}
+      </ThermidorA2UIStream>
     </SessionRequestProvider>
   );
 }

@@ -1,5 +1,5 @@
 import {useOptimistic, useRef} from 'react';
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react/v0_9';
 import type {PaginationAction} from '@coveo/thermidor-schema';
 import {PaginationPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {useGesture} from '../session-request.js';
@@ -9,8 +9,10 @@ import styles from './Pagination.module.css';
 const NUMBER_OF_PAGES = 5;
 
 /** A2-UI component for the `pagination` controls. */
-export const Pagination = createReactComponent(
+export const Pagination = createComponentImplementation(
   {name: 'Pagination', schema: PaginationPropsSchema},
+  // TODO(a2ui-react context): `context` is deprecated in @a2ui/react 0.16. Dispatch with
+  // `useA2uiSurface()?.dispatchAction(action, componentId)` once a component can read its own id.
   ({props, context}) => {
     const {totalPages} = props;
 
