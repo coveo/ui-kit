@@ -1509,11 +1509,11 @@ importers:
         specifier: workspace:*
         version: link:../relay
       '@mantine/core':
-        specifier: 9.8.0
-        version: 9.8.0(@mantine/hooks@9.8.0(react@19.3.1))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: 9.8.1
+        version: 9.8.1(@mantine/hooks@9.8.1(react@19.3.1))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@mantine/hooks':
-        specifier: 9.8.0
-        version: 9.8.0(react@19.3.1)
+        specifier: 9.8.1
+        version: 9.8.1(react@19.3.1)
       '@monaco-editor/react':
         specifier: 4.7.0
         version: 4.7.0(monaco-editor@0.57.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -2351,8 +2351,8 @@ importers:
   samples/thermidor/demo-multi-surface-react:
     dependencies:
       '@copilotkit/a2ui-renderer':
-        specifier: 1.85.0
-        version: 1.85.0(@ag-ui/core@1.0.2(zod@3.25.76))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: 1.88.0
+        version: 1.88.0(@ag-ui/core@1.0.2(zod@3.25.76))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@coveo/thermidor':
         specifier: workspace:*
         version: link:../../../packages/thermidor
@@ -2397,8 +2397,8 @@ importers:
   samples/thermidor/demo-schema-react:
     dependencies:
       '@copilotkit/a2ui-renderer':
-        specifier: 1.85.0
-        version: 1.85.0(@ag-ui/core@1.0.2(zod@3.25.76))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: 1.88.0
+        version: 1.88.0(@ag-ui/core@1.0.2(zod@3.25.76))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@coveo/thermidor':
         specifier: workspace:*
         version: link:../../../packages/thermidor
@@ -2505,14 +2505,14 @@ packages:
   '@adobe/css-tools@4.5.0':
     resolution: {integrity: sha512-6OzddxPio9UiWTCemp4N8cYLV2ZN1ncRnV1cVGtve7dhPOtRkleRyx32GQCYSwDYgaHU3USMm84tNsvKzRCa1Q==}
 
-  '@ag-ui/a2ui-middleware@0.0.10':
-    resolution: {integrity: sha512-2BQFUQ9vJzUAQSR0dNW/ijhyH8KpiRWISSLTP6mIe6ENyQ2cM1/XLG38/Dcb69olcs36gtZADZzAQWcno5H6fA==}
+  '@ag-ui/a2ui-middleware@0.0.16':
+    resolution: {integrity: sha512-Q/yUAZWGzQDip2aVxfeCu2+HmfcPJrw6XOQwGeX9znxqC/S9xzdBpH/c8eVWZvab6KyxitfgaKBzUyPOkBFj4Q==}
     peerDependencies:
-      '@ag-ui/client': '>=0.0.40'
+      '@ag-ui/client': '>=1.0.0'
       rxjs: 7.8.1
 
-  '@ag-ui/a2ui-toolkit@0.0.4':
-    resolution: {integrity: sha512-9VPmgpCAsFVICk7z23kh+Kp/BwYMxw0D0KGjOiKXhm1MAH+Wid2iC3yKsXso+q7UZZiyhWgeDUSgaAkltyLmGg==}
+  '@ag-ui/a2ui-toolkit@0.0.5':
+    resolution: {integrity: sha512-klYOXh+L+X8yM0EdrHJGrKmh7G1bKBvO/Zo4ryl6w5JlkXCrqkCeiSLtwB3UeN2Z1w61y1eMmzWn92q9c4/D8w==}
 
   '@ag-ui/client@0.0.59':
     resolution: {integrity: sha512-d7++r8sBAq6z9G/D/WKrMznQ1Mdvew14pCqOVATReFIvl06mCi1BPqTwmos3zCDGAIiSgcvxc/8m472rYQgFFQ==}
@@ -3744,8 +3744,8 @@ packages:
   '@colordx/core@5.8.0':
     resolution: {integrity: sha512-cG0QJAO6VkaRUlIb0zOzX9gfJgs1pjoOL9gZ/PK1kfvBs0GCkADu5oQh6gPxXgQnZ3gV575h+lQRC0NlMDTclA==}
 
-  '@copilotkit/a2ui-renderer@1.85.0':
-    resolution: {integrity: sha512-o4qetLwSEMD1WK28xcAQGIpHiGD6693/q7UnJe5t2dBR1kurWsAIRHn6zx5V++PnVWS0cnxxlIZk7DBsMF9bWA==}
+  '@copilotkit/a2ui-renderer@1.88.0':
+    resolution: {integrity: sha512-bMnJAZ2rD3gvowGMoHu3VmAeq9WpZTJ7SKDO4yFahRu7+ykwlnlg0wrkk2ursue6jnyQ5kFILvYdhm3nBd253Q==}
     peerDependencies:
       react: 19.3.1
       react-dom: 19.3.1
@@ -3758,8 +3758,8 @@ packages:
   '@copilotkit/license-verifier@0.5.0':
     resolution: {integrity: sha512-vrwKtIpYwF0FT9ZoYASH8owa2cGV0dhDvJGaCRaRMStwDxpc6DRdydKkhx8cWZXyBRxEYcq/Vygv4JvevhQQdQ==}
 
-  '@copilotkit/shared@1.85.0':
-    resolution: {integrity: sha512-ZsSmbVHzbs9RbtgSRF207b2/d1HhKHbDDLP2wfXJkgvMuPBqUe5fgyuxy9wS08Ugmyx6quSKzcgvFdyjg176kw==}
+  '@copilotkit/shared@1.88.0':
+    resolution: {integrity: sha512-EnTWP9hj6at+VjcY7whS6E2tnEty0wr3zK76l+kn69VNKb+5owOkebiW+AmPfwHNYXdAUWgy8g7UckjW0YM/bw==}
     peerDependencies:
       '@ag-ui/core': '>=0.0.48'
 
@@ -5399,15 +5399,15 @@ packages:
   '@lwc/wire-service@7.1.5':
     resolution: {integrity: sha512-obMg8xcCrqSSBGS8G4iKaELFVIEFwaEJm8cL1wftEiqXKkjpNCkSZ/IjPX20vqcLNRmmBlGu6+uS1oligYxTpA==}
 
-  '@mantine/core@9.8.0':
-    resolution: {integrity: sha512-+2Y+GBM6WvBJgBBb7hrfEvHbyljuRsOqC1GjxNpmX6NcD2SwmDXf9ZVFfquyXvi8fFerMrTpAwYdfb6k2PGAlQ==}
+  '@mantine/core@9.8.1':
+    resolution: {integrity: sha512-+ayBTxun7MslJL6x4qaylVy6TyHu3o68+PH22gt70eJSHgy0CHYR/c2q+BYxS8WvORuc4f5mr0xFbi0vzlgHug==}
     peerDependencies:
-      '@mantine/hooks': 9.8.0
+      '@mantine/hooks': 9.8.1
       react: 19.3.1
       react-dom: 19.3.1
 
-  '@mantine/hooks@9.8.0':
-    resolution: {integrity: sha512-fUA3PS8Ys2kih6VEuozgdEO0UyiGhryTJqx+Bf2lxee1XpXQ0XFXsQY7lNB4f+eBDzYCczYykQjIIuUzyJft7A==}
+  '@mantine/hooks@9.8.1':
+    resolution: {integrity: sha512-aAbY3zcqrS/n+wbMnKBXMiF5TJ7HZ06sH455Cf4ZkWRXko9Td2FYSe9aONCzXFaW62XqaWHBICyeIsAmUds3uA==}
     peerDependencies:
       react: 19.3.1
 
@@ -17020,14 +17020,14 @@ snapshots:
 
   '@adobe/css-tools@4.5.0': {}
 
-  '@ag-ui/a2ui-middleware@0.0.10(@ag-ui/client@1.0.2)(rxjs@7.8.1)':
+  '@ag-ui/a2ui-middleware@0.0.16(@ag-ui/client@1.0.2)(rxjs@7.8.1)':
     dependencies:
-      '@ag-ui/a2ui-toolkit': 0.0.4
+      '@ag-ui/a2ui-toolkit': 0.0.5
       '@ag-ui/client': 1.0.2
       clarinet: 0.12.6
       rxjs: 7.8.1
 
-  '@ag-ui/a2ui-toolkit@0.0.4': {}
+  '@ag-ui/a2ui-toolkit@0.0.5': {}
 
   '@ag-ui/client@0.0.59':
     dependencies:
@@ -18809,11 +18809,12 @@ snapshots:
 
   '@colordx/core@5.8.0': {}
 
-  '@copilotkit/a2ui-renderer@1.85.0(@ag-ui/core@1.0.2(zod@3.25.76))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+  '@copilotkit/a2ui-renderer@1.88.0(@ag-ui/core@1.0.2(zod@3.25.76))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@a2ui/web_core': 0.15.0
-      '@copilotkit/shared': 1.85.0(@ag-ui/core@1.0.2(zod@3.25.76))
+      '@copilotkit/shared': 1.88.0(@ag-ui/core@1.0.2(zod@3.25.76))
       clsx: 2.1.1
+      marked: 12.0.2
       zod: 3.25.76
       zod-to-json-schema: 3.25.2(zod@3.25.76)
     optionalDependencies:
@@ -18825,9 +18826,9 @@ snapshots:
 
   '@copilotkit/license-verifier@0.5.0': {}
 
-  '@copilotkit/shared@1.85.0(@ag-ui/core@1.0.2(zod@3.25.76))':
+  '@copilotkit/shared@1.88.0(@ag-ui/core@1.0.2(zod@3.25.76))':
     dependencies:
-      '@ag-ui/a2ui-middleware': 0.0.10(@ag-ui/client@1.0.2)(rxjs@7.8.1)
+      '@ag-ui/a2ui-middleware': 0.0.16(@ag-ui/client@1.0.2)(rxjs@7.8.1)
       '@ag-ui/client': 1.0.2
       '@ag-ui/core': 1.0.2(zod@3.25.76)
       '@copilotkit/license-verifier': 0.5.0
@@ -20525,10 +20526,10 @@ snapshots:
 
   '@lwc/wire-service@7.1.5': {}
 
-  '@mantine/core@9.8.0(@mantine/hooks@9.8.0(react@19.3.1))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+  '@mantine/core@9.8.1(@mantine/hooks@9.8.1(react@19.3.1))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@floating-ui/react': 0.27.20(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@mantine/hooks': 9.8.0(react@19.3.1)
+      '@mantine/hooks': 9.8.1(react@19.3.1)
       clsx: 2.1.1
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
@@ -20538,7 +20539,7 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@mantine/hooks@9.8.0(react@19.3.1)':
+  '@mantine/hooks@9.8.1(react@19.3.1)':
     dependencies:
       react: 19.3.1
 
