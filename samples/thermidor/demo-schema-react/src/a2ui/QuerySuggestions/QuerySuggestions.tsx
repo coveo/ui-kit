@@ -6,12 +6,12 @@ import type {SuggestionSection} from '../../components/SuggestionsDropdown/index
 import {useDebouncedValue} from '../../hooks/use-debounced-value.js';
 import {useSearchBoxQuery} from '../SearchBox/search-box-context.js';
 import {
-  nodeState,
-  useActionFailed,
+  useConcurrentInFlight,
+  useDispatchOutcome,
   useLatestWhenFree,
-  useReadSnapshot,
   useSessionBusy,
   useSurfaceLocked,
+  type NodeAction,
 } from '../session-request.js';
 import {useRecentQueryEdits} from './use-recent-query-edits.js';
 import styles from './QuerySuggestions.module.css';
@@ -34,8 +34,6 @@ export const QuerySuggestions = createComponentImplementation(
     const {query, submitted, focused, showSuggestions} = useSearchBoxQuery();
     const locked = useSurfaceLocked();
     const busy = useSessionBusy();
-    const actionFailed = useActionFailed();
-    const readSnapshot = useReadSnapshot();
     const typed = query.trim() ? query : '';
     const debouncedQuery = useDebouncedValue(typed, SUGGESTIONS_DEBOUNCE_MS);
 
@@ -66,45 +64,41 @@ export const QuerySuggestions = createComponentImplementation(
       () => (wanted ? {query: debouncedQuery, answered, epoch} : undefined),
       [wanted, debouncedQuery, answered, epoch]
     );
-    // A concurrent suggestion is not the session's request, so its dispatches in flight are counted.
-    const [inFlight, setInFlight] = useState(0);
     const surfaceId = context.dataContext.surface?.id;
     const nodeId = context.componentModel.id;
-    // Its content, as the session may rebuild the node of a partial write on any other update.
-    const ownState = () =>
-      surfaceId === undefined
-        ? undefined
-        : JSON.stringify(nodeState(readSnapshot().state, surfaceId, nodeId));
+    const suggestions = useMemo<NodeAction | undefined>(
+      () =>
+        surfaceId === undefined
+          ? undefined
+          : {surfaceId, sourceComponentId: nodeId, name: 'fetchSuggestions'},
+      [surfaceId, nodeId]
+    );
+    // A concurrent suggestion is not the session's request: the session lists it apart.
+    const suggestionsInFlight = useConcurrentInFlight(suggestions);
+    const dispatchOutcome = useDispatchOutcome();
     useLatestWhenFree(
       request,
       (latest) => {
         const payload: FetchSuggestionsPayload = {query: latest.query};
-        const stateBefore = ownState();
-        setInFlight((count) => count + 1);
-        void Promise.resolve(
-          context.dispatchAction({event: {name: 'fetchSuggestions', context: payload}})
-        ).then(() => {
-          setInFlight((count) => count - 1);
-          // The session applies only a node's latest concurrent answer, and sends one suggestion at
-          // a time otherwise, so an older dispatch that resolves late changes nothing.
-          if (actionFailed('QuerySuggestions', 'fetchSuggestions')) {
+        const send = () =>
+          context.dispatchAction({event: {name: 'fetchSuggestions', context: payload}});
+        // Only an applied suggestion refreshes the lists: a superseded one leaves that to the
+        // dispatch that took over.
+        void (
+          suggestions === undefined
+            ? Promise.resolve(send()).then(() => 'applied')
+            : dispatchOutcome(suggestions, send)
+        ).then((outcome) => {
+          if (outcome !== 'applied') {
             return;
           }
-          // A concurrent suggestion that fails resolves quietly, like one that succeeds, so the
-          // empty input's answer counts as fresh either way: a silent failure then shows the
-          // previous list, which may miss a search made since, but an identical answer must show.
           if (latest.epoch !== undefined) {
             setFreshEmptyEpoch(latest.epoch);
           }
-          // The edits stay hidden until this node's content changes, which a streaming answer or
-          // the instant products never do: an identical answer keeps them hidden until the next
-          // one that differs.
-          if (ownState() !== stateBefore) {
-            refreshed(latest.answered);
-          }
+          refreshed(latest.answered);
         });
       },
-      surfaceId === undefined ? undefined : {surfaceId, name: 'fetchSuggestions'}
+      suggestions
     );
 
     const discarding = submitted || (typed === '' && props.query !== '');
@@ -113,7 +107,7 @@ export const QuerySuggestions = createComponentImplementation(
       setDiscardedQuery(props.query);
     }
 
-    const awaitingNewer = busy || inFlight > 0 || debouncedQuery !== typed;
+    const awaitingNewer = busy || suggestionsInFlight || debouncedQuery !== typed;
     // The answer for the empty input never stands in for typed text, which it does not filter.
     const current =
       typed === ''

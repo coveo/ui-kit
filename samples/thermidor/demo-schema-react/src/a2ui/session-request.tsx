@@ -124,10 +124,6 @@ export function useActionFailed(): (component: string, name: string) => boolean 
   );
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
 /** An action that `useLatestWhenFree` sends from a surface. */
 export interface SurfaceAction {
   surfaceId: string;
@@ -175,26 +171,6 @@ export function useLatestWhenFree<T>(
     flush();
     return source.subscribe(flush);
   }, [source, value, surfaceId, concurrentName]);
-}
-
-/**
- * The state of node `nodeId` on surface `surfaceId`, at its `/state/<nodeId>` pointer. The session
- * may rebuild the node on any update, so compare its content rather than its identity.
- */
-export function nodeState(
-  state: SessionSnapshot['state'],
-  surfaceId: string,
-  nodeId: string
-): unknown {
-  const surfaceState = state[surfaceId];
-  const nodes = isRecord(surfaceState) ? surfaceState['state'] : undefined;
-  return isRecord(nodes) ? nodes[nodeId] : undefined;
-}
-
-/** Reads the session's current snapshot, outside of rendering. */
-export function useReadSnapshot(): () => SessionSnapshot {
-  const source = useContext(SessionRequestContext);
-  return source.getSnapshot;
 }
 
 /** An action dispatched from a node. */
