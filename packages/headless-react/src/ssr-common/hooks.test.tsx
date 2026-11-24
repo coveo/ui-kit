@@ -254,5 +254,17 @@ describe('SSR state provider', () => {
       expect(controller.subscribe).toHaveBeenCalledTimes(1);
       expect(latestMethods).toBe(firstMethods);
     });
+
+    test('should throw when two controllers would get the same hook', () => {
+      expect(() =>
+        buildControllerHooks(
+          mockSingletonContext,
+          {commerceContext: {}, context: {}},
+          {hookNames: {context: 'useCommerceContext'}}
+        )
+      ).toThrow(
+        'The commerceContext and context controllers would both get the useCommerceContext hook'
+      );
+    });
   });
 });

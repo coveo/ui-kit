@@ -18,4 +18,13 @@ describe('defineCommerceEngine', () => {
     expect(controllers.useCommerceContext).toBeTypeOf('function');
     expect(controllers).not.toHaveProperty('useContext');
   });
+
+  it('should throw when a controller would get the hook of the built-in context', () => {
+    expect(() =>
+      defineCommerceEngine({
+        configuration: getSampleCommerceEngineConfiguration(),
+        controllers: {commerceContext: defineProductList()},
+      })
+    ).toThrow('would both get the useCommerceContext hook');
+  });
 });
