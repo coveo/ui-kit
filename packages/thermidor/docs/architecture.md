@@ -211,11 +211,12 @@ Derivation follows the A2-UI surface lifecycle in stream order: `deleteSurface` 
 
 ### The v0.9 renderer projection
 
-Agent Gateway emits A2-UI v1.0, and every available renderer consumes v0.9. `src/session/a2ui-v09-projection.ts` converts each surface snapshot's messages (`convertA2uiMessages`), and `appendToRendererStream` adds them to the session's renderer stream:
+Agent Gateway emits A2-UI v1.0, and every available renderer consumes v0.9. While the gateway switches from the v1.0 candidate (`version: "v1.0"`, `{ path }` bindings) to the final v1.0 (`version: "1.0"`, `{ "@path" }` bindings), the projection reads both and produces the same v0.9 output for each. `src/session/a2ui-v09-projection.ts` converts each surface snapshot's messages (`convertA2uiMessages`), and `appendToRendererStream` adds them to the session's renderer stream:
 
-- it splits each v1.0 `createSurface` into v0.9 `createSurface` + `updateComponents`, forwarding flat nodes byte-for-byte so every `{ path }` binding survives, and drops a `createSurface` without a `catalogId`;
+- it splits each v1.0 `createSurface` into v0.9 `createSurface` + `updateComponents`, and drops a `createSurface` without a `catalogId`;
+- it forwards flat nodes as they are, ids included, except that in a `"1.0"` message a final binding `{ "@path": x }` becomes the v0.9 binding `{ path: x }` at any depth. In a candidate `"v1.0"` message, `@path` is not a binding marker and is left alone. A binding is an object whose only key is `@path`, holding a string; other `path` keys, such as a ChildList template's, are left alone;
 - it emits one `updateDataModel` per key of the inline `dataModel`, at that key's root JSON Pointer (`isLoading` → `/isLoading`; a key already written as a pointer, such as `/state/<nodeId>`, is kept);
-- it passes `updateDataModel`, `updateComponents` and `deleteSurface` through;
+- it passes `updateDataModel`, `updateComponents` (with its bindings converted) and `deleteSurface` through, and turns an `updateDataModel` with `value: null` into a v0.9 deletion, which omits `value`;
 - the stream follows the surface lifecycle across every run of the session: a `deleteSurface` is inserted before a `createSurface` that re-creates a live surface, since a renderer refuses to create a surface that exists, and an operation on a surface that is not live is dropped.
 
 It is the single place that rewrites a message envelope, recorded as a charter exception with a retirement condition in the [ADR-015 addendum](./internal/adr/ADR-015-surface-and-route-derivation.md).

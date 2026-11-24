@@ -232,7 +232,7 @@ A session restored with a token resumes through `initialize`; see `SessionConfig
 The following are intentionally **not yet implemented** and are recorded as debt or deferred work:
 
 - **Interim surface derivation** — `surfaces` is a typed projection derived from `activities`, annotated as interim; the core interprets no `rootComponentType`; consumers read it. It is retired once the server sends typed routing.
-- **The A2-UI v0.9 renderer projection** — `session.a2uiMessages` downgrades Agent Gateway's v1.0 stream for today's v0.9 renderers. Removed in a breaking change once a v1.0-capable renderer exists.
+- **The A2-UI v0.9 renderer projection** — `session.a2uiMessages` downgrades Agent Gateway's v1.0 stream, candidate (`"v1.0"`) or final (`"1.0"`), for today's v0.9 renderers. Removed in a breaking change once a v1.0-capable renderer exists.
 - **Renderer stream bypasses validation** — inbound ops that in-transit validation drops from `session.state` still reach the renderer through `session.a2uiMessages`, and so does the component state seeded by `createSurface.dataModel`, which is never validated. A fix must cover both paths.
 - **Enforced action-payload typing at the renderer boundary** — the renderer hands `dispatchAction` a loosely typed action message, so per-component action typing is applied by convention (the consumer opts into the generated `XxxAction` types) rather than enforced at the boundary. Recoverable later if the package owns binding resolution.
 - **Package rename** — deferred as low-stakes; the package remains `@coveo/thermidor`.

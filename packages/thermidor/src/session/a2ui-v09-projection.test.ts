@@ -483,6 +483,316 @@ describe('convertA2uiMessages loading placeholders', () => {
   });
 });
 
+describe('convertA2uiMessages reads both the v1.0 candidate and the final v1.0', () => {
+  type Binding = (path: string) => Record<string, string>;
+  const candidate: Binding = (path) => ({path});
+  const final: Binding = (path) => ({'@path': path});
+
+  /**
+   * The same gateway messages, in the candidate (`"v1.0"`, `{path}`) or final (`"1.0"`,
+   * `{"@path"}`) wire shape.
+   */
+  function gatewayMessages(version: string, bind: Binding): Record<string, unknown>[] {
+    return [
+      {
+        version,
+        createSurface: {
+          surfaceId: 'ui-commerce-water-sports-1',
+          catalogId: 'commerce',
+          sendDataModel: true,
+          components: [
+            {id: 'root', component: 'CommerceSearch', children: ['facet_category_2', 'search-top']},
+            {
+              id: 'facet_category_2',
+              component: 'CategoryFacet',
+              values: bind('/state/facet_category_2/values'),
+              action: {
+                event: {
+                  name: 'toggleSelect',
+                  context: {facetId: 'ec_category', path: bind('/state/facet_category_2/path')},
+                },
+              },
+            },
+            {
+              id: 'search-top',
+              component: 'ProductList',
+              products: {componentId: 'product_card', path: '/state/search-top/products'},
+              slots: {
+                header: {child: 'query_summary_2', visible: bind('/state/search-top/hasResults')},
+                footer: 'pagination_2',
+              },
+              columns: [{label: bind('/state/search-top/label'), width: 2}],
+            },
+          ],
+          dataModel: {
+            '/state/facet_category_2': {
+              values: [{value: 'Surf', path: ['Water sports', 'Surf'], state: 'idle'}],
+              path: ['Water sports'],
+            },
+            isLoading: false,
+          },
+        },
+      },
+      {
+        version,
+        updateComponents: {
+          surfaceId: 'ui-commerce-water-sports-1',
+          components: [
+            {
+              id: 'query_summary_2',
+              component: 'QuerySummary',
+              query: bind('/state/query_summary_2/q'),
+            },
+          ],
+        },
+      },
+      {
+        version,
+        updateDataModel: {
+          surfaceId: 'ui-commerce-water-sports-1',
+          path: '/state/facet_category_2/path',
+          value: ['Water sports', 'Surf'],
+        },
+      },
+      {
+        version,
+        updateDataModel: {
+          surfaceId: 'ui-commerce-water-sports-1',
+          path: '/state/query_summary_2',
+          value: null,
+        },
+      },
+      {version, deleteSurface: {surfaceId: 'ui-commerce-water-sports-1'}},
+    ];
+  }
+
+  function dataModelWrite(messages: A2uiV09Message[], path: string) {
+    return messages.find(
+      (message) => (message['updateDataModel'] as {path?: string} | undefined)?.path === path
+    );
+  }
+
+  it('projects a final 1.0 stream to the same v0.9 messages as the candidate stream', () => {
+    expect(project(gatewayMessages('1.0', final))).toEqual(
+      project(gatewayMessages('v1.0', candidate))
+    );
+  });
+
+  it('turns final bindings into v0.9 path bindings, nested ones included', () => {
+    const converted = project(gatewayMessages('1.0', final));
+    const [, updateComponents] = converted;
+    const [, facet, list] = (
+      updateComponents['updateComponents'] as {
+        components: Record<string, unknown>[];
+      }
+    ).components;
+
+    expect(updateComponents['version']).toBe('v0.9');
+    expect(facet['values']).toEqual({path: '/state/facet_category_2/values'});
+    expect(facet['action']).toEqual({
+      event: {
+        name: 'toggleSelect',
+        context: {facetId: 'ec_category', path: {path: '/state/facet_category_2/path'}},
+      },
+    });
+    expect(list['slots']).toEqual({
+      header: {child: 'query_summary_2', visible: {path: '/state/search-top/hasResults'}},
+      footer: 'pagination_2',
+    });
+    expect(list['columns']).toEqual([{label: {path: '/state/search-top/label'}, width: 2}]);
+    expect(dataModelWrite(converted, '/state/query_summary_2')).toEqual({
+      version: 'v0.9',
+      updateDataModel: {surfaceId: 'ui-commerce-water-sports-1', path: '/state/query_summary_2'},
+    });
+  });
+
+  it('leaves binding-shaped data-model values alone', () => {
+    const bindingShaped = {'@path': '/x'};
+    const converted = project([
+      {
+        version: '1.0',
+        createSurface: {
+          surfaceId: 's',
+          catalogId: 'commerce',
+          components: [{id: 'root', component: 'Text'}],
+          dataModel: {'/state/root': {text: bindingShaped}},
+        },
+      },
+      {
+        version: '1.0',
+        updateDataModel: {surfaceId: 's', path: '/state/root/text', value: bindingShaped},
+      },
+    ]);
+
+    expect(dataModelWrite(converted, '/state/root')).toEqual({
+      version: 'v0.9',
+      updateDataModel: {surfaceId: 's', path: '/state/root', value: {text: {'@path': '/x'}}},
+    });
+    expect(dataModelWrite(converted, '/state/root/text')).toEqual({
+      version: 'v0.9',
+      updateDataModel: {surfaceId: 's', path: '/state/root/text', value: {'@path': '/x'}},
+    });
+  });
+
+  it('leaves a final ChildList template alone', () => {
+    const template = {componentId: 'product_card', path: '/state/product_list_2/products'};
+    const [, updateComponents] = project([
+      {
+        version: '1.0',
+        createSurface: {
+          surfaceId: 's',
+          catalogId: 'commerce',
+          components: [{id: 'product_list_2', component: 'ProductList', children: template}],
+        },
+      },
+    ]);
+
+    expect(updateComponents['updateComponents']).toEqual({
+      surfaceId: 's',
+      components: [{id: 'product_list_2', component: 'ProductList', children: template}],
+    });
+  });
+
+  it.each([['v0.9'], ['2.0']])(
+    'forwards a version %s message exactly as given, @path bindings included',
+    (version) => {
+      const message = {
+        version,
+        updateComponents: {
+          surfaceId: 's',
+          components: [{id: 'root', component: 'Text', text: {'@path': '/state/root/text'}}],
+        },
+      };
+      const before = structuredClone(message);
+
+      const converted = project([message]);
+
+      expect(converted).toHaveLength(1);
+      expect(converted[0]).toBe(message);
+      expect(message).toEqual(before);
+    }
+  );
+
+  it('converts updateDataModel first when a malformed message also carries updateComponents', () => {
+    expect(
+      project([
+        {
+          version: '1.0',
+          updateDataModel: {surfaceId: 's', path: '/state/root', value: 1},
+          updateComponents: {surfaceId: 's', components: []},
+        },
+      ])
+    ).toEqual([
+      {version: 'v0.9', updateDataModel: {surfaceId: 's', path: '/state/root', value: 1}},
+    ]);
+  });
+
+  describe('converts @path only in a final 1.0 message', () => {
+    const node = {id: 'root', component: 'Document', document: {'@path': '/literal'}};
+
+    it.each([
+      [
+        'createSurface',
+        {createSurface: {surfaceId: 's', catalogId: 'commerce', components: [node]}},
+      ],
+      ['updateComponents', {updateComponents: {surfaceId: 's', components: [node]}}],
+    ])('keeps an @path literal in a candidate v1.0 %s unchanged', (_operation, operation) => {
+      const converted = project([{version: 'v1.0', ...operation}]);
+
+      expect(converted.at(-1)?.['updateComponents']).toEqual({surfaceId: 's', components: [node]});
+    });
+
+    it.each([
+      [
+        'createSurface',
+        {createSurface: {surfaceId: 's', catalogId: 'commerce', components: [node]}},
+      ],
+      ['updateComponents', {updateComponents: {surfaceId: 's', components: [node]}}],
+    ])('turns the same prop in a final 1.0 %s into a path binding', (_operation, operation) => {
+      const converted = project([{version: '1.0', ...operation}]);
+
+      expect(converted.at(-1)?.['updateComponents']).toEqual({
+        surfaceId: 's',
+        components: [{id: 'root', component: 'Document', document: {path: '/literal'}}],
+      });
+    });
+
+    it('forwards a candidate updateComponents body as it arrived', () => {
+      const updateComponents = {surfaceId: 's', components: [node]};
+
+      const [converted] = project([{version: 'v1.0', updateComponents}]);
+
+      expect(converted['updateComponents']).toBe(updateComponents);
+    });
+  });
+
+  it.each([
+    ['a non-string @path', {'@path': 3}],
+    ['an @path beside other keys', {'@path': '/state/x', fallback: 'none'}],
+    ['a v0.9 binding', {path: '/state/x'}],
+  ])('keeps %s as it is', (_name, value) => {
+    const [, updateComponents] = project([
+      {
+        version: '1.0',
+        createSurface: {
+          surfaceId: 's',
+          catalogId: 'commerce',
+          components: [{id: 'root', component: 'Text', text: value}],
+        },
+      },
+    ]);
+
+    expect(updateComponents['updateComponents']).toEqual({
+      surfaceId: 's',
+      components: [{id: 'root', component: 'Text', text: value}],
+    });
+  });
+
+  it('passes snake_case and hyphenated component ids through unchanged', () => {
+    const ids = (version: string, bind: Binding) =>
+      project(gatewayMessages(version, bind)).flatMap((message) =>
+        (
+          (message['updateComponents'] as {components?: {id: string}[]} | undefined)?.components ??
+          []
+        ).map(({id}) => id)
+      );
+
+    expect(ids('1.0', final)).toEqual([
+      'root',
+      'facet_category_2',
+      'search-top',
+      'query_summary_2',
+    ]);
+    expect(ids('v1.0', candidate)).toEqual(ids('1.0', final));
+  });
+
+  it('never mutates the final messages it reads', () => {
+    const messages = gatewayMessages('1.0', final);
+    const before = structuredClone(messages);
+
+    project(messages);
+
+    expect(messages).toEqual(before);
+  });
+
+  it('deletes a live surface before a final 1.0 createSurface replaces it', () => {
+    const create = {
+      version: '1.0',
+      createSurface: {surfaceId: 'a', catalogId: 'commerce', components: []},
+    };
+    const stream = appendToRendererStream(
+      appendToRendererStream(EMPTY_RENDERER_STREAM, project([create])),
+      project([create])
+    );
+
+    expect(stream.messages).toEqual([
+      {version: 'v0.9', createSurface: {surfaceId: 'a', catalogId: 'commerce'}},
+      {version: 'v0.9', deleteSurface: {surfaceId: 'a'}},
+      {version: 'v0.9', createSurface: {surfaceId: 'a', catalogId: 'commerce'}},
+    ]);
+  });
+});
+
 describe('appendToRendererStream', () => {
   const create = (surfaceId: string) => ({version: 'v0.9', createSurface: {surfaceId}});
   const remove = (surfaceId: string) => ({version: 'v0.9', deleteSurface: {surfaceId}});
