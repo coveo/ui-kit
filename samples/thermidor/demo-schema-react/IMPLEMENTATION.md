@@ -140,7 +140,7 @@ Search controls show the shopper's choice right away instead of waiting for the 
 - **ADR-013** — Flat A2-UI v1.0 adjacency-list node.
 - **ADR-007** — A2-UI adjacency-list composition.
 
-`@coveo/thermidor` (`packages/thermidor/docs/internal/adr/`):
+`@coveo/thermidor` (`packages/thermidor/contributors/adr/`):
 
 - **ADR-015** — Surface derivation (`response.surfaces`), with addenda for the v0.9 renderer projection and for loading placeholders.
 - **ADR-016** — Inline-state consumption: renderers read resolved props, and `session.dispatchAction` is the single dispatch entry point (the remote controller was removed).

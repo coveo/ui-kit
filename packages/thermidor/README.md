@@ -249,4 +249,4 @@ The API report lives in `api-report/`. When the public API changes, run `pnpm tu
 
 ## Architecture
 
-See the [Architecture Guide](./docs/architecture.md) for the internal structure, and the accepted decisions of record in [`docs/internal/adr`](./docs/internal/adr).
+See the [Architecture Guide](./contributors/architecture.md) for the internal structure, and the accepted decisions of record in [`contributors/adr`](./contributors/adr).

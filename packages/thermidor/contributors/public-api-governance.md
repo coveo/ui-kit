@@ -4,7 +4,7 @@ This document describes how `@coveo/thermidor` keeps its public type surface cle
 
 ## Why it matters
 
-Consumers of the package see only what's exported from `src/index.ts`. The session-client surface is deliberately narrow: `createSession`, the `Session` handle, the `Turn` / `TurnResponse` domain model, `SessionConfig`, the versioned `SerializedSession` shape, and the generic `RemoteController` type and its derivation helpers (see [architecture.md](../architecture.md)).
+Consumers of the package see only what's exported from `src/index.ts`. The session-client surface is deliberately narrow: `createSession`, the `Session` handle, the `Turn` / `TurnResponse` domain model, `SessionConfig`, the versioned `SerializedSession` shape, and the generic `RemoteController` type and its derivation helpers (see [architecture.md](./architecture.md)).
 
 If an internal seam (like the `RemoteControllerSource` type or the internal `buildRemoteController` factory) or a raw transport DTO (the AG-UI SSE event shapes, the converse request/response bodies) leaks into the public `.d.ts`, consumers become coupled to implementation details they cannot control. A refactor of an internal seam would then become a breaking change. The charter ([ADR-009](adr/ADR-009-architecture-decision-charter-v2.md)) makes public-API independence a MUST, and dropping the engine/interface/Redux layers ([ADR-010](adr/ADR-010-unified-endpoint-session-client.md)) makes most of that independence structural — there is no state library or facade type left to leak. This governance guards against reintroducing leakage as the package evolves.
 
