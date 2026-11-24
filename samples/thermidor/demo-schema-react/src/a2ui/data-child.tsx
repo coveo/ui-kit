@@ -47,9 +47,9 @@ export function DataChild({id}: {id: string}) {
   if (!context || !implementation || !('render' in implementation)) {
     return null;
   }
-  // TODO(a2ui-react context): `render` and `context` are deprecated in @a2ui/react 0.16, whose
-  // `view` takes a resolved node. Drop this once the slots are child references the renderer
-  // resolves.
+  // TODO(a2ui-react context): `render` and `context` are deprecated in @a2ui/react 0.16. Draw the
+  // child through its implementation's `view({node, buildChild})` once the slots are child
+  // references the renderer resolves into nodes.
   const Render = (implementation as ReactComponentImplementation).render;
   return <Render context={context} buildChild={NO_CHILDREN} />;
 }
