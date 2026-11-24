@@ -404,6 +404,20 @@ describe('concurrent and cached actions (ADR-020)', () => {
     expect(warned('failed')).toBe(false);
   });
 
+  it('sends an uncached action again for the same payload, never answering it from a cache', async () => {
+    const session = shellSession();
+    const first = dispatch(session, 'boots', UNCACHED);
+    answer(calls[0], 'boots');
+    await first;
+
+    const second = dispatch(session, 'boots', UNCACHED);
+
+    expect(sentQueries()).toEqual(['boots', 'boots']);
+    answer(calls[1], 'boots');
+    await second;
+    expect(shownQuery(session)).toBe('boots');
+  });
+
   it('never aborts a cached miss: its late answer is cached but not applied', async () => {
     const session = shellSession();
     const boots = dispatch(session, 'boots');
@@ -702,6 +716,36 @@ describe('concurrent and cached actions (ADR-020)', () => {
       void dispatch(session, 'boots');
 
       expect(sentQueries()).toEqual(['boots', 'boots']);
+    });
+  });
+
+  describe('isConcurrent', () => {
+    it('is true for an action the producer announces on the surface, cached or not', () => {
+      const session = shellSession();
+
+      expect(session.isConcurrent({surfaceId: SHELL_ID, name: CACHED})).toBe(true);
+      expect(session.isConcurrent({surfaceId: SHELL_ID, name: UNCACHED})).toBe(true);
+    });
+
+    it('is false for an action not announced, or announced on another surface only', () => {
+      const session = shellSession(
+        restoredShell({metadata: {concurrentActions: {other: {fetchSuggestions: {}}}}})
+      );
+
+      expect(session.isConcurrent({surfaceId: SHELL_ID, name: CACHED})).toBe(false);
+      expect(session.isConcurrent({surfaceId: SHELL_ID, name: 'fetchSuggestions'})).toBe(false);
+    });
+
+    it('is false before the session has a token, as such a dispatch is withheld', () => {
+      const session = shellSession(restoredShell({sessionToken: null}));
+
+      expect(session.isConcurrent({surfaceId: SHELL_ID, name: CACHED})).toBe(false);
+    });
+
+    it('can be passed by reference', () => {
+      const {isConcurrent} = shellSession();
+
+      expect(isConcurrent({surfaceId: SHELL_ID, name: UNCACHED})).toBe(true);
     });
   });
 

@@ -164,6 +164,10 @@ export class CaseClassificationObject {
     );
   }
 
+  async waitForCaseStartCollectAnalytics(): Promise<Request> {
+    return this.waitForCollectAnalytics('ticket_create_start', {});
+  }
+
   async waitForTicketFieldUpdateCollectAnalytics(
     expectedData: Record<string, any>
   ): Promise<Request> {

@@ -2,6 +2,7 @@ import type {FacetSearchType} from '../../../api/commerce/facet-search/facet-sea
 import type {FieldSuggestionsFacet} from '../../../api/commerce/search/query-suggest/query-suggest-response.js';
 import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice.js';
+import {executeSearch} from '../../../features/commerce/search/search-actions.js';
 import type {CommerceAppState} from '../../../state/commerce-app-state.js';
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search.js';
 import {buildMockCommerceFacetRequest} from '../../../test/mock-commerce-facet-request.js';
@@ -9,11 +10,13 @@ import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {buildMockCommerceEngine, type MockedCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search.js';
 import {buildCategoryFilterSuggestions} from './headless-category-filter-suggestions.js';
-import {buildFilterSuggestions} from './headless-filter-suggestions.js';
+import {buildFilterSuggestions, type FilterSuggestions} from './headless-filter-suggestions.js';
 import {
   buildFilterSuggestionsGenerator,
   type FilterSuggestionsGenerator,
 } from './headless-filter-suggestions-generator.js';
+
+vi.mock('../../../features/commerce/search/search-actions.js', {spy: true});
 
 describe('FilterSuggestionsGenerator', () => {
   let engine: MockedCommerceEngine;
@@ -141,6 +144,40 @@ describe('FilterSuggestionsGenerator', () => {
           ...commonOptions,
         }).state
       );
+    });
+  });
+
+  describe('the search that a selected suggestion runs', () => {
+    const selectFirstSuggestion = () =>
+      (filterSuggestionsGenerator.filterSuggestions[0] as FilterSuggestions).select({
+        rawValue: 'Nike',
+        displayValue: 'Nike',
+        count: 1,
+      });
+
+    beforeEach(() => {
+      setFacetState([
+        {
+          facetId: 'regular_facet_id',
+          field: 'regular_field',
+          displayName: 'Facet',
+          type: 'regular',
+        },
+      ]);
+    });
+
+    it('fills products by default', () => {
+      selectFirstSuggestion();
+
+      expect(executeSearch).toHaveBeenCalledWith({enableResults: false});
+    });
+
+    it('fills results when the generator is built with enableResults', () => {
+      filterSuggestionsGenerator = buildFilterSuggestionsGenerator(engine, {enableResults: true});
+
+      selectFirstSuggestion();
+
+      expect(executeSearch).toHaveBeenCalledWith({enableResults: true});
     });
   });
 

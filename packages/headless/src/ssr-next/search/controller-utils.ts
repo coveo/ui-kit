@@ -2,16 +2,15 @@ import type {UnknownAction} from '@reduxjs/toolkit';
 import type {CoreEngine, CoreEngineNext} from '../../app/engine.js';
 import type {Controller} from '../../controllers/controller/headless-controller.js';
 import {clone, mapObject} from '../../utils/utils.js';
-import {ControllerBuilder} from '../common/builders/controller-builder.js';
-import {createStaticControllerBuilder} from '../common/builders/static-controller-builder.js';
+import type {BuildConfig} from './types/build.js';
 import type {ControllerDefinitionsMap} from './types/controller-definition.js';
-import type {
-  InferControllerPropsMapFromDefinitions,
-  InferControllersMapFromDefinition,
-} from './types/controller-inference.js';
+import type {InferControllersMapFromDefinition} from './types/controller-inference.js';
 import type {SearchControllerDefinitionsMap} from './types/engine.js';
 import type {SearchStaticState} from './types/fetch-static-state.js';
 
+/**
+ * Builds every controller of the definition with the page facts of the request.
+ */
 export function buildControllerDefinitions<
   TControllerDefinitionsMap extends ControllerDefinitionsMap<
     CoreEngine | CoreEngineNext,
@@ -21,16 +20,15 @@ export function buildControllerDefinitions<
 >({
   definitionsMap,
   engine,
-  propsMap,
+  buildConfig,
 }: {
   definitionsMap: TControllerDefinitionsMap;
   engine: TEngine;
-  propsMap?: InferControllerPropsMapFromDefinitions<TControllerDefinitionsMap>;
+  buildConfig: BuildConfig;
 }): InferControllersMapFromDefinition<TControllerDefinitionsMap> {
-  return mapObject(definitionsMap, (definition, key) => {
-    const props = propsMap?.[key as keyof typeof propsMap];
-    return new ControllerBuilder(definition, engine, props).build();
-  }) as InferControllersMapFromDefinition<TControllerDefinitionsMap>;
+  return mapObject(definitionsMap, (definition) =>
+    definition.build(engine, {buildConfig})
+  ) as InferControllersMapFromDefinition<TControllerDefinitionsMap>;
 }
 
 export function createStaticState<TControllerDefinitions extends SearchControllerDefinitionsMap>({
@@ -41,9 +39,9 @@ export function createStaticState<TControllerDefinitions extends SearchControlle
   controllers: Record<string, Controller>;
 }) {
   return {
-    controllers: mapObject(controllers, (controller) =>
-      createStaticControllerBuilder(controller).build()
-    ) as SearchStaticState<TControllerDefinitions>['controllers'],
+    controllers: mapObject(controllers, (controller) => ({
+      state: clone(controller.state),
+    })) as SearchStaticState<TControllerDefinitions>['controllers'],
     searchActions: clone(searchActions),
   };
 }

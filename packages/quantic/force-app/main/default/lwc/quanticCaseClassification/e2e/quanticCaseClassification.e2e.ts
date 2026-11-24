@@ -160,16 +160,18 @@ test.describe('quantic case classification', () => {
         fetchDocumentSuggestionOnChange: true,
       },
     });
+    // Skipping in beforeEach, before the caseClassification fixture loads the page, avoids the live calls.
+    test.beforeEach(() => {
+      test.skip(
+        test.info().project.name !== 'LWS-enabled',
+        'The live Case Assist API happy path only runs in the LWS-enabled project.'
+      );
+    });
 
     test('should fetch case classifications and document suggestions when a case classification option is clicked', async ({
       caseClassification,
       caseAssist,
-    }, testInfo) => {
-      test.skip(
-        testInfo.project.name !== 'LWS-enabled',
-        'The live Case Assist API happy path only runs in the LWS-enabled project.'
-      );
-
+    }) => {
       const caseClassificationsResponsePromise =
         caseAssist.waitForCaseClassificationsResponse();
       const documentSuggestionResponsePromise =

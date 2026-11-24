@@ -36,24 +36,24 @@
   },
   "devDependencies": {
     "@actions/github": "9.1.1",
-    "@changesets/changelog-github": "0.7.0",
-    "@changesets/cli": "2.31.1",
+    "@changesets/changelog-github": "1.0.1",
+    "@changesets/cli": "3.0.3",
     "@cspell/dict-fr-fr": "2.3.2",
     "@playwright/mcp": "catalog:",
-    "@tsconfig/node22": "22.0.6",
+    "@tsconfig/node22": "22.0.7",
     "@types/jest": "catalog:",
     "@types/node": "catalog:",
     "concurrently": "10.0.7",
-    "cspell": "10.4.1",
+    "cspell": "10.5.1",
     "esbuild": "catalog:",
     "husky": "9.1.7",
-    "knip": "6.45.0",
-    "lint-staged": "17.6.0",
-    "oxfmt": "0.78.0",
-    "oxlint": "1.93.0",
+    "knip": "6.45.1",
+    "lint-staged": "17.6.1",
+    "oxfmt": "0.79.0",
+    "oxlint": "1.94.0",
     "playwright": "catalog:",
     "semver": "7.8.6",
-    "turbo": "2.11.10",
+    "turbo": "2.11.11",
     "typescript": "catalog:",
     "vitest": "catalog:",
     "yaml": "catalog:"
@@ -62,5 +62,5 @@
     "node": "^22.14.0 || ^24.11.0",
     "pnpm": ">=11.17.0"
   },
-  "packageManager": "pnpm@11.28.11"
+  "packageManager": "pnpm@11.28.12"
 }

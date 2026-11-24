@@ -38,7 +38,7 @@ The `@coveo/headless-react/ssr` and `@coveo/headless-react/ssr-commerce` sub-pac
 | Provider props                | `staticState`, `navigatorContext` and `accessToken`                                                                                     | `staticState` and `onHydrationError`                                                                  |
 | Hydration status              | `methods === undefined`                                                                                                                 | `useHydration()`                                                                                      |
 | Recommendations               | `recommendationEngineDefinition` with a nested provider                                                                                 | The `recommendations` option and the page's provider                                                  |
-| Commerce context hook         | `useContext`                                                                                                                            | `useCommerceContext` <!-- decided 2026-10-21, not yet built -->                                       |
+| Context hooks                 | `useContext`                                                                                                                            | `useCommerceContext` on the commerce definitions, `useSearchContext` on the search definitions        |
 
 #### Sub-package paths
 
@@ -141,7 +141,7 @@ export const SearchProvider = buildProviderWithDefinition(searchEngineDefinition
 export const StandaloneProvider = buildProviderWithDefinition(standaloneEngineDefinition);
 ```
 
-The provider renders the static state, hydrates it with `hydrateStaticState(staticState)`, and ignores a hydration that a newer static state superseded; its `staticState` prop is typed from its own definition, so passing the static state of another definition is a compile-time error.
+The provider renders the static state, hydrates it with `hydrateStaticState(staticState)`, and ignores a hydration that a newer static state superseded; its `staticState` prop is typed from its own definition, so passing the static state of another commerce definition is a compile-time error. The search and standalone definitions share one static state type, so their providers accept each other's static state.
 
 #### Provider props
 
@@ -192,7 +192,7 @@ if (status === 'error') {
 }
 ```
 
-`status` is `static` before hydration, `hydrated` once the engine is live, and `error` when the hydration failed and `onHydrationError` handled it; `methods` and `useEngine()` still return `undefined` before hydration, so `methods?.submit()` keeps working.
+`status` is `static` before hydration, and again while a newer static state hydrates, `hydrated` once the engine of the current static state is live, and `error` when its hydration failed and `onHydrationError` handled it; `methods` and `useEngine()` still return `undefined` before hydration, so `methods?.submit()` keeps working.
 
 #### Recommendations
 
@@ -222,11 +222,9 @@ A page requests its recommendation slots through its own `fetchStaticState()` ca
 
 Pass `recommendations: ['popularBought', 'popularViewed']` to the listing definition's `fetchStaticState()`; the recommendation hooks work inside any provider, and `useEngine()` returns the one engine of the page.
 
-#### Commerce context hook
+#### Context hooks
 
-<!-- decided 2026-10-21, not yet built -->
-
-The hook of the built-in commerce `context` controller is renamed `useCommerceContext`.
+The hook of the built-in `context` controller is `useCommerceContext` on the commerce definitions and `useSearchContext` on the search definitions, where the controller is built in and fed by the `context` option of `fetchStaticState()`.
 
 **Headless Version 3**
 
@@ -252,7 +250,7 @@ export default function Cart() {
 }
 ```
 
-Rename the hook where you destructure it; it no longer shadows React's own `useContext`.
+Rename the hook where you destructure it; it no longer shadows React's own `useContext`. On a search definition, destructure `useSearchContext` to read the custom context values of the request.
 
 ## Removals
 
@@ -262,11 +260,11 @@ Removals outside server-side rendering will be listed here.
 
 ### Server-side rendering
 
-| Removed                                                                                       | Replacement                                                                                                                                    |
-| --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `StaticStateProvider` and `HydratedStateProvider` on the search and commerce definitions      | The provider built with `buildProviderWithDefinition(definition)`                                                                              |
-| `setNavigatorContextProvider()`                                                               | `navigatorContext` option of `fetchStaticState()`                                                                                              |
-| `navigatorContext` and `accessToken` props of the commerce provider                           | None: the static state carries both to `hydrateStaticState()`                                                                                  |
-| `recommendationEngineDefinition` and its provider                                             | `recommendations` option of the page's `fetchStaticState()`; the page's provider                                                               |
-| `useContext`                                                                                  | `useCommerceContext` <!-- decided 2026-10-21, not yet built -->                                                                                |
-| The `use<Name>` hook of a `searchParameterManager: defineSearchParameterManager()` controller | `useParameterManager`, from the `parameterManager` controller that every search definition includes <!-- decided 2026-10-21, not yet built --> |
+| Removed                                                                                       | Replacement                                                                                         |
+| --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `StaticStateProvider` and `HydratedStateProvider` on the search and commerce definitions      | The provider built with `buildProviderWithDefinition(definition)`                                   |
+| `setNavigatorContextProvider()`                                                               | `navigatorContext` option of `fetchStaticState()`                                                   |
+| `navigatorContext` and `accessToken` props of the commerce provider                           | None: the static state carries both to `hydrateStaticState()`                                       |
+| `recommendationEngineDefinition` and its provider                                             | `recommendations` option of the page's `fetchStaticState()`; the page's provider                    |
+| `useContext`                                                                                  | `useCommerceContext` on the commerce definitions, `useSearchContext` on the search definitions      |
+| The `use<Name>` hook of a `searchParameterManager: defineSearchParameterManager()` controller | `useParameterManager`, from the `parameterManager` controller that every search definition includes |

@@ -1,7 +1,10 @@
 import type {CommerceFacetSearchRequest} from '../../../../../api/commerce/facet-search/facet-search-request.js';
 import type {NavigatorContext} from '../../../../../app/navigator-context-provider.js';
 import {buildFilterableCommerceAPIRequest} from '../../../common/filterable-commerce-api-request-builder.js';
-import {getFacetIdWithoutCommerceFieldSuggestionNamespace} from '../commerce-facet-search-actions.js';
+import {
+  getFacetIdWithoutCommerceFieldSuggestionNamespace,
+  getFacetSearchField,
+} from '../commerce-facet-search-actions.js';
 import type {StateNeededForRegularFacetSearch} from './commerce-regular-facet-search-state.js';
 
 export const buildFacetSearchRequest = (
@@ -14,6 +17,7 @@ export const buildFacetSearchRequest = (
   const numberOfValues = state.facetSearchSet[facetId]!.options.numberOfValues;
   const facetQuery = `*${baseFacetQuery}*`;
   const query = !isFieldSuggestionsRequest ? state.commerceQuery?.query : baseFacetQuery;
+  const field = getFacetSearchField(facetId, state);
 
   const {
     url,
@@ -33,6 +37,7 @@ export const buildFacetSearchRequest = (
     accessToken,
     organizationId,
     facetId: getFacetIdWithoutCommerceFieldSuggestionNamespace(facetId),
+    ...(!!field && {field}),
     facetQuery: isFieldSuggestionsRequest ? '*' : facetQuery,
     numberOfValues,
     trackingId,

@@ -1,5 +1,6 @@
 import type {Logger} from 'pino';
 import type {CommerceThunkExtraArguments} from '../../app/commerce-thunk-extra-arguments.js';
+import type {AnyFacetResponse} from '../../features/commerce/facets/facet-set/interfaces/response.js';
 import type {CommerceAppState} from '../../state/commerce-app-state.js';
 import type {PlatformEnvironment} from '../../utils/url-utils.js';
 import {
@@ -71,6 +72,25 @@ export const isErrorResponse = <T>(r: CommerceAPIResponse<T>): r is CommerceAPIE
   return (r as CommerceAPIErrorResponse).error !== undefined;
 };
 
+// The simplified Commerce facet API stops returning `facetId` in search and listing facets, and
+// Headless keys facets by it. Query suggest isn't part of that change and keeps `facetId`.
+function fillMissingFacetIds<T extends {facets: AnyFacetResponse[]}>(
+  response: CommerceAPIResponse<T>
+): CommerceAPIResponse<T> {
+  if (isErrorResponse(response) || !Array.isArray(response.success.facets)) {
+    return response;
+  }
+
+  return {
+    success: {
+      ...response.success,
+      facets: response.success.facets.map((facet) =>
+        facet.facetId ? facet : {...facet, facetId: facet.field}
+      ),
+    },
+  };
+}
+
 export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
   constructor(private options: CommerceAPIClientOptions) {}
 
@@ -78,29 +98,33 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
     req: CommerceListingRequest
   ): Promise<CommerceAPIResponse<ListingCommerceSuccessResponse>> {
     const requestOptions = getRequestOptions(req, 'listing');
-    return this.query({
-      ...requestOptions,
-      requestParams: {
-        ...requestOptions.requestParams,
-        enableResults: Boolean(req?.enableResults),
-      },
-      ...this.options,
-    });
+    return fillMissingFacetIds(
+      await this.query<ListingCommerceSuccessResponse>({
+        ...requestOptions,
+        requestParams: {
+          ...requestOptions.requestParams,
+          enableResults: Boolean(req?.enableResults),
+        },
+        ...this.options,
+      })
+    );
   }
 
   async search(
     req: CommerceSearchRequest
   ): Promise<CommerceAPIResponse<SearchCommerceSuccessResponse>> {
     const requestOptions = getRequestOptions(req, 'search');
-    return this.query({
-      ...requestOptions,
-      requestParams: {
-        ...requestOptions.requestParams,
-        query: req?.query,
-        enableResults: Boolean(req?.enableResults),
-      },
-      ...this.options,
-    });
+    return fillMissingFacetIds(
+      await this.query<SearchCommerceSuccessResponse>({
+        ...requestOptions,
+        requestParams: {
+          ...requestOptions.requestParams,
+          query: req?.query,
+          enableResults: Boolean(req?.enableResults),
+        },
+        ...this.options,
+      })
+    );
   }
 
   async getRecommendations(
@@ -151,6 +175,7 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
       requestParams: {
         ...requestOptions.requestParams,
         facetId: req?.facetId,
+        ...(!!req?.field && {field: req.field}),
         facetQuery: req?.facetQuery,
         query: req?.query,
         numberOfValues: req?.numberOfValues,

@@ -351,6 +351,16 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    */
   dispatchAction: (message: A2uiRendererAction | SubmitPromptAction) => Promise<void>;
   /**
+   * Whether a dispatch of the action `name` from the surface `surfaceId` would now be sent at once,
+   * whatever request is in flight, without setting {@link Session.request}: the producer's latest
+   * valid announcement for that surface lists the action as concurrent, and the session has a
+   * token. When it returns `false`, such a dispatch is withheld while a request is in flight, so
+   * wait for {@link Session.request} to become `undefined` before sending it. Read it again
+   * through {@link Session.subscribe}, as a later announcement may change it. Does not rely on
+   * `this`, so it can be passed by reference.
+   */
+  isConcurrent(action: {surfaceId: string; name: string}): boolean;
+  /**
    * Stops the request in flight, `initialize` included, but no concurrent action. A streaming turn
    * or initialization it stops ends in `'error'` with `reason: 'cancelled'`. {@link Session.request} stays set until the stopped request has
    * unwound, a few microtasks later, so a dispatch made right after `cancel()` is withheld: wait for
@@ -1320,6 +1330,14 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     );
   }
 
+  function isConcurrent({surfaceId, name}: {surfaceId: string; name: string}): boolean {
+    const current = store.getState();
+    return (
+      Boolean(current.sessionToken) &&
+      concurrentAction(sessionActivities(current), surfaceId, name) !== undefined
+    );
+  }
+
   function issueConcurrentAction(
     recovered: RecoveredAction,
     policy: CachePolicy | undefined
@@ -1605,6 +1623,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     },
     getSnapshot,
     dispatchAction,
+    isConcurrent,
     cancel,
     retry,
     retryInitialization,

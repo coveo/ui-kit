@@ -6,6 +6,7 @@ import type * as _Components from './components/index.js';
 export type {CommerceBindings} from './components/commerce/atomic-commerce-interface/atomic-commerce-interface';
 export type {SelectChildProductEventArgs} from './components/commerce/atomic-product-children/select-child-product-event';
 export {fetchProductContext} from './components/commerce/product-template-component-utils/context/fetch-product-context';
+export {fetchResultContext} from './components/search/result-template-component-utils/context/fetch-result-context';
 export type {PopoverChildFacet} from './components/common/facets/popover/popover-type';
 export type {RedirectionPayload} from './components/common/search-box/redirection-payload';
 export {dispatchSearchBoxSuggestionsEvent} from './components/common/suggestions/suggestions-events';

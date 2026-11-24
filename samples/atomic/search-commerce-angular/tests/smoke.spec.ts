@@ -14,6 +14,13 @@ test.describe('smoke test', () => {
       // Check if the search box exists and interact with it
       const searchBox = page.locator('atomic-search-box');
       await expect(searchBox).toBeVisible();
+
+      // The search box accepts input before the first search returns, and that response
+      // replaces the box's text with the query it ran (empty). Wait for the first results
+      // so the typed query isn't wiped before Enter submits it.
+      const querySummary = page.locator('atomic-query-summary div[part="container"]');
+      await querySummary.waitFor();
+
       const textArea = searchBox.locator('textarea[part="textarea"]');
       await textArea.fill('test');
       await textArea.press('Enter');
@@ -23,7 +30,6 @@ test.describe('smoke test', () => {
       await expect(facet).toBeVisible();
 
       // Check if the query summary contains the expected text
-      const querySummary = page.locator('atomic-query-summary div[part="container"]');
       await expect(querySummary).toContainText(/Results 1-[1-9]/);
       await expect(querySummary).toContainText('for test');
 

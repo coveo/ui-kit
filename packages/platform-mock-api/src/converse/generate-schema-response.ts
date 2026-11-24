@@ -18,6 +18,7 @@ import {
   SEARCH_SURFACE_ID,
   buildWaterSportsInitialEvents,
   buildWaterSportsActionEvents,
+  pageActionRejection,
   productSearchQuery,
   rerunsSearch,
   searchProductsFor,
@@ -195,8 +196,11 @@ function withTurnOpeningAnnouncements(events: ConverseEvent[]): ConverseEvent[] 
 
 // Agent Gateway answers these beside the turn (Thermidor ADR-022): they take no turn slot and save
 // nothing, so it announces them as concurrent on the shell, with how long their answers are cached.
+// Suggestions read the session's recent queries, which change with every search, so they are not
+// cached (Thermidor ADR-024).
 const SHELL_CONCURRENT_ACTIONS: Record<string, {cache?: {ttlMs: number}}> = {
   fetchInstantProducts: {cache: {ttlMs: 60_000}},
+  fetchSuggestions: {},
 };
 
 function withShellAnnouncements(events: ConverseEvent[], shellSurfaceId: string): ConverseEvent[] {
@@ -434,9 +438,10 @@ function buildSchemaActionResponse(action: SchemaAction, session: SessionKeys) {
   if (failure) {
     return failure();
   }
-  const sortRejection = sortActionRejection(action);
-  if (sortRejection) {
-    return HttpResponse.json(sortRejection, {status: 400});
+  const rejection =
+    sortActionRejection(action) ?? pageActionRejection(action, action.surfaceId ?? undefined);
+  if (rejection) {
+    return HttpResponse.json(rejection, {status: 400});
   }
   // The search surface's answer targets the surface the action came from, under the id its prompt
   // minted for it.

@@ -6,11 +6,24 @@ import type {
 } from './common.js';
 
 export type CategoryFacetResponse = BaseFacetResponse<CategoryFacetValue, 'hierarchical'> &
-  CategoryFacetDelimitingCharacter;
+  CategoryFacetDelimitingCharacter &
+  InitialNumberOfValuesProperty;
+
+interface InitialNumberOfValuesProperty {
+  initialNumberOfValues?: number;
+}
 
 interface SharedFacetValueProperties {
   numberOfResults: number;
+  /**
+   * @deprecated The Commerce API stops returning this property in June 2027, with no replacement. This property will
+   * be removed in the next major version.
+   */
   isAutoSelected: boolean;
+  /**
+   * @deprecated The Commerce API stops returning this property in June 2027, with no replacement. This property will
+   * be removed in the next major version.
+   */
   isSuggested: boolean;
 }
 
@@ -24,6 +37,10 @@ export interface CategoryFacetValue extends BaseFacetValue, SharedFacetValueProp
 
 export type DateFacetResponse = BaseFacetResponse<DateFacetValue, 'dateRange'>;
 
+/**
+ * @deprecated The Commerce API removes date range facets in June 2027, with no replacement. This type will be
+ * removed in the next major version.
+ */
 export type DateFacetValue = RangeFacetValue<string>;
 
 export type NumericFacetResponse = BaseFacetResponse<NumericFacetValue, 'numericalRange'> &
@@ -31,7 +48,8 @@ export type NumericFacetResponse = BaseFacetResponse<NumericFacetValue, 'numeric
 
 export type NumericFacetValue = RangeFacetValue<number>;
 
-export type RegularFacetResponse = BaseFacetResponse<RegularFacetValue, 'regular'>;
+export type RegularFacetResponse = BaseFacetResponse<RegularFacetValue, 'regular'> &
+  InitialNumberOfValuesProperty;
 
 export interface RegularFacetValue extends BaseFacetValue, SharedFacetValueProperties {
   value: string;

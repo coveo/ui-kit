@@ -6,8 +6,10 @@ import type {SuggestionSection} from '../../components/SuggestionsDropdown/index
 import {useDebouncedValue} from '../../hooks/use-debounced-value.js';
 import {useSearchBoxQuery} from '../SearchBox/search-box-context.js';
 import {
+  nodeState,
   useActionFailed,
   useLatestWhenFree,
+  useReadSnapshot,
   useSessionBusy,
   useSurfaceLocked,
 } from '../session-request.js';
@@ -20,7 +22,8 @@ export const SUGGESTIONS_DEBOUNCE_MS = 150;
 /**
  * A2-UI component for `QuerySuggestions`: the session's recent queries, under "Recent searches",
  * above the completions of its `SearchBox`'s query. The query is sent with `fetchSuggestions` once
- * typing pauses and the session is free, and an empty one while the input has the focus.
+ * typing pauses, and an empty one while the input has the focus. It waits for the session to be
+ * free unless the producer announces `fetchSuggestions` as concurrent (ADR-020).
  */
 export const QuerySuggestions = createComponentImplementation(
   {name: 'QuerySuggestions', schema: QuerySuggestionsPropsSchema},
@@ -31,6 +34,7 @@ export const QuerySuggestions = createComponentImplementation(
     const locked = useSurfaceLocked();
     const busy = useSessionBusy();
     const actionFailed = useActionFailed();
+    const readSnapshot = useReadSnapshot();
     const typed = query.trim() ? query : '';
     const debouncedQuery = useDebouncedValue(typed, SUGGESTIONS_DEBOUNCE_MS);
 
@@ -51,27 +55,56 @@ export const QuerySuggestions = createComponentImplementation(
       }
     }
 
-    // Sent once typing pauses, so the text typed before a submit is not sent after it.
-    const wanted = !submitted && debouncedQuery === typed && (typed !== '' || focused);
+    // Sent once typing pauses, so the text typed before a submit is not sent after it. A request
+    // that locks the surface, such as a prompt's turn, holds it back even when the producer answers
+    // suggestions beside it: the turn may change the recent queries, so the query goes out when
+    // it ends, and again if it was sent before it.
+    const wanted = !submitted && !locked && debouncedQuery === typed && (typed !== '' || focused);
     const epoch = debouncedQuery === '' ? emptyEpoch : undefined;
     const request = useMemo(
       () => (wanted ? {query: debouncedQuery, answered, epoch} : undefined),
       [wanted, debouncedQuery, answered, epoch]
     );
-    useLatestWhenFree(request, (latest) => {
-      const payload: FetchSuggestionsPayload = {query: latest.query};
-      void Promise.resolve(
-        context.dispatchAction({event: {name: 'fetchSuggestions', context: payload}})
-      ).then(() => {
-        if (actionFailed('QuerySuggestions', 'fetchSuggestions')) {
-          return;
-        }
-        refreshed(latest.answered);
-        if (latest.epoch !== undefined) {
-          setFreshEmptyEpoch(latest.epoch);
-        }
-      });
-    });
+    // A concurrent suggestion is not the session's request, so its dispatches in flight are counted.
+    const [inFlight, setInFlight] = useState(0);
+    const surfaceId = context.dataContext.surface?.id;
+    const nodeId = context.componentModel.id;
+    // Its content, as the session may rebuild the node of a partial write on any other update.
+    const ownState = () =>
+      surfaceId === undefined
+        ? undefined
+        : JSON.stringify(nodeState(readSnapshot().state, surfaceId, nodeId));
+    useLatestWhenFree(
+      request,
+      (latest) => {
+        const payload: FetchSuggestionsPayload = {query: latest.query};
+        const stateBefore = ownState();
+        setInFlight((count) => count + 1);
+        void Promise.resolve(
+          context.dispatchAction({event: {name: 'fetchSuggestions', context: payload}})
+        ).then(() => {
+          setInFlight((count) => count - 1);
+          // The session applies only a node's latest concurrent answer, and sends one suggestion at
+          // a time otherwise, so an older dispatch that resolves late changes nothing.
+          if (actionFailed('QuerySuggestions', 'fetchSuggestions')) {
+            return;
+          }
+          // A concurrent suggestion that fails resolves quietly, like one that succeeds, so the
+          // empty input's answer counts as fresh either way: a silent failure then shows the
+          // previous list, which may miss a search made since, but an identical answer must show.
+          if (latest.epoch !== undefined) {
+            setFreshEmptyEpoch(latest.epoch);
+          }
+          // The edits stay hidden until this node's content changes, which a streaming answer or
+          // the instant products never do: an identical answer keeps them hidden until the next
+          // one that differs.
+          if (ownState() !== stateBefore) {
+            refreshed(latest.answered);
+          }
+        });
+      },
+      surfaceId === undefined ? undefined : {surfaceId, name: 'fetchSuggestions'}
+    );
 
     const discarding = submitted || (typed === '' && props.query !== '');
     const [discardedQuery, setDiscardedQuery] = useState<string>();
@@ -79,7 +112,7 @@ export const QuerySuggestions = createComponentImplementation(
       setDiscardedQuery(props.query);
     }
 
-    const awaitingNewer = busy || debouncedQuery !== typed;
+    const awaitingNewer = busy || inFlight > 0 || debouncedQuery !== typed;
     // The answer for the empty input never stands in for typed text, which it does not filter.
     const current =
       typed === ''

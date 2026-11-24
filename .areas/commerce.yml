@@ -8,7 +8,6 @@ file_patterns:
   - packages/headless/src/test/**commerce**
 
 reviewers:
-  commerce-routemasters: ~
   dxui: ~
 
 review_bypass:
