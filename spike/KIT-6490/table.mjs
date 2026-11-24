@@ -7,7 +7,8 @@ import {fileURLToPath} from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const [pkg, baseLabel, ...labels] = process.argv.slice(2);
-const load = (label) => JSON.parse(readFileSync(join(here, 'results', `${label}.json`), 'utf8'))[pkg];
+const load = (label) =>
+  JSON.parse(readFileSync(join(here, 'results', `${label}.json`), 'utf8'))[pkg];
 const base = load(baseLabel);
 const others = labels.map((label) => [label, load(label)]);
 
