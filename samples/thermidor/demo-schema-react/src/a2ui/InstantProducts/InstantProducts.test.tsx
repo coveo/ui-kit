@@ -3,6 +3,7 @@ import {afterEach, describe, expect, it, vi} from 'vitest';
 import {SessionSearchBox} from '../../components/SessionSearchBox/SessionSearchBox.js';
 import {
   answerInstantProductsShell,
+  answerUnannouncedInstantProductsShell,
   createTestSession,
   findSearchBox,
   INSTANT_PRODUCTS_ID,
@@ -14,11 +15,7 @@ import {
   type ConverseHandler,
 } from '../../test/session.js';
 import {SUGGESTIONS_DEBOUNCE_MS} from '../QuerySuggestions/QuerySuggestions.js';
-import {
-  INSTANT_PRODUCTS_SETTLE_MS,
-  INSTANT_PRODUCTS_TIMEOUT_MS,
-  PRODUCTS_PANEL_MEDIA_QUERY,
-} from './InstantProducts.js';
+import {INSTANT_PRODUCTS_SETTLE_MS, PRODUCTS_PANEL_MEDIA_QUERY} from './InstantProducts.js';
 
 afterEach(() => {
   vi.useRealTimers();
@@ -251,7 +248,112 @@ describe('InstantProducts', () => {
     await waitFor(() => expect(panelShown()).toBe('No products for surf boards'));
   });
 
-  it('says there are no products when the answer never comes', async () => {
+  it('says there are no products once their request fails', async () => {
+    const {type} = await renderSearchBox({
+      handler: (request) =>
+        request.action?.name === 'fetchInstantProducts'
+          ? new Response('Unavailable', {status: 503})
+          : answerInstantProductsShell(request),
+    });
+
+    type('surf');
+
+    await waitFor(() => expect(panelShown()).toBe('No products for surf boards'));
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
+
+  it('keeps saying there are no products while the session sends an ordinary action', async () => {
+    const {type, session} = await renderSearchBox({
+      handler: (request) =>
+        request.action?.name === 'fetchInstantProducts'
+          ? new Response('Unavailable', {status: 503})
+          : answerInstantProductsShell(request),
+    });
+    type('surf');
+    await waitFor(() => expect(panelShown()).toBe('No products for surf boards'));
+
+    await act(() =>
+      session.dispatchAction({
+        userAction: {
+          name: 'removeRecentQuery',
+          surfaceId: SHELL_SURFACE_ID,
+          sourceComponentId: 'query-suggestions',
+          context: {query: 'surf'},
+        },
+      })
+    );
+
+    expect(session.request).toBeUndefined();
+    expect(panelShown()).toBe('No products for surf boards');
+  });
+
+  it('loads a failed query highlighted again, rather than saying it has no products', async () => {
+    const {type, textarea, queriesSent} = await renderSearchBox({
+      handler: (request) =>
+        request.action?.name === 'fetchInstantProducts' &&
+        request.action.context['query'] === 'surf boards'
+          ? new Response('Unavailable', {status: 503})
+          : answerInstantProductsShell(request),
+    });
+    type('surf');
+    await waitFor(() => expect(panelShown()).toBe('No products for surf boards'));
+
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    fireEvent.keyDown(textarea, {key: 'ArrowUp'});
+
+    expect(panelShown()).toBe('Loading products for surf boards');
+    await pause();
+    expect(queriesSent()).toEqual(['surf boards', 'surf boards']);
+    expect(panelShown()).toBe('No products for surf boards');
+  });
+
+  it('shows no panel and sends no products when the producer does not announce them as concurrent', async () => {
+    const {type, session, queriesSent} = await renderSearchBox({
+      handler: answerUnannouncedInstantProductsShell,
+    });
+    type('surf');
+    await waitFor(() => expect(options()).toEqual(['surf boards', 'surf wax']));
+
+    await pause();
+
+    expect(session.isConcurrent({surfaceId: SHELL_SURFACE_ID, name: 'fetchInstantProducts'})).toBe(
+      false
+    );
+    expect(panelShown()).toBeUndefined();
+    expect(queriesSent()).toEqual([]);
+  });
+
+  it('ignores the failure of a query highlighted again before it settles', async () => {
+    let failFirst!: () => void;
+    const firstHeld = new Promise<void>((resolve) => (failFirst = resolve));
+    let firstSent = false;
+    const {type, textarea, queriesSent} = await renderSearchBox({
+      handler: async (request, signal) => {
+        if (request.action?.name === 'fetchInstantProducts' && !firstSent) {
+          firstSent = true;
+          await firstHeld;
+          return new Response('Unavailable', {status: 503});
+        }
+        return answerInstantProductsShell(request, signal);
+      },
+    });
+    type('surf');
+    await waitFor(() => expect(panelShown()).toBe('Loading products for surf boards'));
+    await waitFor(() => expect(firstSent).toBe(true));
+
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    fireEvent.keyDown(textarea, {key: 'ArrowUp'});
+    await act(async () => failFirst());
+    await act(() => new Promise((resolve) => setTimeout(resolve, 0)));
+
+    expect(panelShown()).toBe('Loading products for surf boards');
+    await waitFor(() => expect(productsShown()).toBe('Products for surf boards'));
+    expect(queriesSent()).toEqual(['surf boards', 'surf boards']);
+  });
+
+  it('keeps loading, with no timeout, while the answer is slow', async () => {
     vi.useFakeTimers({shouldAdvanceTime: true});
     const {type} = await renderSearchBox({
       handler: (request) =>
@@ -262,9 +364,29 @@ describe('InstantProducts', () => {
     type('surf');
     await waitFor(() => expect(panelShown()).toBe('Loading products for surf boards'));
 
-    await act(() => vi.advanceTimersByTimeAsync(INSTANT_PRODUCTS_TIMEOUT_MS));
+    await act(() => vi.advanceTimersByTimeAsync(30_000));
 
-    expect(panelShown()).toBe('No products for surf boards');
+    expect(panelShown()).toBe('Loading products for surf boards');
+  });
+
+  it('loads the next highlight after a failure, rather than saying it has no products', async () => {
+    const {release, handler} = holdingBack('surf wax');
+    const {type, textarea} = await renderSearchBox({
+      handler: (request) =>
+        request.action?.name === 'fetchInstantProducts' &&
+        request.action.context['query'] === 'surf boards'
+          ? new Response('Unavailable', {status: 503})
+          : handler(request),
+    });
+    type('surf');
+    await waitFor(() => expect(panelShown()).toBe('No products for surf boards'));
+
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+    fireEvent.keyDown(textarea, {key: 'ArrowDown'});
+
+    await waitFor(() => expect(panelShown()).toBe('Loading products for surf wax'));
+    release();
+    await waitFor(() => expect(productsShown()).toBe('Products for surf wax'));
   });
 });
 
