@@ -51,7 +51,7 @@ export interface ProviderProps<TStaticState> {
 }
 
 type HydrationOutcome<TStaticState, THydratedState> =
-  | {hydratedState: THydratedState}
+  | {staticState: TStaticState; hydratedState: THydratedState}
   | {staticState: TStaticState; error: unknown};
 
 /**
@@ -88,9 +88,9 @@ export function buildProviderWithDefinition<
 ): FunctionComponent<PropsWithChildren<ProviderProps<TStaticState>>> {
   return function WrappedProvider({staticState, onHydrationError, children}) {
     const [outcome, setOutcome] = useState<HydrationOutcome<TStaticState, THydratedState>>();
-    const hydratedState = outcome && 'hydratedState' in outcome ? outcome.hydratedState : undefined;
-    const hydrationFailure =
-      outcome && 'error' in outcome && outcome.staticState === staticState ? outcome : undefined;
+    const current = outcome?.staticState === staticState ? outcome : undefined;
+    const hydratedState = current && 'hydratedState' in current ? current.hydratedState : undefined;
+    const hydrationFailure = current && 'error' in current ? current : undefined;
     const onHydrationErrorRef = useRef(onHydrationError);
 
     useEffect(() => {
@@ -103,7 +103,7 @@ export function buildProviderWithDefinition<
       definition.hydrateStaticState(staticState).then(
         (result) => {
           if (!superseded) {
-            setOutcome({hydratedState: result});
+            setOutcome({staticState, hydratedState: result});
           }
         },
         (error: unknown) => {

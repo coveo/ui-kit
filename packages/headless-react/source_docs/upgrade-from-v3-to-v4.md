@@ -192,7 +192,7 @@ if (status === 'error') {
 }
 ```
 
-`status` is `static` before hydration, `hydrated` once the engine is live, and `error` when the hydration failed and `onHydrationError` handled it; `methods` and `useEngine()` still return `undefined` before hydration, so `methods?.submit()` keeps working.
+`status` is `static` before hydration, and again while a newer static state hydrates, `hydrated` once the engine of the current static state is live, and `error` when its hydration failed and `onHydrationError` handled it; `methods` and `useEngine()` still return `undefined` before hydration, so `methods?.submit()` keeps working.
 
 #### Recommendations
 

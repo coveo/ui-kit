@@ -12,9 +12,10 @@ export type HydrationStatus = 'static' | 'hydrated' | 'error';
  */
 export interface Hydration {
   /**
-   * `static` while the components render the static state fetched on the server, `hydrated` once the
-   * engine is live in the browser, and `error` when the hydration failed and the provider's
-   * `onHydrationError` option handles it.
+   * `static` while the components render the static state fetched on the server, a newer static state
+   * included until it hydrates, `hydrated` once the engine of the current static state is live in the
+   * browser, and `error` when its hydration failed and the provider's `onHydrationError` option
+   * handles it.
    */
   status: HydrationStatus;
   /**
