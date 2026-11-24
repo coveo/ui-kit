@@ -7,8 +7,8 @@ settings:
 catalogs:
   default:
     '@ag-ui/client':
-      specifier: 0.0.59
-      version: 0.0.59
+      specifier: 1.0.4
+      version: 1.0.4
     '@angular-devkit/build-angular':
       specifier: 22.2.6
       version: 22.2.6
@@ -1171,7 +1171,7 @@ importers:
     dependencies:
       '@ag-ui/client':
         specifier: 'catalog:'
-        version: 0.0.59
+        version: 1.0.4(zod@4.6.7)
       '@coveo/bueno':
         specifier: workspace:*
         version: link:../bueno
@@ -1349,7 +1349,7 @@ importers:
     devDependencies:
       '@ag-ui/client':
         specifier: 'catalog:'
-        version: 0.0.59
+        version: 1.0.4(zod@4.6.7)
       '@coveo/headless':
         specifier: workspace:*
         version: link:../headless
@@ -2352,7 +2352,7 @@ importers:
     dependencies:
       '@copilotkit/a2ui-renderer':
         specifier: 1.88.0
-        version: 1.88.0(@ag-ui/core@1.0.2(zod@3.25.76))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        version: 1.88.0(@ag-ui/core@1.0.4(zod@3.25.76))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@coveo/thermidor':
         specifier: workspace:*
         version: link:../../../packages/thermidor
@@ -2398,7 +2398,7 @@ importers:
     dependencies:
       '@copilotkit/a2ui-renderer':
         specifier: 1.88.0
-        version: 1.88.0(@ag-ui/core@1.0.2(zod@3.25.76))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        version: 1.88.0(@ag-ui/core@1.0.4(zod@3.25.76))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@coveo/thermidor':
         specifier: workspace:*
         version: link:../../../packages/thermidor
@@ -2514,11 +2514,13 @@ packages:
   '@ag-ui/a2ui-toolkit@0.0.5':
     resolution: {integrity: sha512-klYOXh+L+X8yM0EdrHJGrKmh7G1bKBvO/Zo4ryl6w5JlkXCrqkCeiSLtwB3UeN2Z1w61y1eMmzWn92q9c4/D8w==}
 
-  '@ag-ui/client@0.0.59':
-    resolution: {integrity: sha512-d7++r8sBAq6z9G/D/WKrMznQ1Mdvew14pCqOVATReFIvl06mCi1BPqTwmos3zCDGAIiSgcvxc/8m472rYQgFFQ==}
-
   '@ag-ui/client@1.0.2':
     resolution: {integrity: sha512-BPxcQBPxJZi7XiQI8eBpiE6KBcySjD6hV7XWQhezYbLeK9WJkcUZ6RhX5dngWw+VgfapxPdJdEDTV/JxF21Duw==}
+
+  '@ag-ui/client@1.0.4':
+    resolution: {integrity: sha512-bACZj5CG/B6coQL54/LT0b29RjoyZf7k+XTs1c4+PBpsZbCYCNQ/TVDE5ffvmZvZ4NnH2Zc+JjbIeGdNdYJu8w==}
+    peerDependencies:
+      zod: ^3.25.18 || ^4.0.0
 
   '@ag-ui/core@0.0.59':
     resolution: {integrity: sha512-hDgy4ipTqXieT8YG8Mr917Y+FD/f11VK1GefZ5CwTDCuNqS/oTwjJ5l/DZkicThgS8hQW/Y7wPylPBMBJ8BkUg==}
@@ -2531,17 +2533,29 @@ packages:
       zod:
         optional: true
 
-  '@ag-ui/encoder@0.0.59':
-    resolution: {integrity: sha512-wQCzBsStyZMm8nzhTdTx1G0B1C8yv5rbzZLnz1ka/l5LcJEsK3KTounU8CR9l+7QtcpOUUDJKd0xAbyI6gNcSw==}
+  '@ag-ui/core@1.0.4':
+    resolution: {integrity: sha512-Z/G3UXYRyZ/1LcOtCCf6RJiFPTjRqaNublW/kQ7wsfiP4Qw5oIVmvO6NkUQYoqCoMXuXggyD3MMH2Td5OVKECQ==}
+    peerDependencies:
+      zod: ^3.25.18 || ^4.0.0
+    peerDependenciesMeta:
+      zod:
+        optional: true
 
   '@ag-ui/encoder@1.0.2':
     resolution: {integrity: sha512-SE8pQ7dpXwtqpD1WzW2Of9h4uZRDPVGZqT7kdrQ17w9+eOxAolqqRybVLBqJTqCZiUNgX0hFUNlAJSOV0z0UDg==}
 
-  '@ag-ui/proto@0.0.59':
-    resolution: {integrity: sha512-X+uvDaegLEHw5kJu8tv2eSqHH8ouat+JCfFokGV1uuMquY8qCEQSlGsM7xzexwX9fujuxgHOWumg5kJDqa0+RA==}
+  '@ag-ui/encoder@1.0.4':
+    resolution: {integrity: sha512-fq5kqj+kCFtpLhBhfLjv55DRTKdbduFg6Wcsw4VL3uCABSQhH+PLC36vMjbjZdDp9q+mgVrGhRvaW+JdkdfVog==}
+    peerDependencies:
+      zod: ^3.25.18 || ^4.0.0
 
   '@ag-ui/proto@1.0.2':
     resolution: {integrity: sha512-uIp6TkQdos03Bkjl01Z46cK/D7QAKNO26RYIIX1WfxNy4penVatU0b/TFTjVrOtwSnp5mtl8Rpzkiiu9cZHwlg==}
+
+  '@ag-ui/proto@1.0.4':
+    resolution: {integrity: sha512-+OAa2w1ELijSwNgNGvMDCIx5rFO+1NQDpwzoq1oXwE4L0qWciZnhIisocVzAKjtH7Ac/ONSyYR1t4qG3kMzRkw==}
+    peerDependencies:
+      zod: ^3.25.18 || ^4.0.0
 
   '@alloc/quick-lru@5.3.0':
     resolution: {integrity: sha512-U4+70Pc5ZS9osnCBCE5Jha/ciHM+Yp+CNMNC/7HvYbNRk1Ldd+f7qO65W5qfhu/TCv+/ozljlXXe9Nj8419DMA==}
@@ -17033,19 +17047,6 @@ snapshots:
 
   '@ag-ui/a2ui-toolkit@0.0.5': {}
 
-  '@ag-ui/client@0.0.59':
-    dependencies:
-      '@ag-ui/core': 0.0.59
-      '@ag-ui/encoder': 0.0.59
-      '@ag-ui/proto': 0.0.59
-      '@types/uuid': 10.0.0
-      compare-versions: 6.1.1
-      fast-json-patch: 3.1.1
-      rxjs: 7.8.1
-      untruncate-json: 0.0.1
-      uuid: 11.1.1
-      zod: 3.25.76
-
   '@ag-ui/client@1.0.2':
     dependencies:
       '@ag-ui/core': 1.0.2(zod@3.25.76)
@@ -17059,6 +17060,19 @@ snapshots:
       uuid: 11.1.1
       zod: 3.25.76
 
+  '@ag-ui/client@1.0.4(zod@4.6.7)':
+    dependencies:
+      '@ag-ui/core': 1.0.4(zod@4.6.7)
+      '@ag-ui/encoder': 1.0.4(zod@4.6.7)
+      '@ag-ui/proto': 1.0.4(zod@4.6.7)
+      '@types/uuid': 10.0.0
+      compare-versions: 6.1.1
+      fast-json-patch: 3.1.1
+      rxjs: 7.8.1
+      untruncate-json: 0.0.1
+      uuid: 11.1.1
+      zod: 4.6.7
+
   '@ag-ui/core@0.0.59':
     dependencies:
       zod: 3.25.76
@@ -17067,10 +17081,13 @@ snapshots:
     optionalDependencies:
       zod: 3.25.76
 
-  '@ag-ui/encoder@0.0.59':
-    dependencies:
-      '@ag-ui/core': 0.0.59
-      '@ag-ui/proto': 0.0.59
+  '@ag-ui/core@1.0.4(zod@3.25.76)':
+    optionalDependencies:
+      zod: 3.25.76
+
+  '@ag-ui/core@1.0.4(zod@4.6.7)':
+    optionalDependencies:
+      zod: 4.6.7
 
   '@ag-ui/encoder@1.0.2(zod@3.25.76)':
     dependencies:
@@ -17079,11 +17096,11 @@ snapshots:
     transitivePeerDependencies:
       - zod
 
-  '@ag-ui/proto@0.0.59':
+  '@ag-ui/encoder@1.0.4(zod@4.6.7)':
     dependencies:
-      '@ag-ui/core': 0.0.59
-      '@bufbuild/protobuf': 2.17.0
-      '@protobuf-ts/protoc': 2.11.1
+      '@ag-ui/core': 1.0.4(zod@4.6.7)
+      '@ag-ui/proto': 1.0.4(zod@4.6.7)
+      zod: 4.6.7
 
   '@ag-ui/proto@1.0.2':
     dependencies:
@@ -17091,6 +17108,13 @@ snapshots:
       '@bufbuild/protobuf': 2.17.0
       '@protobuf-ts/protoc': 2.11.1
       zod: 3.25.76
+
+  '@ag-ui/proto@1.0.4(zod@4.6.7)':
+    dependencies:
+      '@ag-ui/core': 1.0.4(zod@4.6.7)
+      '@bufbuild/protobuf': 2.17.0
+      '@protobuf-ts/protoc': 2.11.1
+      zod: 4.6.7
 
   '@alloc/quick-lru@5.3.0': {}
 
@@ -18813,10 +18837,10 @@ snapshots:
 
   '@colordx/core@5.8.0': {}
 
-  '@copilotkit/a2ui-renderer@1.88.0(@ag-ui/core@1.0.2(zod@3.25.76))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+  '@copilotkit/a2ui-renderer@1.88.0(@ag-ui/core@1.0.4(zod@3.25.76))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@a2ui/web_core': 0.15.0
-      '@copilotkit/shared': 1.88.0(@ag-ui/core@1.0.2(zod@3.25.76))
+      '@copilotkit/shared': 1.88.0(@ag-ui/core@1.0.4(zod@3.25.76))
       clsx: 2.1.1
       marked: 12.0.2
       zod: 3.25.76
@@ -18830,11 +18854,11 @@ snapshots:
 
   '@copilotkit/license-verifier@0.5.0': {}
 
-  '@copilotkit/shared@1.88.0(@ag-ui/core@1.0.2(zod@3.25.76))':
+  '@copilotkit/shared@1.88.0(@ag-ui/core@1.0.4(zod@3.25.76))':
     dependencies:
       '@ag-ui/a2ui-middleware': 0.0.16(@ag-ui/client@1.0.2)(rxjs@7.8.1)
       '@ag-ui/client': 1.0.2
-      '@ag-ui/core': 1.0.2(zod@3.25.76)
+      '@ag-ui/core': 1.0.4(zod@3.25.76)
       '@copilotkit/license-verifier': 0.5.0
       '@segment/analytics-node': 2.3.0
       '@standard-schema/spec': 1.1.0
