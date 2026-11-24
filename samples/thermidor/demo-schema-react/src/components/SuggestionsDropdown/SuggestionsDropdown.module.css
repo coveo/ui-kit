@@ -22,8 +22,9 @@
 }
 
 /* Fixed while an aside is shown, so the height does not follow its content as the highlight moves.
-   Sized for four instant products, two of them with children; more children scroll. */
-.dropdown:has(> .listbox + *) {
+   Sized for four instant products, two of them with children; more children scroll. An aside that
+   renders nothing still leaves its empty renderer host element. */
+.dropdown:has(> .listbox + :not(:empty)) {
   height: 416px;
   max-height: none;
 }
