@@ -1,4 +1,3 @@
-import type {AgentSubscriber} from '@ag-ui/client';
 import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {
   followUpCitationsReceived,
@@ -25,6 +24,7 @@ import type {
   GenerationToolCallArgsSearch,
 } from '../../../../../features/generated-answer/generated-answer-state.js';
 import {mapRunErrorCode} from '../../../../../features/generated-answer/sse-generated-answer-errors.js';
+import type {AgentSubscriber} from '../sse-agent/agent-subscriber.js';
 
 /**
  * Creates an AgentSubscriber that handles follow-up answer streaming events

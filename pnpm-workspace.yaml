@@ -42,6 +42,7 @@ packages:
 
 catalog:
   '@ag-ui/client': 1.0.4
+  '@ag-ui/core': 1.0.4
   chromatic: 18.14.5
   '@msw/playwright': 0.6.7
   '@mswjs/http-middleware': ^0.10.3

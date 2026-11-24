@@ -1,6 +1,6 @@
 /* oxlint-disable @typescript-eslint/no-explicit-any -- unit test */
 
-import type {RunAgentInput} from '@ag-ui/client';
+import type {RunAgentInput} from '@ag-ui/core';
 import {describe, expect, it} from 'vitest';
 import {AnswerAgent} from './answer-agent.js';
 

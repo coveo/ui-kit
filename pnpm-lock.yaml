@@ -9,6 +9,9 @@ catalogs:
     '@ag-ui/client':
       specifier: 1.0.4
       version: 1.0.4
+    '@ag-ui/core':
+      specifier: 1.0.4
+      version: 1.0.4
     '@angular-devkit/build-angular':
       specifier: 22.2.7
       version: 22.2.7
@@ -1169,7 +1172,7 @@ importers:
 
   packages/headless:
     dependencies:
-      '@ag-ui/client':
+      '@ag-ui/core':
         specifier: 'catalog:'
         version: 1.0.4(zod@4.6.7)
       '@coveo/bueno':

@@ -99,7 +99,7 @@
     "size": "node ../../scripts/size-limit.mjs run"
   },
   "dependencies": {
-    "@ag-ui/client": "catalog:",
+    "@ag-ui/core": "catalog:",
     "@coveo/bueno": "workspace:*",
     "@coveo/relay": "workspace:*",
     "@coveo/relay-event-types": "catalog:",

@@ -1,6 +1,5 @@
 /* oxlint-disable @typescript-eslint/no-explicit-any -- unit test */
 
-import type {AgentSubscriber} from '@ag-ui/client';
 import type {Dispatch} from '@reduxjs/toolkit';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
@@ -20,6 +19,7 @@ import {
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
 import * as generatedAnswerAnalyticsActions from '../../../../../features/generated-answer/generated-answer-analytics-actions.js';
 import {GeneratedAnswerSseErrorCode} from '../../../../../features/generated-answer/sse-generated-answer-errors.js';
+import type {AgentSubscriber} from '../sse-agent/agent-subscriber.js';
 import {createFollowUpStrategy} from './follow-up-answer-strategy.js';
 
 describe('createFollowUpStrategy', () => {
