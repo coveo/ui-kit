@@ -171,6 +171,17 @@ describe('createPrivateSession', () => {
     ).toThrow('navigatorContextProvider');
   });
 
+  it('throws when the contracts do not declare SessionShell, unless initialize is false', () => {
+    const withoutShell = z.discriminatedUnion('component', [
+      z.strictObject({component: z.literal('Pagination')}),
+    ]) as unknown as ContractsSchema;
+
+    expect(() => createPrivateSession(config({contracts: withoutShell, initialize: true}))).toThrow(
+      "declare SessionShell's initialize"
+    );
+    expect(() => createPrivateSession(config({contracts: withoutShell}))).not.toThrow();
+  });
+
   it.each(['language', 'country', 'currency'])(
     'fails the run, without a request, when the navigator %s is blank',
     async (key) => {

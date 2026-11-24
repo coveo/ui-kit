@@ -542,11 +542,11 @@ function validateSessionKeys({sessionId, sessionToken, sessionToRestore}: Sessio
 const SESSION_SHELL = 'SessionShell';
 const INITIALIZE = 'initialize';
 
-function requireInitializeContract(contracts: ContractsSchema): void {
+function requireInitializeContract(contracts: ContractsSchema, hint = ''): void {
   const validation = validateActionPayload(SESSION_SHELL, INITIALIZE, {}, contracts);
   if (!validation.valid) {
     throw new Error(
-      `A session that sends ${INITIALIZE} requires contracts that accept it (${validation.reason}). Pass initialize: false otherwise.`
+      `Sending ${INITIALIZE} requires contracts that declare ${SESSION_SHELL}'s ${INITIALIZE} with an empty payload (${validation.reason}).${hint}`
     );
   }
 }
@@ -564,7 +564,10 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   }
   validateSessionKeys(config);
   if (config.initialize !== false) {
-    requireInitializeContract(config.contracts);
+    requireInitializeContract(
+      config.contracts,
+      ' Pass initialize: false for a session that never sends it by itself.'
+    );
   }
   // An id without a token may not be the endpoint's: the session drops it if a request that may
   // have reserved it ends before the endpoint sends a token.

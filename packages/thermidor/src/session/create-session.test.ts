@@ -3120,7 +3120,7 @@ describe('createSession lifecycle', () => {
           ],
         ])('throws with %s, unless initialize is false', (_, contracts) => {
           expect(() => createSession({...baseConfig, contracts, initialize: undefined})).toThrow(
-            'requires contracts that accept it'
+            /declare SessionShell's initialize with an empty payload .*Pass initialize: false/
           );
           expect(() => createSession({...baseConfig, contracts, initialize: false})).not.toThrow();
           expect(callMock).not.toHaveBeenCalled();
@@ -3137,7 +3137,9 @@ describe('createSession lifecycle', () => {
           });
           expect(session.initialization?.status).toBe('error');
 
-          expect(() => session.retryInitialization()).toThrow('requires contracts that accept it');
+          expect(() => session.retryInitialization()).toThrow(
+            /^Sending initialize requires contracts that declare SessionShell's initialize with an empty payload \(.*\)\.$/
+          );
           expect(session.initialization?.status).toBe('error');
           expect(callMock).toHaveBeenCalledTimes(1);
         });
