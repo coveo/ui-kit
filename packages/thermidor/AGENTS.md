@@ -13,5 +13,6 @@ Some repository-wide instructions don't apply when working in this package. Name
 
 **Always**:
 
-- Ensure that any architectural changes you suggest or make satisfy the requirements of `docs/internal/adr/ADR-009-architecture-decision-charter-v2.md` in this package (the current charter, which supersedes the deprecated `ADR-000-architecture-decision-charter.md`).
+- Ensure that any architectural changes you suggest or make satisfy the requirements of `contributors/adr/ADR-009-architecture-decision-charter-v2.md` in this package (the current charter, which supersedes the deprecated `ADR-000-architecture-decision-charter.md`).
+- Put a new Thermidor ADR in `contributors/adr/`, never in `docs/adr/` (ADR 0002's rule for a package whose `docs/` is generated): `docs/` holds the TypeDoc output, and every `build:typedoc` empties it (restore the tracked template with `git checkout -- docs/adr`).
 - Document every symbol that is part of the package's public API with JSDoc. "Public" means anything re-exported from the entry point (`src/index.ts`) — functions, classes, interfaces, and types — **including symbols that are declared under `internal/` but re-exported through the public surface** (e.g. the context types `NavigatorContext` and `CommerceContext` from `src/internal/context/`). Document their members too (methods, and non-trivial fields). Symbols that are *not* re-exported (internal-only) do not require JSDoc.
