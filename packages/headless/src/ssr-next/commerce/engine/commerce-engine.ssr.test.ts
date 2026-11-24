@@ -171,6 +171,59 @@ describe('Commerce Engine SSR', () => {
     });
   });
 
+  describe('a visitor without a client ID', () => {
+    const context = {
+      view: {url: 'http://example.com'},
+      country: 'US',
+      currency: 'USD' as const,
+      language: 'en',
+    };
+    const productView = {
+      currency: 'USD',
+      product: {productId: 'some-product', name: 'Some product', price: 10},
+    };
+
+    const hydrateWith = async (navigatorContext: NavigatorContext) => {
+      const {listingEngineDefinition} = defineCommerceEngine(definitionOptions);
+      const staticState = await listingEngineDefinition.fetchStaticState({
+        navigatorContext,
+        context,
+      });
+      const {engine} = await listingEngineDefinition.hydrateStaticState(staticState);
+      const emitted = vi.fn();
+      engine.relay.on('ec.productView', emitted);
+      engine.relay.emit('ec.productView', productView);
+      return {engine, emitted};
+    };
+
+    it('should emit events from the engine hydrated for a visitor with a client ID', async () => {
+      const {engine, emitted} = await hydrateWith(
+        buildMockNavigatorContext({clientId: '3f2b1a9c-0d4e-4f6a-8b7c-9d0e1f2a3b4c'})
+      );
+
+      expect(engine.configuration.analytics.enabled).toBe(true);
+      expect(emitted).toHaveBeenCalledTimes(1);
+    });
+
+    it('should emit no event from the engine hydrated for a visitor without a client ID', async () => {
+      const {engine, emitted} = await hydrateWith(buildMockNavigatorContext({clientId: ''}));
+
+      expect(engine.configuration.analytics.enabled).toBe(false);
+      expect(emitted).not.toHaveBeenCalled();
+    });
+
+    it('should emit no event from the engine hydrated with capture turned off', async () => {
+      const {emitted} = await hydrateWith(
+        buildMockNavigatorContext({
+          clientId: '3f2b1a9c-0d4e-4f6a-8b7c-9d0e1f2a3b4c',
+          capture: false,
+        })
+      );
+
+      expect(emitted).not.toHaveBeenCalled();
+    });
+  });
+
   describe('requests sent to the Commerce API', () => {
     interface CapturedRequest {
       url: string;
@@ -211,6 +264,19 @@ describe('Commerce Engine SSR', () => {
 
     afterEach(() => {
       vi.unstubAllGlobals();
+    });
+
+    it('should send neither a client ID nor capture for a visitor without a client ID, even when the navigator context captures', async () => {
+      const {listingEngineDefinition} = defineCommerceEngine(definitionOptions);
+
+      await listingEngineDefinition.fetchStaticState({
+        navigatorContext: buildMockNavigatorContext({clientId: '', capture: true}),
+        context,
+      });
+
+      expect(commerceRequests).toHaveLength(1);
+      expect(commerceRequests[0].body).not.toHaveProperty('clientId');
+      expect(commerceRequests[0].body.context).toMatchObject({capture: false});
     });
 
     it('should send each request its own x-forwarded-for header', async () => {

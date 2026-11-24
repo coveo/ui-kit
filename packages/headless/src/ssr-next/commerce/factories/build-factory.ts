@@ -18,7 +18,8 @@ import type {
   CommerceEngineDefinitionOptions,
 } from '../types/engine.js';
 import type {CommerceHydratedState} from '../types/hydrate-static-state.js';
-import {wireControllerParams} from '../utils/controller-wiring.js';
+import {validateBuildConfig} from '../utils/controller-wiring.js';
+import {resolveEnableResults} from '../utils/enable-results.js';
 import {augmentCommerceEngineOptions} from '../utils/engine-wiring.js';
 import {withDefaultViewUrl} from '../utils/view-url.js';
 
@@ -105,8 +106,9 @@ export const buildFactory =
   <TSolutionType extends SolutionType>(solutionType: TSolutionType) =>
   async (rawBuildOptions: BuildParameters<TControllerDefinitions>) => {
     const buildOptions = withDefaultViewUrl(rawBuildOptions);
-    const controllerProps = wireControllerParams(solutionType, controllerDefinitions, buildOptions);
+    validateBuildConfig(solutionType, controllerDefinitions, buildOptions);
 
+    const enableResults = resolveEnableResults(options.enableResults);
     const enabledRecommendationControllers = new Set(buildOptions.recommendations).size;
 
     const engineOptions: CommerceEngineOptions = augmentCommerceEngineOptions(
@@ -124,7 +126,8 @@ export const buildFactory =
       definitionsMap: controllerDefinitions ?? {},
       engine,
       solutionType,
-      propsMap: controllerProps,
+      buildConfig: buildOptions,
+      enableResults,
     });
 
     buildOptions.searchActions?.forEach((action) => {

@@ -2,19 +2,23 @@ import {describe, expectTypeOf, it} from 'vitest';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
-import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import type {EngineDefinition, EngineStaticState} from '../../common/types/engine.js';
+import {defineDidYouMean} from '../controllers/did-you-mean/headless-did-you-mean.ssr.js';
+import {defineProductEnrichment} from '../controllers/product-enrichment/headless-product-enrichment.ssr.js';
 import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
 import type {BuildConfig} from '../types/build.js';
 import type {ContextOptions} from '../controllers/context/headless-context.ssr.js';
 import type {SolutionType} from '../types/controller-constants.js';
-import type {ControllerDefinitionsMap} from '../types/controller-definitions.js';
+import type {
+  ControllerDefinition,
+  ControllerDefinitionsMap,
+} from '../types/controller-definitions.js';
 import type {InferHydratedState, InferStaticState} from '../types/controller-inference.js';
 import type {CommerceStaticState} from '../types/fetch-static-state.js';
 import type {CommerceHydratedState} from '../types/hydrate-static-state.js';
-import type {CommerceEngineDefinition} from '../types/engine.js';
+import type {CommerceEngineDefinition, CommerceEngineDefinitionOptions} from '../types/engine.js';
 import {defineCommerceEngine} from './commerce-engine.ssr.js';
 
 const controllers = {
@@ -22,6 +26,7 @@ const controllers = {
   searchBox: defineSearchBox(),
   popularViewed: defineRecommendations({options: {slotId: 'slot-viewed'}}),
   popularBought: defineRecommendations({options: {slotId: 'slot-bought'}}),
+  productEnrichment: defineProductEnrichment({options: {placementIds: ['placement-a']}}),
 };
 
 // Types the customer relies on for IntelliSense: everything below is inferred from the controllers
@@ -31,6 +36,8 @@ const {listingEngineDefinition, searchEngineDefinition, standaloneEngineDefiniti
     configuration: getSampleCommerceEngineConfiguration(),
     controllers,
   });
+
+declare const customController: Controller;
 
 type ListingStaticState = InferStaticState<typeof listingEngineDefinition>;
 type ListingHydratedState = InferHydratedState<typeof listingEngineDefinition>;
@@ -68,6 +75,24 @@ describe('defineCommerceEngine', () => {
     expectTypeOf<ListingStaticState['accessToken']>().toEqualTypeOf<string | undefined>();
   });
 
+  it('should build a hand-written controller definition on the kinds of page its flags name', () => {
+    const custom = {
+      listing: true,
+      build: () => customController,
+    } satisfies ControllerDefinition<Controller>;
+    const definitions = defineCommerceEngine({
+      configuration: getSampleCommerceEngineConfiguration(),
+      controllers: {custom},
+    });
+
+    expectTypeOf<
+      InferStaticState<typeof definitions.listingEngineDefinition>['controllers']
+    >().toHaveProperty('custom');
+    expectTypeOf<
+      InferStaticState<typeof definitions.searchEngineDefinition>['controllers']
+    >().not.toHaveProperty('custom');
+  });
+
   it('should stamp the static state with the solution type of its definition', () => {
     expectTypeOf<ListingStaticState['solutionType']>().toEqualTypeOf<SolutionType.listing>();
     expectTypeOf<
@@ -97,6 +122,26 @@ describe('defineCommerceEngine', () => {
     expectTypeOf<ListingFetchOptions['recommendations']>().toEqualTypeOf<SlotNames>();
     expectTypeOf<SearchFetchOptions['recommendations']>().toEqualTypeOf<SlotNames>();
     expectTypeOf<StandaloneFetchOptions['recommendations']>().toEqualTypeOf<SlotNames>();
+  });
+
+  it('should take page facts only, with no per-request controller props', () => {
+    expectTypeOf<ListingFetchOptions>().not.toHaveProperty('controllers');
+    expectTypeOf<StandaloneFetchOptions>().not.toHaveProperty('controllers');
+    expectTypeOf<ListingStaticState>().not.toHaveProperty('controllerProps');
+    expectTypeOf<ListingStaticState['controllers']['productList']>().not.toHaveProperty(
+      'initialState'
+    );
+  });
+
+  it('should take the results flag once, on the definition, and on no definer', () => {
+    expectTypeOf<CommerceEngineDefinitionOptions['enableResults']>().toEqualTypeOf<
+      boolean | {search?: boolean; listing?: boolean} | undefined
+    >();
+    expectTypeOf<Parameters<typeof defineProductList>>().toEqualTypeOf<[]>();
+    expectTypeOf<Parameters<typeof defineDidYouMean>>().toEqualTypeOf<[]>();
+    expectTypeOf<
+      NonNullable<NonNullable<Parameters<typeof defineSearchBox>[0]>['options']>
+    >().not.toHaveProperty('enableResults');
   });
 
   it('should accept the product ID on every engine definition', () => {
@@ -210,7 +255,6 @@ describe('the static and hydrated states of a commerce engine definition', () =>
       BuildConfig<typeof controllers, TSolutionType> & {
         solutionType: TSolutionType;
         context: ContextOptions;
-        controllerProps?: ControllersPropsMap;
       };
     type Listing = CommerceStaticState<typeof controllers, SolutionType.listing>;
     type Search = CommerceStaticState<typeof controllers, SolutionType.search>;
@@ -281,7 +325,7 @@ describe('the static and hydrated states of a commerce engine definition', () =>
       'productList' | 'searchBox' | RecommendationSlots | 'parameterManager' | 'context' | 'cart'
     >();
     expectTypeOf<keyof StandaloneHydratedState['controllers']>().toEqualTypeOf<
-      RecommendationSlots | 'context' | 'cart'
+      RecommendationSlots | 'productEnrichment' | 'context' | 'cart'
     >();
     expectTypeOf<keyof ListingStaticState['controllers']>().toEqualTypeOf<
       keyof ListingHydratedState['controllers']

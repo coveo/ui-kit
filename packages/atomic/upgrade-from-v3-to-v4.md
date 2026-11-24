@@ -41,3 +41,10 @@ Modified behaviors will be listed here.
 | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
 | A Stencil `VNode` as the `content` of a `SearchBoxSuggestionElement` | An `Element`, as the built-in suggestions pass <!-- decided 2026-10-31, not yet built --> |
 | `atomic-suggestion-renderer`                                         | None: it is internal to the search boxes <!-- decided 2026-10-31, not yet built -->       |
+
+### Custom components
+
+| Removed          | Replacement                                                                                                                                      |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `resultContext`  | `fetchResultContext` from `@coveo/atomic`, which takes the same element and returns the same promise <!-- decided 2026-11-23, not yet built -->  |
+| `productContext` | `fetchProductContext` from `@coveo/atomic`, which takes the same element and returns the same promise <!-- decided 2026-11-23, not yet built --> |

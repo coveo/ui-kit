@@ -9,16 +9,19 @@ import {
   useActionError,
   useComponentActionError,
   useLatestWhenFree,
+  type SurfaceAction,
   type QuerySubmitter,
   type SessionRequestSource,
 } from './session-request.js';
 import {requestSnapshot} from '../test/fake-session-requests.js';
 
-function fakeSession() {
+function fakeSession(concurrent: readonly SurfaceAction[] = []) {
   const listeners = new Set<() => void>();
   let snapshot = requestSnapshot(undefined);
   const session = {
     getSnapshot: () => snapshot,
+    isConcurrent: ({surfaceId, name}: SurfaceAction) =>
+      concurrent.some((action) => action.surfaceId === surfaceId && action.name === name),
     subscribe(listener: () => void) {
       listeners.add(listener);
       return () => listeners.delete(listener);
@@ -116,11 +119,17 @@ describe('useComponentActionError', () => {
 });
 
 describe('useLatestWhenFree', () => {
-  function mount(initial: string) {
-    const {session, setRequest} = fakeSession();
+  function mount(
+    initial: string,
+    {
+      concurrent,
+      sessionConcurrent = [],
+    }: {concurrent?: SurfaceAction; sessionConcurrent?: readonly SurfaceAction[]} = {}
+  ) {
+    const {session, setRequest} = fakeSession(sessionConcurrent);
     const send = vi.fn();
     function Consumer({value}: {value: string}) {
-      useLatestWhenFree(value, send);
+      useLatestWhenFree(value, send, concurrent);
       return null;
     }
     const view = render(
@@ -158,6 +167,44 @@ describe('useLatestWhenFree', () => {
 
     view.setRequest(undefined);
     expect(view.send.mock.calls).toEqual([['kay']]);
+  });
+
+  it('sends each value at once while the session is busy when the session sends the action concurrently', () => {
+    const view = mount('', {
+      concurrent: {surfaceId: 'shell', name: 'fetchSuggestions'},
+      sessionConcurrent: [{surfaceId: 'shell', name: 'fetchSuggestions'}],
+    });
+    view.setRequest({kind: 'prompt', turnId: 'turn'});
+
+    view.change('k');
+    view.change('ka');
+
+    expect(view.send.mock.calls).toEqual([['k'], ['ka']]);
+  });
+
+  it('holds values back while the session is busy when the session does not send the action concurrently', () => {
+    const view = mount('', {concurrent: {surfaceId: 'shell', name: 'fetchSuggestions'}});
+    view.setRequest({kind: 'prompt', turnId: 'turn'});
+
+    view.change('k');
+    expect(view.send).not.toHaveBeenCalled();
+
+    view.setRequest(undefined);
+    expect(view.send.mock.calls).toEqual([['k']]);
+  });
+
+  it('holds values back while the session is busy when the session sends the action concurrently from another surface only', () => {
+    const view = mount('', {
+      concurrent: {surfaceId: 'shell', name: 'fetchSuggestions'},
+      sessionConcurrent: [{surfaceId: 'other', name: 'fetchSuggestions'}],
+    });
+    view.setRequest({kind: 'prompt', turnId: 'turn'});
+
+    view.change('k');
+    expect(view.send).not.toHaveBeenCalled();
+
+    view.setRequest(undefined);
+    expect(view.send.mock.calls).toEqual([['k']]);
   });
 
   it('does not send the value last sent again', () => {

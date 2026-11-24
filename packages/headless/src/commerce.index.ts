@@ -100,6 +100,7 @@ export type {
   CategoryFacetValue,
   CategoryFacetValueRequest,
   DateFacetValue,
+  DateFilterRange,
   DateRangeRequest,
   FacetType,
   FacetValueRequest,
@@ -197,6 +198,7 @@ export type {
 export {buildFilterSuggestions} from './controllers/commerce/filter-suggestions/headless-filter-suggestions.js';
 export type {
   FilterSuggestionsGenerator,
+  FilterSuggestionsGeneratorOptions,
   GeneratedFilterSuggestionsControllers,
 } from './controllers/commerce/filter-suggestions/headless-filter-suggestions-generator.js';
 export {buildFilterSuggestionsGenerator} from './controllers/commerce/filter-suggestions/headless-filter-suggestions-generator.js';
@@ -273,7 +275,6 @@ export {buildRedirectionTrigger} from './controllers/commerce/triggers/headless-
 export type {Controller, Subscribable} from './controllers/controller/headless-controller.js';
 // Controllers
 export {buildController} from './controllers/controller/headless-controller.js';
-export type {DateFilterRange} from './controllers/core/facets/range-facet/date-facet/headless-core-date-filter.js';
 export type {InteractiveResultCore} from './controllers/core/interactive-result/headless-core-interactive-result.js';
 export type {
   NotifyTrigger,

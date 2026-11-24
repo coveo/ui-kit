@@ -4,11 +4,11 @@ import {
   type CategoryFacet,
   type CategoryFacetProps,
 } from '../../../../../controllers/facets/category-facet/headless-category-facet.js';
-import type {ControllerDefinitionWithoutProps} from '../../../types/controller-definition.js';
+import type {ControllerDefinition} from '../../../types/controller-definition.js';
 
 export * from '../../../../../controllers/facets/category-facet/headless-category-facet.js';
 
-export interface CategoryFacetDefinition extends ControllerDefinitionWithoutProps<
+export interface CategoryFacetDefinition extends ControllerDefinition<
   SearchEngine,
   CategoryFacet
 > {}

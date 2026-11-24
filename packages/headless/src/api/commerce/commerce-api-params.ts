@@ -98,6 +98,10 @@ export interface FacetIdParam {
   facetId: string;
 }
 
+export interface FacetFieldParam {
+  field?: string;
+}
+
 export interface IgnorePathsParam {
   ignorePaths: string[];
 }

@@ -145,12 +145,14 @@ describe('initialize', () => {
     });
   });
 
-  it('announces fetchInstantProducts on the shell as concurrent and cached for a minute', async () => {
+  it('announces fetchInstantProducts cached for a minute and fetchSuggestions uncached as concurrent on the shell', async () => {
     const [snapshot] = (await initialize()).filter(({event}) => event === 'ACTIVITY_SNAPSHOT');
     const shellId = (surfaceMessages([snapshot])[0].createSurface as {surfaceId: string}).surfaceId;
 
     expect(snapshot.data.metadata).toEqual({
-      concurrentActions: {[shellId]: {fetchInstantProducts: {cache: {ttlMs: 60000}}}},
+      concurrentActions: {
+        [shellId]: {fetchInstantProducts: {cache: {ttlMs: 60000}}, fetchSuggestions: {}},
+      },
     });
   });
 
@@ -200,10 +202,36 @@ describe('fetchSuggestions', () => {
     expect(await expressions('snowboard')).toEqual([]);
   });
 
-  it("runs on the session's keys", async () => {
+  it("runs on the session's keys and writes the whole slice in a single snapshot", async () => {
     const events = await fetchSuggestions('surf');
 
-    expect(events[0]).toEqual({event: 'turn_started', data: session});
+    expect(events.map(({event}) => event)).toEqual([
+      'turn_started',
+      'RUN_STARTED',
+      'ACTIVITY_SNAPSHOT',
+      'RUN_FINISHED',
+      'turn_complete',
+    ]);
+    expect(events[0].data).toEqual(session);
+    expect(events.at(-1)!.data).toEqual(session);
+    const messages = surfaceMessages(events);
+    expect(messages).toHaveLength(1);
+    expect(Object.keys((messages[0].updateDataModel as {value: object}).value)).toEqual([
+      'query',
+      'recentQueries',
+      'completions',
+    ]);
+  });
+
+  it('is a concurrent action', () => {
+    expect(
+      converseSchemaResponses.isConcurrentAction({
+        name: 'fetchSuggestions',
+        surfaceId: 'session-shell-1',
+        sourceComponentId: 'query_suggestions',
+        context: {query: 'surf'},
+      })
+    ).toBe(true);
   });
 });
 

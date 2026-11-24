@@ -12,7 +12,7 @@ export const {
 
 export const {
   useCart,
-  useContext,
+  useCommerceContext,
   useProductList,
   useDidYouMean,
   useInstantProducts,

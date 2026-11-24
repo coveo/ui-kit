@@ -3,7 +3,6 @@ import type {SearchEngine} from '../../../../app/search-engine/search-engine.js'
 import {
   buildSearchParameterManager,
   type SearchParameterManager,
-  type SearchParameterManagerInitialState,
 } from '../../../../controllers/search-parameter-manager/headless-search-parameter-manager.js';
 import {advancedSearchQueriesReducer as advancedSearchQueries} from '../../../../features/advanced-search-queries/advanced-search-queries-slice.js';
 import {configurationReducer as configuration} from '../../../../features/configuration/configuration-slice.js';
@@ -20,39 +19,29 @@ import {sortCriteriaReducer as sortCriteria} from '../../../../features/sort-cri
 import {staticFilterSetReducer as staticFilterSet} from '../../../../features/static-filter-set/static-filter-set-slice.js';
 import {tabSetReducer as tabSet} from '../../../../features/tab-set/tab-set-slice.js';
 import {loadReducerError} from '../../../../utils/errors.js';
-import {MissingControllerProps} from '../../../common/errors.js';
-import type {ControllerDefinitionWithProps} from '../../types/controller-definition.js';
+import type {ControllerDefinition} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/search-parameter-manager/headless-search-parameter-manager.js';
 
-export interface SearchParameterManagerBuildProps {
-  initialState: SearchParameterManagerInitialState;
-}
-
-export interface SearchParameterManagerDefinition extends ControllerDefinitionWithProps<
+export interface SearchParameterManagerDefinition extends ControllerDefinition<
   SearchEngine,
-  SearchParameterManager,
-  SearchParameterManagerBuildProps
+  SearchParameterManager
 > {}
 
 /**
- * Defines a `SearchParameterManager` controller instance.
- * @group Definers
+ * Defines the `SearchParameterManager` controller that every search engine definition includes as
+ * `parameterManager`. It is fed by the `searchParams` option of `fetchStaticState()`.
  *
- * @returns The `SearchParameterManager` controller definition.
- * */
+ * @internal
+ */
 export function defineSearchParameterManager(): SearchParameterManagerDefinition {
   return {
-    // TODO: KIT-5154 - Apply commerce pattern
-    buildWithProps: (engine, props) => {
-      if (props === undefined) {
-        throw new MissingControllerProps('SearchParameterManager');
-      }
+    build: (engine, {buildConfig}) => {
       if (!loadSearchParameterManagerReducers(engine)) {
         throw loadReducerError;
       }
       return buildSearchParameterManager(engine, {
-        initialState: props.initialState,
+        initialState: {parameters: buildConfig.searchParams ?? {}},
       });
     },
   };

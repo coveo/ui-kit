@@ -6,7 +6,10 @@ import type {
   CategoryFacetRequest,
   CategoryFacetValueRequest,
 } from '../../facet-set/interfaces/request.js';
-import {getFacetIdWithoutCommerceFieldSuggestionNamespace} from '../commerce-facet-search-actions.js';
+import {
+  getFacetIdWithoutCommerceFieldSuggestionNamespace,
+  getFacetSearchField,
+} from '../commerce-facet-search-actions.js';
 import type {StateNeededForCategoryFacetSearch} from './commerce-category-facet-search-state.js';
 
 export const buildCategoryFacetSearchRequest = (
@@ -25,6 +28,7 @@ export const buildCategoryFacetSearchRequest = (
       : [];
   const query = isFieldSuggestionsRequest ? baseFacetQuery : state.commerceQuery?.query;
   const numberOfValues = state.categoryFacetSearchSet[facetId]!.options.numberOfValues;
+  const field = getFacetSearchField(facetId, state);
 
   const {
     url,
@@ -44,6 +48,7 @@ export const buildCategoryFacetSearchRequest = (
     accessToken,
     organizationId,
     facetId: getFacetIdWithoutCommerceFieldSuggestionNamespace(facetId),
+    ...(!!field && {field}),
     facetQuery: isFieldSuggestionsRequest ? '*' : facetQuery,
     numberOfValues,
     ignorePaths,

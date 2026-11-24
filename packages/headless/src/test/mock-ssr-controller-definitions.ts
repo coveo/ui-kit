@@ -1,56 +1,15 @@
 import {vi} from 'vitest';
-import type {SearchEngine} from '../app/search-engine/search-engine.js';
 import type {Controller} from '../controllers/controller/headless-controller.js';
-import type {
-  ControllerDefinitionWithoutProps,
-  ControllerDefinitionWithProps,
-} from '../ssr/common/types/controllers.js';
 import {recommendationInternalOptionKey} from '../ssr-next/commerce/types/controller-constants.js';
 import type {SSRSearchEngine} from '../ssr-next/search/types/build.js';
-import type {
-  ControllerDefinitionWithoutProps as SearchControllerDefinitionWithoutProps,
-  ControllerDefinitionWithProps as SearchControllerDefinitionWithProps,
-} from '../ssr-next/search/types/controller-definition.js';
+import type {ControllerDefinition as SearchControllerDefinition} from '../ssr-next/search/types/controller-definition.js';
 import {buildMockController, buildMockControllerWithInitialState} from './mock-controller.js';
-
-interface MockController {
-  initialState?: Record<string, unknown>;
-}
-
-interface MockControllerDefinitionWithoutProps extends ControllerDefinitionWithoutProps<
-  SearchEngine,
-  Controller
-> {}
-
-interface MockControllerDefinitionWithProps extends ControllerDefinitionWithProps<
-  SearchEngine,
-  Controller,
-  MockController
-> {}
 
 type SolutionTypeAvailabilities = {
   listing?: boolean;
   search?: boolean;
   standalone?: boolean;
 };
-
-export function defineMockController(): MockControllerDefinitionWithoutProps {
-  return {
-    build: vi.fn((_engine) => {
-      return buildMockController();
-    }),
-  };
-}
-
-export function defineMockControllerWithProps(): MockControllerDefinitionWithProps {
-  return {
-    buildWithProps: vi.fn((engine, props) => {
-      return buildMockControllerWithInitialState(engine, {
-        initialState: props?.initialState,
-      });
-    }),
-  };
-}
 
 export function defineMockCommerceController(options?: SolutionTypeAvailabilities) {
   return {
@@ -63,19 +22,25 @@ export function defineMockCommerceController(options?: SolutionTypeAvailabilitie
   };
 }
 
-export function defineMockCommerceControllerWithProps(options?: SolutionTypeAvailabilities) {
+/**
+ * A commerce controller whose state is the page facts it was built with.
+ */
+export function defineMockCommerceControllerReadingPageFacts(options?: SolutionTypeAvailabilities) {
   return {
-    buildWithProps: vi.fn((engine, props) => ({
-      ...buildMockControllerWithInitialState(engine, {
-        initialState: props?.initialState,
-      }),
-    })),
+    build: vi.fn((engine, context) =>
+      buildMockControllerWithInitialState(engine, {
+        initialState: context?.buildConfig,
+      })
+    ),
     listing: options?.listing ?? true,
     search: options?.search ?? true,
     standalone: options?.standalone ?? true,
   };
 }
 
+/**
+ * A recommendation slot whose state carries the product it was seeded with.
+ */
 export function defineMockRecommendationDefinition(slotId: string) {
   return {
     search: true,
@@ -84,30 +49,20 @@ export function defineMockRecommendationDefinition(slotId: string) {
     [recommendationInternalOptionKey]: {
       slotId,
     },
-    buildWithProps: vi.fn((engine, props) => ({
-      ...buildMockControllerWithInitialState(engine, {
-        initialState: props,
-      }),
-    })),
+    build: vi.fn((engine, context) =>
+      buildMockControllerWithInitialState(engine, {
+        initialState: {productId: context?.buildConfig?.productId},
+      })
+    ),
   };
 }
 
-interface MockSearchController {
-  initialState?: Record<string, unknown>;
-}
-
-interface MockSearchControllerDefinitionWithoutProps extends SearchControllerDefinitionWithoutProps<
+interface MockSearchControllerDefinition extends SearchControllerDefinition<
   SSRSearchEngine,
   Controller
 > {}
 
-interface MockSearchControllerDefinitionWithProps extends SearchControllerDefinitionWithProps<
-  SSRSearchEngine,
-  Controller,
-  MockSearchController
-> {}
-
-export function defineMockSearchController(): MockSearchControllerDefinitionWithoutProps {
+export function defineMockSearchController(): MockSearchControllerDefinition {
   return {
     build: vi.fn((_engine) => {
       return buildMockController();
@@ -115,22 +70,15 @@ export function defineMockSearchController(): MockSearchControllerDefinitionWith
   };
 }
 
-export function defineMockSearchControllerWithProps(): MockSearchControllerDefinitionWithProps {
+/**
+ * A search controller whose state is the page facts it was built with.
+ */
+export function defineMockSearchControllerReadingPageFacts(): MockSearchControllerDefinition {
   return {
-    buildWithProps: vi.fn((engine, props) => {
-      return buildMockControllerWithInitialState(engine, {
-        initialState: props?.initialState,
-      });
-    }),
-  };
-}
-
-export function defineMockSearchParameterManager(): MockSearchControllerDefinitionWithProps {
-  return {
-    buildWithProps: vi.fn((engine, props) => {
-      return buildMockControllerWithInitialState(engine, {
-        initialState: props?.initialState,
-      });
-    }),
+    build: vi.fn((engine, context) =>
+      buildMockControllerWithInitialState(engine, {
+        initialState: context?.buildConfig,
+      })
+    ),
   };
 }

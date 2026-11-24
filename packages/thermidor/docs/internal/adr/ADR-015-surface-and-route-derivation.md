@@ -127,7 +127,10 @@ successor) is populated from the server's typed data instead of derived from
 
 > **Retired (2026-11-19)** by [ADR-021](./ADR-021-a2ui-1-0-renderer-stream.md): its retirement
 > condition holds, the projection is deleted, and `session.a2uiMessages` carries Agent Gateway's
-> v1.0 messages unchanged. Kept for the record.
+> v1.0 messages unchanged. Kept for the record. Before the retirement, an interim release let the
+> projection read both the v1.0 candidate and the final v1.0
+> ([coveo/ui-kit#9024](https://github.com/coveo/ui-kit/pull/9024)), so v0.9 renderers kept working
+> while Agent Gateway switched; see "Dual input while Agent Gateway moves to the final v1.0" below.
 
 A second derived projection of the same class now lives beside `response.surfaces`:
 **`response.a2uiMessages`**, the turn's A2-UI message stream downgraded to the v0.9
@@ -212,6 +215,36 @@ and from the fold, and let consumers read `response.activities` directly. That i
 breaking change to `@coveo/thermidor`, which is intended and acceptable while the
 package is `0.x` — and is precisely why this compensation belongs in the package
 rather than in the server.
+
+### Dual input while Agent Gateway moves to the final v1.0 (2026-11-20)
+
+A2-UI v1.0 is now final, and Agent Gateway is switching from the candidate to it. On the
+wire, two things change: the envelope `version` goes from `"v1.0"` to `"1.0"`, and a data
+binding goes from `{ "path": <JSON Pointer> }` to `{ "@path": <JSON Pointer> }`. Component
+ids also become snake_case, which the projection never reads.
+
+Consumers such as the Coveo Admin UI still render with a v0.9 renderer (`@a2ui/web_core`
+0.12), and no v1.0 renderer is on npm yet. So that the backend can switch without breaking
+them, the projection reads **both** inputs for the length of the switch and produces the same
+v0.9 output for each:
+
+- both envelopes get the same conversion (the `createSurface` split, `value: null` as a v0.9
+  deletion, the `"v0.9"` envelope) and the same surface lifecycle rules (a `deleteSurface`
+  before a re-create);
+- in the component nodes of a `"1.0"` message, and only there, a final binding becomes a v0.9
+  binding at any depth. A binding is an object whose only key is `@path`, holding a string, the
+  rule Agent Gateway applies. In a candidate `"v1.0"` message `@path` is not a binding marker, so
+  its nodes are forwarded unchanged, as before. Agent Gateway switches the envelope and the
+  bindings together, so the two never arrive mixed. Other `path` keys are data, not bindings, and are left alone: `updateDataModel.path`,
+  a ChildList template `{ componentId, path }`, and data-model values such as a category
+  facet's `path`;
+- component ids are forwarded as they arrive, snake_case or hyphenated.
+
+The public API doesn't change. The order is: release this, let consumers move to it, then
+switch the backend. The candidate input becomes dead code once the backend has switched, and it
+goes with the rest of the projection under the retirement condition above;
+[coveo/ui-kit#9017](https://github.com/coveo/ui-kit/pull/9017) is that retirement, for
+`@a2ui/react` 0.16.
 
 ### Coupling to serialization ([ADR-011](./ADR-011-session-serialization.md))
 

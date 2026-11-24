@@ -1,5 +1,5 @@
 # Development container for pnpm-based monorepo
-FROM node:krypton-bookworm@sha256:9d266751ca3d7fdbe651c878ffd5ad0a42fed49a18c283509267c97f025b7496
+FROM node:krypton-bookworm@sha256:6b33b0be1647d1a577f9cebb6c8fc2587cc02c98c9956af8d0289df1791a3d10
 
 # Install essential packages
 RUN apt-get update && apt-get install -y \
@@ -29,7 +29,7 @@ RUN mkdir -p /pnpm/store && chown -R node:node /pnpm
 USER node
 
 # Pre-install pnpm as the node user so it's ready to use
-RUN corepack prepare pnpm@11.28.11 --activate
+RUN corepack prepare pnpm@11.28.12 --activate
 
 # Install turbo globally so it's available in terminal
 RUN pnpm add -g turbo@2.5.5

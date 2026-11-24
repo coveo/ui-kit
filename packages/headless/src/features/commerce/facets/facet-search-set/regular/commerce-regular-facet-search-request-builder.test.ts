@@ -3,10 +3,13 @@ import type {CommerceFacetSearchRequest} from '../../../../../api/commerce/facet
 import type {NavigatorContext} from '../../../../../app/navigator-context-provider.js';
 import * as Actions from '../../../../../features/commerce/common/filterable-commerce-api-request-builder.js';
 import type {CommerceAppState} from '../../../../../state/commerce-app-state.js';
+import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request.js';
+import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice.js';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
 import {buildMockFacetSearch} from '../../../../../test/mock-facet-search.js';
 import {buildMockFacetSearchRequestOptions} from '../../../../../test/mock-facet-search-request-options.js';
 import {buildMockNavigatorContextProvider} from '../../../../../test/mock-navigator-context-provider.js';
+import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../commerce-facet-search-actions.js';
 import {buildFacetSearchRequest} from './commerce-regular-facet-search-request-builder.js';
 
 describe('#buildFacetSearchRequest', () => {
@@ -38,6 +41,36 @@ describe('#buildFacetSearchRequest', () => {
     const request = buildFacetSearchRequest(facetId, state, false, navigatorContext);
 
     expect(request.facetId).toBe(facetId);
+  });
+
+  describe('returned object #field property', () => {
+    it('when the facet is in the facet set, is the field of the facet', () => {
+      state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
+        request: buildMockCommerceFacetRequest({facetId, field: 'ec_brand'}),
+      });
+
+      const request = buildFacetSearchRequest(facetId, state, false, navigatorContext);
+
+      expect(request.field).toBe('ec_brand');
+    });
+
+    it('when the facet is a field suggestions facet, is the field of that facet', () => {
+      const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(facetId);
+      state.facetSearchSet[namespacedFacetId] = state.facetSearchSet[facetId];
+      state.fieldSuggestionsOrder = [
+        {facetId, field: 'ec_brand', displayName: 'Brand', type: 'regular'},
+      ];
+
+      const request = buildFacetSearchRequest(namespacedFacetId, state, true, navigatorContext);
+
+      expect(request.field).toBe('ec_brand');
+    });
+
+    it('when the facet field is unknown, is absent', () => {
+      const request = buildFacetSearchRequest(facetId, state, false, navigatorContext);
+
+      expect(request).not.toHaveProperty('field');
+    });
   });
 
   describe('when not building a field suggestion request', () => {

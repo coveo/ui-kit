@@ -13,7 +13,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@copilotkit/a2ui-renderer": "1.85.0",
+    "@copilotkit/a2ui-renderer": "1.88.0",
     "@coveo/thermidor": "workspace:*",
     "@coveo/thermidor-schema": "catalog:",
     "react": "catalog:",

@@ -48,8 +48,25 @@ export interface FilterSuggestionsGenerator extends Controller {
 }
 
 /**
+ * The options of the filter suggestions generator.
+ *
+ * @group Buildable controllers
+ * @category FilterSuggestionsGenerator
+ */
+export interface FilterSuggestionsGeneratorOptions {
+  /**
+   * When set to true, the search that a selected filter suggestion triggers fills the `results`
+   * field rather than the `products` field in the response. It may also include Spotlight Content
+   * in the results.
+   * @default false
+   */
+  enableResults?: boolean;
+}
+
+/**
  * Builds a filter suggestions generator controller for a given commerce engine.
  * @param engine - The commerce engine.
+ * @param options - The options of the filter suggestions generator.
  * @returns The filter suggestions generator controller.
  *
  * @alpha  This controller relies on a Commerce API functionality that is not yet generally available. If you wish to
@@ -59,14 +76,15 @@ export interface FilterSuggestionsGenerator extends Controller {
  * @category FilterSuggestionsGenerator
  */
 export function buildFilterSuggestionsGenerator(
-  engine: CommerceEngine
+  engine: CommerceEngine,
+  {enableResults = false}: FilterSuggestionsGeneratorOptions = {}
 ): FilterSuggestionsGenerator {
   if (!loadFilterSuggestionsGeneratorReducers(engine)) {
     throw loadReducerError;
   }
 
   const commonOptions = {
-    fetchProductsActionCreator: executeSearch,
+    fetchProductsActionCreator: () => executeSearch({enableResults}),
     facetResponseSelector,
     isFacetLoadingResponseSelector,
     facetSearch: {type: 'SEARCH' as FacetSearchType},

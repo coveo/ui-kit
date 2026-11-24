@@ -6,43 +6,39 @@ import type {
   ControllerDefinitionsMap,
   InferControllerFromDefinition,
   SolutionType,
-  CommerceEngine as SSRCommerceEngine,
 } from '@coveo/headless/ssr-commerce-next';
 import type {FunctionComponent, PropsWithChildren} from 'react';
+import type {ControllerHook, StateProviderProps} from '../ssr-common/types.js';
 
-export type ContextHydratedState<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-  TSolutionType extends SolutionType,
-> = {
-  engine: SSRCommerceEngine;
-  controllers: CommerceHydratedState<TControllers, TSolutionType>['controllers'];
-  solutionType: TSolutionType;
-};
+export type {ControllerHook, Hydration, HydrationStatus} from '../ssr-common/types.js';
 
-export type ContextState<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-  TSolutionType extends SolutionType,
-> = {
-  engine?: SSRCommerceEngine;
-  controllers:
-    | CommerceHydratedState<TControllers, TSolutionType>['controllers']
-    | CommerceStaticState<TControllers, TSolutionType>['controllers'];
-  solutionType: TSolutionType;
-};
+/**
+ * The name of a controller's hook: `use<Name>`, except for the built-in `context` controller, whose
+ * hook is `useCommerceContext` so that it does not shadow React's own `useContext`.
+ */
+type ControllerHookName<K> = K extends 'context'
+  ? 'useCommerceContext'
+  : `use${Capitalize<K extends string ? K : never>}`;
 
-export type ControllerHook<TController extends Controller> = () => {
-  state: TController['state'];
-  methods?: Omit<TController, 'state' | 'subscribe'>;
-};
-
+/**
+ * The hooks of an engine definition: one `use<Name>` hook per controller, with `useCommerceContext`
+ * for the built-in `context` controller.
+ *
+ * @group Hooks
+ */
 export type InferControllerHooksMapFromDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
 > = {
-  [K in keyof TControllers as `use${Capitalize<K extends string ? K : never>}`]: ControllerHook<
+  [K in keyof TControllers as ControllerHookName<K>]: ControllerHook<
     InferControllerFromDefinition<TControllers[K]>
   >;
 };
 
+/**
+ * A commerce engine definition with the React `StateProvider` of its hooks.
+ *
+ * @group Engine
+ */
 export type ReactEngineDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
@@ -55,19 +51,4 @@ export type ReactEngineDefinition<
       >
     >
   >;
-};
-
-/**
- * The props of the `StateProvider` of an engine definition: the controllers that its hooks read (their
- * static state, or the live controllers once hydrated) and the hydrated engine.
- *
- * @typeParam TStaticState - The static state of the engine definition.
- * @typeParam THydratedState - The hydrated state of the engine definition.
- */
-export type StateProviderProps<
-  TStaticState extends {controllers: object},
-  THydratedState extends {engine: unknown; controllers: object},
-> = {
-  engine?: THydratedState['engine'];
-  controllers: TStaticState['controllers'] | THydratedState['controllers'];
 };

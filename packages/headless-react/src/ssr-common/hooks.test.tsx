@@ -1,33 +1,27 @@
-import {
-  type CommerceHydratedState,
-  type CommerceStaticState,
-  type Controller,
-  type ControllerDefinitionsMap,
-  SolutionType,
-  type CommerceEngine as SSRCommerceEngine,
-} from '@coveo/headless/ssr-commerce-next';
 import {act, cleanup, render, screen} from '@testing-library/react';
-import React, {type Context, createContext} from 'react';
+import React, {createContext} from 'react';
 import {afterEach, describe, expect, test, vi} from 'vitest';
-import {buildControllerHooks, buildStateProvider} from './common.js';
-import type {ContextState, StateProviderProps} from './types.js';
+import {buildControllerHooks, buildStateProvider} from './hooks.js';
+import type {EngineContextState} from './types.js';
 
-type MockDefinitions = ControllerDefinitionsMap<Controller>;
-type MockContext = ContextState<MockDefinitions, SolutionType.listing>;
-type MockControllers = StateProviderProps<
-  CommerceStaticState<MockDefinitions, SolutionType.listing>,
-  CommerceHydratedState<MockDefinitions, SolutionType.listing>
->['controllers'];
-describe('SSR Commerce Common functions', () => {
-  const mockContext = createContext(null) as unknown as Context<MockContext | null>;
+interface MockEngine {
+  subscribe: () => void;
+  dispatch: () => void;
+}
+
+type MockContext = EngineContextState<MockEngine>;
+type MockDefinitions = Record<string, object>;
+type MockControllers = MockContext['controllers'];
+describe('SSR state provider', () => {
+  const mockContext = createContext<MockContext | null>(null);
   const mockSingletonContext = {
     get: () => mockContext,
   };
 
-  const mockEngine = {
+  const mockEngine: MockEngine = {
     subscribe: vi.fn(),
     dispatch: vi.fn(),
-  } as unknown as SSRCommerceEngine;
+  };
 
   const mockControllers = {
     searchBox: {
@@ -35,15 +29,15 @@ describe('SSR Commerce Common functions', () => {
       subscribe: vi.fn(),
       methods: {updateText: vi.fn()},
     },
-  } as unknown as MockControllers;
+  };
 
   const mockStaticControllers = {
     searchBox: {
       state: {value: 'test'},
     },
-  } as unknown as MockControllers;
+  };
 
-  const mockSolutionType = SolutionType.listing;
+  const mockSolutionType = 'listing';
 
   function TestComponent() {
     return <div data-testid="test-component">Test</div>;
@@ -259,6 +253,18 @@ describe('SSR Commerce Common functions', () => {
 
       expect(controller.subscribe).toHaveBeenCalledTimes(1);
       expect(latestMethods).toBe(firstMethods);
+    });
+
+    test('should throw when two controllers would get the same hook', () => {
+      expect(() =>
+        buildControllerHooks(
+          mockSingletonContext,
+          {commerceContext: {}, context: {}},
+          {hookNames: {context: 'useCommerceContext'}}
+        )
+      ).toThrow(
+        'The commerceContext and context controllers would both get the useCommerceContext hook'
+      );
     });
   });
 });

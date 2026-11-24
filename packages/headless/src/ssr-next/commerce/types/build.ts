@@ -2,7 +2,6 @@ import type {UnknownAction} from '@reduxjs/toolkit';
 import type {CommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
 import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import type {CartInitialState} from '../controllers/cart/headless-cart.ssr.js';
 import type {ContextOptions} from '../controllers/context/headless-context.ssr.js';
 import type {
@@ -14,6 +13,7 @@ import type {
   ControllerDefinitionsMap,
   IsRecommendationController,
 } from './controller-definitions.js';
+import type {WithViewUrl} from '../utils/view-url.js';
 
 /**
  * The keys under which a controllers map declares its `defineRecommendations()` controllers, for
@@ -31,6 +31,37 @@ export type RecommendationNames<TControllers extends ControllerDefinitionsMap<Co
             : K;
         }[keyof TControllers]
       >;
+
+/**
+ * Whether the listing and search requests fill `results` (products and spotlight content) rather
+ * than `products`: `true` for both kinds of request, or one flag per kind.
+ */
+export type EnableResultsOption = boolean | {search?: boolean; listing?: boolean};
+
+/**
+ * The `enableResults` option of the engine definition, resolved for each kind of request.
+ */
+export interface ResolvedEnableResults {
+  listing: boolean;
+  search: boolean;
+}
+
+/**
+ * What a controller definition receives to build its controller for a request: the kind of page it is
+ * built for, the page facts passed to `fetchStaticState()`, and the results flag of the definition.
+ */
+export interface ControllerBuildContext {
+  solutionType: SolutionType;
+  /**
+   * The page facts, with the URL of the page (`context.view.url`) resolved.
+   */
+  buildConfig: WithViewUrl<CommonBuildConfig>;
+  /**
+   * Whether the requests the controller triggers fill `results` rather than `products`, from the
+   * `enableResults` option of the engine definition.
+   */
+  enableResults: ResolvedEnableResults;
+}
 
 export interface SearchBuildConfig<
   TControllers extends ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
@@ -222,11 +253,9 @@ export type BuildConfig<
       : never;
 
 /**
- * What a build reads: the build configuration, the controller props under `controllers` and, when
- * hydrating, the search actions to replay.
+ * What a build reads: the page facts and, when hydrating, the search actions to replay.
  */
 export type BuildParameters<TControllers extends ControllerDefinitionsMap<Controller>> =
   BuildConfig<TControllers, SolutionType> & {
-    controllers?: ControllersPropsMap;
     searchActions?: UnknownAction[];
   };
