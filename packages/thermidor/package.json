@@ -33,6 +33,7 @@
   "scripts": {
     "publint": "publint",
     "build": "tsdown",
+    "build:typedoc": "typedoc --tsconfig tsconfig.typedoc.json",
     "clean": "node ../../utils/ci/rm-rf.mjs dist",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -44,12 +45,14 @@
     "@ag-ui/core": "0.0.59"
   },
   "devDependencies": {
+    "@coveo/documentation": "workspace:*",
     "@microsoft/api-extractor": "7.60.1",
     "@size-limit/preset-small-lib": "catalog:",
     "fast-check": "4.10.2",
     "publint": "catalog:",
     "size-limit": "catalog:",
     "tsdown": "0.23.7",
+    "typedoc": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:",
     "zod": "catalog:"
