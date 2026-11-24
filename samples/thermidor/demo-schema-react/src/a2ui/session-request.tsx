@@ -18,8 +18,8 @@ import type {
 import type {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
 
 /**
- * What the surfaces read from the session: its request in flight, why the last action failed, and
- * whether an action is sent beside the request in flight.
+ * What the surfaces read from the session: its request and concurrent actions in flight, why the
+ * last action failed, and whether an action is sent beside the request in flight.
  */
 export type SessionRequestSource = Pick<Session, 'subscribe' | 'getSnapshot'> &
   Partial<Pick<Session, 'isConcurrent'>>;
@@ -195,6 +195,112 @@ export function nodeState(
 export function useReadSnapshot(): () => SessionSnapshot {
   const source = useContext(SessionRequestContext);
   return source.getSnapshot;
+}
+
+/** An action dispatched from a node. */
+export interface NodeAction extends SurfaceAction {
+  sourceComponentId: string;
+}
+
+function sameNodeAction(
+  a: Pick<NodeAction, 'surfaceId' | 'sourceComponentId' | 'name'>,
+  b: NodeAction
+): boolean {
+  return (
+    a.surfaceId === b.surfaceId && a.sourceComponentId === b.sourceComponentId && a.name === b.name
+  );
+}
+
+/**
+ * Whether the latest dispatch of `action` awaits its answer beside the session's request, as the
+ * producer announces it concurrent (ADR-020). Read once an older dispatch resolves, it tells that a
+ * later one superseded it.
+ */
+export function isConcurrentInFlight(snapshot: SessionSnapshot, action: NodeAction): boolean {
+  return snapshot.concurrentRequests.some((request) => sameNodeAction(request, action));
+}
+
+/**
+ * Whether the session reports the failure of `action`, on the path its dispatch took: `concurrent`
+ * when `session.isConcurrent` said so just before it was dispatched. A concurrent action reports
+ * the failure of its node's latest dispatch in `concurrentFailures`, kept until the node dispatches
+ * it again; an action sent as the session's request reports it in `actionError`, cleared once
+ * anything else is sent. Each path reads only its own, so a failure left on the other path, before
+ * the producer's announcement changed, does not count.
+ */
+export function hasFailed(
+  snapshot: SessionSnapshot,
+  action: NodeAction,
+  concurrent: boolean
+): boolean {
+  const {actionError, concurrentFailures} = snapshot;
+  return concurrent
+    ? concurrentFailures.some((failure) => sameNodeAction(failure, action))
+    : actionError !== undefined && sameNodeAction(actionError, action);
+}
+
+/** Whether the latest dispatch of `action` awaits its answer beside the session's request. */
+export function useConcurrentInFlight(action: NodeAction | undefined): boolean {
+  const source = useContext(SessionRequestContext);
+  const {surfaceId, sourceComponentId, name} = action ?? {};
+  return useSyncExternalStore(
+    source.subscribe,
+    () =>
+      surfaceId !== undefined &&
+      sourceComponentId !== undefined &&
+      name !== undefined &&
+      isConcurrentInFlight(source.getSnapshot(), {surfaceId, sourceComponentId, name}),
+    () => false
+  );
+}
+
+/**
+ * How a dispatch ended: `applied` when its answer was applied, `failed` when the session reports its
+ * failure, `superseded` when a later dispatch of its node action is in flight, which brings the
+ * answer to read.
+ */
+export type DispatchOutcome = 'applied' | 'failed' | 'superseded';
+
+/** Whether the session sends `action` beside its request (`session.isConcurrent`), as it changes. */
+export function useIsConcurrent(action: SurfaceAction | undefined): boolean {
+  const source = useContext(SessionRequestContext);
+  const {surfaceId, name} = action ?? {};
+  return useSyncExternalStore(
+    source.subscribe,
+    () =>
+      surfaceId !== undefined &&
+      name !== undefined &&
+      source.isConcurrent?.({surfaceId, name}) === true,
+    () => false
+  );
+}
+
+/**
+ * Dispatches `action` with `dispatch`, and resolves with how it ended once it resolves, on the path
+ * it takes: concurrently when `session.isConcurrent` says so, as the session's request otherwise.
+ *
+ * A concurrent dispatch reads its node's latest dispatch in `concurrentRequests` and
+ * `concurrentFailures`. An ordinary one is best effort: it failed when `actionError` names it as it
+ * resolves, so a failure that another dispatch cleared meanwhile reads as applied, and so does a
+ * dispatch cancelled for a prompt.
+ */
+export function useDispatchOutcome(): (
+  action: NodeAction,
+  dispatch: () => unknown
+) => Promise<DispatchOutcome> {
+  const source = useContext(SessionRequestContext);
+  return useCallback(
+    async (action, dispatch) => {
+      const concurrent = source.isConcurrent?.(action) === true;
+      await dispatch();
+      const snapshot = source.getSnapshot();
+      if (concurrent && isConcurrentInFlight(snapshot, action)) {
+        return 'superseded';
+      }
+      return hasFailed(snapshot, action, concurrent) ? 'failed' : 'applied';
+    },
+    [source]
+  );
 }
 
 /** What {@link submitQuery} needs from the session. */
