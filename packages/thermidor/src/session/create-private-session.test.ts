@@ -20,6 +20,10 @@ import {createSession} from './create-session.js';
 
 const contracts = z.discriminatedUnion('component', [
   z.strictObject({
+    component: z.literal('SessionShell'),
+    actions: z.strictObject({initialize: z.strictObject({payload: z.strictObject({})})}).optional(),
+  }),
+  z.strictObject({
     component: z.literal('Pagination'),
     actions: z
       .strictObject({
@@ -165,6 +169,17 @@ describe('createPrivateSession', () => {
     expect(() =>
       createPrivateSession(config({navigatorContextProvider: undefined as never}))
     ).toThrow('navigatorContextProvider');
+  });
+
+  it('throws when the contracts do not declare SessionShell, unless initialize is false', () => {
+    const withoutShell = z.discriminatedUnion('component', [
+      z.strictObject({component: z.literal('Pagination')}),
+    ]) as unknown as ContractsSchema;
+
+    expect(() => createPrivateSession(config({contracts: withoutShell, initialize: true}))).toThrow(
+      "declare SessionShell's initialize"
+    );
+    expect(() => createPrivateSession(config({contracts: withoutShell}))).not.toThrow();
   });
 
   it.each(['language', 'country', 'currency'])(

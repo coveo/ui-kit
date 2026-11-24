@@ -210,7 +210,8 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
    * {@link createSession} returns so that a listener subscribed in the same task sees it start.
    * Defaults to `true`. A restored session sends it only when it has a token. Pass `false` for
    * tests, or for a server that creates a session while rendering; the session keys then go out
-   * with the first prompt or action.
+   * with the first prompt or action. Unless `false`, {@link createSession} throws when the contracts
+   * don't accept `SessionShell`'s `initialize` with an empty payload.
    */
   initialize?: boolean;
 }
@@ -387,6 +388,7 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * fresh `'streaming'` run while it runs, a restored session's included. It carries the session's
    * keys when it has them, so the endpoint resumes that session. Does nothing when the
    * initialization is `undefined`, streaming or complete, or while a request is in flight.
+   * Throws instead of sending it when the contracts don't accept `SessionShell`'s `initialize`.
    */
   retryInitialization(): void;
   /** Serializes the session transcript for persistence. */
@@ -537,6 +539,18 @@ function validateSessionKeys({sessionId, sessionToken, sessionToRestore}: Sessio
   }
 }
 
+const SESSION_SHELL = 'SessionShell';
+const INITIALIZE = 'initialize';
+
+function requireInitializeContract(contracts: ContractsSchema, hint = ''): void {
+  const validation = validateActionPayload(SESSION_SHELL, INITIALIZE, {}, contracts);
+  if (!validation.valid) {
+    throw new Error(
+      `Sending ${INITIALIZE} requires contracts that declare ${SESSION_SHELL}'s ${INITIALIZE} with an empty payload (${validation.reason}).${hint}`
+    );
+  }
+}
+
 /**
  * The session runtime both entry points share. `requestScope` holds the fields sent with
  * every request besides the ones the session builds itself.
@@ -549,6 +563,12 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     throw new Error('A session requires a navigatorContextProvider.');
   }
   validateSessionKeys(config);
+  if (config.initialize !== false) {
+    requireInitializeContract(
+      config.contracts,
+      ' Pass initialize: false for a session that never sends it by itself.'
+    );
+  }
   // An id without a token may not be the endpoint's: the session drops it if a request that may
   // have reserved it ends before the endpoint sends a token.
   const seed = config.sessionToRestore ?? config;
@@ -1197,7 +1217,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
             INITIALIZATION,
             () =>
               buildActionRequest({
-                name: 'initialize',
+                name: INITIALIZE,
                 timestamp: new Date().toISOString(),
                 context: {},
               }),
@@ -1553,6 +1573,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     if (initialization?.status !== 'error' || request) {
       return;
     }
+    requireInitializeContract(config.contracts);
     void initialize(false);
   }
 

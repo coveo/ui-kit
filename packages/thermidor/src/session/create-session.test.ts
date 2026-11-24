@@ -94,7 +94,13 @@ const ProductListSchema = z.strictObject({
     .optional(),
 });
 
+const SessionShellSchema = z.strictObject({
+  component: z.literal('SessionShell'),
+  actions: z.strictObject({initialize: z.strictObject({payload: z.strictObject({})})}).optional(),
+});
+
 const contracts = z.discriminatedUnion('component', [
+  SessionShellSchema,
   PaginationSchema,
   NextActionsBarSchema,
   ProductListSchema,
@@ -3090,6 +3096,55 @@ describe('createSession lifecycle', () => {
         expect(session.initialization?.status).toBe('complete');
       });
 
+      describe('with contracts that do not accept initialize', () => {
+        const contractsWith = (...members: z.ZodObject[]) =>
+          z.discriminatedUnion('component', [
+            PaginationSchema,
+            ...members,
+          ]) as unknown as ContractsSchema;
+        const shellWithActions = (actions: z.ZodObject) =>
+          z.strictObject({component: z.literal('SessionShell'), actions: actions.optional()});
+
+        it.each([
+          ['no SessionShell', contractsWith()],
+          ['no initialize', contractsWith(shellWithActions(z.strictObject({})))],
+          [
+            'an initialize that rejects an empty payload',
+            contractsWith(
+              shellWithActions(
+                z.strictObject({
+                  initialize: z.strictObject({payload: z.strictObject({locale: z.string()})}),
+                })
+              )
+            ),
+          ],
+        ])('throws with %s, unless initialize is false', (_, contracts) => {
+          expect(() => createSession({...baseConfig, contracts, initialize: undefined})).toThrow(
+            /declare SessionShell's initialize with an empty payload .*Pass initialize: false/
+          );
+          expect(() => createSession({...baseConfig, contracts, initialize: false})).not.toThrow();
+          expect(callMock).not.toHaveBeenCalled();
+        });
+
+        it('throws from retryInitialization', async () => {
+          queueStream();
+          const interrupted = createSession(shellConfig);
+          await vi.advanceTimersByTimeAsync(0);
+          const session = createSession({
+            ...baseConfig,
+            contracts: contractsWith(),
+            sessionToRestore: interrupted.serialize(),
+          });
+          expect(session.initialization?.status).toBe('error');
+
+          expect(() => session.retryInitialization()).toThrow(
+            /^Sending initialize requires contracts that declare SessionShell's initialize with an empty payload \(.*\)\.$/
+          );
+          expect(session.initialization?.status).toBe('error');
+          expect(callMock).toHaveBeenCalledTimes(1);
+        });
+      });
+
       it('retryInitialization sends initialize from a session restored while initialize was in flight', async () => {
         queueStream();
         const interrupted = createSession(shellConfig);
@@ -3788,6 +3843,7 @@ describe('createSession with the final A2-UI 1.0 stream (stand-in Breadbox contr
       .optional(),
   });
   const finalContracts = z.discriminatedUnion('component', [
+    SessionShellSchema,
     PaginationSchema,
     BreadboxSchema,
   ]) as unknown as ContractsSchema;
