@@ -125,7 +125,9 @@ export interface A2uiClientMessage {
  * of a session.
  */
 export interface SubmitPromptAction {
+  /** Identifies a prompt submission. */
   name: 'submitPrompt';
+  /** The prompt to submit. */
   payload: {
     /** The prompt recorded as the new turn's `input.prompt`. */
     prompt: string;
@@ -152,7 +154,15 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
    * A2-UI contract schema, not only `@coveo/thermidor-schema`.
    */
   contracts: TContracts;
+  /**
+   * The unique identifier of the Coveo organization. The session derives the converse URL from
+   * it, unless `endpoint` is set.
+   */
   organizationId: string;
+  /**
+   * The token that authenticates every request, sent as a bearer token. A request without one
+   * fails without being sent.
+   */
   accessToken: string;
   /**
    * Full converse URL override. When provided the client POSTs to it verbatim

@@ -2,7 +2,7 @@
 
 `@coveo/thermidor` is an experimental, framework-agnostic client for a single, stateful, intent-routing **unified converse endpoint**. It exposes one factory — `createSession(config)` — that returns a `Session`: a plain observable list of `Turn`s folded from a server-sent-event (SSE) stream, plus a single action-dispatch entry point wired straight to the renderer.
 
-The package is private, experimental, and consumed only inside this monorepo (by `samples/thermidor/demo-schema-react`).
+The package is experimental: its API can change in any release.
 
 > There is **no engine, no interface layer, no Redux/RTK, and no per-endpoint facades**. References to those layers in older revisions are obsolete.
 

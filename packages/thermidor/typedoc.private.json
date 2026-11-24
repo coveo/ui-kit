@@ -1,0 +1,7 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "extends": ["./typedoc.json"],
+  "entryPoints": ["src/private.ts"],
+  "plugin": [],
+  "emit": "none"
+}

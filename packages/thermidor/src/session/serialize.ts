@@ -74,7 +74,9 @@ const STREAM_INTERRUPTED = {
  * turns whose runtime `response.agent` was present.
  */
 export interface SerializedTurnAgent {
+  /** The agent's text messages, as in {@link TurnAgent.messages}. */
   messages: AgentMessage[];
+  /** The agent's tool calls, as in {@link TurnAgent.toolCalls}. */
   toolCalls: ToolCall[];
 }
 
@@ -95,12 +97,22 @@ export interface SerializedTurnResponse {
  * persistence and runtime evolve independently.
  */
 export interface SerializedTurn {
+  /** The turn's {@link Turn.id}. */
   id: string;
+  /** The prompt or the component action the turn answers. */
   input: TurnInput;
+  /**
+   * The turn's status when it was serialized. A `'streaming'` turn is restored as `'error'`, with
+   * the response it had streamed.
+   */
   status: TurnStatus;
+  /** Why the turn failed. Present when `status === 'error'`, absent otherwise. */
   error?: string;
+  /** Why it ended in `'error'`. Present when `status === 'error'`, absent otherwise. */
   reason?: TurnErrorReason;
+  /** The gateway's `RUN_ERROR` code, when it sent one. */
   errorCode?: string;
+  /** What the endpoint streamed for the turn, without the surfaces, which are derived again. */
   response: SerializedTurnResponse;
 }
 
@@ -108,6 +120,10 @@ export interface SerializedTurn {
 export interface SerializedInitialization {
   /** The run's activities, which hold the surfaces it created. */
   activities: Activity[];
+  /**
+   * The run's status when it was serialized. A `'streaming'` run is restored as `'error'`, with
+   * the activities it had streamed.
+   */
   status: TurnStatus;
   /** Present when `status === 'error'`, absent otherwise. */
   error?: string;
@@ -129,9 +145,15 @@ export interface SerializedSession {
   sessionId?: string;
   /** Continuity key for request-authentication continuity. */
   sessionToken?: string;
+  /**
+   * The id of the session's active turn: the last turn opened or retried. Activity snapshots from
+   * component actions that open no turn and are not concurrent are recorded with this turn; their
+   * text and tool calls are not.
+   */
   activeTurnId?: string;
   /** The run of the `initialize` action that opened the session, when it sent one. */
   initialization?: SerializedInitialization;
+  /** The session's turns, oldest first. */
   turns: SerializedTurn[];
   /** The session's validated data model, keyed by surface id. */
   state?: Record<string, unknown>;

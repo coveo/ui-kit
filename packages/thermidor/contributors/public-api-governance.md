@@ -4,9 +4,9 @@ This document describes how `@coveo/thermidor` keeps its public type surface cle
 
 ## Why it matters
 
-Consumers of the package see only what's exported from `src/index.ts`. The session-client surface is deliberately narrow: `createSession`, the `Session` handle, the `Turn` / `TurnResponse` domain model, `SessionConfig`, the versioned `SerializedSession` shape, and the generic `RemoteController` type and its derivation helpers (see [architecture.md](./architecture.md)).
+Consumers of the package see only what's exported from `src/index.ts`. The session-client surface is deliberately narrow: `createSession`, the `Session` handle, the `Turn` / `TurnResponse` domain model, `SessionConfig`, the versioned `SerializedSession` shape, the structural `ContractsSchema` types the injected contracts must match, and the client-owned context types (see [architecture.md](./architecture.md)). Every action goes through `session.dispatchAction`; there is no controller type to vend.
 
-If an internal seam (like the `RemoteControllerSource` type or the internal `buildRemoteController` factory) or a raw transport DTO (the AG-UI SSE event shapes, the converse request/response bodies) leaks into the public `.d.ts`, consumers become coupled to implementation details they cannot control. A refactor of an internal seam would then become a breaking change. The charter ([ADR-009](adr/ADR-009-architecture-decision-charter-v2.md)) makes public-API independence a MUST, and dropping the engine/interface/Redux layers ([ADR-010](adr/ADR-010-unified-endpoint-session-client.md)) makes most of that independence structural — there is no state library or facade type left to leak. This governance guards against reintroducing leakage as the package evolves.
+If an internal seam (like the session store or the request builder) or a raw transport DTO (the AG-UI SSE event shapes, the converse request/response bodies) leaks into the public `.d.ts`, consumers become coupled to implementation details they cannot control. A refactor of an internal seam would then become a breaking change. The charter ([ADR-009](adr/ADR-009-architecture-decision-charter-v2.md)) makes public-API independence a MUST, and dropping the engine/interface/Redux layers ([ADR-010](adr/ADR-010-unified-endpoint-session-client.md)) makes most of that independence structural — there is no state library or facade type left to leak. This governance guards against reintroducing leakage as the package evolves.
 
 ## DTS validation: api-extractor
 
@@ -23,7 +23,7 @@ Api-extractor resolves all types reachable from the public entry point. If a typ
 | `mainEntryPointFilePath` | `./dist/index.d.ts`   | Validates the compiled public entry point, the exact surface consumers resolve.                                 |
 | `bundledPackages`        | `[]` (empty)          | No third-party package gets a free pass. If a `zod` or AG-UI type appears in the public surface, it's an error. |
 | `ae-forgotten-export`    | `"logLevel": "error"` | Fail immediately on any leak — no warnings to ignore.                                                           |
-| `apiReport.enabled`      | `false`               | Disabled until the API stabilizes (see below).                                                                  |
+| `apiReport.enabled`      | `true`                | Commits a snapshot of the surface, so every public API change shows up as a reviewable diff (see below).        |
 
 ### Why this catches what lint cannot
 
@@ -31,28 +31,15 @@ There is no lint rule policing the public surface for state-library or transport
 
 ### Commands
 
-- `pnpm run test:dts` — local validation with the `--local` flag (does not fail on a stale API report)
-- `pnpm run test:dts:ci` — CI validation without `--local` (strict; fails on a stale API report once reports are enabled)
+- `pnpm run test:dts` — local validation with the `--local` flag (does not fail on a stale API report, and updates it). It reads `dist/` and does not build first, so run `pnpm run build && pnpm run test:dts`.
+- `pnpm run test:dts:ci` — CI validation without `--local` (strict; fails on a stale API report)
 
-## API Report (snapshot) — not yet enabled
+## API Report (snapshot)
 
-Api-extractor can generate an "API Report" file — a human-readable snapshot of the entire public API surface, committed to the repo. On every run, api-extractor compares the current surface against the committed snapshot; any difference (new export, changed signature, removed type) fails the check until the report is explicitly updated.
+Api-extractor generates an "API Report", a human-readable snapshot of the entire public API surface, committed under `api-report/`: `thermidor.api.md` for the root entry and `thermidor-private.api.md` for `@coveo/thermidor/private` (configured in `api-extractor.private.json`). On every run, api-extractor compares the current surface against the committed snapshot; any difference (new export, changed signature, removed type) fails `test:dts:ci` until the report is regenerated with `pnpm run build && pnpm run test:dts` and the change is reviewed.
 
-### Why it's disabled
-
-The package is in active development and its public API still changes. A committed report would need updating on nearly every PR, adding friction without much value yet.
-
-### When to enable it
-
-Enable `apiReport` once the package reaches a stable public API (likely before the first non-prerelease version). At that point:
-
-1. Set `"apiReport": { "enabled": true, "reportFolder": "./api-report/" }` in `api-extractor.json`
-2. Run `pnpm run test:dts` to generate the initial report
-3. Commit the report file
-4. From that point, any public API change requires an explicit report update plus review
-
-This provides a reviewable diff for every public API change — catching accidental breaking changes before they ship.
+The report also marks every public declaration that has no TSDoc as `(undocumented)`. The public report must have none: the TypeDoc build (`pnpm run build:typedoc`) fails on any undocumented public member, since the reference on docs.coveo.com is generated from these comments. `pnpm run test` holds `@coveo/thermidor/private` to the same rule with `check:typedoc:private`, a TypeDoc pass over `src/private.ts` (`typedoc.private.json`) that writes no output, so the published reference stays public-only.
 
 ## Keeping internal seams out of the surface
 
-The remote controller is the one place where an internal seam is deliberately kept narrow yet unexported. `session.remoteController(id, type)` returns the public `RemoteController<TContracts, T>` type, but it delegates to an internal `buildRemoteController({ source, ... })` factory whose `RemoteControllerSource` seam exists only so the controller stays unit-testable against a fake source ([ADR-013](adr/ADR-013-remote-controller-vending.md)). Neither `buildRemoteController`, `RemoteControllerSource`, nor `selectRemoteControllerState` is re-exported from `src/index.ts`, and api-extractor enforces that none of them appears transitively in the public `.d.ts`. When adding a new public type, thread only domain-level concepts through the entry point and run `pnpm run test:dts` to confirm nothing internal came along for the ride.
+The internal-only `createPrivateSession` factory is the one deliberate exception to the narrow surface, and it lives in its own entry point, `@coveo/thermidor/private`, never in `src/index.ts`. Its api-extractor config (`api-extractor.private.json`) validates that entry and its own report separately. The root entry stays free of it because the root report (`thermidor.api.md`) would show any leak, and because the negative `@ts-expect-error` imports in `src/index.test-d.ts` fail `pnpm run test` if `createPrivateSession` or `PrivateSessionConfig` becomes reachable from the root. Vitest type-checks the `*.test-d.ts` files with `tsconfig.typecheck.json`, which turns off `noUnusedLocals`: otherwise the unused-import error alone would satisfy every `@ts-expect-error`, leak or not. The same file asserts that the retired names (`Engine`, the facades, `RemoteController` and its helpers, and the Redux store, slice, reducer, selector and thunk) stay unreachable. When adding a new public type, thread only domain-level concepts through the entry point and run `pnpm run build && pnpm run test:dts` to confirm nothing internal came along for the ride.
