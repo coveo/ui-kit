@@ -11,7 +11,10 @@ import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr
 import type {BuildConfig} from '../types/build.js';
 import type {ContextOptions} from '../controllers/context/headless-context.ssr.js';
 import type {SolutionType} from '../types/controller-constants.js';
-import type {ControllerDefinitionsMap} from '../types/controller-definitions.js';
+import type {
+  ControllerDefinition,
+  ControllerDefinitionsMap,
+} from '../types/controller-definitions.js';
 import type {InferHydratedState, InferStaticState} from '../types/controller-inference.js';
 import type {CommerceStaticState} from '../types/fetch-static-state.js';
 import type {CommerceHydratedState} from '../types/hydrate-static-state.js';
@@ -33,6 +36,8 @@ const {listingEngineDefinition, searchEngineDefinition, standaloneEngineDefiniti
     configuration: getSampleCommerceEngineConfiguration(),
     controllers,
   });
+
+declare const customController: Controller;
 
 type ListingStaticState = InferStaticState<typeof listingEngineDefinition>;
 type ListingHydratedState = InferHydratedState<typeof listingEngineDefinition>;
@@ -68,6 +73,24 @@ describe('defineCommerceEngine', () => {
     defineCommerceEngine(withProvider);
     expectTypeOf<ListingStaticState>().toHaveProperty('navigatorContext');
     expectTypeOf<ListingStaticState['accessToken']>().toEqualTypeOf<string | undefined>();
+  });
+
+  it('should build a hand-written controller definition on the kinds of page its flags name', () => {
+    const custom = {
+      listing: true,
+      build: () => customController,
+    } satisfies ControllerDefinition<Controller>;
+    const definitions = defineCommerceEngine({
+      configuration: getSampleCommerceEngineConfiguration(),
+      controllers: {custom},
+    });
+
+    expectTypeOf<
+      InferStaticState<typeof definitions.listingEngineDefinition>['controllers']
+    >().toHaveProperty('custom');
+    expectTypeOf<
+      InferStaticState<typeof definitions.searchEngineDefinition>['controllers']
+    >().not.toHaveProperty('custom');
   });
 
   it('should stamp the static state with the solution type of its definition', () => {

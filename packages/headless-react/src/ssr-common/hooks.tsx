@@ -83,10 +83,22 @@ export function buildControllerHooks<TEngine>(
     hookNames?: Readonly<Record<string, string>>;
   } = {}
 ) {
+  const controllerNamesByHookName = new Map<string, string>();
+  for (const key of Object.keys(controllersMap)) {
+    const hookName = hookNames[key] ?? `use${capitalize(key)}`;
+    const otherKey = controllerNamesByHookName.get(hookName);
+    if (otherKey !== undefined) {
+      throw new Error(
+        `The ${otherKey} and ${key} controllers would both get the ${hookName} hook; use another name for your own controller.`
+      );
+    }
+    controllerNamesByHookName.set(hookName, key);
+  }
+
   return Object.fromEntries(
-    Object.entries(controllersMap).map(([key, definition]) => [
-      hookNames[key] ?? `use${capitalize(key)}`,
-      buildControllerHook(singletonContext, key, getSupportedSolutionTypes(definition)),
+    [...controllerNamesByHookName].map(([hookName, key]) => [
+      hookName,
+      buildControllerHook(singletonContext, key, getSupportedSolutionTypes(controllersMap[key])),
     ])
   );
 }

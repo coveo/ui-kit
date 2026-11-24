@@ -256,4 +256,25 @@ describe('buildProviderWithDefinition', () => {
 
     expect(getByTestId('status').textContent).toBe('error:none');
   });
+
+  it('should render a newer static state as static until it hydrates', async () => {
+    const Provider = buildProviderWithDefinition(definition);
+
+    const {getByTestId, rerender} = render(
+      <Provider staticState={buildStaticState()}>
+        <Status />
+      </Provider>
+    );
+    await waitFor(() => expect(getByTestId('status').textContent).toBe('hydrated:hydrated'));
+
+    hydrateStaticState.mockReturnValueOnce(new Promise(() => {}));
+    rerender(
+      <Provider staticState={buildStaticState()}>
+        <Status />
+      </Provider>
+    );
+    await waitForAsyncUpdates();
+
+    expect(getByTestId('status').textContent).toBe('static:none');
+  });
 });

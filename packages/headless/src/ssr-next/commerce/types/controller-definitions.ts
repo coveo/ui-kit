@@ -21,10 +21,10 @@ interface SolutionTypeAvailability {
 }
 
 /**
- * The definition of a controller: how to build it for a request. The kinds of page it is built for are
- * the solution-type flags set next to it by the definer.
+ * A controller definition without its solution-type flags. The definition types of the definers add
+ * the flags of their kinds of page to it, so that the engine definitions list exactly those.
  */
-export interface ControllerDefinition<TController extends Controller> {
+interface UnscopedControllerDefinition<TController extends Controller> {
   /**
    * Creates an instance of the controller.
    *
@@ -36,8 +36,16 @@ export interface ControllerDefinition<TController extends Controller> {
   build(engine: SSRCommerceEngine, context: ControllerBuildContext): TController;
 }
 
+/**
+ * The definition of a controller: how to build it for a request, and the kinds of page it is built
+ * for. An engine definition builds the controller only when its solution-type flag is `true`, so a
+ * hand-written definition sets the flag of each kind of page it serves, such as `listing: true`.
+ */
+export interface ControllerDefinition<TController extends Controller>
+  extends UnscopedControllerDefinition<TController>, SolutionTypeAvailability {}
+
 export interface ControllerDefinitionsMap<TController extends Controller> {
-  [customName: string]: ControllerDefinition<TController> & SolutionTypeAvailability;
+  [customName: string]: ControllerDefinition<TController>;
 }
 
 type BakedInControllerDefinitions = {
@@ -69,16 +77,16 @@ export type IsRecommendationController<TController extends ControllerDefinition<
   HasKey<TController, typeof recommendationInternalOptionKey>;
 
 export type SearchOnlyControllerDefinition<TController extends Controller> =
-  ControllerDefinition<TController> & SearchOnlyController;
+  UnscopedControllerDefinition<TController> & SearchOnlyController;
 
 export type ListingAndStandaloneControllerDefinition<TController extends Controller> =
-  ControllerDefinition<TController> & ListingAndStandaloneController;
+  UnscopedControllerDefinition<TController> & ListingAndStandaloneController;
 
 export type UniversalControllerDefinition<TController extends Controller> =
-  ControllerDefinition<TController> & UniversalController;
+  UnscopedControllerDefinition<TController> & UniversalController;
 
 export type SearchAndListingControllerDefinition<TController extends Controller> =
-  ControllerDefinition<TController> & SearchAndListingController;
+  UnscopedControllerDefinition<TController> & SearchAndListingController;
 
 export type StandaloneControllerDefinition<TController extends Controller> =
-  ControllerDefinition<TController> & StandaloneController;
+  UnscopedControllerDefinition<TController> & StandaloneController;
