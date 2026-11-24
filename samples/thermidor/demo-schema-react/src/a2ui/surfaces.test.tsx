@@ -426,6 +426,55 @@ describe('ThermidorA2UIStream', () => {
     await waitFor(() => expect(screen.getAllByLabelText('Products per page:')).toHaveLength(2));
     expect(screen.getAllByLabelText('Products per page:')[0]).toBe(first);
   });
+
+  it('skips a message the renderer rejects, applies the ones after it, and never retries it', async () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const [create, ...valid] = surfaceMessages(SURFACE_ID);
+    const placeholder = {
+      version: 'v0.9',
+      updateComponents: {
+        surfaceId: SURFACE_ID,
+        components: [{id: ROOT_COMPONENT_ID, component: 'BundleDisplay'}],
+      },
+    } as unknown as A2uiV09Message;
+    const messages = [create, placeholder, ...valid];
+    const page = (stream: A2uiV09Message[]) => (
+      <SessionRequestProvider value={lockedSource(false)}>
+        <ThermidorA2UIStream catalog={CATALOG} messages={stream} onAction={ignoreAction}>
+          <TurnSurfaces surfaces={makeSurfaces(SURFACE_ID)} latest isStreaming={false} />
+        </ThermidorA2UIStream>
+      </SessionRequestProvider>
+    );
+    try {
+      const {rerender} = render(page(messages));
+
+      expect(
+        ((await screen.findByLabelText('Products per page:')) as HTMLSelectElement).value
+      ).toBe('24');
+      const rejected = consoleError.mock.calls.filter(
+        ([message]) => message === 'A2-UI message rejected by the renderer'
+      );
+      expect(rejected).toHaveLength(1);
+      expect(rejected[0][2]).toBe(placeholder);
+
+      rerender(
+        page([
+          ...messages,
+          {
+            version: 'v0.9',
+            updateDataModel: {surfaceId: SURFACE_ID, path: '/state/root/pageSize', value: 48},
+          } as unknown as A2uiV09Message,
+        ])
+      );
+
+      await waitFor(() =>
+        expect((screen.getByLabelText('Products per page:') as HTMLSelectElement).value).toBe('48')
+      );
+      expect(consoleError).toHaveBeenCalledTimes(1);
+    } finally {
+      consoleError.mockRestore();
+    }
+  });
 });
 
 describe('the failure of an action', () => {
