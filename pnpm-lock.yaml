@@ -61,8 +61,8 @@ catalogs:
       specifier: 0.0.85
       version: 0.0.85
     '@playwright/test':
-      specifier: 1.65.0
-      version: 1.65.0
+      specifier: 1.65.1
+      version: 1.65.1
     '@react-router/dev':
       specifier: 8.5.1
       version: 8.5.1
@@ -199,8 +199,8 @@ catalogs:
       specifier: 3.3.2
       version: 3.3.2
     playwright:
-      specifier: 1.65.0
-      version: 1.65.0
+      specifier: 1.65.1
+      version: 1.65.1
     postcss:
       specifier: 8.5.32
       version: 8.5.32
@@ -335,7 +335,7 @@ importers:
         version: 1.93.0
       playwright:
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       semver:
         specifier: 7.8.6
         version: 7.8.6
@@ -420,7 +420,7 @@ importers:
         version: 2.0.3
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       '@rollup/plugin-replace':
         specifier: 'catalog:'
         version: 6.0.3(rollup@4.68.2)
@@ -462,13 +462,13 @@ importers:
         version: 24.19.2
       '@vitest/browser-playwright':
         specifier: 'catalog:'
-        version: 4.1.12(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(playwright@1.65.0)(vite@8.3.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)
+        version: 4.1.12(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(playwright@1.65.1)(vite@8.3.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)
       '@wc-toolkit/storybook-helpers':
         specifier: 10.7.7
         version: 10.7.7(patch_hash=b78f00b2faefe3ea2625ce5fea02f1bad0e89bbdec9279c3dd6c661d189d90db)(lit@3.3.3)(storybook@10.6.7(@types/react@19.3.0)(prettier@3.9.10)(react@19.3.1))
       chromatic:
         specifier: 'catalog:'
-        version: 18.14.3(@chromatic-com/playwright@0.15.0(@playwright/test@1.65.0)(@testing-library/dom@10.4.2)(prettier@3.9.10)(react@19.3.1))
+        version: 18.14.3(@chromatic-com/playwright@0.15.0(@playwright/test@1.65.1)(@testing-library/dom@10.4.2)(prettier@3.9.10)(react@19.3.1))
       handlebars:
         specifier: 'catalog:'
         version: 4.7.10
@@ -489,7 +489,7 @@ importers:
         version: 5.0.0
       playwright:
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       postcss:
         specifier: 'catalog:'
         version: 8.5.32
@@ -628,7 +628,7 @@ importers:
     devDependencies:
       '@chromatic-com/playwright':
         specifier: 0.15.0
-        version: 0.15.0(@playwright/test@1.65.0)(@testing-library/dom@10.4.2)(prettier@3.9.10)(react@19.3.1)
+        version: 0.15.0(@playwright/test@1.65.1)(@testing-library/dom@10.4.2)(prettier@3.9.10)(react@19.3.1)
       '@coveo/platform-mock-api':
         specifier: workspace:*
         version: link:../platform-mock-api
@@ -637,10 +637,10 @@ importers:
         version: 0.6.7(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       chromatic:
         specifier: 'catalog:'
-        version: 18.14.3(@chromatic-com/playwright@0.15.0(@playwright/test@1.65.0)(@testing-library/dom@10.4.2)(prettier@3.9.10)(react@19.3.1))
+        version: 18.14.3(@chromatic-com/playwright@0.15.0(@playwright/test@1.65.1)(@testing-library/dom@10.4.2)(prettier@3.9.10)(react@19.3.1))
       msw:
         specifier: 'catalog:'
         version: 2.15.0(@types/node@24.19.2)(typescript@6.0.3)
@@ -668,7 +668,7 @@ importers:
         version: 0.6.7(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       '@size-limit/preset-small-lib':
         specifier: 'catalog:'
         version: 14.3.0(size-limit@14.3.0)
@@ -796,7 +796,7 @@ importers:
         version: 0.6.7(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       msw:
         specifier: 'catalog:'
         version: 2.15.0(@types/node@24.19.2)(typescript@6.0.3)
@@ -1340,7 +1340,7 @@ importers:
     devDependencies:
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       vite:
         specifier: 'catalog:'
         version: 8.3.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1)
@@ -1401,7 +1401,7 @@ importers:
         version: 15.26.1
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       '@salesforce/eslint-config-lwc':
         specifier: 4.1.2
         version: 4.1.2(@lwc/eslint-plugin-lwc@3.5.0(@babel/eslint-parser@7.25.9(@babel/core@8.0.5)(eslint@9.39.5(jiti@2.7.0)(supports-color@10.2.2)))(eslint@9.39.5(jiti@2.7.0)(supports-color@10.2.2)))(@salesforce/eslint-plugin-lightning@2.0.0(eslint@9.39.5(jiti@2.7.0)(supports-color@10.2.2)))(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.72.2(eslint@9.39.5(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(eslint@9.39.5(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2))(eslint-plugin-jest@29.17.1(eslint@9.39.5(jiti@2.7.0)(supports-color@10.2.2))(jest@30.3.0(@types/node@24.19.2)(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.19.2)(typescript@6.0.3)))(supports-color@10.2.2)(typescript@6.0.3))(eslint@9.39.5(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)
@@ -1480,13 +1480,13 @@ importers:
         version: 14.3.0(size-limit@14.3.0)
       '@vitest/browser-playwright':
         specifier: 'catalog:'
-        version: 4.1.12(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(playwright@1.65.0)(vite@8.3.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)
+        version: 4.1.12(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(playwright@1.65.1)(vite@8.3.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)
       jsdom:
         specifier: 'catalog:'
         version: 30.1.3(@noble/hashes@1.8.0)
       playwright:
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       publint:
         specifier: 'catalog:'
         version: 0.3.25
@@ -1519,7 +1519,7 @@ importers:
         version: 4.7.0(monaco-editor@0.57.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       next:
         specifier: 'catalog:'
-        version: 16.4.6(@babel/core@8.0.5)(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@24.19.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.108.2)
+        version: 16.4.6(@babel/core@8.0.5)(@opentelemetry/api@1.9.1)(@playwright/test@1.65.1)(@types/node@24.19.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.108.2)
       react:
         specifier: 19.3.1
         version: 19.3.1
@@ -1616,7 +1616,7 @@ importers:
         version: 0.6.7(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       msw:
         specifier: 'catalog:'
         version: 2.15.0(@types/node@24.19.2)(typescript@6.0.3)
@@ -1655,7 +1655,7 @@ importers:
         version: 0.6.7(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       '@types/react':
         specifier: 'catalog:'
         version: 19.3.0
@@ -1697,7 +1697,7 @@ importers:
         version: 0.6.7(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       msw:
         specifier: 'catalog:'
         version: 2.15.0(@types/node@24.19.2)(typescript@6.0.3)
@@ -1757,7 +1757,7 @@ importers:
         version: 22.2.5(@angular/compiler@22.2.5)(typescript@6.0.3)
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       '@types/node':
         specifier: 'catalog:'
         version: 24.19.2
@@ -1782,7 +1782,7 @@ importers:
     devDependencies:
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       '@types/node':
         specifier: 'catalog:'
         version: 24.19.2
@@ -1815,7 +1815,7 @@ importers:
         version: link:../../../packages/headless
       next:
         specifier: 'catalog:'
-        version: 16.4.6(@babel/core@8.0.5)(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@24.19.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.108.2)
+        version: 16.4.6(@babel/core@8.0.5)(@opentelemetry/api@1.9.1)(@playwright/test@1.65.1)(@types/node@24.19.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.108.2)
       react:
         specifier: 19.3.1
         version: 19.3.1
@@ -1859,7 +1859,7 @@ importers:
         version: 0.6.7(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       '@types/react':
         specifier: 'catalog:'
         version: 19.3.0
@@ -1901,7 +1901,7 @@ importers:
         version: 0.6.7(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       msw:
         specifier: 'catalog:'
         version: 2.15.0(@types/node@24.19.2)(typescript@6.0.3)
@@ -1925,7 +1925,7 @@ importers:
     devDependencies:
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       '@vitejs/plugin-vue':
         specifier: 6.0.10
         version: 6.0.10(vite@8.3.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.45(typescript@6.0.3))
@@ -1953,7 +1953,7 @@ importers:
         version: 0.6.7(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       '@types/express':
         specifier: 5.0.6
         version: 5.0.6
@@ -1982,7 +1982,7 @@ importers:
         version: link:../../../packages/headless-react
       next:
         specifier: 'catalog:'
-        version: 16.4.6(@babel/core@8.0.5)(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@24.19.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.108.2)
+        version: 16.4.6(@babel/core@8.0.5)(@opentelemetry/api@1.9.1)(@playwright/test@1.65.1)(@types/node@24.19.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.108.2)
       react:
         specifier: 19.3.1
         version: 19.3.1
@@ -1998,7 +1998,7 @@ importers:
         version: 0.10.3(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(supports-color@10.2.2)
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       '@types/node':
         specifier: 'catalog:'
         version: 24.19.2
@@ -2030,7 +2030,7 @@ importers:
         version: link:../../../packages/headless-react
       next:
         specifier: 'catalog:'
-        version: 16.4.6(@babel/core@8.0.5)(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@24.19.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.108.2)
+        version: 16.4.6(@babel/core@8.0.5)(@opentelemetry/api@1.9.1)(@playwright/test@1.65.1)(@types/node@24.19.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.108.2)
       react:
         specifier: 19.3.1
         version: 19.3.1
@@ -2040,7 +2040,7 @@ importers:
     devDependencies:
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       '@types/node':
         specifier: 'catalog:'
         version: 24.19.2
@@ -2113,7 +2113,7 @@ importers:
         version: link:../../../packages/headless-react
       next:
         specifier: 'catalog:'
-        version: 16.4.6(@babel/core@8.0.5)(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@24.19.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.108.2)
+        version: 16.4.6(@babel/core@8.0.5)(@opentelemetry/api@1.9.1)(@playwright/test@1.65.1)(@types/node@24.19.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.108.2)
       react:
         specifier: 19.3.1
         version: 19.3.1
@@ -2123,7 +2123,7 @@ importers:
     devDependencies:
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       '@types/node':
         specifier: 'catalog:'
         version: 24.19.2
@@ -2157,7 +2157,7 @@ importers:
         version: 0.6.7(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 6.3.0(vite@8.3.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))
@@ -2190,7 +2190,7 @@ importers:
         version: 0.6.7(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       msw:
         specifier: 'catalog:'
         version: 2.15.0(@types/node@24.19.2)(typescript@6.0.3)
@@ -2293,7 +2293,7 @@ importers:
     devDependencies:
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       '@types/node':
         specifier: 'catalog:'
         version: 24.19.2
@@ -2335,7 +2335,7 @@ importers:
         version: 0.6.7(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       msw:
         specifier: 'catalog:'
         version: 2.15.0(@types/node@24.19.2)(typescript@6.0.3)
@@ -2423,7 +2423,7 @@ importers:
     devDependencies:
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       '@testing-library/react':
         specifier: 'catalog:'
         version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -2444,7 +2444,7 @@ importers:
         version: 3.23.2
       playwright:
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -2459,13 +2459,13 @@ importers:
     devDependencies:
       '@vitest/browser-playwright':
         specifier: 'catalog:'
-        version: 4.1.12(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(playwright@1.65.0)(vite@8.3.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)
+        version: 4.1.12(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(playwright@1.65.1)(vite@8.3.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)
       local-web-server:
         specifier: 'catalog:'
         version: 5.4.2(supports-color@10.2.2)
       playwright:
         specifier: 'catalog:'
-        version: 1.65.0
+        version: 1.65.1
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -6809,8 +6809,8 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@playwright/test@1.65.0':
-    resolution: {integrity: sha512-iGURLGuKDLakSEl7Pgfv8h7f+XLT+V861Wfhz0zlEl5nyFuKUopdkFBPKqTllTUp06aOwPuH8iuUEb3yp3MpbQ==}
+  '@playwright/test@1.65.1':
+    resolution: {integrity: sha512-y+NCIRm2LvY4slUVWvGh1nujJ8RF/hEisIsq2mtUPgdQC4L701bq5hZGMhrpeXjACvwvO9tj5dJqhvM6TP9lbw==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -13952,8 +13952,8 @@ packages:
     resolution: {integrity: sha512-V9kOzaItwDgqlryhXysQsAXUEKi5O7kqWUaP3dXI7MLvkPqWWMb4wVb1QAtmEDCKI+XIAINsZoNKMFF7sZb1eg==}
     engines: {node: '>=16.0.0'}
 
-  playwright-core@1.65.0:
-    resolution: {integrity: sha512-vNSKgH6YqtN7cdT/L334zo0a+YwkrpicyrHJlWWPIm/Q+Nn2SWInil01oT0mbu96U4GgoRtCYQD9CzJQgju+lA==}
+  playwright-core@1.65.1:
+    resolution: {integrity: sha512-hqPpz7blSMPxWVdoeE1yiBSzXsKiVOd2k+kjCvmUywD2GPO2Dd9HfcWnq9NN0GHbNZDFgZ9JfBFr+X5/BLo0qw==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -13962,8 +13962,8 @@ packages:
     engines: {node: '>=20'}
     hasBin: true
 
-  playwright@1.65.0:
-    resolution: {integrity: sha512-F3AMWcR44qMBt4kq+6Kb6mX7bjGXshktKFOPULd7reED6ZJWevjbNRqysP7q+AATE9kdPEZBibex1BYsvpVoeA==}
+  playwright@1.65.1:
+    resolution: {integrity: sha512-vJ1FuoOrNwOKHUIVEvSt3jT1L+wjjDpwhwIstKtfvTh8XIG4FG4bIFuvNdMxi81LGfAhUgUZleVFaOLY4RIUUw==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -18744,10 +18744,10 @@ snapshots:
       '@changesets/types': 7.0.0
       human-id: 4.2.2
 
-  '@chromatic-com/playwright@0.15.0(@playwright/test@1.65.0)(@testing-library/dom@10.4.2)(prettier@3.9.10)(react@19.3.1)':
+  '@chromatic-com/playwright@0.15.0(@playwright/test@1.65.1)(@testing-library/dom@10.4.2)(prettier@3.9.10)(react@19.3.1)':
     dependencies:
       '@chromaui/rrweb-snapshot': 2.0.0-alpha.19-noAbsolute
-      '@playwright/test': 1.65.0
+      '@playwright/test': 1.65.1
       storybook: 10.2.13(@testing-library/dom@10.4.2)(prettier@3.9.10)(react@19.3.1)
     transitivePeerDependencies:
       - '@testing-library/dom'
@@ -21608,9 +21608,9 @@ snapshots:
       playwright: 1.66.0-alpha-2026-11-09
       playwright-core: 1.66.0-alpha-2026-11-09
 
-  '@playwright/test@1.65.0':
+  '@playwright/test@1.65.1':
     dependencies:
-      playwright: 1.65.0
+      playwright: 1.65.1
 
   '@pnpm/deps.graph-sequencer@1100.0.1': {}
 
@@ -22512,7 +22512,7 @@ snapshots:
       storybook: 10.6.7(@types/react@19.3.0)(prettier@3.9.10)(react@19.3.1)
     optionalDependencies:
       '@vitest/browser': 4.1.12(@vitest/browser-playwright@4.1.12)(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(vite@8.3.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)
-      '@vitest/browser-playwright': 4.1.12(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(playwright@1.65.0)(vite@8.3.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)
+      '@vitest/browser-playwright': 4.1.12(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(playwright@1.65.1)(vite@8.3.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)
       vitest: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(@vitest/browser-playwright@4.1.12)(jsdom@30.1.3(@noble/hashes@1.8.0))(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(vite@8.3.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))
     transitivePeerDependencies:
       - react
@@ -23209,11 +23209,11 @@ snapshots:
       vite: 8.3.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1)
       vue: 3.5.45(typescript@6.0.3)
 
-  '@vitest/browser-playwright@4.1.12(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(playwright@1.65.0)(vite@8.3.5(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)':
+  '@vitest/browser-playwright@4.1.12(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(playwright@1.65.1)(vite@8.3.5(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)':
     dependencies:
       '@vitest/browser': 4.1.12(@vitest/browser-playwright@4.1.12)(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(vite@8.3.5(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)
       '@vitest/mocker': 4.1.12(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(vite@8.3.5(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1))
-      playwright: 1.65.0
+      playwright: 1.65.1
       tinyrainbow: 3.2.0
       vitest: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(@vitest/browser-playwright@4.1.12)(jsdom@30.1.3(@noble/hashes@1.8.0))(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(vite@8.3.5(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1))
     transitivePeerDependencies:
@@ -23223,11 +23223,11 @@ snapshots:
       - vite
     optional: true
 
-  '@vitest/browser-playwright@4.1.12(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(playwright@1.65.0)(vite@8.3.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)':
+  '@vitest/browser-playwright@4.1.12(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(playwright@1.65.1)(vite@8.3.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)':
     dependencies:
       '@vitest/browser': 4.1.12(@vitest/browser-playwright@4.1.12)(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(vite@8.3.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)
       '@vitest/mocker': 4.1.12(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(vite@8.3.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))
-      playwright: 1.65.0
+      playwright: 1.65.1
       tinyrainbow: 3.2.0
       vitest: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(@vitest/browser-playwright@4.1.12)(jsdom@30.1.3(@noble/hashes@1.8.0))(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(vite@8.3.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))
     transitivePeerDependencies:
@@ -24301,11 +24301,11 @@ snapshots:
 
   chownr@3.0.0: {}
 
-  chromatic@18.14.3(@chromatic-com/playwright@0.15.0(@playwright/test@1.65.0)(@testing-library/dom@10.4.2)(prettier@3.9.10)(react@19.3.1)):
+  chromatic@18.14.3(@chromatic-com/playwright@0.15.0(@playwright/test@1.65.1)(@testing-library/dom@10.4.2)(prettier@3.9.10)(react@19.3.1)):
     dependencies:
       semver: 7.8.6
     optionalDependencies:
-      '@chromatic-com/playwright': 0.15.0(@playwright/test@1.65.0)(@testing-library/dom@10.4.2)(prettier@3.9.10)(react@19.3.1)
+      '@chromatic-com/playwright': 0.15.0(@playwright/test@1.65.1)(@testing-library/dom@10.4.2)(prettier@3.9.10)(react@19.3.1)
 
   chrome-trace-event@1.0.4: {}
 
@@ -29260,7 +29260,7 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  next@16.4.6(@babel/core@8.0.5)(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@24.19.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.108.2):
+  next@16.4.6(@babel/core@8.0.5)(@opentelemetry/api@1.9.1)(@playwright/test@1.65.1)(@types/node@24.19.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.108.2):
     dependencies:
       '@next/env': 16.4.6
       '@swc/helpers': 0.5.23
@@ -29280,7 +29280,7 @@ snapshots:
       '@next/swc-win32-arm64-msvc': 16.4.6
       '@next/swc-win32-x64-msvc': 16.4.6
       '@opentelemetry/api': 1.9.1
-      '@playwright/test': 1.65.0
+      '@playwright/test': 1.65.1
       sass: 1.108.2
       sharp: 0.35.5(@types/node@24.19.2)
     transitivePeerDependencies:
@@ -30004,13 +30004,13 @@ snapshots:
       pvutils: 1.2.0
       tslib: 2.9.1
 
-  playwright-core@1.65.0: {}
+  playwright-core@1.65.1: {}
 
   playwright-core@1.66.0-alpha-2026-11-09: {}
 
-  playwright@1.65.0:
+  playwright@1.65.1:
     dependencies:
-      playwright-core: 1.65.0
+      playwright-core: 1.65.1
 
   playwright@1.66.0-alpha-2026-11-09:
     dependencies:
@@ -32780,7 +32780,7 @@ snapshots:
     optionalDependencies:
       '@opentelemetry/api': 1.9.1
       '@types/node': 24.19.2
-      '@vitest/browser-playwright': 4.1.12(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(playwright@1.65.0)(vite@8.3.5(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)
+      '@vitest/browser-playwright': 4.1.12(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(playwright@1.65.1)(vite@8.3.5(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.104.1)(sass@1.104.1)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)
       jsdom: 30.1.3(@noble/hashes@1.8.0)
     transitivePeerDependencies:
       - msw
@@ -32811,7 +32811,7 @@ snapshots:
     optionalDependencies:
       '@opentelemetry/api': 1.9.1
       '@types/node': 24.19.2
-      '@vitest/browser-playwright': 4.1.12(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(playwright@1.65.0)(vite@8.3.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)
+      '@vitest/browser-playwright': 4.1.12(msw@2.15.0(@types/node@24.19.2)(typescript@6.0.3))(playwright@1.65.1)(vite@8.3.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vitest@4.1.12)
       jsdom: 30.1.3(@noble/hashes@1.8.0)
     transitivePeerDependencies:
       - msw
