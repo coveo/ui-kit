@@ -141,7 +141,7 @@ export const SearchProvider = buildProviderWithDefinition(searchEngineDefinition
 export const StandaloneProvider = buildProviderWithDefinition(standaloneEngineDefinition);
 ```
 
-The provider renders the static state, hydrates it with `hydrateStaticState(staticState)`, and ignores a hydration that a newer static state superseded; its `staticState` prop is typed from its own definition, so passing the static state of another definition is a compile-time error.
+The provider renders the static state, hydrates it with `hydrateStaticState(staticState)`, and ignores a hydration that a newer static state superseded; its `staticState` prop is typed from its own definition, so passing the static state of another commerce definition is a compile-time error. The search and standalone definitions share one static state type, so their providers accept each other's static state.
 
 #### Provider props
 
