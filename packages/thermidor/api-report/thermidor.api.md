@@ -101,6 +101,20 @@ export interface ComponentContractSchema {
 }
 
 // @public
+export interface ConcurrentFailure extends ConcurrentRequest {
+    errorCode?: string;
+    message: string;
+}
+
+// @public
+export interface ConcurrentRequest {
+    component: string;
+    name: string;
+    sourceComponentId: string;
+    surfaceId: string;
+}
+
+// @public
 export interface ContractsSchema {
     readonly options: readonly ComponentContractSchema[];
 }
@@ -211,6 +225,8 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
     readonly a2uiMessages: readonly A2uiV09Message[];
     readonly actionError: ActionError | undefined;
     cancel(): void;
+    readonly concurrentFailures: readonly ConcurrentFailure[];
+    readonly concurrentRequests: readonly ConcurrentRequest[];
     readonly contracts: TContracts;
     dispatchAction: (message: A2uiClientMessage | SubmitPromptAction) => Promise<void>;
     getSnapshot(): SessionSnapshot;
@@ -263,6 +279,8 @@ export type SessionRequest = InitializeRequest | PromptRequest | ActionRequest;
 export interface SessionSnapshot {
     readonly a2uiMessages: readonly A2uiV09Message[];
     readonly actionError: ActionError | undefined;
+    readonly concurrentFailures: readonly ConcurrentFailure[];
+    readonly concurrentRequests: readonly ConcurrentRequest[];
     readonly initialization: SessionInitialization | undefined;
     readonly request: SessionRequest | undefined;
     readonly state: A2uiState;

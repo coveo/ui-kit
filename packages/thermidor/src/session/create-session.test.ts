@@ -1186,6 +1186,8 @@ describe('createSession lifecycle', () => {
         state: {},
         request: undefined,
         actionError: undefined,
+        concurrentRequests: [],
+        concurrentFailures: [],
       });
     });
 

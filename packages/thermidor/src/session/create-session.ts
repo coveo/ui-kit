@@ -43,7 +43,11 @@ import type {ActionOrigin} from './action-cache.js';
 import {validateActionPayload} from './action-payload-validation.js';
 import {concurrentAction, type CachePolicy} from './announced-actions.js';
 import type {ContractsSchema} from './contracts.js';
-import {createConcurrentActions} from './concurrent-actions.js';
+import {
+  NO_CONCURRENT_FAILURES,
+  NO_CONCURRENT_REQUESTS,
+  createConcurrentActions,
+} from './concurrent-actions.js';
 import {callWithRetry, type RetryOptions} from './request-retry.js';
 import {
   EMPTY_RENDERER_STREAM,
@@ -78,6 +82,8 @@ import type {
   A2uiV09Message,
   ActionError,
   Activity,
+  ConcurrentFailure,
+  ConcurrentRequest,
   DiscoveredSurface,
   SessionInitialization,
   SessionRequest,
@@ -279,6 +285,10 @@ export interface SessionSnapshot {
   readonly request: SessionRequest | undefined;
   /** The last component action that failed, as {@link Session.actionError}. */
   readonly actionError: ActionError | undefined;
+  /** The concurrent actions awaiting their answer, as {@link Session.concurrentRequests}. */
+  readonly concurrentRequests: readonly ConcurrentRequest[];
+  /** The failed concurrent actions, as {@link Session.concurrentFailures}. */
+  readonly concurrentFailures: readonly ConcurrentFailure[];
 }
 
 // The handle exposes only the session client API, not an engine, interface, or state-library
@@ -360,7 +370,7 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * - Surface updates streamed before the failure stay in state; the session does not roll them
    *   back.
    * - It is cleared when the next prompt or non-concurrent action is sent. A concurrent action
-   *   does not clear it.
+   *   does not clear it: {@link Session.concurrentFailures} lists its failure.
    * - Its changes notify {@link Session.subscribe} listeners.
    */
   readonly actionError: ActionError | undefined;
@@ -370,14 +380,43 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * @remarks
    * - The session sends one request at a time, `initialize`, prompts and actions alike, in the
    *   order they were dispatched. An action's run counts, a follow-up included.
-   * - An action the producer announces as concurrent is sent beside it and never sets it.
+   * - An action the producer announces as concurrent is sent beside it and never sets it:
+   *   {@link Session.concurrentRequests} lists it.
    * - Read it synchronously, or through {@link Session.subscribe}.
    */
   readonly request: SessionRequest | undefined;
   /**
+   * The actions the producer announces as concurrent whose latest dispatch from their node awaits
+   * its answer (ADR-020).
+   *
+   * @remarks
+   * - One entry per surface, node and action name, in the order they were sent. Empty when none
+   *   is in flight.
+   * - An entry leaves the list once that dispatch's answer is applied or it fails, before its
+   *   Promise resolves, or once a later dispatch from the same node is answered from the cache or
+   *   fails before it is sent.
+   * - Read it synchronously, or through {@link Session.subscribe}.
+   */
+  readonly concurrentRequests: readonly ConcurrentRequest[];
+  /**
+   * The actions the producer announces as concurrent whose latest dispatch from their node failed
+   * (ADR-020).
+   *
+   * @remarks
+   * - One entry per surface, node and action name, in the order they failed. Empty when none
+   *   failed.
+   * - A failure is a refused request, a `RUN_ERROR`, a stream that ends without a terminal event,
+   *   or a request that can't be built. A dispatch a later one from its node superseded reports
+   *   nothing.
+   * - An entry stays until the node dispatches the action again, whatever else the session sends
+   *   meanwhile, and leaves {@link Session.actionError} as it is.
+   * - Read it synchronously, or through {@link Session.subscribe}.
+   */
+  readonly concurrentFailures: readonly ConcurrentFailure[];
+  /**
    * Registers a listener called whenever the session changes, including `state` and
-   * `a2uiMessages` changes from concurrent actions. Does not rely on `this`, so it can be passed by
-   * reference.
+   * `a2uiMessages` changes from concurrent actions, and `concurrentRequests` and
+   * `concurrentFailures`. Does not rely on `this`, so it can be passed by reference.
    *
    * @param listener - The function to call after each change. Read the new state with
    * {@link Session.getSnapshot}.
@@ -391,7 +430,8 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
   subscribe(listener: () => void): () => void;
   /**
    * Returns the session's turns, initialization, surfaces, renderer stream, state, request in
-   * flight and action error as one immutable {@link SessionSnapshot}.
+   * flight, action error, concurrent requests and concurrent failures as one immutable
+   * {@link SessionSnapshot}.
    *
    * @remarks
    * The same object is returned until one of its fields changes, so a framework's state hook that
@@ -431,6 +471,12 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    *   flight, and never sets {@link Session.request}. Only the latest dispatch from a node is
    *   shown, and one the producer allows to be reused is answered without a request. Its answer
    *   isn't recorded, and its failure sets no {@link Session.actionError}.
+   * - Once a concurrent dispatch's Promise resolves, read what became of its node's action from
+   *   the session, for the node's latest dispatch rather than this one:
+   *   {@link Session.concurrentFailures} lists it when that dispatch failed,
+   *   {@link Session.concurrentRequests} when it still awaits its answer, and neither when its
+   *   answer was applied. So a dispatch a later one superseded reads that one's outcome, a failure
+   *   included.
    * - A message that can't be sent, such as one with no `userAction` or no `sourceComponentId`,
    *   one from a node that matches no component, or one whose payload is invalid, is dropped with
    *   a warning in development, and nothing is sent.
@@ -1532,7 +1578,14 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     if (!hasValidPayload(recovered)) {
       return withhold();
     }
-    return concurrentActions.issue(recovered, policy);
+    const {surfaceId, sourceComponentId, name, discriminant: component, context} = recovered;
+    // The dispatch is the entry `concurrentRequests` and `concurrentFailures` list, so it holds
+    // their fields only.
+    return concurrentActions.issue(
+      {component, name, surfaceId, sourceComponentId},
+      context,
+      policy
+    );
   }
 
   /**
@@ -1741,6 +1794,8 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     const a2uiMessages = (store.getState().rendererStream ?? EMPTY_RENDERER_STREAM).messages;
     const state = readLiveState();
     const {initialization, request, actionError} = store.getState();
+    const concurrentRequests = store.getState().concurrentRequests ?? NO_CONCURRENT_REQUESTS;
+    const concurrentFailures = store.getState().concurrentFailures ?? NO_CONCURRENT_FAILURES;
     if (
       snapshot === undefined ||
       snapshot.turns !== turns ||
@@ -1749,7 +1804,9 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
       snapshot.a2uiMessages !== a2uiMessages ||
       snapshot.state !== state ||
       snapshot.request !== request ||
-      snapshot.actionError !== actionError
+      snapshot.actionError !== actionError ||
+      snapshot.concurrentRequests !== concurrentRequests ||
+      snapshot.concurrentFailures !== concurrentFailures
     ) {
       snapshot = Object.freeze({
         turns,
@@ -1759,6 +1816,8 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
         state,
         request,
         actionError,
+        concurrentRequests,
+        concurrentFailures,
       });
     }
     return snapshot;
@@ -1805,6 +1864,12 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     },
     get request() {
       return store.getState().request;
+    },
+    get concurrentRequests() {
+      return store.getState().concurrentRequests ?? NO_CONCURRENT_REQUESTS;
+    },
+    get concurrentFailures() {
+      return store.getState().concurrentFailures ?? NO_CONCURRENT_FAILURES;
     },
     subscribe(listener) {
       return store.subscribe(listener);

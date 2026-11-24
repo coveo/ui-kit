@@ -283,6 +283,40 @@ export interface ActionRequest {
 }
 
 /**
+ * A concurrent action whose latest dispatch from its node awaits its answer (ADR-020), listed in
+ * `Session.concurrentRequests`. An older dispatch from the same node that is passed over is not
+ * listed: its answer is never applied.
+ *
+ * @group Requests and initialization
+ */
+export interface ConcurrentRequest {
+  /** The `component` discriminant of the dispatching node. */
+  component: string;
+  /** The action name declared by the dispatching component's contract. */
+  name: string;
+  /** The A2-UI surface the action originated on. */
+  surfaceId: string;
+  /** The id of the node that dispatched the action. */
+  sourceComponentId: string;
+}
+
+/**
+ * The failure of a concurrent action's latest dispatch from its node (ADR-020), listed in
+ * `Session.concurrentFailures` until the node dispatches that action again.
+ *
+ * @group Actions
+ */
+export interface ConcurrentFailure extends ConcurrentRequest {
+  /** Why the dispatch failed. */
+  message: string;
+  /**
+   * The code of the gateway's `RUN_ERROR` that failed the dispatch, such as
+   * `'AGENT:UPSTREAM_TIMEOUT'`. Absent when the gateway sent none or the dispatch failed otherwise.
+   */
+  errorCode?: string;
+}
+
+/**
  * Why a component action failed, and the action it came from, so a consumer can show the failure
  * next to the block that dispatched it.
  *

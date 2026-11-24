@@ -14,6 +14,8 @@ export function requestSnapshot(
     state: {},
     request,
     actionError,
+    concurrentRequests: [],
+    concurrentFailures: [],
   };
 }
 
