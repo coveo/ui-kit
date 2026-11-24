@@ -36,7 +36,7 @@ See [`.changeset/README.md`](../.changeset/README.md) for more details.
 
 ## Versioning
 
-When the "Version Packages" PR is created (or updated), `changesets/action` runs `pnpm changeset version`, which:
+When the "Version Packages" PR is created (or updated), `changesets/action` runs `pnpm exec turbo run create-version`. That task depends on the root `version-packages` script, which runs `changeset version`. It:
 
 1. Reads all pending changeset files in `.changeset/`.
 2. Determines the appropriate semver bump for each affected package.
