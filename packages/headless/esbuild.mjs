@@ -75,7 +75,7 @@ function getUseCaseDir(prefix, useCase) {
  * @type {import('esbuild').BuildOptions}
  */
 const base = {
-  target: ['es2020'],
+  target: ['es2022'],
   bundle: true,
   tsconfig: './src/tsconfig.build.json',
   define: {

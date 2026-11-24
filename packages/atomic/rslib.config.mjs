@@ -9,7 +9,7 @@ const {version} = JSON.parse(readFileSync(join(__dirname, 'package.json'), 'utf8
 
 const shared = {
   bundle: false,
-  syntax: 'es2021',
+  syntax: 'es2022',
   redirect: {
     style: {
       path: true,

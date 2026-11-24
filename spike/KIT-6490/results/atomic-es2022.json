@@ -1,0 +1,39 @@
+{
+  "label": "atomic-es2022",
+  "headless": {},
+  "atomic": {
+    "cdn/atomic.esm.js": {
+      "raw": 9687,
+      "gzip": 5311,
+      "brotli": 4125
+    },
+    "cdn/index.js": {
+      "raw": 10004,
+      "gzip": 5543,
+      "brotli": 4275
+    },
+    "cdn/index.esm.js": {
+      "raw": 4195,
+      "gzip": 1875,
+      "brotli": 1638
+    },
+    "cdn (all js)": {
+      "raw": 1910894,
+      "gzip": 657003,
+      "brotli": 565056,
+      "files": 436
+    },
+    "dist/esm (all js)": {
+      "raw": 2339013,
+      "gzip": 624830,
+      "brotli": 536171,
+      "files": 629
+    },
+    "dist/cjs (all js)": {
+      "raw": 3380674,
+      "gzip": 871104,
+      "brotli": 759380,
+      "files": 629
+    }
+  }
+}

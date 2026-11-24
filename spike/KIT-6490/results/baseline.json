@@ -1,0 +1,206 @@
+{
+  "label": "baseline",
+  "headless": {
+    "cdn/case-assist/headless.esm.js": {
+      "raw": 528954,
+      "gzip": 141727,
+      "brotli": 119125
+    },
+    "cdn/case-assist/headless.js": {
+      "raw": 531083,
+      "gzip": 141980,
+      "brotli": 119416
+    },
+    "cdn/commerce/headless.esm.js": {
+      "raw": 656072,
+      "gzip": 173319,
+      "brotli": 145251
+    },
+    "cdn/commerce/headless.js": {
+      "raw": 659218,
+      "gzip": 173246,
+      "brotli": 145385
+    },
+    "cdn/headless.esm.js": {
+      "raw": 701722,
+      "gzip": 187231,
+      "brotli": 156548
+    },
+    "cdn/headless.js": {
+      "raw": 704867,
+      "gzip": 187121,
+      "brotli": 156240
+    },
+    "cdn/insight/headless.esm.js": {
+      "raw": 692012,
+      "gzip": 179174,
+      "brotli": 150384
+    },
+    "cdn/insight/headless.js": {
+      "raw": 695337,
+      "gzip": 179065,
+      "brotli": 150463
+    },
+    "cdn/recommendation/headless.esm.js": {
+      "raw": 540343,
+      "gzip": 144716,
+      "brotli": 121660
+    },
+    "cdn/recommendation/headless.js": {
+      "raw": 543255,
+      "gzip": 144773,
+      "brotli": 121653
+    },
+    "cdn/ssr-commerce-next/headless.esm.js": {
+      "raw": 675016,
+      "gzip": 178919,
+      "brotli": 150064
+    },
+    "cdn/ssr-commerce-next/headless.js": {
+      "raw": 678199,
+      "gzip": 178786,
+      "brotli": 149874
+    },
+    "cdn/ssr-commerce/headless.esm.js": {
+      "raw": 676895,
+      "gzip": 179468,
+      "brotli": 150506
+    },
+    "cdn/ssr-commerce/headless.js": {
+      "raw": 680052,
+      "gzip": 179395,
+      "brotli": 150286
+    },
+    "cdn/ssr-next/headless.esm.js": {
+      "raw": 691507,
+      "gzip": 184547,
+      "brotli": 154687
+    },
+    "cdn/ssr-next/headless.js": {
+      "raw": 694654,
+      "gzip": 184498,
+      "brotli": 154583
+    },
+    "cdn/ssr/headless.esm.js": {
+      "raw": 692787,
+      "gzip": 184869,
+      "brotli": 155173
+    },
+    "cdn/ssr/headless.js": {
+      "raw": 695916,
+      "gzip": 184791,
+      "brotli": 155218
+    },
+    "dist/cjs/case-assist/headless.cjs": {
+      "raw": 375613,
+      "gzip": 69192,
+      "brotli": 55254
+    },
+    "dist/cjs/commerce/headless.cjs": {
+      "raw": 682184,
+      "gzip": 115284,
+      "brotli": 89372
+    },
+    "dist/cjs/headless.cjs": {
+      "raw": 789753,
+      "gzip": 134544,
+      "brotli": 104632
+    },
+    "dist/cjs/insight/headless.cjs": {
+      "raw": 755384,
+      "gzip": 124008,
+      "brotli": 95889
+    },
+    "dist/cjs/recommendation/headless.cjs": {
+      "raw": 402837,
+      "gzip": 72248,
+      "brotli": 58316
+    },
+    "dist/cjs/ssr-commerce-next/headless.cjs": {
+      "raw": 731137,
+      "gzip": 125159,
+      "brotli": 96868
+    },
+    "dist/cjs/ssr-commerce/headless.cjs": {
+      "raw": 738049,
+      "gzip": 126506,
+      "brotli": 97830
+    },
+    "dist/cjs/ssr-next/headless.cjs": {
+      "raw": 767554,
+      "gzip": 130861,
+      "brotli": 102914
+    },
+    "dist/cjs/ssr/headless.cjs": {
+      "raw": 770385,
+      "gzip": 131869,
+      "brotli": 103488
+    },
+    "dist/quantic/case-assist/headless.js": {
+      "raw": 552436,
+      "gzip": 148711,
+      "brotli": 124601
+    },
+    "dist/quantic/commerce/headless.js": {
+      "raw": 677946,
+      "gzip": 179304,
+      "brotli": 149612
+    },
+    "dist/quantic/headless.js": {
+      "raw": 724736,
+      "gzip": 193085,
+      "brotli": 161232
+    },
+    "dist/quantic/insight/headless.js": {
+      "raw": 714588,
+      "gzip": 185097,
+      "brotli": 154886
+    },
+    "dist/quantic/recommendation/headless.js": {
+      "raw": 562301,
+      "gzip": 150971,
+      "brotli": 126642
+    },
+    "dist/esm (all files)": {
+      "raw": 1875958,
+      "gzip": 544935,
+      "brotli": 458706,
+      "files": 1198
+    }
+  },
+  "atomic": {
+    "cdn/atomic.esm.js": {
+      "raw": 9687,
+      "gzip": 5311,
+      "brotli": 4125
+    },
+    "cdn/index.js": {
+      "raw": 10004,
+      "gzip": 5543,
+      "brotli": 4275
+    },
+    "cdn/index.esm.js": {
+      "raw": 4195,
+      "gzip": 1875,
+      "brotli": 1638
+    },
+    "cdn (all js)": {
+      "raw": 1910894,
+      "gzip": 657003,
+      "brotli": 565056,
+      "files": 436
+    },
+    "dist/esm (all js)": {
+      "raw": 2338922,
+      "gzip": 625791,
+      "brotli": 537170,
+      "files": 629
+    },
+    "dist/cjs (all js)": {
+      "raw": 3380583,
+      "gzip": 871981,
+      "brotli": 760131,
+      "files": 629
+    }
+  }
+}

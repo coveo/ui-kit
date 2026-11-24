@@ -1,0 +1,172 @@
+{
+  "label": "headless-es2021",
+  "headless": {
+    "cdn/case-assist/headless.esm.js": {
+      "raw": 528847,
+      "gzip": 141658,
+      "brotli": 119130
+    },
+    "cdn/case-assist/headless.js": {
+      "raw": 530976,
+      "gzip": 141910,
+      "brotli": 119358
+    },
+    "cdn/commerce/headless.esm.js": {
+      "raw": 655829,
+      "gzip": 173222,
+      "brotli": 145241
+    },
+    "cdn/commerce/headless.js": {
+      "raw": 658975,
+      "gzip": 173118,
+      "brotli": 145214
+    },
+    "cdn/headless.esm.js": {
+      "raw": 701604,
+      "gzip": 187145,
+      "brotli": 156421
+    },
+    "cdn/headless.js": {
+      "raw": 704749,
+      "gzip": 187055,
+      "brotli": 156329
+    },
+    "cdn/insight/headless.esm.js": {
+      "raw": 691913,
+      "gzip": 179095,
+      "brotli": 150432
+    },
+    "cdn/insight/headless.js": {
+      "raw": 695238,
+      "gzip": 178988,
+      "brotli": 150312
+    },
+    "cdn/recommendation/headless.esm.js": {
+      "raw": 540236,
+      "gzip": 144642,
+      "brotli": 121611
+    },
+    "cdn/recommendation/headless.js": {
+      "raw": 543148,
+      "gzip": 144710,
+      "brotli": 121656
+    },
+    "cdn/ssr-commerce-next/headless.esm.js": {
+      "raw": 674789,
+      "gzip": 178827,
+      "brotli": 150061
+    },
+    "cdn/ssr-commerce-next/headless.js": {
+      "raw": 677972,
+      "gzip": 178698,
+      "brotli": 149767
+    },
+    "cdn/ssr-commerce/headless.esm.js": {
+      "raw": 676668,
+      "gzip": 179354,
+      "brotli": 150318
+    },
+    "cdn/ssr-commerce/headless.js": {
+      "raw": 679825,
+      "gzip": 179290,
+      "brotli": 150254
+    },
+    "cdn/ssr-next/headless.esm.js": {
+      "raw": 691420,
+      "gzip": 184480,
+      "brotli": 154709
+    },
+    "cdn/ssr-next/headless.js": {
+      "raw": 694567,
+      "gzip": 184420,
+      "brotli": 154552
+    },
+    "cdn/ssr/headless.esm.js": {
+      "raw": 692669,
+      "gzip": 184791,
+      "brotli": 155167
+    },
+    "cdn/ssr/headless.js": {
+      "raw": 695798,
+      "gzip": 184708,
+      "brotli": 155033
+    },
+    "dist/cjs/case-assist/headless.cjs": {
+      "raw": 375591,
+      "gzip": 69192,
+      "brotli": 55223
+    },
+    "dist/cjs/commerce/headless.cjs": {
+      "raw": 681968,
+      "gzip": 115247,
+      "brotli": 89374
+    },
+    "dist/cjs/headless.cjs": {
+      "raw": 789731,
+      "gzip": 134543,
+      "brotli": 104595
+    },
+    "dist/cjs/insight/headless.cjs": {
+      "raw": 755362,
+      "gzip": 124008,
+      "brotli": 95881
+    },
+    "dist/cjs/recommendation/headless.cjs": {
+      "raw": 402815,
+      "gzip": 72238,
+      "brotli": 58301
+    },
+    "dist/cjs/ssr-commerce-next/headless.cjs": {
+      "raw": 730921,
+      "gzip": 125123,
+      "brotli": 96841
+    },
+    "dist/cjs/ssr-commerce/headless.cjs": {
+      "raw": 737833,
+      "gzip": 126472,
+      "brotli": 97863
+    },
+    "dist/cjs/ssr-next/headless.cjs": {
+      "raw": 767532,
+      "gzip": 130860,
+      "brotli": 102912
+    },
+    "dist/cjs/ssr/headless.cjs": {
+      "raw": 770363,
+      "gzip": 131867,
+      "brotli": 103449
+    },
+    "dist/quantic/case-assist/headless.js": {
+      "raw": 552318,
+      "gzip": 148635,
+      "brotli": 124500
+    },
+    "dist/quantic/commerce/headless.js": {
+      "raw": 677700,
+      "gzip": 179177,
+      "brotli": 149638
+    },
+    "dist/quantic/headless.js": {
+      "raw": 724614,
+      "gzip": 193006,
+      "brotli": 160915
+    },
+    "dist/quantic/insight/headless.js": {
+      "raw": 714466,
+      "gzip": 185028,
+      "brotli": 154856
+    },
+    "dist/quantic/recommendation/headless.js": {
+      "raw": 562183,
+      "gzip": 150892,
+      "brotli": 126677
+    },
+    "dist/esm (all files)": {
+      "raw": 1875958,
+      "gzip": 544935,
+      "brotli": 458706,
+      "files": 1198
+    }
+  },
+  "atomic": {}
+}
