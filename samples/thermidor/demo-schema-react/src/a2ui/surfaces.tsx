@@ -74,7 +74,7 @@ interface ThermidorA2UIStreamProps {
 }
 
 /** The session's `userAction` message for an action the processor dispatches. */
-export function toClientMessage({
+function toClientMessage({
   name,
   surfaceId,
   sourceComponentId,
