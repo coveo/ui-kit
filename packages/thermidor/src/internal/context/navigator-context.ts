@@ -1,8 +1,12 @@
 /**
- * Ambient navigator context — one of the client-owned context inputs a consumer
- * supplies through a pull-based provider on `SessionConfig`. The request builder
- * reads it fresh per request and maps it onto the wire request; it is never
- * stored on the session and never serialized.
+ * The browser context of the experience, returned by the
+ * {@link SessionConfig.navigatorContextProvider} the consumer supplies.
+ *
+ * @remarks
+ * The session reads it before every request and sends it with the request. It never keeps it and
+ * never serializes it.
+ *
+ * @group Context
  */
 export interface NavigatorContext {
   /**
@@ -42,8 +46,9 @@ export interface NavigatorContext {
 }
 
 /**
- * The pull-based provider a consumer supplies for ambient
- * {@link NavigatorContext}. Synchronous by design: the request builder calls it
- * fresh per request.
+ * A synchronous function that returns the current {@link NavigatorContext}. The session calls it
+ * before every request.
+ *
+ * @group Context
  */
 export type NavigatorContextProvider = () => NavigatorContext;

@@ -86,43 +86,55 @@ import type {
   TurnInput,
 } from './types.js';
 
+// Kept structural so the renderer callback stays assignable without coupling this package to React
+// or the renderer package.
 /**
- * The standard A2-UI client-to-server message the frozen renderer delivers to
- * its `onAction` handler. {@link Session.dispatchAction} accepts this shape so it
- * is assignable to the renderer's `OnActionCallback` with no adapter.
+ * The standard A2-UI client-to-server message an A2-UI renderer passes to its `onAction` handler.
  *
- * Declared structurally (not imported) so `@coveo/thermidor` stays
- * framework-agnostic: it depends on neither React nor the renderer package,
- * yet `onAction={session.dispatchAction}` type-checks against the renderer's
- * `(message: A2UIClientEventMessage) => void | Promise<void>` callback.
+ * @remarks
+ * {@link Session.dispatchAction} accepts this shape, so it can be passed to the renderer's
+ * `onAction` as is, with no adapter.
+ *
+ * @group Actions
  */
 export interface A2uiClientMessage {
   /**
-   * The user interaction, when the message carries one. A message with no
-   * `userAction` is dropped (nothing sent).
+   * The user interaction, when the message carries one. A message with no `userAction` is dropped,
+   * and nothing is sent.
    */
   userAction?: {
     /** The action name declared by the dispatching component's contract. */
     name: string;
     /** The A2-UI surface the interaction originated on. */
     surfaceId: string;
-    /** The id of the node that dispatched the action. Absent → dropped. */
+    /** The id of the node that dispatched the action. A message without one is dropped. */
     sourceComponentId?: string;
-    /** The action payload, validated against the action's contract in transit. */
+    /** The action payload, validated against the action's contract before it is sent. */
     context?: Record<string, unknown>;
-    /** Optional client-provided timestamp (unused; the core stamps its own). */
+    /** A timestamp set by the renderer. The session ignores it. */
     timestamp?: string;
-    /** Optional data-context pointer (unused by the core dispatch path). */
+    // The core dispatch path ignores this renderer extension field.
+    /**
+     * A data-context path set by the renderer. The session ignores it.
+     */
     dataContextPath?: string;
   };
 }
 
 /**
- * Submits a prompt from outside A2-UI composition (for example, the
- * integrator's search box), opening a new streaming turn. Dispatched through
- * {@link Session.dispatchAction} like any other interaction, but it needs no
- * rendered component, surface, or active turn, so it also opens the first turn
- * of a session.
+ * Submits a prompt from outside A2-UI composition, such as the integrator's search box, and opens
+ * a new streaming turn for it.
+ *
+ * @remarks
+ * Dispatched through {@link Session.dispatchAction} like any other interaction, but it needs no
+ * rendered component, surface or active turn, so it can open the first turn of a session.
+ *
+ * @example
+ * ```ts
+ * await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me running shoes'}});
+ * ```
+ *
+ * @group Actions
  */
 export interface SubmitPromptAction {
   /** Identifies a prompt submission. */
@@ -137,21 +149,25 @@ export interface SubmitPromptAction {
 /**
  * The configuration accepted by {@link createSession}.
  *
- * The context providers are pull-based and synchronous: the request builder
- * calls `navigatorContextProvider` and `commerceContextProvider` fresh per
- * request so the app's current context is always sent without thermidor-side
- * context state.
+ * @remarks
+ * The context providers are synchronous functions the session calls before every request, so each
+ * request carries the app's current context and the session keeps no copy of it.
+ *
+ * @group Session
  */
 export interface SessionConfig<TContracts extends ContractsSchema = ContractsSchema> {
+  // Injecting the contract keeps the runtime independent of any concrete contract package.
   /**
-   * The injected component contracts schema (a discriminated union on `component`,
-   * each member carrying that component's `state` and `actions`). It is the SOLE
-   * validation source for the session: inbound `updateDataModel` ops are validated
-   * against the member's `state` (whole) / its sub-schema (partial sub-path), and
-   * outbound action payloads against the member's `actions` for the dispatched
-   * action name, before the POST. Injecting it here keeps `@coveo/thermidor`
-   * decoupled from any concrete contract package, so the runtime works with any
-   * A2-UI contract schema, not only `@coveo/thermidor-schema`.
+   * The component contracts the session validates against: a discriminated union on `component`,
+   * each member carrying that component's `state` and `actions` schemas.
+   *
+   * @remarks
+   * - It is the session's only validation source.
+   * - Each `updateDataModel` operation the endpoint sends is validated against the component's
+   *   `state` schema, or the part of it the operation's path addresses, before it applies.
+   * - Each action payload is validated against the component's `actions` schema for the dispatched
+   *   action name before the action is sent.
+   * - Any A2-UI contract package of this shape works, such as `@coveo/thermidor-schema`.
    */
   contracts: TContracts;
   /**
@@ -165,9 +181,10 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
    */
   accessToken: string;
   /**
-   * Full converse URL override. When provided the client POSTs to it verbatim
-   * (appending nothing); when absent the Coveo converse URL is derived from
-   * `organizationId`.
+   * The full converse URL, to override the derived one. When set, the session sends every request
+   * to it as is, appending nothing.
+   *
+   * @defaultValue The Coveo converse URL of `organizationId`.
    */
   endpoint?: string;
   /**
@@ -176,11 +193,12 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
    */
   navigatorContextProvider: NavigatorContextProvider;
   /**
-   * App-owned commerce context (cart / pinnedProducts / source / custom), read
-   * fresh per request. When absent, the request carries the structural-empty
-   * "absent" encoding; when present, it carries the values the provider returns
-   * as the "present" encoding, distinguishable on the wire from the absent
-   * encoding even when the returned cart is empty.
+   * The app's commerce context (cart, pinned products, sources and custom values), read before
+   * every request.
+   *
+   * @remarks
+   * Without a provider, requests carry an empty commerce context that the endpoint can tell apart
+   * from a provided one, even one whose cart is empty.
    */
   commerceContextProvider?: CommerceContextProvider;
   /** The identifier of the configured agent that answers the session. Sent with every request. */
@@ -188,24 +206,31 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
   /** The tracking identifier of the experience. Sent with every request. */
   trackingId: string;
   /**
-   * A previously-serialized session to restore at construction. When provided,
-   * the store is seeded from the serialized session, reproducing the persisted
-   * transcript and continuity keys (`sessionId`/`sessionToken`/`activeTurnId`)
-   * so the restored session continues the same backend conversation. The surfaces its earlier
-   * turns created are {@link DiscoveredSurface.readOnly | read-only}; those of the last turn that
-   * created one stay live, and so does the last turn's retry. When it has a token, its `initialize`
-   * resumes the session: the restored shell stays until the endpoint answers with a new, live shell
-   * under a new id. A failed turn opened from the restored shell can't be retried once that shell is
-   * replaced. If the endpoint answers with another session instead, the restored turns are dropped,
-   * and `a2uiMessages` deletes their surfaces.
+   * A session returned by {@link Session.serialize}, to restore when the session is created.
+   *
+   * @remarks
+   * - The session starts from the serialized transcript and keys (`sessionId`, `sessionToken` and
+   *   the active turn), so it continues the same conversation on the endpoint.
+   * - The surfaces its earlier turns created are {@link DiscoveredSurface.readOnly | read-only};
+   *   those of the last turn that created one stay live, and so does the last turn's retry.
+   * - When it has a token, its `initialize` resumes the session: the restored shell stays until
+   *   the endpoint answers with a new, live shell under a new id. A failed turn opened from the
+   *   restored shell can't be retried once that shell is replaced.
+   * - If the endpoint answers with another session instead, the restored turns are dropped, and
+   *   `a2uiMessages` deletes their surfaces.
+   * - It can't be combined with `sessionId`.
    */
   sessionToRestore?: SerializedSession;
   /**
    * The conversation session id the session opens with. It must be a UUID, and it is sent as
-   * `conversationSessionId` from the first request. Alone, it opens a new session under that id;
-   * if the first request ends before the endpoint sends a token, the session drops the id and the
-   * endpoint assigns one (it keeps it after an error status other than 403, 502 or 504, or a
-   * request never sent). It can't be combined with `sessionToRestore`.
+   * `conversationSessionId` from the first request.
+   *
+   * @remarks
+   * - Alone, it opens a new session under that id.
+   * - If the first request ends before the endpoint sends a token, the session drops the id and
+   *   the endpoint assigns one. It keeps the id after an error status other than 403, 502 or 504,
+   *   or when the request was never sent.
+   * - It can't be combined with `sessionToRestore`.
    */
   sessionId?: string;
   /**
@@ -218,10 +243,16 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
   /**
    * Whether the session opens itself with an `initialize` action, sent a microtask after
    * {@link createSession} returns so that a listener subscribed in the same task sees it start.
-   * Defaults to `true`. A restored session sends it only when it has a token. Pass `false` for
-   * tests, or for a server that creates a session while rendering; the session keys then go out
-   * with the first prompt or action. Unless `false`, {@link createSession} throws when the contracts
-   * don't accept `SessionShell`'s `initialize` with an empty payload.
+   *
+   * @remarks
+   * A restored session sends it only when it has a token. A prompt or non-concurrent action that
+   * starts a request in the same task opens the session instead; a concurrent action or a
+   * withheld dispatch does not suppress `initialize`. Pass `false` for tests, or for a server that
+   * creates a session while rendering; the session keys then go out with the first prompt or
+   * action. Unless `false`, {@link createSession} throws when the contracts don't accept
+   * `SessionShell`'s `initialize` with an empty payload.
+   *
+   * @defaultValue `true`
    */
   initialize?: boolean;
 }
@@ -230,6 +261,8 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
  * The session's observable state as one immutable value, read through
  * {@link Session.getSnapshot}. Each field is the value of the {@link Session} member of the same
  * name at the time of the snapshot.
+ *
+ * @group Session
  */
 export interface SessionSnapshot {
   /** The turns, as {@link Session.turns}. */
@@ -248,21 +281,23 @@ export interface SessionSnapshot {
   readonly actionError: ActionError | undefined;
 }
 
+// The handle exposes only the session client API, not an engine, interface, or state-library
+// object.
 /**
- * The client-side handle for one continuous interaction with the unified
- * converse endpoint. No engine, interface, or state-library object is reachable
- * from it.
+ * The client-side handle for one continuous interaction with the unified converse endpoint,
+ * returned by {@link createSession}.
+ *
+ * @group Session
  */
 export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
+  // Retained so the generic parameter is observable on the handle.
   /**
-   * The injected contracts schema this session validates against. Retained on
-   * the handle so the generic parameter is observable and the runtime threads
-   * the exact contract that was injected.
+   * The contracts this session validates against, as passed in {@link SessionConfig.contracts}.
    */
   readonly contracts: TContracts;
   /**
-   * Readonly observable list of turns folded from the streamed response. Each turn's `surfaces`
-   * are the live surfaces it created, so a transcript knows where to draw them.
+   * The session's turns, oldest first, built from what the endpoint streams. Each turn's
+   * `surfaces` are the live surfaces it created, so a transcript knows where to draw them.
    */
   readonly turns: readonly Turn[];
   /**
@@ -276,12 +311,16 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
   readonly sessionToken: string | undefined;
   /**
    * The run of the `initialize` action that opened the session, or `undefined` when the session
-   * sent none. Not a turn. Only `initialize` changes its `status`; the surface snapshots of a
-   * component action dispatched before the first turn are recorded here too, unless it opens one.
-   * The session briefly retries a transient rejection of the `initialize` it sent itself, while
-   * {@link Session.request} stays `{kind: 'initialize'}`. Once its
-   * `status` is `'error'`, no surface it would have created is coming: the first prompt still
-   * opens the session, and {@link Session.retryInitialization} sends `initialize` again.
+   * sent none. Not a turn.
+   *
+   * @remarks
+   * - Only `initialize` changes its `status`. The surface snapshots of a component action
+   *   dispatched before the first turn are recorded here too, unless the action opens a turn.
+   * - The session briefly retries a transient rejection of the `initialize` it sent itself, while
+   *   {@link Session.request} stays `{kind: 'initialize'}`.
+   * - Once its `status` is `'error'`, no surface it would have created is coming: the first
+   *   prompt still opens the session, and {@link Session.retryInitialization} sends `initialize`
+   *   again.
    */
   readonly initialization: SessionInitialization | undefined;
   /**
@@ -298,99 +337,156 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    */
   readonly a2uiMessages: readonly A2uiV09Message[];
   /**
-   * The validated data model of every live surface, keyed by surface id, whichever turn wrote it:
-   * inbound `updateDataModel` ops are validated against the injected contracts before they apply
-   * here. The answers to concurrent actions are applied on top without being recorded: a later
-   * recorded write to the same path replaces them, and {@link Session.serialize} leaves them out.
+   * The validated data model of every live surface, keyed by surface id, whichever turn wrote it.
+   *
+   * @remarks
+   * - Each `updateDataModel` operation the endpoint sends is validated against the injected
+   *   contracts before it applies here.
+   * - The answers to concurrent actions are applied on top without being recorded: a later
+   *   recorded write to the same path replaces them, and {@link Session.serialize} leaves them out.
    */
   readonly state: A2uiState;
   /**
-   * Why the last component action failed, and which action it was, or `undefined`. An action never
-   * changes a turn's status: when it fails, whether the endpoint rejects it (after the session's
-   * own bounded retries for concurrency conflicts), it streams `RUN_ERROR`, its stream ends
-   * without a terminal event, or its request cannot be built, only this reports it, so a consumer
-   * can show it next to the block that dispatched it. Any optimistic state tied to the action is
-   * released and the last authoritative state shows again. Cleared once the next action or prompt
-   * is sent. Changes notify {@link Session.subscribe} listeners.
+   * Why the last component action failed, and which action it was, or `undefined`.
+   *
+   * @remarks
+   * - An action that opens no turn never changes a turn's status, so only this reports its
+   *   failure, and a consumer can show it next to the block that dispatched it.
+   * - A turn-opening action's failure fails the turn it opened instead, and sets this only for a
+   *   concurrency conflict. A concurrent action's failure never sets it.
+   * - It is set when the endpoint rejects the action (after the session's own bounded retries for
+   *   concurrency conflicts), the action streams `RUN_ERROR`, its stream fails before a terminal
+   *   event, or its request can't be built.
+   * - Surface updates streamed before the failure stay in state; the session does not roll them
+   *   back.
+   * - It is cleared when the next prompt or non-concurrent action is sent. A concurrent action
+   *   does not clear it.
+   * - Its changes notify {@link Session.subscribe} listeners.
    */
   readonly actionError: ActionError | undefined;
   /**
-   * The request the session is sending, or `undefined` when it is idle. The session sends one
-   * request at a time, `initialize`, prompts and actions alike, in the order they were dispatched;
-   * an action's run counts, a follow-up included. An action the producer announces as concurrent
-   * is sent beside it and never sets it. Read it synchronously, or through {@link Session.subscribe}.
+   * The request the session is sending, or `undefined` when it is idle.
+   *
+   * @remarks
+   * - The session sends one request at a time, `initialize`, prompts and actions alike, in the
+   *   order they were dispatched. An action's run counts, a follow-up included.
+   * - An action the producer announces as concurrent is sent beside it and never sets it.
+   * - Read it synchronously, or through {@link Session.subscribe}.
    */
   readonly request: SessionRequest | undefined;
   /**
-   * Registers a listener invoked once per change to the turn list, the initialization,
-   * `actionError` or `request`. Does not rely on `this`, so it can be passed by reference.
+   * Registers a listener called whenever the session changes, including `state` and
+   * `a2uiMessages` changes from concurrent actions. Does not rely on `this`, so it can be passed by
+   * reference.
+   *
+   * @param listener - The function to call after each change. Read the new state with
+   * {@link Session.getSnapshot}.
+   * @returns A function that removes the listener.
+   *
+   * @example
+   * ```ts
+   * const unsubscribe = session.subscribe(() => render(session.getSnapshot()));
+   * ```
    */
   subscribe(listener: () => void): () => void;
   /**
    * Returns the session's turns, initialization, surfaces, renderer stream, state, request in
-   * flight and action error as one immutable {@link SessionSnapshot}. The same object is returned until one of its fields
-   * changes, so it can back any store that subscribes through {@link Session.subscribe} and
-   * compares snapshots by reference, such as React's
-   * `useSyncExternalStore(session.subscribe, session.getSnapshot)`. Does not rely on `this`, so
-   * it can be passed by reference.
+   * flight and action error as one immutable {@link SessionSnapshot}.
+   *
+   * @remarks
+   * The same object is returned until one of its fields changes, so a framework's state hook that
+   * subscribes through {@link Session.subscribe} and compares snapshots by reference can read it.
+   * Does not rely on `this`, so it can be passed by reference.
+   *
+   * @returns The current snapshot.
+   *
+   * @example
+   * In React:
+   *
+   * ```ts
+   * const snapshot = useSyncExternalStore(session.subscribe, session.getSnapshot);
+   * ```
    */
   getSnapshot(): SessionSnapshot;
   /**
-   * The single consumer-facing action-dispatch entry point, wired directly as
-   * the renderer's `onAction` handler (`onAction={session.dispatchAction}`).
+   * Sends a prompt or a component action, and is the renderer's `onAction` handler.
    *
-   * The session sends one request at a time: a dispatch made while another request is in flight
-   * is withheld, a prompt included. The returned Promise resolves once the dispatch's own request
-   * ends.
+   * @remarks
+   * - The returned Promise always resolves once the dispatch's own request ends, and never
+   *   rejects, so the consumer needs no `.catch`.
+   * - The session sends one request at a time: a dispatch made while another request is in flight
+   *   is withheld, a prompt included, and nothing is sent.
+   * - A {@link SubmitPromptAction} opens a new streaming turn for its prompt, and resolves once
+   *   that turn's stream ends.
+   * - An {@link A2uiClientMessage} is unwrapped to its `userAction`. The session finds the
+   *   dispatching component among its live surfaces, whichever turn created them, validates the
+   *   payload against that component's contract and, when it is valid, sends the action.
+   * - An action the producer announces as opening a turn, such as a follow-up chip, opens a new
+   *   streaming turn whose `input.action` records it, as a prompt does, and resolves once that
+   *   turn's stream ends. It needs no active turn, so it can open the first turn of a session.
+   * - Any other action only updates the surfaces. Its surface snapshots are recorded with the
+   *   active turn, or with {@link Session.initialization} before the first turn, and its failure
+   *   sets {@link Session.actionError}.
+   * - An action the producer announces as concurrent is sent at once, whatever request is in
+   *   flight, and never sets {@link Session.request}. Only the latest dispatch from a node is
+   *   shown, and one the producer allows to be reused is answered without a request. Its answer
+   *   isn't recorded, and its failure sets no {@link Session.actionError}.
+   * - A message that can't be sent, such as one with no `userAction` or no `sourceComponentId`,
+   *   one from a node that matches no component, or one whose payload is invalid, is dropped with
+   *   a warning in development, and nothing is sent.
    *
-   * A {@link SubmitPromptAction} opens a new streaming turn for its prompt, and resolves once that
-   * turn's stream ends.
+   * @param message - A {@link SubmitPromptAction}, or the {@link A2uiClientMessage} the renderer
+   * passes to `onAction`.
+   * @returns A Promise that resolves once the dispatch's request ends, or at once when nothing is
+   * sent.
    *
-   * An {@link A2uiClientMessage} is unwrapped to its `userAction`: the session
-   * recovers the dispatching component's discriminant from the session's live
-   * surfaces, whichever turn created them, validates the action payload against the component's contract
-   * internally, and — on success — POSTs the action to the converse endpoint.
+   * @example
+   * Pass it as is to an A2-UI renderer, such as the `A2UIProvider` of `@copilotkit/a2ui-renderer`:
    *
-   * An action the producer announces as opening a turn, such as a follow-up
-   * chip, opens a new streaming turn whose `input.action` records it, as a prompt does, and its
-   * answer streams there; it resolves once that turn's stream ends. It needs no active turn, so it
-   * may open the first turn of a session. Any other action only updates the surfaces: its surface
-   * snapshots are recorded with the active turn, or with {@link Session.initialization} before the
-   * first turn, and its failure sets {@link Session.actionError}.
-   *
-   * An action the producer announces as concurrent is sent at once, whatever request is in flight,
-   * and never sets {@link Session.request}. Only the latest dispatch from a node is shown, and one
-   * the producer allows to be reused is answered without a request. Its answer is not recorded, and
-   * its failure sets no {@link Session.actionError}.
-   *
-   * FIRE-AND-FORGET: the returned Promise ALWAYS resolves and NEVER rejects, so
-   * the consumer needs no `.catch`. A message with no `userAction`, no
-   * `sourceComponentId`, a node that resolves to no component, and an internal
-   * dispatch rejection (for example an invalid payload) are all dropped with a
-   * dev-only warning and nothing is sent.
+   * ```tsx
+   * <A2UIProvider catalog={catalog} onAction={session.dispatchAction}>
+   *   {children}
+   * </A2UIProvider>
+   * ```
    */
   dispatchAction: (message: A2uiClientMessage | SubmitPromptAction) => Promise<void>;
   /**
-   * Whether a dispatch of the action `name` from the surface `surfaceId` would now be sent at once,
-   * whatever request is in flight, without setting {@link Session.request}: the producer's latest
-   * valid announcement for that surface lists the action as concurrent, and the session has a
-   * token. When it returns `false`, such a dispatch is withheld while a request is in flight, so
-   * wait for {@link Session.request} to become `undefined` before sending it. Read it again
-   * through {@link Session.subscribe}, as a later announcement may change it. Does not rely on
-   * `this`, so it can be passed by reference.
+   * Whether a dispatch of an action would now be sent at once, whatever request is in flight,
+   * without setting {@link Session.request}.
+   *
+   * @remarks
+   * - It returns `true` when the producer's latest valid announcement for the surface lists the
+   *   action as concurrent, and the session has a token.
+   * - When it returns `false`, such a dispatch is withheld while a request is in flight, so wait
+   *   for {@link Session.request} to become `undefined` before sending it.
+   * - Read it again through {@link Session.subscribe}, as a later announcement may change it.
+   * - Does not rely on `this`, so it can be passed by reference.
+   *
+   * @param action - The action to check: the `surfaceId` it would be dispatched from, and its
+   * `name`.
+   * @returns Whether the action would be sent at once.
    */
   isConcurrent(action: {surfaceId: string; name: string}): boolean;
   /**
-   * Stops the request in flight, `initialize` included, but no concurrent action. A streaming turn
-   * or initialization it stops ends in `'error'` with `reason: 'cancelled'`. {@link Session.request} stays set until the stopped request has
-   * unwound, a few microtasks later, so a dispatch made right after `cancel()` is withheld: wait for
-   * `request` to become `undefined`, through {@link Session.subscribe}, before sending the next one.
+   * Stops the request in flight, `initialize` included, but no concurrent action.
+   *
+   * @remarks
+   * - A streaming turn or initialization it stops ends in `'error'` with `reason: 'cancelled'`.
+   * - {@link Session.request} stays set until the stopped request has unwound, a few microtasks
+   *   later, so a dispatch made right after `cancel()` is withheld: wait for `request` to become
+   *   `undefined`, through {@link Session.subscribe}, before sending the next one.
    */
   cancel(): void;
   /**
    * Re-submits the input of the last turn when it errored: its prompt, or the action that opened
-   * it, sent again from the surface it was dispatched from. Withheld like any dispatch while a
-   * request is in flight. An earlier turn is not retried: its answer would land before later turns.
+   * it, sent again from the surface it was dispatched from.
+   *
+   * @remarks
+   * Withheld like any dispatch while a request is in flight. An earlier turn isn't retried: its
+   * answer would land before later turns.
+   *
+   * @param turnId - The {@link Turn.id} of the turn to retry. Nothing is sent unless it is the
+   * last turn and its `status` is `'error'`.
    */
   retry(turnId: string): void;
   /**
@@ -401,7 +497,12 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * Throws instead of sending it when the contracts don't accept `SessionShell`'s `initialize`.
    */
   retryInitialization(): void;
-  /** Serializes the session transcript for persistence. */
+  /**
+   * Serializes the session transcript for persistence.
+   *
+   * @returns A versioned snapshot to save and pass back later as
+   * {@link SessionConfig.sessionToRestore}.
+   */
   serialize(): SerializedSession;
 }
 
@@ -500,7 +601,50 @@ export type SessionRuntimeConfig<TContracts extends ContractsSchema = ContractsS
 const LOCALE_KEYS = ['language', 'country', 'currency'] as const;
 
 /**
- * Creates a {@link Session} over a fresh observable store + fold.
+ * Creates a session for one conversation with the unified converse endpoint.
+ *
+ * @remarks
+ * - The session sends an `initialize` action a microtask after this returns, so a listener
+ *   subscribed in the same task sees it start. It sends none when `config.initialize` is `false`,
+ *   when `config.sessionToRestore` has no token, or when a prompt or non-concurrent action starts
+ *   a request in the same task. A concurrent action or a withheld dispatch does not suppress it.
+ * - Two sessions created from the same configuration share no state.
+ *
+ * @param config - The organization, credentials, contracts and context providers of the session,
+ * and optionally a session to continue or restore.
+ * @returns The new session.
+ * @throws An `Error` when the configuration is invalid:
+ *
+ * - `agentConfigurationId` or `trackingId` is missing or blank.
+ * - `navigatorContextProvider` isn't a function.
+ * - `sessionId` isn't a UUID, `sessionToken` is blank or set without `sessionId`, or `sessionId`
+ *   and `sessionToRestore` are both set.
+ * - `sessionToRestore` has a `version` this client doesn't support.
+ *
+ * @example
+ * ```ts
+ * const session = createSession({
+ *   contracts: ComponentContractsSchema,
+ *   organizationId: 'my-org',
+ *   accessToken: 'xx-token',
+ *   agentConfigurationId: '00000000-0000-0000-0000-000000000000',
+ *   trackingId: 'my-tracking-id',
+ *   navigatorContextProvider: getNavigatorContext,
+ * });
+ * ```
+ *
+ * @example
+ * Continue a session stored earlier from {@link Session.sessionId} and {@link Session.sessionToken}:
+ *
+ * ```ts
+ * const session = createSession({
+ *   ...config,
+ *   sessionId: stored.sessionId,
+ *   sessionToken: stored.sessionToken,
+ * });
+ * ```
+ *
+ * @group Session
  */
 export function createSession<TContracts extends ContractsSchema>(
   config: SessionConfig<TContracts>

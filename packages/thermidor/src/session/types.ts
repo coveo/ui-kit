@@ -8,91 +8,112 @@
  */
 
 /**
- * The lifecycle status of a {@link Turn}.
+ * The lifecycle status of a {@link Turn}, or of the {@link SessionInitialization}.
+ *
+ * @group Turns
  */
 export type TurnStatus = 'streaming' | 'complete' | 'error';
 
 /**
  * Why a {@link Turn} or the {@link SessionInitialization} ended in `'error'`.
  *
- * - `'cancelled'`: `session.cancel()` stopped it while it streamed.
+ * - `'cancelled'`: {@link Session.cancel} stopped it while it streamed.
  * - `'failed'`: the endpoint sent `RUN_ERROR`, the request or stream failed, or the stream ended
  *   without a terminal event, including a run restored while it was streaming.
+ *
+ * @group Turns
  */
 export type TurnErrorReason = 'cancelled' | 'failed';
 
 /**
- * The server-authoritative UI state of the session, keyed BY SURFACE: each live
- * surface owns its own data model at `state[surfaceId]`, into which validated
- * `updateDataModel` ops are applied at their `/state/<nodeId>` pointer, whichever
- * turn carried them. Keying by surface keeps two surfaces that share a
- * node id (every surface has a `root`) from colliding.
+ * The session's UI state as the endpoint last set it, keyed by surface id.
+ *
+ * @remarks
+ * - Each live surface owns its data model at `state[surfaceId]`.
+ * - Validated `updateDataModel` operations apply there at their `/state/<nodeId>` path,
+ *   whichever turn carried them.
+ * - Keying by surface keeps two surfaces that share a node id, such as `root`, from colliding.
+ *
+ * @group Surfaces
  */
 export type A2uiState = Record<string, unknown>;
 
+// The turn-level surface list is derived from activities; the session-level list is the source of
+// truth.
 /**
- * A discovered renderable region derived from `activities`, exposed as the
- * session's live surfaces and as each turn's {@link TurnResponse.surfaces}
- * (interim). Each entry carries a non-empty `surfaceId` and a non-empty
- * `rootComponentType`. A surface lives from its `createSurface` until its
- * `deleteSurface`, whichever runs carry them; a deleted surface leaves
- * the lists, and so does a loading placeholder its turn left behind once it
- * stopped streaming.
+ * A live A2-UI surface: a region to render, listed in {@link Session.surfaces} and in the
+ * {@link TurnResponse.surfaces} of the turn that created it.
+ *
+ * @remarks
+ * - A surface lives from its `createSurface` until its `deleteSurface`, whichever runs carry them.
+ * - A deleted surface leaves the lists, and so does a loading placeholder its turn left behind
+ *   once it stopped streaming.
+ *
+ * @group Surfaces
  */
 export interface DiscoveredSurface {
-  /** The id of the A2-UI surface, unique among the session's live surfaces. */
+  /** The id of the A2-UI surface: never empty, and unique among the session's live surfaces. */
   surfaceId: string;
+  // This root-type projection is interim and is currently used by consumers and navigation.
   /**
-   * The root node's PascalCase `component` discriminant; interim: compared
-   * against `'CommerceSearch'` by consumers/nav.
+   * The PascalCase `component` of the surface's root node, such as `'CommerceSearch'`. Never empty.
    */
   rootComponentType: string;
+  // This loading flag comes from the commerce catalog data model.
   /**
-   * Whether the surface is a loading placeholder: its data model declares
-   * `isLoading: true` (the commerce catalog flag). A consumer renders a
-   * placeholder for `rootComponentType` while this holds. It ends when the
-   * agent deletes the surface (the surface leaves this list) or writes
-   * `isLoading: false` to its data model. A placeholder is listed only while the
-   * run that created it streams; one the agent left behind (a cancelled run, an
-   * error, a restored session) leaves the lists, and a later request streaming
-   * into its turn does not bring it back.
+   * Whether the surface is a loading placeholder: its data model sets `isLoading: true`.
+   *
+   * @remarks
+   * - A consumer renders a placeholder for `rootComponentType` while it is `true`.
+   * - Loading ends when the agent deletes the surface, which leaves the lists, or sets
+   *   `isLoading: false` in its data model.
+   * - A placeholder is listed only while the run that created it streams. One the agent left
+   *   behind, after a cancelled run, an error or a restore, leaves the lists, and a later request
+   *   streaming into its turn doesn't bring it back.
    */
   isLoading: boolean;
   /**
-   * `true` on a surface a restored turn created before the last restored turn that created one
-   * (`sessionToRestore`): a snapshot of an earlier page. `dispatchAction` refuses its actions
-   * without a request, except `productClick`, which the endpoint still counts, so a consumer draws
-   * it without its controls but keeps its product links. Absent on every other surface, such as
-   * the last restored turn's that created one, the restored shell or the new one the resuming
-   * `initialize` answers with, or one a later run creates again.
+   * `true` on a surface of a restored session that shows an earlier page: one a restored turn
+   * created before the last restored turn that created one.
+   *
+   * @remarks
+   * - {@link Session.dispatchAction} sends none of its actions, except `productClick`, which the
+   *   endpoint still counts, so a consumer draws it without its controls but keeps its product
+   *   links.
+   * - It is absent on every other surface, such as the ones the last restored turn created, the
+   *   restored shell, the new shell the resuming `initialize` answers with, or a surface a later
+   *   run creates again.
    */
   readOnly?: true;
 }
 
+// Keep the operation shapes untyped here: they belong to the renderer protocol, not Thermidor's
+// domain model.
 /**
- * A single A2-UI message in the **v0.9** shape a renderer consumes, exposed in
- * the session's renderer stream (`Session.a2uiMessages`).
+ * A single A2-UI message in the v0.9 shape renderers consume, as listed in
+ * {@link Session.a2uiMessages}.
  *
- * Agent Gateway emits A2-UI v1.0; every available renderer
- * (`@copilotkit/a2ui-renderer`, via `@a2ui/web_core/v0_9`) consumes v0.9. This
- * projection performs that downgrade so a consumer can hand the stream straight
- * to a renderer without writing version-aware code of their own.
+ * @remarks
+ * The endpoint streams A2-UI v1.0, and the available renderers, such as
+ * `@copilotkit/a2ui-renderer`, consume v0.9, so the session converts each message. A consumer
+ * hands the stream to a renderer as is, with no version-specific code. This conversion is interim:
+ * a breaking release will remove it once a v1.0-capable renderer exists.
  *
- * INTERIM: this is recorded debt, removed in a breaking change
- * once a v1.0-capable renderer exists. Kept deliberately untyped beyond
- * "record" — the per-operation shapes belong to the renderer's protocol, not to
- * thermidor's domain model, and pinning them here would deepen the coupling this
- * projection is meant to contain.
+ * @group Surfaces
  */
 export type A2uiV09Message = Record<string, unknown>;
 
 /**
  * The lifecycle status of a {@link ToolCall}.
+ *
+ * @group Turns
  */
 export type ToolCallStatus = 'calling' | 'completed';
 
 /**
  * A tool the agent invoked during a turn, in the order the stream started it.
+ *
+ * @group Turns
  */
 export interface ToolCall {
   /**
@@ -124,6 +145,8 @@ export interface ToolCall {
 /**
  * A text message the agent streamed during a turn, in the order the stream started it. Its
  * `content` grows while the message streams.
+ *
+ * @group Turns
  */
 export interface AgentMessage {
   /**
@@ -139,7 +162,10 @@ export interface AgentMessage {
 }
 
 /**
- * Represents a single activity emitted during a turn's streamed response.
+ * A single activity snapshot the endpoint streamed during a turn or the initialization, such as
+ * the A2-UI messages of a surface.
+ *
+ * @group Turns
  */
 export interface Activity {
   /**
@@ -160,15 +186,17 @@ export interface Activity {
    */
   replace: boolean;
   /**
-   * The snapshot's content. When it replaced an activity with the same `id` in this turn and both
-   * payloads carry a `messages` array, earlier `updateDataModel` writes at a surface and path this
-   * snapshot doesn't write are kept before its messages, unless this snapshot creates or deletes
-   * that surface. A write at the same path on another surviving surface is kept; a whole-model
-   * write without a path has no slice and isn't carried forward.
-   * The earlier latest `updateComponents` is also kept when this one sends none, except for a
-   * surface this snapshot creates or deletes. Otherwise it is this snapshot's content unchanged.
-   * For an `'a2ui-surface'` activity, its
-   * `messages` array holds the A2-UI messages that create, update or delete surfaces.
+   * The snapshot's content. For an `'a2ui-surface'` activity, its `messages` array holds the A2-UI
+   * messages that create, update or delete surfaces.
+   *
+   * @remarks
+   * When the snapshot replaced an activity with the same `id` in this turn and both payloads carry
+   * a `messages` array, earlier `updateDataModel` writes at a surface and path this snapshot
+   * doesn't write are kept before its messages, unless this snapshot creates or deletes that
+   * surface. A write at the same path on another surviving surface is kept; a whole-model write
+   * without a path has no slice and isn't carried forward. The earlier latest `updateComponents`
+   * is also kept when this one sends none, except for a surface this snapshot creates or deletes.
+   * Otherwise it is this snapshot's content unchanged.
    */
   payload: Record<string, unknown>;
   /**
@@ -180,8 +208,10 @@ export interface Activity {
 }
 
 /**
- * Agent-specific content, present only when the router invoked an agent for the
- * turn. Kept separate from the routing-neutral {@link TurnResponse} fields.
+ * What the agent streamed for a turn: its text messages and tool calls. Present as
+ * {@link TurnResponse.agent} only when the endpoint routed the turn to an agent.
+ *
+ * @group Turns
  */
 export interface TurnAgent {
   /**
@@ -200,16 +230,27 @@ export interface TurnAgent {
 /**
  * A request the session is sending: the `initialize` that opens the session, a prompt that streams
  * a turn, or a component action (a follow-up included).
+ *
+ * @group Requests and initialization
  */
 export type SessionRequest = InitializeRequest | PromptRequest | ActionRequest;
 
-/** The `initialize` action the session sends to open itself, recorded as `Session.initialization`. */
+/**
+ * The `initialize` action the session sends to open itself, recorded as
+ * {@link Session.initialization}.
+ *
+ * @group Requests and initialization
+ */
 export interface InitializeRequest {
   /** Identifies an `initialize` request. */
   kind: 'initialize';
 }
 
-/** A prompt the session is sending, streaming into a new turn or a retried one. */
+/**
+ * A prompt the session is sending, streaming into a new turn or a retried one.
+ *
+ * @group Requests and initialization
+ */
 export interface PromptRequest {
   /** Identifies a prompt request. */
   kind: 'prompt';
@@ -217,7 +258,11 @@ export interface PromptRequest {
   turnId: string;
 }
 
-/** A component action the session is sending. */
+/**
+ * A component action the session is sending.
+ *
+ * @group Requests and initialization
+ */
 export interface ActionRequest {
   /** Identifies a component action request. */
   kind: 'action';
@@ -231,7 +276,7 @@ export interface ActionRequest {
   sourceComponentId: string;
   /**
    * The turn the action's response streams into: the turn it opens, or the active turn. Absent
-   * before the first turn, when the response is recorded with `Session.initialization`.
+   * before the first turn, when the response is recorded with {@link Session.initialization}.
    */
   turnId?: string;
 }
@@ -239,6 +284,8 @@ export interface ActionRequest {
 /**
  * Why a component action failed, and the action it came from, so a consumer can show the failure
  * next to the block that dispatched it.
+ *
+ * @group Actions
  */
 export interface ActionError {
   /** Why the action failed. */
@@ -261,8 +308,11 @@ export interface ActionError {
 /**
  * The input paired with a turn's streamed response.
  *
+ * @remarks
  * A prompt turn carries `prompt`. A turn opened by a component action the producer announces as
  * opening a turn, such as a follow-up chip, carries `action` instead.
+ *
+ * @group Turns
  */
 export interface TurnInput {
   /** The prompt the turn answers, for a turn a prompt opened. */
@@ -271,7 +321,11 @@ export interface TurnInput {
   action?: TurnAction;
 }
 
-/** A component action that opened a turn, as it was dispatched. */
+/**
+ * A component action that opened a turn, as it was dispatched.
+ *
+ * @group Turns
+ */
 export interface TurnAction {
   /** The PascalCase `component` discriminant of the node that dispatched it. */
   component: string;
@@ -289,12 +343,18 @@ export interface TurnAction {
 }
 
 /**
- * The streamed result of a {@link Turn}.
+ * What the endpoint streamed for a {@link Turn}.
  *
- * `activities` is routing-neutral and always present. `surfaces` is a derived
- * projection of the session's activities (interim). `agent` is present
- * only when the router invoked an agent. The session's renderer stream and
- * component state span every turn, so they live on the session.
+ * @remarks
+ * - `activities` is always present.
+ * - `surfaces` is derived from the session's activities.
+ * - `agent` is present only when the endpoint routed the turn to an agent.
+ * - The renderer stream and the component state span every turn, so they live on the
+ *   {@link Session}.
+ * - `surfaces` on a turn is interim and may be removed in a breaking release; prefer
+ *   {@link Session.surfaces}.
+ *
+ * @group Turns
  */
 export interface TurnResponse {
   /**
@@ -316,14 +376,17 @@ export interface TurnResponse {
   surfaces: DiscoveredSurface[];
 
   /**
-   * Agent-specific content. Present ONLY when the router invoked an agent.
+   * What the agent streamed for the turn. Present only when the endpoint routed the turn to an
+   * agent.
    */
   agent?: TurnAgent;
 }
 
 /**
- * The run of the `initialize` action that opens a session, exposed as `Session.initialization`.
- * Not a turn: it never appears in `Session.turns`.
+ * The run of the `initialize` action that opens a session, exposed as
+ * {@link Session.initialization}. Not a turn: it never appears in {@link Session.turns}.
+ *
+ * @group Requests and initialization
  */
 export interface SessionInitialization {
   /**
@@ -346,7 +409,13 @@ export interface SessionInitialization {
 }
 
 /**
- * One `input` paired with its streamed `response`.
+ * One prompt or turn-opening action, its streamed response and its status.
+ *
+ * @remarks
+ * Its `status` is a {@link TurnStatus}; when it is `'error'`, `reason` is a
+ * {@link TurnErrorReason}.
+ *
+ * @group Turns
  */
 export interface Turn {
   /** The turn's id, assigned by the session when the turn opens. A retry keeps it. */

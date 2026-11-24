@@ -5,6 +5,19 @@
   "readme": "none",
   "excludePrivate": true,
   "excludeInternal": true,
+  "includeHierarchySummary": false,
+  "sort": ["required-first", "alphabetical-ignoring-documents"],
+  "groupOrder": [
+    "Session",
+    "Turns",
+    "Actions",
+    "Surfaces",
+    "Requests and initialization",
+    "Context",
+    "Contracts",
+    "Serialization",
+    "*"
+  ],
   "validation": {
     "notDocumented": true
   },
