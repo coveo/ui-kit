@@ -1,3 +1,4 @@
+export {detectOpenAcrDrift, type OpenAcrDrift} from './openacr/drift.js';
 export {type JsonToOpenAcrOptions, transformJsonToOpenAcr} from './openacr/json-to-openacr.js';
 export {syncOpenAcrVersionFile} from './openacr/sync-version-file.js';
 export {type VpatCatalog, renderVpat} from './openacr/vpat-renderer.js';

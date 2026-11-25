@@ -7,9 +7,8 @@
  */
 import {existsSync, readFileSync} from 'node:fs';
 import {resolve} from 'node:path';
-import {isDeepStrictEqual} from 'node:util';
 import {parse} from 'yaml';
-import {transformJsonToOpenAcr} from '../dist/index.js';
+import {detectOpenAcrDrift, transformJsonToOpenAcr} from '../dist/index.js';
 
 const PKG_ROOT = resolve(import.meta.dirname, '..');
 const REPO_ROOT = resolve(PKG_ROOT, '../..');
@@ -27,32 +26,39 @@ if (!existsSync(INPUT_REPORT)) {
   process.exit(0);
 }
 
-// Generate fresh openacr from the merged a11y report
+// Generate fresh openacr from the merged a11y report. Using the committed file
+// as the baseline keeps its dates whenever the evaluation did not change, so the
+// two documents can be compared as a whole.
 await transformJsonToOpenAcr({
   inputFile: INPUT_REPORT,
   outputFile: GENERATED_OPENACR,
+  baselineFile: COMMITTED_OPENACR,
 });
 
 // Compare the parsed documents, not the serialized text, so formatting (quote
-// style, line wrapping, key order) is irrelevant. Some fields are regenerated
-// from the environment rather than from a11y results and must be ignored:
-//   - report_date / last_modified_date -> change every day
-//   - product.version                  -> changes on every Atomic release
-function stripVolatile(report) {
-  delete report.report_date;
-  delete report.last_modified_date;
-  if (report.product) {
-    delete report.product.version;
-  }
-  return report;
-}
+// style, line wrapping, key order) is irrelevant.
+const committed = parse(readFileSync(COMMITTED_OPENACR, 'utf-8'));
+const generated = parse(readFileSync(GENERATED_OPENACR, 'utf-8'));
+const drift = detectOpenAcrDrift(committed, generated);
 
-const committed = stripVolatile(parse(readFileSync(COMMITTED_OPENACR, 'utf-8')));
-const generated = stripVolatile(parse(readFileSync(GENERATED_OPENACR, 'utf-8')));
-
-if (isDeepStrictEqual(committed, generated)) {
+if (drift === 'none') {
   console.log('✅ openacr.yaml is up to date.');
   process.exit(0);
+}
+
+if (drift === 'product-version') {
+  console.error(`
+❌ openacr.yaml targets Atomic ${committed.product?.version}, but @coveo/atomic is ${generated.product?.version}.
+
+The Changesets "version packages" PR normally updates it. To update it, run:
+
+  pnpm exec turbo run a11y:sync-version --filter=@coveo/atomic-a11y
+
+Then commit the updated openacr.yaml.
+
+Details: https://github.com/coveo/ui-kit/blob/main/packages/atomic-a11y/README.md#updating-openacryaml
+`);
+  process.exit(1);
 }
 
 const runId = process.env.GITHUB_RUN_ID ?? '<RUN_ID>';
