@@ -1,2 +1,2 @@
 export const atomicVersion = process.env.VERSION || 'Test version';
-export {version as headlessVersion} from '@coveo/headless/package.json';
+export const headlessVersion = process.env.HEADLESS_VERSION || 'Test version';
