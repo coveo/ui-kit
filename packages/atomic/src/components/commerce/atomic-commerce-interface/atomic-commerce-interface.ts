@@ -289,7 +289,7 @@ export class AtomicCommerceInterface
 
   /**
    * Initializes the connection with a preconfigured [headless commerce engine](https://docs.coveo.com/en/headless/latest/reference/interfaces/Commerce.CommerceEngine.html), as opposed to the `initialize` method, which internally creates a new commerce engine instance.
-   * This bypasses the properties set on the component, such as disableAnalytics and language.
+   * The engine's own configuration is used, so properties that configure the engine, such as `disableAnalytics`, are bypassed.
    */
   public initializeWithEngine(engine: CommerceEngine) {
     engine.dispatch(
