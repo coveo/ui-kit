@@ -74,18 +74,6 @@ jest.mock('c/quanticUtils', () => {
         return count === 1 ? baseName : `${baseName}_plural`;
       }),
     },
-    RecentQueryUtils: {
-      formatRecentQuery: jest.fn((query, currentQuery) => {
-        if (!currentQuery) return query;
-        const lowerQuery = query.toLowerCase();
-        const lowerCurrentQuery = currentQuery.toLowerCase();
-        const index = lowerQuery.indexOf(lowerCurrentQuery);
-        if (index === 0) {
-          return `<strong>${query.substring(0, currentQuery.length)}</strong>${query.substring(currentQuery.length)}`;
-        }
-        return query;
-      }),
-    },
     __ariaDispatchMessageMock: ariaDispatchMessageMock,
   };
 });
@@ -119,7 +107,7 @@ const mockRecentQueries = [
 const buildMixedOptions = (suggestions, recentQueries) => {
   return [
     ...recentQueries.map((query) => ({
-      value: query,
+      value: `<b>${query}</b>`,
       rawValue: query,
       isRecentQuery: true,
     })),
@@ -138,6 +126,28 @@ const createTestComponent = buildCreateTestComponent(
 );
 
 describe('c-quantic-search-box-suggestions-list', () => {
+  beforeAll(() => {
+    window.coveoHeadless = {
+      'example-engine': {
+        bundle: {
+          HighlightUtils: {
+            highlightString: ({
+              content,
+              openingDelimiter,
+              closingDelimiter,
+              highlights: [{offset, length}],
+            }) =>
+              `${content.slice(0, offset)}${openingDelimiter}${content.slice(offset, offset + length)}${closingDelimiter}${content.slice(offset + length)}`,
+          },
+        },
+      },
+    };
+  });
+
+  afterAll(() => {
+    delete window.coveoHeadless;
+  });
+
   afterEach(() => {
     cleanup();
   });
@@ -205,7 +215,9 @@ describe('c-quantic-search-box-suggestions-list', () => {
           .slice(1)
           .forEach((option, index) => {
             const lightningRichText = option.querySelector(selectors.richText);
-            expect(lightningRichText.value).toBe(mockRecentQueries[index]);
+            expect(lightningRichText.value).toBe(
+              `<b>${mockRecentQueries[index]}</b>`
+            );
             expect(lightningRichText.title).toBe(mockRecentQueries[index]);
             expect(option.querySelector(selectors.lightningIcon).iconName).toBe(
               'utility:clock'
@@ -346,11 +358,11 @@ describe('c-quantic-search-box-suggestions-list', () => {
       expect(clearButton.textContent).toContain(labels.recentQueries);
       const recentQueryOption = options.item(1);
       expect(recentQueryOption.querySelector(selectors.richText).value).toEqual(
-        expect.stringContaining('<strong>test</strong> recent query')
+        'test<b> recent query</b>'
       );
     });
 
-    it('should bold the current query in recent queries', async () => {
+    it('should bold the part of each recent query that follows the current query', async () => {
       const element = createTestComponent({
         recentQueries: mockRecentQueries,
         query: 'test',
@@ -361,7 +373,7 @@ describe('c-quantic-search-box-suggestions-list', () => {
       // Skip the first option (clear button)
       const recentQueryOption = options.item(1);
       expect(recentQueryOption.querySelector(selectors.richText).value).toEqual(
-        expect.stringContaining('<strong>test</strong>')
+        expect.stringMatching(/^test<b>.*<\/b>$/)
       );
     });
   });

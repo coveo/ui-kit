@@ -5,11 +5,38 @@ import recentQueryAriaLabel from '@salesforce/label/c.quantic_RecentQueryAriaLab
 import suggestionFound from '@salesforce/label/c.quantic_SuggestionFound';
 import suggestionFound_plural from '@salesforce/label/c.quantic_SuggestionFound_Plural';
 import suggestionsNotFound from '@salesforce/label/c.quantic_SuggestionNotFound';
-import {AriaLiveRegion, I18nUtils, RecentQueryUtils} from 'c/quanticUtils';
+import {AriaLiveRegion, I18nUtils} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
 const optionCSSClass =
   'slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-grid option';
+
+/**
+ * Highlights the part of a recent query that follows the query currently typed by the end user.
+ * @param {string} recentQuery
+ * @param {string} query
+ * @returns {string}
+ */
+function formatRecentQuery(recentQuery, query) {
+  try {
+    const headlessBundle = Object.values(window.coveoHeadless)[0].bundle;
+    return headlessBundle.HighlightUtils.highlightString({
+      content: recentQuery,
+      openingDelimiter: '<b>',
+      closingDelimiter: '</b>',
+      highlights: [
+        {
+          offset: query.length,
+          length: recentQuery.length - query.length,
+        },
+      ],
+    });
+  } catch (e) {
+    console.warn('Unable to highlight recent query text.');
+    console.warn(e);
+    return recentQuery;
+  }
+}
 
 /**
  * @typedef Suggestion
@@ -302,7 +329,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     if (!this.query) {
       this._recentQueriesThatStartWithCurrentQuery =
         this.recentQueries?.map((recentQuery) => ({
-          value: RecentQueryUtils.formatRecentQuery(recentQuery, ''),
+          value: formatRecentQuery(recentQuery, ''),
           rawValue: recentQuery,
           isRecentQuery: true,
         })) || [];
@@ -315,7 +342,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
               recentQuery.toLowerCase().startsWith(this.query?.toLowerCase())
           )
           .map((recentQuery) => ({
-            value: RecentQueryUtils.formatRecentQuery(recentQuery, this.query),
+            value: formatRecentQuery(recentQuery, this.query),
             rawValue: recentQuery,
             isRecentQuery: true,
           })) || [];
