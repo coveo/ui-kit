@@ -162,7 +162,7 @@ export class AtomicFacet extends LitElement implements InitializableComponent<Bi
     }),
     allowedValues: new ArrayValue({
       each: new StringValue({emptyAllowed: false}),
-      max: 25,
+      max: 50,
       required: false,
     }),
     customSort: new ArrayValue({
@@ -385,7 +385,7 @@ export class AtomicFacet extends LitElement implements InitializableComponent<Bi
    * <atomic-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-facet>
    * ```
    *
-   * The maximum amount of allowed values is 25.
+   * The maximum amount of allowed values is 50.
    *
    * Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
    */

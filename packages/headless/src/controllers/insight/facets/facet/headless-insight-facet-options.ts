@@ -25,7 +25,7 @@ export interface FacetOptions extends CoreFacetOptions {
    * If you specify a list of values for this option, the facet uses only these values (if they are available in
    * the current result set).
    *
-   * The maximum amount of allowed values is 25.
+   * The maximum amount of allowed values is 50.
    *
    * Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
    */

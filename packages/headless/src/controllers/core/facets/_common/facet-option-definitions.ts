@@ -48,7 +48,7 @@ export const allowedValues = new RecordValue({
     }),
     values: new ArrayValue({
       required: true,
-      max: 25,
+      max: 50,
       each: new StringValue({emptyAllowed: false, required: true}),
     }),
   },

@@ -1150,16 +1150,16 @@ describe('atomic-facet', () => {
     });
 
     describe('#allowedValues', () => {
-      it('should not set error when allowedValues has 25 or fewer items', async () => {
+      it('should not set error when allowedValues has 50 or fewer items', async () => {
         const {element} = await setupElement({
-          allowedValues: Array.from({length: 25}, (_, i) => `value${i}`),
+          allowedValues: Array.from({length: 50}, (_, i) => `value${i}`),
         });
         expect(element.error).toBeUndefined();
       });
 
-      it('should set error when allowedValues has more than 25 items', async () => {
+      it('should set error when allowedValues has more than 50 items', async () => {
         const {element} = await setupElement({
-          allowedValues: Array.from({length: 26}, (_, i) => `value${i}`),
+          allowedValues: Array.from({length: 51}, (_, i) => `value${i}`),
         });
         expect(element.error).toBeInstanceOf(Error);
       });

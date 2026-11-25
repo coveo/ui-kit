@@ -235,7 +235,7 @@ export class AtomicSegmentedFacet extends LitElement implements InitializableCom
    * <atomic-segmented-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-segmented-facet>
    * ```
    *
-   * The maximum amount of allowed values is 25.
+   * The maximum amount of allowed values is 50.
    *
    * The default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
    */

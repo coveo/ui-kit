@@ -708,7 +708,7 @@ describe('atomic-color-facet', () => {
     },
     {
       prop: 'allowedValues',
-      invalidValue: Array.from({length: 26}, () => 'value'),
+      invalidValue: Array.from({length: 51}, () => 'value'),
     },
     {
       prop: 'customSort',
@@ -790,7 +790,7 @@ describe('atomic-color-facet', () => {
     {
       prop: 'allowedValues',
       validValue: ['pdf', 'doc'],
-      invalidValue: Array.from({length: 26}, () => 'value'),
+      invalidValue: Array.from({length: 51}, () => 'value'),
     },
     {
       prop: 'customSort',
