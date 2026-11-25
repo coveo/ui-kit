@@ -15,13 +15,6 @@
     <shortDescription>ex: Results 0-10 of 123,456</shortDescription>
   </labels>
   <labels>
-    <fullName>quantic_ShowingResultsOf_zero</fullName>
-    <value>No results</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>No Results</shortDescription>
-  </labels>
-  <labels>
     <fullName>quantic_ShowingResultsOfWithQuery</fullName>
     <value>Result {{0}} of {{1}} for {{2}}</value>
     <language>en_US</language>
@@ -34,13 +27,6 @@
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>ex: Results 0-10 of 123,456 for potato</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_ShowingResultsOfWithQuery_zero</fullName>
-    <value>No results for {{2}}</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>ex: No results for potato</shortDescription>
   </labels>
   <labels>
     <fullName>quantic_NoResults</fullName>
@@ -139,20 +125,6 @@
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Clear All Filters</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_Previous</fullName>
-    <value>Previous</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Previous</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_Next</fullName>
-    <value>Next</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Next</shortDescription>
   </labels>
   <labels>
     <fullName>quantic_PreviousPage</fullName>
@@ -1164,7 +1136,7 @@
   </labels>
   <labels>
     <fullName>quantic_InvalidNumberOfAutoOpenedDocuments</fullName>
-    <value>The number of automatically opened document suggestions must be an integer greater that 0.</value>
+    <value>The number of automatically opened document suggestions must be an integer greater than 0.</value>
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Invalid number of automatically opened document suggestions.</shortDescription>
@@ -1261,20 +1233,6 @@
     <shortDescription>AI-generated answer</shortDescription>
   </labels>
   <labels>
-    <fullName>quantic_ThisAnswerWasNotHelpful</fullName>
-    <value>This answer was not helpful</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>This answer was not helpful</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_ThisAnswerWasHelpful</fullName>
-    <value>This answer was helpful</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>This answer was helpful</shortDescription>
-  </labels>
-  <labels>
     <fullName>quantic_Citations</fullName>
     <value>Citations</value>
     <language>en_US</language>
@@ -1322,48 +1280,6 @@
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Show generated answer</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_Irrelevant</fullName>
-    <value>Irrelevant</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Irrelevant</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_Inaccurate</fullName>
-    <value>Inaccurate</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Inaccurate</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_OutOfDate</fullName>
-    <value>Out-of-date</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Out-of-date</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_Harmful</fullName>
-    <value>Harmful</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Harmful</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_Feedback</fullName>
-    <value>Feedback</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Feedback</shortDescription>
-  </labels>
-  <labels>
-    <fullName>quantic_WhyGeneratedAnswerWasNotHelpful</fullName>
-    <value>Tell us why the generated answer was not helpful.</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Tell us why the generated answer was not helpful.</shortDescription>
   </labels>
   <labels>
     <fullName>quantic_GeneratedAnswerIsHidden</fullName>

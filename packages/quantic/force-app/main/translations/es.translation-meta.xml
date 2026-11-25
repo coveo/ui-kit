@@ -9,20 +9,12 @@
     <name>quantic_ShowingResultsOf_plural</name>
   </customLabels>
   <customLabels>
-    <label>Ningún resultado</label>
-    <name>quantic_ShowingResultsOf_zero</name>
-  </customLabels>
-  <customLabels>
     <label>Resultado {{0}} de {{1}} para {{2}}</label>
     <name>quantic_ShowingResultsOfWithQuery</name>
   </customLabels>
   <customLabels>
     <label>Resultados {{0}} de {{1}} para {{2}}</label>
     <name>quantic_ShowingResultsOfWithQuery_plural</name>
-  </customLabels>
-  <customLabels>
-    <label>Ningún resultado para {{2}}</label>
-    <name>quantic_ShowingResultsOfWithQuery_zero</name>
   </customLabels>
   <customLabels>
     <label>Ningún resultado</label>
@@ -75,14 +67,6 @@
   <customLabels>
     <label>{{0}} más...</label>
     <name>quantic_NMore</name>
-  </customLabels>
-  <customLabels>
-    <label>Anterior</label>
-    <name>quantic_Previous</name>
-  </customLabels>
-  <customLabels>
-    <label>Siguiente</label>
-    <name>quantic_Next</name>
   </customLabels>
   <customLabels>
     <label>Buscar...</label>
@@ -697,14 +681,6 @@
     <name>quantic_GeneratedAnswerErrorTurnLimitReached</name>
   </customLabels>
   <customLabels>
-    <label>Esta respuesta no fue útil</label>
-    <name>quantic_ThisAnswerWasNotHelpful</name>
-  </customLabels>
-  <customLabels>
-    <label>Esta respuesta fue útil</label>
-    <name>quantic_ThisAnswerWasHelpful</name>
-  </customLabels>
-  <customLabels>
     <label>Citas</label>
     <name>quantic_Citations</name>
   </customLabels>
@@ -727,30 +703,6 @@
   <customLabels>
     <label>Mostrar respuesta generada</label>
     <name>quantic_ShowGeneratedAnswer</name>
-  </customLabels>
-  <customLabels>
-    <label>Irrelevante</label>
-    <name>quantic_Irrelevant</name>
-  </customLabels>
-  <customLabels>
-    <label>Inexacta</label>
-    <name>quantic_Inaccurate</name>
-  </customLabels>
-  <customLabels>
-    <label>Desactualizada</label>
-    <name>quantic_OutOfDate</name>
-  </customLabels>
-  <customLabels>
-    <label>Ofensiva</label>
-    <name>quantic_Harmful</name>
-  </customLabels>
-  <customLabels>
-    <label>Comentarios</label>
-    <name>quantic_Feedback</name>
-  </customLabels>
-  <customLabels>
-    <label>Cuéntanos por qué la respuesta generada no fue útil.</label>
-    <name>quantic_WhyGeneratedAnswerWasNotHelpful</name>
   </customLabels>
   <customLabels>
     <label>La respuesta generada está oculta</label>

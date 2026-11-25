@@ -32,16 +32,6 @@ jest.mock(
   }),
   {virtual: true}
 );
-jest.mock(
-  '@salesforce/label/c.quantic_ThisAnswerWasHelpful',
-  () => ({default: 'This answer was helpful'}),
-  {virtual: true}
-);
-jest.mock(
-  '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful',
-  () => ({default: 'This answer was not helpful'}),
-  {virtual: true}
-);
 
 const defaultOptions = {
   engineId: 'example-engine',
