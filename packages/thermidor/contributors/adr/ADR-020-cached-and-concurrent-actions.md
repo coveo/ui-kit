@@ -151,8 +151,8 @@ A concurrent action is sent at once, whatever request is in flight.
   shows. A renderer reads the outcome of its node's latest dispatch from `concurrentRequests` and
   `concurrentFailures`, while `dispatchAction` keeps resolving with nothing, so
   `onAction={session.dispatchAction}` keeps type-checking against a renderer's `void` handler. The
-  README's "Concurrent and cached actions" section details the failure kinds and superseded and
-  joined dispatches.
+  README's "Concurrent and cached actions" section details the failure kinds, superseded and joined
+  dispatches, and the handoff once the producer revokes the announcement.
 - **It needs a session.** Before the session has a token, a concurrent action is withheld.
 
 ### The cache

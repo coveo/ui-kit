@@ -302,7 +302,8 @@ export interface ConcurrentRequest {
 
 /**
  * The failure of a concurrent action's latest dispatch from its node (ADR-020), listed in
- * `Session.concurrentFailures` until the node dispatches that action again.
+ * `Session.concurrentFailures` until the node dispatches that action again, concurrently or, once
+ * the producer no longer announces it as concurrent, as the session's request.
  *
  * @group Actions
  */

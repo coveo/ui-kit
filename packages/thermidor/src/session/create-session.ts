@@ -393,8 +393,9 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    * - One entry per surface, node and action name, in the order they were sent. Empty when none
    *   is in flight.
    * - An entry leaves the list once that dispatch's answer is applied or it fails, before its
-   *   Promise resolves, or once a later dispatch from the same node is answered from the cache or
-   *   fails before it is sent.
+   *   Promise resolves, or once a later dispatch from the same node is answered from the cache,
+   *   fails before it is sent, or, no longer announced as concurrent, is sent as the session's
+   *   request.
    * - Read it synchronously, or through {@link Session.subscribe}.
    */
   readonly concurrentRequests: readonly ConcurrentRequest[];
@@ -410,6 +411,9 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    *   nothing.
    * - An entry stays until the node dispatches the action again, whatever else the session sends
    *   meanwhile, and leaves {@link Session.actionError} as it is.
+   * - Once the producer no longer announces the action as concurrent, its next dispatch sent as
+   *   the session's request clears the entry too, and supersedes a concurrent dispatch of the node
+   *   action still in flight.
    * - Read it synchronously, or through {@link Session.subscribe}.
    */
   readonly concurrentFailures: readonly ConcurrentFailure[];
@@ -1602,6 +1606,9 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
     abortController: AbortController
   ): Promise<void> {
     setActionError(undefined);
+    // Once revoked as concurrent, the node action's earlier concurrent dispatch and failure no
+    // longer stand.
+    concurrentActions.supersede(source);
     const failure = await executeStream(
       target,
       () => buildActionRequest(action),

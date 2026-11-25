@@ -921,6 +921,144 @@ describe('concurrent and cached actions (ADR-020)', () => {
 
       expect(sentQueries()).toEqual(['boots', 'boots']);
     });
+
+    /**
+     * Sends a prompt whose answer announces `kept` only, so far without ending; the uncached
+     * action is no longer concurrent by default.
+     */
+    function revokeUncached(
+      session: ReturnType<typeof createSession>,
+      kept: Record<string, unknown> = {[CACHED]: {cache: {ttlMs: 60_000}}}
+    ) {
+      const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'jackets'}});
+      calls.at(-1)!.emit({
+        type: 'ACTIVITY_SNAPSHOT',
+        messageId: 'shell-activity',
+        activityType: 'a2ui-surface',
+        content: shellActivity().payload,
+        metadata: {concurrentActions: {[SHELL_ID]: kept}},
+      });
+      return turn;
+    }
+
+    /**
+     * Dispatches `name` concurrently, revokes it while in flight, then retries it as the session's
+     * request, answered. Returns the older call and its dispatch.
+     */
+    async function retryAfterRevocation(session: ReturnType<typeof createSession>, name: string) {
+      const older = dispatch(session, 'boots', name);
+      const olderCall = calls.at(-1)!;
+      const turn = revokeUncached(session, name === CACHED ? {[UNCACHED]: {}} : undefined);
+      calls.at(-1)!.emit({type: 'RUN_FINISHED'});
+      calls.at(-1)!.close();
+      await turn;
+      expect(session.isConcurrent({surfaceId: SHELL_ID, name})).toBe(false);
+      expect(session.concurrentRequests).toEqual([
+        {component: 'InstantProducts', name, surfaceId: SHELL_ID, sourceComponentId: PRODUCTS_ID},
+      ]);
+
+      const retry = dispatch(session, 'poles', name);
+      expect(session.request).toMatchObject({kind: 'action', name});
+      expect(session.concurrentRequests).toEqual([]);
+      answer(calls.at(-1)!, 'poles');
+      await retry;
+      expect(shownQuery(session)).toBe('poles');
+      return {older, olderCall};
+    }
+
+    it('aborts an uncached dispatch in flight once the revoked action is sent as a request', async () => {
+      const session = shellSession();
+
+      const {older, olderCall} = await retryAfterRevocation(session, UNCACHED);
+
+      expect(olderCall.signal?.aborted).toBe(true);
+      await older;
+      expect(session.concurrentFailures).toEqual([]);
+      expect(session.concurrentRequests).toEqual([]);
+    });
+
+    it('applies nothing a cached dispatch in flight answers once the revoked action is sent as a request', async () => {
+      const session = shellSession();
+      const {older, olderCall} = await retryAfterRevocation(session, CACHED);
+
+      answer(olderCall, 'boots');
+      await older;
+
+      expect(shownQuery(session)).toBe('poles');
+      expect(session.concurrentRequests).toEqual([]);
+    });
+
+    it('reports nothing a cached dispatch in flight fails with once the revoked action is sent as a request', async () => {
+      const session = shellSession();
+      const {older, olderCall} = await retryAfterRevocation(session, CACHED);
+
+      olderCall.emit({type: 'RUN_ERROR', message: 'productSuggest failed'});
+      olderCall.close();
+      await older;
+
+      expect(session.concurrentFailures).toEqual([]);
+      expect(warned('productSuggest failed')).toBe(false);
+    });
+
+    it('reports nothing a cached miss fails with once the same payload, no longer cached, was answered', async () => {
+      const session = shellSession();
+      const older = dispatch(session, 'boots');
+      const olderCall = calls.at(-1)!;
+      const turn = revokeUncached(session, {[CACHED]: {}});
+      calls.at(-1)!.emit({type: 'RUN_FINISHED'});
+      calls.at(-1)!.close();
+      await turn;
+
+      const retry = dispatch(session, 'boots');
+      expect(calls).toHaveLength(3);
+      answer(calls.at(-1)!, 'boots');
+      await retry;
+      olderCall.emit({type: 'RUN_ERROR', message: 'productSuggest failed'});
+      olderCall.close();
+      await older;
+
+      expect(session.concurrentFailures).toEqual([]);
+      expect(warned('productSuggest failed')).toBe(false);
+      expect(shownQuery(session)).toBe('boots');
+    });
+
+    it('drops its failure once the node action, no longer announced, is sent as a request', async () => {
+      const session = shellSession();
+      callMock.mockImplementationOnce(async () => ({success: false, error: 'Refused'}));
+      await dispatch(session, 'boots', UNCACHED);
+      const turn = revokeUncached(session);
+      calls.at(-1)!.emit({type: 'RUN_FINISHED'});
+      calls.at(-1)!.close();
+      await turn;
+      expect(session.isConcurrent({surfaceId: SHELL_ID, name: UNCACHED})).toBe(false);
+      expect(session.concurrentFailures).toHaveLength(1);
+
+      const retry = dispatch(session, 'boots', UNCACHED);
+      expect(session.request).toMatchObject({kind: 'action', name: UNCACHED});
+      expect(session.concurrentFailures).toEqual([]);
+      answer(calls.at(-1)!, 'boots');
+      await retry;
+
+      expect(session.concurrentFailures).toEqual([]);
+      expect(session.actionError).toBeUndefined();
+    });
+
+    it('keeps its failure when the node action, no longer announced, is withheld', async () => {
+      const session = shellSession();
+      callMock.mockImplementationOnce(async () => ({success: false, error: 'Refused'}));
+      await dispatch(session, 'boots', UNCACHED);
+      const turn = revokeUncached(session);
+      await flush();
+      expect(session.isConcurrent({surfaceId: SHELL_ID, name: UNCACHED})).toBe(false);
+
+      void dispatch(session, 'poles', UNCACHED);
+
+      expect(session.request).toMatchObject({kind: 'prompt'});
+      expect(session.concurrentFailures).toEqual([productsFailure(UNCACHED, 'Refused')]);
+      calls.at(-1)!.emit({type: 'RUN_FINISHED'});
+      calls.at(-1)!.close();
+      await turn;
+    });
   });
 
   describe('isConcurrent', () => {

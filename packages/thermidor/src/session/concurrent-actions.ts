@@ -61,6 +61,13 @@ export interface ConcurrentActions {
     context: unknown,
     policy: CachePolicy | undefined
   ): Promise<void>;
+  /**
+   * Hands the lane of `dispatch` over to the session's request, which sends it now that the
+   * producer no longer announces it as concurrent: in one store update, no earlier concurrent
+   * dispatch of the lane is the latest any more, its uncached request is aborted, and the lane
+   * leaves `concurrentRequests` and `concurrentFailures`. That request brings the outcome.
+   */
+  supersede(dispatch: ConcurrentRequest): void;
 }
 
 interface Lanes {
@@ -216,6 +223,11 @@ export function createConcurrentActions({
     return settled;
   }
 
+  /**
+   * Reports the failure of `work` once, through the dispatch its lane still lists as awaiting its
+   * answer: an earlier one with the same key, such as a cached miss sent again uncached, reports
+   * nothing, and a miss that dispatches joined reports through the latest of them.
+   */
   async function settle(
     dispatch: ConcurrentRequest,
     key: string,
@@ -225,7 +237,12 @@ export function createConcurrentActions({
     try {
       await work;
     } catch (error) {
-      if (!signal?.aborted && lanes.isLatest(dispatch, key) && !reported.has(work)) {
+      if (
+        !signal?.aborted &&
+        lanes.isLatest(dispatch, key) &&
+        requests.get(laneKey(dispatch)) === dispatch &&
+        !reported.has(work)
+      ) {
         reported.add(work);
         publish(dispatch, undefined, failureOf(dispatch, error));
       }
@@ -345,6 +362,10 @@ export function createConcurrentActions({
   }
 
   return {
+    supersede(dispatch) {
+      lanes.claim(dispatch);
+      publish(dispatch, false, null);
+    },
     issue(dispatch, context, policy) {
       let navigatorRead: ReturnType<typeof readNavigatorContext>;
       let key: string;
