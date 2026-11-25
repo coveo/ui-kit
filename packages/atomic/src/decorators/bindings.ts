@@ -23,7 +23,7 @@ type BindingsElement = BindingsHost & {
  * KIT-5099 prototype switch. `false` is the v3 behavior (console only), `true` the v4 one
  * (the component also renders the error).
  */
-export const SHOW_MISSING_INTERFACE_ERROR = false;
+const SHOW_MISSING_INTERFACE_ERROR = false;
 
 /**
  * A decorator that will initialize the component with the bindings provided by the bindings context.
