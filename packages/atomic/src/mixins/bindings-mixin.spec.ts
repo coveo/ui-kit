@@ -4,7 +4,7 @@ import {customElement, state} from 'lit/decorators.js';
 import {afterEach, beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {fetchBindings} from '@/src/utils/initialization-common-utils';
+import {fetchBindings, MissingInterfaceParentError} from '@/src/utils/initialization-common-utils';
 import {InitializeBindingsMixin} from './bindings-mixin';
 
 vi.mock('@/src/utils/initialization-common-utils', {spy: true});
@@ -89,6 +89,17 @@ describe('InitializeBindingsMixin', () => {
   it('should call the initialize method when bindings are present', async () => {
     await setupElement();
     expect(element.initialize).toHaveBeenCalled();
+  });
+
+  it('should set and log the error once when the bindings fetch fails', async () => {
+    const error = new MissingInterfaceParentError('test-element');
+    mockedFetchBindings.mockRejectedValueOnce(error);
+
+    await setupElement();
+    await new Promise((resolve) => setTimeout(resolve));
+
+    expect(element.error).toBe(error);
+    expect(consoleErrorSpy).toHaveBeenCalledExactlyOnceWith(error, element);
   });
 
   it('should fetch the bindings for the host again after a failed fetch and a reconnection', async () => {

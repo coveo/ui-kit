@@ -8,6 +8,8 @@ import {enqueueOrDispatchInitializationEvent} from './init-queue';
 
 /**
  * Retrieves `Bindings` or `CommerceBindings` on a configured parent interface.
+ * When no parent interface is found, the lookup runs again one task later, so that a wrapper can render the slot that
+ * places the element in an interface.
  * @param event - The element on which to dispatch the event, which must be the child of a configured Atomic container element.
  * @returns A promise that resolves upon initialization of the parent container element, and rejects otherwise.
  */
@@ -18,11 +20,18 @@ export function fetchBindings<SpecificBindings extends AnyBindings>(element: Ele
       (bindings: unknown) => resolve(bindings as SpecificBindings)
     );
     const parent = findInterfaceParent(element);
-    if (!parent) {
-      reject(new MissingInterfaceParentError(element.nodeName.toLowerCase()));
+    if (parent) {
+      enqueueOrDispatchInitializationEvent(parent, event, element);
       return;
     }
-    enqueueOrDispatchInitializationEvent(parent, event, element);
+    setTimeout(() => {
+      const lateParent = findInterfaceParent(element);
+      if (!lateParent) {
+        reject(new MissingInterfaceParentError(element.nodeName.toLowerCase()));
+        return;
+      }
+      enqueueOrDispatchInitializationEvent(lateParent, event, element);
+    });
   });
 }
 /**

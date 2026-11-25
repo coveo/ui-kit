@@ -1,5 +1,6 @@
 import type {LitElement, ReactiveController, ReactiveControllerHost, ReactiveElement} from 'lit';
 import type {AnyBindings} from '../components/common/interface/bindings';
+import {logComponentError} from '../decorators/component-error';
 import type {InitializableComponent} from '../decorators/types';
 import {fetchBindings} from '../utils/initialization-common-utils';
 import type {Constructor} from './mixin-common';
@@ -24,6 +25,7 @@ function initializeBindings<
       })
       .catch((error) => {
         instance.error = error;
+        logComponentError(error, instance);
         reject(error);
       });
   });

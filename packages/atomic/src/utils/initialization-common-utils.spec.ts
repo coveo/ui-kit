@@ -1,6 +1,16 @@
+import {html, LitElement} from 'lit';
+import {customElement} from 'lit/decorators.js';
 import {describe, expect, it, vi} from 'vitest';
 import {fetchBindings, MissingInterfaceParentError} from './initialization-common-utils';
 import '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
+
+@customElement('test-late-slot-wrapper')
+// oxlint-disable-next-line @typescript-eslint/no-unused-vars -- <used as an element>
+class TestLateSlotWrapper extends LitElement {
+  public render() {
+    return html`<atomic-external><slot></slot></atomic-external>`;
+  }
+}
 
 describe('fetchBindings', () => {
   it('should rejects when the component is not the children of a search interface element', async () => {
@@ -44,5 +54,20 @@ describe('fetchBindings', () => {
 
     expect(onRejected).not.toHaveBeenCalled();
     host.remove();
+  });
+
+  it('should not reject when a wrapper renders the interface slot after the component connects', async () => {
+    const wrapper = document.createElement('test-late-slot-wrapper');
+    const element = document.createElement('my-component');
+    wrapper.appendChild(element);
+    document.body.appendChild(wrapper);
+    const onRejected = vi.fn();
+
+    fetchBindings(element).catch(onRejected);
+    await new Promise((resolve) => setTimeout(resolve));
+    await Promise.resolve();
+
+    expect(onRejected).not.toHaveBeenCalled();
+    wrapper.remove();
   });
 });
