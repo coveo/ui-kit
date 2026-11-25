@@ -21,6 +21,11 @@
       "dependsOn": ["build"],
       "cache": false
     },
+    "create-version": {
+      "dependsOn": ["build", "//#version-packages"],
+      "cache": false,
+      "outputs": []
+    },
     "a11y:vpat-pdf": {
       "dependsOn": ["build", "@coveo/atomic#build:cdn"],
       "outputs": []

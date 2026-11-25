@@ -5,7 +5,11 @@
  * @coveo/atomic, without re-running the a11y evaluation. `report_date` is kept
  * and `last_modified_date` is set to today.
  *
- * Run it with `a11y:sync-version`.
+ * It is the `create-version` script of this package, which runs after the root
+ * `version-packages` script (`changeset version`) and which `@coveo/atomic`'s
+ * `create-version` task depends on, so the Changesets "version packages" PR
+ * carries the update alongside the Atomic version bump. Run `a11y:sync-version`
+ * to sync the version on its own.
  */
 import {readFileSync} from 'node:fs';
 import {resolve} from 'node:path';

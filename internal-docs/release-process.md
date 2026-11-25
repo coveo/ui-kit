@@ -44,6 +44,8 @@ When the "Version Packages" PR is created (or updated), `changesets/action` runs
 4. Generates or prepends to each package's `CHANGELOG.md`.
 5. Deletes the consumed changeset files.
 
+`@coveo/atomic`'s `create-version` task also depends on `@coveo/atomic-a11y#create-version`, which runs after `changeset version` and sets `product.version` in `packages/atomic-a11y/reports/openacr.yaml` to the new `@coveo/atomic` version, so the accessibility conformance report names the version being released.
+
 All these changes are committed into the "Version Packages" PR for the team to review before merging.
 
 ## Publishing to npm
