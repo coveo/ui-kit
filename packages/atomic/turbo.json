@@ -40,13 +40,18 @@
     "build:cem": {
       "outputs": ["./custom-elements.json"],
       "inputs": [
+        "./custom-elements-manifest.config.mjs",
+        "./scripts/cem-plugins/*.mjs",
+        "!./scripts/cem-plugins/*.spec.mjs",
         "./src/**/*.ts",
         "!./src/components/*/index.ts",
         "!./src/components/*/lazy-index.ts",
         "!./src/utils/custom-element-tags.ts",
+        "!./src/**/*.stories.ts",
         "!./src/**/*.spec.ts",
         "!./src/**/*.d.ts",
-        "!./src/**/e2e/**"
+        "!./src/**/e2e/**",
+        "!./src/generated/**"
       ]
     },
     "build:indexes": {

@@ -176,7 +176,7 @@ const atomicNode = defineConfig({
   name: 'atomic-node',
   test: {
     name: 'atomic-node',
-    include: ['scripts/element-dependencies.spec.mjs'],
+    include: ['scripts/element-dependencies.spec.mjs', 'scripts/cem-plugins/*.spec.mjs'],
     environment: 'node',
   },
 });
