@@ -1,7 +1,8 @@
 /**
  * Type-checks the ```ts code blocks of the public TSDoc `@example` tags, which TypeDoc never
  * compiles. Each test holds one example verbatim, minus its imports, with the names the example
- * takes from the reader's app declared around it.
+ * takes from the reader's app declared around it. `tsdoc-examples.test.ts` fails when an example
+ * in the TSDoc no longer matches its copy here.
  *
  * The ```tsx example of `Session.dispatchAction` is covered by the `onAction` assignability test
  * in `index.test-d.ts`.
