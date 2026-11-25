@@ -8,7 +8,7 @@
     },
     "build:locales": {
       "outputs": ["dist/lang/**", "src/assets/lang/**", "src/generated/**"],
-      "inputs": ["src/locales.json"]
+      "inputs": ["src/locales.json", "scripts/build-locales.mjs"]
     },
     "build:assets": {
       "outputs": ["dist/assets/**"],
@@ -72,6 +72,8 @@
       ],
       "inputs": [
         "./src/**/*.ts",
+        "./rslib.config.mjs",
+        "./scripts/lit-css-plugin.mjs",
         "!./src/components/*/index.ts",
         "!./src/components/*/lazy-index.ts",
         "!./src/utils/custom-element-tags.ts",

@@ -54,7 +54,7 @@ function generateDayjsLocales() {
   let fileContent = 'export const locales: Record<string, () => Promise<unknown>> = {';
   for (const {key} of localesData) {
     const mapKey = key.includes('-') ? `'${key}'` : key;
-    fileContent += `\n  ${mapKey}: () => import('dayjs/locale/${key}'),`;
+    fileContent += `\n  ${mapKey}: () => import('dayjs/locale/${key}.js'),`;
   }
   fileContent += '\n};\n';
 
