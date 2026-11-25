@@ -5,6 +5,7 @@ related:
   - https://coveord.atlassian.net/browse/KIT-5099
   - https://coveord.atlassian.net/browse/KIT-5197
   - https://github.com/coveo/ui-kit/pull/8943
+  - ./0002-annex-walkthrough.md
 ---
 
 # Display component errors through explicit guards in one fixed order
@@ -92,6 +93,8 @@ KIT-5197 makes every prop validation fatal in v4, so every component must displa
 
 Choose Option G.
 
+[The annex](./0002-annex-walkthrough.md) shows the effect in code.
+
 A component with `@bindings()` placed outside any interface reports `MissingInterfaceParentError` in the console only, in v4 too. It does not render the error box. This avoids showing a box to visitors when the check is wrong, and it can be changed later by letting `@bindingGuard()` display that error.
 
 ### Rationale
@@ -123,137 +126,17 @@ A component with `@bindings()` placed outside any interface reports `MissingInte
   - The contract spec reads source code and must be kept up to date with the decorators.
 - **Neutral:**
   - A component outside an interface still renders nothing. It now logs why, once per connection.
-  - The public `initializeBindings` and `MissingInterfaceParentError` keep their signatures.
+  - The public `initializeBindings` and `MissingInterfaceParentError` keep their signatures. `initializeBindings` now also finds an interface through slotted content.
 
 ## Implementation and Follow-up
 
 Each step is one pull request on `main`. The numbers follow the delivery plan, where step 1 is this ADR.
 
 2. Internal contract `error?: Error`, writers clear only their own error, and a deduplicated `logComponentError` (patch).
-3. `@bindings()` returns a subclass with one context consumer per element. It logs `initialize()` errors, and logs a missing interface with a new parent check that also follows slotted content. The binding controller keeps its host when the request fails (patch).
+3. `@bindings()` returns a subclass with one context consumer per element. It logs `initialize()` errors, and logs a missing interface once per connection with a new parent check that walks the composed tree, slotted content included. `fetchBindings`, exported as `initializeBindings`, uses the same walk, so the check and the fetch cannot disagree. The binding controller keeps its host when the request fails (patch).
 4. Drop `InitializeBindingsMixin` from the 12 components that also use `@bindings()`. The mixin marks them initialized before its fetch, so `@bindings()` does nothing on them, and its error handling never clears its own error (patch).
 5. v4: `@state() public error?: Error` on every component that can receive an error (major).
 6. v4: `@bindingGuard()` above `@errorGuard()` everywhere, guards added where missing (including `atomic-timeframe` and `atomic-sort-expression`), the static contract spec, and the component skill updated (major).
 7. KIT-5197: every prop validation fatal (major).
 
 Revisit this decision if the contract spec needs a growing list of exemptions or keeps breaking on legitimate refactors. Option B would then be worth a second look.
-
-## Annex: walkthrough
-
-Illustrative code showing what the decision looks like. The pull requests above set the final names and details.
-
-### A component with bindings
-
-Before, `atomic-commerce-pager` already had the chosen order, but `error` said it always exists:
-
-```ts
-@state() public error!: Error;
-```
-
-35 other components put the guards the other way round and show an error before their bindings arrive:
-
-```ts
-@errorGuard()
-@bindingGuard()
-render() {}
-```
-
-After, every component with bindings that can receive an error reads the same:
-
-```ts
-@customElement('atomic-commerce-pager')
-@bindings()
-@withTailwindStyles
-export class AtomicCommercePager
-  extends LitElement
-  implements InitializableComponent<CommerceBindings>
-{
-  @state() public bindings!: CommerceBindings;
-  @state() public error?: Error;
-
-  @bindingGuard()
-  @errorGuard()
-  render() {}
-}
-```
-
-### A component without bindings, or one that renders before its bindings arrive
-
-```ts
-@state() public error?: Error;
-
-@errorGuard()
-render() {}
-```
-
-### A writer clears only its own error
-
-```ts
-private clearError() {
-  if (this.host.error === this.lastValidationError) {
-    this.host.error = undefined;
-  }
-  this.lastValidationError = undefined;
-}
-```
-
-The item context controller follows the same rule with the `MissingParentError` it set.
-
-### The `@bindings()` subclass
-
-```ts
-const missingInterfaceError = Symbol('missingInterfaceError');
-
-export function bindings() {
-  return <T extends Constructor<BindingsHost>>(Base: T): T =>
-    class extends Base {
-      [missingInterfaceError]?: MissingInterfaceParentError;
-
-      #consumer = new ContextConsumer(this, {
-        context: bindingsContext,
-        callback: (value) => receiveBindings(this, value),
-        subscribe: true,
-      });
-
-      connectedCallback() {
-        super.connectedCallback();
-        if (!this.bindings && !findInterfaceParent(this)) {
-          this[missingInterfaceError] = new MissingInterfaceParentError(this.localName);
-          logComponentError(this[missingInterfaceError], this);
-        }
-      }
-
-      disconnectedCallback() {
-        this.unsubscribeLanguage?.();
-        super.disconnectedCallback();
-      }
-    };
-}
-
-function receiveBindings(host: BindingsElement, value: AnyBindings) {
-  host[missingInterfaceError] = undefined;
-  try {
-    host.initialize?.();
-  } catch (error) {
-    host.error = error as Error;
-    logComponentError(host.error, host);
-  }
-}
-```
-
-The missing-interface error lives in a private symbol rather than in `error`, so it cannot clobber or be clobbered by another writer. The consumer is a class field, so it is created once per element. `findInterfaceParent` is new: unlike today's check, it also follows `assignedSlot`. The subclass does not override `render()`. `receiveBindings` keeps today's checks and its `languageChanged` subscription, left out here.
-
-### What a developer sees
-
-A component placed outside an interface logs once per connection and renders nothing:
-
-```text
-Error: The "atomic-commerce-pager" element must be the child of the following elements: atomic-recs-interface, atomic-search-interface, atomic-commerce-interface, … <atomic-commerce-pager>
-```
-
-A component that misses a guard, or puts them in the wrong order, fails the contract spec in CI:
-
-```text
-atomic-commerce-pager: @bindingGuard() must be above @errorGuard() on render().
-atomic-tab: sets `error` but render() has no @errorGuard().
-```
