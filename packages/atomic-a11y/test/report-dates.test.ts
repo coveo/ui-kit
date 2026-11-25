@@ -2,7 +2,7 @@ import {describe, expect, it} from 'vitest';
 import {parse} from 'yaml';
 
 import {serializeOpenAcr} from '../src/openacr/json-to-openacr.js';
-import {reconcileReportDates} from '../src/openacr/report-dates.js';
+import {reconcileReportDates, syncProductVersion} from '../src/openacr/report-dates.js';
 import type {OpenAcrReport} from '../src/openacr/types.js';
 
 const buildReport = (overrides: Partial<OpenAcrReport> = {}): OpenAcrReport =>
@@ -102,5 +102,25 @@ describe('reconcileReportDates', () => {
 
   it('uses the regenerated dates when there is no committed report', () => {
     expect(reconcileReportDates(undefined, regenerated()).report_date).toBe('2026-11-24');
+  });
+});
+
+describe('syncProductVersion', () => {
+  it('sets the version and last_modified_date, keeping report_date', () => {
+    const {report, changed} = syncProductVersion(buildReport(), '3.66.0', '2026-11-24');
+
+    expect(changed).toBe(true);
+    expect(report.product.version).toBe('3.66.0');
+    expect(report.report_date).toBe('2026-11-11');
+    expect(report.last_modified_date).toBe('2026-11-24');
+  });
+
+  it('leaves the report untouched when the version already matches', () => {
+    const original = buildReport();
+
+    const {report, changed} = syncProductVersion(original, '3.65.1', '2026-11-24');
+
+    expect(changed).toBe(false);
+    expect(report).toBe(original);
   });
 });

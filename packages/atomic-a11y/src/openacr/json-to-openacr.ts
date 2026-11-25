@@ -1,6 +1,6 @@
 import {mkdir, readFile, writeFile} from 'node:fs/promises';
 import path from 'node:path';
-import {stringify} from 'yaml';
+import {parse, stringify} from 'yaml';
 import {DEFAULT_A11Y_REPORT_FILENAME, DEFAULT_A11Y_REPORT_OUTPUT_DIR} from '../shared/constants.js';
 import {isA11yReport} from '../shared/guards.js';
 import type {A11yReport} from '../shared/types.js';
@@ -66,6 +66,42 @@ export function serializeOpenAcr(report: OpenAcrReport): string {
     version: '1.1',
     singleQuote: true,
   });
+}
+
+/**
+ * Reads an OpenACR YAML file. Returns `undefined` when the file does not exist,
+ * and throws when it cannot be parsed or has no `report_date` or
+ * `last_modified_date`, so a broken file is never mistaken for a missing one.
+ *
+ * Only the dates are checked: the rest of the document is trusted to match
+ * {@link OpenAcrReport}, since this package generates it.
+ */
+export async function readOpenAcr(file: string): Promise<OpenAcrReport | undefined> {
+  let contents: string;
+  try {
+    contents = await readFile(file, 'utf8');
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      return undefined;
+    }
+    throw error;
+  }
+
+  let report: OpenAcrReport | null;
+  try {
+    report = parse(contents, {version: '1.1'}) as OpenAcrReport | null;
+  } catch (error) {
+    throw new Error(
+      `${LOG_PREFIX} Could not parse the OpenACR report at ${file}: ${
+        error instanceof Error ? error.message : String(error)
+      }`
+    );
+  }
+
+  if (!report?.report_date || !report.last_modified_date) {
+    throw new Error(`${LOG_PREFIX} ${file} has no report_date or last_modified_date`);
+  }
+  return report;
 }
 
 /**

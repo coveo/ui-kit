@@ -3,6 +3,13 @@ import {parse, stringify} from 'yaml';
 import {isRecord} from '../shared/guards.js';
 import type {OpenAcrReport} from './types.js';
 
+/**
+ * Returns today's date in the `YYYY-MM-DD` format used by OpenACR dates.
+ */
+function todayIsoDate(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
 // Both sides go through the same YAML round trip, so a value the committed file
 // cannot represent exactly does not count as an evaluation change.
 function toPlainData(value: unknown): unknown {
@@ -39,7 +46,7 @@ function withoutDates(report: OpenAcrReport): unknown {
  *
  * Without this, every regeneration would stamp both dates with the day it ran.
  *
- * @param previous - The previously committed report, if any.
+ * @param previous - The previously committed report, if any (see `readOpenAcr`).
  * @param next - The freshly generated report, dated with the day it ran.
  */
 export function reconcileReportDates(
@@ -59,5 +66,31 @@ export function reconcileReportDates(
     ...next,
     report_date: previous.report_date,
     last_modified_date: documentChanged ? next.last_modified_date : previous.last_modified_date,
+  };
+}
+
+/**
+ * Sets the Atomic version of an OpenACR report without re-running the evaluation.
+ *
+ * Keeps `report_date`, since nothing was re-evaluated, and sets
+ * `last_modified_date` to `today` when the version actually changes.
+ *
+ * @returns The updated report, and whether it differs from the input.
+ */
+export function syncProductVersion(
+  report: OpenAcrReport,
+  version: string,
+  today: string = todayIsoDate()
+): {report: OpenAcrReport; changed: boolean} {
+  if (report.product.version === version) {
+    return {report, changed: false};
+  }
+  return {
+    report: {
+      ...report,
+      product: {...report.product, version},
+      last_modified_date: today,
+    },
+    changed: true,
   };
 }
