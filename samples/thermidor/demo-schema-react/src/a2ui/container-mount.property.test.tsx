@@ -4,7 +4,7 @@ import {cleanup, waitFor} from '@testing-library/react';
 import {mountSurface} from './mount-surface.harness.js';
 
 /**
- * The ordered-list container components (FacetManager, BundleDisplay) are `createReactComponent`
+ * The ordered-list container components (FacetManager, BundleDisplay) are `createComponentImplementation`
  * implementations driven by the generic binder: they mount their children by id via `buildChild`,
  * reading composition from their resolved props. These property tests drive the whole pipeline
  * through the real thermidor catalog, asserting the observable mounted-child DOM: each present
@@ -25,12 +25,12 @@ function leafNode(id: string): Record<string, unknown> {
 function mountedChildIds(container: HTMLElement, selector: string): string[] {
   return Array.from(container.querySelectorAll(`${selector} p strong`))
     .map((node) => node.textContent)
-    .filter((text): text is string => text !== null && text.startsWith('id-'));
+    .filter((text): text is string => text !== null && text.startsWith('id_'));
 }
 
 // Unique, QuerySummary-safe child ids (no whitespace; stable prefix).
 const childIdArb = fc.uniqueArray(
-  fc.integer({min: 0, max: 9999}).map((n) => `id-${n}`),
+  fc.integer({min: 0, max: 9999}).map((n) => `id_${n}`),
   {minLength: 0, maxLength: 6}
 );
 
@@ -87,7 +87,7 @@ describe('BundleDisplay mounts only the active tier slot childIds in order (Prop
     description: fc.string({maxLength: 20}),
     total: fc.float({min: Math.fround(0), max: Math.fround(10000), noNaN: true}),
     slots: fc.uniqueArray(
-      fc.integer({min: 0, max: 9999}).map((n) => ({categoryLabel: `cat-${n}`, childId: `id-${n}`})),
+      fc.integer({min: 0, max: 9999}).map((n) => ({categoryLabel: `cat-${n}`, childId: `id_${n}`})),
       {minLength: 0, maxLength: 5, selector: (slot) => slot.childId}
     ),
   });
@@ -109,7 +109,7 @@ describe('BundleDisplay mounts only the active tier slot childIds in order (Prop
 
           const mounted = Array.from(container.querySelectorAll('p strong'))
             .map((node) => node.textContent)
-            .filter((text): text is string => text !== null && text.startsWith('id-'));
+            .filter((text): text is string => text !== null && text.startsWith('id_'));
           expect(mounted).toEqual(activeTierSlotIds);
 
           cleanup();

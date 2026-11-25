@@ -1,5 +1,5 @@
 import {useContext} from 'react';
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react/v0_9';
 import type {Product} from '@coveo/thermidor-schema';
 import {ProductSummaryPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {ProductCardActionsContext} from '../ProductCard/product-card-actions.js';
@@ -29,7 +29,7 @@ function resolvePrice(product: Product): number | undefined {
  * `ProductCardActionsContext` actions for its product. `categoryLabel === undefined` (bindings not
  * yet resolved) renders a loading state.
  */
-export const ProductSummary = createReactComponent(
+export const ProductSummary = createComponentImplementation(
   {
     name: 'ProductSummary',
     schema: ProductSummaryPropsSchema,

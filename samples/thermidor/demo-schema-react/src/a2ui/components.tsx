@@ -1,4 +1,5 @@
-import {Catalog} from '@copilotkit/a2ui-renderer';
+import type {ReactComponentImplementation} from '@a2ui/react/v0_9';
+import {Catalog} from '@a2ui/web_core/v0_9';
 import {THERMIDOR_CATALOG_ID} from '@coveo/thermidor-schema/zod3';
 export {THERMIDOR_CATALOG_ID};
 import {ProductCarousel} from './ProductCarousel/ProductCarousel.js';
@@ -37,8 +38,13 @@ export interface ThermidorCatalogOptions {
   productResearchCard?: ProductResearchCardOptions;
 }
 
-export function createThermidorCatalog(options: ThermidorCatalogOptions = {}) {
-  return new Catalog(THERMIDOR_CATALOG_ID, [
+/** The A2-UI protocol version of the messages the catalog renders. */
+export const A2UI_PROTOCOL_VERSION = 'v0.9';
+
+export function createThermidorCatalog(
+  options: ThermidorCatalogOptions = {}
+): Catalog<ReactComponentImplementation> {
+  return new Catalog<ReactComponentImplementation>(THERMIDOR_CATALOG_ID, A2UI_PROTOCOL_VERSION, [
     ProductCarousel,
     actsOnSurface(NextActionsBar),
     BundleDisplay,

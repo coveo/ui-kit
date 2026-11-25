@@ -1,4 +1,4 @@
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react/v0_9';
 
 import {LayoutStackPropsSchema} from '@coveo/thermidor-schema/zod3';
 import styles from './LayoutStack.module.css';
@@ -11,7 +11,7 @@ import styles from './LayoutStack.module.css';
  * from `LayoutStackPropsSchema` (the container holds no state). Unknown/missing `direction` falls
  * back to 'column'.
  */
-export const LayoutStack = createReactComponent(
+export const LayoutStack = createComponentImplementation(
   {name: 'LayoutStack', schema: LayoutStackPropsSchema},
   ({props, buildChild}) => {
     const childIds = props.children ?? [];

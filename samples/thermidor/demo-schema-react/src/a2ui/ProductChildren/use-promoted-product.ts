@@ -5,7 +5,8 @@ import type {Product, ProductChild} from '@coveo/thermidor-schema';
  * The product a slot shows, and how to promote one of its children into it. A promoted child
  * replaces the product's fields, such as its name, price, images and link, while the slot keeps the
  * product's children and their count. The promotion is local to the slot: it sends nothing, and it
- * ends at the next write of the product, which delivers it as a new object.
+ * ends once a write changes the product. The renderer keeps a product written again unchanged as
+ * the same object, so such a write keeps the promotion.
  */
 export function usePromotedProduct(
   product: Product

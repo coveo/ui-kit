@@ -18,5 +18,5 @@ interface ViewSurfacesProps {
  * answer streams.
  */
 export function ViewSurfaces({surfaces, isStreaming, interactive = true}: ViewSurfacesProps) {
-  return <TurnSurfaces surfaces={surfaces} interactive={interactive} isStreaming={isStreaming} />;
+  return <TurnSurfaces surfaces={surfaces} latest={interactive} isStreaming={isStreaming} />;
 }

@@ -1,5 +1,5 @@
 import {useContext, useEffect, useState} from 'react';
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react/v0_9';
 import type {FetchInstantProductsPayload, InstantProductsState} from '@coveo/thermidor-schema';
 import {InstantProductsPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {
@@ -54,8 +54,11 @@ function useShowProductsPanel(): boolean {
  * the highlighted query's answer. Products answering another query than the highlighted one are never
  * shown as current.
  */
-export const InstantProducts = createReactComponent(
+export const InstantProducts = createComponentImplementation(
   {name: 'InstantProducts', schema: InstantProductsPropsSchema},
+  // TODO(a2ui-react context): `context` is deprecated in @a2ui/react 0.16. Build this through
+  // `view({node, buildChild})` (or a shared helper): props from `useNodeView`, and dispatch with
+  // `useA2uiSurface()?.dispatchAction(action, node.componentId)`.
   ({props, context}) => {
     const {highlightedQuery, submitted} = useSearchBoxQuery();
     const showProducts = useShowProductsPanel();

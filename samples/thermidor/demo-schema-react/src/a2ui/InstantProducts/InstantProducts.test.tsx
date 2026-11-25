@@ -396,7 +396,7 @@ describe('InstantProducts children', () => {
     );
   });
 
-  it('drops the pick when the cache answers the product again', async () => {
+  it('keeps the pick when the cache answers the same product again', async () => {
     const {type, dispatchedQueries, queriesSent} = await renderSearchBox({
       handler: answerWithGroups,
     });
@@ -409,7 +409,8 @@ describe('InstantProducts children', () => {
     expect(option.textContent).toContain('$420.00');
 
     await waitFor(() => expect(dispatchedQueries()).toEqual(['surf boards', 'surf boards']));
-    await waitFor(() => expect(option.textContent).toContain('$400.00'));
+    // The renderer keeps an unchanged product as the same object, so the pick stays.
+    expect(option.textContent).toContain('$420.00');
     expect(queriesSent()).toEqual(['surf boards']);
   });
 });

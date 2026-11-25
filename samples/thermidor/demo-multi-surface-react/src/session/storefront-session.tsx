@@ -46,7 +46,7 @@ interface StorefrontValue extends TurnViews {
    * Sends a component action on behalf of the view that draws it, and records the turn it opens,
    * such as a search option's.
    */
-  sendAction(view: StorefrontView, message: A2uiClientMessage, visitId: number): void;
+  sendAction(view: StorefrontView, message: A2uiClientMessage, visitId: number): Promise<void>;
 }
 
 const StorefrontContext = createContext<StorefrontValue | null>(null);
@@ -107,7 +107,7 @@ function createStorefront(): StorefrontValue {
     sendAction(view, message, visitId) {
       const inFlight = session.request;
       currentView = view;
-      void session.dispatchAction(message);
+      const sent = session.dispatchAction(message);
       const {request} = session;
       // An action that updates a turn in place keeps that turn's view and visit.
       if (
@@ -119,6 +119,7 @@ function createStorefront(): StorefrontValue {
         turnViews.set(request.turnId, view);
         turnVisits.set(request.turnId, visitId);
       }
+      return sent;
     },
   };
 }

@@ -94,7 +94,7 @@ The template set lives in
 The app is a single page managed by `AppShell`:
 
 ```
-AppShell (A2-UI provider + the session's renderer stream)
+AppShell (the session's renderer stream, fed to ThermidorA2UIStream)
 ├── LandingPage        — The search box with suggestion pills, until the first prompt
 └── ConversationPage   — One feed of every turn, search and conversation alike, with the search box pinned below
 ```
@@ -176,12 +176,12 @@ These controls dispatch component actions: an interaction (sort, page, page size
 | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `src/context/session.tsx`                                | Creates the `@coveo/thermidor` session of the current conversation and injects the `ComponentContractsSchema` it validates against; saves it after each turn, and swaps it for a new or saved conversation                                                                                                                                                       |
 | `src/conversations/conversation-storage.ts`              | Saves conversations in `localStorage` (at most 20, oldest dropped first, and to make room) and remembers the tab's current one in `sessionStorage`                                                                                                                                                                                                               |
-| `src/components/AppShell.tsx`                            | Reads the session through one `useSyncExternalStore(session.subscribe, session.getSnapshot)`, passes `session.dispatchAction` to `A2UIProvider` as its `onAction`, and feeds the session's renderer stream (`session.a2uiMessages`) to the renderer                                                                                                              |
+| `src/components/AppShell.tsx`                            | Reads the session through one `useSyncExternalStore(session.subscribe, session.getSnapshot)`, feeds the session's renderer stream (`session.a2uiMessages`) to `ThermidorA2UIStream`, with `session.dispatchAction` as its action handler                                                                                                                         |
 | `src/components/ConversationDrawer/`                     | The drawer listing the saved conversations, to open, rename, delete or start one                                                                                                                                                                                                                                                                                 |
 | `src/components/SessionSearchBox/`                       | Draws the session shell's search box where the page's prompt input goes, a disabled input while the session opens, or a plain input if it opened without one                                                                                                                                                                                                     |
 | `src/a2ui/SearchBox/`, `src/a2ui/QuerySuggestions/`      | The shell's search box: the input, and the completions of its query, fetched with `fetchSuggestions`                                                                                                                                                                                                                                                             |
 | `src/a2ui/InstantProducts/`                              | The products of the search box's highlighted completion, fetched with `fetchInstantProducts` and drawn beside the completions on wide screens                                                                                                                                                                                                                    |
-| `src/a2ui/surfaces.tsx`                                  | `ThermidorA2UIStream` feeds the stream to the renderer; `TurnSurfaces` draws one turn's surfaces, or a skeleton for a loading one (thermidor owns the v1.0 → v0.9 downgrade)                                                                                                                                                                                     |
+| `src/a2ui/surfaces.tsx`                                  | `ThermidorA2UIStream` feeds the stream to one `@a2ui/web_core` v0.9 message processor; `TurnSurfaces` draws one turn's surfaces, or a skeleton for a loading one (thermidor owns the v1.0 → v0.9 downgrade)                                                                                                                                                      |
 | `src/a2ui/components.tsx`                                | `createThermidorCatalog()`: registers every catalog component (conversational: ProductCarousel, BundleDisplay, ComparisonTable, ProductResearchCard, ProductSummary, NextActionsBar; decomposed commerce: CommerceSearch, LayoutStack, FacetManager, RegularFacet, NumericFacet, CategoryFacet, Breadbox, QuerySummary, Sort, ProductList, Pagination, PageSize) |
 | `src/a2ui/CommerceSearch/`                               | `commerce-search` root — composes the sidebar and main columns and mounts them by id via `buildChild(id)`                                                                                                                                                                                                                                                        |
 | `src/a2ui/LayoutStack/`                                  | Generic layout container — stacks its declared children in a column or row (direction is a presentation node prop); reused for the sidebar, main, and top/bottom rows                                                                                                                                                                                            |
@@ -202,15 +202,15 @@ Session (thermidor, via createSession) — folds each turn's response
   ↓
 AppShell — one renderer stream, loading placeholders from turn.response.surfaces
   ↓
-ThermidorA2UIStream — processMessages (catalog resolution + updateDataModel ops → renderer data model)
+ThermidorA2UIStream — v0.9 MessageProcessor (catalog resolution + updateDataModel ops → renderer data model)
   ↓
 TurnSurfaces (per turn)
   ├── A2UISkeleton for each loading surface while its turn streams
-  └── A2UIRenderer → catalog components (ProductCarousel, BundleDisplay, etc.)
+  └── A2uiSurface → catalog components (ProductCarousel, BundleDisplay, etc.)
         ↓ read resolved values from props ({ "path": ... } bindings resolved by the renderer)
 
 Action dispatch (consumer → producer):
-  context.dispatchAction → renderer onAction → AppShell → session
+  context.dispatchAction → message processor → ThermidorA2UIStream onAction (userAction) → session
     → one request at a time → validate payload (Zod) → HTTP POST (Action_Channel)
   ↓
   producer replies with /state/<id> updateDataModel ops (re-resolved into the renderer)

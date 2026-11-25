@@ -1,5 +1,5 @@
 import {useId, useOptimistic} from 'react';
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react/v0_9';
 import {SortPropsSchema, type SortAction, type SortCriterion} from '@coveo/thermidor-schema/zod3';
 import {useGesture} from '../session-request.js';
 import styles from './Sort.module.css';
@@ -15,8 +15,11 @@ function sortLabel(sort: SortCriterion): string {
 }
 
 /** A2-UI component for the `sort` selector. */
-export const Sort = createReactComponent(
+export const Sort = createComponentImplementation(
   {name: 'Sort', schema: SortPropsSchema},
+  // TODO(a2ui-react context): `context` is deprecated in @a2ui/react 0.16. Build this through
+  // `view({node, buildChild})` (or a shared helper): props from `useNodeView`, and dispatch with
+  // `useA2uiSurface()?.dispatchAction(action, node.componentId)`.
   ({props, context}) => {
     const selectId = useId();
     const availableSorts = props.availableSorts ?? [];
