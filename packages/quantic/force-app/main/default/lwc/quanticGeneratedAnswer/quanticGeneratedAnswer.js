@@ -41,7 +41,6 @@ const DEFAULT_COLLAPSED_HEIGHT = 250;
 const MAX_VALID_COLLAPSED_HEIGHT = 500;
 const MIN_VALID_COLLAPSED_HEIGHT = 150;
 
-const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
 const DEFAULT_CITATION_FIELDS = ['sfid', 'sfkbid', 'sfkavid', 'filetype'];
 
 /**
@@ -50,7 +49,7 @@ const DEFAULT_CITATION_FIELDS = ['sfid', 'sfkbid', 'sfkavid', 'filetype'];
  * @category Search
  * @slot no-answer-message - Slot that allows the rendering of a custom message when no answer is generated.
  * @example
- * <c-quantic-generated-answer engine-id={engineId} with-toggle collapsible>
+ * <c-quantic-generated-answer engine-id={engineId} collapsible>
  *  <div slot="no-answer-message">No answer was generated.</div>
  * </c-quantic-generated-answer>
  */
@@ -75,13 +74,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @default {false}
    */
   @api collapsible = false;
-  /**
-   * Whether the generated answer can be toggled on or off.
-   * @api
-   * @type {boolean}
-   * @default {false}
-   */
-  @api withToggle = false;
   /**
    * The unique identifier of the answer configuration to use to generate the answer.
    * @api
@@ -170,12 +162,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       'quantic__generatedanswercopy',
       this.handleGeneratedAnswerCopyToClipboard
     );
-    if (this.withToggle) {
-      this.template.addEventListener(
-        'quantic__generatedanswertoggle',
-        this.handleGeneratedAnswerToggle
-      );
-    }
   }
 
   renderedCallback() {
@@ -204,16 +190,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   };
 
   buildHeadlessGeneratedAnswerController(engine) {
-    let initialVisibility = true;
-    if (this.withToggle) {
-      const storedGeneratedAnswerData = this.readStoredData();
-      if (storedGeneratedAnswerData?.isVisible === false) {
-        initialVisibility = false;
-      }
-    }
     return this.headless.buildGeneratedAnswer(engine, {
       initialState: {
-        isVisible: initialVisibility,
+        isVisible: true,
         responseFormat: {
           contentFormat: ['text/markdown', 'text/plain'],
         },
@@ -234,12 +213,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       'quantic__generatedanswercopy',
       this.handleGeneratedAnswerCopyToClipboard
     );
-    if (this.withToggle) {
-      this.template.removeEventListener(
-        'quantic__generatedanswertoggle',
-        this.handleGeneratedAnswerToggle
-      );
-    }
   }
 
   updateState() {
@@ -362,20 +335,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.generatedAnswer.logCopyToClipboard(event.detail?.answerId);
   };
 
-  handleGeneratedAnswerToggle = (event) => {
-    event.stopPropagation();
-    if (!this.withToggle) {
-      return;
-    }
-    if (this.isVisible) {
-      this.generatedAnswer.hide();
-      this.writeStoredDate({isVisible: false});
-    } else {
-      this.generatedAnswer.show();
-      this.writeStoredDate({isVisible: true});
-    }
-  };
-
   handleAnswerContentUpdated = (event) => {
     event.stopPropagation();
     this.generatedAnswerHeight = event.detail?.height;
@@ -390,18 +349,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       ? this.generatedAnswer.collapse()
       : this.generatedAnswer.expand();
     this.updateGeneratedAnswerCSSVariables();
-  }
-
-  readStoredData() {
-    try {
-      return JSON.parse(sessionStorage?.getItem(GENERATED_ANSWER_DATA_KEY));
-    } catch {
-      return {};
-    }
-  }
-
-  writeStoredDate(data) {
-    sessionStorage?.setItem(GENERATED_ANSWER_DATA_KEY, JSON.stringify(data));
   }
 
   /**

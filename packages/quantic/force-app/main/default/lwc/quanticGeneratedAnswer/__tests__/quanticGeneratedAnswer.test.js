@@ -64,7 +64,6 @@ const defaultOptions = {
   engineId: exampleEngineId,
   fieldsToIncludeInCitations: 'sfid,sfkbid,sfkavid,filetype',
   answerConfigurationId: undefined,
-  withToggle: false,
   collapsible: false,
   maxCollapsedHeight: 250,
 };
@@ -91,7 +90,6 @@ const selectors = {
   generatedAnswer: '[data-testid="generated-answer__answer"]',
   generatedAnswerBadge: '[data-testid="generated-answer__header-title"]',
   generatedAnswerRetryButton: '[data-testid="generated-answer__retry-button"]',
-  generatedAnswerToggleButton: 'c-quantic-generated-answer-toggle',
   generatedAnswerBodyComponent: 'c-quantic-generated-answer-body',
   generatingMessageWhenAnswerCollapsed:
     '[data-testid="generated-answer__collapse-generating-message"]',
@@ -430,22 +428,6 @@ describe('c-quantic-generated-answer', () => {
         expect(generatedAnswerBadge).not.toBeNull();
       });
 
-      describe('when the property withToggle is set to true', () => {
-        it('should display the generated answer toggle button', async () => {
-          const element = createTestComponent({
-            ...defaultOptions,
-            withToggle: true,
-          });
-          await flushPromises();
-
-          const generatedAnswerToggleButton = element.shadowRoot.querySelector(
-            selectors.generatedAnswerToggleButton
-          );
-
-          expect(generatedAnswerToggleButton).not.toBeNull();
-        });
-      });
-
       describe('when the property collapsible is set to true', () => {
         describe('when the answer is shorter than the maximum answer height', () => {
           beforeEach(() => {
@@ -598,22 +580,6 @@ describe('c-quantic-generated-answer', () => {
           expect(getDispatchedMessages()).toContain(
             `${exampleAnswerGeneratedMessage} ${rgaDisclaimerAnnouncementLabel}`
           );
-        });
-      });
-
-      describe('when the property withToggle is set to true', () => {
-        it('should display the generated answer toggle button', async () => {
-          const element = createTestComponent({
-            ...defaultOptions,
-            withToggle: true,
-          });
-          await flushPromises();
-
-          const generatedAnswerToggleButton = element.shadowRoot.querySelector(
-            selectors.generatedAnswerToggleButton
-          );
-
-          expect(generatedAnswerToggleButton).not.toBeNull();
         });
       });
 

@@ -23,7 +23,6 @@ const pageUrl = 's/quantic-generated-answer';
 interface GeneratedAnswerOptions {
   fieldsToIncludeInCitations: string;
   collapsible: boolean;
-  withToggle: boolean;
   useCase: string;
   answerConfigurationId: string;
 }
