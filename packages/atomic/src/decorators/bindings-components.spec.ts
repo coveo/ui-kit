@@ -5,6 +5,7 @@ import '@/src/components/common/atomic-smart-snippet-collapse-wrapper/atomic-sma
 import '@/src/components/insight/atomic-insight-query-summary/atomic-insight-query-summary';
 import '@/src/components/ipx/atomic-ipx-modal/atomic-ipx-modal';
 import '@/src/components/search/atomic-automatic-facet/atomic-automatic-facet';
+import '@/src/components/search/atomic-external/atomic-external';
 import '@/src/components/search/atomic-notifications/atomic-notifications';
 import '@/src/components/search/atomic-pager/atomic-pager';
 import '@/src/components/search/atomic-query-summary/atomic-query-summary';
@@ -111,6 +112,16 @@ describe('bindings-components', () => {
 
       root.remove();
       await moveTo(atomicInterface, root, element);
+      expectRenderedWithBindings(element);
+    });
+
+    it('should initialize inside an atomic-external added after the interface is ready', async () => {
+      const {element, root} = createElement();
+      const external = document.createElement('atomic-external');
+      outside.append(external);
+
+      await moveTo(external, root, element);
+      await vi.waitFor(() => expect(initialize).toHaveBeenCalledOnce());
       expectRenderedWithBindings(element);
     });
 

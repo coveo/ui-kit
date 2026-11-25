@@ -1,6 +1,7 @@
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {markParentAsReady} from '@/src/utils/init-queue';
 import {initializeEventName} from '@/src/utils/initialization-common-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import type {AtomicExternal} from './atomic-external';
@@ -212,6 +213,16 @@ describe('atomic-external', () => {
       expect(capturedEventDetail).not.toBeNull();
       expect(capturedEventDetail).toEqual(scrollDetail);
     });
+  });
+
+  it('should provide the interface bindings when it connects after the interface is ready', async () => {
+    const mockBindings = {engine: {}, i18n: {}, store: {}};
+    Object.assign(mockInterface, {id: 'ready-interface', bindings: mockBindings});
+    markParentAsReady(mockInterface);
+
+    const {element} = await renderComponent({props: {selector: '#ready-interface'}});
+
+    await vi.waitFor(() => expect(element.bindings).toBe(mockBindings));
   });
 
   describe('when atomic/parentReady event is dispatched', () => {

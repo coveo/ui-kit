@@ -48,6 +48,7 @@ export class AtomicExternal extends ChildrenUpdateCompleteMixin(LitElement) {
       this.handleParentReady as EventListener
     );
     if (isParentReady(this.#interface!)) {
+      this.bindings = this.#interface?.bindings as AnyBindings;
       markParentAsReady(this);
     }
   }
