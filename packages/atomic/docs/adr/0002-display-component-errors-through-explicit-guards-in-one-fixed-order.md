@@ -134,3 +134,123 @@ Each step is one pull request on `main`:
 6. KIT-5197: every prop validation fatal (major).
 
 Revisit this decision if guards keep getting forgotten despite the contract spec. Option B would then be worth a second look.
+
+## Annex: walkthrough
+
+Illustrative code showing what the decision looks like. The pull requests above set the final names and details.
+
+### A component with bindings
+
+Before, `atomic-commerce-pager` already had the chosen order, but `error` said it always exists:
+
+```ts
+@state() public error!: Error;
+```
+
+About 35 other components put the guards the other way round and show an error before their bindings arrive:
+
+```ts
+@errorGuard()
+@bindingGuard()
+render() {}
+```
+
+After, every component with bindings reads the same:
+
+```ts
+@customElement('atomic-commerce-pager')
+@bindings()
+@withTailwindStyles
+export class AtomicCommercePager
+  extends LitElement
+  implements InitializableComponent<CommerceBindings>
+{
+  @state() public bindings!: CommerceBindings;
+  @state() public error?: Error;
+
+  @bindingGuard()
+  @errorGuard()
+  render() {}
+}
+```
+
+### A component without bindings, or one that renders before its bindings arrive
+
+```ts
+@state() public error?: Error;
+
+@errorGuard()
+render() {}
+```
+
+### A writer clears only its own error
+
+```ts
+private clearError() {
+  if (this.host.error === this.lastValidationError) {
+    this.host.error = undefined;
+  }
+  this.lastValidationError = undefined;
+}
+```
+
+The item context controller follows the same rule with the `MissingParentError` it set.
+
+### The `@bindings()` subclass
+
+```ts
+const missingInterfaceError = Symbol('missingInterfaceError');
+
+export function bindings() {
+  return <T extends Constructor<BindingsHost>>(Base: T): T =>
+    class extends Base {
+      [missingInterfaceError]?: MissingInterfaceParentError;
+
+      #consumer = new ContextConsumer(this, {
+        context: bindingsContext,
+        callback: (value) => receiveBindings(this, value),
+        subscribe: true,
+      });
+
+      connectedCallback() {
+        super.connectedCallback();
+        if (!this.bindings && !findInterfaceParent(this)) {
+          this[missingInterfaceError] = new MissingInterfaceParentError(this.localName);
+          logComponentError(this[missingInterfaceError], this);
+        }
+      }
+
+      disconnectedCallback() {
+        this.unsubscribeLanguage?.();
+        super.disconnectedCallback();
+      }
+    };
+}
+
+function receiveBindings(host: BindingsElement, value: AnyBindings) {
+  host[missingInterfaceError] = undefined;
+  try {
+    host.initialize?.();
+  } catch (error) {
+    host.error = error as Error;
+    logComponentError(host.error, host);
+  }
+}
+```
+
+The consumer is a class field, so it is created once per element, after the component's own controllers. `findInterfaceParent` walks the composed tree through `assignedSlot`, `parentNode` and shadow hosts. The subclass does not override `render()`. `receiveBindings` keeps today's checks and its `languageChanged` subscription, left out here.
+
+### What a developer sees
+
+A component placed outside an interface logs once per connection and renders nothing:
+
+```text
+Error: The "atomic-commerce-pager" element must be the child of the following elements: atomic-recs-interface, atomic-search-interface, atomic-commerce-interface, … <atomic-commerce-pager>
+```
+
+A component that misses a guard, or puts them in the wrong order, fails the contract spec in CI:
+
+```text
+atomic-commerce-pager: @bindingGuard() must be above @errorGuard() on render().
+atomic-tab: sets `error` but render() has no @errorGuard().
+```
