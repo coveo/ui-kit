@@ -130,7 +130,7 @@ export class AtomicInsightSmartSnippet
     const modalRef = document.createElement('atomic-insight-smart-snippet-feedback-modal');
     modalRef.addEventListener('feedbackSent', this.feedbackSentHandler);
     this.modalRef = modalRef;
-    this.renderRoot.parentElement?.insertAdjacentElement('beforebegin', modalRef);
+    this.insertAdjacentElement('beforebegin', modalRef);
   }
 
   private renderSource() {

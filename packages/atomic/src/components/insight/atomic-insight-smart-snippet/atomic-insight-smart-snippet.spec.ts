@@ -77,10 +77,9 @@ describe('atomic-insight-smart-snippet', () => {
       thankYouMessage: shadow?.querySelector<HTMLElement>('[part="feedback-thank-you"]') ?? null,
       explainWhyButton:
         shadow?.querySelector<HTMLElement>('[part="feedback-explain-why-button"]') ?? null,
-      feedbackModal:
-        element.renderRoot.parentElement?.querySelector(
-          'atomic-insight-smart-snippet-feedback-modal'
-        ) ?? null,
+      get feedbackModal() {
+        return document.querySelector('atomic-insight-smart-snippet-feedback-modal');
+      },
     };
   };
 
@@ -350,29 +349,41 @@ describe('atomic-insight-smart-snippet', () => {
   });
 
   describe('feedback modal', () => {
-    it('should create modal when dislike is clicked and open on explain why click', async () => {
-      const {element, dislikeButton, explainWhyButton} = await renderComponent({
-        controllerState: {answerFound: true, disliked: true},
+    const dislike = async () => {
+      const result = await renderComponent({
+        controllerState: {answerFound: true, disliked: false},
       });
+      const {element, dislikeButton} = result;
 
       element.smartSnippet.dislike = vi.fn();
       dislikeButton?.click();
+      element.smartSnippetState = {...element.smartSnippetState, disliked: true};
       await element.updateComplete;
 
-      const modal = element.renderRoot.parentElement?.querySelector(
-        'atomic-insight-smart-snippet-feedback-modal'
-      );
+      return result;
+    };
+
+    it('should insert the modal right before the component when dislike is clicked', async () => {
+      const result = await dislike();
+
+      const modal = result.feedbackModal;
       expect(modal).not.toBeNull();
-      expect(explainWhyButton).not.toBeNull();
+      expect(result.element.previousElementSibling).toBe(modal);
+    });
+
+    it('should open the modal when explain why is clicked', async () => {
+      const result = await dislike();
+      const explainWhyButton = result.element.shadowRoot?.querySelector<HTMLElement>(
+        '[part="feedback-explain-why-button"]'
+      );
 
       explainWhyButton?.click();
-      await element.updateComplete;
+      await result.element.updateComplete;
 
-      const modalAfterClick = element.renderRoot.parentElement?.querySelector(
-        'atomic-insight-smart-snippet-feedback-modal'
-      );
-      expect(modalAfterClick).not.toBeNull();
-      expect(modalAfterClick?.parentElement).not.toBeNull();
+      const modal = result.feedbackModal;
+      expect(modal?.isConnected).toBe(true);
+      expect(modal?.isOpen).toBe(true);
+      expect(modal?.source).toBe(explainWhyButton);
     });
   });
 
