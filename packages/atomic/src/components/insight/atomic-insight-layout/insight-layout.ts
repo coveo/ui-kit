@@ -63,11 +63,13 @@ export function buildInsightLayout(
       height: 2.6rem;
     }
 
-    ${toggleSelectors.map(
-      (toggleSelector) => `${sectionSelector('search')} ${toggleSelector} {
+    ${toggleSelectors
+      .map(
+        (toggleSelector) => `${sectionSelector('search')} ${toggleSelector} {
       flex-shrink: 0;
     }`
-    )}
+      )
+      .join('')}
 
     ${sectionSelector('search')} ${tabsSelector} {
       width: 100%;
