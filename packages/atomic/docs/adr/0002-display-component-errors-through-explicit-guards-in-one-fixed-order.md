@@ -36,6 +36,75 @@ KIT-5197 makes every prop validation fatal in v4, so every component must displa
 - A validation error that clears itself before the bindings arrive never flashes an error box. Validators run in `hostUpdate`, before the bindings exist, and some props are set after the first update.
 - The breaking part fits in the v4 window, before the first v4 prerelease.
 
+## Decision Outcome
+
+Every component that can receive an error declares it and displays it with explicit guards in one fixed order. Final errors are logged where they occur, and a static spec keeps the pattern in place. This is Option G below. It keeps the display rule of Option B, the RFC's proposal, without moving the display out of the component.
+
+### Declaration
+
+Every component that can receive an error declares `@state() public error?: Error`. Optional, because `undefined` means no error. Declared, so it is typed and reactive.
+
+### Guard order
+
+- Where both guards appear, `@bindingGuard()` sits above `@errorGuard()`, so an error displays once the bindings arrive.
+- Components without bindings, and the components that render before their bindings arrive, use `@errorGuard()` alone.
+- Components that cannot receive an error use no guard.
+
+A component's shape therefore follows from what it uses, and every component that can receive an error declares and displays it the same way.
+
+### Writers
+
+Each writer of `error` clears only an error it set.
+
+### Logging
+
+Final errors are logged where they occur: `initialize()` throwing, a missing interface, and the error box itself. A validation error is not logged when it is set, because it can clear itself before the bindings arrive.
+
+### Missing interface
+
+A component with `@bindings()` placed outside any interface reports `MissingInterfaceParentError` in the console only, once per connection, in v4 too. It does not render the error box, and the error is never written to `error`. This avoids showing a box to visitors when the check is wrong, and it can be changed later by letting `@bindingGuard()` display that error.
+
+### Contract spec
+
+A static spec over `src/components` checks that every component that can receive an error has the declaration and `@errorGuard()`, and that `@bindingGuard()` comes first when present.
+
+### Out of scope
+
+Errors thrown in `render()` stay as they are: the component goes blank and the browser logs the error.
+
+## Consequences
+
+- **Positive:**
+  - One guard order wherever both guards appear, and one way to declare and display an error.
+  - No silent failure: final errors are logged where they occur.
+  - No non-null assertion, no `null` writes, and no `@ts-expect-error` for `error`.
+  - Once KIT-5197 lands, every fatal prop validation error is displayed and logged the same way.
+- **Negative:**
+  - In v4, the 9 components whose errors nobody displayed, and the 2 with an empty `initialize()`, show the error box when they receive an error.
+  - In v4, once KIT-5197 lands, `atomic-timeframe` and `atomic-sort-expression`, which validate without throwing today, show the error box for invalid props. `atomic-sort-expression` also renders `atomic-component-error` by hand when it is outside `atomic-sort-dropdown`; step 6 brings that path under `error` and `@errorGuard()` too.
+  - In v4, the 35 components that showed an error at once now wait for the interface to initialize.
+  - In v4, `error` becomes optional in the published types of every component.
+  - Each component keeps its error declaration and guards.
+  - The contract spec reads source code and must be kept up to date with the decorators.
+- **Neutral:**
+  - A component outside an interface still renders nothing. It now logs why, once per connection.
+  - The public `initializeBindings` and `MissingInterfaceParentError` keep their signatures. `initializeBindings` now also finds an interface through slotted content.
+
+## Implementation and Follow-up
+
+[The annex](./0002-annex-walkthrough.md) shows the effect in code.
+
+Each step is one pull request on `main`. The numbers follow the delivery plan, where step 1 is this ADR.
+
+2. Internal contract `error?: Error`, writers clear only their own error, and a deduplicated `logComponentError` (patch).
+3. `@bindings()` returns a subclass with one context consumer per element. It logs `initialize()` errors, and logs a missing interface once per connection with a new parent check that walks the composed tree, slotted content included. `fetchBindings`, exported as `initializeBindings`, uses the same walk, so the check and the fetch cannot disagree. The binding controller keeps its host when the request fails (patch).
+4. Drop `InitializeBindingsMixin` from the 12 components that also use `@bindings()`. The mixin marks them initialized before its fetch, so `@bindings()` does nothing on them, and its error handling never clears its own error (patch).
+5. v4: `@state() public error?: Error` on every component that can receive an error (major).
+6. v4: `@bindingGuard()` above `@errorGuard()` everywhere, guards added where missing (including `atomic-timeframe` and `atomic-sort-expression`), the static contract spec, and the component skill updated (major).
+7. KIT-5197: every prop validation fatal (major).
+
+Revisit this decision if the contract spec needs a growing list of exemptions or keeps breaking on legitimate refactors. Option B would then be worth a second look.
+
 ## Considered Options
 
 ### Option A: Make `error` optional, and stop there
@@ -78,65 +147,11 @@ KIT-5197 makes every prop validation fatal in v4, so every component must displa
 - **Pros:** Covers errors thrown in `render()`.
 - **Cons:** No integrator has asked for it. Catching a render error makes a failure permanent that the next update would usually fix. It adds public API to design and support.
 
-### Option G: Explicit guards in one fixed order, with logging and a contract check
+### Option G (selected): Explicit guards in one fixed order, with logging and a contract check
 
-- **Summary:**
-  - Every component that can receive an error declares `@state() public error?: Error` and displays it with `@errorGuard()`.
-  - Where both guards appear, `@bindingGuard()` sits above `@errorGuard()`, so an error displays once the bindings arrive. Components without bindings, and the components that render before their bindings arrive, use `@errorGuard()` alone. Components that cannot receive an error use no guard.
-  - Each writer clears only an error it set.
-  - Final errors are logged where they occur: `initialize()` throwing, a missing interface, and the error box itself.
-  - A static spec checks the declaration, the guards and their order.
-- **Pros:** A component's shape follows from what it uses, and every component that can receive an error declares and displays it the same way. Control flow stays in the component file. The order is already the documented one and the majority one. No error is silent. Most of the work ships as non-breaking fixes.
+- **Summary:** described in [Decision Outcome](#decision-outcome).
+- **Pros:** A component's shape follows from what it uses. Control flow stays in the component file. The order is already the documented one and the majority one. No error is silent. Most of the work ships as non-breaking fixes.
 - **Cons:** Up to three declaration lines stay in each component. A forgotten guard is caught in CI rather than made impossible. The contract spec reads source code and is one more test to maintain.
-
-## Decision Outcome
-
-Choose Option G.
-
-[The annex](./0002-annex-walkthrough.md) shows the effect in code.
-
-A component with `@bindings()` placed outside any interface reports `MissingInterfaceParentError` in the console only, in v4 too. It does not render the error box. This avoids showing a box to visitors when the check is wrong, and it can be changed later by letting `@bindingGuard()` display that error.
-
-### Rationale
-
-- **G versus B.** Both log final errors where they occur, so neither leaves an error silent. The real tradeoff: B makes the error display impossible to forget on components with `@bindings()`, while G makes a forgotten guard a CI failure and keeps the display visible in each component. A CI failure is enough here, because the pieces were mostly forgotten during the migration, which ended in February 2026, and new components start from a generator that already has the guards. For that, G keeps what a component renders readable in its own file, which the team prefers.
-- **What G keeps from B.** It keeps B's display rule: an error shows once the bindings arrive. It also keeps the prototype's `@bindings()` subclass, without its `render()` override.
-- **Delivery.** G ships as patch fixes on `main` plus two major pull requests. B as planned in the RFC adds a v3 story and a forward port. The difference is moderate and did not decide the outcome.
-- **Against A and E.** Each one alone leaves part of the problem. G combines them with the fixes that remove the silent failures.
-- **Against C, D and F.** C and D keep the guard and add a mandatory step on top of it: extend a class, or create a controller. C also breaks the React and Angular wrappers until their generators change. F adds public API that nobody has asked for.
-
-### Scope
-
-- **`error?: Error`, declared on every component that can receive an error.** Optional, because `undefined` means no error. Declared, so it is typed and reactive.
-- **Errors thrown in `render()` are out of scope.** They stay as they are: the component goes blank and the browser logs the error.
-
-## Consequences
-
-- **Positive:**
-  - One guard order wherever both guards appear, and one way to declare and display an error.
-  - No silent failure: final errors are logged where they occur.
-  - No non-null assertion, no `null` writes, and no `@ts-expect-error` for `error`.
-  - Once KIT-5197 lands, every fatal prop validation error is displayed and logged the same way.
-- **Negative:**
-  - In v4, the 9 components whose errors nobody displayed, and the 2 with an empty `initialize()`, show the error box when they receive an error.
-  - In v4, once KIT-5197 lands, `atomic-timeframe` and `atomic-sort-expression`, which validate without throwing today, show the error box for invalid props. `atomic-sort-expression` also renders `atomic-component-error` by hand when it is outside `atomic-sort-dropdown`; step 6 brings that path under `error` and `@errorGuard()` too.
-  - In v4, the 35 components that showed an error at once now wait for the interface to initialize.
-  - In v4, `error` becomes optional in the published types of every component.
-  - Each component keeps its error declaration and guards.
-  - The contract spec reads source code and must be kept up to date with the decorators.
-- **Neutral:**
-  - A component outside an interface still renders nothing. It now logs why, once per connection.
-  - The public `initializeBindings` and `MissingInterfaceParentError` keep their signatures. `initializeBindings` now also finds an interface through slotted content.
-
-## Implementation and Follow-up
-
-Each step is one pull request on `main`. The numbers follow the delivery plan, where step 1 is this ADR.
-
-2. Internal contract `error?: Error`, writers clear only their own error, and a deduplicated `logComponentError` (patch).
-3. `@bindings()` returns a subclass with one context consumer per element. It logs `initialize()` errors, and logs a missing interface once per connection with a new parent check that walks the composed tree, slotted content included. `fetchBindings`, exported as `initializeBindings`, uses the same walk, so the check and the fetch cannot disagree. The binding controller keeps its host when the request fails (patch).
-4. Drop `InitializeBindingsMixin` from the 12 components that also use `@bindings()`. The mixin marks them initialized before its fetch, so `@bindings()` does nothing on them, and its error handling never clears its own error (patch).
-5. v4: `@state() public error?: Error` on every component that can receive an error (major).
-6. v4: `@bindingGuard()` above `@errorGuard()` everywhere, guards added where missing (including `atomic-timeframe` and `atomic-sort-expression`), the static contract spec, and the component skill updated (major).
-7. KIT-5197: every prop validation fatal (major).
-
-Revisit this decision if the contract spec needs a growing list of exemptions or keeps breaking on legitimate refactors. Option B would then be worth a second look.
+- **Why G over B:** Both log final errors where they occur, so neither leaves an error silent. The real tradeoff: B makes the error display impossible to forget on components with `@bindings()`, while G makes a forgotten guard a CI failure and keeps the display visible in each component. A CI failure is enough here, because the pieces were mostly forgotten during the migration, which ended in February 2026, and new components start from a generator that already has the guards. For that, G keeps what a component renders readable in its own file, which the team prefers. G keeps B's display rule and the prototype's `@bindings()` subclass, without its `render()` override.
+- **Delivery:** G ships as patch fixes on `main` plus two major pull requests. B as planned in the RFC adds a v3 story and a forward port. The difference is moderate and did not decide the outcome.
+- **Why G over the others:** A and E each leave part of the problem; G combines them with the fixes that remove the silent failures. C and D keep the guard and add a mandatory step on top of it: extend a class, or create a controller. C also breaks the React and Angular wrappers until their generators change. F adds public API that nobody has asked for.
