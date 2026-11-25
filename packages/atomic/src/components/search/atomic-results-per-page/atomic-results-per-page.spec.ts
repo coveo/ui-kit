@@ -10,16 +10,6 @@ import type {AtomicResultsPerPage} from './atomic-results-per-page';
 import './atomic-results-per-page';
 
 vi.mock('@coveo/headless', {spy: true});
-vi.mock('@/src/mixins/bindings-mixin', () => ({
-  InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
-    return class extends superClass {
-      // oxlint-disable-next-line no-useless-constructor -- <mocking the mixin for testing>
-      constructor(...args: unknown[]) {
-        super(...args);
-      }
-    };
-  }),
-}));
 
 describe('atomic-results-per-page', () => {
   const mockedEngine = buildFakeSearchEngine();

@@ -28,7 +28,6 @@ import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin.js';
 import {buildCustomEvent} from '@/src/utils/event-utils.js';
 import {randomID} from '@/src/utils/utils.js';
 
@@ -45,10 +44,7 @@ import {randomID} from '@/src/utils/utils.js';
 @customElement('atomic-results-per-page')
 @bindings()
 @withTailwindStyles
-export class AtomicResultsPerPage
-  extends InitializeBindingsMixin(LitElement)
-  implements InitializableComponent<Bindings>
-{
+export class AtomicResultsPerPage extends LitElement implements InitializableComponent<Bindings> {
   @state() public bindings!: Bindings;
   @state() public error!: Error;
   public resultPerPage!: ResultsPerPage;

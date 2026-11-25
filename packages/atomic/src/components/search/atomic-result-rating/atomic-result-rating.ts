@@ -14,7 +14,6 @@ import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import Star from '../../../images/star.svg';
 
 /**
@@ -31,10 +30,7 @@ import Star from '../../../images/star.svg';
 @bindings()
 @withTailwindStyles
 // TODO V4: Consider switching to Light DOM if appropriate for result template components
-export class AtomicResultRating
-  extends InitializeBindingsMixin(LitElement)
-  implements InitializableComponent<Bindings>
-{
+export class AtomicResultRating extends LitElement implements InitializableComponent<Bindings> {
   static styles = ratingStyles;
 
   private static readonly propsSchema = new Schema({

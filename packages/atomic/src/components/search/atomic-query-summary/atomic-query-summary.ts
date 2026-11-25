@@ -8,7 +8,6 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {localizedString} from '@/src/directives/localized-string';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {renderQuerySummaryContainer} from '../../common/query-summary/container';
 import {renderQuerySummaryGuard} from '../../common/query-summary/guard';
@@ -27,10 +26,7 @@ import type {Bindings} from '../atomic-search-interface/interfaces';
 @customElement('atomic-query-summary')
 @bindings()
 @withTailwindStyles
-export class AtomicQuerySummary
-  extends InitializeBindingsMixin(LitElement)
-  implements InitializableComponent<Bindings>
-{
+export class AtomicQuerySummary extends LitElement implements InitializableComponent<Bindings> {
   @state() public bindings!: Bindings;
   @state() error!: Error;
   static styles: CSSResultGroup = [

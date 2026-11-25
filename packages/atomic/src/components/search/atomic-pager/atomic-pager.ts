@@ -29,7 +29,6 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {AriaLiveRegionController, FocusTargetController} from '@/src/utils/accessibility-utils';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
@@ -52,10 +51,7 @@ import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
 @customElement('atomic-pager')
 @bindings()
 @withTailwindStyles
-export class AtomicPager
-  extends InitializeBindingsMixin(LitElement)
-  implements InitializableComponent<Bindings>
-{
+export class AtomicPager extends LitElement implements InitializableComponent<Bindings> {
   private static readonly propsSchema = new Schema({
     numberOfPages: new NumberValue({min: 0}),
   });

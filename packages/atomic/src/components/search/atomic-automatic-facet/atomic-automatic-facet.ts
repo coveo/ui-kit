@@ -16,7 +16,6 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
 
@@ -49,10 +48,7 @@ import {getFieldValueCaption} from '@/src/utils/field-utils';
 @customElement('atomic-automatic-facet')
 @bindings()
 @withTailwindStyles
-export class AtomicAutomaticFacet
-  extends InitializeBindingsMixin(LitElement)
-  implements InitializableComponent<Bindings>
-{
+export class AtomicAutomaticFacet extends LitElement implements InitializableComponent<Bindings> {
   static styles = [facetCommonStyles, facetValueCheckboxStyles];
 
   @state() bindings!: Bindings;

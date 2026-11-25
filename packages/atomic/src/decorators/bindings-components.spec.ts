@@ -57,6 +57,7 @@ describe('bindings-components', () => {
   describe.each(components)('<$tag>', ({tag, inResult}) => {
     let initialize: MockInstance;
     let atomicInterface: FixtureAtomicSearchInterface;
+    let created: {element: Component; root: HTMLElement};
 
     beforeEach(async () => {
       const prototype = customElements.get(tag)!.prototype as Component;
@@ -65,16 +66,24 @@ describe('bindings-components', () => {
       ({atomicInterface} = await renderInAtomicSearchInterface({template: html``}));
     });
 
+    afterEach(async () => {
+      created.root.remove();
+      atomicInterface.remove();
+      await created.element.updateComplete;
+    });
+
     const createElement = () => {
       const element = document.createElement(tag) as Component;
       element.setAttribute('field', 'size');
-      if (!inResult) {
-        return {element, root: element};
+      let root: HTMLElement = element;
+      if (inResult) {
+        const atomicResult = document.createElement('atomic-result') as FixtureAtomicResult;
+        atomicResult.result = buildFakeResult({raw: {size: 1}});
+        atomicResult.append(element);
+        root = atomicResult;
       }
-      const atomicResult = document.createElement('atomic-result') as FixtureAtomicResult;
-      atomicResult.result = buildFakeResult({raw: {size: 1}});
-      atomicResult.append(element);
-      return {element, root: atomicResult};
+      created = {element, root};
+      return created;
     };
 
     const moveTo = async (parent: HTMLElement, root: HTMLElement, element: Component) => {

@@ -20,7 +20,6 @@ After creating the component directory and files (see SKILL.md for structure):
 | Shadow DOM + Tailwind + bindings   | `LitElement` with `@withTailwindStyles` `@bindings()` | Most common pattern                           |
 | Shadow DOM + bindings, no Tailwind | `LitElement` with `@bindings()`                       | Use `static styles = css\`...\``              |
 | Light DOM + bindings               | `LightDomMixin(LitElement)` with `@bindings()`        | Result template components, etc.              |
-| Light DOM + initialization mixin   | `LightDomMixin(InitializeBindingsMixin(LitElement))`  | Components without use-case-specific bindings |
 | Standalone (no bindings)           | `LitElement` with `@customElement()` only             | Rare, utility components                      |
 
 ### Bindings Type by Use Case

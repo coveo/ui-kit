@@ -8,7 +8,6 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import ArrowDown from '../../../images/arrow-down.svg';
 import '@/src/components/common/atomic-icon/atomic-icon';
 
@@ -20,7 +19,7 @@ import '@/src/components/common/atomic-icon/atomic-icon';
 @bindings()
 @withTailwindStyles
 export class AtomicSmartSnippetCollapseWrapper
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<Bindings>
 {
   static styles = css`

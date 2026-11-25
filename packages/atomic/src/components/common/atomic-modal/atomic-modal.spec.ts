@@ -10,16 +10,6 @@ import '@/src/components/common/atomic-component-error/atomic-component-error';
 
 vi.mock('@coveo/headless', {spy: true});
 vi.mock('@/src/utils/replace-breakpoint-utils', {spy: true});
-vi.mock('@/src/mixins/bindings-mixin', () => ({
-  InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
-    return class extends superClass {
-      // oxlint-disable-next-line no-useless-constructor -- <mocking the mixin for testing>
-      constructor(...args: unknown[]) {
-        super(...args);
-      }
-    };
-  }),
-}));
 
 class MockAtomicFocusTrap extends HTMLElement {
   active = false;

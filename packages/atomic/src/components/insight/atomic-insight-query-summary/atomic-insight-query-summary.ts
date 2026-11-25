@@ -16,7 +16,6 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {localizedString} from '@/src/directives/localized-string';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 
 /**
@@ -32,7 +31,7 @@ import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 @bindings()
 @withTailwindStyles
 export class AtomicInsightQuerySummary
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<InsightBindings>
 {
   @state() public bindings!: InsightBindings;

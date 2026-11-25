@@ -9,16 +9,6 @@ import type {AtomicInsightQuerySummary} from './atomic-insight-query-summary';
 import './atomic-insight-query-summary';
 
 vi.mock('@coveo/headless/insight', {spy: true});
-vi.mock('@/src/mixins/bindings-mixin', () => ({
-  InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
-    return class extends superClass {
-      // oxlint-disable-next-line no-useless-constructor -- <mocking the mixin for testing>
-      constructor(...args: unknown[]) {
-        super(...args);
-      }
-    };
-  }),
-}));
 
 describe('atomic-insight-query-summary', () => {
   const mockedEngine = buildFakeInsightEngine();
