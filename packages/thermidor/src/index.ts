@@ -126,6 +126,8 @@ export type {
   PromptRequest,
   ActionRequest,
   ActionError,
+  ConcurrentFailure,
+  ConcurrentRequest,
 } from '@/src/session/types.js';
 
 // ── Serialization ───────────────────────────────────────────────────────────

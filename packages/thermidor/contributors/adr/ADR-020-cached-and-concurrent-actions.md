@@ -132,7 +132,9 @@ A concurrent action is sent at once, whatever request is in flight.
   instead of sending another.
 - **Not a request of the session.** `session.request` does not change, so a renderer waiting for the
   session to be free, and the single request of prompts and other actions, ignore it. A prompt or
-  `cancel()` does not abort it.
+  `cancel()` does not abort it. `session.concurrentRequests` lists it instead, by surface, node and
+  action name, while the latest dispatch from its node awaits its answer, so a renderer reads
+  whether an answer is coming without counting its own dispatches.
 - **State writes on known nodes only.** Its answer may only update the data model of nodes the
   session's recorded runs already hold. Any other message, such as a new surface or component, is
   dropped with a development warning before it reaches the state or the renderer stream, and the answer's metadata is not read: announcements, nodes
@@ -142,8 +144,15 @@ A concurrent action is sent at once, whatever request is in flight.
   on top, a later recorded write to the same path replaces it, and serialization saves the recorded
   state alone. A restored session holds the component's state as the last recorded run left it,
   and the renderer asks again.
-- **Failures are quiet.** A failed request, including a refusal, is a development warning. It sets
-  no `actionError` and changes no run.
+- **Failures are reported apart, not retried.** A concurrent action's failure is listed per node
+  action in `session.concurrentFailures`, and never retried. It never sets or clears `actionError`,
+  which the single request's prompts and actions clear as they are sent: sharing it, a background
+  failure would erase a visible one, and an ordinary action would erase a failure a renderer still
+  shows. A renderer reads the outcome of its node's latest dispatch from `concurrentRequests` and
+  `concurrentFailures`, while `dispatchAction` keeps resolving with nothing, so
+  `onAction={session.dispatchAction}` keeps type-checking against a renderer's `void` handler. The
+  README's "Concurrent and cached actions" section details the failure kinds, superseded and joined
+  dispatches, and the handoff once the producer revokes the announcement.
 - **It needs a session.** Before the session has a token, a concurrent action is withheld.
 
 ### The cache

@@ -32,6 +32,8 @@ const IDLE_SNAPSHOT: SessionSnapshot = {
   state: {},
   request: undefined,
   actionError: undefined,
+  concurrentRequests: [],
+  concurrentFailures: [],
 };
 
 const IDLE: SessionRequestSource = {

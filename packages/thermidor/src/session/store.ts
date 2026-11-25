@@ -7,7 +7,14 @@
 
 import type {RendererStream} from './a2ui-v09-projection.js';
 import type {UnrecordedState} from './session-state.js';
-import type {A2uiState, ActionError, SessionInitialization, SessionRequest} from './types.js';
+import type {
+  A2uiState,
+  ActionError,
+  ConcurrentFailure,
+  ConcurrentRequest,
+  SessionInitialization,
+  SessionRequest,
+} from './types.js';
 
 /**
  * A function that removes a previously-registered store listener.
@@ -48,6 +55,12 @@ export interface SessionStoreState<TTurn> {
 
   /** The request the session is sending, or `undefined` when idle. Runtime only: never serialized. */
   request?: SessionRequest;
+
+  /** The concurrent actions awaiting their answer (ADR-020). Runtime only: never serialized. */
+  concurrentRequests?: readonly ConcurrentRequest[];
+
+  /** The failures of concurrent actions' latest dispatches (ADR-020). Runtime only: never serialized. */
+  concurrentFailures?: readonly ConcurrentFailure[];
 
   /**
    * The validated data model of every surface, keyed by surface id, across every turn
