@@ -1,13 +1,11 @@
 import {LightningElement, api} from 'lwc';
 
-/** @typedef {import("coveo").Result} Result */
-
 /**
  * The `QuanticResultAction` component allows the end user to perform a specific action on a result.
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-result-action result={result} event-name="attachtocase" icon-name="utility:chat" label="Attach result" selected selected-label="Detach result"></c-quantic-result-action>
+ * <c-quantic-result-action event-name="attachtocase" icon-name="utility:chat" label="Attach result" selected selected-label="Detach result"></c-quantic-result-action>
  */
 export default class QuanticResultAction extends LightningElement {
   /**
@@ -34,13 +32,6 @@ export default class QuanticResultAction extends LightningElement {
    * @type {string}
    */
   @api eventName;
-  /**
-   * The result to perform the action on.
-   * @api
-   * @type {Result}
-   * @deprecated The component no longer needs a result.
-   */
-  @api result;
   /**
    * The name of the icon displayed inside the result action button when the result action button is selected.
    * @api

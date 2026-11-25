@@ -6,8 +6,8 @@ import {LightningElement} from 'lwc';
  * @category Insight Panel
  * @example
  * <c-quantic-result-action-bar>
- *   <c-quantic-result-action result={result} event-name='posttofeed' icon-name="utility:chat" label="Post to feed"></c-quantic-result-action>
- *   <c-quantic-result-action result={result} event-name='sendasemail' icon-name="utility:email" label="Send as email"></c-quantic-result-action>
+ *   <c-quantic-result-action event-name='posttofeed' icon-name="utility:chat" label="Post to feed"></c-quantic-result-action>
+ *   <c-quantic-result-action event-name='sendasemail' icon-name="utility:email" label="Send as email"></c-quantic-result-action>
  * </c-quantic-result-action-bar>
  */
 export default class QuanticResultActionBar extends LightningElement {
