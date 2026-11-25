@@ -120,6 +120,53 @@ describe('fully-specified-imports', () => {
       ]);
     });
 
+    it('should report a subpath that the exports map of its package does not declare', () => {
+      writeFiles({
+        'node_modules/lit/package.json': JSON.stringify({
+          name: 'lit',
+          exports: {
+            '.': './index.js',
+            './decorators.js': {types: './decorators.d.ts', default: './decorators.js'},
+          },
+        }),
+        'node_modules/lit/decorators.js': '',
+        'dist/esm/index.js': [
+          'import {property} from "lit/decorators";',
+          'import {missing} from "lit/missing.js";',
+        ].join('\n'),
+      });
+
+      expect(findUnspecifiedImports(root)).toEqual([
+        "dist/esm/index.js: 'lit/decorators' should be 'lit/decorators.js'",
+        "dist/esm/index.js: 'lit/missing.js' names no file",
+      ]);
+    });
+
+    it('should report an exported subpath whose target names no file', () => {
+      writeFiles({
+        'node_modules/fixture/package.json': '{"name": "fixture", "exports": {"./*": "./*"}}',
+        'node_modules/fixture/feature.js': '',
+        'dist/esm/index.js': 'import "fixture/feature";',
+      });
+
+      expect(findUnspecifiedImports(root)).toEqual([
+        "dist/esm/index.js: 'fixture/feature' should be 'fixture/feature.js'",
+      ]);
+    });
+
+    it('should only check the relative imports of the CommonJS build', () => {
+      writeFiles({
+        'node_modules/dayjs/package.json': '{"name": "dayjs", "main": "dayjs.min.js"}',
+        'node_modules/dayjs/plugin/utc.js': '',
+        'dist/cjs/index.cjs': [
+          'const utc = require("dayjs/plugin/utc");',
+          'const {property} = require("lit/decorators");',
+        ].join('\n'),
+      });
+
+      expect(findUnspecifiedImports(root)).toEqual([]);
+    });
+
     it('should report an import of a file that does not exist', () => {
       writeFiles({'dist/esm/index.js': 'import "./missing.js";'});
 
@@ -140,11 +187,32 @@ describe('fully-specified-imports', () => {
       writeFiles({
         'node_modules/dayjs/package.json': '{"name": "dayjs", "main": "dayjs.min.js"}',
         'node_modules/dayjs/plugin/utc.js': '',
-        'node_modules/@coveo/headless/package.json':
-          '{"name": "@coveo/headless", "exports": {".": "./dist/index.js", "./commerce": "./dist/commerce.js"}}',
+        'node_modules/@coveo/headless/package.json': JSON.stringify({
+          name: '@coveo/headless',
+          exports: {
+            '.': './dist/index.js',
+            './commerce': {
+              types: './dist/commerce.d.ts',
+              node: './dist/node/commerce.js',
+              import: './dist/commerce.js',
+            },
+          },
+        }),
+        'node_modules/@coveo/headless/dist/commerce.js': '',
+        'node_modules/lit-html/package.json': JSON.stringify({
+          name: 'lit-html',
+          exports: {
+            './directives/*': {
+              browser: {development: './development/directives/*', default: './directives/*'},
+              default: './directives/*',
+            },
+          },
+        }),
+        'node_modules/lit-html/directives/when.js': '',
         'dist/esm/index.js': [
           'import {html} from "lit";',
           'import {buildCart} from "@coveo/headless/commerce";',
+          'import {when} from "lit-html/directives/when.js";',
           'import utc from "dayjs/plugin/utc.js";',
           'export {helper} from "./utils/helper.js";',
           'export const lazy = () => import("./components/lazy.js");',
