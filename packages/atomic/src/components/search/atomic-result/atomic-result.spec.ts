@@ -1,10 +1,11 @@
 import type {Result} from '@coveo/headless';
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import type {ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout} from '@/src/components';
 import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
+import {AtomicResultLink} from '@/src/components/search/atomic-result-link/atomic-result-link';
 import {AtomicResult} from './atomic-result';
 
 vi.mock('@coveo/headless', {spy: true});
@@ -222,25 +223,51 @@ describe('atomic-result', () => {
   });
 
   describe('#clickLinkContainer', () => {
-    it('should click the anchor element when found', async () => {
-      const element = await renderResult();
-      const mockClick = vi.fn();
-      const mockAnchor = {click: mockClick};
-      const mockQuerySelector = vi.fn().mockReturnValue(mockAnchor);
-      vi.spyOn(element.shadowRoot!, 'querySelector').mockImplementation(mockQuerySelector);
+    let clickLinkSpy: MockInstance<AtomicResultLink['clickLink']>;
+
+    beforeEach(() => {
+      clickLinkSpy = vi.spyOn(AtomicResultLink.prototype, 'clickLink').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      clickLinkSpy.mockRestore();
+    });
+
+    const buildLinkContent = () => {
+      const fragment = document.createDocumentFragment();
+      fragment.appendChild(document.createElement('atomic-result-link'));
+      return fragment;
+    };
+
+    it('should call #clickLink on the atomic-result-link in the link container', async () => {
+      const element = await renderResult({linkContent: buildLinkContent()});
+      const link = element.shadowRoot!.querySelector('.link-container > atomic-result-link');
 
       element.clickLinkContainer();
 
-      expect(mockQuerySelector).toHaveBeenCalledWith(
-        '.link-container > atomic-result-link a:not([slot])'
-      );
-      expect(mockClick).toHaveBeenCalled();
+      expect(link).toBeInstanceOf(AtomicResultLink);
+      expect(clickLinkSpy).toHaveBeenCalledOnce();
+      expect(clickLinkSpy.mock.contexts[0]).toBe(link);
     });
 
-    it('should not throw when anchor element is not found', async () => {
+    it('should call #clickLink without options', async () => {
+      const element = await renderResult({linkContent: buildLinkContent()});
+
+      element.clickLinkContainer();
+
+      expect(clickLinkSpy).toHaveBeenCalledWith();
+    });
+
+    it('should not throw when the link container has no atomic-result-link', async () => {
       const element = await renderResult();
 
-      vi.spyOn(element.shadowRoot!, 'querySelector').mockReturnValue(null);
+      expect(() => element.clickLinkContainer()).not.toThrow();
+      expect(clickLinkSpy).not.toHaveBeenCalled();
+    });
+
+    it('should not throw when the atomic-result-link is not upgraded yet', async () => {
+      const element = await renderResult();
+      vi.spyOn(element.shadowRoot!, 'querySelector').mockReturnValue(document.createElement('div'));
 
       expect(() => element.clickLinkContainer()).not.toThrow();
     });

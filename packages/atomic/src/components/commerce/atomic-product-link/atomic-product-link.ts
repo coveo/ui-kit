@@ -2,10 +2,14 @@ import {isUndefined} from '@coveo/bueno';
 import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
 import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {createRef} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
 import {createInteractiveProductContextController} from '@/src/components/commerce/product-template-component-utils/context/interactive-product-context-controller.js';
 import {getAttributesFromLinkSlotContent} from '@/src/components/common/item-link/attributes-slot';
-import {renderLinkWithItemAnalytics} from '@/src/components/common/item-link/item-link';
+import {
+  clickItemLink,
+  renderLinkWithItemAnalytics,
+} from '@/src/components/common/item-link/item-link';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -62,6 +66,7 @@ export class AtomicProductLink
   @state() private linkAttributes?: Attr[];
   private stopPropagation?: boolean;
   private removeLinkEventHandlers?: () => void;
+  private anchorRef = createRef<HTMLAnchorElement>();
 
   private logWarningIfNeeded(warning?: string) {
     if (warning) {
@@ -82,6 +87,20 @@ export class AtomicProductLink
         this.stopPropagation = stopPropagation;
       })
     );
+  }
+
+  /**
+   * Clicks the rendered link, the same way a user would. This logs the product click and opens the link's `href`.
+   *
+   * Use this method rather than querying the `a` element rendered by the component, whose markup may change.
+   *
+   * Does nothing if the link isn't rendered yet.
+   *
+   * @param options - The click options.
+   * @param options.newTab - Whether to open the link in a new tab, as with a Ctrl or Cmd click. The link's `target` is set to `_blank` for this click only.
+   */
+  public clickLink(options?: {newTab?: boolean}): void {
+    clickItemLink(this.anchorRef.value, options);
   }
 
   disconnectedCallback() {
@@ -113,6 +132,7 @@ export class AtomicProductLink
       return renderLinkWithItemAnalytics({
         props: {
           href,
+          ref: this.anchorRef,
           onSelect: () => {
             this.logWarningIfNeeded(warningMessage);
             interactiveProduct.select();

@@ -1,6 +1,15 @@
 import {buildInstantProducts} from '@coveo/headless/commerce';
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, type MockedObject, type MockInstance, vi} from 'vitest';
+import {
+  beforeEach,
+  describe,
+  expect,
+  it,
+  type Mock,
+  type MockedObject,
+  type MockInstance,
+  vi,
+} from 'vitest';
 import {page} from 'vitest/browser';
 import type {
   SearchBoxSuggestionElement,
@@ -226,6 +235,74 @@ describe('atomic-commerce-search-box-instant-products', () => {
             buildFakeInstantProducts().state.query
           );
           expect(element.bindings.searchBoxController.submit).toHaveBeenCalled();
+        });
+
+        describe('when selecting an instant product item', () => {
+          let itemElement: HTMLElement;
+          let link: HTMLElement & {clickLink: Mock};
+
+          const attachShadowContent = (host: HTMLElement, ...children: HTMLElement[]) => {
+            const shadowContent = document.createElement('div');
+            shadowContent.append(...children);
+            Object.defineProperty(host, 'shadowRoot', {
+              get: () => shadowContent,
+              configurable: true,
+            });
+          };
+
+          const selectItem = (target: HTMLElement, init: MouseEventInit = {}) => {
+            const onSelect = (event: Event) => items[0].onSelect?.(event as MouseEvent);
+            target.addEventListener('click', onSelect, {once: true});
+            target.dispatchEvent(new MouseEvent('click', init));
+          };
+
+          beforeEach(() => {
+            itemElement = items[0].content as HTMLElement;
+            link = Object.assign(document.createElement('atomic-product-link'), {
+              clickLink: vi.fn(),
+            });
+            attachShadowContent(itemElement, link);
+          });
+
+          it('should call #clickLink on the atomic-product-link without opening a new tab', () => {
+            selectItem(itemElement);
+
+            expect(link.clickLink).toHaveBeenCalledExactlyOnceWith({newTab: false});
+          });
+
+          it('should call #clickLink with newTab set to true when the Ctrl key is pressed', () => {
+            selectItem(itemElement, {ctrlKey: true});
+
+            expect(link.clickLink).toHaveBeenCalledExactlyOnceWith({newTab: true});
+          });
+
+          it('should call #clickLink with newTab set to true when the Meta key is pressed', () => {
+            selectItem(itemElement, {metaKey: true});
+
+            expect(link.clickLink).toHaveBeenCalledExactlyOnceWith({newTab: true});
+          });
+
+          it('should find the atomic-product when the event target contains it', () => {
+            const wrapper = document.createElement('div');
+            wrapper.appendChild(itemElement);
+
+            selectItem(wrapper);
+
+            expect(link.clickLink).toHaveBeenCalledExactlyOnceWith({newTab: false});
+          });
+
+          it('should not throw when the atomic-product has no atomic-product-link', () => {
+            attachShadowContent(itemElement);
+
+            expect(() => selectItem(itemElement)).not.toThrow();
+            expect(link.clickLink).not.toHaveBeenCalled();
+          });
+
+          it('should not throw when the atomic-product-link is not upgraded yet', () => {
+            attachShadowContent(itemElement, document.createElement('atomic-product-link'));
+
+            expect(() => selectItem(itemElement)).not.toThrow();
+          });
         });
 
         describe('when rendering the content', () => {

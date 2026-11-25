@@ -282,4 +282,94 @@ describe('atomic-product-link', () => {
     const errorComponent = element?.querySelector('atomic-component-error');
     expect(errorComponent).toBeTruthy();
   });
+  describe('#clickLink', () => {
+    const getRenderedAnchor = (element: HTMLElement) =>
+      Array.from(element.querySelectorAll('a')).find((anchor) => !anchor.hasAttribute('slot'))!;
+
+    const recordClickTargets = (anchor: HTMLAnchorElement) => {
+      const targets: (string | null)[] = [];
+      anchor.addEventListener('click', (event) => {
+        event.preventDefault();
+        targets.push(anchor.getAttribute('target'));
+      });
+      return targets;
+    };
+
+    it('should click the rendered link', async () => {
+      const {element} = await renderProductLink();
+      const clickTargets = recordClickTargets(getRenderedAnchor(element));
+
+      element.clickLink();
+
+      expect(clickTargets).toEqual(['_self']);
+    });
+
+    it('should log the click through the link analytics', async () => {
+      const {element} = await renderProductLink();
+      recordClickTargets(getRenderedAnchor(element));
+
+      element.clickLink();
+
+      expect(mockInteractiveProduct.select).toHaveBeenCalledOnce();
+    });
+
+    it('should not click the anchor passed in the attributes slot', async () => {
+      const {element} = await renderProductLink({attributes: 'true'});
+      const attributesAnchor = element.querySelector<HTMLAnchorElement>('a[slot="attributes"]');
+      const attributesClickSpy = vi.fn();
+      attributesAnchor?.addEventListener('click', attributesClickSpy);
+      const clickTargets = recordClickTargets(getRenderedAnchor(element));
+
+      element.clickLink();
+
+      expect(clickTargets).toEqual(['_blank']);
+      expect(attributesClickSpy).not.toHaveBeenCalled();
+    });
+
+    it('should set the target to "_blank" during the click when newTab is true', async () => {
+      const {element} = await renderProductLink();
+      const clickTargets = recordClickTargets(getRenderedAnchor(element));
+
+      element.clickLink({newTab: true});
+
+      expect(clickTargets).toEqual(['_blank']);
+    });
+
+    it('should restore the previous target after the click when newTab is true', async () => {
+      const {element} = await renderProductLink();
+      const anchor = getRenderedAnchor(element);
+      recordClickTargets(anchor);
+
+      element.clickLink({newTab: true});
+
+      expect(anchor.getAttribute('target')).toBe('_self');
+    });
+
+    it('should remove the target after the click when newTab is true and the link had no target', async () => {
+      const {element} = await renderProductLink();
+      const anchor = getRenderedAnchor(element);
+      anchor.removeAttribute('target');
+      recordClickTargets(anchor);
+
+      element.clickLink({newTab: true});
+
+      expect(anchor.hasAttribute('target')).toBe(false);
+    });
+
+    it('should not change the target when newTab is false', async () => {
+      const {element} = await renderProductLink();
+      const clickTargets = recordClickTargets(getRenderedAnchor(element));
+
+      element.clickLink({newTab: false});
+
+      expect(clickTargets).toEqual(['_self']);
+    });
+
+    it('should do nothing when the link is not rendered yet', () => {
+      const element = document.createElement('atomic-product-link');
+
+      expect(() => element.clickLink({newTab: true})).not.toThrow();
+      expect(element.querySelector('a')).toBeNull();
+    });
+  });
 });

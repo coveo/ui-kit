@@ -1,4 +1,5 @@
 import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
+import type {AtomicProductLink} from '@/src/components/commerce/atomic-product-link/atomic-product-link';
 import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
@@ -161,8 +162,8 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
 
   public clickLinkContainer = () => {
     this.shadowRoot
-      ?.querySelector<HTMLAnchorElement>('.link-container > atomic-product-link a:not([slot])')
-      ?.click();
+      ?.querySelector<AtomicProductLink>('.link-container > atomic-product-link')
+      ?.clickLink?.();
   };
 
   public async connectedCallback() {

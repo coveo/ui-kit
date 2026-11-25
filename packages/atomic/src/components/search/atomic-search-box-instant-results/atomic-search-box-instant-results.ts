@@ -27,6 +27,7 @@ import type {
   SearchBoxSuggestionsBindings,
 } from '@/src/components/common/suggestions/suggestions-types';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
+import type {AtomicResultLink} from '@/src/components/search/atomic-result-link/atomic-result-link';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
 import {encodeForDomAttribute} from '@/src/utils/string-utils';
@@ -114,19 +115,10 @@ export class AtomicSearchBoxInstantResults
     }
   }
 
-  private getLink(el: HTMLElement): HTMLElement | null {
+  private getLink(el: HTMLElement): AtomicResultLink | null {
     const atomicResult = el.tagName === 'ATOMIC-RESULT' ? el : el?.querySelector('atomic-result');
 
-    return atomicResult?.shadowRoot?.querySelector('atomic-result-link a:not([slot])') || null;
-  }
-
-  private handleLinkClick(el: HTMLElement, hasModifier: boolean) {
-    const setTarget = (value: string) => el.setAttribute('target', value);
-    const initialTarget = el.getAttribute('target');
-
-    hasModifier && setTarget('_blank');
-    el.click();
-    hasModifier && setTarget(initialTarget || '');
+    return atomicResult?.shadowRoot?.querySelector<AtomicResultLink>('atomic-result-link') || null;
   }
 
   private renderItems(): SearchBoxSuggestionElement[] {
@@ -175,7 +167,7 @@ export class AtomicSearchBoxInstantResults
           if (!link) {
             return;
           }
-          this.handleLinkClick(link, e.ctrlKey || e.metaKey);
+          link.clickLink?.({newTab: e.ctrlKey || e.metaKey});
         },
       };
     });
