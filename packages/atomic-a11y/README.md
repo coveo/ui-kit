@@ -78,7 +78,7 @@ This avoids running the full Storybook test suite locally. The CI already ran th
 pnpm exec turbo run a11y:update-openacr --filter=@coveo/atomic-a11y -- --run-id=<RUN_ID>
 ```
 
-Replace `<RUN_ID>` with the GitHub Actions run ID from the failing check (shown in the error message). This uses the `gh` CLI to download the `a11y-report.json` artifact and regenerates `openacr.yaml`.
+Replace `<RUN_ID>` with the GitHub Actions run ID from the failing check (shown in the error message). The run must be for the current `@coveo/atomic` version: the script refuses a report generated for another version, so an older run cannot revert `product.version`. This uses the `gh` CLI to download the `a11y-report.json` artifact and regenerates `openacr.yaml`.
 
 > Requires the [GitHub CLI](https://cli.github.com/) (`gh`) to be installed and authenticated.
 

@@ -134,6 +134,20 @@ describe('transformJsonToOpenAcr (integration)', () => {
     expect(result.report_date).toBe('2026-01-01');
   });
 
+  it('rejects a report generated for another Atomic version', async () => {
+    await writeInput();
+
+    await expect(
+      transformJsonToOpenAcr({
+        inputFile: path.join(dir, 'a11y-report.json'),
+        outputFile: path.join(dir, 'openacr.yaml'),
+        overridesFile: path.join(dir, 'no-overrides.json'),
+        manualAuditDir: path.join(dir, 'no-manual'),
+        expectedVersion: '3.1.0',
+      })
+    ).rejects.toThrow(/generated for Atomic 3.0.0, but @coveo\/atomic is 3.1.0/);
+  });
+
   describe('when regenerating over a committed report', () => {
     const today = new Date().toISOString().slice(0, 10);
     const outputFile = () => path.join(dir, 'openacr.yaml');

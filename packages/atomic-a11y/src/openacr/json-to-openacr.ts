@@ -57,6 +57,10 @@ export interface JsonToOpenAcrOptions {
    * did not change (see {@link reconcileReportDates}). Ignored if missing.
    * @default outputFile */
   baselineFile?: string;
+  /** The `@coveo/atomic` version the report must have been generated for. When
+   * set, a report for any other version is rejected, so regenerating from an
+   * older CI run cannot revert `product.version`. */
+  expectedVersion?: string;
 }
 
 /**
@@ -144,6 +148,12 @@ export async function transformJsonToOpenAcr(
   );
 
   const report = await readInputReport(inputFile);
+
+  if (options.expectedVersion && report.report.version !== options.expectedVersion) {
+    throw new Error(
+      `${LOG_PREFIX} ${inputFile} was generated for Atomic ${report.report.version}, but @coveo/atomic is ${options.expectedVersion}. Use an a11y report from a run on the current version.`
+    );
+  }
 
   if (!report) {
     console.warn(LOG_PREFIX, 'No valid a11y report available. Skipping OpenACR generation.');
