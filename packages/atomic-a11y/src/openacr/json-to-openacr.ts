@@ -61,7 +61,7 @@ export interface JsonToOpenAcrOptions {
  * (single-quoted scalars), so regenerating produces a minimal diff limited to
  * real changes rather than quote churn. Run oxfmt on the written file afterwards.
  */
-function serializeOpenAcr(report: OpenAcrReport): string {
+export function serializeOpenAcr(report: OpenAcrReport): string {
   return stringify(report, {
     version: '1.1',
     singleQuote: true,
