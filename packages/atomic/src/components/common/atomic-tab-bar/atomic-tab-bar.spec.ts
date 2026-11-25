@@ -154,11 +154,17 @@ describe('atomic-tab-bar', () => {
     it('should export parts from tab-popover', async () => {
       const {locators} = await renderTabBar();
       const tabPopover = locators.tabPopover();
-      expect(tabPopover?.getAttribute('exportparts')).toContain('popover-button');
-      expect(tabPopover?.getAttribute('exportparts')).toContain('value-label');
-      expect(tabPopover?.getAttribute('exportparts')).toContain('arrow-icon');
-      expect(tabPopover?.getAttribute('exportparts')).toContain('backdrop');
-      expect(tabPopover?.getAttribute('exportparts')).toContain('overflow-tabs');
+      const exportedParts = tabPopover
+        ?.getAttribute('exportparts')
+        ?.split(',')
+        .map((part) => part.trim());
+      expect(exportedParts).toEqual([
+        'popover-button',
+        'value-label',
+        'arrow-icon',
+        'backdrop',
+        'overflow-tabs',
+      ]);
     });
   });
 
