@@ -80,14 +80,19 @@ Errors thrown in `render()` stay as they are: the component goes blank and the b
   - No silent failure: final errors are logged where they occur.
   - No non-null assertion, no `null` writes, and no `@ts-expect-error` for `error`.
 - **Negative:**
-  - v4 makes visible changes that need upgrade guide entries: a page with a latent invalid configuration, which rendered blank or carried on silently, now shows an error box.
-  - In v4, `error` becomes optional in the published types, which can break consumer code that reads it as always set.
   - Each component keeps its error declaration and guards.
   - The contract spec reads source code and must be kept up to date with the decorators.
 - **Neutral:**
-  - The 35 components that showed an error at once now show it once the interface initializes, like the others. Only the timing changes, and it avoids flashing transient validation errors.
   - A component outside an interface still renders nothing. It now logs why, once per connection.
   - The public `initializeBindings` and `MissingInterfaceParentError` keep their signatures. `initializeBindings` now also finds an interface through slotted content.
+
+### Breaking in v4
+
+Each change needs a major changeset and an entry in the v3 to v4 upgrade guide.
+
+- **Errors that were swallowed are displayed (step 6).** 9 components start displaying errors they used to swallow, and `atomic-timeframe` and `atomic-sort-expression` follow once every validation is fatal (step 7). A page with a hidden invalid configuration now shows an error box.
+- **35 components wait for the interface (step 6).** They show their error once the interface initializes, not at once.
+- **`error` becomes optional (step 5).** The published types of every component declare `error?: Error`.
 
 ## Implementation and Follow-up
 
