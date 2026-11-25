@@ -55,6 +55,20 @@ export interface JsonToOpenAcrOptions {
 }
 
 /**
+ * Serializes an OpenACR report the way the committed `openacr.yaml` is written.
+ *
+ * `singleQuote: true` keeps the output consistent with the committed baseline
+ * (single-quoted scalars), so regenerating produces a minimal diff limited to
+ * real changes rather than quote churn. Run oxfmt on the written file afterwards.
+ */
+function serializeOpenAcr(report: OpenAcrReport): string {
+  return stringify(report, {
+    version: '1.1',
+    singleQuote: true,
+  });
+}
+
+/**
  * Converts an `a11y-report.json` into an OpenACR-compliant YAML document.
  *
  * Reads the input report, loads optional manual audit baselines and conformance
@@ -108,16 +122,9 @@ export async function transformJsonToOpenAcr(
   const manualAggregates = await loadManualAuditData(manualAuditDir);
 
   const openAcrReport = buildOpenAcrReport(report, overrides, manualAggregates);
-  // `singleQuote: true` keeps the output consistent with the committed
-  // openacr.yaml baseline (single-quoted scalars), so regenerating produces a
-  // minimal diff limited to real conformance changes rather than quote churn.
-  const serialized = stringify(openAcrReport, {
-    version: '1.1',
-    singleQuote: true,
-  });
 
   await mkdir(path.dirname(outputFile), {recursive: true});
-  await writeFile(outputFile, serialized, 'utf8');
+  await writeFile(outputFile, serializeOpenAcr(openAcrReport), 'utf8');
 
   return openAcrReport;
 }
