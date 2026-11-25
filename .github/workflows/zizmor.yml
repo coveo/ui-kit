@@ -29,7 +29,6 @@ jobs:
 
       - name: Run zizmor
         continue-on-error: true
-        uses: zizmorcore/zizmor-action@1b4550e929643b8b26a62303c6bd64814271a4f1 # v0.9.2
-        with:
-          advanced-security: false
-          annotations: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: pipx run zizmor --format=github .
