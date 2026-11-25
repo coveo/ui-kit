@@ -62,7 +62,7 @@ Final errors are logged where they occur: `initialize()` throwing, a missing int
 
 ### Missing interface
 
-A component with `@bindings()` placed outside any interface reports `MissingInterfaceParentError` in the console only, once per connection, in v4 too. It does not render the error box, and the error is never written to `error`. This avoids showing a box to visitors when the check is wrong, and it can be changed later by letting `@bindingGuard()` display that error.
+A component with `@bindings()` that has not received its bindings and is connected outside any interface reports `MissingInterfaceParentError` in the console only, once per such connection, in v4 too. A component that already initialized keeps its bindings and keeps working when it is moved, so it is not reported. It does not render the error box, and the error is never written to `error`. This avoids showing a box to visitors when the check is wrong, and it can be changed later by letting `@bindingGuard()` display that error.
 
 ### Contract spec
 
@@ -75,7 +75,7 @@ Errors thrown in `render()` stay as they are: the component goes blank and the b
 ## Consequences
 
 - **Positive:**
-  - Every error a component receives is displayed, including on the 9 components whose errors nothing displayed and, once KIT-5197 lands, on `atomic-timeframe` and `atomic-sort-expression`.
+  - Every error a component receives is displayed, including on the 9 components whose errors nothing displayed and, once KIT-5197 lands, on `atomic-sort-expression`. Invalid `atomic-timeframe` props surface through the parent timeframe facet.
   - One guard order wherever both guards appear, and one way to declare and display an error.
   - No silent failure: final errors are logged where they occur.
   - No non-null assertion, no `null` writes, and no `@ts-expect-error` for `error`.
@@ -83,14 +83,14 @@ Errors thrown in `render()` stay as they are: the component goes blank and the b
   - Each component keeps its error declaration and guards.
   - The contract spec reads source code and must be kept up to date with the decorators.
 - **Neutral:**
-  - A component outside an interface still renders nothing. It now logs why, once per connection.
+  - A component outside an interface that has not received its bindings still renders nothing. It now logs why, once per connection.
   - The public `initializeBindings` and `MissingInterfaceParentError` keep their signatures. `initializeBindings` now also finds an interface through slotted content.
 
 ### Breaking in v4
 
 Each change needs a major changeset and an entry in the v3 to v4 upgrade guide.
 
-- **Errors that were swallowed are displayed (step 6).** 9 components start displaying errors they used to swallow, and `atomic-timeframe` and `atomic-sort-expression` follow once every validation is fatal (step 7). A page with a hidden invalid configuration now shows an error box.
+- **Errors that were swallowed are displayed (step 6).** 9 components start displaying errors they used to swallow. Once every validation is fatal (step 7), `atomic-sort-expression` shows the box inside `atomic-sort-dropdown`, and the timeframe facets surface an invalid child `atomic-timeframe`. A page with a hidden invalid configuration now shows an error.
 - **35 components wait for the interface (step 6).** They show their error once the interface initializes, not at once.
 - **`error` becomes optional (step 5).** The published types of every component declare `error?: Error`.
 
@@ -101,10 +101,10 @@ Each change needs a major changeset and an entry in the v3 to v4 upgrade guide.
 Each step is one pull request on `main`. The numbers follow the delivery plan, where step 1 is this ADR.
 
 2. Internal contract `error?: Error`, writers clear only their own error, and a deduplicated `logComponentError` (patch).
-3. `@bindings()` returns a subclass with one context consumer per element. It logs `initialize()` errors, and logs a missing interface once per connection with a new parent check that walks the composed tree, slotted content included. `fetchBindings`, exported as `initializeBindings`, uses the same walk, so the check and the fetch cannot disagree. The binding controller keeps its host when the request fails (patch).
+3. `@bindings()` returns a subclass with one context consumer per element. It logs `initialize()` errors, and re-subscribes to `languageChanged` when an initialized component reconnects. One task after a connection, it logs a missing interface unless the component is disconnected, already initialized, or inside an interface, using a new parent check that walks the composed tree, slotted content included. `fetchBindings`, exported as `initializeBindings`, uses the same walk, so the check and the fetch cannot disagree. The binding controller keeps its host when the request fails (patch).
 4. Drop `InitializeBindingsMixin` from the 12 components that also use `@bindings()`. The mixin marks them initialized before its fetch, so `@bindings()` does nothing on them, and its error handling never clears its own error (patch).
-5. v4: `@state() public error?: Error` on every component that can receive an error (major).
-6. v4: `@bindingGuard()` above `@errorGuard()` everywhere, guards added where missing, the static contract spec, and the component skill updated (major). The added guards include `atomic-timeframe` and `atomic-sort-expression`. `atomic-sort-expression` also renders `atomic-component-error` by hand when it is outside `atomic-sort-dropdown`; that path moves to `error` and `@errorGuard()`. `atomic-ipx-button` and `atomic-ipx-tabs` have an empty `initialize()` and cannot receive an error in practice, but they use `@bindings()`, so they get the guard for uniformity and the contract spec treats them like every other `@bindings()` component.
+5. v4: `@state() public error?: Error` on every component that can receive an error, and in the component generator template (`scripts/generate-component-templates/component.ts.hbs`) (major).
+6. v4: `@bindingGuard()` above `@errorGuard()` everywhere, guards added where missing, the static contract spec, which also covers generated components, and the component skill updated (major). `atomic-sort-expression` gets `@errorGuard()`; it renders in the light DOM and `atomic-sort-dropdown` always renders its `<slot>`, so the box shows inside the dropdown. `atomic-timeframe` also renders in the light DOM, but the timeframe facets render no `<slot>`, so a box on it would never show: the parent facet displays or logs an invalid child timeframe's error instead. `atomic-sort-expression` also renders `atomic-component-error` by hand when it is outside `atomic-sort-dropdown`; that path moves to `error` and `@errorGuard()`. `atomic-ipx-button` and `atomic-ipx-tabs` have an empty `initialize()` and cannot receive an error in practice, but they use `@bindings()`, so they get the guard for uniformity and the contract spec treats them like every other `@bindings()` component.
 7. KIT-5197: every prop validation fatal (major).
 
 Revisit this decision if the contract spec needs a growing list of exemptions or keeps breaking on legitimate refactors. Option B would then be worth a second look.

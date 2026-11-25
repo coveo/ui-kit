@@ -78,24 +78,33 @@ export function bindings() {
 
       connectedCallback() {
         super.connectedCallback();
-        if (!this.bindings && !findInterfaceParent(this)) {
-          logComponentError(new MissingInterfaceParentError(this.localName), this);
+        if (this.initialized && this.bindings && !this.unsubscribeLanguage) {
+          subscribeToLanguage(this);
         }
+        setTimeout(() => reportMissingInterfaceParent(this));
       }
 
       disconnectedCallback() {
         this.unsubscribeLanguage?.();
+        this.unsubscribeLanguage = undefined;
         super.disconnectedCallback();
       }
     };
 }
+
+function reportMissingInterfaceParent(host: BindingsHost) {
+  if (!host.isConnected || host.initialized || findInterfaceParent(host)) {
+    return;
+  }
+  logComponentError(new MissingInterfaceParentError(host.localName), host);
+}
 ```
 
-The consumer is a class field, so it is created once per element. The subclass does not override `render()`, and the missing-interface error is never written to `error`. `findInterfaceParent` is new: it walks the composed tree, following `assignedSlot`, `parentNode` and shadow hosts. `fetchBindings`, exported as `initializeBindings`, uses the same walk. `receiveBindings` keeps today's logic and also logs an error thrown by `initialize()` with `logComponentError`.
+The consumer is a class field, so it is created once per element. The subclass does not override `render()`, and the missing-interface error is never written to `error`. The report waits one task, so a component moved into an interface within the same task is not reported, and a component that already initialized keeps its bindings when it is moved, so it is not reported either. A reconnected component subscribes to `languageChanged` again. `findInterfaceParent` is new: it walks the composed tree, following `assignedSlot`, `parentNode` and shadow hosts. `fetchBindings`, exported as `initializeBindings`, uses the same walk. `receiveBindings` sets the bindings, subscribes to `languageChanged`, calls `initialize()`, and logs an error it throws with `logComponentError`.
 
 ## What a developer sees
 
-A component placed outside an interface logs once per connection and renders nothing:
+A component that has not received its bindings and is connected outside an interface logs once per connection and renders nothing:
 
 ```text
 Error: The "atomic-commerce-pager" element must be the child of the following elements: atomic-recs-interface, atomic-search-interface, atomic-commerce-interface, … <atomic-commerce-pager>
