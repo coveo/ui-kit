@@ -1,0 +1,5 @@
+---
+'@coveo/atomic': patch
+---
+
+Components that use the `@bindings()` decorator now handle reconnection and setup errors better. A component removed from the page and added back requests its bindings once, keeps updating when the language changes, and no longer piles up context consumers. When a component's setup throws, the error is logged once and the component updates. A component placed outside of an Atomic interface now logs an error to the console on each connection, while a component slotted into an interface through another shadow root is no longer treated as outside of it. Components that use `InitializeBindingsMixin` fetch their bindings again on reconnection after a failed fetch.

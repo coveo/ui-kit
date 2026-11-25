@@ -91,6 +91,17 @@ describe('InitializeBindingsMixin', () => {
     expect(element.initialize).toHaveBeenCalled();
   });
 
+  it('should fetch the bindings for the host again after a failed fetch and a reconnection', async () => {
+    mockedFetchBindings.mockRejectedValueOnce(new Error('Failed to fetch bindings'));
+    await setupElement();
+    await new Promise((resolve) => setTimeout(resolve));
+
+    document.body.removeChild(element);
+    document.body.appendChild(element);
+
+    expect(mockedFetchBindings).toHaveBeenLastCalledWith(element);
+  });
+
   it('should handle fetchBindings rejection gracefully', async () => {
     // Mock fetchBindings to return a rejected promise
     mockedFetchBindings.mockRejectedValue(new Error('Failed to fetch bindings'));

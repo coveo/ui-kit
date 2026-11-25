@@ -1,4 +1,4 @@
-import {describe, expect, it} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {fetchBindings, MissingInterfaceParentError} from './initialization-common-utils';
 import '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
 
@@ -28,5 +28,21 @@ describe('fetchBindings', () => {
       store: expect.anything(),
       engine: searchInterface.engine,
     });
+  });
+
+  it('should not reject when the component is slotted into an interface inside another shadow root', async () => {
+    const host = document.createElement('div');
+    host.attachShadow({mode: 'open'}).innerHTML =
+      '<atomic-search-interface><slot></slot></atomic-search-interface>';
+    const element = document.createElement('my-component');
+    host.appendChild(element);
+    document.body.appendChild(host);
+
+    const onRejected = vi.fn();
+    fetchBindings(element).catch(onRejected);
+    await Promise.resolve();
+
+    expect(onRejected).not.toHaveBeenCalled();
+    host.remove();
   });
 });
