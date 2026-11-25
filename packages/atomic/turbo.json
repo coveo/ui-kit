@@ -72,6 +72,8 @@
       ],
       "inputs": [
         "./src/**/*.ts",
+        "./rslib.config.mjs",
+        "./scripts/lit-css-plugin.mjs",
         "!./src/components/*/index.ts",
         "!./src/components/*/lazy-index.ts",
         "!./src/utils/custom-element-tags.ts",
