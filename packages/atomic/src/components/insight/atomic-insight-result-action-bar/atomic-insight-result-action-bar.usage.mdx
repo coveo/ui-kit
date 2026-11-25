@@ -1,6 +1,6 @@
-This component is used to display action buttons within an Insight result template. Action buttons placed in this component appear when the user hovers over a result.
+This component is used to display action buttons within an Insight result template. Action buttons placed in this component appear when the user hovers over a result or moves the keyboard focus into it.
 
-The action bar is positioned absolutely within the result and becomes visible on hover. When the action bar is empty (no slotted content), it automatically hides itself.
+The action bar is positioned absolutely within the result and becomes visible on hover or when the focus is in the result. Its buttons stay in the tab order while the bar is hidden, so keyboard users can tab to them, and focusing one shows the bar. When the action bar is empty (no slotted content), it automatically hides itself.
 
 Place the `atomic-insight-result-action-bar` inside an `atomic-insight-result-template`:
 

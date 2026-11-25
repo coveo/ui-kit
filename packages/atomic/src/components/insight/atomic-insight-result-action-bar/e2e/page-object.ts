@@ -14,7 +14,17 @@ export class InsightResultActionBarObject extends BasePageObject {
     return this.page.locator('atomic-insight-result').first();
   }
 
+  get resultLink() {
+    return this.result.locator('atomic-result-link a');
+  }
+
   get buttons() {
     return this.actionBar.locator('button');
+  }
+
+  get copyToClipboardButton() {
+    return this.actionBar.locator(
+      'atomic-insight-result-action[action="copyToClipboard"] [part="result-action-button"]'
+    );
   }
 }

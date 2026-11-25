@@ -135,12 +135,14 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(LitElement)
       }
     }
 
-    :host(:hover) .result-root.with-sections {
+    :host(:hover) .result-root.with-sections,
+    :host(:focus-within) .result-root.with-sections {
       @apply bg-neutral-lighter;
     }
 
-    :host(:hover) atomic-insight-result-action-bar {
-      @apply visible;
+    :host(:hover) atomic-insight-result-action-bar,
+    :host(:focus-within) atomic-insight-result-action-bar {
+      @apply pointer-events-auto opacity-100;
     }
 
     :host(:first-of-type) .result-root.with-sections:not(.child-result) {

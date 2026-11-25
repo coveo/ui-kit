@@ -13,7 +13,7 @@ export class AtomicInsightResultActionBar extends ItemSectionMixin(
   css`
     @reference '../../../utils/tailwind.global.tw.css';
     atomic-insight-result-action-bar {
-      @apply invisible absolute -top-4 right-6 flex;
+      @apply pointer-events-none absolute -top-4 right-6 flex opacity-0;
     }
     atomic-insight-result-action-bar > :not(:last-child) button {
       @apply rounded-r-none border-r-0;
