@@ -88,6 +88,9 @@ export default class QuanticModalA11yHandler extends LightningElement {
    * @param {string} excludedTagName
    */
   removeElementsFromA11yTree(element, excludedTagName) {
+    if (element.nodeType !== Node.ELEMENT_NODE) {
+      return;
+    }
     /** @type {Array} */
     const childNodes = Array.from(element.childNodes);
     if (!isParentOf(element, excludedTagName)) {

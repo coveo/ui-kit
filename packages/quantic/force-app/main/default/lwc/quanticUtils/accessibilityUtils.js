@@ -85,7 +85,7 @@ export function isFocusable(element) {
  * @returns {HTMLElement | null}
  */
 export function getLastFocusableElement(element) {
-  if (!element || element.nodeType === Node.TEXT_NODE) return null;
+  if (!element || element.nodeType !== Node.ELEMENT_NODE) return null;
 
   if (isCustomElement(element)) {
     if (element.dataset?.focusable?.toString() === 'true') {
@@ -119,7 +119,7 @@ export function getLastFocusableElement(element) {
  * @returns {HTMLElement | null}
  */
 export function getFirstFocusableElement(element) {
-  if (!element || element.nodeType === Node.TEXT_NODE) return null;
+  if (!element || element.nodeType !== Node.ELEMENT_NODE) return null;
 
   if (isCustomElement(element)) {
     if (element.dataset?.focusable?.toString() === 'true') {
@@ -152,7 +152,7 @@ export function getFirstFocusableElement(element) {
  * @returns {boolean}
  */
 export function isCustomElement(element) {
-  if (element && element.tagName.includes('-')) {
+  if (element?.tagName?.includes('-')) {
     return true;
   }
   return false;
@@ -205,7 +205,7 @@ function getFirstFocusableElementFromSlot(slotElement) {
  * @returns {boolean}
  */
 export function isParentOf(element, targetElement) {
-  if (!element || element.nodeType === Node.TEXT_NODE) {
+  if (!element || element.nodeType !== Node.ELEMENT_NODE) {
     return false;
   }
 

@@ -122,6 +122,10 @@ describe('accessibilityUtils', () => {
     it('should return false for null', () => {
       expect(isCustomElement(null)).toBe(false);
     });
+
+    it('should return false for a comment node', () => {
+      expect(isCustomElement(document.createComment(''))).toBe(false);
+    });
   });
 
   describe('getFirstFocusableElement', () => {
@@ -160,6 +164,17 @@ describe('accessibilityUtils', () => {
       const text = document.createTextNode('hello');
       expect(getFirstFocusableElement(text)).toBeNull();
     });
+
+    it('should return null for a comment node', () => {
+      expect(getFirstFocusableElement(document.createComment(''))).toBeNull();
+    });
+
+    it('should skip the comment nodes around a conditional block', () => {
+      const div = document.createElement('div');
+      const btn = document.createElement('button');
+      div.append(document.createComment(''), btn, document.createComment(''));
+      expect(getFirstFocusableElement(div)).toBe(btn);
+    });
   });
 
   describe('getLastFocusableElement', () => {
@@ -179,6 +194,17 @@ describe('accessibilityUtils', () => {
     it('should return the element itself if it is focusable and has no focusable children', () => {
       const input = document.createElement('input');
       expect(getLastFocusableElement(input)).toBe(input);
+    });
+
+    it('should return null for a comment node', () => {
+      expect(getLastFocusableElement(document.createComment(''))).toBeNull();
+    });
+
+    it('should skip the comment nodes around a conditional block', () => {
+      const div = document.createElement('div');
+      const btn = document.createElement('button');
+      div.append(document.createComment(''), btn, document.createComment(''));
+      expect(getLastFocusableElement(div)).toBe(btn);
     });
   });
 
@@ -209,6 +235,23 @@ describe('accessibilityUtils', () => {
     it('should return false for a text node', () => {
       const text = document.createTextNode('hello');
       expect(isParentOf(text, 'MY-COMPONENT')).toBe(false);
+    });
+
+    it('should return false for a comment node', () => {
+      expect(isParentOf(document.createComment(''), 'MY-COMPONENT')).toBe(
+        false
+      );
+    });
+
+    it('should skip the comment nodes around a conditional block', () => {
+      const wrapper = document.createElement('div');
+      const child = document.createElement('my-component');
+      wrapper.append(
+        document.createComment(''),
+        child,
+        document.createComment('')
+      );
+      expect(isParentOf(wrapper, 'MY-COMPONENT')).toBe(true);
     });
   });
 });
