@@ -75,18 +75,17 @@ Errors thrown in `render()` stay as they are: the component goes blank and the b
 ## Consequences
 
 - **Positive:**
+  - Every error a component receives is displayed, including on the 9 components whose errors nothing displayed and, once KIT-5197 lands, on `atomic-timeframe` and `atomic-sort-expression`.
   - One guard order wherever both guards appear, and one way to declare and display an error.
   - No silent failure: final errors are logged where they occur.
   - No non-null assertion, no `null` writes, and no `@ts-expect-error` for `error`.
-  - Once KIT-5197 lands, every fatal prop validation error is displayed and logged the same way.
 - **Negative:**
-  - In v4, the 9 components whose errors nobody displayed, and the 2 with an empty `initialize()`, show the error box when they receive an error.
-  - In v4, once KIT-5197 lands, `atomic-timeframe` and `atomic-sort-expression`, which validate without throwing today, show the error box for invalid props. `atomic-sort-expression` also renders `atomic-component-error` by hand when it is outside `atomic-sort-dropdown`; step 6 brings that path under `error` and `@errorGuard()` too.
-  - In v4, the 35 components that showed an error at once now wait for the interface to initialize.
-  - In v4, `error` becomes optional in the published types of every component.
+  - v4 makes visible changes that need upgrade guide entries: a page with a latent invalid configuration, which rendered blank or carried on silently, now shows an error box.
+  - In v4, `error` becomes optional in the published types, which can break consumer code that reads it as always set.
   - Each component keeps its error declaration and guards.
   - The contract spec reads source code and must be kept up to date with the decorators.
 - **Neutral:**
+  - The 35 components that showed an error at once now show it once the interface initializes, like the others. Only the timing changes, and it avoids flashing transient validation errors.
   - A component outside an interface still renders nothing. It now logs why, once per connection.
   - The public `initializeBindings` and `MissingInterfaceParentError` keep their signatures. `initializeBindings` now also finds an interface through slotted content.
 
@@ -100,7 +99,7 @@ Each step is one pull request on `main`. The numbers follow the delivery plan, w
 3. `@bindings()` returns a subclass with one context consumer per element. It logs `initialize()` errors, and logs a missing interface once per connection with a new parent check that walks the composed tree, slotted content included. `fetchBindings`, exported as `initializeBindings`, uses the same walk, so the check and the fetch cannot disagree. The binding controller keeps its host when the request fails (patch).
 4. Drop `InitializeBindingsMixin` from the 12 components that also use `@bindings()`. The mixin marks them initialized before its fetch, so `@bindings()` does nothing on them, and its error handling never clears its own error (patch).
 5. v4: `@state() public error?: Error` on every component that can receive an error (major).
-6. v4: `@bindingGuard()` above `@errorGuard()` everywhere, guards added where missing (including `atomic-timeframe` and `atomic-sort-expression`), the static contract spec, and the component skill updated (major).
+6. v4: `@bindingGuard()` above `@errorGuard()` everywhere, guards added where missing, the static contract spec, and the component skill updated (major). The added guards include `atomic-timeframe` and `atomic-sort-expression`. `atomic-sort-expression` also renders `atomic-component-error` by hand when it is outside `atomic-sort-dropdown`; that path moves to `error` and `@errorGuard()`. `atomic-ipx-button` and `atomic-ipx-tabs` have an empty `initialize()` and cannot receive an error in practice, but they use `@bindings()`, so they get the guard for uniformity and the contract spec treats them like every other `@bindings()` component.
 7. KIT-5197: every prop validation fatal (major).
 
 Revisit this decision if the contract spec needs a growing list of exemptions or keeps breaking on legitimate refactors. Option B would then be worth a second look.
