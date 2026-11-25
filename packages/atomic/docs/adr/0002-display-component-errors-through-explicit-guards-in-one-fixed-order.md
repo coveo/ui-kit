@@ -107,7 +107,7 @@ Each step is one pull request on `main`. The numbers follow the delivery plan, w
 6. v4: `@bindingGuard()` above `@errorGuard()` everywhere, guards added where missing, the static contract spec, which also covers generated components, and the component skill updated (major). `atomic-sort-expression` gets `@errorGuard()`; it renders in the light DOM and `atomic-sort-dropdown` always renders its `<slot>`, so the box shows inside the dropdown. `atomic-timeframe` also renders in the light DOM, but the timeframe facets render no `<slot>`, so a box on it would never show: the parent facet displays or logs an invalid child timeframe's error instead. `atomic-sort-expression` also renders `atomic-component-error` by hand when it is outside `atomic-sort-dropdown`; that path moves to `error` and `@errorGuard()`. `atomic-ipx-button` and `atomic-ipx-tabs` have an empty `initialize()` and cannot receive an error in practice, but they use `@bindings()`, so they get the guard for uniformity and the contract spec treats them like every other `@bindings()` component.
 7. KIT-5197: every prop validation fatal (major).
 
-Revisit this decision if the contract spec needs a growing list of exemptions or keeps breaking on legitimate refactors. Option B would then be worth a second look.
+Revisit this decision if the contract spec needs a growing list of exemptions or keeps breaking on legitimate refactors. Option B or B′ would then be worth a second look.
 
 ## Considered Options
 
@@ -126,6 +126,19 @@ Revisit this decision if the contract spec needs a growing list of exemptions or
   - The rule "wait for the bindings" lives in two places: the class decorator and `@bindingGuard()`.
   - What a component renders on error is decided outside its file. This reverses the January 2025 choice of small, explicit decorators ([#4891](https://github.com/coveo/ui-kit/pull/4891)).
   - The delivery planned in the RFC is a v3 story with a log-only override, a forward port to `main`, and a v4 story that turns the display on.
+
+### Option B′: A composite `@Bindings` decorator that applies the existing decorators
+
+- **Summary:** A capitalized class decorator, `@Bindings`, applies the existing lowercase pieces: the `bindings()` subclass, plus `@bindingGuard()` and `@errorGuard()` wrapped around `render()` in the fixed order. Components that use it drop the per-method guards.
+- **Pros:**
+  - Each rule has one implementation, and the guard order lives in one place. Unlike B, the rule "wait for the bindings" is not split between two decorators.
+  - The error display cannot be forgotten on components that use it.
+  - Less boilerplate.
+- **Cons:**
+  - Components still end up in several shapes: `@Bindings` alone, `@errorGuard()` alone on components without bindings, and the lowercase decorators on the components that render before their bindings arrive, which cannot take the binding guard.
+  - A TypeScript class decorator cannot add a member to the class type, so components still declare `@state() public error?: Error` to have it typed, or leave it untyped as in B.
+  - `render()` no longer shows what the component renders on error.
+  - As long as the lowercase `bindings()` exists, which the early-render components need, a component can use it and forget the guards, so a contract check or lint rule is still required.
 
 ### Option C: A mixin or base class owns the error
 
@@ -156,6 +169,6 @@ Revisit this decision if the contract spec needs a growing list of exemptions or
 - **Summary:** described in [Decision Outcome](#decision-outcome).
 - **Pros:** A component's shape follows from what it uses. Control flow stays in the component file. The order is already the documented one and the majority one. No error is silent. Most of the work ships as non-breaking fixes.
 - **Cons:** Up to three declaration lines stay in each component. A forgotten guard is caught in CI rather than made impossible. The contract spec reads source code and is one more test to maintain.
-- **Why G over B:** Both log final errors where they occur, so neither leaves an error silent. The real tradeoff: B makes the error display impossible to forget on components with `@bindings()`, while G makes a forgotten guard a CI failure and keeps the display visible in each component. A CI failure is enough here, because the pieces were mostly forgotten during the migration, which ended in February 2026, and new components start from a generator that already has the guards. For that, G keeps what a component renders readable in its own file, which the team prefers. G keeps B's display rule and the prototype's `@bindings()` subclass, without its `render()` override.
+- **Why G over B:** Both log final errors where they occur, so neither leaves an error silent. The real tradeoff: B makes the error display impossible to forget on components with `@bindings()`, while G makes a forgotten guard a CI failure and keeps the display visible in each component. A CI failure is enough here, because the pieces were mostly forgotten during the migration, which ended in February 2026, and new components start from a generator that already has the guards. For that, G keeps what a component renders readable in its own file, which the team prefers. G keeps B's display rule and the prototype's `@bindings()` subclass, without its `render()` override. B′ narrows the gap with G but keeps the core tradeoff: a display that cannot be forgotten on most components, against one way to write every component.
 - **Delivery:** G ships as patch fixes on `main` plus two major pull requests. B as planned in the RFC adds a v3 story and a forward port. The difference is moderate and did not decide the outcome.
 - **Why G over the others:** A and E each leave part of the problem; G combines them with the fixes that remove the silent failures. C and D keep the guard and add a mandatory step on top of it: extend a class, or create a controller. C also breaks the React and Angular wrappers until their generators change. F adds public API that nobody has asked for.
