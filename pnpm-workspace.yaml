@@ -42,28 +42,28 @@ packages:
 
 catalog:
   '@ag-ui/client': 0.0.59
-  chromatic: 18.14.3
+  chromatic: 18.14.5
   '@msw/playwright': 0.6.7
   '@mswjs/http-middleware': ^0.10.3
   msw: 2.15.0
-  '@angular-devkit/build-angular': 22.2.6
-  '@angular/animations': 22.2.5
-  '@angular/build': 22.2.6
-  '@angular/cli': 22.2.6
-  '@angular/common': 22.2.5
-  '@angular/compiler': 22.2.5
-  '@angular/compiler-cli': 22.2.5
-  '@angular/core': 22.2.5
-  '@angular/forms': 22.2.5
-  '@angular/platform-browser': 22.2.5
-  '@angular/platform-browser-dynamic': 22.2.5
-  '@angular/platform-server': 22.2.5
-  '@angular/router': 22.2.5
-  '@coveo/atomic-component-health-check': 2.2.19
+  '@angular-devkit/build-angular': 22.2.7
+  '@angular/animations': 22.2.6
+  '@angular/build': 22.2.7
+  '@angular/cli': 22.2.7
+  '@angular/common': 22.2.6
+  '@angular/compiler': 22.2.6
+  '@angular/compiler-cli': 22.2.6
+  '@angular/core': 22.2.6
+  '@angular/forms': 22.2.6
+  '@angular/platform-browser': 22.2.6
+  '@angular/platform-browser-dynamic': 22.2.6
+  '@angular/platform-server': 22.2.6
+  '@angular/router': 22.2.6
+  '@coveo/atomic-component-health-check': 2.2.20
   '@coveo/relay-event-types': 20.7.1
-  '@coveo/thermidor-schema': 1.0.0-beta.54
+  '@coveo/thermidor-schema': 1.0.0-beta.56
   '@playwright/mcp': 0.0.85
-  '@playwright/test': 1.65.0
+  '@playwright/test': 1.65.1
   '@react-router/dev': 8.5.1
   '@react-router/fs-routes': 8.5.1
   '@react-router/node': 8.5.1
@@ -89,7 +89,7 @@ catalog:
   '@vitest/browser-playwright': 4.1.12
   abortcontroller-polyfill: 1.7.8
   dayjs: 1.11.23
-  dompurify: 3.4.17
+  dompurify: 3.4.18
   dotenv: 18.0.10
   esbuild: 0.28.2
   esbuild-plugin-umd-wrapper: 3.0.0
@@ -107,15 +107,15 @@ catalog:
   natural-orderby: 5.0.0
   next: 16.4.6
   node-fetch: 3.3.2
-  postcss: 8.5.32
-  prettier: 3.9.10
+  postcss: 8.5.33
+  prettier: 3.10.1
   publint: 0.3.25
-  puppeteer: 25.16.0
-  playwright: 1.65.0
+  puppeteer: 25.18.0
+  playwright: 1.65.1
   rxjs: 7.8.2
   react: 19.3.1
   react-dom: 19.3.1
-  rollup: 4.68.2
+  rollup: 4.68.5
   rollup-plugin-string: 3.0.0
   rollup-plugin-node-polyfills: 0.2.1
   size-limit: 14.3.0
@@ -125,7 +125,7 @@ catalog:
   typedoc: 0.28.20
   typescript: 6.0.3
   uuid: 14.0.3
-  vite: 8.3.7
+  vite: 8.3.8
   vitest: 4.1.12
   yaml: 2.9.1
   zod: 4.6.7

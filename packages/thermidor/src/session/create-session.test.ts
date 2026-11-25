@@ -94,7 +94,13 @@ const ProductListSchema = z.strictObject({
     .optional(),
 });
 
+const SessionShellSchema = z.strictObject({
+  component: z.literal('SessionShell'),
+  actions: z.strictObject({initialize: z.strictObject({payload: z.strictObject({})})}).optional(),
+});
+
 const contracts = z.discriminatedUnion('component', [
+  SessionShellSchema,
   PaginationSchema,
   NextActionsBarSchema,
   ProductListSchema,
@@ -3090,6 +3096,55 @@ describe('createSession lifecycle', () => {
         expect(session.initialization?.status).toBe('complete');
       });
 
+      describe('with contracts that do not accept initialize', () => {
+        const contractsWith = (...members: z.ZodObject[]) =>
+          z.discriminatedUnion('component', [
+            PaginationSchema,
+            ...members,
+          ]) as unknown as ContractsSchema;
+        const shellWithActions = (actions: z.ZodObject) =>
+          z.strictObject({component: z.literal('SessionShell'), actions: actions.optional()});
+
+        it.each([
+          ['no SessionShell', contractsWith()],
+          ['no initialize', contractsWith(shellWithActions(z.strictObject({})))],
+          [
+            'an initialize that rejects an empty payload',
+            contractsWith(
+              shellWithActions(
+                z.strictObject({
+                  initialize: z.strictObject({payload: z.strictObject({locale: z.string()})}),
+                })
+              )
+            ),
+          ],
+        ])('throws with %s, unless initialize is false', (_, contracts) => {
+          expect(() => createSession({...baseConfig, contracts, initialize: undefined})).toThrow(
+            /declare SessionShell's initialize with an empty payload .*Pass initialize: false/
+          );
+          expect(() => createSession({...baseConfig, contracts, initialize: false})).not.toThrow();
+          expect(callMock).not.toHaveBeenCalled();
+        });
+
+        it('throws from retryInitialization', async () => {
+          queueStream();
+          const interrupted = createSession(shellConfig);
+          await vi.advanceTimersByTimeAsync(0);
+          const session = createSession({
+            ...baseConfig,
+            contracts: contractsWith(),
+            sessionToRestore: interrupted.serialize(),
+          });
+          expect(session.initialization?.status).toBe('error');
+
+          expect(() => session.retryInitialization()).toThrow(
+            /^Sending initialize requires contracts that declare SessionShell's initialize with an empty payload \(.*\)\.$/
+          );
+          expect(session.initialization?.status).toBe('error');
+          expect(callMock).toHaveBeenCalledTimes(1);
+        });
+      });
+
       it('retryInitialization sends initialize from a session restored while initialize was in flight', async () => {
         queueStream();
         const interrupted = createSession(shellConfig);
@@ -3752,5 +3807,220 @@ describe('createSession session keys', () => {
         conversationToken: 'new-token',
       });
     });
+  });
+});
+
+describe('createSession with the final A2-UI 1.0 stream (stand-in Breadbox contract)', () => {
+  /**
+   * `@coveo/thermidor` does not depend on `@coveo/thermidor-schema`, so this Breadbox contract is a
+   * hand-written stand-in. It uses the facet and component id pattern of the schema release that
+   * accepts snake_case ids, so snake_case and hyphenated ids both pass.
+   */
+  const ID_PATTERN = /^[a-z][a-z0-9_-]*$/;
+  const BreadboxSchema = z.strictObject({
+    component: z.literal('Breadbox'),
+    state: z
+      .strictObject({
+        facets: z.array(
+          z.strictObject({
+            facetId: z.string().regex(ID_PATTERN),
+            displayName: z.string(),
+            values: z.array(z.strictObject({value: z.string(), state: z.literal('selected')})),
+          })
+        ),
+      })
+      .optional(),
+    actions: z
+      .strictObject({
+        deselect: z.strictObject({
+          payload: z.strictObject({
+            facetId: z.string().regex(ID_PATTERN),
+            type: z.literal('regular'),
+            value: z.string().min(1),
+          }),
+        }),
+      })
+      .optional(),
+  });
+  const finalContracts = z.discriminatedUnion('component', [
+    SessionShellSchema,
+    PaginationSchema,
+    BreadboxSchema,
+  ]) as unknown as ContractsSchema;
+  const config: SessionConfig = {...baseConfig, contracts: finalContracts};
+
+  const SURFACE_ID = 'ui-commerce-water-sports-1';
+  const facets = [
+    {facetId: 'ec_brand', displayName: 'Brand', values: [{value: 'Nike', state: 'selected'}]},
+  ];
+  const pagination = {page: 0, pageSize: 24, totalEntries: 100, totalPages: 5};
+  const components = (binding: (path: string) => Record<string, string>) => [
+    {id: 'root', component: 'CommerceSearch', children: ['breadbox_2', 'pagination_2']},
+    {id: 'breadbox_2', component: 'Breadbox', facets: binding('/state/breadbox_2/facets')},
+    {id: 'pagination_2', component: 'Pagination', page: binding('/state/pagination_2/page')},
+  ];
+  const snapshot = (messageId: string, messages: unknown[]) => ({
+    type: 'ACTIVITY_SNAPSHOT',
+    messageId,
+    activityType: 'a2ui-surface',
+    content: {messages},
+  });
+
+  beforeEach(() => {
+    callMock.mockReset();
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  async function seed(session: ReturnType<typeof createSession>) {
+    const stream = queueStream();
+    const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'water sports'}});
+    await stream.opened;
+    stream.emit(
+      snapshot('search', [
+        {
+          version: '1.0',
+          createSurface: {
+            surfaceId: SURFACE_ID,
+            catalogId: 'catalog',
+            components: components((path) => ({'@path': path})),
+          },
+        },
+        {
+          version: '1.0',
+          updateDataModel: {surfaceId: SURFACE_ID, path: '/state/breadbox_2', value: {facets}},
+        },
+        {
+          version: '1.0',
+          updateDataModel: {surfaceId: SURFACE_ID, path: '/state/pagination_2', value: pagination},
+        },
+      ])
+    );
+    stream.emit({type: 'RUN_FINISHED'});
+    stream.close();
+    await turn;
+  }
+
+  it('projects the stream to v0.9, with path bindings and the snake_case ids unchanged', async () => {
+    const session = createSession(config);
+    await seed(session);
+
+    expect(session.a2uiMessages).toEqual([
+      {version: 'v0.9', createSurface: {surfaceId: SURFACE_ID, catalogId: 'catalog'}},
+      {
+        version: 'v0.9',
+        updateComponents: {surfaceId: SURFACE_ID, components: components((path) => ({path}))},
+      },
+      {
+        version: 'v0.9',
+        updateDataModel: {surfaceId: SURFACE_ID, path: '/state/breadbox_2', value: {facets}},
+      },
+      {
+        version: 'v0.9',
+        updateDataModel: {surfaceId: SURFACE_ID, path: '/state/pagination_2', value: pagination},
+      },
+    ]);
+  });
+
+  it('keeps the state of snake_case nodes by their ids', async () => {
+    const session = createSession(config);
+    await seed(session);
+
+    expect(session.state).toEqual({
+      [SURFACE_ID]: {state: {breadbox_2: {facets}, pagination_2: pagination}},
+    });
+  });
+
+  it('sends an action from a snake_case node with a snake_case facet id', async () => {
+    const session = createSession(config);
+    await seed(session);
+
+    const stream = queueStream();
+    const action = session.dispatchAction({
+      userAction: {
+        name: 'deselect',
+        surfaceId: SURFACE_ID,
+        sourceComponentId: 'breadbox_2',
+        context: {facetId: 'ec_brand', type: 'regular', value: 'Nike'},
+      },
+    });
+    await stream.opened;
+    stream.emit({type: 'RUN_FINISHED'});
+    stream.close();
+    await action;
+
+    expect(callMock).toHaveBeenCalledTimes(2);
+    expect(callMock.mock.calls[1][0]).toMatchObject({
+      action: {
+        name: 'deselect',
+        surfaceId: SURFACE_ID,
+        sourceComponentId: 'breadbox_2',
+        context: {facetId: 'ec_brand', type: 'regular', value: 'Nike'},
+      },
+    });
+    expect(session.actionError).toBeUndefined();
+  });
+
+  it('withholds an action whose facet id matches no id pattern', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const session = createSession(config);
+    await seed(session);
+
+    await session.dispatchAction({
+      userAction: {
+        name: 'deselect',
+        surfaceId: SURFACE_ID,
+        sourceComponentId: 'breadbox_2',
+        context: {facetId: 'EC Brand', type: 'regular', value: 'Nike'},
+      },
+    });
+
+    expect(callMock).toHaveBeenCalledTimes(1);
+    expect(session.request).toBeUndefined();
+    expect(session.actionError).toBeUndefined();
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('Invalid payload for action "deselect"')
+    );
+    warn.mockRestore();
+  });
+
+  it('replaces a live surface re-created by a later final 1.0 run', async () => {
+    const session = createSession(config);
+    await seed(session);
+
+    const stream = queueStream();
+    const turn = session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'again'}});
+    await stream.opened;
+    stream.emit(
+      snapshot('again', [
+        {
+          version: '1.0',
+          createSurface: {
+            surfaceId: SURFACE_ID,
+            catalogId: 'catalog',
+            components: components((path) => ({'@path': path})),
+          },
+        },
+        {
+          version: '1.0',
+          updateDataModel: {surfaceId: SURFACE_ID, path: '/state/breadbox_2', value: null},
+        },
+      ])
+    );
+    stream.emit({type: 'RUN_FINISHED'});
+    stream.close();
+    await turn;
+
+    expect(session.a2uiMessages.slice(4)).toEqual([
+      {version: 'v0.9', deleteSurface: {surfaceId: SURFACE_ID}},
+      {version: 'v0.9', createSurface: {surfaceId: SURFACE_ID, catalogId: 'catalog'}},
+      {
+        version: 'v0.9',
+        updateComponents: {surfaceId: SURFACE_ID, components: components((path) => ({path}))},
+      },
+      {version: 'v0.9', updateDataModel: {surfaceId: SURFACE_ID, path: '/state/breadbox_2'}},
+    ]);
   });
 });

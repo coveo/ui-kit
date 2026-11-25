@@ -35,7 +35,6 @@ export interface ActionError {
 // @public
 export interface ActionRequest {
     component: string;
-    // (undocumented)
     kind: 'action';
     name: string;
     sourceComponentId: string;
@@ -45,18 +44,14 @@ export interface ActionRequest {
 
 // @public
 export interface Activity {
-    // (undocumented)
     id: string;
-    // (undocumented)
     kind: string;
     metadata?: Record<string, unknown>;
-    // (undocumented)
     payload: Record<string, unknown>;
-    // (undocumented)
     replace: boolean;
 }
 
-// @public (undocumented)
+// @public
 export interface AgentMessage {
     content: string;
     role: string;
@@ -64,25 +59,17 @@ export interface AgentMessage {
 
 // @public
 export interface CommerceCartItem {
-    // (undocumented)
     name: string;
-    // (undocumented)
     price: number;
-    // (undocumented)
     productId: string;
-    // (undocumented)
     quantity: number;
 }
 
 // @public
 export interface CommerceContext {
-    // (undocumented)
     cart: CommerceCartItem[];
-    // (undocumented)
     custom?: Record<string, unknown>;
-    // (undocumented)
     pinnedProducts?: string[];
-    // (undocumented)
     source?: string[];
 }
 
@@ -104,7 +91,6 @@ export type ComponentActionNames<TComponents extends ContractsSchema = Contracts
 
 // @public
 export interface ComponentContractSchema {
-    // (undocumented)
     readonly shape: {
         readonly component: {
             readonly value: string;
@@ -116,7 +102,6 @@ export interface ComponentContractSchema {
 
 // @public
 export interface ContractsSchema {
-    // (undocumented)
     readonly options: readonly ComponentContractSchema[];
 }
 
@@ -128,13 +113,11 @@ export interface DiscoveredSurface {
     isLoading: boolean;
     readOnly?: true;
     rootComponentType: string;
-    // (undocumented)
     surfaceId: string;
 }
 
 // @public
 export interface InitializeRequest {
-    // (undocumented)
     kind: 'initialize';
 }
 
@@ -154,21 +137,17 @@ export type NavigatorContextProvider = () => NavigatorContext;
 
 // @public
 export interface ParsableSchema {
-    // (undocumented)
     safeParse(value: unknown): SafeParseResult;
 }
 
 // @public
 export interface ParseIssue {
-    // (undocumented)
     readonly message: string;
-    // (undocumented)
     readonly path: ReadonlyArray<string | number | symbol>;
 }
 
 // @public
 export interface PromptRequest {
-    // (undocumented)
     kind: 'prompt';
     turnId: string;
 }
@@ -190,46 +169,34 @@ export interface SerializedInitialization {
     error?: string;
     errorCode?: string;
     reason?: TurnErrorReason;
-    // (undocumented)
     status: TurnStatus;
 }
 
 // @public
 export interface SerializedSession {
-    // (undocumented)
     activeTurnId?: string;
     initialization?: SerializedInitialization;
     sessionId?: string;
     sessionToken?: string;
     state?: Record<string, unknown>;
-    // (undocumented)
     turns: SerializedTurn[];
     version: number;
 }
 
 // @public
 export interface SerializedTurn {
-    // (undocumented)
     error?: string;
-    // (undocumented)
     errorCode?: string;
-    // (undocumented)
     id: string;
-    // (undocumented)
     input: TurnInput;
-    // (undocumented)
     reason?: TurnErrorReason;
-    // (undocumented)
     response: SerializedTurnResponse;
-    // (undocumented)
     status: TurnStatus;
 }
 
 // @public
 export interface SerializedTurnAgent {
-    // (undocumented)
     messages: AgentMessage[];
-    // (undocumented)
     toolCalls: ToolCall[];
 }
 
@@ -266,7 +233,6 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
 
 // @public
 export interface SessionConfig<TContracts extends ContractsSchema = ContractsSchema> {
-    // (undocumented)
     accessToken: string;
     agentConfigurationId: string;
     commerceContextProvider?: CommerceContextProvider;
@@ -274,7 +240,6 @@ export interface SessionConfig<TContracts extends ContractsSchema = ContractsSch
     endpoint?: string;
     initialize?: boolean;
     navigatorContextProvider: NavigatorContextProvider;
-    // (undocumented)
     organizationId: string;
     sessionId?: string;
     sessionToken?: string;
@@ -307,9 +272,7 @@ export interface SessionSnapshot {
 
 // @public
 export interface SubmitPromptAction {
-    // (undocumented)
     name: 'submitPrompt';
-    // (undocumented)
     payload: {
         prompt: string;
     };
@@ -331,14 +294,10 @@ export type ToolCallStatus = 'calling' | 'completed';
 export interface Turn {
     error?: string;
     errorCode?: string;
-    // (undocumented)
     id: string;
-    // (undocumented)
     input: TurnInput;
     reason?: TurnErrorReason;
-    // (undocumented)
     response: TurnResponse;
-    // (undocumented)
     status: TurnStatus;
 }
 
@@ -353,9 +312,7 @@ export interface TurnAction {
 
 // @public
 export interface TurnAgent {
-    // (undocumented)
     messages: AgentMessage[];
-    // (undocumented)
     toolCalls: ToolCall[];
 }
 
@@ -377,7 +334,5 @@ export interface TurnResponse {
 
 // @public
 export type TurnStatus = 'streaming' | 'complete' | 'error';
-
-// (No @packageDocumentation comment for this package)
 
 ```

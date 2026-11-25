@@ -13,6 +13,7 @@ const atomicDist = resolve(import.meta.dirname, '../atomic/dist');
 
 const require = createRequire(import.meta.url);
 const atomicVersion = require('../atomic/package.json').version;
+const headlessVersion = require('../headless/package.json').version;
 // coveo.analytics is a Headless dependency, and its default entry is not browser-ready.
 // The ESM build is what `analyticsTransformer` substitutes in during a real build.
 const analyticsEsm = createRequire(resolve(monorepoRoot, 'packages/headless/package.json')).resolve(
@@ -36,6 +37,7 @@ export default defineConfig({
   },
   define: {
     'process.env.VERSION': JSON.stringify(atomicVersion),
+    'process.env.HEADLESS_VERSION': JSON.stringify(headlessVersion),
     'process.env.NODE_ENV': JSON.stringify('development'),
   },
   resolve: {

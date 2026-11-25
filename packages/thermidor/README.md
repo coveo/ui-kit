@@ -2,7 +2,7 @@
 
 `@coveo/thermidor` is an experimental, framework-agnostic client for a single, stateful, intent-routing **unified converse endpoint**. It exposes one factory — `createSession(config)` — that returns a `Session`: a plain observable list of `Turn`s folded from a server-sent-event (SSE) stream, plus a single action-dispatch entry point wired straight to the renderer.
 
-The package is private, experimental, and consumed only inside this monorepo (by `samples/thermidor/demo-schema-react`).
+The package is experimental: its API can change in any release.
 
 > There is **no engine, no interface layer, no Redux/RTK, and no per-endpoint facades**. References to those layers in older revisions are obsolete.
 
@@ -59,7 +59,7 @@ The concrete `contracts` type pinned at the `createSession` call site threads un
 
 ## Opening the session
 
-The session opens itself: `createSession` sends an `initialize` action a microtask after it returns, so a listener subscribed in the same task sees it start. It carries no surface or source component, since no component exists yet. While it is in flight, `session.request` is `{kind: 'initialize'}`. It goes through the [one-request rule](#one-request-at-a-time) and the conflict retry, and adopts the session id and token from its run, like a prompt. The producer answers with the session's shell, such as its search box, as an ordinary surface.
+The session opens itself: `createSession` sends an `initialize` action a microtask after it returns, so a listener subscribed in the same task sees it start. It carries no surface or source component, since no component exists yet. While it is in flight, `session.request` is `{kind: 'initialize'}`. It goes through the [one-request rule](#one-request-at-a-time) and the conflict retry, and adopts the session id and token from its run, like a prompt. The producer answers with the session's shell, such as its search box, as an ordinary surface. By convention, `SessionShell` declares `initialize`: unless `initialize` is `false`, `createSession` throws when the contracts don't declare it there with a payload that accepts `{}`, and so does `retryInitialization()`.
 
 Its run is recorded as `session.initialization` (`activities`, `status`, `error`), never as a turn. When the endpoint rejects it with a network error, a `429`, `502`, `503` or `504`, the session retries it, up to 3 attempts within 5 seconds, the attempts included, so a failure that takes several seconds to arrive, such as a proxy timeout, isn't retried. `request` stays `{kind: 'initialize'}` meanwhile, and a dispatch is withheld as during any request. Once it has failed, `initialization.status` is `'error'`, the first prompt still opens the session, and `retryInitialization()` sends it again, a restored session's included, with the session's keys when it has them. `cancel()` stops it like any request. A session created with `initialize: false` never sends it by itself, for tests or for a server that creates a session while rendering, and neither does a restored session without a token.
 
@@ -232,7 +232,7 @@ A session restored with a token resumes through `initialize`; see `SessionConfig
 The following are intentionally **not yet implemented** and are recorded as debt or deferred work:
 
 - **Interim surface derivation** — `surfaces` is a typed projection derived from `activities`, annotated as interim; the core interprets no `rootComponentType`; consumers read it. It is retired once the server sends typed routing.
-- **The A2-UI v0.9 renderer projection** — `session.a2uiMessages` downgrades Agent Gateway's v1.0 stream for today's v0.9 renderers. Removed in a breaking change once a v1.0-capable renderer exists.
+- **The A2-UI v0.9 renderer projection** — `session.a2uiMessages` downgrades Agent Gateway's v1.0 stream, candidate (`"v1.0"`) or final (`"1.0"`), for today's v0.9 renderers. Removed in a breaking change once a v1.0-capable renderer exists.
 - **Renderer stream bypasses validation** — inbound ops that in-transit validation drops from `session.state` still reach the renderer through `session.a2uiMessages`, and so does the component state seeded by `createSurface.dataModel`, which is never validated. A fix must cover both paths.
 - **Enforced action-payload typing at the renderer boundary** — the renderer hands `dispatchAction` a loosely typed action message, so per-component action typing is applied by convention (the consumer opts into the generated `XxxAction` types) rather than enforced at the boundary. Recoverable later if the package owns binding resolution.
 - **Package rename** — deferred as low-stakes; the package remains `@coveo/thermidor`.
@@ -249,4 +249,4 @@ The API report lives in `api-report/`. When the public API changes, run `pnpm tu
 
 ## Architecture
 
-See the [Architecture Guide](./docs/architecture.md) for the internal structure, and the accepted decisions of record in [`docs/internal/adr`](./docs/internal/adr).
+See the [Architecture Guide](./contributors/architecture.md) for the internal structure, and the accepted decisions of record in [`contributors/adr`](./contributors/adr).

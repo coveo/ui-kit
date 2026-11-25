@@ -113,7 +113,7 @@
     "@flakiness/playwright": "2.0.3",
     "@playwright/test": "catalog:",
     "@rollup/plugin-replace": "catalog:",
-    "@rslib/core": "0.23.2",
+    "@rslib/core": "1.0.7",
     "@size-limit/preset-small-lib": "catalog:",
     "@storybook/addon-a11y": "10.6.7",
     "@storybook/addon-docs": "10.6.7",

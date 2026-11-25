@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@coveo/relay": "workspace:*",
-    "@mantine/core": "9.8.0",
-    "@mantine/hooks": "9.8.0",
+    "@mantine/core": "9.8.1",
+    "@mantine/hooks": "9.8.1",
     "@monaco-editor/react": "4.7.0",
     "next": "catalog:",
     "react": "catalog:",
