@@ -44,5 +44,15 @@ describe('component-error', () => {
 
       expect(consoleErrorSpy).toHaveBeenCalledTimes(2);
     });
+
+    it('should log a value that is not an object every time', () => {
+      const element = document.createElement('div');
+
+      logComponentError('boom', element);
+      logComponentError('boom', element);
+
+      expect(consoleErrorSpy).toHaveBeenCalledTimes(2);
+      expect(consoleErrorSpy).toHaveBeenCalledWith('boom', element);
+    });
   });
 });

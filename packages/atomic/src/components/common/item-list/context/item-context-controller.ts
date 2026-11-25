@@ -68,7 +68,7 @@ export class ItemContextController<T = Record<string, unknown>> implements React
   private _resolveItemContext(): void {
     const event = buildCustomEvent(itemContextEventName, (item: Record<string, unknown>) => {
       this._item = extractFolded<T>(item, this.folded);
-      if (this._error && this.host.error === this._error) {
+      if (this.host.error === this._error) {
         this.host.error = undefined;
       }
       this._error = null;
@@ -78,9 +78,12 @@ export class ItemContextController<T = Record<string, unknown>> implements React
     const canceled = this.host.dispatchEvent(event);
     if (canceled) {
       const elementName = (this.host as Element).nodeName.toLowerCase();
+      const canWriteError = !this.host.error || this.host.error === this._error;
       this._error = new MissingParentError(elementName, this.parentName);
       this._item = null;
-      this.host.error = this._error;
+      if (canWriteError) {
+        this.host.error = this._error;
+      }
       this.host.requestUpdate();
     }
   }

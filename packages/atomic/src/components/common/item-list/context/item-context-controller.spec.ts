@@ -166,6 +166,16 @@ describe('item-context', () => {
           expect(mockElement.requestUpdate).toHaveBeenCalled();
         });
 
+        it('should keep an error set by another writer', () => {
+          const foreignError = new Error('foreign');
+          mockElement.error = foreignError;
+
+          controller.hostConnected();
+
+          expect(mockElement.error).toBe(foreignError);
+          expect(controller.error).toBeInstanceOf(MissingParentError);
+        });
+
         it('should clear its own error once the item resolves', () => {
           controller.hostConnected();
           vi.spyOn(mockElement, 'dispatchEvent').mockImplementation((event) => {
