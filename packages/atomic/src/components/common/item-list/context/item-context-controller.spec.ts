@@ -5,7 +5,7 @@ import {ItemContextController, MissingParentError} from './item-context-controll
 
 @customElement('test-element')
 class TestElement extends LitElement {
-  @state() error: Error | null = null;
+  @state() error?: Error;
 
   requestUpdate = vi.fn();
 }
@@ -93,8 +93,17 @@ describe('item-context', () => {
           expect(controller.item).toEqual({title: 'Test Item'});
           expect(controller.error).toBeNull();
           expect(controller.hasError).toBe(false);
-          expect(mockElement.error).toBeNull();
+          expect(mockElement.error).toBeUndefined();
           expect(mockElement.requestUpdate).toHaveBeenCalled();
+        });
+
+        it('should keep an error set by another writer', () => {
+          const foreignError = new Error('foreign');
+          mockElement.error = foreignError;
+
+          controller.hostConnected();
+
+          expect(mockElement.error).toBe(foreignError);
         });
 
         it('should extract folded data when #folded is true', () => {
@@ -155,6 +164,19 @@ describe('item-context', () => {
           );
           expect(mockElement.error).toBe(controller.error);
           expect(mockElement.requestUpdate).toHaveBeenCalled();
+        });
+
+        it('should clear its own error once the item resolves', () => {
+          controller.hostConnected();
+          vi.spyOn(mockElement, 'dispatchEvent').mockImplementation((event) => {
+            (event as CustomEvent).detail({title: 'Test Item'});
+            return false;
+          });
+
+          controller.hostConnected();
+
+          expect(mockElement.error).toBeUndefined();
+          expect(controller.hasError).toBe(false);
         });
       });
     });

@@ -1,11 +1,6 @@
-import type {LitElement, ReactiveController, ReactiveControllerHost} from 'lit';
-import type {InitializableComponent} from '@/src/decorators/types.js';
+import type {ReactiveController, ReactiveControllerHost} from 'lit';
+import type {LitElementWithError} from '@/src/decorators/types.js';
 import {buildCustomEvent} from '@/src/utils/event-utils';
-
-type LitElementWithError = Omit<Pick<InitializableComponent, 'error'>, 'error'> &
-  LitElement & {
-    error: Error | null;
-  };
 
 const itemContextEventName = 'atomic/resolveResult';
 
@@ -73,8 +68,10 @@ export class ItemContextController<T = Record<string, unknown>> implements React
   private _resolveItemContext(): void {
     const event = buildCustomEvent(itemContextEventName, (item: Record<string, unknown>) => {
       this._item = extractFolded<T>(item, this.folded);
+      if (this._error && this.host.error === this._error) {
+        this.host.error = undefined;
+      }
       this._error = null;
-      this.host.error = null;
       this.host.requestUpdate();
     });
 
