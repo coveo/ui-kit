@@ -40,6 +40,9 @@ const components: {tag: string; inResult?: boolean}[] = [
   {tag: 'atomic-smart-snippet-collapse-wrapper'},
 ];
 
+const nextTask = () => new Promise((resolve) => setTimeout(resolve));
+const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
+
 describe('bindings-components', () => {
   let mockedConsole: ReturnType<typeof mockConsole>;
   let outside: HTMLElement;
@@ -69,6 +72,8 @@ describe('bindings-components', () => {
     afterEach(async () => {
       created.root.remove();
       atomicInterface.remove();
+      await nextFrame();
+      await nextFrame();
       await created.element.updateComplete;
     });
 
@@ -113,6 +118,7 @@ describe('bindings-components', () => {
       const {element, root} = createElement();
 
       await moveTo(outside, root, element);
+      await nextTask();
       expect(element.error).toBeUndefined();
       expect(initialize).not.toHaveBeenCalled();
       expect(mockedConsole.error).toHaveBeenCalledWith(
