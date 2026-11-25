@@ -198,4 +198,41 @@ describe('atomic-result-rating', () => {
       element
     );
   });
+
+  describe('outline', () => {
+    const getIconPath = async (root: ParentNode, state: 'active' | 'inactive') => {
+      const selector = `.text-rating-icon-${state} svg path`;
+      await expect.poll(() => root.querySelector(selector)).not.toBeNull();
+      return root.querySelector(selector)!;
+    };
+
+    it.each(['--atomic-rating-icon-outline', '--atomic-rating-icon-outline-color'])(
+      'should set the stroke of the active and inactive icons to %s',
+      async (variable) => {
+        const element = await renderComponent({field: 'snrating'});
+        element.style.setProperty(variable, 'rgb(255, 0, 0)');
+
+        for (const state of ['active', 'inactive'] as const) {
+          const path = await getIconPath(element.shadowRoot!, state);
+          expect(getComputedStyle(path).stroke).toBe('rgb(255, 0, 0)');
+        }
+      }
+    );
+
+    it('should give --atomic-rating-icon-outline-color precedence over --atomic-rating-icon-outline', async () => {
+      const element = await renderComponent({field: 'snrating'});
+      element.style.setProperty('--atomic-rating-icon-outline', 'rgb(255, 0, 0)');
+      element.style.setProperty('--atomic-rating-icon-outline-color', 'rgb(0, 0, 255)');
+
+      const path = await getIconPath(element.shadowRoot!, 'active');
+      expect(getComputedStyle(path).stroke).toBe('rgb(0, 0, 255)');
+    });
+
+    it('should not outline the icons when no outline variable is set', async () => {
+      const element = await renderComponent({field: 'snrating'});
+
+      const path = await getIconPath(element.shadowRoot!, 'active');
+      expect(getComputedStyle(path).stroke).toBe('none');
+    });
+  });
 });
