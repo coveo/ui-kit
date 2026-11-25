@@ -7,6 +7,7 @@ import type {A11yReport} from '../shared/types.js';
 import {loadManualAuditData} from './manual-audit.js';
 import {loadOverrides} from './overrides.js';
 import {buildOpenAcrReport} from './report-builder.js';
+import {reconcileReportDates} from './report-dates.js';
 import type {OpenAcrReport} from './types.js';
 
 const LOG_PREFIX = '[json-to-openacr]';
@@ -52,6 +53,10 @@ export interface JsonToOpenAcrOptions {
   /** Directory containing `manual-audit-*.json` baseline files.
    * @default 'a11y/reports' */
   manualAuditDir?: string;
+  /** Previously committed OpenACR YAML whose dates are kept when the evaluation
+   * did not change (see {@link reconcileReportDates}). Ignored if missing.
+   * @default outputFile */
+  baselineFile?: string;
 }
 
 /**
@@ -157,7 +162,11 @@ export async function transformJsonToOpenAcr(
   const manualAuditDir = path.resolve(options.manualAuditDir ?? DEFAULT_MANUAL_AUDIT_DIR);
   const manualAggregates = await loadManualAuditData(manualAuditDir);
 
-  const openAcrReport = buildOpenAcrReport(report, overrides, manualAggregates);
+  const baselineFile = path.resolve(options.baselineFile ?? outputFile);
+  const openAcrReport = reconcileReportDates(
+    await readOpenAcr(baselineFile),
+    buildOpenAcrReport(report, overrides, manualAggregates)
+  );
 
   await mkdir(path.dirname(outputFile), {recursive: true});
   await writeFile(outputFile, serializeOpenAcr(openAcrReport), 'utf8');
