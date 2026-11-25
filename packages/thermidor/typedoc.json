@@ -4,5 +4,14 @@
   "plugin": ["@coveo/documentation"],
   "readme": "none",
   "excludePrivate": true,
-  "excludeInternal": true
+  "excludeInternal": true,
+  "validation": {
+    "notDocumented": true
+  },
+  "intentionallyNotDocumented": [
+    "ComponentActionNames.__type.shape",
+    "ComponentActionNames.__type.shape.__type.actions",
+    "ComponentActionNames.__type.unwrap",
+    "ComponentActionNames.__type.unwrap.__type.shape"
+  ]
 }

@@ -36,12 +36,27 @@
  * issue list on failure (used for a dev-only diagnostic).
  */
 export type SafeParseResult =
-  | {readonly success: true; readonly data: unknown}
-  | {readonly success: false; readonly error: {readonly issues: readonly ParseIssue[]}};
+  | {
+      /** `true` when the value is valid. */
+      readonly success: true;
+      /** The parsed value. */
+      readonly data: unknown;
+    }
+  | {
+      /** `false` when the value is invalid. */
+      readonly success: false;
+      /** The validation error. */
+      readonly error: {
+        /** The validation issues. */
+        readonly issues: readonly ParseIssue[];
+      };
+    };
 
 /** A single Zod issue, narrowed to the fields the dev-only diagnostic reads. */
 export interface ParseIssue {
+  /** The path to the value that failed validation. */
   readonly path: ReadonlyArray<string | number | symbol>;
+  /** Why the value failed validation. */
   readonly message: string;
 }
 
@@ -53,6 +68,12 @@ export interface ParseIssue {
  * different Zod major, and `safeParse` is structurally compatible across both.
  */
 export interface ParsableSchema {
+  /**
+   * Validates `value` without throwing.
+   *
+   * @param value - The value to validate.
+   * @returns The parsed value on success, or the validation issues on failure.
+   */
   safeParse(value: unknown): SafeParseResult;
 }
 
@@ -71,9 +92,25 @@ export interface ObjectSchema extends ParsableSchema {
  * component's optional `state` and `actions` sub-schemas.
  */
 export interface ComponentContractSchema {
+  /** The member's field schemas. */
   readonly shape: {
-    readonly component: {readonly value: string};
+    /** The literal schema of the component's `component` discriminant. */
+    readonly component: {
+      /** The PascalCase component name, such as `'CommerceSearch'`. */
+      readonly value: string;
+    };
+    /**
+     * The object schema of the component's state, optionally wrapped in `.optional()`. Without an
+     * object schema, every `updateDataModel` operation addressed to the component is dropped from
+     * `Session.state`; `Session.a2uiMessages` still carries it to the renderer.
+     */
     readonly state?: ParsableSchema;
+    /**
+     * The object schema of the component's actions, optionally wrapped in `.optional()`: keyed by
+     * action name, each value an object schema whose `payload` field validates the dispatched
+     * payload, such as `{ fetchSuggestions: z.strictObject({ payload: FetchSuggestionsPayloadSchema }) }`.
+     * A dispatch whose action isn't declared, or whose payload doesn't match, is withheld.
+     */
     readonly actions?: ParsableSchema;
   };
 }
@@ -84,6 +121,7 @@ export interface ComponentContractSchema {
  * `ComponentContractsSchema` of any A2-UI contract package is assignable to it.
  */
 export interface ContractsSchema {
+  /** The union's members, one per component. */
   readonly options: readonly ComponentContractSchema[];
 }
 

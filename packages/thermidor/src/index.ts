@@ -1,18 +1,20 @@
 /**
- * `@coveo/thermidor` public surface.
+ * `@coveo/thermidor` is an experimental, framework-agnostic client for the Coveo unified converse
+ * endpoint. The endpoint streams conversational messages, tool calls and schema-defined A2-UI
+ * components; the client sends the consumer's input and folds what streams back into an
+ * observable {@link Session}: its turns, its initialization and its A2-UI surfaces and state.
  *
- * The package exposes exactly the session-client surface: the `createSession`
- * factory, the `Session` handle, the `Turn` / `TurnResponse` domain model, the
- * session configuration, and the versioned serialization shape.
+ * The package exposes the session-client surface: the {@link createSession} factory, the
+ * {@link Session} handle, the {@link Turn} / {@link TurnResponse} domain model, the
+ * {@link SessionConfig | session configuration} and the versioned {@link SerializedSession}
+ * shape.
  *
- * Outbound actions reach the core through the single consumer-facing entry
- * point {@link Session.dispatchAction}, wired directly as the renderer's
- * `onAction` handler; the action-payload validation happens internally, so the
- * consumer never runs Zod and writes no adapter glue.
+ * Outbound actions reach the session through the single entry point
+ * {@link Session.dispatchAction}, wired directly as the renderer's `onAction` handler. The
+ * session validates action payloads against the injected contracts itself, so the consumer never
+ * runs Zod and writes no adapter glue.
  *
- * The entry is intentionally free of state-library concepts (no store, slice,
- * selector, thunk, or reducer) and free of raw transport DTO shapes
- * (`CommerceRequestModel`, `A2uiAction`, etc.).
+ * @packageDocumentation
  */
 
 // ── Session factory + handle ────────────────────────────────────────────────

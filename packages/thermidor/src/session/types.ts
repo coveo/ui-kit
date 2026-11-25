@@ -40,6 +40,7 @@ export type A2uiState = Record<string, unknown>;
  * stopped streaming.
  */
 export interface DiscoveredSurface {
+  /** The id of the A2-UI surface, unique among the session's live surfaces. */
   surfaceId: string;
   /**
    * The root node's PascalCase `component` discriminant; interim: compared
@@ -120,6 +121,10 @@ export interface ToolCall {
   status: ToolCallStatus;
 }
 
+/**
+ * A text message the agent streamed during a turn, in the order the stream started it. Its
+ * `content` grows while the message streams.
+ */
 export interface AgentMessage {
   /**
    * The text content of the message.
@@ -127,7 +132,8 @@ export interface AgentMessage {
   content: string;
 
   /**
-   * The origin role of the message.
+   * The origin role of the message, as the stream sent it. `'assistant'` when the stream named
+   * none.
    */
   role: string;
 }
@@ -136,9 +142,34 @@ export interface AgentMessage {
  * Represents a single activity emitted during a turn's streamed response.
  */
 export interface Activity {
+  /**
+   * The AG-UI `messageId` of the snapshot. A later snapshot of the same turn with the same id
+   * supersedes this activity in place, unless its `replace` is `false`. An empty string when the
+   * event had none, which no later snapshot matches.
+   */
   id: string;
+  /**
+   * The AG-UI `activityType` of the snapshot, such as `'a2ui-surface'` for one that carries A2-UI
+   * surface messages. An empty string when the event had none.
+   */
   kind: string;
+  /**
+   * Whether the snapshot supersedes the earlier activity of the same turn with the same `id`.
+   * AG-UI defaults it to `true` when the event omits it. When no such activity exists, or `id` is
+   * empty, the snapshot is added as a new activity.
+   */
   replace: boolean;
+  /**
+   * The snapshot's content. When it replaced an activity with the same `id` in this turn and both
+   * payloads carry a `messages` array, earlier `updateDataModel` writes at a surface and path this
+   * snapshot doesn't write are kept before its messages, unless this snapshot creates or deletes
+   * that surface. A write at the same path on another surviving surface is kept; a whole-model
+   * write without a path has no slice and isn't carried forward.
+   * The earlier latest `updateComponents` is also kept when this one sends none, except for a
+   * surface this snapshot creates or deletes. Otherwise it is this snapshot's content unchanged.
+   * For an `'a2ui-surface'` activity, its
+   * `messages` array holds the A2-UI messages that create, update or delete surfaces.
+   */
   payload: Record<string, unknown>;
   /**
    * The AG-UI `metadata` of the event that carried the activity, when it had one. A producer
@@ -153,7 +184,16 @@ export interface Activity {
  * turn. Kept separate from the routing-neutral {@link TurnResponse} fields.
  */
 export interface TurnAgent {
+  /**
+   * The text messages the agent streamed for the prompt or action that opened the turn, in the
+   * order they started. Text streamed for a later component action recorded with the turn isn't
+   * kept.
+   */
   messages: AgentMessage[];
+  /**
+   * The tools the agent called for the prompt or action that opened the turn, in the order they
+   * started. Tool calls streamed for a later component action recorded with the turn aren't kept.
+   */
   toolCalls: ToolCall[];
 }
 
@@ -165,11 +205,13 @@ export type SessionRequest = InitializeRequest | PromptRequest | ActionRequest;
 
 /** The `initialize` action the session sends to open itself, recorded as `Session.initialization`. */
 export interface InitializeRequest {
+  /** Identifies an `initialize` request. */
   kind: 'initialize';
 }
 
 /** A prompt the session is sending, streaming into a new turn or a retried one. */
 export interface PromptRequest {
+  /** Identifies a prompt request. */
   kind: 'prompt';
   /** The turn the prompt streams into. */
   turnId: string;
@@ -177,6 +219,7 @@ export interface PromptRequest {
 
 /** A component action the session is sending. */
 export interface ActionRequest {
+  /** Identifies a component action request. */
   kind: 'action';
   /** The `component` discriminant of the dispatching node. */
   component: string;
@@ -306,11 +349,23 @@ export interface SessionInitialization {
  * One `input` paired with its streamed `response`.
  */
 export interface Turn {
+  /** The turn's id, assigned by the session when the turn opens. A retry keeps it. */
   id: string;
+  /** The prompt or the component action the turn answers. */
   input: TurnInput;
+  /**
+   * What the prompt or action that opened the turn has streamed so far, plus the activity snapshots
+   * of component actions that open no turn and are recorded with it. A retry clears it.
+   */
   response: TurnResponse;
+  /**
+   * `'streaming'` while the request that opened or retried the turn streams, then `'complete'` or
+   * `'error'`. A component action that opens no turn can still add activity snapshots to `response`
+   * afterwards without changing it: {@link Session.request} shows when one is in flight, and
+   * {@link Session.actionError} when one fails.
+   */
   status: TurnStatus;
-  /** Present when `status === 'error'`, absent otherwise. */
+  /** Why the turn failed. Present when `status === 'error'`, absent otherwise. */
   error?: string;
   /** Why it ended in `'error'`. Present when `status === 'error'`, absent otherwise. */
   reason?: TurnErrorReason;
