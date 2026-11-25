@@ -11,20 +11,17 @@ import {logComponentError} from './component-error';
 import type {InitializableComponent} from './types';
 
 const bindingsConsumer = Symbol('bindingsConsumer');
-const missingInterfaceError = Symbol('missingInterfaceError');
 
 type BindingsHost = LitElement & InitializableComponent<AnyBindings>;
-
-type BindingsElement = BindingsHost & {
-  [missingInterfaceError]?: MissingInterfaceParentError;
-};
 
 /**
  * A decorator that will initialize the component with the bindings provided by the bindings context.
  * It ensures that the component is initialized only once and that the language is updated when the language changes.
  *
  * When `initialize()` throws, the decorator sets the `error` property, logs the error and requests an update.
- * When the component connects outside of an Atomic interface, the decorator logs a `MissingInterfaceParentError`.
+ * When the component is still outside of an Atomic interface, without bindings, one task after it connects, the
+ * decorator logs a `MissingInterfaceParentError`. Waiting lets a wrapper render the slot that places the component
+ * in an interface.
  *
  * The decorator returns a subclass of the decorated class. The subclass creates its `ContextConsumer` once, as a
  * class field, so the component's own controllers connect before `initialize()` runs.
@@ -55,8 +52,6 @@ type BindingsElement = BindingsHost & {
 export function bindings() {
   return <T extends Constructor<BindingsHost>>(Base: T): T =>
     class extends Base {
-      [missingInterfaceError]?: MissingInterfaceParentError;
-
       [bindingsConsumer] = new ContextConsumer(this, {
         context: bindingsContext,
         callback: (value) => receiveBindings(this, value),
@@ -68,7 +63,7 @@ export function bindings() {
         if (this.initialized && this.bindings && !this.unsubscribeLanguage) {
           subscribeToLanguage(this);
         }
-        checkInterfaceParent(this);
+        setTimeout(() => reportMissingInterfaceParent(this));
       }
 
       disconnectedCallback() {
@@ -79,13 +74,12 @@ export function bindings() {
     };
 }
 
-function receiveBindings(host: BindingsElement, value: AnyBindings) {
+function receiveBindings(host: BindingsHost, value: AnyBindings) {
   if (host.initialized || Object.keys(value).length === 0) {
     return;
   }
 
   host.initialized = true;
-  host[missingInterfaceError] = undefined;
 
   try {
     host.bindings = value;
@@ -104,12 +98,9 @@ function subscribeToLanguage(host: BindingsHost) {
   host.unsubscribeLanguage = () => host.bindings?.i18n.off('languageChanged', updateLanguage);
 }
 
-function checkInterfaceParent(host: BindingsElement) {
-  if (host.initialized || findInterfaceParent(host)) {
-    host[missingInterfaceError] = undefined;
+function reportMissingInterfaceParent(host: BindingsHost) {
+  if (!host.isConnected || host.initialized || findInterfaceParent(host)) {
     return;
   }
-
-  host[missingInterfaceError] = new MissingInterfaceParentError(host.nodeName.toLowerCase());
-  logComponentError(host[missingInterfaceError], host);
+  logComponentError(new MissingInterfaceParentError(host.nodeName.toLowerCase()), host);
 }

@@ -69,6 +69,19 @@ class TestInterfaceElement extends LitElement {
   }
 }
 
+@customElement('test-late-slot-wrapper')
+// oxlint-disable-next-line @typescript-eslint/no-unused-vars -- <used as an element>
+class TestLateSlotWrapper extends LitElement {
+  private interfaceBindings = mockBindings();
+
+  public render() {
+    return html`<atomic-external
+      ><test-interface-element .bindings=${this.interfaceBindings}
+        ><slot></slot></test-interface-element
+    ></atomic-external>`;
+  }
+}
+
 describe('bindings decorator', () => {
   let element: InitializableComponent<Bindings> & LitElement;
   let interfaceElement: TestInterfaceElement;
@@ -94,6 +107,8 @@ describe('bindings decorator', () => {
     element?.remove();
     interfaceWrapper.remove();
   };
+
+  const nextTask = () => new Promise((resolve) => setTimeout(resolve));
 
   const reconnect = (node: Element) => {
     const parent = node.parentNode!;
@@ -202,15 +217,30 @@ describe('bindings decorator', () => {
   it('should log a missing interface error once per connection, without rendering it', async () => {
     element = document.createElement('test-element-with-controller') as TestElementWithController;
     document.body.appendChild(element);
-    await element.updateComplete;
+    await nextTask();
 
     reconnect(element);
-    await element.updateComplete;
+    await nextTask();
 
     expect(consoleErrorSpy).toHaveBeenCalledTimes(2);
     expect(consoleErrorSpy).toHaveBeenCalledWith(expect.any(MissingInterfaceParentError), element);
     expect(element.error).toBeUndefined();
     expect(element.shadowRoot!.children).toHaveLength(0);
+  });
+
+  it('should not report a missing interface when a wrapper renders the interface slot after the component connects', async () => {
+    const wrapper = document.createElement('test-late-slot-wrapper');
+    element = document.createElement('test-element') as TestElement;
+    wrapper.appendChild(element);
+    document.body.appendChild(wrapper);
+    await nextTask();
+
+    const shadowInterface = wrapper.shadowRoot!.querySelector(
+      'test-interface-element'
+    ) as TestInterfaceElement;
+    expect(element.bindings).toBe(shadowInterface.bindings);
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
+    wrapper.remove();
   });
 
   it('should not report a missing interface when slotted into an interface through another shadow root', async () => {
