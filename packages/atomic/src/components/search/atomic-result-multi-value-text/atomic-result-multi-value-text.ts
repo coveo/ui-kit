@@ -40,6 +40,9 @@ export class AtomicResultMultiValueText
     maxValuesToDisplay: new NumberValue({min: 0, required: false}),
   });
 
+  /**
+   * @internal
+   */
   public breadcrumbManager!: BreadcrumbManager;
 
   /**

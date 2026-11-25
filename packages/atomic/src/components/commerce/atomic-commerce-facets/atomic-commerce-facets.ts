@@ -57,6 +57,9 @@ export class AtomicCommerceFacets
   public facetGeneratorState!: string[];
 
   public facetGenerator!: FacetGenerator;
+  /**
+   * @internal
+   */
   public summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
 
   /**

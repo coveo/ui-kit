@@ -64,6 +64,9 @@ export class AtomicCommercePager
   @state() private isAppLoaded = false;
 
   public pager!: Pagination;
+  /**
+   * @internal
+   */
   public listingOrSearch!: ProductListing | Search;
 
   @bindStateToController('pager')

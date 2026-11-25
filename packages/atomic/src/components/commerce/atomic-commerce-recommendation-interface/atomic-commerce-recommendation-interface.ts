@@ -70,6 +70,9 @@ export class AtomicCommerceRecommendationInterface
   @provide({context: bindingsContext})
   public bindings: CommerceBindings = {} as CommerceBindings;
   @state() public error!: Error;
+  /**
+   * @internal
+   */
   public context!: Context;
   private store: CommerceRecommendationStore;
 

@@ -82,7 +82,13 @@ export class AtomicCommerceInterface
   public bindings: CommerceBindings = {} as CommerceBindings;
   @state() public error!: Error;
 
+  /**
+   * @internal
+   */
   public context!: Context;
+  /**
+   * @internal
+   */
   public summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   public urlManager!: UrlManager;
   public searchOrListing!: Search | ProductListing;

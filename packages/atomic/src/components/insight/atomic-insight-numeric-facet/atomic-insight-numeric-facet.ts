@@ -237,6 +237,9 @@ export class AtomicInsightNumericFacet
 
   @state() bindings!: InsightBindings;
 
+  /**
+   * @internal
+   */
   @state()
   public facetState?: NumericFacetState;
 
