@@ -17,6 +17,10 @@
       "dependsOn": ["build"],
       "cache": false
     },
+    "a11y:sync-version": {
+      "dependsOn": ["build"],
+      "cache": false
+    },
     "a11y:vpat-pdf": {
       "dependsOn": ["build", "@coveo/atomic#build:cdn"],
       "outputs": []
