@@ -126,17 +126,16 @@ export class AtomicCommerceRecommendationInterface
   @property({type: String, attribute: 'icon-assets-path', reflect: true})
   iconAssetsPath: string = './assets';
 
-  // TODO - (v4) KIT-4365: Remove (or more likely turn into private state attribute)
+  // TODO - (v4) KIT-4365: Remove the property and its attribute, and keep the interface language as
+  // internal state that the InterfaceController can watch (KIT-5080).
   /**
    * The commerce interface language.
    *
    * Will default to the value set in the Headless engine context if not
    * provided.
    *
-   * @deprecated - This property will be removed in the next major version of
-   * Atomic (v4). Rather than using this property, set the initial language
-   * through the engine configuration when calling `initializeWithEngine`, and
-   * update the language as needed using the `updateLocale` method.
+   * @deprecated Set the initial language in the `context` of the engine configuration, then call
+   * `updateLocale({language})` to change it. Atomic v4 removes this property and its attribute.
    */
   @property({type: String, reflect: true}) language?: string;
 
@@ -309,8 +308,10 @@ export class AtomicCommerceRecommendationInterface
       return;
     }
 
-    this.engine.logger.warn(
-      'The `language` property will be removed in the next major version of Atomic (v4). Rather than using this property, set the initial language through the engine configuration when calling `initializeWithEngine`, and update the language as needed using the `updateLocale` method.'
+    warnDeprecatedOnce(
+      this.engine.logger,
+      'The `language` property of `atomic-commerce-recommendation-interface`',
+      'Set the initial language in the `context` of the engine configuration, then call `updateLocale({language})` to change it.'
     );
 
     this.context.setLanguage(this.language);
