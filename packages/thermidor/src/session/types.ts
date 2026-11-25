@@ -54,9 +54,10 @@ export type A2uiState = Record<string, unknown>;
 export interface DiscoveredSurface {
   /** The id of the A2-UI surface: never empty, and unique among the session's live surfaces. */
   surfaceId: string;
-  // This root-type projection is interim and is currently used by consumers and navigation.
+  // Consumers and navigation compare this root type against 'CommerceSearch' today.
   /**
    * The PascalCase `component` of the surface's root node, such as `'CommerceSearch'`. Never empty.
+   * It is interim and may be removed in a breaking release.
    */
   rootComponentType: string;
   // This loading flag comes from the commerce catalog data model.
