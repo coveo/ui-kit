@@ -1,96 +1,105 @@
-# KIT-6490: JavaScript target and runtime baseline spike
+# KIT-6490: JavaScript compile target for v4
 
-**Status:** Proposed decision for UI-Kit v4; this PR is a spike, not a production-ready compatibility change.
+**Status:** spike findings behind the proposed [ADR 0008](docs/adr/0008-javascript-compile-target.md). The build configuration changes in this PR are a prototype for measuring, not a change to merge.
 
-**Evidence:** builds compared with main at `593ab276f`; measurements and scripts are retained under [`spike/KIT-6490`](spike/KIT-6490/).
+**Evidence:** builds compared with `main` at `593ab276f`. The scripts and raw results are in [`spike/KIT-6490`](spike/KIT-6490/), and the full per-bundle tables are in [`spike/KIT-6490/results/tables.md`](spike/KIT-6490/results/tables.md). Browser release dates and API support come from MDN browser-compat-data 8.1.10.
 
-## Recommendation
+Browser support isn't defined by ui-kit: it follows Coveo's [Browser Conformity](https://coveord.atlassian.net/wiki/spaces/DATA/pages/4489085043/Browser+Conformity) policy. These findings only check that v4's output fits it.
 
-For v4, standardize Headless and Atomic output on **ES2022** and adopt the accepted Coveo browser conformance policy rather than publishing fixed browser version minimums:
+## Which ES target do the v4 bundles use?
 
-- Desktop Chrome: latest released major and extended stable.
-- Desktop Edge: latest released major.
-- Desktop Safari: latest released major and latest minor.
-- Desktop Firefox: latest released version and ESR.
-- Older supported versions remain supported until one year after release.
-- Mobile Chrome, Safari, and Firefox follow the latest-major policy; Edge is included for completeness.
+**ES2022** for Headless and Atomic, as [ADR 0008](docs/adr/0008-javascript-compile-target.md) proposes.
 
-The Chrome 107 / Edge 107 / Firefox 104 / Safari 16 versions used during the prototype are measurement snapshots, not the v4 support promise. Fixed versions would conflict with the accepted policy and would require an outdated manual table update.
+| Output                              | Today                        | ES2022 prototype                   |
+| ----------------------------------- | ---------------------------- | ---------------------------------- |
+| Headless CDN, CommonJS and Quantic  | esbuild `es2020`             | esbuild `es2022`                   |
+| Headless npm ESM (`dist/esm`)       | `tsc`, already ES2022        | unchanged                          |
+| Atomic npm (`dist/esm`, `dist/cjs`) | `rslib` `es2021`, tsc ES2021 | `rslib` `es2022`, tsc ES2022       |
+| Atomic CDN                          | Rsbuild default browser list | unchanged: it already emits ES2022 |
 
-This is a runtime contract, not just a compiler setting. The spike found that current Atomic code uses `Promise.withResolvers`, which in the tested feature inventory sets a higher implementation floor: Chrome/Edge 119, Firefox 121, Safari 17.4. Before release, the v4 implementation must remove/replace that use (or otherwise make the affected public entry points work), then test against the exact desktop and mobile lines in the conformance policy. If that cannot be done, revise the effective support floor and document the reason. Unsupported browser issues follow the support stance in the policy: defects on supported browsers, possible R&D review for unsupported versions, and no build-level compatibility fix when not supported.
+ES2023, ES2024 and esnext produce Headless bundles that are byte-identical to ES2022, so a newer target brings nothing measurable today.
 
-The main evidence does **not** show a meaningful size or parse-time win from raising the target. Treat ES2022 as consistency and an explicit v4 contract—not as a bundle-optimization project.
+The wrappers (`@coveo/atomic-react`, `@coveo/atomic-angular`, `@coveo/headless-react`) already target ES2022.
 
-## Answers and findings
+## Do the chosen target and the APIs v4 relies on fit the Browser Conformity policy at the v4 release?
 
-### Output targets and measured size effects
+**Yes.** The policy covers each browser's latest release, plus older versions until one year after their release. Chrome also includes extended stable, and Firefox also includes ESR. Every API below shipped years before the start of that one-year window, both today and at any v4 release date. No v4 GA date is set in Jira yet. No release gate is needed.
 
-The full per-output raw and gzip deltas are in [`spike/KIT-6490/results/tables.md`](spike/KIT-6490/results/tables.md). Sizes are kB; deltas compare each prototype with the baseline.
+- **ES2022 syntax:** the last of it to ship everywhere was class static blocks, in Safari in March 2023. Class fields, private methods and `#x in obj` shipped in every engine by September 2022.
+- **Newest built-in in use:** `Promise.withResolvers`, which ES2022 doesn't polyfill. Atomic v3 already calls it in all five interface components on `main` (for example `packages/atomic/src/components/search/atomic-search-interface/atomic-search-interface.ts:293`). It shipped in:
+  - Chrome on 2023-10-31 and Edge on 2023-11-02
+  - Firefox on 2023-12-19
+  - Safari, desktop and iOS, on 2024-03-05
+- **Other built-ins** in Headless and Atomic, such as `.at()`, `Object.hasOwn` and `findLast`, are older.
 
-| Output                                                          |                     ES2022 change | Interpretation                                             |
-| --------------------------------------------------------------- | --------------------------------: | ---------------------------------------------------------- |
-| Headless CDN entries                                            | about −0.19 to −0.31 kB gzip each | Negligible per bundle                                      |
-| Headless CJS entries                                            | about −0.18 to −0.24 kB gzip each | Negligible; npm ESM is unchanged                           |
-| Headless Quantic entries, keeping ponyfills                     | about −0.17 to −0.27 kB gzip each | Negligible                                                 |
-| Headless Quantic entries, experimental removal of all ponyfills | about −5.86 to −6.35 kB gzip each | Larger, but not a safe target-only optimization; see below |
-| Atomic CDN                                                      |                         0 kB gzip | No measured change                                         |
-| Atomic npm ESM, all JS                                          |                     −0.96 kB gzip | Under 1 kB total                                           |
-| Atomic npm CJS, all JS                                          |                     −0.88 kB gzip | Under 1 kB total                                           |
-| Atomic size-limit “all lazy”                                    |                617.93 → 617.10 kB | −0.83 kB                                                   |
-| V8 parse/compile benchmark                                      |                    6.32 → 6.35 ms | No improvement                                             |
+To keep fitting, nothing new should require a browser released inside the policy's one-year window. That covers v4 code and dependencies. For example, top-level await isn't used today, and Safari only supports it fully since September 2026.
 
-Headless es2023, es2024, and esnext output was byte-identical to es2022. Atomic es2022 and es2023 CDN outputs were byte-identical. The npm ESM output from TypeScript was already ES2022, so changing the Headless bundler target did not change it.
+## Do the three ponyfills and `abortcontroller-polyfill` go?
 
-### Browser/runtime baseline
+**No, not while Quantic supports Lightning Locker.**
 
-- The recommendation is ES2022 under the accepted Coveo rolling browser conformance policy.
-- Headless's observed built-in use alone has a lower feature floor (Chrome/Edge 97, Firefox 104, Safari 15.4), but Atomic's `Promise.withResolvers` use currently sets a much higher observed floor (Chrome/Edge 119, Firefox 121, Safari 17.4).
-- Atomic already depends on `Promise.withResolvers`; changing `tsconfig` alone cannot lower that runtime requirement. This is a material gap and a release gate for the proposed contract.
-- No repository-wide browser support declaration or browserslist was found. The v4 story should add a pinned release-test matrix derived from the accepted policy rather than freezing a single unsupported version set.
+- **Where they are:** the `Headers`, `globalThis` and abortable-fetch shims, plus `navigator.sendbeacon`, are injected only into the Quantic UMD bundle (`dist/quantic/**`). The CDN and npm bundles don't contain them.
+- **Why they exist:** each one was added because Salesforce Lightning Locker lacks that API. Quantic still supports Locker.
+- **The dependencies stay too:** the shims need `abortcontroller-polyfill` and `headers-polyfill` as long as the shims exist.
+- **`navigator.sendbeacon`** can go if Quantic agrees: Relay now sends events with `fetch` and `keepalive`.
+- **What removal would save:** dropping all four saves about 5.9 to 6.4 kB gzip per Quantic bundle. That's the only sizable gain the spike measured, and it depends on Quantic dropping Locker, not on the target.
 
-### Ponyfills: keep this separate from the target decision
+## What is the TypeScript floor?
 
-The three injected ponyfills and `navigator.sendBeacon` support were added for Salesforce Lightning Locker behavior. Quantic still supports Locker, and its UMD output is the only in-repository consumer of `dist/quantic/**`. Removing all four in an experiment saved approximately 5.9–6.4 kB gzip per Quantic bundle, but risks breaking Locker customers.
+**Recommended: `typescript >=5.9.0`, as an input to KIT-6127, which decides it.**
 
-Recommendation: keep the Locker shims isolated to the Quantic compatibility bundle; do not remove them as part of raising the general Headless/Atomic target. Research recommends dropping only the `navigator.sendBeacon` shim, but that should be its own Quantic compatibility decision and test. Revisit the remaining shims if/when Quantic drops Locker support. The current prototype intentionally leaves ponyfills unchanged.
+- **What the published types need:** Atomic's declarations use `export type *` (TypeScript 5.0). Headless's dependency declarations need 5.4 (Redux Toolkit).
+- **Why 5.9:** the Angular majors v4 is expected to support require TypeScript 5.9.
+- **Not validated yet:** type-checking the emitted declarations with `skipLibCheck: false` showed separate problems, a `lib.dom` conflict and a CommonJS/ESM import issue. A packed-consumer type-check at 5.9 with `skipLibCheck: false` must pass before the floor is published.
 
-### TypeScript floor
+## What are the measured size and performance gains?
 
-- Recommend v4 TypeScript peer floor **`>=5.9.0`**, retaining the open upper bound from ADR-0007.
-- `export type *` in published Atomic declarations requires TypeScript 5.0, but dependency/framework constraints are higher. The measured technical floor from dependency declarations is 5.4 (RTK); the v4 Angular floor is expected to bind at TypeScript 5.9.
-- Type-checking emitted declarations with `skipLibCheck: false` exposed independent declaration problems, including a `lib.dom` issue and a CommonJS/ESM import problem. A real consumer verification at the floor is needed; the reported floor is not fully validated until those are addressed.
-- Add a CI consumer type-check using the floor version with `skipLibCheck: false`, plus the repository TypeScript version.
+Negligible. Sizes are in kB, gzip at level 9.
 
-### Node.js floor and separate CommonJS finding
+| Output                                              | Baseline gzip | ES2022 change       |
+| --------------------------------------------------- | ------------: | ------------------- |
+| Headless CDN entries (ESM and UMD), 18 bundles      | 141.7 – 187.2 | −0.19 to −0.31 each |
+| Headless CommonJS entries, 9 bundles                |  69.2 – 134.5 | −0.18 to −0.24 each |
+| Headless Quantic entries, 5 bundles                 | 148.7 – 193.1 | −0.17 to −0.27 each |
+| Headless npm ESM, all files                         |         544.9 | 0 (already ES2022)  |
+| Atomic CDN, all JavaScript                          |         657.0 | 0                   |
+| Atomic npm ESM, all JavaScript                      |         625.8 | −0.96 in total      |
+| Atomic npm CommonJS, all JavaScript                 |         872.0 | −0.88 in total      |
+| Atomic size-limit, loader with all lazy components  | 617.93 brotli | 617.10 (−0.83)      |
+| Headless Quantic, all four shims removed (separate) | 148.7 – 193.1 | −5.86 to −6.35 each |
 
-- Recommend using **`^22.12.0 || ^24.11.0 || ^26.0.0`** as the v4 public-package Node range input to KIT-6387. Node 20 reached end of life in April 2026; 22.12 is the first Node 22 release with unflagged `require(esm)`. Consider 22.13 instead to avoid the experimental warning observed on 22.12.
-- This recommendation is an input for the v4 Node-floor decision, not a change made by this spike. If CommonJS output remains, set its esbuild target to `node22.12` (or later); if npm Headless becomes ESM-only, the CJS target question no longer applies.
-- **Independent defect:** `require('@coveo/headless')` from published Headless 3.59.0 failed on Node 20.19, 22.14, and 24 with `StringValue is not a constructor`. The investigated root cause is `@coveo/bueno` declaring `"type": "module"` while its `require` condition points to `dist/bueno.js`, which contains CommonJS output. This is a package export/loader issue, not an ES target or browser-baseline effect. Track and fix it separately; do not infer that merely raising the target fixes it.
+- **Performance:** V8 compile time of the Headless search UMD bundle stays at a median of 6.32 ms before and 6.35 ms after, over 60 runs (`spike/KIT-6490/parse-bench.mjs`).
+- **Tests:** the Headless and Atomic unit tests pass on the ES2022 prototype. Headless ran 456 files and 5,815 tests. Atomic ran 7,275 tests with 81 skipped.
 
-### Other package implications
+## Other findings
 
-Several packages already target ES2022. `coveo-analytics`, `atomic-legacy`, Quantic, samples, and create-* templates have distinct build/runtime considerations and were not changed as part of this proposal. Audit each package and consumer path in the v4 implementation story before describing ES2022 as a repository-wide target.
+- **Node.js floor (input to KIT-6387):**
+  - Recommendation: `^22.12.0 || ^24.11.0 || ^26.0.0`.
+  - Node 20 reached end of life in April 2026.
+  - Node 22.12 is the first Node 22 release with unflagged `require(esm)`. Consider 22.13, because 22.12 still prints an experimental warning.
+  - If Headless keeps CommonJS output, its esbuild target can follow the Node floor (`node22.12`).
+- **`require('@coveo/headless')` is broken today:**
+  - Published Headless 3.59.0 fails on Node 20.19, 22.14 and 24 with `StringValue is not a constructor`.
+  - The cause: `@coveo/bueno` declares `"type": "module"`, but its `require` entry, `dist/bueno.js`, is CommonJS. Node loads it as ESM, so it exports nothing.
+  - It's unrelated to the compile target and needs its own fix.
+- **Out of scope here, unchanged:** `coveo-analytics`, `atomic-legacy`, Quantic, the samples and the create-* templates have their own builds.
 
-## Draft v4 follow-up story
+## Draft v4 story
 
-**Title:** `[UI-Kit v4] Standardize the JavaScript target and enforce the runtime contract`
+**Title:** `[Headless][Atomic] v4: compile to ES2022`
 
-**User story:** As a UI-Kit consumer, I want v4 packages to publish a documented, consistently validated JavaScript and runtime baseline so that I can determine whether my browser and Node.js environments are supported before upgrading.
+**User story:** As a ui-kit maintainer, I want Headless and Atomic to compile to ES2022, like their wrappers, so that every v4 package emits the same JavaScript target.
 
 **Acceptance criteria:**
 
-1. Headless and Atomic publish ES2022 output, with wrappers and package-specific exceptions audited and documented.
-2. The v4 browser contract follows the accepted Coveo conformance policy. At release, publish the exact versions exercised by the pinned test matrix and document the support stance.
-3. CI exercises the public package entry points on the supported desktop and mobile browser lines and checks that dependencies do not introduce syntax or built-ins above the policy. Atomic's `Promise.withResolvers` requirement is removed or polyfilled, or the effective floor is deliberately documented.
-4. TypeScript peer metadata is raised to `>=5.9.0` only after a packed-consumer type-check at 5.9 with `skipLibCheck: false` passes; publish the migration guidance.
-5. Node engines are aligned with the approved KIT-6387 decision (recommended input: `^22.12.0 || ^24.11.0 || ^26.0.0`), and the CommonJS `require` defect is tracked independently.
-6. Quantic's Lightning Locker ponyfills remain isolated to the Quantic compatibility output and have explicit regression coverage; any removal is separately approved and tested.
-7. Release notes/documentation state the new runtime requirements and migration impact.
+1. Headless's esbuild bundles (CDN, CommonJS, Quantic) and Atomic's `rslib` output and `tsconfig` target ES2022.
+2. The wrappers (`@coveo/atomic-react`, `@coveo/atomic-angular`, `@coveo/headless-react`) are audited, and any package that keeps another target is listed with the reason.
+3. The Quantic UMD bundle keeps its Lightning Locker shims and their dependencies.
+4. The TypeScript and Node.js floors follow the decisions of KIT-6127 and KIT-6387.
+5. The release notes and the v3 to v4 upgrade guide state the target change.
 
-**Migration note:** Consumers running below the finalized browser or Node floor must remain on the supported v3 line or upgrade their runtime before moving to v4. The v4 release notes must identify the minimum versions and any API/TypeScript changes. This spike's prototype is not a production-ready implementation.
+**Migration note:**
 
-## Validation already recorded
-
-- `pnpm --filter @coveo/headless test`: passed, 456 files / 5,815 tests.
-- `pnpm --filter @coveo/atomic test`: passed, 7,275 tests / 81 skipped.
-- These are prior spike runs documented in `spike/KIT-6490/STATUS.md`; the current PR will run focused lint/format checks on its final changes.
+- **Syntax:** Headless and Atomic v4 ship ES2022 syntax. Toolchains that parse or re-bundle them must accept ES2022, as they already must for the wrappers and for Headless's npm ESM output.
+- **TypeScript and Node.js:** the minimum versions change as KIT-6127 and KIT-6387 decide.
+- **Browsers:** browser support follows Coveo's [Browser Conformity](https://coveord.atlassian.net/wiki/spaces/DATA/pages/4489085043/Browser+Conformity) policy.
