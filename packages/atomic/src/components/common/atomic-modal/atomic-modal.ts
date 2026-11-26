@@ -9,7 +9,6 @@ import type {InitializableComponent} from '@/src/decorators/types.js';
 import {watch} from '@/src/decorators/watch.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map.js';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {buildCustomEvent, listenOnce} from '@/src/utils/event-utils.js';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {getFocusedElement, isAncestorOf, once, randomID} from '@/src/utils/utils.js';
@@ -42,10 +41,7 @@ import '@/src/components/common/atomic-focus-trap/atomic-focus-trap.js';
 @customElement('atomic-modal')
 @bindings()
 @withTailwindStyles
-export class AtomicModal
-  extends InitializeBindingsMixin(LitElement)
-  implements InitializableComponent<AnyBindings>
-{
+export class AtomicModal extends LitElement implements InitializableComponent<AnyBindings> {
   static styles = css`
     @reference '../../../utils/tailwind.global.tw.css';
 

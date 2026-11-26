@@ -12,7 +12,6 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {HiddenStateController} from '@/src/utils/hidden-state-controller';
 import InfoIcon from '../../../images/info.svg';
@@ -31,10 +30,7 @@ import type {Bindings} from '../atomic-search-interface/interfaces';
 @customElement('atomic-notifications')
 @bindings()
 @withTailwindStyles
-export class AtomicNotifications
-  extends InitializeBindingsMixin(LitElement)
-  implements InitializableComponent<Bindings>
-{
+export class AtomicNotifications extends LitElement implements InitializableComponent<Bindings> {
   private static readonly schema = new Schema({
     headingLevel: new NumberValue({min: 0, max: 6, required: false}),
   });

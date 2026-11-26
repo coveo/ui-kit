@@ -9,7 +9,6 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {once, randomID} from '@/src/utils/utils';
@@ -43,7 +42,7 @@ import {once, randomID} from '@/src/utils/utils';
 @customElement('atomic-ipx-modal')
 @bindings()
 @withTailwindStyles
-export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
+export class AtomicIpxModal extends LitElement {
   static styles: CSSResultGroup = [
     ipxBodyStyles,
     css`

@@ -46,7 +46,7 @@ export class AtomicElement
 **Light DOM components** use mixins instead of extending `LitElement` directly:
 
 - `LightDomMixin(LitElement)` — most light DOM components with `@bindings()`
-- `LightDomMixin(InitializeBindingsMixin(LitElement))` — components needing binding initialization without use-case-specific bindings
+- Never combine `InitializeBindingsMixin` with `@bindings()`: the mixin marks the component initialized before `@bindings()` can, so `@bindings()` does nothing
 
 ### Field declaration order
 

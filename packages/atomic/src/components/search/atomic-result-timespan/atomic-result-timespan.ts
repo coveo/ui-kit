@@ -12,7 +12,6 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 
 dayjs.extend(duration);
@@ -23,7 +22,7 @@ dayjs.extend(duration);
 @customElement('atomic-result-timespan')
 @bindings()
 export class AtomicResultTimespan
-  extends LightDomMixin(InitializeBindingsMixin(LitElement))
+  extends LightDomMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
   private static readonly propsSchema = new Schema({
