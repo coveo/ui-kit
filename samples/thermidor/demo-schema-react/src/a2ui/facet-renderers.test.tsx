@@ -395,6 +395,35 @@ describe('NumericFacet', () => {
     expect(screen.queryByText(/\$/)).toBeNull();
   });
 
+  it('hides idle ranges with no results', async () => {
+    mountFacet({
+      ...stateWithRanges,
+      values: [
+        ...stateWithRanges.values!,
+        {start: 200, end: 300, numberOfResults: 0, state: 'idle'},
+      ],
+    });
+
+    await waitFor(() => expect(screen.getByText('$100 - $200')).toBeDefined());
+    expect(screen.queryByText('$200 - $300')).toBeNull();
+  });
+
+  it('keeps a selected range with no results visible so it can be deselected', async () => {
+    mountFacet({
+      ...stateWithRanges,
+      hasActiveValues: true,
+      values: [
+        ...stateWithRanges.values!,
+        {start: 200, end: 300, numberOfResults: 0, state: 'selected'},
+      ],
+    });
+
+    await waitFor(() => expect(screen.getByText('$200 - $300')).toBeDefined());
+    expect(screen.getByText('$200 - $300').closest('button')!.getAttribute('aria-pressed')).toBe(
+      'true'
+    );
+  });
+
   it('dispatches toggleSingleSelect with the range start/end when a listed range is clicked', async () => {
     const {lastAction} = mountFacet(stateWithRanges);
 
