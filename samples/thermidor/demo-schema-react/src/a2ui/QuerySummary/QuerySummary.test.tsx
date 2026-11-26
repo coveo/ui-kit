@@ -3,9 +3,9 @@ import {act, screen, cleanup, waitFor, fireEvent} from '@testing-library/react';
 import {mountSurface} from '../mount-surface.harness.js';
 
 /**
- * QuerySummary is a `createReactComponent` implementation driven by the generic binder, mounted
+ * QuerySummary is a `createComponentImplementation` implementation driven by the generic binder, mounted
  * end-to-end through the real thermidor catalog: `query` / `firstIndex` / `lastIndex` /
- * `totalEntries` / `correction` are `{path}` bindings resolved from the surface data model. Its one
+ * `totalEntries` / `correction` are `{ path }` bindings resolved from the surface data model. Its one
  * action, `overrideCorrection`, searches the shopper's query instead of the one that replaced it.
  *
  * Progressive-resolution cases (a field not yet arrived) are expressed by OMITTING that field's

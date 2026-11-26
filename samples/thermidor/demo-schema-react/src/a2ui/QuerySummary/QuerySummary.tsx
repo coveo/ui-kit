@@ -1,4 +1,4 @@
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react/v0_9';
 import {useRef} from 'react';
 import type {QueryCorrection, QuerySummaryAction} from '@coveo/thermidor-schema';
 import {QuerySummaryPropsSchema} from '@coveo/thermidor-schema/zod3';
@@ -25,11 +25,14 @@ import styles from './QuerySummary.module.css';
  * did-you-mean follows, ending with a "Search instead" link (`overrideCorrection`) if `canOverride`.
  * Once the search runs, keyboard focus moves from the link to the results.
  */
-export const QuerySummary = createReactComponent(
+export const QuerySummary = createComponentImplementation(
   {
     name: 'QuerySummary',
     schema: QuerySummaryPropsSchema,
   },
+  // TODO(a2ui-react context): `context` is deprecated in @a2ui/react 0.16. Build this through
+  // `view({node, buildChild})` (or a shared helper): props from `useNodeView`, and dispatch with
+  // `useA2uiSurface()?.dispatchAction(action, node.componentId)`.
   ({props, context}) => {
     const {query, firstIndex, lastIndex, totalEntries, correction} = props;
     const startGesture = useGesture();

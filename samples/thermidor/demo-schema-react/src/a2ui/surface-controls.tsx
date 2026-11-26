@@ -1,5 +1,7 @@
 import {createContext, useContext, useLayoutEffect, type ReactNode} from 'react';
-import type {ReactComponentImplementation} from '@copilotkit/a2ui-renderer';
+// `@a2ui/react/v0_9` re-exports the root module without `useA2uiSurface`; both share one surface context.
+import {useA2uiSurface} from '@a2ui/react';
+import type {ReactComponentImplementation} from '@a2ui/react/v0_9';
 import {useComponentActionError} from './session-request.js';
 import styles from './surfaces.module.css';
 
@@ -81,6 +83,12 @@ function ComponentActionErrorNote({
   return message === undefined ? null : <ActionErrorMessage message={message} />;
 }
 
+/** {@link ComponentActionErrorNote} for a node drawn through its `view`, on the surface it is in. */
+function ViewActionErrorNote({componentId}: {componentId: string}) {
+  const surfaceId = useA2uiSurface()?.id ?? '';
+  return <ComponentActionErrorNote surfaceId={surfaceId} componentId={componentId} />;
+}
+
 function SurfaceControls({children}: {children: ReactNode}) {
   const earlier = useContext(EarlierTurnContext);
   return (
@@ -100,11 +108,14 @@ function SurfaceControls({children}: {children: ReactNode}) {
  * chip, so an earlier turn disables them and the failure of its last action shows right after it.
  * Other controls, such as opening a product or adding it to the cart, never act on the surface and
  * stay enabled.
+ *
+ * A surface draws a component through its `view`, and falls back to its `render` without one, so
+ * both are wrapped.
  */
 export function actsOnSurface(
   component: ReactComponentImplementation
 ): ReactComponentImplementation {
-  const Render = component.render;
+  const {render: Render, view: View} = component;
   return {
     ...component,
     render: (props) => (
@@ -116,5 +127,13 @@ export function actsOnSurface(
         />
       </SurfaceControls>
     ),
+    ...(View && {
+      view: (props) => (
+        <SurfaceControls>
+          <View {...props} />
+          <ViewActionErrorNote componentId={props.node.componentId} />
+        </SurfaceControls>
+      ),
+    }),
   };
 }

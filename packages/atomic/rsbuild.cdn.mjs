@@ -11,6 +11,9 @@ import {generateExternalPackageMappings} from './scripts/externalPackageMappings
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const {version} = JSON.parse(readFileSync(join(__dirname, 'package.json'), 'utf8'));
+const {version: headlessVersion} = JSON.parse(
+  readFileSync(join(__dirname, '../headless/package.json'), 'utf8')
+);
 const packageMappings = generateExternalPackageMappings(__dirname);
 const sourceDir = join(__dirname, 'src');
 const litRuntime =
@@ -30,6 +33,7 @@ const rsbuild = await rsbuildApi.createRsbuild({
       decorators: {version: 'legacy'},
       define: {
         'process.env.VERSION': JSON.stringify(version),
+        'process.env.HEADLESS_VERSION': JSON.stringify(headlessVersion),
         'process.env.NODE_ENV': JSON.stringify('production'),
       },
     },

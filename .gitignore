@@ -13,6 +13,8 @@ sarifs
 scripts/translation-gpt/temporary.json
 packages/headless/docs/*
 !packages/headless/docs/adr/
+packages/thermidor/docs/*
+!packages/thermidor/docs/adr/
 
 # CI Release
 topology.json

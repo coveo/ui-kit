@@ -1,16 +1,33 @@
 /**
  * A2-UI Surface Bridge
  *
- * Mounts the session's A2-UI message stream into the renderer, and draws each surface where the
- * page places it.
+ * Feeds the session's A2-UI message stream (`session.a2uiMessages`) to one `@a2ui/web_core` v0.9
+ * message processor, and draws each surface it holds where the page places it, with
+ * `@a2ui/react`'s `A2uiSurface`.
  *
- * The v1.0 → v0.9 downgrade the renderer needs no longer happens here: it is a derived
- * projection inside `@coveo/thermidor`, read off `session.a2uiMessages`. See that package's
+ * The v1.0 → v0.9 downgrade the renderer needs does not happen here: it is a derived projection
+ * inside `@coveo/thermidor`, read off `session.a2uiMessages`. See that package's
  * `session/a2ui-v09-projection.ts` for the conversion and the recorded interim debt.
  */
-import {useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode} from 'react';
-import {A2UIRenderer, useA2UI} from '@copilotkit/a2ui-renderer';
-import type {A2uiV09Message, DiscoveredSurface} from '@coveo/thermidor';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from 'react';
+import {A2uiSurface, type ReactComponentImplementation} from '@a2ui/react/v0_9';
+import {
+  type ActionPayload,
+  type Catalog,
+  MessageProcessor,
+  type SurfaceModel,
+} from '@a2ui/web_core/v0_9';
+import type {A2uiClientMessage, A2uiV09Message, DiscoveredSurface} from '@coveo/thermidor';
 import {turnSurfacesTarget} from './results-focus.js';
 import {TurnFailedContext} from './ProgressBlock/ProgressBlock.js';
 import {A2UISkeleton} from './Skeleton/Skeleton.js';
@@ -41,40 +58,162 @@ function controlAt(target: EventTarget): HTMLElement | null {
  */
 let lastUsedControl: HTMLElement | null = null;
 
+type ThermidorProcessor = MessageProcessor<ReactComponentImplementation>;
+
+const ProcessorContext = createContext<ThermidorProcessor | null>(null);
+
 interface ThermidorA2UIStreamProps {
+  /** The catalog the surfaces render with. */
+  catalog: Catalog<ReactComponentImplementation>;
   /** The session's whole renderer stream (`session.a2uiMessages`). */
   messages: readonly A2uiV09Message[];
+  /** Receives every action a surface dispatches, such as `session.dispatchAction`. */
+  onAction: (message: A2uiClientMessage) => unknown;
   /** The page whose {@link TurnSurfaces} draw the stream's surfaces. */
   children?: ReactNode;
 }
 
+/** The session's `userAction` message for an action the processor dispatches. */
+function toClientMessage({
+  name,
+  surfaceId,
+  sourceComponentId,
+  context,
+  timestamp,
+}: ActionPayload): A2uiClientMessage {
+  return {userAction: {name, surfaceId, sourceComponentId, context, timestamp}};
+}
+
+/** Removes every surface the processor holds. */
+function clearSurfaces(processor: ThermidorProcessor) {
+  for (const surfaceId of [...processor.model.surfacesMap.keys()]) {
+    processor.model.deleteSurface(surfaceId);
+  }
+}
+
 /**
- * Feeds the whole session's message stream to the renderer. It draws nothing itself: each surface
- * is drawn by a {@link TurnSurfaces} placed under the turn that created it.
+ * Feeds one message to the processor. A message the processor rejects, such as one whose props
+ * fail their schema, is reported and skipped, so the messages after it still apply.
  */
-export function ThermidorA2UIStream({messages, children}: ThermidorA2UIStreamProps) {
-  const {clearSurfaces, processMessages} = useA2UI();
-  const actionsRef = useRef({clearSurfaces, processMessages});
-  actionsRef.current = {clearSurfaces, processMessages};
-  const fedRef = useRef<readonly A2uiV09Message[]>([]);
+function feed(processor: ThermidorProcessor, message: A2uiV09Message) {
+  try {
+    processor.processMessages([message as never]);
+  } catch (error) {
+    console.error('A2-UI message rejected by the renderer', error, message);
+  }
+}
+
+/**
+ * Feeds the whole session's message stream to one message processor. It draws nothing itself:
+ * each surface is drawn by a {@link TurnSurfaces} or an {@link A2UISurface} placed under the turn
+ * or the page that shows it.
+ */
+export function ThermidorA2UIStream({
+  catalog,
+  messages,
+  onAction,
+  children,
+}: ThermidorA2UIStreamProps) {
+  const onActionRef = useRef(onAction);
+  onActionRef.current = onAction;
+  const processor = useMemo(
+    () =>
+      new MessageProcessor<ReactComponentImplementation>([catalog], async (action) => {
+        await onActionRef.current(toClientMessage(action));
+      }),
+    [catalog]
+  );
+  const fedRef = useRef<{processor: ThermidorProcessor; messages: readonly A2uiV09Message[]}>({
+    processor,
+    messages: [],
+  });
 
   // The session's stream only grows, so only its new messages are fed. A stream that does not
   // extend the one already fed, such as another session's, is fed again from the start.
   useEffect(() => {
-    const {clearSurfaces, processMessages} = actionsRef.current;
-    const fed = fedRef.current;
+    const fed = fedRef.current.processor === processor ? fedRef.current.messages : [];
     const extendsFed = fed.length === 0 || messages[fed.length - 1] === fed[fed.length - 1];
     const start = extendsFed ? fed.length : 0;
     if (!extendsFed) {
-      clearSurfaces();
+      clearSurfaces(processor);
     }
-    fedRef.current = messages;
-    if (messages.length > start) {
-      processMessages(messages.slice(start) as A2uiV09Message[]);
+    fedRef.current = {processor, messages};
+    for (const message of messages.slice(start)) {
+      feed(processor, message);
     }
-  }, [messages]);
+  }, [processor, messages]);
 
-  return <>{children}</>;
+  return <ProcessorContext.Provider value={processor}>{children}</ProcessorContext.Provider>;
+}
+
+/** The surface the stream holds under `surfaceId`, once its `createSurface` has been fed. */
+function useSurfaceModel(
+  surfaceId: string
+): SurfaceModel<ReactComponentImplementation> | undefined {
+  const processor = useContext(ProcessorContext);
+  const subscribe = useCallback(
+    (onChange: () => void) => {
+      if (!processor) {
+        return () => {};
+      }
+      const created = processor.model.onSurfaceCreated.subscribe(onChange);
+      const deleted = processor.model.onSurfaceDeleted.subscribe(onChange);
+      return () => {
+        created.unsubscribe();
+        deleted.unsubscribe();
+      };
+    },
+    [processor]
+  );
+  const getSnapshot = useCallback(
+    () => processor?.model.getSurface(surfaceId),
+    [processor, surfaceId]
+  );
+  return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+}
+
+/** Whether the surface has its root component, without which it draws nothing. */
+function useHasRoot(surface: SurfaceModel<ReactComponentImplementation> | undefined): boolean {
+  const subscribe = useCallback(
+    (onChange: () => void) => {
+      if (!surface) {
+        return () => {};
+      }
+      const created = surface.componentsModel.onCreated.subscribe(onChange);
+      const deleted = surface.componentsModel.onDeleted.subscribe(onChange);
+      return () => {
+        created.unsubscribe();
+        deleted.unsubscribe();
+      };
+    },
+    [surface]
+  );
+  const getSnapshot = useCallback(() => surface?.componentsModel.has('root') ?? false, [surface]);
+  return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+}
+
+interface A2UISurfaceProps {
+  /** The surface to draw. */
+  surfaceId: string;
+  /** Drawn until the surface and its root component arrive. */
+  fallback?: ReactNode;
+}
+
+/**
+ * Draws one surface of the {@link ThermidorA2UIStream} above, or `fallback` until it has a root
+ * component to draw.
+ */
+export function A2UISurface({surfaceId, fallback = null}: A2UISurfaceProps) {
+  const surface = useSurfaceModel(surfaceId);
+  const hasRoot = useHasRoot(surface);
+  if (!surface || !hasRoot) {
+    return <>{fallback}</>;
+  }
+  return (
+    <div className="a2ui-surface" data-surface-id={surfaceId}>
+      <A2uiSurface surface={surface} />
+    </div>
+  );
 }
 
 interface TurnSurfacesProps {
@@ -183,7 +322,7 @@ function Surface({surfaceId, rootComponentType, isLoading}: DiscoveredSurface) {
         {isLoading ? (
           <A2UISkeleton componentType={rootComponentType} />
         ) : (
-          <A2UIRenderer surfaceId={surfaceId} />
+          <A2UISurface surfaceId={surfaceId} />
         )}
       </ActionErrorNotesContext.Provider>
       <BlockActionErrorNote surfaceId={surfaceId} notes={notes} />
@@ -234,7 +373,7 @@ export function ProgressSurfaces({surfaces, turnFailed}: ProgressSurfacesProps) 
     <TurnFailedContext.Provider value={turnFailed}>
       {surfaces.map(({surfaceId}) => (
         <section className="catalog-surface" aria-label="Agent progress" key={surfaceId}>
-          <A2UIRenderer surfaceId={surfaceId} />
+          <A2UISurface surfaceId={surfaceId} />
         </section>
       ))}
     </TurnFailedContext.Provider>

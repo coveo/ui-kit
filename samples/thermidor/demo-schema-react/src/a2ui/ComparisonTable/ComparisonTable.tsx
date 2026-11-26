@@ -1,5 +1,5 @@
 import {useContext} from 'react';
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react/v0_9';
 import type {ComparisonAttribute, ComparisonProduct} from '@coveo/thermidor-schema';
 import {ComparisonTablePropsSchema} from '@coveo/thermidor-schema/zod3';
 import {ProductCardActionsContext} from '../ProductCard/product-card-actions.js';
@@ -22,7 +22,9 @@ export interface ComparisonTableOptions {
 }
 
 const comparisonTableApi = {name: 'ComparisonTable', schema: ComparisonTablePropsSchema};
-type ComparisonTableRender = Parameters<typeof createReactComponent<typeof comparisonTableApi>>[1];
+type ComparisonTableRender = Parameters<
+  typeof createComponentImplementation<typeof comparisonTableApi>
+>[1];
 
 function ComparisonProductHeader({product}: {product: ComparisonProduct}) {
   const renderActions = useContext(ProductCardActionsContext);
@@ -165,5 +167,8 @@ const renderComparisonTable =
   };
 
 export function createComparisonTable({maxLinks = DEFAULT_MAX_LINKS}: ComparisonTableOptions = {}) {
-  return createReactComponent(comparisonTableApi, renderComparisonTable(toLinkLimit(maxLinks)));
+  return createComponentImplementation(
+    comparisonTableApi,
+    renderComparisonTable(toLinkLimit(maxLinks))
+  );
 }

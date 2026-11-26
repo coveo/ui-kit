@@ -1,7 +1,8 @@
 /**
  * The concurrent lane (ADR-020): actions the producer announces as concurrent, sent beside the
  * session's single request, one lane per action and source node. Only the latest dispatch of a
- * lane is applied, and its answer is applied without being recorded in a run.
+ * lane is applied, and its answer is applied without being recorded in a run. The session lists
+ * each lane whose latest dispatch awaits its answer, and each lane whose latest dispatch failed.
  */
 
 import {readEventStream} from '@/src/internal/api/protocol/stream.js';
@@ -26,8 +27,8 @@ import {
   acceptUnrecordedWrites,
   applyUnrecordedWrites,
 } from './session-state.js';
-import type {SessionStore} from './store.js';
-import type {Turn} from './types.js';
+import type {SessionStore, SessionStoreState} from './store.js';
+import type {ConcurrentFailure, ConcurrentRequest, Turn} from './types.js';
 
 export interface ConcurrentActionsOptions {
   store: SessionStore<Turn>;
@@ -49,9 +50,20 @@ export interface ConcurrentActionsOptions {
 export interface ConcurrentActions {
   /**
    * Sends a validated action, or answers it from the cache when `policy` allows. Resolves once
-   * its answer is applied or dropped; never rejects.
+   * its answer is applied or dropped, after its failure is reported; never rejects.
    */
-  issue(action: ActionOrigin & {context: unknown}, policy: CachePolicy | undefined): Promise<void>;
+  issue(
+    dispatch: ConcurrentRequest,
+    context: unknown,
+    policy: CachePolicy | undefined
+  ): Promise<void>;
+  /**
+   * Hands the lane of `dispatch` over to the session's request, which sends it now that the
+   * producer no longer announces it as concurrent: in one store update, no earlier concurrent
+   * dispatch of the lane is the latest any more, its uncached request is aborted, and the lane
+   * leaves `concurrentRequests` and `concurrentFailures`. That request brings the outcome.
+   */
+  supersede(dispatch: ConcurrentRequest): void;
 }
 
 interface Lanes {
@@ -65,7 +77,8 @@ interface Lanes {
   sendUncached(origin: ActionOrigin, run: (signal: AbortSignal) => Promise<void>): Promise<void>;
   /**
    * Sends a request that runs to the end, unless one with the same key is in flight: joins it.
-   * `run` reads whether another dispatch joined its request.
+   * `run` reads whether another dispatch joined its request. Every dispatch that joined it gets
+   * its settlement, a rejection included.
    */
   sendCachedMiss(key: string, run: (joined: () => boolean) => Promise<void>): Promise<void>;
 }
@@ -123,20 +136,13 @@ function surfaceSnapshotMessages(event: NormalizedStreamEvent): readonly unknown
     : undefined;
 }
 
-async function quietly(
-  origin: ActionOrigin,
-  work: Promise<unknown>,
-  signal?: AbortSignal
-): Promise<void> {
-  try {
-    await work;
-  } catch (error) {
-    if (!signal?.aborted) {
-      const message = error instanceof Error ? error.message : String(error);
-      devWarn(`dispatchAction: ${origin.name} failed: ${message}`);
-    }
-  }
-}
+export const NO_CONCURRENT_REQUESTS: readonly ConcurrentRequest[] = Object.freeze([]);
+export const NO_CONCURRENT_FAILURES: readonly ConcurrentFailure[] = Object.freeze([]);
+
+type Update = (state: SessionStoreState<Turn>) => SessionStoreState<Turn>;
+
+/** A `RUN_ERROR`'s message, with its code when the gateway sent one. */
+type RunError = Error & {errorCode?: string};
 
 export function createConcurrentActions({
   store,
@@ -147,6 +153,97 @@ export function createConcurrentActions({
 }: ConcurrentActionsOptions): ConcurrentActions {
   const cache = createActionCache();
   const lanes = createLanes();
+  // The requests whose failure was reported: dispatches that joined one report it once.
+  const reported = new WeakSet<Promise<unknown>>();
+  // The entries the store's `concurrentRequests` and `concurrentFailures` list, by lane. A listed
+  // lane holds its latest dispatch that awaits its answer, the entry of an earlier one in the store.
+  const requests = new Map<string, ConcurrentRequest>();
+  const failures = new Map<string, ConcurrentFailure>();
+
+  function failureOf(dispatch: ConcurrentRequest, error: unknown): ConcurrentFailure {
+    const message = error instanceof Error ? error.message : String(error);
+    devWarn(`dispatchAction: ${dispatch.name} failed: ${message}`);
+    const errorCode = (error as RunError | undefined)?.errorCode;
+    return {...dispatch, message, ...(errorCode ? {errorCode} : {})};
+  }
+
+  /**
+   * Publishes what became of the lane of `dispatch` in one store update: whether it is listed as
+   * awaiting its answer, its failure replaced, or cleared with `null`, and `update`, such as a
+   * cached answer's writes. What is left `undefined` stays as it is. Subscribers run synchronously
+   * and may dispatch on the lane, so a dispatch publishes once its own bookkeeping is done and does
+   * nothing more after it.
+   */
+  function publish(
+    dispatch: ConcurrentRequest,
+    listed?: boolean,
+    failure?: ConcurrentFailure | null,
+    update?: Update
+  ): void {
+    const lane = laneKey(dispatch);
+    const relist = listed !== undefined && requests.has(lane) !== listed;
+    const refail = failure !== undefined && (failure !== null || failures.has(lane));
+    if (listed) {
+      requests.set(lane, dispatch);
+    } else if (relist) {
+      requests.delete(lane);
+    }
+    if (refail) {
+      // A failure moves to the end, as the latest to fail.
+      failures.delete(lane);
+      if (failure) {
+        failures.set(lane, failure);
+      }
+    }
+    if (relist || refail || update) {
+      store.setState((latest) => ({
+        ...(update ? update(latest) : latest),
+        ...(relist && {concurrentRequests: Object.freeze([...requests.values()])}),
+        ...(refail && {concurrentFailures: Object.freeze([...failures.values()])}),
+      }));
+    }
+  }
+
+  /**
+   * Starts `work`, then lists `dispatch` as awaiting its answer, its lane's last failure cleared,
+   * until `work` settles, unless a later dispatch of its lane awaits one meanwhile. A later cache
+   * hit or failure before sending unlists it itself.
+   */
+  function awaitAnswer(dispatch: ConcurrentRequest, work: () => Promise<void>): Promise<void> {
+    const settled = work().finally(() => {
+      if (requests.get(laneKey(dispatch)) === dispatch) {
+        publish(dispatch, false);
+      }
+    });
+    publish(dispatch, true, null);
+    return settled;
+  }
+
+  /**
+   * Reports the failure of `work` once, through the dispatch its lane still lists as awaiting its
+   * answer: an earlier one with the same key, such as a cached miss sent again uncached, reports
+   * nothing, and a miss that dispatches joined reports through the latest of them.
+   */
+  async function settle(
+    dispatch: ConcurrentRequest,
+    key: string,
+    work: Promise<unknown>,
+    signal?: AbortSignal
+  ): Promise<void> {
+    try {
+      await work;
+    } catch (error) {
+      if (
+        !signal?.aborted &&
+        lanes.isLatest(dispatch, key) &&
+        requests.get(laneKey(dispatch)) === dispatch &&
+        !reported.has(work)
+      ) {
+        reported.add(work);
+        publish(dispatch, undefined, failureOf(dispatch, error));
+      }
+    }
+  }
 
   function accept(messages: readonly unknown[]) {
     return acceptUnrecordedWrites(messages, sessionActivities(store.getState()), config.contracts);
@@ -154,7 +251,7 @@ export function createConcurrentActions({
 
   // A cache hit, or an answer applied again, reuses its messages, so each apply delivers copies:
   // a renderer can then tell a write from a render by identity.
-  function apply(messages: readonly unknown[]): void {
+  function applying(messages: readonly unknown[]): Update | undefined {
     const accepted = accept(structuredClone(messages));
     if (accepted.messages.length < messages.length) {
       devWarn(
@@ -162,9 +259,9 @@ export function createConcurrentActions({
       );
     }
     if (accepted.writes.length === 0) {
-      return;
+      return undefined;
     }
-    store.setState((latest) => ({
+    return (latest) => ({
       ...latest,
       unrecordedState: applyUnrecordedWrites(
         latest.unrecordedState ?? EMPTY_UNRECORDED_STATE,
@@ -174,7 +271,14 @@ export function createConcurrentActions({
         latest.rendererStream ?? EMPTY_RENDERER_STREAM,
         accepted.messages
       ),
-    }));
+    });
+  }
+
+  function apply(messages: readonly unknown[]): void {
+    const update = applying(messages);
+    if (update) {
+      store.setState(update);
+    }
   }
 
   /**
@@ -206,7 +310,7 @@ export function createConcurrentActions({
     const answer: unknown[] = [];
     let passedOver = false;
     let finished = false;
-    let runError: string | undefined;
+    let runError: RunError | undefined;
     await readEventStream({
       stream: result.data.stream,
       signal,
@@ -217,8 +321,10 @@ export function createConcurrentActions({
         }
         const event = parseSSEEvent(rawEvent);
         if (event.type === 'RUN_ERROR') {
-          runError =
-            (event as {message?: string}).message || 'An error occurred during the action.';
+          const {message, code} = event as {message?: string; code?: unknown};
+          runError = Object.assign(new Error(message || 'An error occurred during the action.'), {
+            errorCode: typeof code === 'string' ? code : undefined,
+          });
         } else if (event.type === 'RUN_FINISHED' || event.type === 'turn_complete') {
           finished = true;
         } else if (event.type === 'ACTIVITY_SNAPSHOT') {
@@ -233,9 +339,14 @@ export function createConcurrentActions({
           }
         }
       },
+    }).catch((error: unknown) => {
+      // Once the run reported its outcome, a later transport error does not replace it.
+      if (signal?.aborted || (!finished && runError === undefined)) {
+        throw error;
+      }
     });
     if (runError !== undefined) {
-      throw new Error(runError);
+      throw runError;
     }
     if (!finished) {
       throw new Error('Stream ended without a terminal event.');
@@ -247,44 +358,58 @@ export function createConcurrentActions({
   }
 
   return {
-    issue(origin, policy) {
+    supersede(dispatch) {
+      lanes.claim(dispatch);
+      publish(dispatch, false, null);
+    },
+    issue(dispatch, context, policy) {
       let navigatorRead: ReturnType<typeof readNavigatorContext>;
+      let key: string;
       try {
         navigatorRead = readNavigatorContext();
+        key = actionCacheKey(dispatch, context, navigatorRead.locale);
       } catch (error) {
-        lanes.claim(origin);
-        return quietly(origin, Promise.reject(error));
+        lanes.claim(dispatch);
+        publish(dispatch, false, failureOf(dispatch, error));
+        return Promise.resolve();
       }
 
-      const key = actionCacheKey(origin, origin.context, navigatorRead.locale);
-      lanes.claim(origin, key);
+      lanes.claim(dispatch, key);
       const cached = policy && cache.get(key, policy.ttlMs);
       if (cached) {
-        apply(cached);
+        // The answer and the lane's unlisting reach subscribers in one update, before any of them
+        // can dispatch on the lane again.
+        publish(dispatch, false, null, applying(cached));
         return Promise.resolve();
       }
 
       const action: A2uiAction = {
-        surfaceId: origin.surfaceId,
-        name: origin.name,
-        sourceComponentId: origin.sourceComponentId,
+        surfaceId: dispatch.surfaceId,
+        name: dispatch.name,
+        sourceComponentId: dispatch.sourceComponentId,
         timestamp: new Date().toISOString(),
-        context: origin.context,
+        context,
       };
       if (!policy) {
-        return lanes.sendUncached(origin, (signal) =>
-          quietly(
-            origin,
-            stream(action, navigatorRead.navigatorContext, origin, key, {signal}),
-            signal
+        return awaitAnswer(dispatch, () =>
+          lanes.sendUncached(dispatch, (signal) =>
+            settle(
+              dispatch,
+              key,
+              stream(action, navigatorRead.navigatorContext, dispatch, key, {signal}),
+              signal
+            )
           )
         );
       }
-      return lanes.sendCachedMiss(key, (joined) =>
-        quietly(
-          origin,
-          stream(action, navigatorRead.navigatorContext, origin, key, {joined}).then((messages) =>
-            cache.set(key, accept(messages).messages)
+      return awaitAnswer(dispatch, () =>
+        settle(
+          dispatch,
+          key,
+          lanes.sendCachedMiss(key, (joined) =>
+            stream(action, navigatorRead.navigatorContext, dispatch, key, {joined}).then(
+              (messages) => cache.set(key, accept(messages).messages)
+            )
           )
         )
       );

@@ -1,9 +1,10 @@
-import {Fragment, useState} from 'react';
+import {useState} from 'react';
 
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react/v0_9';
 import type {BundleSlot, BundleTier} from '@coveo/thermidor-schema';
 import {BundleDisplayPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {formatConfiguredPrice as formatPrice} from '../../context/format-configured-price.js';
+import {DataChild} from '../data-child.js';
 import styles from './BundleDisplay.module.css';
 
 /**
@@ -11,15 +12,16 @@ import styles from './BundleDisplay.module.css';
  *
  * The generic binder resolves `heading` and `tiers` from `BundleDisplayPropsSchema`; the heading is
  * left out when the backend sends none. For the active tier only it mounts each slot's
- * product-summary child via `buildChild(slot.childId)`. Each child owns its own resolved state
+ * product-summary child with `DataChild`: the slot ids arrive in the bound `tiers`, which
+ * `buildChild` cannot draw from. Each child owns its own resolved state
  * (price included); the per-tier total is the backend-computed `tier.total`, rendered as-is.
  */
-export const BundleDisplay = createReactComponent(
+export const BundleDisplay = createComponentImplementation(
   {
     name: 'BundleDisplay',
     schema: BundleDisplayPropsSchema,
   },
-  ({props, buildChild}) => {
+  ({props}) => {
     const heading = props.heading;
     const tiers = props.tiers ?? [];
     const [activeTierIndex, setActiveTierIndex] = useState(0);
@@ -55,7 +57,7 @@ export const BundleDisplay = createReactComponent(
             )}
             <div className={styles.itemList} role="list" aria-label="Bundle items">
               {activeSlots.map((slot: BundleSlot) => (
-                <Fragment key={slot.childId}>{buildChild(slot.childId)}</Fragment>
+                <DataChild key={slot.childId} id={slot.childId} />
               ))}
             </div>
             {activeSlots.length > 0 && (

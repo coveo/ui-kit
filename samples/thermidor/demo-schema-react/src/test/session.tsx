@@ -1,7 +1,6 @@
 import {useSyncExternalStore, type ReactElement, type ReactNode} from 'react';
 import {render, screen, waitFor} from '@testing-library/react';
 import {expect, vi} from 'vitest';
-import {A2UIProvider} from '@copilotkit/a2ui-renderer';
 import {createSession, type SerializedSession} from '@coveo/thermidor';
 import {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
 import {SessionProvider, useSession, type DemoSession} from '../context/session.js';
@@ -111,7 +110,7 @@ export const INSTANT_PRODUCTS_ID = 'instant-products';
  */
 function instantProductsShellRun(
   surfaceId = SHELL_SURFACE_ID,
-  announced: Record<string, unknown> = {}
+  announced: Record<string, unknown> | null = {}
 ): object[] {
   return run(
     [
@@ -151,11 +150,13 @@ function instantProductsShellRun(
         },
       },
     ],
-    {
-      concurrentActions: {
-        [surfaceId]: {fetchInstantProducts: {cache: {ttlMs: 60_000}}, ...announced},
-      },
-    }
+    announced === null
+      ? undefined
+      : {
+          concurrentActions: {
+            [surfaceId]: {fetchInstantProducts: {cache: {ttlMs: 60_000}}, ...announced},
+          },
+        }
   );
 }
 
@@ -314,6 +315,17 @@ export const answerInstantProductsShell: ConverseHandler = (request) => {
 };
 
 /**
+ * Answers as {@link answerInstantProductsShell}, with the shell announcing nothing as concurrent,
+ * so it shows no products.
+ */
+export const answerUnannouncedInstantProductsShell: ConverseHandler = (request, signal) => {
+  if (request.action?.name === 'initialize') {
+    return sseResponse(instantProductsShellRun(SHELL_SURFACE_ID, null));
+  }
+  return answerInstantProductsShell(request, signal);
+};
+
+/**
  * Answers as {@link answerInstantProductsShell}, with the shell also announcing `fetchSuggestions`
  * as concurrent.
  */
@@ -364,9 +376,13 @@ function SessionStream({children}: {children: ReactNode}) {
   );
   return (
     <SessionRequestProvider value={session}>
-      <A2UIProvider catalog={catalog} onAction={session.dispatchAction}>
-        <ThermidorA2UIStream messages={a2uiMessages}>{children}</ThermidorA2UIStream>
-      </A2UIProvider>
+      <ThermidorA2UIStream
+        catalog={catalog}
+        messages={a2uiMessages}
+        onAction={session.dispatchAction}
+      >
+        {children}
+      </ThermidorA2UIStream>
     </SessionRequestProvider>
   );
 }

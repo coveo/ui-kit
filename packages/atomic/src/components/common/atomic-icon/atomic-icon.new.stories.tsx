@@ -1,4 +1,4 @@
-import bgIcons from '@salesforce-ux/design-system/design-tokens/dist/bg-standard.common';
+import bgIcons from '@salesforce-ux/design-system/design-tokens/dist/bg-standard.common.js';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';

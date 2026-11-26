@@ -1,5 +1,5 @@
 import {useId} from 'react';
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react/v0_9';
 import {ProductResearchCardPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {A2UIProductCard} from '../ProductCard/ProductCard.js';
 import {A2UISkeleton} from '../Skeleton/Skeleton.js';
@@ -35,7 +35,7 @@ export function createProductResearchCard({
 }: ProductResearchCardOptions = {}) {
   const linkLimit = toLinkLimit(maxLinks);
 
-  return createReactComponent(
+  return createComponentImplementation(
     {
       name: 'ProductResearchCard',
       schema: ProductResearchCardPropsSchema,

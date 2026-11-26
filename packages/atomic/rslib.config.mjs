@@ -6,6 +6,9 @@ import {litCssPlugin} from './scripts/lit-css-plugin.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const {version} = JSON.parse(readFileSync(join(__dirname, 'package.json'), 'utf8'));
+const {version: headlessVersion} = JSON.parse(
+  readFileSync(join(__dirname, '../headless/package.json'), 'utf8')
+);
 
 const shared = {
   bundle: false,
@@ -48,6 +51,7 @@ export default defineConfig({
     },
     define: {
       'process.env.VERSION': JSON.stringify(version),
+      'process.env.HEADLESS_VERSION': JSON.stringify(headlessVersion),
       // import.meta.url is only used for CDN detection in resource-url-utils.ts.
       // CDN builds go through rsbuild (not rslib), so safe to stub it out here.
       // This also prevents CJS output from containing invalid import.meta syntax.

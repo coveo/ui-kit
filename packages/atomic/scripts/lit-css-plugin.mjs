@@ -113,6 +113,44 @@ async function createCssModules(distDir, format = 'esm') {
   }
 }
 
+/**
+ * Point the imports of standalone `.tw.css` files at the JS modules that `createCssModules` emits.
+ * Rslib leaves these imports on the `.css` file, which the build does not emit, so they only
+ * resolved in tools that try file extensions. Webpack and Rspack resolve the imports of an ES
+ * module package strictly, and Node.js never tries `.cjs`.
+ *
+ * Only module specifiers change, not the `@reference` and `@import` rules of inline styles that
+ * name the same files.
+ */
+function redirectCssModuleImports(distDir, format = 'esm') {
+  const ext = jsExt(format);
+  let redirected = 0;
+
+  for (const file of getAllJsFiles(distDir, ext)) {
+    const content = readFileSync(file, 'utf8');
+    let updated = content;
+    for (const cssFile of standaloneCssFiles) {
+      let specifier = relative(dirname(file), join(distDir, cssFile)).split(sep).join(posix.sep);
+      if (!specifier.startsWith('.')) {
+        specifier = `./${specifier}`;
+      }
+      const imports = new RegExp(
+        `((?<!@)\\b(?:from|import|require)\\s*\\(?\\s*)(["'])${specifier.replaceAll('.', '\\.')}\\2`,
+        'g'
+      );
+      updated = updated.replace(imports, `$1$2${specifier}${ext}$2`);
+    }
+    if (updated !== content) {
+      writeFileSync(file, updated, 'utf8');
+      redirected++;
+    }
+  }
+  console.log(
+    colors.bgGreen(`Pointed CSS module imports (${format}) at their JS files in`),
+    colors.green(`${redirected} files`)
+  );
+}
+
 // ── Inline CSS processing ──────────────────────────────────────────────────────
 
 function getAllJsFiles(dir, ext = '.js') {
@@ -248,6 +286,7 @@ export function litCssPlugin() {
           createJsonModules(dir, format);
           await createCssModules(dir, format);
           await processInlineCss(dir, format);
+          redirectCssModuleImports(dir, format);
         }
         resolvePathAliasesInDts(join(packageDir, 'dist/types'));
 

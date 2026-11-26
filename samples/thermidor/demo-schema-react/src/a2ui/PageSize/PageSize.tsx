@@ -1,5 +1,5 @@
 import {useId, useOptimistic, useRef} from 'react';
-import {createReactComponent} from '@copilotkit/a2ui-renderer';
+import {createComponentImplementation} from '@a2ui/react/v0_9';
 import type {PageSizeAction} from '@coveo/thermidor-schema';
 import {PageSizePropsSchema} from '@coveo/thermidor-schema/zod3';
 import {useGesture} from '../session-request.js';
@@ -9,8 +9,11 @@ import styles from './PageSize.module.css';
 const DEFAULT_PAGE_SIZE_OPTIONS = [12, 24, 48];
 
 /** A2-UI component for the `page-size` selector. */
-export const PageSize = createReactComponent(
+export const PageSize = createComponentImplementation(
   {name: 'PageSize', schema: PageSizePropsSchema},
+  // TODO(a2ui-react context): `context` is deprecated in @a2ui/react 0.16. Build this through
+  // `view({node, buildChild})` (or a shared helper): props from `useNodeView`, and dispatch with
+  // `useA2uiSurface()?.dispatchAction(action, node.componentId)`.
   ({props, context}) => {
     const selectId = useId();
 

@@ -3,11 +3,14 @@ import type {ReactNode} from 'react';
 import {describe, expect, it, vi} from 'vitest';
 import type {ActionError, SessionRequest} from '@coveo/thermidor';
 import {
+  hasFailed,
   isBlocking,
+  isConcurrentInFlight,
   SessionRequestProvider,
   submitQuery,
   useActionError,
   useComponentActionError,
+  useDispatchOutcome,
   useLatestWhenFree,
   type SurfaceAction,
   type QuerySubmitter,
@@ -29,8 +32,8 @@ function fakeSession(concurrent: readonly SurfaceAction[] = []) {
     cancel: vi.fn(),
     dispatchAction: vi.fn(async () => {}),
   };
-  const setRequest = (next: SessionRequest | undefined) => {
-    snapshot = requestSnapshot(next);
+  const setRequest = (next: SessionRequest | undefined, actionError?: ActionError) => {
+    snapshot = requestSnapshot(next, actionError);
     for (const listener of [...listeners]) {
       listener();
     }
@@ -46,6 +49,12 @@ const SUGGESTION: SessionRequest = {
   sourceComponentId: 'query-suggestions',
 };
 
+function withSession(session: SessionRequestSource) {
+  return ({children}: {children: ReactNode}) => (
+    <SessionRequestProvider value={session}>{children}</SessionRequestProvider>
+  );
+}
+
 describe('isBlocking', () => {
   it('keeps the surfaces usable while suggestions are fetched', () => {
     expect(isBlocking(SUGGESTION)).toBe(false);
@@ -56,6 +65,47 @@ describe('isBlocking', () => {
   it('keeps the surfaces usable while recent queries are removed or cleared', () => {
     expect(isBlocking({...SUGGESTION, name: 'removeRecentQuery'})).toBe(false);
     expect(isBlocking({...SUGGESTION, name: 'clearRecentQueries'})).toBe(false);
+  });
+});
+
+describe('isConcurrentInFlight and hasFailed', () => {
+  const suggestions = {
+    surfaceId: 'shell',
+    sourceComponentId: 'query-suggestions',
+    name: 'fetchSuggestions',
+  };
+  const listed = {component: 'QuerySuggestions', ...suggestions};
+
+  it('reads whether the node action is listed among the concurrent requests', () => {
+    const snapshot = {...requestSnapshot(undefined), concurrentRequests: [listed]};
+
+    expect(isConcurrentInFlight(snapshot, suggestions)).toBe(true);
+    expect(isConcurrentInFlight(snapshot, {...suggestions, sourceComponentId: 'other'})).toBe(
+      false
+    );
+    expect(isConcurrentInFlight(requestSnapshot(undefined), suggestions)).toBe(false);
+  });
+
+  it("reads a concurrent dispatch's failure from concurrentFailures only", () => {
+    const failure = {...listed, message: 'Refused'};
+    const concurrentFailure = {...requestSnapshot(undefined), concurrentFailures: [failure]};
+
+    expect(hasFailed(concurrentFailure, suggestions, true)).toBe(true);
+    expect(hasFailed(concurrentFailure, {...suggestions, sourceComponentId: 'other'}, true)).toBe(
+      false
+    );
+    expect(hasFailed(concurrentFailure, suggestions, false)).toBe(false);
+  });
+
+  it("reads an ordinary dispatch's failure from actionError only", () => {
+    const ordinaryFailure = requestSnapshot(undefined, {...listed, message: 'Refused'});
+
+    expect(hasFailed(ordinaryFailure, suggestions, false)).toBe(true);
+    expect(hasFailed(ordinaryFailure, {...suggestions, name: 'removeRecentQuery'}, false)).toBe(
+      false
+    );
+    expect(hasFailed(ordinaryFailure, suggestions, true)).toBe(false);
+    expect(hasFailed(requestSnapshot(undefined), suggestions, false)).toBe(false);
   });
 });
 
@@ -292,5 +342,38 @@ describe('submitQuery', () => {
       name: 'submitPrompt',
       payload: {prompt: 'kayaks'},
     });
+  });
+});
+
+describe('useDispatchOutcome', () => {
+  const suggestions = {
+    surfaceId: 'shell',
+    sourceComponentId: 'query-suggestions',
+    name: 'fetchSuggestions',
+  };
+
+  it('reads an ordinary dispatch as failed when actionError names it as it resolves', async () => {
+    const {session, setRequest} = fakeSession();
+    const {result} = renderHook(() => useDispatchOutcome(), {wrapper: withSession(session)});
+
+    const failed = result.current(suggestions, () =>
+      setRequest(undefined, {...SUGGESTION, message: 'Boom'})
+    );
+    await expect(failed).resolves.toBe('failed');
+
+    const applied = result.current(suggestions, () => setRequest(undefined));
+    await expect(applied).resolves.toBe('applied');
+  });
+
+  it('reads a concurrent dispatch as superseded while a later one is in flight', async () => {
+    const {session} = fakeSession([suggestions]);
+    const {result} = renderHook(() => useDispatchOutcome(), {wrapper: withSession(session)});
+    const snapshot = {
+      ...session.getSnapshot(),
+      concurrentRequests: [{...SUGGESTION, component: 'QuerySuggestions'}],
+    };
+    session.getSnapshot = () => snapshot;
+
+    await expect(result.current(suggestions, () => {})).resolves.toBe('superseded');
   });
 });

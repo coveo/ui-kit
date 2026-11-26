@@ -634,7 +634,22 @@ describe('atomic-commerce-recommendation-interface', () => {
         await element.updateComplete;
 
         expect(engine.logger.warn).toHaveBeenCalledExactlyOnceWith(
-          'The `language` property will be removed in the next major version of Atomic (v4). Rather than using this property, set the initial language through the engine configuration when calling `initializeWithEngine`, and update the language as needed using the `updateLocale` method.'
+          '[Deprecated] The `language` property of `atomic-commerce-recommendation-interface` is deprecated and will be removed in Atomic v4. Set the initial language in the `context` of the engine configuration, then call `updateLocale({language})` to change it.'
+        );
+      });
+
+      it('should log the deprecation warning only once per engine', async () => {
+        const element = await setupElement({language: 'en'});
+        const engine = buildFakeCommerceEngine();
+        await element.initializeWithEngine(engine);
+
+        element.language = 'fr';
+        await element.updateComplete;
+        element.language = 'de';
+        await element.updateComplete;
+
+        expect(engine.logger.warn).toHaveBeenCalledExactlyOnceWith(
+          '[Deprecated] The `language` property of `atomic-commerce-recommendation-interface` is deprecated and will be removed in Atomic v4. Set the initial language in the `context` of the engine configuration, then call `updateLocale({language})` to change it.'
         );
       });
 
