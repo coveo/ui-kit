@@ -20,6 +20,12 @@ class XTestComponentInside extends HTMLElement {}
 
 const failingComponentError = new Error('chunk load failed');
 
+const pageAutoloaderKey = Symbol.for('@coveo/atomic/autoloader');
+
+const {loadHandedOverComponent} = vi.hoisted(() => ({
+  loadHandedOverComponent: vi.fn(),
+}));
+
 vi.mock('@/src/components/lazy-index.js', () => ({
   __esModule: true,
   default: {
@@ -32,6 +38,7 @@ vi.mock('@/src/components/lazy-index.js', () => ({
     'x-failing-component': async () => {
       throw failingComponentError;
     },
+    'x-handed-over-component': loadHandedOverComponent,
   },
 }));
 
@@ -57,9 +64,16 @@ describe('autoloader', () => {
       return element;
     };
 
+    const createDetachedRoot = () => {
+      const root = document.createElement('div');
+      root.append(document.createElement('x-handed-over-component'));
+      return root;
+    };
+
     beforeEach(() => {
       mockCustomElementsRegistry.clear();
       document.body.innerHTML = '';
+      Reflect.deleteProperty(window, pageAutoloaderKey);
     });
 
     it('should register components when added to DOM', async () => {
@@ -182,6 +196,42 @@ describe('autoloader', () => {
       await setupComponent(() => document.createElement('x-test-component'));
 
       expect(consoleErrorSpy).not.toHaveBeenCalled();
+    });
+
+    it('should register the components of the roots that a later call hands over', async () => {
+      registerAutoloader();
+      const addRootsSpy = vi.spyOn(Reflect.get(window, pageAutoloaderKey), 'addRoots');
+      const root = createDetachedRoot();
+
+      registerAutoloader(root);
+      await waitForNextTick();
+
+      expect(addRootsSpy).toHaveBeenCalledWith([root]);
+      expect(loadHandedOverComponent).toHaveBeenCalledOnce();
+    });
+
+    describe('when another copy of the autoloader already runs on the page', () => {
+      const addRoots = vi.fn();
+
+      beforeEach(() => {
+        vi.stubGlobal(pageAutoloaderKey, {addRoots});
+      });
+
+      it('should hand its roots over without importing any component', async () => {
+        const root = createDetachedRoot();
+
+        registerAutoloader(root);
+        await waitForNextTick();
+
+        expect(addRoots).toHaveBeenCalledWith([root]);
+        expect(loadHandedOverComponent).not.toHaveBeenCalled();
+      });
+
+      it('should hand the document element over when called without roots', () => {
+        registerAutoloader();
+
+        expect(addRoots).toHaveBeenCalledWith([document.documentElement]);
+      });
     });
   });
 });
