@@ -36,7 +36,7 @@ describe('ValidatePropsController', () => {
   describe('when throwOnError is true (default behavior)', () => {
     beforeEach(() => {
       controller = new ValidatePropsController(
-        mockElement as TestElement & HTMLElement & {error: Error},
+        mockElement as TestElement,
         mockGetProps,
         mockSchema
       );
@@ -159,6 +159,22 @@ describe('ValidatePropsController', () => {
 
           expect(mockElement.error).toBeUndefined();
         });
+
+        it('should leave an error set by another writer', async () => {
+          mockGetProps.mockReturnValue({name: 'invalid'});
+
+          fixtureWrapper(mockElement);
+          await mockElement.updateComplete;
+
+          const foreignError = new Error('foreign');
+          mockElement.error = foreignError;
+          mockGetProps.mockReturnValue({name: 'valid'});
+
+          controller.hostUpdate();
+
+          expect(mockElement.error).toBe(foreignError);
+          expect(schemaSpy).toHaveBeenCalledOnce();
+        });
       });
     });
   });
@@ -166,7 +182,7 @@ describe('ValidatePropsController', () => {
   describe('when throwOnError is false (warning mode)', () => {
     beforeEach(() => {
       controller = new ValidatePropsController(
-        mockElement as TestElement & HTMLElement & {error: Error},
+        mockElement as TestElement,
         mockGetProps,
         mockSchema,
         false

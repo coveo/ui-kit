@@ -51,7 +51,7 @@ export class AtomicQuickview extends LitElement implements InitializableComponen
   public sandbox = 'allow-popups allow-top-navigation allow-same-origin';
 
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
   @state() private result!: Result;
 
   @bindStateToController('quickview')

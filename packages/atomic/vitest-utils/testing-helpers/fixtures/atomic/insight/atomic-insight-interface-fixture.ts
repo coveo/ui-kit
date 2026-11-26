@@ -31,7 +31,7 @@ export class FixtureAtomicInsightInterface
   template!: TemplateResult;
   @provide({context: bindingsContext})
   bindings: InsightBindings = {} as InsightBindings;
-  error!: Error;
+  error?: Error;
   updateIconAssetsPath = () => {};
   registerFieldsToInclude?: (() => void) | undefined;
 

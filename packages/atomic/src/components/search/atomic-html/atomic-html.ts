@@ -39,7 +39,7 @@ export class AtomicHtml extends LitElement implements InitializableComponent<Bin
   }
 
   @state() bindings!: Bindings;
-  @state() error!: Error;
+  @state() public error?: Error;
 
   /**
    * The string value containing HTML to display;

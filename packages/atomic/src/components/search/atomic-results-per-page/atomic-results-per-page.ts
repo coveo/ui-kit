@@ -50,7 +50,7 @@ export class AtomicResultsPerPage
   implements InitializableComponent<Bindings>
 {
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
   public resultPerPage!: ResultsPerPage;
   public searchStatus!: SearchStatus;
   private choices!: number[];

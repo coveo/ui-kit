@@ -29,8 +29,7 @@ export class AtomicCommerceFacetNumberInput
   @state()
   bindings!: CommerceBindings;
 
-  @state()
-  error!: Error;
+  @state() public error?: Error;
 
   /**
    * The label for the numeric facet input, used for accessibility and display.

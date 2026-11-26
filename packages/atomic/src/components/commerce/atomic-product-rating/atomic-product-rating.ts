@@ -31,7 +31,7 @@ export class AtomicProductRating
   implements InitializableComponent<CommerceBindings>
 {
   @state() public bindings!: CommerceBindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   private productController = createProductContextController(this);
 

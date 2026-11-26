@@ -118,8 +118,7 @@ export class AtomicRecsList
 
   @state()
   bindings!: RecsBindings;
-  @state()
-  error!: Error;
+  @state() public error?: Error;
   @state()
   private isAppLoaded = false;
   @state()

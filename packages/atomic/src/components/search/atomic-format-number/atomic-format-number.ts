@@ -52,7 +52,7 @@ export class AtomicFormatNumber extends LitElement implements LitElementWithErro
   })
   maximumSignificantDigits?: number;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   private format: NumberFormatter = (value, languages) => {
     return value.toLocaleString(languages, {

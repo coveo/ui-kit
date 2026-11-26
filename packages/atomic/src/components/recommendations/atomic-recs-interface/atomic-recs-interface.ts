@@ -64,7 +64,7 @@ export class AtomicRecsInterface
   @state()
   @provide({context: bindingsContext})
   public bindings: RecsBindings = {} as RecsBindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   private initialized = false;
   private store: RecsStore;

@@ -137,7 +137,7 @@ export class AtomicCommerceSearchBox
   `;
 
   @state() bindings!: CommerceBindings;
-  @state() error!: Error;
+  @state() public error?: Error;
   @state() isExpanded = false;
   @bindStateToController('searchBox')
   @state()

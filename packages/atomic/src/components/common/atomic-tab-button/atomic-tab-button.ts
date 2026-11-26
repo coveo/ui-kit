@@ -1,5 +1,5 @@
 import {html, LitElement, type PropertyValues} from 'lit';
-import {customElement, property} from 'lit/decorators.js';
+import {customElement, property, state} from 'lit/decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {LitElementWithError} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
@@ -17,7 +17,7 @@ import {LightDomMixin} from '@/src/mixins/light-dom';
 @customElement('atomic-tab-button')
 @withTailwindStyles
 export class AtomicTabButton extends LightDomMixin(LitElement) implements LitElementWithError {
-  error!: Error;
+  @state() public error?: Error;
   /**
    * The label to display on the tab button.
    */

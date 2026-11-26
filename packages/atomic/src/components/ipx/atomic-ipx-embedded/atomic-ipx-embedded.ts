@@ -51,8 +51,7 @@ export class AtomicIpxEmbedded extends LitElement implements InitializableCompon
   @state()
   public bindings!: AnyBindings;
 
-  @state()
-  public error!: Error;
+  @state() public error?: Error;
 
   /**
    * The container to hide from the tabindex and accessibility DOM when the modal is closed.

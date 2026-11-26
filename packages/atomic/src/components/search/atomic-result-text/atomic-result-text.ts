@@ -77,7 +77,7 @@ export class AtomicResultText
 
   @state() public bindings!: Bindings;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
     {

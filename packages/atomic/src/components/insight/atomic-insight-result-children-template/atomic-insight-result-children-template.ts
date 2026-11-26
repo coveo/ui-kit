@@ -21,7 +21,7 @@ import {mapProperty} from '@/src/utils/props-utils';
 @customElement('atomic-insight-result-children-template')
 @withTailwindStyles
 export class AtomicInsightResultChildrenTemplate extends LitElement implements LitElementWithError {
-  @state() error!: Error;
+  @state() public error?: Error;
 
   /**
    * An array of functions that must each return `true` for this template to apply to a child result.

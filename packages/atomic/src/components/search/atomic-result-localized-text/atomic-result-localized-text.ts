@@ -58,7 +58,7 @@ export class AtomicResultLocalizedText
 
   @state() public bindings!: Bindings;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   public initialize() {
     if (!this.result && this.resultController.item) {

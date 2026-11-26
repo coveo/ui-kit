@@ -106,8 +106,7 @@ export class AtomicRefineModal extends LitElement implements InitializableCompon
   @state()
   bindings!: Bindings;
 
-  @state()
-  error!: Error;
+  @state() public error?: Error;
 
   /**
    * The element that opens the modal when clicked.

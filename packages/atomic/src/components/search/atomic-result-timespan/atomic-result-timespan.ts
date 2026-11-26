@@ -74,7 +74,7 @@ export class AtomicResultTimespan
   @property({reflect: true}) public format?: string;
 
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   private resultContext = createResultContextController(this);
 

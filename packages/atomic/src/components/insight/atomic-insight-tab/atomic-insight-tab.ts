@@ -72,7 +72,7 @@ export class AtomicInsightTab
   @property({type: String}) public expression!: string;
 
   @state() public bindings!: InsightBindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
   @bindStateToController('tab')
   @state()
   private tabState!: InsightTabState;

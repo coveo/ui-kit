@@ -36,8 +36,7 @@ export class AtomicProductPrice
   @state()
   bindings!: CommerceBindings;
 
-  @state()
-  error!: Error;
+  @state() public error?: Error;
 
   private productController = createProductContextController(this);
   context!: Context;

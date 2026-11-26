@@ -106,7 +106,7 @@ export class AtomicRatingRangeFacet extends LitElement implements InitializableC
 
   static styles = [facetCommonStyles, facetValueCheckboxStyles, atomicRatingStyles];
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   public facet!: NumericFacet;
   public searchStatus!: SearchStatus;

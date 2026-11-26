@@ -66,7 +66,7 @@ export class AtomicInsightInterface
   @state()
   @provide({context: bindingsContext})
   public bindings: InsightBindings = {} as InsightBindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
   private initialized = false;
   private interfaceController = new InterfaceController<InsightEngine>(
     this,

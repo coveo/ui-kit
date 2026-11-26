@@ -56,7 +56,7 @@ export class AtomicAutomaticFacet
   static styles = [facetCommonStyles, facetValueCheckboxStyles];
 
   @state() bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   /**
    * The field associated with the automatic facet.

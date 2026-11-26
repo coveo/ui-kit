@@ -66,7 +66,7 @@ export class AtomicInsightUserActionsTimeline
   });
 
   @state() public bindings!: InsightBindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   public userActions!: InsightUserActions;
 

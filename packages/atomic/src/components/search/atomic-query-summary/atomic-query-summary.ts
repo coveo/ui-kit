@@ -32,7 +32,7 @@ export class AtomicQuerySummary
   implements InitializableComponent<Bindings>
 {
   @state() public bindings!: Bindings;
-  @state() error!: Error;
+  @state() public error?: Error;
   static styles: CSSResultGroup = [
     css`
       :host {

@@ -54,7 +54,7 @@ export class AtomicInsightSmartSnippet
   static styles = styles;
 
   @state() bindings!: InsightBindings;
-  @state() error!: Error;
+  @state() public error?: Error;
 
   @bindStateToController('smartSnippet')
   @state()

@@ -46,8 +46,7 @@ export class AtomicCommerceLoadMoreProducts
   @state()
   bindings!: CommerceBindings;
 
-  @state()
-  public error!: Error;
+  @state() public error?: Error;
 
   public pagination!: Pagination;
   public listingOrSearch!: ProductListing | Search;

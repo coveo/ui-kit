@@ -50,7 +50,7 @@ export class AtomicCommerceFacets
   @state()
   bindings!: CommerceBindings;
 
-  @state() error!: Error;
+  @state() public error?: Error;
 
   @bindStateToController('facetGenerator')
   @state()

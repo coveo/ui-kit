@@ -41,7 +41,7 @@ export class AtomicResultNumber
   @property({reflect: true}) public field!: string;
 
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   @state() private formatter: NumberFormatter = defaultNumberFormatter;
 

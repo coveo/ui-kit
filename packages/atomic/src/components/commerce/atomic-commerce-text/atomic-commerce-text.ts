@@ -16,7 +16,7 @@ export class AtomicCommerceText
   implements InitializableComponent<CommerceBindings>
 {
   @state() bindings!: CommerceBindings;
-  @state() error!: Error;
+  @state() public error?: Error;
 
   /**
    * The string key value.

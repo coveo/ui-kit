@@ -42,8 +42,7 @@ export class AtomicLoadMoreResults extends LitElement implements InitializableCo
   @state()
   public bindings!: Bindings;
 
-  @state()
-  public error!: Error;
+  @state() public error?: Error;
 
   public querySummary!: QuerySummary;
   public resultList!: ResultList;

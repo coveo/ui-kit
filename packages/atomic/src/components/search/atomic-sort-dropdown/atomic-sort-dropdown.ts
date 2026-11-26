@@ -70,7 +70,7 @@ export class AtomicSortDropdown extends LitElement implements InitializableCompo
   @state()
   public tabManagerState!: TabManagerState;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   public initialize() {
     this.buildOptions();

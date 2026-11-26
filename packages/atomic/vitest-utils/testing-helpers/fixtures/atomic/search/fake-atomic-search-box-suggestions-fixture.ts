@@ -16,7 +16,7 @@ export class FixtureFakeAtomicSearchBoxSuggestions
   implements SearchBoxSuggestionsComponent<Bindings>
 {
   bindings!: SearchBoxSuggestionsBindings<SearchBox, Bindings>;
-  @state() error!: Error;
+  @state() public error?: Error;
 
   @property({type: Number, attribute: 'suggestion-count'})
   suggestionCount = 3;

@@ -44,7 +44,7 @@ export class AtomicResultPrintableUri
   maxNumberOfParts = 5;
 
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
   @state() private listExpanded = false;
   @state() private result!: Result;
 

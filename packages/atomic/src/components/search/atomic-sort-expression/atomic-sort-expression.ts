@@ -84,7 +84,7 @@ export class AtomicSortExpression extends LightDomMixin(LitElement) {
   })
   public tabsExcluded: string[] = [];
 
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   constructor() {
     super();

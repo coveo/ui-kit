@@ -80,7 +80,7 @@ export class AtomicCommerceInterface
   @state()
   @provide({context: bindingsContext})
   public bindings: CommerceBindings = {} as CommerceBindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   public context!: Context;
   public summary!: Summary<SearchSummaryState | ProductListingSummaryState>;

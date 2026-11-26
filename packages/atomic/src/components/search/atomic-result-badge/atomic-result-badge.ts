@@ -54,7 +54,7 @@ import type {Bindings} from '../atomic-search-interface/atomic-search-interface'
 @bindings()
 export class AtomicResultBadge extends LitElement implements InitializableComponent<Bindings> {
   @state() bindings!: Bindings;
-  public error!: Error;
+  @state() public error?: Error;
 
   initialize() {}
 

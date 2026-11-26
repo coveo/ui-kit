@@ -71,7 +71,7 @@ export class AtomicInsightPager
   `;
 
   @state() public bindings!: InsightBindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   public pager!: InsightPager;
   public searchStatus!: InsightSearchStatus;

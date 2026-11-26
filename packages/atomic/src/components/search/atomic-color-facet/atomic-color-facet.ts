@@ -210,7 +210,7 @@ export class AtomicColorFacet extends LitElement implements InitializableCompone
   @bindStateToController('tabManager')
   @state()
   public tabManagerState!: TabManagerState;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   /**
    * A unique identifier for the facet.

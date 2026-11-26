@@ -51,7 +51,7 @@ export class AtomicFacetManager
   @state()
   public facetManagerState!: FacetManagerState;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   /**
    * The number of expanded facets inside the manager.

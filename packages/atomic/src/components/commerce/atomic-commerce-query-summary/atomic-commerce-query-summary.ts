@@ -36,7 +36,7 @@ export class AtomicCommerceQuerySummary
   implements InitializableComponent<CommerceBindings>
 {
   public bindings!: CommerceBindings;
-  @state() error!: Error;
+  @state() public error?: Error;
   static styles: CSSResultGroup = [
     css`
       :host {

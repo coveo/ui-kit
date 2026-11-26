@@ -56,7 +56,7 @@ export class AtomicIpxResultLink
   public hrefTemplate?: string;
 
   @state() public bindings!: RecsBindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
   @state() private linkAttributes?: Attr[];
   @state() private stopPropagation?: boolean;
   @state() private result!: AnyUnfoldedItem;

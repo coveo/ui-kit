@@ -152,8 +152,7 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(LitElement)
     }
   `;
 
-  @state()
-  error!: Error;
+  @state() public error?: Error;
 
   /**
    * Whether `atomic-result-link` components nested in the `atomic-insight-result` should stop click event propagation.

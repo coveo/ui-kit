@@ -92,8 +92,7 @@ export class AtomicModal
   @state()
   bindings!: AnyBindings;
 
-  @state()
-  error!: Error;
+  @state() public error?: Error;
 
   /**
    * Whether to display the open and close animations over the entire page or the atomic-modal only.

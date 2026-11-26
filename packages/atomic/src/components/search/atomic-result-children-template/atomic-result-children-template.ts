@@ -21,7 +21,7 @@ import type {LitElementWithError} from '@/src/decorators/types';
 export class AtomicResultChildrenTemplate extends LitElement implements LitElementWithError {
   private resultTemplateController: ResultTemplateController;
 
-  @state() error!: Error;
+  @state() public error?: Error;
 
   /**
    * A function that must return true on results for the result template to apply.

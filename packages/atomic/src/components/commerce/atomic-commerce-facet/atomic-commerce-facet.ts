@@ -111,7 +111,7 @@ export class AtomicCommerceFacet
   @state()
   public facetState!: RegularFacetState;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   static styles: CSSResultGroup = [
     facetValueCheckboxStyles,

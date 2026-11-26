@@ -36,7 +36,7 @@ export class AtomicGeneratedAnswerInlineLink
   answerId!: string | null;
 
   @state() public bindings!: AnyBindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
   public initialized = false;
 
   @property({reflect: true})

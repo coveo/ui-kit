@@ -56,7 +56,7 @@ export class AtomicCommerceSearchBoxInstantProducts
   private instantProducts!: InstantProducts;
   private display: ItemDisplayLayout = 'list';
 
-  @state() public error!: Error;
+  @state() public error?: Error;
   @state() private templateHasError = false;
 
   /**

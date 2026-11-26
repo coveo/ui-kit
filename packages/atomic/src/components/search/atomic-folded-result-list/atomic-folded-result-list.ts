@@ -183,8 +183,7 @@ export class AtomicFoldedResultList
 
   @state()
   bindings!: Bindings;
-  @state()
-  error!: Error;
+  @state() public error?: Error;
   @state()
   private isAppLoaded = false;
   @state()

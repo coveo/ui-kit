@@ -60,7 +60,7 @@ export class AtomicIpxRefineToggle extends LitElement implements InitializableCo
   public collapseFacetsAfter = 0;
 
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   @bindStateToController('breadcrumbManager')
   @state()

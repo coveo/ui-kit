@@ -82,7 +82,7 @@ export class AtomicInsightSmartSnippetSuggestions
   static styles: CSSResultGroup = styles;
 
   @state() public bindings!: InsightBindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   @bindStateToController('smartSnippetQuestionsList')
   @state()

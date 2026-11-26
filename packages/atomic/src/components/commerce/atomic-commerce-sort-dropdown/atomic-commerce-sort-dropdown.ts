@@ -55,7 +55,7 @@ export class AtomicCommerceSortDropdown
   @state()
   searchOrListingState?: SearchState | ProductListingState;
 
-  @state() error!: Error;
+  @state() public error?: Error;
 
   public initialize() {
     if (this.bindings.interfaceElement.type === 'product-listing') {

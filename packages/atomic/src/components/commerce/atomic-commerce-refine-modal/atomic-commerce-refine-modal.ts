@@ -74,8 +74,7 @@ export class AtomicCommerceRefineModal
   @state()
   bindings!: CommerceBindings;
 
-  @state()
-  error!: Error;
+  @state() public error?: Error;
 
   /**
    * The element that opens the modal when clicked.

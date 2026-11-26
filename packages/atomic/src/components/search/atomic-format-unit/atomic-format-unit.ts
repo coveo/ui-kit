@@ -31,7 +31,7 @@ export class AtomicFormatUnit extends LitElement implements LitElementWithError 
   @property({reflect: true, attribute: 'unit-display'})
   unitDisplay?: 'long' | 'short' | 'narrow' = 'short';
 
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   private format: NumberFormatter = (value, languages) => {
     return value.toLocaleString(languages, {

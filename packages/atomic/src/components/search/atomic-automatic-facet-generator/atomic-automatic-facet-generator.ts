@@ -55,7 +55,7 @@ export class AtomicAutomaticFacetGenerator
   public numberOfValues = 8;
 
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   @bindStateToController('automaticFacetGenerator')
   @state()

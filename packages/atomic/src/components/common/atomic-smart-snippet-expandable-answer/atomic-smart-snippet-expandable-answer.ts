@@ -42,8 +42,7 @@ export class AtomicSmartSnippetExpandableAnswer
   @state()
   bindings!: AnyBindings;
 
-  @state()
-  public error!: Error;
+  @state() public error?: Error;
 
   @property({type: Boolean, reflect: true, converter: booleanConverter})
   expanded!: boolean;

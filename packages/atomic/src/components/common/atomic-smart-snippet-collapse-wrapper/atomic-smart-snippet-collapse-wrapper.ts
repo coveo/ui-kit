@@ -60,8 +60,7 @@ export class AtomicSmartSnippetCollapseWrapper
   @state()
   bindings!: Bindings;
 
-  @state()
-  error!: Error;
+  @state() public error?: Error;
 
   /**
    * The maximum height in pixels.

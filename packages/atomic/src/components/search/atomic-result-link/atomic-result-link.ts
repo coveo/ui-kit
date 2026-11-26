@@ -60,7 +60,7 @@ export class AtomicResultLink
   private interactiveResultContext = createInteractiveResultContextController(this);
 
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   public initialize() {
     if (!this.result && this.resultContext.item) {

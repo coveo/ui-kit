@@ -80,7 +80,7 @@ export class AtomicSmartSnippet extends LitElement implements InitializableCompo
   static styles = styles;
 
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   @bindStateToController('smartSnippet')
   @state()

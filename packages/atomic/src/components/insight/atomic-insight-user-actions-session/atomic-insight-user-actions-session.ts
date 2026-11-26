@@ -54,8 +54,7 @@ export class AtomicInsightUserActionsSession
   @state()
   public bindings!: InsightBindings;
 
-  @state()
-  public error!: Error;
+  @state() public error?: Error;
 
   /**
    * The start time of the session as a Unix timestamp.

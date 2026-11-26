@@ -69,7 +69,7 @@ export class AtomicIpxTab
   @property({type: String}) public expression!: string;
 
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
   @bindStateToController('tab')
   @state()
   private tabState!: TabState;

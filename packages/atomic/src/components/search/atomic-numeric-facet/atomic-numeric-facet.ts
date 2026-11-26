@@ -285,7 +285,7 @@ export class AtomicNumericFacet extends LitElement implements InitializableCompo
   @state()
   public tabManagerState!: TabManagerState;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   @state()
   public facetForInputState?: NumericFacetState;

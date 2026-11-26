@@ -28,8 +28,7 @@ export class AtomicRefineToggle extends LitElement implements InitializableCompo
   @state()
   bindings!: Bindings;
 
-  @state()
-  error!: Error;
+  @state() public error?: Error;
 
   public searchStatus!: SearchStatus;
 

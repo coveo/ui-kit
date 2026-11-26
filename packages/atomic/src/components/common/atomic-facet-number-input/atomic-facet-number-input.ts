@@ -45,8 +45,7 @@ export class AtomicFacetNumberInput
 
   @state()
   bindings!: AnyBindings;
-  @state()
-  error!: Error;
+  @state() public error?: Error;
   @state() private start?: number;
   @state() private end?: number;
 

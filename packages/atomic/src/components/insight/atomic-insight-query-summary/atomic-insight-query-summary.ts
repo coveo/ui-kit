@@ -36,7 +36,7 @@ export class AtomicInsightQuerySummary
   implements InitializableComponent<InsightBindings>
 {
   @state() public bindings!: InsightBindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   static styles: CSSResultGroup = [
     css`

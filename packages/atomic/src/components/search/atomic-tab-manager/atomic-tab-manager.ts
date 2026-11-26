@@ -57,7 +57,7 @@ export class AtomicTabManager extends LitElement implements InitializableCompone
   @state()
   private tabManagerState!: TabManagerState;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   private tabs: TabInfo[] = [];
 

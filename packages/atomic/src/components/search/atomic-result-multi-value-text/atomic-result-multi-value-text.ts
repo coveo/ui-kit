@@ -62,7 +62,7 @@ export class AtomicResultMultiValueText
   @property({type: String, reflect: true}) public delimiter: string | null = null;
 
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
   @state() private sortedValues: string[] | null = null;
 
   private resultContext = createResultContextController(this);

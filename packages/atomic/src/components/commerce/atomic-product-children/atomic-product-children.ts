@@ -45,7 +45,7 @@ export class AtomicProductChildren
   @state() private childProducts: ChildProduct[] = [];
   @state() private activeChildId: string = '';
 
-  public error!: Error;
+  @state() public error?: Error;
 
   initialize() {
     const product = this.productController.item;

@@ -56,7 +56,7 @@ export class AtomicInsightRefineModal
   implements InitializableComponent<InsightBindings>
 {
   @state() public bindings!: InsightBindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   @bindStateToController('querySummary')
   @state()

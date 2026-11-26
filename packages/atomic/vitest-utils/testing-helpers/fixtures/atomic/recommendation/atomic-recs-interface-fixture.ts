@@ -31,7 +31,7 @@ export class FixtureAtomicRecsInterface
   template!: TemplateResult;
   @provide({context: bindingsContext})
   bindings: RecsBindings = {} as RecsBindings;
-  error!: Error;
+  error?: Error;
   updateIconAssetsPath = () => {};
   registerFieldsToInclude?: (() => void) | undefined;
 

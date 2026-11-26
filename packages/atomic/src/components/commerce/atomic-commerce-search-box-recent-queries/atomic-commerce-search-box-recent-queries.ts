@@ -37,7 +37,7 @@ export class AtomicCommerceSearchBoxRecentQueries
   private recentQueriesList!: RecentQueriesList;
   private storage!: SafeStorage;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   /**
    * The SVG icon to display.

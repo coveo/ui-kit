@@ -51,8 +51,7 @@ export class AtomicCommerceDidYouMean
   @state()
   private queryTriggerState!: QueryTriggerState;
 
-  @state()
-  public error!: Error;
+  @state() public error?: Error;
 
   public initialize() {
     if (this.bindings.interfaceElement.type !== 'search') {

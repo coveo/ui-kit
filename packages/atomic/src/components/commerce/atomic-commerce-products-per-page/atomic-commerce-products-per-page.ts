@@ -55,7 +55,7 @@ export class AtomicCommerceProductsPerPage
   @state()
   private summaryState!: SearchSummaryState | ProductListingSummaryState;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
   @state() private isAppLoaded = false;
 
   private choices!: number[];

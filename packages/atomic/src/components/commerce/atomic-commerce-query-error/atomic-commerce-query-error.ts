@@ -54,7 +54,7 @@ export class AtomicCommerceQueryError
   @state()
   private searchOrListingState!: SearchState | ProductListingState;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
   @state() showMoreInfo = false;
 
   protected ariaMessage = new AriaLiveRegionController(this, 'commerce-query-error');

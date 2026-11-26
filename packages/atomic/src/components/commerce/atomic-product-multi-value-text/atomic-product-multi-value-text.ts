@@ -36,8 +36,7 @@ export class AtomicProductMultiValueText
   @state()
   bindings!: CommerceBindings;
 
-  @state()
-  error!: Error;
+  @state() public error?: Error;
 
   public breadcrumbManager!: BreadcrumbManager;
 

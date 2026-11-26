@@ -35,7 +35,7 @@ export class AtomicProductExcerpt
   @state()
   bindings!: CommerceBindings;
 
-  public error!: Error;
+  @state() public error?: Error;
 
   private productController = createProductContextController(this);
 

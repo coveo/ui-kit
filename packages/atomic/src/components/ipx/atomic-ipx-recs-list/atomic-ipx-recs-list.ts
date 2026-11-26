@@ -124,8 +124,7 @@ export class AtomicIpxRecsList
 
   @state()
   bindings!: RecsBindings;
-  @state()
-  error!: Error;
+  @state() public error?: Error;
   @state()
   private currentPage = 0;
   @state()

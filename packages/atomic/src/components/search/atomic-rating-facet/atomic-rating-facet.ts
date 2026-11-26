@@ -111,7 +111,7 @@ export class AtomicRatingFacet extends LitElement implements InitializableCompon
   static styles = [facetCommonStyles, facetValueCheckboxStyles, atomicRatingStyles];
 
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   public facet!: NumericFacet;
   private dependenciesManager?: FacetConditionsManager;

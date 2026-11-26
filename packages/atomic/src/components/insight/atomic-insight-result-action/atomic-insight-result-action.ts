@@ -77,7 +77,7 @@ export class AtomicInsightResultAction
   @property({type: String}) action: Actions | string = '';
 
   @state() public bindings!: InsightBindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
   @state() private currentTooltip = '';
 
   private itemContextController!: ItemContextController<Result>;

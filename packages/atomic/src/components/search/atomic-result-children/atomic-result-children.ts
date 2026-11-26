@@ -84,7 +84,7 @@ export class AtomicResultChildren extends LitElement implements InitializableCom
   noResultText = 'no-documents-related';
 
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
   @state() private resultTemplateRegistered = false;
   @state() private templateHasError = false;
   @state() private showInitialChildren = true;

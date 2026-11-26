@@ -83,7 +83,7 @@ export class AtomicSmartSnippetSuggestions
   static styles: CSSResultGroup = styles;
 
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   @bindStateToController('smartSnippetQuestionsList')
   @state()

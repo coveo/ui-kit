@@ -20,7 +20,7 @@ export class AtomicIpxTabs
   implements InitializableComponent<Bindings>
 {
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   public initialize() {}
 

@@ -62,8 +62,7 @@ export class AtomicInsightSearchBox
   @state()
   public bindings!: InsightBindings;
 
-  @state()
-  public error!: Error;
+  @state() public error?: Error;
 
   public searchBox!: InsightSearchBox;
 

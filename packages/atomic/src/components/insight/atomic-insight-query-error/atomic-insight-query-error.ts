@@ -49,7 +49,7 @@ export class AtomicInsightQueryError
 
   @state() public bindings!: InsightBindings;
   public queryError!: QueryError;
-  @state() public error!: Error;
+  @state() public error?: Error;
   @state() public showMoreInfo = false;
 
   public initialize() {

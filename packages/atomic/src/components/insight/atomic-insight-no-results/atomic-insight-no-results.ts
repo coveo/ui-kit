@@ -54,8 +54,7 @@ export class AtomicInsightNoResults
   @state()
   public querySummaryState!: QuerySummaryState;
 
-  @state()
-  public error!: Error;
+  @state() public error?: Error;
 
   protected ariaMessage = new AriaLiveRegionController(this, 'no-results');
 

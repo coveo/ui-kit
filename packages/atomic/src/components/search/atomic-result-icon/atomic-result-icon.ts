@@ -40,7 +40,7 @@ export class AtomicResultIcon extends LitElement implements InitializableCompone
 
   @state() public bindings!: Bindings;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   private resultController = createResultContextController(this);
 

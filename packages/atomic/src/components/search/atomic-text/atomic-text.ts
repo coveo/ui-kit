@@ -20,7 +20,7 @@ export class AtomicText extends LitElement implements InitializableComponent<Bin
   });
 
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   /**
    * The string key value.
