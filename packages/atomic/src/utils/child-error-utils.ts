@@ -10,6 +10,7 @@ interface ErrorHolder {
  *
  * It re-checks after each child update, keeps the child's error as `cause`, never replaces an error the parent already
  * holds, and clears only the error it set. Setting the parent's error does not update the children, so it cannot loop.
+ * The children are a fixed snapshot: a child added later is not watched, and the watchers stay on the children.
  *
  * @param parent - The component that displays the error.
  * @param children - The children to watch. Only upgraded elements can be watched.
@@ -24,7 +25,7 @@ export function displayChildErrors(
 
   const sync = () => {
     const childError = children.find((child) => child.error)?.error;
-    if (displayedError?.cause === childError) {
+    if (displayedError?.cause === childError && parent.error === displayedError) {
       return;
     }
     if (parent.error && parent.error !== displayedError) {
