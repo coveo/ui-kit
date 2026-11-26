@@ -100,7 +100,7 @@ export class AtomicInsightResultQuickviewAction
     this.result = 'result' in item ? item.result : item;
     this.buttonFocusTarget = new FocusTargetController(this, this.bindings);
     this.quickview = buildQuickview(this.bindings.engine, {
-      options: {result: this.result},
+      options: {result: this.result, highlightTerms: false},
     });
   }
 

@@ -14,7 +14,8 @@ export async function buildInsightResultPreviewRequest(
   const {accessToken, organizationId, environment} = state.configuration;
   const {insightId} = state.insightConfiguration;
 
-  const q = state.query?.q || '';
+  const {highlightTerms = true, ...requestOptions} = options;
+  const q = highlightTerms ? state.query?.q || '' : '';
   const url = baseInsightUrl({
     url: getOrganizationEndpoint(organizationId, environment),
     accessToken,
@@ -28,7 +29,7 @@ export async function buildInsightResultPreviewRequest(
     organizationId,
     enableNavigation: false,
     q,
-    ...options,
-    requestedOutputSize: options.requestedOutputSize || 0,
+    ...requestOptions,
+    requestedOutputSize: requestOptions.requestedOutputSize || 0,
   };
 }

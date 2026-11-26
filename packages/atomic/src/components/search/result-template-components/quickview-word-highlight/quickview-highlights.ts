@@ -1,5 +1,5 @@
 import type {HighlightKeywords} from '@/src/components/search/atomic-quickview-modal/highlight-keywords';
-import {HIGHLIGHT_PREFIX, type QuickviewWordHighlight} from './quickview-word-highlight';
+import type {QuickviewWordHighlight} from './quickview-word-highlight';
 
 type IframeWindow = Window & typeof globalThis;
 
@@ -27,15 +27,7 @@ export class QuickviewHighlights {
     this.document = document;
     this.words = Object.values(words);
     this.styleSheet = new window.CSSStyleSheet();
-    this.styleSheet.replaceSync(
-      [
-        `[id^="${HIGHLIGHT_PREFIX}"] {
-          background-color: transparent !important;
-          color: inherit !important;
-        }`,
-        ...this.words.map((word) => word.styles),
-      ].join('\n')
-    );
+    this.styleSheet.replaceSync(this.words.map((word) => word.styles).join('\n'));
     document.adoptedStyleSheets = [...document.adoptedStyleSheets, this.styleSheet];
   }
 

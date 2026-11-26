@@ -18,8 +18,11 @@ describe('QuickviewSidebar (Lit)', () => {
 
   const createWord = (text: string) => {
     const element = document.createElement('span');
+    element.textContent = text;
     element.scrollIntoView = vi.fn();
-    return new QuickviewWordHighlight(`${text}-id`, text, '#123456', element);
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    return new QuickviewWordHighlight(`${text}-id`, text, '#123456', [range]);
   };
 
   const baseHighlightKeywords: HighlightKeywords = {

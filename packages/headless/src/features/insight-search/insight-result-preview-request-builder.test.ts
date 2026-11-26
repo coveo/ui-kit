@@ -47,4 +47,14 @@ describe('ResultPreviewRequestBuilder', () => {
       url: expectedUrl,
     });
   });
+
+  it('should not send the query when #options.highlightTerms is false', async () => {
+    state.query = {...getQueryInitialState(), q: 'some terms'};
+    const finalRequest = await buildInsightResultPreviewRequest(state, {
+      ...options,
+      highlightTerms: false,
+    });
+    expect(finalRequest.q).toBe('');
+    expect(finalRequest).not.toHaveProperty('highlightTerms');
+  });
 });

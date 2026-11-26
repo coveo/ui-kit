@@ -17,21 +17,21 @@ describe('QuickviewHighlights', () => {
     iframe = document.createElement('iframe');
     document.body.appendChild(iframe);
     iframeDocument = iframe.contentDocument!;
-    iframeDocument.body.innerHTML = `
-      <p>
-        <span id="CoveoHighlight:1.1.1" style="background-color: rgb(255, 255, 0)">alpha</span>
-        <span id="CoveoHighlight:2.1.1" style="background-color: rgb(0, 255, 255)">beta</span>
-        <span id="CoveoHighlight:1.2.1" style="background-color: rgb(255, 255, 0)">alpha</span>
-      </p>`;
+    iframeDocument.body.innerHTML = '<p>alpha beta alpha</p>';
+    const text = iframeDocument.querySelector('p')!.firstChild!;
+    const rangeOf = (start: number, end: number) => {
+      const range = iframeDocument.createRange();
+      range.setStart(text, start);
+      range.setEnd(text, end);
+      return range;
+    };
 
-    const [alpha1, beta, alpha2] = Array.from(
-      iframeDocument.querySelectorAll<HTMLElement>('[id^="CoveoHighlight"]')
-    );
-    const alpha = new QuickviewWordHighlight('1', 'alpha', 'rgb(255, 255, 0)', alpha1);
-    alpha.addElement(alpha2);
     words = {
-      '1': alpha,
-      '2': new QuickviewWordHighlight('2', 'beta', 'rgb(0, 255, 255)', beta),
+      '1': new QuickviewWordHighlight('1', 'alpha', 'rgb(255, 255, 0)', [
+        rangeOf(0, 5),
+        rangeOf(11, 16),
+      ]),
+      '2': new QuickviewWordHighlight('2', 'beta', 'rgb(0, 255, 255)', [rangeOf(6, 10)]),
     };
 
     highlights = new QuickviewHighlights();
@@ -54,12 +54,6 @@ describe('QuickviewHighlights', () => {
 
     it('should adopt one stylesheet in the iframe document', () => {
       expect(iframeDocument.adoptedStyleSheets).toHaveLength(1);
-    });
-
-    it('should neutralize the inline colors of the index highlights', () => {
-      const span = iframeDocument.getElementById('CoveoHighlight:1.1.1')!;
-      const computed = iframe.contentWindow!.getComputedStyle(span);
-      expect(computed.backgroundColor).toBe('rgba(0, 0, 0, 0)');
     });
 
     it('should declare a ::highlight() rule for each keyword', () => {
@@ -88,8 +82,7 @@ describe('QuickviewHighlights', () => {
       });
 
       it('should not modify the iframe DOM', () => {
-        const span = iframeDocument.getElementById('CoveoHighlight:1.1.1')!;
-        expect(span.getAttribute('style')).toBe('background-color: rgb(255, 255, 0)');
+        expect(iframeDocument.body.innerHTML).toBe('<p>alpha beta alpha</p>');
       });
     });
 

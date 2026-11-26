@@ -92,7 +92,7 @@ export class AtomicQuickview extends LitElement implements InitializableComponen
     }
     this.buttonFocusTarget = new FocusTargetController(this, this.bindings);
     this.quickview = buildQuickview(this.bindings.engine, {
-      options: {result: this.result},
+      options: {result: this.result, highlightTerms: false},
     });
   }
 

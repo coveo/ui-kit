@@ -1,10 +1,5 @@
 import '@/src/components/common/atomic-modal/atomic-modal';
-import {
-  buildInteractiveResult,
-  type InteractiveResult,
-  type Result,
-  type TermsToHighlight,
-} from '@coveo/headless';
+import {buildInteractiveResult, type InteractiveResult, type Result} from '@coveo/headless';
 import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '@/src/components/common/atomic-modal/export-parts';
@@ -16,10 +11,11 @@ import {renderQuickviewSidebar} from '@/src/components/search/result-template-co
 import {renderQuickviewIframe} from '@/src/components/search/result-template-components/quickview-iframe/quickview-iframe';
 import {buildQuickviewPreviewBar} from '@/src/components/search/result-template-components/quickview-preview-bar/quickview-preview-bar';
 import {QuickviewHighlights} from '@/src/components/search/result-template-components/quickview-word-highlight/quickview-highlights';
+import type {QuickviewWordHighlight} from '@/src/components/search/result-template-components/quickview-word-highlight/quickview-word-highlight';
 import {
+  getQuickviewKeywords,
   getWordsHighlights,
-  type QuickviewWordHighlight,
-} from '@/src/components/search/result-template-components/quickview-word-highlight/quickview-word-highlight';
+} from '@/src/components/search/result-template-components/quickview-word-highlight/term-matcher';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -246,7 +242,7 @@ export class AtomicQuickviewModal extends LitElement implements InitializableCom
               content: this.content,
               onSetIframeRef: async (ref: HTMLIFrameElement) => {
                 this.iframeRef = ref;
-                this.words = getWordsHighlights(this.termsToHighlight, this.iframeRef);
+                this.words = getWordsHighlights(this.keywords, this.iframeRef);
                 this.highlights.attach(this.iframeRef, this.words);
                 this.highlights.update(this.highlightKeywords);
               },
@@ -311,23 +307,9 @@ export class AtomicQuickviewModal extends LitElement implements InitializableCom
     return this.bindings.engine.state.resultPreview?.contentURL;
   }
 
-  private get termsToHighlight() {
-    const flatPhrasesToHighlight: TermsToHighlight = {};
-
-    const phrasesToHighlight = this.bindings.engine.state.search.response.phrasesToHighlight;
-
-    Object.entries(phrasesToHighlight).forEach(([phrase, keywords]) => {
-      flatPhrasesToHighlight[phrase] = Object.entries(keywords).flatMap(
-        ([keywordEntry, keywordStemming]) => {
-          return [keywordEntry, ...keywordStemming];
-        }
-      );
-    });
-
-    return {
-      ...this.bindings.engine.state.search.response.termsToHighlight,
-      ...flatPhrasesToHighlight,
-    };
+  private get keywords() {
+    const {termsToHighlight, phrasesToHighlight} = this.bindings.engine.state.search.response;
+    return getQuickviewKeywords(termsToHighlight, phrasesToHighlight);
   }
 
   private get requestId() {
