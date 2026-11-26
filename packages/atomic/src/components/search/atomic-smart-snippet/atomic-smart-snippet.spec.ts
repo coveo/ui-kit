@@ -271,6 +271,102 @@ describe('atomic-smart-snippet', () => {
       expect(getParts().feedbackThankYou).toBeInTheDocument();
     });
 
+    describe('feedback modal lifecycle', () => {
+      const getFeedbackModal = () => document.querySelector('atomic-smart-snippet-feedback-modal');
+
+      const getExplainWhyButton = (element: AtomicSmartSnippet) =>
+        element.shadowRoot?.querySelector<HTMLElement>('[part="feedback-explain-why-button"]');
+
+      const dislike = async () => {
+        vi.spyOn(mockedSmartSnippet, 'dislike').mockImplementation(() => {
+          mockedSmartSnippet.state.disliked = true;
+        });
+        const rendered = await renderAtomicSmartSnippet();
+        rendered.getParts().feedbackDislikeButton?.click();
+        rendered.element.requestUpdate();
+        await rendered.element.updateComplete;
+        await vi.waitFor(() =>
+          expect(getFeedbackModal()?.shadowRoot?.querySelector('atomic-modal')).not.toBeNull()
+        );
+        return rendered;
+      };
+
+      const openFeedbackModal = async (element: AtomicSmartSnippet) => {
+        getExplainWhyButton(element)?.click();
+        await getFeedbackModal()?.updateComplete;
+        await vi.waitFor(() => expect(document.body).toHaveClass('atomic-modal-opened'));
+      };
+
+      it('should insert and open the modal on explain why when the component renders already disliked', async () => {
+        mockedSmartSnippet.state.disliked = true;
+        const {element} = await renderAtomicSmartSnippet();
+        const explainWhyButton = getExplainWhyButton(element)!;
+
+        explainWhyButton.click();
+        await element.updateComplete;
+
+        const modal = getFeedbackModal();
+        expect(modal).not.toBeNull();
+        expect(element.previousElementSibling).toBe(modal);
+        expect(modal?.isOpen).toBe(true);
+        expect(modal?.source).toBe(explainWhyButton);
+      });
+
+      it('should remove the modal when the component is removed', async () => {
+        const {element} = await dislike();
+        const modal = getFeedbackModal();
+
+        element.remove();
+
+        expect(modal?.isConnected).toBe(false);
+      });
+
+      it('should put the modal back and show the thank-you state when feedback is sent after a re-attach', async () => {
+        const {element} = await dislike();
+        const modal = getFeedbackModal();
+        const parent = element.parentElement!;
+
+        element.remove();
+        expect(modal?.isConnected).toBe(false);
+
+        parent.append(element);
+        await element.updateComplete;
+        expect(element.previousElementSibling).toBe(modal);
+        expect(getExplainWhyButton(element)).not.toBeNull();
+
+        modal?.dispatchEvent(new Event('feedbackSent'));
+        await element.updateComplete;
+
+        expect(getExplainWhyButton(element)).toBeNull();
+      });
+
+      it('should close the feedback workflow when the component is removed while the modal is open, and keep it closed after a re-attach', async () => {
+        const {element} = await dislike();
+        const modal = getFeedbackModal()!;
+        const parent = element.parentElement!;
+        const closeFeedbackModal = vi.fn();
+        mockedSmartSnippet.closeFeedbackModal = closeFeedbackModal;
+        await openFeedbackModal(element);
+
+        element.remove();
+        await modal.updateComplete;
+
+        expect(modal.isOpen).toBe(false);
+        expect(closeFeedbackModal).toHaveBeenCalledOnce();
+        await vi.waitFor(() => {
+          expect(document.body).not.toHaveClass('atomic-modal-opened');
+          expect(element.bindings.interfaceElement).not.toHaveClass('atomic-modal-opened');
+        });
+
+        parent.append(element);
+        await element.updateComplete;
+
+        expect(element.previousElementSibling).toBe(modal);
+        expect(modal.isOpen).toBe(false);
+        expect(document.body).not.toHaveClass('atomic-modal-opened');
+      });
+    });
+
     it('should hide thank you message when liked state changes to false', async () => {
       mockedSmartSnippet.state.liked = true;
       const {element, getParts} = await renderAtomicSmartSnippet();

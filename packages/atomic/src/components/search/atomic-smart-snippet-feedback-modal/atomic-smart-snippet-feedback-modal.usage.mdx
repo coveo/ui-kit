@@ -1,5 +1,5 @@
 
-The `atomic-smart-snippet-feedback-modal` component is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` component is initialized. It displays a modal dialog that allows users to provide feedback on why a smart snippet answer was not helpful.
+The `atomic-smart-snippet-feedback-modal` component is automatically inserted right before the `atomic-smart-snippet` the first time a user dislikes the snippet or clicks its "Explain why" button, and is removed along with the snippet. It displays a modal dialog that allows users to provide feedback on why a smart snippet answer was not helpful.
 
 When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
 
@@ -11,7 +11,7 @@ When the modal is opened, the class `atomic-modal-opened` is added to the body, 
 - **Modal Dialog**: Displays as a modal overlay with backdrop
 
 
-This component is typically not used directly. It is automatically created and managed by the `atomic-smart-snippet` component when a user clicks the "dislike" button.
+This component is typically not used directly. It is automatically inserted right before the `atomic-smart-snippet` the first time a user dislikes the snippet or clicks its "Explain why" button, and is removed along with the snippet.
 
 ```html
 <atomic-search-interface>

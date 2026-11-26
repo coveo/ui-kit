@@ -96,6 +96,7 @@ export class AtomicSmartSnippet extends LitElement implements InitializableCompo
 
   #id!: string;
   private modalRef?: AtomicSmartSnippetFeedbackModal;
+  private explainWhyButton?: HTMLElement;
 
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
@@ -194,6 +195,9 @@ export class AtomicSmartSnippet extends LitElement implements InitializableCompo
       'cancelPendingSelectInlineLink',
       this.onCancelPendingSelectInlineLink as EventListener
     );
+    if (this.modalRef) {
+      this.attachModal(this.modalRef);
+    }
   }
 
   disconnectedCallback(): void {
@@ -207,6 +211,9 @@ export class AtomicSmartSnippet extends LitElement implements InitializableCompo
       'cancelPendingSelectInlineLink',
       this.onCancelPendingSelectInlineLink as EventListener
     );
+    if (this.modalRef) {
+      this.detachModal(this.modalRef);
+    }
   }
 
   public initialize() {
@@ -235,10 +242,6 @@ export class AtomicSmartSnippet extends LitElement implements InitializableCompo
     this.smartSnippet.cancelPendingSelectInlineLink(event.detail);
   }
 
-  private setModalRef(ref: HTMLElement) {
-    this.modalRef = ref as AtomicSmartSnippetFeedbackModal;
-  }
-
   private setFeedbackSent(isSent: boolean) {
     this.feedbackSent = isSent;
   }
@@ -252,16 +255,30 @@ export class AtomicSmartSnippet extends LitElement implements InitializableCompo
   }
 
   private loadModal() {
-    if (this.modalRef) {
-      return;
+    if (!this.modalRef) {
+      this.modalRef = document.createElement('atomic-smart-snippet-feedback-modal');
+      this.attachModal(this.modalRef);
     }
-    const modalRef = document.createElement('atomic-smart-snippet-feedback-modal');
-    modalRef.addEventListener('feedbackSent', () => {
-      this.setFeedbackSent(true);
-    });
-    this.setModalRef(modalRef);
+    return this.modalRef;
+  }
+
+  private attachModal(modalRef: AtomicSmartSnippetFeedbackModal) {
+    modalRef.addEventListener('feedbackSent', this.onFeedbackSent);
     this.insertAdjacentElement('beforebegin', modalRef);
   }
+
+  private detachModal(modalRef: AtomicSmartSnippetFeedbackModal) {
+    if (modalRef.isOpen) {
+      modalRef.isOpen = false;
+      this.smartSnippet.closeFeedbackModal();
+    }
+    modalRef.removeEventListener('feedbackSent', this.onFeedbackSent);
+    modalRef.remove();
+  }
+
+  private onFeedbackSent = () => {
+    this.setFeedbackSent(true);
+  };
 
   @bindingGuard()
   @errorGuard()
@@ -341,9 +358,7 @@ export class AtomicSmartSnippet extends LitElement implements InitializableCompo
             props: {
               disliked: this.smartSnippetState.disliked,
               explainWhyRef: (button?: Element | HTMLButtonElement) => {
-                if (this.modalRef && button) {
-                  this.modalRef.source = button as HTMLButtonElement;
-                }
+                this.explainWhyButton = button as HTMLElement | undefined;
               },
               feedbackSent: this.feedbackSent,
               id: this.#id,
@@ -355,9 +370,9 @@ export class AtomicSmartSnippet extends LitElement implements InitializableCompo
               },
               onLike: () => this.smartSnippet.like(),
               onPressExplainWhy: () => {
-                if (this.modalRef) {
-                  this.modalRef.isOpen = true;
-                }
+                const modal = this.loadModal();
+                modal.source = this.explainWhyButton;
+                modal.isOpen = true;
               },
             },
           })}
