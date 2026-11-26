@@ -6,17 +6,18 @@ import {AtomicComponentError} from './atomic-component-error';
 
 describe('atomic-component-error', () => {
   let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+  let element: HTMLElement;
+  let error: Error;
 
-  const setupElement = () => {
-    const element = document.createElement('div');
-    const error = new Error('Test error');
-    return fixture(
+  const setupElement = () =>
+    fixture<AtomicComponentError>(
       html`<atomic-component-error .element=${element} .error=${error}></atomic-component-error>`
     );
-  };
 
-  beforeEach(async () => {
+  beforeEach(() => {
     consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    element = document.createElement('div');
+    error = new Error('Test error');
   });
 
   afterEach(() => {
@@ -35,16 +36,26 @@ describe('atomic-component-error', () => {
     );
   });
 
-  it('should log the error to the console', async () => {
-    const element = document.createElement('div');
-    const error = new Error('Test error');
-    await setupElement();
-    expect(consoleErrorSpy).toHaveBeenCalledWith(error, element);
+  it('should log the error to the console once', async () => {
+    const el = await setupElement();
+    el.requestUpdate();
+    await el.updateComplete;
+
+    expect(consoleErrorSpy).toHaveBeenCalledExactlyOnceWith(error, element);
+  });
+
+  it('should log an error that replaces the displayed one', async () => {
+    const el = await setupElement();
+    const replacingError = new Error('Replacing error');
+
+    el.error = replacingError;
+    await el.updateComplete;
+
+    expect(consoleErrorSpy).toHaveBeenCalledTimes(2);
+    expect(consoleErrorSpy).toHaveBeenLastCalledWith(replacingError, element);
   });
 
   it('should log an error once when several boxes render it', async () => {
-    const element = document.createElement('div');
-    const error = new Error('Shared error');
     await fixture(
       html`<div>
         <atomic-component-error .element=${element} .error=${error}></atomic-component-error>
@@ -56,8 +67,6 @@ describe('atomic-component-error', () => {
   });
 
   it('should log the error to the console when the element is loaded after being attached to the DOM', async () => {
-    const element = document.createElement('div');
-    const error = new Error('Test error');
     const el = await fixture(
       html`<atomic-component-error-clone
         .element=${element}
