@@ -15,10 +15,10 @@ function initializeBindings<
       .then((bindings) => {
         instance.bindings = bindings;
 
+        const i18n = instance.bindings?.i18n;
         const updateLanguage = () => instance.requestUpdate();
-        instance.bindings?.i18n?.on('languageChanged', updateLanguage);
-        const unsubscribeLanguage = () =>
-          instance.bindings?.i18n?.off('languageChanged', updateLanguage);
+        i18n?.on('languageChanged', updateLanguage);
+        const unsubscribeLanguage = () => i18n?.off('languageChanged', updateLanguage);
         resolve(unsubscribeLanguage);
 
         instance.initialize?.();
@@ -52,6 +52,7 @@ class BindingController implements ReactiveController {
   host: ReactiveControllerHost;
 
   private unsubscribeLanguage = () => {};
+  private fetchError?: Error;
 
   constructor(host: ReactiveControllerHost) {
     this.host = host;
@@ -59,11 +60,19 @@ class BindingController implements ReactiveController {
   }
 
   hostConnected() {
-    initializeBindings(this.host as ReactiveElement & InitializableComponent<AnyBindings>)
+    const host = this.host as ReactiveElement & InitializableComponent<AnyBindings>;
+    initializeBindings(host)
       .then((unsubscribeLanguage) => {
         this.unsubscribeLanguage = unsubscribeLanguage;
+        if (this.fetchError && host.error === this.fetchError) {
+          host.error = undefined;
+          host.requestUpdate();
+        }
+        this.fetchError = undefined;
       })
-      .catch(() => {});
+      .catch((error: Error) => {
+        this.fetchError = error;
+      });
   }
 
   hostDisconnected() {

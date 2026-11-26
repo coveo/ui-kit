@@ -72,11 +72,16 @@ describe('InitializeBindingsMixin', () => {
     expect(element.bindings?.i18n.on).toHaveBeenCalled();
   });
 
-  it('should unsubscribe to language changes when the host is disconnected from the component tree', async () => {
-    vi.spyOn(bindings.i18n, 'off');
+  it('should unsubscribe from the subscribed language when the host is disconnected, even after its bindings change', async () => {
     await setupElement();
+    await new Promise((resolve) => setTimeout(resolve));
+    element.bindings = mockBindings();
     await teardownElement();
-    expect(element.bindings?.i18n.off).toHaveBeenCalled();
+    const requestUpdateSpy = vi.spyOn(element, 'requestUpdate');
+
+    await bindings.i18n.changeLanguage('fr');
+
+    expect(requestUpdateSpy).not.toHaveBeenCalled();
   });
 
   it('should request a component update when the language changes', async () => {
@@ -102,15 +107,32 @@ describe('InitializeBindingsMixin', () => {
     expect(consoleErrorSpy).toHaveBeenCalledExactlyOnceWith(error, element);
   });
 
-  it('should fetch the bindings for the host again after a failed fetch and a reconnection', async () => {
+  it('should fetch the bindings for the host again and clear its fetch error after a failed fetch and a reconnection', async () => {
     mockedFetchBindings.mockRejectedValueOnce(new Error('Failed to fetch bindings'));
     await setupElement();
     await new Promise((resolve) => setTimeout(resolve));
 
     document.body.removeChild(element);
     document.body.appendChild(element);
+    await new Promise((resolve) => setTimeout(resolve));
 
     expect(mockedFetchBindings).toHaveBeenLastCalledWith(element);
+    expect(element.bindings).toBe(bindings);
+    expect(element.error).toBeUndefined();
+  });
+
+  it('should keep an error set by another writer after a successful retry', async () => {
+    mockedFetchBindings.mockRejectedValueOnce(new Error('Failed to fetch bindings'));
+    await setupElement();
+    await new Promise((resolve) => setTimeout(resolve));
+    const otherError = new Error('Invalid prop');
+    element.error = otherError;
+
+    document.body.removeChild(element);
+    document.body.appendChild(element);
+    await new Promise((resolve) => setTimeout(resolve));
+
+    expect(element.error).toBe(otherError);
   });
 
   it('should handle fetchBindings rejection gracefully', async () => {

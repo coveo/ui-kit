@@ -93,9 +93,10 @@ function receiveBindings(host: BindingsHost, value: AnyBindings) {
 }
 
 function subscribeToLanguage(host: BindingsHost) {
+  const {i18n} = host.bindings;
   const updateLanguage = () => host.requestUpdate();
-  host.bindings.i18n.on('languageChanged', updateLanguage);
-  host.unsubscribeLanguage = () => host.bindings?.i18n.off('languageChanged', updateLanguage);
+  i18n.on('languageChanged', updateLanguage);
+  host.unsubscribeLanguage = () => i18n.off('languageChanged', updateLanguage);
 }
 
 function reportMissingInterfaceParent(host: BindingsHost) {

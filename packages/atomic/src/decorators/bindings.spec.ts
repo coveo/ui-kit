@@ -138,12 +138,16 @@ describe('bindings decorator', () => {
     expect(element.bindings?.i18n.on).toHaveBeenCalled();
   });
 
-  it('should unsubscribe from language changes when the host is disconnected from the component tree', async () => {
-    vi.spyOn(interfaceElement.bindings.i18n, 'off');
+  it('should unsubscribe from the subscribed language when the host is disconnected, even after its bindings change', async () => {
     await setupElement();
+    const subscribedI18n = element.bindings.i18n;
+    element.bindings = mockBindings();
     await teardownElement();
-    expect(element.bindings?.i18n.off).toHaveBeenCalled();
-    expect(interfaceElement.bindings?.i18n.off).toHaveBeenCalled();
+    const requestUpdateSpy = vi.spyOn(element, 'requestUpdate');
+
+    await subscribedI18n.changeLanguage('fr');
+
+    expect(requestUpdateSpy).not.toHaveBeenCalled();
   });
 
   it('should request a component update when the language changes', async () => {
