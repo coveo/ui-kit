@@ -2,7 +2,7 @@
 
 This directory contains configuration files for Repository Areas.
 
-Each YAML file defines an "area" of the codebase and the review requirements for it.
+Each YAML file defines an "area" of the codebase and the review requirements for it. The requirements apply to pull requests to `main` and `v3`: after each sync, `.github/workflows/areas-ruleset-sync.yml` adds `v3` to every area ruleset.
 
 **Example:**
 
