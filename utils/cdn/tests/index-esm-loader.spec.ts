@@ -1,4 +1,4 @@
-import {afterEach, beforeEach, describe, expect, it} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {serveCdnAsIs, stopServingCdnAsIs} from './serve-cdn-as-is.js';
 import {startupFiles} from './startup-files.js';
 
@@ -53,6 +53,23 @@ describe('CDN index.esm.js', () => {
       const sizes = await Promise.all([...files.values()].map(gzippedSize));
 
       expect(sizes.reduce((total, size) => total + size, 0)).toBeLessThanOrEqual(16_000);
+    });
+
+    it('should start downloading Headless as soon as it runs', async () => {
+      const frame = document.createElement('iframe');
+      frame.srcdoc = `<!doctype html><script type="module">import '/atomic/v3/index.esm.js';</script>`;
+      const loaded = new Promise((resolve) =>
+        frame.addEventListener('load', resolve, {once: true})
+      );
+      document.body.append(frame);
+      await loaded;
+
+      const requestedHeadless = () =>
+        frame
+          .contentWindow!.performance.getEntriesByType('resource')
+          .some((entry) => entry.name.includes('/headless/'));
+      await vi.waitFor(() => expect(requestedHeadless()).toBe(true), {timeout: 5000});
+      frame.remove();
     });
   });
 });

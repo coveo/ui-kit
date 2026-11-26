@@ -13,3 +13,8 @@ export {
   headlessVersion,
   setNonce,
 } from './loader.js';
+
+// Atomic's components need Headless too, and on a busy live page they ask for it about a second after this file runs.
+// The static import that this file no longer has used to start that download early; this keeps the early start
+// without making the file wait for Headless.
+import('@coveo/headless').catch(() => {});
