@@ -75,10 +75,10 @@ Ready, in ms:
 
 **Live pages.** An earlier change that started a large download sooner gained on this harness, then delayed first paint on a live site. So both builds were also loaded into two live docs.coveo.com pages, the search page and an article. Only Atomic's CDN files were swapped for the build, and analytics requests were blocked. First paint and largest paint, median of 7 loads, in ms:
 
-| Page                | Mobile, first | Mobile, largest | Fast, first | Fast, largest |
-| ------------------- | ------------- | --------------- | ----------- | ------------- |
-| Search, A → B       | 3,264 → 3,032 | 7,692 → 7,884   | 1,156 → 1,336 | 2,136 → 1,992 |
-| Article, A → B      | 3,872 → 3,624 | 4,016 → 3,748   | 1,412 → 1,320 | 1,488 → 1,420 |
+| Page           | Mobile, first | Mobile, largest | Fast, first   | Fast, largest |
+| -------------- | ------------- | --------------- | ------------- | ------------- |
+| Search, A → B  | 3,264 → 3,032 | 7,692 → 7,884   | 1,156 → 1,336 | 2,136 → 1,992 |
+| Article, A → B | 3,872 → 3,624 | 4,016 → 3,748   | 1,412 → 1,320 | 1,488 → 1,420 |
 
 The changes go both ways and stay within the noise of these pages: two builds that load the same files on the search page differed by up to 372 ms. On mobile, the browser requests Atomic's entry file only at about 3 s, after the site's own blocking scripts, so the round trip saved here is a small part of these pages' load.
 
