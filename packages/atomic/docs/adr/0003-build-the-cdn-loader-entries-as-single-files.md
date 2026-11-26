@@ -10,7 +10,7 @@ related:
 
 ## Context and Problem Statement
 
-Two CDN files start Atomic's loader. `atomic.esm.js` is the file behind the documented script tag, and it starts the loader as soon as it runs. `index.js` exports `defineCustomElements` for pages that start the loader themselves, which is how projects created with `@coveo/create-atomic` load Atomic.
+Two CDN files start Atomic's loader. `atomic.esm.js` is the file behind the documented script tag, and it starts the loader as soon as it runs. `index.js` exports `defineCustomElements` for pages that start the loader themselves.
 
 The loader needs the tag map: the table that says which file holds each of the 207 components. Both entries use it, so rspack's chunk splitting moves it into a chunk of its own (5.0 KB gzipped), and each entry begins with a static import of that chunk. A browser therefore fetches three files in a row before the loader can look at the page: the pointer file under `/atomic/v3/`, the entry, and the tag map.
 
@@ -70,14 +70,22 @@ Ready, in ms:
 
 - Every page fetches one Atomic file fewer.
 - The page with both entries downloads 213.1 KB of Atomic JavaScript instead of 208.7 KB, and is still ready sooner.
-- The last page imports the loader from `index.js`, a helper from `index.esm.js` and Headless in one module, as a `@coveo/create-atomic` project does. That module waits for Headless before it calls the loader, with either build.
+- The last page imports the loader from `index.js`, a helper from `index.esm.js` and Headless in one module. That module waits for Headless before it calls the loader, with either build.
 - On mobile, the two builds' ranges don't overlap on any page but the last.
+
+**Live pages.** An earlier change that started a large download sooner gained on this harness, then delayed first paint on a live site. So both builds were also loaded into two live docs.coveo.com pages, the search page and an article. Only Atomic's CDN files were swapped for the build, and analytics requests were blocked. First paint and largest paint, median of 7 loads, in ms:
+
+| Page                | Mobile, first | Mobile, largest | Fast, first | Fast, largest |
+| ------------------- | ------------- | --------------- | ----------- | ------------- |
+| Search, A → B       | 3,264 → 3,032 | 7,692 → 7,884   | 1,156 → 1,336 | 2,136 → 1,992 |
+| Article, A → B      | 3,872 → 3,624 | 4,016 → 3,748   | 1,412 → 1,320 | 1,488 → 1,420 |
+
+The changes go both ways and stay within the noise of these pages: two builds that load the same files on the search page differed by up to 372 ms. On mobile, the browser requests Atomic's entry file only at about 3 s, after the site's own blocking scripts, so the round trip saved here is a small part of these pages' load.
 
 What these measurements don't show:
 
-- They come from one machine and a local server.
+- They come from one machine. The live pages add the network's own variation.
 - Option C was not built.
-- First paint on a live page was not measured.
 
 ## Decision Outcome
 
@@ -93,15 +101,11 @@ Chosen option: B.
 ## Consequences
 
 - **Positive:** On mobile, ADR 0001's four pages are ready 148 to 179 ms sooner, and a page that calls the loader from `index.js` 170 ms sooner. Every page fetches one file fewer.
-- **Negative:** A page that loads both entries downloads the tag map twice. A deployed `@coveo/create-atomic` project is such a page: its hosted page adds the script tag, and its bundle calls the loader from `index.js`. The build as a whole grows by 4.6 KB gzipped.
+- **Negative:** A page that loads both entries, the script tag and a loader call from `index.js`, downloads the tag map twice. The build as a whole grows by 4.6 KB gzipped.
 - **Neutral:** `atomic.esm.js` and `index.js` no longer export `__webpack_require__`. rspack exported that internal function only so that the shared chunk could reach the entry's runtime. `index.esm.js` still loads its two small chunks and Headless at startup. Of the 435 files, 414 are byte-identical, and 19 others differ by one to three bytes, where rspack numbers a module differently. ADR 0001 noted that the loader's code is in both entries; the tag map now is too.
 
 ## Implementation and Follow-up
 
 The `chunks` function of `chunkSplit.override` in `rsbuild.cdn.mjs` implements the decision: no cache group takes modules out of the `atomic.esm` and `index` entries. `utils/cdn/tests/loader-entries.spec.ts` fails when either entry gains a static import of another Atomic file.
-
-Before this record is accepted:
-
-- Check first paint on a live page. An earlier experiment that preloaded Headless gained on this same harness and then delayed first paint on a live site, because it started a large download sooner. This change moves Atomic's downloads about 150 ms earlier on mobile.
 
 Revisit if another entry starts the loader, or if the tag map grows enough that downloading it twice matters.
