@@ -1,22 +1,27 @@
 #!/usr/bin/env node
 /**
- * Refuses the changesets that main cannot ship.
+ * Refuses the changesets that the target branch cannot ship.
  *
- * UI_KIT_MAJOR_WINDOW is "open" while main collects the v4 breaking changes, from the v3 cut to
- * the v4 GA (KIT-6480): a package that gets a major from a changeset or its fixed group must then
- * change its upgrade guide in the same range. While the window is closed, a major on a UI-Kit
- * package would make the next release publish a new major, so the guard refuses it.
+ * main collects the v4 breaking changes from the v3 cut to the v4 GA (KIT-6480). While its
+ * UI_KIT_MAJOR_WINDOW is "open", a package that gets a major from a changeset or its fixed group
+ * must change its upgrade guide in the same range. While the window is closed, a major on a UI-Kit
+ * package would make the next release publish a new major, so the guard refuses it. Until the v4
+ * GA, the packages that main does not publish sit in its Changesets `ignore` list, and a changeset
+ * that names both a package Changesets skips and one it publishes makes `changeset version` throw,
+ * so the guard refuses that too.
  *
- * Until the v4 GA, the v4 packages sit in the Changesets `ignore` list. A changeset that names
- * both a package Changesets skips and one it publishes makes `changeset version` throw, so the
- * guard refuses it too.
+ * v3 publishes the 3.x releases (KIT-6763). It refuses a major on any package, and any release of
+ * the packages that publish from main only, so that the two lines never publish the same version.
  *
  * The guard plans the release from every changeset at the base and at the head, the way
  * Changesets 3 does (highest bump, fixed groups, and only a patch for the packages built on a
  * bumped one), and reports what the range introduces.
  *
+ * main and v3 carry this same file, so that merging v3 into main before the v4 GA does not
+ * conflict here.
+ *
  * Usage: node changeset-major-guard.mjs --base <sha>
- * Environment: BASE_REF (target branch, default main), UI_KIT_MAJOR_WINDOW (open or closed, default closed)
+ * Environment: BASE_REF (target branch, default main), UI_KIT_MAJOR_WINDOW (main only: open or closed, default closed)
  */
 
 import {execFileSync} from 'node:child_process';
@@ -33,6 +38,8 @@ export const UI_KIT_PACKAGES = new Map([
   ['@coveo/atomic-react', {guide: 'packages/atomic/upgrade-from-v3-to-v4.md'}],
   ['@coveo/atomic-angular', {guide: 'packages/atomic/upgrade-from-v3-to-v4.md'}],
 ]);
+
+export const MAIN_ONLY_PACKAGES = ['@coveo/thermidor'];
 
 const RANK = {patch: 1, minor: 2, major: 3};
 const RELEASE_LINE = /^(['"]?)([^'"\s:]+)\1\s*:\s*(['"]?)(major|minor|patch|none)\3\s*(?:#.*)?$/;
@@ -179,12 +186,22 @@ export function checkMixedChangesets({base, head}) {
   return {files: mixed.map(({file}) => file), errors, warnings};
 }
 
-function describe({kind, source}) {
-  return kind === 'changeset' ? `major in ${source}` : `fixed group with ${source}`;
+function describe({kind, source}, type = 'major') {
+  return kind === 'changeset' ? `${type} in ${source}` : `fixed group with ${source}`;
+}
+
+function listWithCauses(plan, names) {
+  return names
+    .map((name) => `${name} (${describe(plan.causes.get(name), plan.bumps.get(name))})`)
+    .join(', ');
+}
+
+function versionOf(packages, name) {
+  return packages.find((pkg) => pkg.name === name)?.version;
 }
 
 function majorOf(packages, name) {
-  const version = packages.find((pkg) => pkg.name === name)?.version ?? '';
+  const version = versionOf(packages, name) ?? '';
   return Number(version.split('.')[0]);
 }
 
@@ -272,6 +289,57 @@ export function checkMajors({base, head, changedFiles, windowOpen}) {
   return {planned, introduced, errors, warnings};
 }
 
+export function checkV3({base, head}) {
+  const before = planReleases(base);
+  const after = planReleases(head);
+  const shipsFromV3 = (name) => !MAIN_ONLY_PACKAGES.includes(name);
+  const majors = [...after.bumps.keys()].filter(
+    (name) => shipsFromV3(name) && after.bumps.get(name) === 'major'
+  );
+  const newMajors = majors.filter((name) => before.bumps.get(name) !== 'major');
+  const mainOnly = MAIN_ONLY_PACKAGES.filter((name) => after.bumps.has(name));
+  const newMainOnly = mainOnly.filter((name) => !before.bumps.has(name));
+  const raisedByHand = head.packages
+    .map(({name}) => name)
+    .filter(
+      (name) =>
+        shipsFromV3(name) &&
+        versionOf(base.packages, name) !== undefined &&
+        majorOf(head.packages, name) > majorOf(base.packages, name)
+    );
+  const errors = [];
+  const warnings = [];
+
+  if (newMajors.length > 0) {
+    errors.push(
+      `Major version on v3: ${listWithCauses(after, newMajors)}. v3 publishes 3.x only: use a minor or patch bump, or open the breaking change against main.`
+    );
+  }
+  if (raisedByHand.length > 0) {
+    errors.push(
+      `The major version in package.json changed for ${raisedByHand.join(', ')}. v3 publishes 3.x only.`
+    );
+  }
+  if (newMainOnly.length > 0) {
+    errors.push(
+      `Release on v3 of packages that publish from main only: ${listWithCauses(after, newMainOnly)}. Open this change against main, so that the two lines never publish the same version.`
+    );
+  }
+  const pendingMajors = majors.filter((name) => !newMajors.includes(name));
+  if (pendingMajors.length > 0) {
+    warnings.push(
+      `v3 already plans a major version for ${pendingMajors.join(', ')}. Remove those changesets: the version pull request fails on them.`
+    );
+  }
+  const pendingMainOnly = mainOnly.filter((name) => !newMainOnly.includes(name));
+  if (pendingMainOnly.length > 0) {
+    warnings.push(
+      `v3 already plans a release of packages that publish from main only: ${pendingMainOnly.join(', ')}. Remove those changesets before the next release from v3.`
+    );
+  }
+  return {majors, mainOnly, errors, warnings};
+}
+
 export function readWorkspacePackages(root, ref) {
   const patterns = workspacePatterns(show(root, ref, 'pnpm-workspace.yaml'));
   const include = patterns.filter((pattern) => !pattern.startsWith('!')).map(globToRegExp);
@@ -324,8 +392,8 @@ function main() {
   }
 
   const baseRef = (process.env.BASE_REF || 'main').replace(/^refs\/heads\//, '');
-  if (baseRef !== 'main') {
-    console.log(`The target branch is ${baseRef}, not main: nothing to check.`);
+  if (baseRef !== 'main' && baseRef !== 'v3') {
+    console.log(`The target branch is ${baseRef}, neither main nor v3: nothing to check.`);
     return;
   }
 
@@ -334,33 +402,49 @@ function main() {
       process.env.GITHUB_ACTIONS === 'true' ? `::${level}::${message}` : `${level}: ${message}`
     );
   const windowOpen = process.env.UI_KIT_MAJOR_WINDOW === 'open';
-  let majors;
-  let mixed;
+  let result;
   try {
     const root = git(process.cwd(), 'rev-parse', '--show-toplevel');
     const base = readReleaseState(root, values.base);
     const head = readReleaseState(root, 'HEAD');
-    majors = checkMajors({
-      base,
-      head,
-      changedFiles: lines(git(root, 'diff', '--name-only', '--no-renames', values.base, 'HEAD')),
-      windowOpen,
-    });
-    mixed = checkMixedChangesets({base, head});
+    if (baseRef === 'v3') {
+      result = checkV3({base, head});
+    } else {
+      const majors = checkMajors({
+        base,
+        head,
+        changedFiles: lines(git(root, 'diff', '--name-only', '--no-renames', values.base, 'HEAD')),
+        windowOpen,
+      });
+      const mixed = checkMixedChangesets({base, head});
+      result = {
+        ...majors,
+        mixed: mixed.files,
+        errors: [...majors.errors, ...mixed.errors],
+        warnings: [...majors.warnings, ...mixed.warnings],
+      };
+    }
   } catch (error) {
     annotate('error', error.message);
     process.exitCode = 1;
     return;
   }
 
-  const errors = [...majors.errors, ...mixed.errors];
-  const warnings = [...majors.warnings, ...mixed.warnings];
-  console.log(`UI-Kit major window: ${windowOpen ? 'open' : 'closed'}`);
-  console.log(`UI-Kit majors planned at the head: ${majors.planned.join(', ') || 'none'}`);
-  console.log(`UI-Kit majors this range introduces: ${majors.introduced.join(', ') || 'none'}`);
-  console.log(
-    `Changesets that mix held and published packages: ${mixed.files.join(', ') || 'none'}`
-  );
+  const {errors, warnings} = result;
+  if (baseRef === 'v3') {
+    console.log('Target branch: v3, which publishes 3.x only');
+    console.log(`Majors planned at the head: ${result.majors.join(', ') || 'none'}`);
+    console.log(
+      `Packages that publish from main, planned at the head: ${result.mainOnly.join(', ') || 'none'}`
+    );
+  } else {
+    console.log(`UI-Kit major window: ${windowOpen ? 'open' : 'closed'}`);
+    console.log(`UI-Kit majors planned at the head: ${result.planned.join(', ') || 'none'}`);
+    console.log(`UI-Kit majors this range introduces: ${result.introduced.join(', ') || 'none'}`);
+    console.log(
+      `Changesets that mix held and published packages: ${result.mixed.join(', ') || 'none'}`
+    );
+  }
   for (const warning of warnings) {
     annotate('warning', warning);
   }
