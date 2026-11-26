@@ -395,7 +395,8 @@ describe('atomic-insight-smart-snippet', () => {
 
     it('should only close the feedback on Escape while the modal is open', async () => {
       const result = await dislike();
-      const closeFeedbackModal = vi.spyOn(mockSmartSnippet, 'closeFeedbackModal');
+      const closeFeedbackModal = vi.fn();
+      mockSmartSnippet.closeFeedbackModal = closeFeedbackModal;
 
       pressEscape();
       expect(closeFeedbackModal).not.toHaveBeenCalled();
@@ -414,6 +415,28 @@ describe('atomic-insight-smart-snippet', () => {
       result.element.remove();
 
       expect(modal?.isConnected).toBe(false);
+    });
+
+    it('should close the feedback when the component is removed while the modal is open', async () => {
+      const result = await dislike();
+      const {element, atomicInterface} = result;
+      const closeFeedbackModal = vi.fn();
+      mockSmartSnippet.closeFeedbackModal = closeFeedbackModal;
+      const parent = element.parentElement!;
+      getExplainWhyButton(element)?.click();
+      await vi.waitFor(() => expect(document.body).toHaveClass('atomic-modal-opened'));
+
+      element.remove();
+
+      expect(closeFeedbackModal).toHaveBeenCalledOnce();
+      await vi.waitFor(() => {
+        expect(document.body).not.toHaveClass('atomic-modal-opened');
+        expect(atomicInterface).not.toHaveClass('atomic-modal-opened');
+      });
+
+      parent.append(element);
+      await element.updateComplete;
+      expect(result.feedbackModal?.isOpen).toBe(false);
     });
 
     it('should show the thank-you state when feedback is sent after the component is re-attached', async () => {

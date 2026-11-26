@@ -118,6 +118,10 @@ export class AtomicInsightSmartSnippet
     super.disconnectedCallback();
     if (this.modalRef) {
       this.modalRef.removeEventListener('feedbackSent', this.feedbackSentHandler);
+      if (this.modalRef.isOpen) {
+        this.modalRef.isOpen = false;
+        this.smartSnippet.closeFeedbackModal();
+      }
       this.modalRef.remove();
     }
   }
