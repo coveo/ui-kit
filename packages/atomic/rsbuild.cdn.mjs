@@ -19,6 +19,7 @@ const sourceDir = join(__dirname, 'src');
 const litRuntime =
   /node_modules[\\/](?:lit|lit-html|lit-element|@lit[\\/](?:reactive-element|context)|tslib)[\\/]/;
 const loaderEntries = new Set(['atomic.esm', 'index']);
+const cdnIndexEsmSource = join(sourceDir, 'cdn-index-esm.ts');
 
 const rsbuild = await rsbuildApi.createRsbuild({
   cwd: __dirname,
@@ -27,8 +28,9 @@ const rsbuild = await rsbuildApi.createRsbuild({
       entry: {
         // ⚠️  Changing these entry names affects CDN pointer files in ui-kit-cd.
         'atomic.esm': './src/cdn.ts',
+        // `index.esm.js` imports `./index.js`: renaming this entry breaks it.
         index: './src/loader.ts',
-        'index.esm': './src/index.ts',
+        'index.esm': './src/cdn-index-esm.ts',
       },
       tsconfigPath: './tsconfig.lit.json',
       decorators: {version: 'legacy'},
@@ -45,8 +47,13 @@ const rsbuild = await rsbuildApi.createRsbuild({
       cleanDistPath: true,
       sourceMap: {js: 'source-map'},
       externals: [
-        ({request}, callback) => {
+        ({request, contextInfo}, callback) => {
           if (!request) return callback();
+          // `index.esm.js` takes the loader from the CDN's `index.js` instead of bundling a second copy.
+          // Why: docs/adr/0003-export-the-cdn-loader-from-index-esm-js.md
+          if (request === './loader.js' && contextInfo?.issuer === cdnIndexEsmSource) {
+            return callback(null, './index.js');
+          }
           const mapping = packageMappings[request];
           if (mapping?.cdn) {
             return callback(null, mapping.cdn);
@@ -76,6 +83,8 @@ const rsbuild = await rsbuildApi.createRsbuild({
 
         config.experiments ??= {};
         config.experiments.outputModule = true;
+        // A dynamic `import()` of an external package stays a dynamic import in the output.
+        config.externalsType = 'module-import';
 
         config.optimization ??= {};
         config.optimization.sideEffects = true;

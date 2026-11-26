@@ -21,14 +21,19 @@ exports[`CDN exports checks > did index.esm exports changed? 1`] = `
 {
   "MissingInterfaceParentError": [Function],
   "__webpack_require__": [Function],
+  "applyPolyfills": [Function],
+  "atomicVersion": "<version>",
   "bindLogDocumentOpenOnResult": [Function],
+  "defineCustomElements": [Function],
   "dispatchSearchBoxSuggestionsEvent": [Function],
   "elementHasNoQuery": [Function],
   "elementHasQuery": [Function],
   "fetchProductContext": [Function],
   "fetchResultContext": [Function],
+  "headlessVersion": "<version>",
   "initializeBindings": [Function],
   "productContext": [Function],
   "resultContext": [Function],
+  "setNonce": [Function],
 }
 `;

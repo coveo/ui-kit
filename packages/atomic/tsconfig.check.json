@@ -13,6 +13,7 @@
     "src/**/e2e/**",
     "src/index.ts",
     "src/cdn.ts",
+    "src/cdn-index-esm.ts",
     "src/loader.ts",
     "src/autoloader/**",
     "src/components/**/index.ts",

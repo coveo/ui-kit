@@ -132,7 +132,7 @@ Chosen option: C with N = 10.
 
 The `shared` cache group in `rsbuild.cdn.mjs` implements the decision. It sits next to the `dayjsLocales` group from #8681.
 
-Since [ADR 0003](./0003-build-the-cdn-loader-entries-as-single-files.md), `atomic.esm.js` and `index.js` contain the tag map instead of importing it as a chunk, so those two entries no longer load what they loaded when this record was written.
+Since [ADR 0002](./0002-build-the-cdn-loader-entries-as-single-files.md), `atomic.esm.js` and `index.js` contain the tag map instead of importing it as a chunk, so those two entries no longer load what they loaded when this record was written. Since [ADR 0003](./0003-export-the-cdn-loader-from-index-esm-js.md), `index.esm.js` imports `index.js` and no longer imports Headless: it loads 13 kB gzipped at startup, not 2 kB. N = 10 still keeps the shared chunk out of it.
 
 The build was verified as follows:
 
@@ -145,5 +145,5 @@ The build was verified as follows:
 
 Revisit after adding many components or upgrading rsbuild or rspack:
 
-- Check that `index.esm.js` still imports only its two small chunks.
+- If the budget test in `utils/cdn/tests/index-esm-loader.spec.ts` fails, check what `index.esm.js` loads at startup. It fails when the startup files include the shared chunk, import Headless or exceed 16 kB gzipped.
 - Measure N = 10 against its neighbors again.
