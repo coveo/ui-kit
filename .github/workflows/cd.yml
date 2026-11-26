@@ -60,8 +60,8 @@ jobs:
           github-token: ${{ steps.generate-token.outputs.token }}
           version-script: pnpm changeset version
           publish-script: pnpm run release
-          pr-title: 'ci(changesets): version packages j:KIT-5605'
-          commit-message: 'ci(changesets): version packages j:KIT-5605'
+          pr-title: 'ci(changesets): version packages (v3) j:KIT-5605'
+          commit-message: 'ci(changesets): version packages (v3) j:KIT-5605'
       - name: Fail if publishing made no progress
         if: ${{ steps.changesets.outcome == 'failure' && steps.changesets.outputs.published != 'true' }}
         run: |
