@@ -79,7 +79,7 @@ This avoids running the full Storybook test suite locally. The CI already ran th
 pnpm exec turbo run a11y:update-openacr --filter=@coveo/atomic-a11y -- --run-id=<RUN_ID>
 ```
 
-Replace `<RUN_ID>` with the GitHub Actions run ID from the failing check (shown in the error message). The run must be for the current `@coveo/atomic` version: the script refuses a report generated for another version, so an older run cannot revert `product.version`. This uses the `gh` CLI to download the `a11y-report.json` artifact and regenerates `openacr.yaml`.
+Replace `<RUN_ID>` with the GitHub Actions run ID from the failing check (shown in the error message). The run must be for the current `@coveo/atomic` version: the script refuses a report generated for another version, so an older run cannot revert `product.version`. CI tests your branch merged with its target branch, so if your branch is behind (for example after a release), merge the target branch into it before running the command. This uses the `gh` CLI to download the `a11y-report.json` artifact and regenerates `openacr.yaml`.
 
 > Requires the [GitHub CLI](https://cli.github.com/) (`gh`) to be installed and authenticated.
 
@@ -102,7 +102,7 @@ After either option, review the changes to `reports/openacr.yaml` and commit the
 
 `product.version` is the `@coveo/atomic` version the report applies to. The Changesets "version packages" PR keeps it current: the release workflow runs `pnpm exec turbo run create-version`, and this package's `create-version` task runs the sync after `changeset version`. `@coveo/atomic`'s `create-version` task depends on it.
 
-The CI check also fails when `product.version` differs from `packages/atomic/package.json`. To fix it, run:
+The CI check also fails when `product.version` differs from `packages/atomic/package.json`. If your branch is behind its target branch, merge the target branch into it first: after a release, that alone brings the updated `openacr.yaml`. Otherwise, run:
 
 ```bash
 pnpm exec turbo run a11y:sync-version --filter=@coveo/atomic-a11y

@@ -50,7 +50,9 @@ if (drift === 'product-version') {
   console.error(`
 ❌ openacr.yaml targets Atomic ${committed.product?.version}, but @coveo/atomic is ${generated.product?.version}.
 
-The Changesets "version packages" PR normally updates it. To update it, run:
+The Changesets "version packages" PR normally updates it. If your branch is
+behind its target branch (for example after a release), merge the target branch
+into it first: that may be all it needs. Otherwise, run:
 
   pnpm exec turbo run a11y:sync-version --filter=@coveo/atomic-a11y
 
@@ -71,7 +73,8 @@ test results differs from the committed version. This means WCAG conformance
 levels have changed. Either a new violation was introduced, a fix improved
 conformance, or component coverage changed.
 
-To update, run:
+To update, first merge the target branch (for example main) into your branch if
+it is behind, so the report matches its @coveo/atomic version. Then run:
 
   pnpm exec turbo run a11y:update-openacr --filter=@coveo/atomic-a11y -- --run-id=${runId}
 

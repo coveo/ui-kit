@@ -151,7 +151,7 @@ export async function transformJsonToOpenAcr(
 
   if (options.expectedVersion && report.report.version !== options.expectedVersion) {
     throw new Error(
-      `${LOG_PREFIX} ${inputFile} was generated for Atomic ${report.report.version}, but @coveo/atomic is ${options.expectedVersion}. Use an a11y report from a run on the current version.`
+      `${LOG_PREFIX} ${inputFile} was generated for Atomic ${report.report.version}, but @coveo/atomic is ${options.expectedVersion}. If your branch is behind its target branch, merge the target branch in first; otherwise, use an a11y report from a run on the current version.`
     );
   }
 
