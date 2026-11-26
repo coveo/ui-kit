@@ -33,8 +33,17 @@ export class AtomicRelevanceInspector
     );
   };
 
+  connectedCallback(): void {
+    super.connectedCallback();
+    this.bindings?.interfaceElement.addEventListener(
+      'dblclick',
+      this.handleRelevanceInspectorDoubleClick
+    );
+  }
+
   disconnectedCallback(): void {
-    this.bindings.interfaceElement.removeEventListener(
+    super.disconnectedCallback();
+    this.bindings?.interfaceElement.removeEventListener(
       'dblclick',
       this.handleRelevanceInspectorDoubleClick
     );

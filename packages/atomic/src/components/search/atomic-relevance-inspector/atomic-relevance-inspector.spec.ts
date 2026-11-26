@@ -77,6 +77,49 @@ describe('atomic-relevance-inspector', () => {
       element.remove();
       expect(removeEventListenerSpy).toHaveBeenCalledWith('dblclick', expect.any(Function));
     });
+
+    it('should call hostDisconnected on its controllers', async () => {
+      const {element} = await renderRelevanceInspector();
+      const hostDisconnected = vi.fn();
+      element.addController({hostDisconnected});
+
+      element.remove();
+
+      expect(hostDisconnected).toHaveBeenCalledOnce();
+    });
+
+    it('should not throw when removed before receiving bindings', () => {
+      const errors: unknown[] = [];
+      const onError = (event: ErrorEvent) => {
+        errors.push(event.error);
+        event.preventDefault();
+      };
+      window.addEventListener('error', onError);
+      const element = document.createElement('atomic-relevance-inspector');
+      document.body.appendChild(element);
+
+      try {
+        element.remove();
+      } finally {
+        window.removeEventListener('error', onError);
+      }
+
+      expect(errors).toEqual([]);
+    });
+  });
+
+  describe('when removed and re-appended', () => {
+    it('should open the modal on alt+double-click', async () => {
+      const {element, modal} = await renderRelevanceInspector();
+      const parent = element.parentElement!;
+
+      element.remove();
+      parent.appendChild(element);
+      element.bindings.interfaceElement.dispatchEvent(altDblClick);
+      await element.updateComplete;
+
+      expect(modal.isOpen).toBe(true);
+    });
   });
 
   describe('when alt+double-clicking on the interface element', () => {
