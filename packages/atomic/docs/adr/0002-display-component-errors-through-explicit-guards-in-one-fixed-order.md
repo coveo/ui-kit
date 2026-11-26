@@ -1,6 +1,6 @@
 ---
-status: Proposed
-date: 2026-11-25
+status: Accepted
+date: 2026-11-26
 related:
   - https://coveord.atlassian.net/browse/KIT-5099
   - https://coveord.atlassian.net/browse/KIT-5197
