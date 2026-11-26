@@ -310,10 +310,22 @@ describe('checkV3', () => {
 
   it('allows picking up by hand a version that main published', () => {
     const pickedUp = PACKAGES.map((pkg) =>
-      pkg.name === '@coveo/relay' ? {...pkg, version: '3.0.0'} : pkg
+      pkg.name === '@coveo/thermidor' ? {...pkg, version: '1.0.0'} : pkg
     );
     const {errors} = checkV3({base: state(), head: state([], {packages: pickedUp})});
     assert.deepEqual(errors, []);
+  });
+
+  it('allows a release of Bueno and Relay, which publish from v3 until GA', () => {
+    const {errors, warnings} = checkV3({
+      base: state(),
+      head: state([
+        {name: '@coveo/bueno', type: 'patch'},
+        {name: '@coveo/relay', type: 'minor', file: '.changeset/b.md'},
+      ]),
+    });
+    assert.deepEqual(errors, []);
+    assert.deepEqual(warnings, []);
   });
 
   it('allows a range that removes the changesets of a package that publishes from main', () => {
