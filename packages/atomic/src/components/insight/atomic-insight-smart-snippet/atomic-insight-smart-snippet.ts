@@ -65,6 +65,7 @@ export class AtomicInsightSmartSnippet
 
   private smartSnippetId!: string;
   private modalRef?: AtomicInsightSmartSnippetFeedbackModal;
+  private explainWhyButton?: HTMLElement;
   private feedbackSentHandler = () => {
     this.feedbackSent = true;
   };
@@ -107,10 +108,22 @@ export class AtomicInsightSmartSnippet
     this.smartSnippet = buildInsightSmartSnippet(this.bindings.engine);
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    if (this.modalRef) {
+      this.attachModal(this.modalRef);
+    }
+  }
+
   disconnectedCallback() {
     super.disconnectedCallback();
     if (this.modalRef) {
       this.modalRef.removeEventListener('feedbackSent', this.feedbackSentHandler);
+      if (this.modalRef.isOpen) {
+        this.modalRef.isOpen = false;
+        this.smartSnippet.closeFeedbackModal();
+      }
+      this.modalRef.remove();
     }
   }
 
@@ -124,13 +137,16 @@ export class AtomicInsightSmartSnippet
   }
 
   private loadModal() {
-    if (this.modalRef) {
-      return;
+    if (!this.modalRef) {
+      this.modalRef = document.createElement('atomic-insight-smart-snippet-feedback-modal');
+      this.attachModal(this.modalRef);
     }
-    const modalRef = document.createElement('atomic-insight-smart-snippet-feedback-modal');
+    return this.modalRef;
+  }
+
+  private attachModal(modalRef: AtomicInsightSmartSnippetFeedbackModal) {
     modalRef.addEventListener('feedbackSent', this.feedbackSentHandler);
-    this.modalRef = modalRef;
-    this.renderRoot.parentElement?.insertAdjacentElement('beforebegin', modalRef);
+    this.insertAdjacentElement('beforebegin', modalRef);
   }
 
   private renderSource() {
@@ -150,9 +166,7 @@ export class AtomicInsightSmartSnippet
 
   private renderFeedbackBanner() {
     const explainWhyRef: RefOrCallback = (button) => {
-      if (this.modalRef && button) {
-        this.modalRef.source = button as HTMLElement;
-      }
+      this.explainWhyButton = button as HTMLElement | undefined;
     };
 
     return renderSmartSnippetFeedbackBanner({
@@ -169,9 +183,9 @@ export class AtomicInsightSmartSnippet
         },
         onLike: () => this.smartSnippet.like(),
         onPressExplainWhy: () => {
-          if (this.modalRef) {
-            this.modalRef.isOpen = true;
-          }
+          const modal = this.loadModal();
+          modal.source = this.explainWhyButton;
+          modal.isOpen = true;
         },
       },
     });

@@ -77,10 +77,9 @@ describe('atomic-insight-smart-snippet', () => {
       thankYouMessage: shadow?.querySelector<HTMLElement>('[part="feedback-thank-you"]') ?? null,
       explainWhyButton:
         shadow?.querySelector<HTMLElement>('[part="feedback-explain-why-button"]') ?? null,
-      feedbackModal:
-        element.renderRoot.parentElement?.querySelector(
-          'atomic-insight-smart-snippet-feedback-modal'
-        ) ?? null,
+      get feedbackModal() {
+        return document.querySelector('atomic-insight-smart-snippet-feedback-modal');
+      },
     };
   };
 
@@ -350,29 +349,127 @@ describe('atomic-insight-smart-snippet', () => {
   });
 
   describe('feedback modal', () => {
-    it('should create modal when dislike is clicked and open on explain why click', async () => {
-      const {element, dislikeButton, explainWhyButton} = await renderComponent({
-        controllerState: {answerFound: true, disliked: true},
+    const dislike = async () => {
+      const result = await renderComponent({
+        controllerState: {answerFound: true, disliked: false},
       });
+      const {element, dislikeButton} = result;
 
       element.smartSnippet.dislike = vi.fn();
       dislikeButton?.click();
+      element.smartSnippetState = {...element.smartSnippetState, disliked: true};
       await element.updateComplete;
-
-      const modal = element.renderRoot.parentElement?.querySelector(
-        'atomic-insight-smart-snippet-feedback-modal'
+      await vi.waitFor(() =>
+        expect(result.feedbackModal?.shadowRoot?.querySelector('atomic-modal')).not.toBeNull()
       );
+
+      return result;
+    };
+
+    const getExplainWhyButton = (element: AtomicInsightSmartSnippet) =>
+      element.shadowRoot?.querySelector<HTMLElement>('[part="feedback-explain-why-button"]');
+
+    const pressEscape = () =>
+      document.body.dispatchEvent(new KeyboardEvent('keyup', {key: 'Escape', bubbles: true}));
+
+    it('should insert the modal right before the component when dislike is clicked', async () => {
+      const result = await dislike();
+
+      const modal = result.feedbackModal;
       expect(modal).not.toBeNull();
-      expect(explainWhyButton).not.toBeNull();
+      expect(result.element.previousElementSibling).toBe(modal);
+    });
+
+    it('should open the modal when explain why is clicked', async () => {
+      const result = await dislike();
+      const explainWhyButton = getExplainWhyButton(result.element);
+
+      explainWhyButton?.click();
+      await result.element.updateComplete;
+
+      const modal = result.feedbackModal;
+      expect(modal?.isConnected).toBe(true);
+      expect(modal?.isOpen).toBe(true);
+      expect(modal?.source).toBe(explainWhyButton);
+    });
+
+    it('should insert and open the modal on explain why when the component renders already disliked', async () => {
+      const {element} = await renderComponent({
+        controllerState: {answerFound: true, disliked: true},
+      });
+      const explainWhyButton = getExplainWhyButton(element);
 
       explainWhyButton?.click();
       await element.updateComplete;
 
-      const modalAfterClick = element.renderRoot.parentElement?.querySelector(
-        'atomic-insight-smart-snippet-feedback-modal'
-      );
-      expect(modalAfterClick).not.toBeNull();
-      expect(modalAfterClick?.parentElement).not.toBeNull();
+      const modal = document.querySelector('atomic-insight-smart-snippet-feedback-modal');
+      expect(modal).not.toBeNull();
+      expect(element.previousElementSibling).toBe(modal);
+      expect(modal?.isOpen).toBe(true);
+      expect(modal?.source).toBe(explainWhyButton);
+    });
+
+    it('should only close the feedback on Escape while the modal is open', async () => {
+      const result = await dislike();
+      const closeFeedbackModal = vi.fn();
+      mockSmartSnippet.closeFeedbackModal = closeFeedbackModal;
+
+      pressEscape();
+      expect(closeFeedbackModal).not.toHaveBeenCalled();
+
+      getExplainWhyButton(result.element)?.click();
+      await result.element.updateComplete;
+      pressEscape();
+      pressEscape();
+      expect(closeFeedbackModal).toHaveBeenCalledOnce();
+    });
+
+    it('should remove the modal when the component is removed', async () => {
+      const result = await dislike();
+      const modal = result.feedbackModal;
+
+      result.element.remove();
+
+      expect(modal?.isConnected).toBe(false);
+    });
+
+    it('should close the feedback when the component is removed while the modal is open', async () => {
+      const result = await dislike();
+      const {element, atomicInterface} = result;
+      const closeFeedbackModal = vi.fn();
+      mockSmartSnippet.closeFeedbackModal = closeFeedbackModal;
+      const parent = element.parentElement!;
+      getExplainWhyButton(element)?.click();
+      await vi.waitFor(() => expect(document.body).toHaveClass('atomic-modal-opened'));
+
+      element.remove();
+
+      expect(closeFeedbackModal).toHaveBeenCalledOnce();
+      await vi.waitFor(() => {
+        expect(document.body).not.toHaveClass('atomic-modal-opened');
+        expect(atomicInterface).not.toHaveClass('atomic-modal-opened');
+      });
+
+      parent.append(element);
+      await element.updateComplete;
+      expect(result.feedbackModal?.isOpen).toBe(false);
+    });
+
+    it('should show the thank-you state when feedback is sent after the component is re-attached', async () => {
+      const result = await dislike();
+      const {element} = result;
+      const parent = element.parentElement!;
+
+      element.remove();
+      parent.append(element);
+      element.smartSnippetState = {...element.smartSnippetState, disliked: true};
+      await element.updateComplete;
+      expect(element.previousElementSibling).toBe(result.feedbackModal);
+
+      result.feedbackModal?.dispatchEvent(new Event('feedbackSent'));
+      await element.updateComplete;
+
+      expect(getExplainWhyButton(element)).toBeNull();
     });
   });
 

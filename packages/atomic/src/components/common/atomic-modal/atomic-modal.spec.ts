@@ -159,13 +159,22 @@ describe('atomic-modal', () => {
         expect(closeEventSpy).not.toHaveBeenCalled();
       });
 
-      it('should call the close function when provided', async () => {
+      it('should call the close function when provided and isOpen is true', async () => {
         const closeSpy = vi.fn();
-        await renderModal({close: closeSpy});
+        await renderModal({isOpen: true, close: closeSpy});
 
         await userEvent.keyboard('{Escape}');
 
         expect(closeSpy).toHaveBeenCalledOnce();
+      });
+
+      it('should not call the close function when isOpen is false', async () => {
+        const closeSpy = vi.fn();
+        await renderModal({isOpen: false, close: closeSpy});
+
+        await userEvent.keyboard('{Escape}');
+
+        expect(closeSpy).not.toHaveBeenCalled();
       });
 
       it('should set isOpen to false', async () => {
