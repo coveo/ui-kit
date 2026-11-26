@@ -26,20 +26,22 @@ When the track is v4, tell the user what will break for a v3 customer (the membe
 
 Newer story titles start with `[Package] v3:` or `[Package] v4:`. Treat that prefix as a hint and let the order above decide: most stories in the epics have no prefix, and `[Docs] v4: write the v3 to v4 upgrade guide` changes no published package, so it is no-release.
 
-| Track            | Example story                                                                        | Base branch                                   | Changeset bump                                     | Upgrade guide entry               |
-| ---------------- | ------------------------------------------------------------------------------------ | --------------------------------------------- | -------------------------------------------------- | --------------------------------- |
-| **v3**           | KIT-6346 `[Headless] v3: deprecate the legacy commerce facet contract`               | `main`                                        | `minor` for a new API or notice, `patch` for a fix | Optional "planned removal" row    |
-| **v4**           | KIT-6347 `[Headless] v4: sunset the legacy commerce facet contract`                  | see "Where v4 PRs go"                         | `major` on every public package whose API breaks   | Required                          |
-| **experimental** | A change to the SSR `-next` entry points                                             | `main`                                        | `minor` or `patch`, never `major`                  | Kept in sync, see below           |
-| **no-release**   | KIT-4388 `Should we use Zod over Bueno and deprecate Bueno?`                         | `main`, when any file changes                 | None                                               | None, except in the guide's story |
+| Track            | Example story                                                          | Base branch                                              | Changeset bump                                     | Upgrade guide entry               |
+| ---------------- | ---------------------------------------------------------------------- | -------------------------------------------------------- | -------------------------------------------------- | --------------------------------- |
+| **v3**           | KIT-6346 `[Headless] v3: deprecate the legacy commerce facet contract` | `v3`                                                     | `minor` for a new API or notice, `patch` for a fix | Optional "planned removal" row    |
+| **v4**           | KIT-6347 `[Headless] v4: sunset the legacy commerce facet contract`    | `main`                                                   | `major` on every public package whose API breaks   | Required                          |
+| **experimental** | A change to the SSR `-next` entry points                               | `main`                                                   | `minor` or `patch`, never `major`                  | Kept in sync, see below           |
+| **no-release**   | KIT-4388 `Should we use Zod over Bueno and deprecate Bueno?`           | `main` when any file changes, `v3` too when 3.x needs it | None                                               | None, except in the guide's story |
 
 Rules that follow from the track:
 
-- A v4 removal needs a v3 deprecation that already shipped with a replacement customers can use on v3 (KIT-6373 reworded the v3 notices so that each names one). A breaking story without one is two stories: do the v3 part first, as its own PR, and propose the missing v3 story to the user. For example, KIT-4958 renames `atomic-popover`: v3 adds `atomic-facet-popover` and deprecates the old name, and v4 removes it.
+- A v4 removal needs a v3 deprecation, naming a replacement customers can use on v3, that is already released from `v3` (KIT-6373 reworded the v3 notices so that each names one). Released means its merge commit is in the `release/v3` tag, which moves to each 3.x release: run `git fetch --force origin tag release/v3`, then `git merge-base --is-ancestor <commit> refs/tags/release/v3`. A breaking story without one is two stories: do the v3 part first, as its own PR to `v3`, and propose the missing v3 story to the user. For example, KIT-4958 renames `atomic-popover`: v3 adds `atomic-facet-popover` and deprecates the old name, and v4 removes it.
 - A no-release story adds no changeset. A spike ends with its decision in the Jira issue and, when the decision calls for a change, proposes the v3 and v4 stories that carry it out.
 - A v3 deprecation notice names the v3 replacement and never an experimental entry point.
 - Experimental sub-packages change without aliases or deprecation periods, but every change is still described in a changeset for customers.
 - The experimental SSR sub-packages become the v4 SSR API. When a change there alters what a customer writes, update its upgrade guide entry in the same PR, and remove the entry's `not yet built` marker in the PR that makes both the API and its `-v4` sample match the entry (see references/upgrade-guide-entry.md).
+
+Then start the branch from the base branch of the track: `git fetch origin`, then `git switch -c <branch> origin/<base branch>`. A branch from `main` opened against `v3` would carry every change `main` took since the cut (see "Two branches until the v4 GA").
 
 ## Step 2: Build the change
 
@@ -69,10 +71,11 @@ Use [references/upgrade-guide-entry.md](references/upgrade-guide-entry.md) for t
 A no-release story that changes no file, such as most spikes, goes straight to Step 6.
 
 1. Run the checks of the packages you changed, then `pnpm -w run lint:fix`.
-2. Run the story check: `node .agents/skills/working-on-ui-kit-v4/scripts/check-v4-change.mjs --track <v3|v4|experimental|no-release>`. It fails when a public package changed without a changeset, when a bump does not match the track, when a `major` bump has no entry in the guide of its package (Atomic React and Atomic Angular use the Atomic guide), when a guide entry names an experimental entry point, or when a no-release branch adds a changeset or changes published source. Fix what it reports.
+2. Run the story check: `node .agents/skills/working-on-ui-kit-v4/scripts/check-v4-change.mjs --base origin/<base branch> --track <v3|v4|experimental|no-release>`. It fails when a public package changed without a changeset, when a bump does not match the track, when a `major` bump has no entry in the guide of its package (Atomic React and Atomic Angular use the Atomic guide), when a guide entry names an experimental entry point, or when a no-release branch adds a changeset or changes published source. Fix what it reports.
 3. Commit with a Conventional Commits title; a breaking change on the v4 track takes the `!` marker: `feat(headless)!: remove the legacy SSR API`. Sign every commit (`git commit -S`); unsigned commits block the merge.
-4. Push the branch, then open the PR against the base branch of the track, with the template of its type from `.github/PULL_REQUEST_TEMPLATE/` and the Jira link filled in (the `commit-changes` skill covers the title and the template). For every story this skill covers, this overrides the `commit-changes` default of always opening a draft: open the PR ready for review once the piece is ready, and open it as a draft only when early CI feedback is wanted before the review, saying so in the description.
-5. In the PR description, state the track, the bump and the guide entry title, so the reviewer checks all three.
+4. Push the branch, then open the PR against the base branch of the track with `gh pr create --base <base branch>`, since `gh` targets `main` by default. Use the template of its type from `.github/PULL_REQUEST_TEMPLATE/` and fill in the Jira link (the `commit-changes` skill covers the title and the template). For every story this skill covers, this overrides the `commit-changes` default of always opening a draft: open the PR ready for review once the piece is ready, and open it as a draft only when early CI feedback is wanted before the review, saying so in the description.
+5. On a PR to `v3`, add the `forwardport` label when it touches code that `main` changed since the cut: `git log --oneline origin/v3..origin/main -- <changed files>` lists those changes. The label tells whoever merges `v3` into `main` where to look.
+6. In the PR description, state the track, the bump and the guide entry title, so the reviewer checks all three.
 
 ## Step 6: Close the story
 
@@ -80,15 +83,20 @@ A no-release story that changes no file, such as most spikes, goes straight to S
 - Set "Requires Public Documentation" to Yes when a docs.coveo.com page other than the guide must change, and open a DOC request for the technical writers.
 - Leave the story in progress until the PR is merged into the base branch of its track.
 
-## Where v4 PRs go
+## Two branches until the v4 GA
 
-A v4 removal cannot merge into `main` while `main` ships v3. The `changeset-major-guard` job in `.github/workflows/ci.yml` (`utils/ci/changeset-major-guard.mjs`) fails any pull request to `main` that introduces a UI-Kit major while its `UI_KIT_MAJOR_WINDOW` is `closed`. The window opens when `main` is frozen for v4 (KIT-4387). While it is closed: build the removal on a branch stacked on its v3 deprecation branch, push it to `origin`, run the story check with `--track v4`, link the branch from the Jira issue, and do not open a PR against `main`. When the window is set to `open`, follow KIT-4387 for where v4 PRs go and update this section.
+`v3` was cut from `main` on November 25, 2026. Until the v4 GA, `v3` releases every package except Thermidor, and `main` takes the v4 breaking changes and publishes only Thermidor: the changesets of the other packages wait on `main` until GA. Step 1 gives each track its base branch, and these rules come with it:
+
+- A v3-track change goes to `v3` even when you find it while working on `main`: open it as a PR of its own, outside the v4 work.
+- `v3` is merged into `main` before the first v4 prerelease and again just before GA. Each merge brings the 3.x fixes, versions and changelog entries to `main`, so a v3-track change takes one PR, against `v3`.
+- An experimental fix goes to `v3` only when it unblocks a v3 customer; otherwise the v3 version of the SSR entry points stays as released.
+- A no-release change that `v3` needs too, such as a CI fix, gets a second PR once the first merges on `main`: cherry-pick its commit with `git cherry-pick -S <commit>` on a branch from `origin/v3`, so both branches hold the same lines and the merges of `v3` into `main` have nothing to resolve there. That copy takes no `forwardport` label.
 
 ## Scripts
 
-| Script                | Purpose                                                              | Usage                                                                                                                                                            |
-| --------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `check-v4-change.mjs` | Verifies changesets, bump versus track, guide entry and naming rules | From the repository root: `node .agents/skills/working-on-ui-kit-v4/scripts/check-v4-change.mjs [--base origin/main] [--track v3\|v4\|experimental\|no-release]` |
+| Script                | Purpose                                                              | Usage                                                                                                                                                                       |
+| --------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `check-v4-change.mjs` | Verifies changesets, bump versus track, guide entry and naming rules | From the repository root: `node .agents/skills/working-on-ui-kit-v4/scripts/check-v4-change.mjs [--base origin/main\|origin/v3] [--track v3\|v4\|experimental\|no-release]` |
 
 ## References
 
@@ -97,7 +105,7 @@ A v4 removal cannot merge into `main` while `main` ships v3. The `changeset-majo
 ## Do not
 
 - Do not point customers at an experimental entry point in a deprecation notice, a changeset or the guide.
-- Do not remove a member on `main`.
+- Do not remove or rename a member in a PR to `v3`.
 - Do not bump `major` on the v3 or experimental tracks.
 - Do not reorganize folders or files in a v4 story unless the story is about that; a removal PR stays a removal.
 - Do not edit the v3 samples to the new API.
