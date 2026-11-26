@@ -17,8 +17,13 @@
  * Changesets 3 does (highest bump, fixed groups, and only a patch for the packages built on a
  * bumped one), and reports what the range introduces.
  *
- * main and v3 carry this same file, so that merging v3 into main before the v4 GA does not
- * conflict here.
+ * On both lines, `.changeset/config.json` must name the target branch as `baseBranch`, since a
+ * merge of v3 into main brings v3's value without a conflict. A range that removes pending
+ * changesets of a package the target branch publishes, without releasing that package, gets a
+ * warning: the next release and its changelog would leave them out.
+ *
+ * main and v3 are meant to carry the same copy of this file, so that merging v3 into main before
+ * the v4 GA does not conflict here. When the copies differ, keep main's in that merge.
  *
  * Usage: node changeset-major-guard.mjs --base <sha>
  * Environment: BASE_REF (target branch, default main), UI_KIT_MAJOR_WINDOW (main only: open or closed, default closed)
@@ -340,6 +345,45 @@ export function checkV3({base, head}) {
   return {majors, mainOnly, errors, warnings};
 }
 
+export function checkBaseBranch({head, target}) {
+  if (head.baseBranch === target) {
+    return {errors: []};
+  }
+  const setting =
+    head.baseBranch === undefined
+      ? 'sets no "baseBranch"'
+      : `sets "baseBranch" to "${head.baseBranch}"`;
+  return {
+    errors: [
+      `.changeset/config.json ${setting}, but this pull request targets ${target}. Each line keeps its own value: when merging v3 into main, keep main's .changeset/config.json.`,
+    ],
+  };
+}
+
+export function droppedChangesets({base, head, publishes}) {
+  const keptFiles = new Set(head.changesets.map(({file}) => file));
+  const keptTexts = new Set(head.changesets.map(({text}) => text));
+  const removed = base.changesets.filter(
+    ({file, text}) => !keptFiles.has(file) && !keptTexts.has(text)
+  );
+  const dropped = new Map();
+  for (const {file, releases} of removed) {
+    for (const {name, type} of releases) {
+      const released = versionOf(head.packages, name) !== versionOf(base.packages, name);
+      if (type !== 'none' && publishes(name) && !released) {
+        dropped.set(name, [...(dropped.get(name) ?? []), file]);
+      }
+    }
+  }
+  return {
+    packages: [...dropped.keys()],
+    warnings: [...dropped].map(
+      ([name, files]) =>
+        `This range removes pending changesets of ${name} without releasing it (${files.join(', ')}), so its next release and changelog would leave them out. Restore them unless that is intended.`
+    ),
+  };
+}
+
 export function readWorkspacePackages(root, ref) {
   const patterns = workspacePatterns(show(root, ref, 'pnpm-workspace.yaml'));
   const include = patterns.filter((pattern) => !pattern.startsWith('!')).map(globToRegExp);
@@ -367,6 +411,7 @@ export function readReleaseState(root, ref) {
       return {file, text, releases: parseChangeset(text, file)};
     });
   const {
+    baseBranch,
     fixed = [],
     ignore = [],
     privatePackages,
@@ -380,6 +425,7 @@ export function readReleaseState(root, ref) {
     fixedGroups: fixed,
     ignore,
     privatePackages,
+    baseBranch,
   };
 }
 
@@ -424,6 +470,15 @@ function main() {
         warnings: [...majors.warnings, ...mixed.warnings],
       };
     }
+    const skipped = skippedPackages(head);
+    const dropped = droppedChangesets({
+      base,
+      head,
+      publishes: (name) =>
+        !skipped.has(name) && (baseRef === 'main' || !MAIN_ONLY_PACKAGES.includes(name)),
+    });
+    result.errors.push(...checkBaseBranch({head, target: baseRef}).errors);
+    result.warnings.push(...dropped.warnings);
   } catch (error) {
     annotate('error', error.message);
     process.exitCode = 1;
