@@ -502,6 +502,18 @@ describe('TimeframeFacetCommon', () => {
       mockHost.append(timeframe);
       return timeframe;
     };
+    const setChildError = async (
+      timeframe: HTMLElementTagNameMap['atomic-timeframe'],
+      error?: Error
+    ) => {
+      timeframe.error = error;
+      await timeframe.updateComplete;
+    };
+    const surfaced = (childError: Error) =>
+      expect.objectContaining({
+        message: `An "atomic-timeframe" child is invalid: ${childError.message}`,
+        cause: childError,
+      });
 
     beforeEach(() => {
       mockHost = document.createElement('div');
@@ -515,40 +527,39 @@ describe('TimeframeFacetCommon', () => {
     it('should display the error of the first invalid child on the facet', async () => {
       appendTimeframe();
       const childError = new Error('unit: value is not in the list');
-      appendTimeframe(childError);
+      const timeframe = appendTimeframe(childError);
 
       createInstance();
+      await timeframe.updateComplete;
 
-      await vi.waitFor(() =>
-        expect(mockHost.error).toEqual(
-          expect.objectContaining({
-            message: `An "atomic-timeframe" child is invalid: ${childError.message}`,
-            cause: childError,
-          })
-        )
-      );
+      expect(mockHost.error).toEqual(surfaced(childError));
     });
 
-    it('should keep an error the facet already holds', async () => {
+    it('should follow the child as it becomes invalid, then valid again', async () => {
+      const timeframe = appendTimeframe();
+      createInstance();
+      await timeframe.updateComplete;
+      expect(mockHost.error).toBeUndefined();
+
+      const childError = new Error('unit: value is not in the list');
+      await setChildError(timeframe, childError);
+      expect(mockHost.error).toEqual(surfaced(childError));
+
+      await setChildError(timeframe, undefined);
+      expect(mockHost.error).toBeUndefined();
+    });
+
+    it('should never replace or clear an error it did not set', async () => {
       const facetError = new Error('facet error');
       mockHost.error = facetError;
       const timeframe = appendTimeframe(new Error('child error'));
 
       createInstance();
       await timeframe.updateComplete;
-      await Promise.resolve();
-
       expect(mockHost.error).toBe(facetError);
-    });
 
-    it('should not set an error when every child is valid', async () => {
-      const timeframe = appendTimeframe();
-
-      createInstance();
-      await timeframe.updateComplete;
-      await Promise.resolve();
-
-      expect(mockHost.error).toBeUndefined();
+      await setChildError(timeframe, undefined);
+      expect(mockHost.error).toBe(facetError);
     });
   });
 

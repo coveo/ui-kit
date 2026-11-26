@@ -44,7 +44,16 @@ See SKILL.md for the decorator stack order and base class/mixin selection.
 
 Applied to the `render()` method. `@bindingGuard()` renders nothing until the bindings arrive. `@errorGuard()` renders `atomic-component-error` instead of the content while the component's `error` is set. It does not catch errors thrown in `render()`.
 
-A component can receive an error when it uses `@bindings()`, a `ValidatePropsController`, an item or product context controller, or writes `this.error`. Such a component declares `@state() public error?: Error` and puts `@errorGuard()` on `render()`. A component that cannot receive an error declares no `error` and uses no guard.
+A component can receive an error when it uses any of these:
+
+- `@bindings()` or `InitializeBindingsMixin`;
+- a `ValidatePropsController`;
+- an item, folded item list or product context controller (`ItemContextController`, `FoldedItemListContextController`, `createProductContextController`, `createResultContextController` and their interactive variants);
+- a template controller (`ResultTemplateController`, `RecsResultTemplateController`, `ProductTemplateController`);
+- `TimeframeFacetCommon`;
+- a write to `this.error`, with `=` or any other assignment operator.
+
+Such a component declares `@state() public error?: Error` and puts `@errorGuard()` on `render()`. A component that cannot receive an error declares no `error` and uses no guard.
 
 Decorators apply bottom-up, so the top one runs first. Where both guards appear, `@bindingGuard()` sits directly above `@errorGuard()`, so an error displays once the bindings arrive:
 
@@ -58,7 +67,7 @@ render() {
 }
 ```
 
-Components without bindings, and the few with `@bindings()` that render before their bindings arrive, use `@errorGuard()` alone; the latter are listed in `RENDERS_BEFORE_BINDINGS` in `packages/atomic/scripts/component-error-contract.mjs`. Its spec enforces these rules in CI. See [ADR 0002](../../../../packages/atomic/docs/adr/0002-display-component-errors-through-explicit-guards-in-one-fixed-order.md).
+Components without bindings, and the few with `@bindings()` that render before their bindings arrive, use `@errorGuard()` alone; the latter are listed in `RENDERS_BEFORE_BINDINGS` in `packages/atomic/scripts/component-error-contract.mjs`. A light DOM component whose parent renders no `<slot>`, such as `atomic-timeframe`, declares `error` without `@errorGuard()`, and its parent displays the error; these are listed in `DISPLAYED_BY_PARENT` in the same file. Its spec enforces these rules in CI. See [ADR 0002](../../../../packages/atomic/docs/adr/0002-display-component-errors-through-explicit-guards-in-one-fixed-order.md).
 
 ### `@bindStateToController('controllerFieldName')`
 

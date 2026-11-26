@@ -103,24 +103,31 @@ describe('component error contract (ADR 0002)', () => {
         ],
       },
       {
+        case: 'another decorator between the guards',
+        source: component({guards: '@bindingGuard()\n@withHeading()\n@errorGuard()'}),
+        expected: [
+          'atomic-probe: @bindingGuard() must be directly above @errorGuard() on render().',
+        ],
+      },
+      {
         case: 'a missing @errorGuard()',
         source: component({guards: '@bindingGuard()'}),
         expected: [
           'atomic-probe: can receive `error` (@bindings()) but render() has no @errorGuard().',
         ],
       },
-      {
-        case: 'a missing declaration',
+      ...['=', '??=', '||='].map((operator) => ({
+        case: `a missing declaration on a component that writes this.error ${operator}`,
         source: component({
           classDecorators: '',
           declaration: '',
-          members: 'fail() { this.error = new Error(); }',
+          members: `fail() { this.error ${operator} new Error(); }`,
           guards: '@errorGuard()',
         }),
         expected: [
-          'atomic-probe: can receive `error` (this.error =) but does not declare `@state() public error?: Error`.',
+          'atomic-probe: can receive `error` (a write to this.error) but does not declare `@state() public error?: Error`.',
         ],
-      },
+      })),
       {
         case: 'a declaration without @state()',
         source: component({declaration: 'public error?: Error;'}),

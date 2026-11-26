@@ -2,6 +2,16 @@ import {readdirSync, readFileSync} from 'node:fs';
 import {join, relative} from 'node:path';
 import ts from 'typescript';
 
+/*
+ * Static check of the component error contract of ADR 0002, run by `component-error-contract.spec.mjs`.
+ *
+ * It reads source code, so it only sees what the source names directly. It does not resolve:
+ * - aliased imports: decorators, controllers and mixins are matched by name, so `bindings as withBindings` is missed;
+ * - base classes: only the members and mixin calls of the custom element class itself are scanned;
+ * - helpers that write `host.error` for a component, unless they are listed in `ERROR_WRITING_CONTROLLERS`.
+ * None of these patterns exists in `src/components`. Extend the check if one appears.
+ */
+
 /**
  * Components with `@bindings()` that render before their bindings arrive, so they take `@errorGuard()` without
  * `@bindingGuard()`. See ADR 0002, "Guard order".
@@ -64,7 +74,8 @@ function calleeName(expression) {
 function isThisErrorWrite(node) {
   return (
     ts.isBinaryExpression(node) &&
-    node.operatorToken.kind === ts.SyntaxKind.EqualsToken &&
+    node.operatorToken.kind >= ts.SyntaxKind.FirstAssignment &&
+    node.operatorToken.kind <= ts.SyntaxKind.LastAssignment &&
     ts.isPropertyAccessExpression(node.left) &&
     node.left.expression.kind === ts.SyntaxKind.ThisKeyword &&
     node.left.name.text === 'error'
@@ -87,7 +98,7 @@ function errorSourcesOf(classNode) {
       }
     }
     if (isThisErrorWrite(node)) {
-      sources.add('this.error =');
+      sources.add('a write to this.error');
     }
     ts.forEachChild(node, visit);
   };
@@ -129,7 +140,7 @@ function tagNameOf(classNode) {
 }
 
 /**
- * Describes each custom element class of a source file: what can write its `error`, whether it declares it, and the guards on its `render()`.
+ * Describes each custom element class of a source file: what can write its `error`, whether it declares it, and the decorators on its `render()`.
  * @param {string} fileName
  * @param {string} source
  */
@@ -148,11 +159,7 @@ export function describeComponents(fileName, source) {
           fileName,
           errorSources: errorSourcesOf(node),
           declaresError: node.members.some(isOptionalErrorState),
-          renderGuards: render
-            ? decoratorsOf(render).filter(
-                (name) => name === 'bindingGuard' || name === 'errorGuard'
-              )
-            : [],
+          renderDecorators: render ? decoratorsOf(render) : [],
         });
       }
     }
@@ -171,10 +178,10 @@ export function contractViolations(
   component,
   {rendersBeforeBindings = RENDERS_BEFORE_BINDINGS, displayedByParent = DISPLAYED_BY_PARENT} = {}
 ) {
-  const {tagName, errorSources, declaresError, renderGuards} = component;
+  const {tagName, errorSources, declaresError, renderDecorators} = component;
   const violations = [];
-  const bindingGuardIndex = renderGuards.indexOf('bindingGuard');
-  const errorGuardIndex = renderGuards.indexOf('errorGuard');
+  const bindingGuardIndex = renderDecorators.indexOf('bindingGuard');
+  const errorGuardIndex = renderDecorators.indexOf('errorGuard');
   const canReceiveError = errorSources.length > 0;
   const via = errorSources.join(', ');
 

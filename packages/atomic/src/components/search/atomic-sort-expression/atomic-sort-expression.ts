@@ -87,6 +87,7 @@ export class AtomicSortExpression extends LightDomMixin(LitElement) {
   @state() public error?: Error;
 
   private missingDropdownError?: Error;
+  private displacedError?: Error;
 
   constructor() {
     super();
@@ -124,18 +125,21 @@ export class AtomicSortExpression extends LightDomMixin(LitElement) {
     const dropdownComponent = 'atomic-sort-dropdown';
 
     if (this.closest(dropdownComponent)) {
-      if (this.error === this.missingDropdownError) {
-        this.error = undefined;
+      if (this.missingDropdownError && this.error === this.missingDropdownError) {
+        this.error = this.displacedError;
       }
       this.missingDropdownError = undefined;
+      this.displacedError = undefined;
       return;
     }
 
-    if (!this.missingDropdownError) {
-      this.missingDropdownError = new Error(
-        `The "${this.nodeName.toLowerCase()}" component has to be used inside an ${dropdownComponent} element.`
-      );
+    if (this.missingDropdownError) {
+      return;
     }
+    this.missingDropdownError = new Error(
+      `The "${this.nodeName.toLowerCase()}" component has to be used inside an ${dropdownComponent} element.`
+    );
+    this.displacedError = this.error;
     this.error = this.missingDropdownError;
   }
 }

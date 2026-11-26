@@ -27,8 +27,9 @@ interface TabInfo {
 
 /**
  * The `atomic-tab-manager` component manages a collection of tabs,
- * allowing users to switch between them. Each child `atomic-tab` represents an
- * individual tab within the manager.
+ * allowing users to switch between them. Each child `atomic-tab` configures an
+ * individual tab within the manager. The manager renders a button for each one and does
+ * not display the `atomic-tab` elements themselves.
  *
  * @part button-container - The container for the tab button.
  * @part button-container-active - The container for the active tab button.
@@ -42,7 +43,6 @@ interface TabInfo {
  * @part overflow-tabs - The list of tabs shown when the "More" button is clicked.
  * @part popover-tab - The individual tab buttons shown when the "More" button is clicked.
  * @part backdrop - The backdrop shown when the "More" button is clicked.
- * @slot default - The `atomic-tab` elements that represent the tabs.
  */
 @customElement('atomic-tab-manager')
 @bindings()
