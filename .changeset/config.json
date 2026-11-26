@@ -51,6 +51,7 @@
     "@coveo/ui-kit-sample-*",
     "@coveo/auth",
     "@coveo/bueno",
+    "@coveo/create-ui",
     "@coveo/relay",
     "coveo.analytics"
   ],
