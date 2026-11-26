@@ -1,7 +1,7 @@
 name: Create release
 on:
   push:
-    branches: [v3]
+    branches: [main, v3]
 
 permissions:
   contents: read
@@ -60,8 +60,8 @@ jobs:
           github-token: ${{ steps.generate-token.outputs.token }}
           version-script: pnpm changeset version
           publish-script: pnpm run release
-          pr-title: 'ci(changesets): version packages (v3) j:KIT-5605'
-          commit-message: 'ci(changesets): version packages (v3) j:KIT-5605'
+          pr-title: 'ci(changesets): version packages (${{ github.ref_name }}) j:KIT-5605'
+          commit-message: 'ci(changesets): version packages (${{ github.ref_name }}) j:KIT-5605'
       - name: Fail if publishing made no progress
         if: ${{ steps.changesets.outcome == 'failure' && steps.changesets.outputs.published != 'true' }}
         run: |
@@ -284,8 +284,8 @@ jobs:
           # On release commits, update both private and preview pointers.
           # On regular merges, only update private pointers.
           CHANNELS: ${{ needs.release.outputs.published == 'true' && 'private,preview' || 'private' }}
-  chromatic-update-v3:
-    name: 'Update Chromatic baseline on v3'
+  chromatic-update-baseline:
+    name: 'Update the Chromatic baseline of this branch'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -293,7 +293,7 @@ jobs:
         with:
           egress-policy: audit
 
-      # Chromatic needs full history to update the v3 branch baseline.
+      # Chromatic needs full history to update the branch baseline.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
@@ -303,7 +303,7 @@ jobs:
         uses: chromaui/action@6efa19d4a40404313897de5a6d516e0333a2a787 # v18.14.5
         with:
           autoAcceptChanges: true
-          branchName: v3
+          branchName: ${{ github.ref_name }}
           exitZeroOnChanges: true
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           workingDir: packages/atomic
