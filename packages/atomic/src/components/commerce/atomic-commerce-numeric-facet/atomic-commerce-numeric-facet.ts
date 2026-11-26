@@ -125,7 +125,7 @@ export class AtomicCommerceNumericFacet
   }
 
   private get formatter() {
-    if (isCurrencyField(this.field, this.bindings.interfaceElement.currencyFields)) {
+    if (isCurrencyField(this.field ?? '', this.bindings.interfaceElement.currencyFields)) {
       return defaultCurrencyFormatter(this.contextState.currency);
     }
     return defaultNumberFormatter;
