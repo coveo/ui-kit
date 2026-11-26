@@ -45,6 +45,7 @@ interface TabInfo {
  * @part overflow-tabs - The list of tabs shown when the "More" button is clicked.
  * @part popover-tab - The individual tab buttons shown when the "More" button is clicked.
  * @part backdrop - The backdrop shown when the "More" button is clicked.
+ * @slot default - The `atomic-tab` elements that configure the tabs. They are read, not displayed.
  */
 @customElement('atomic-tab-manager')
 @bindings()
