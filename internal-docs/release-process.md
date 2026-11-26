@@ -10,7 +10,7 @@ This repository uses [Changesets](https://github.com/changesets/changesets) to m
 - `main` publishes Thermidor only. Every other package is in the `ignore` list of its `.changeset/config.json`, so their changesets, v4 majors included, wait on `main` until GA. `main`'s copy of `cd.yml` has no post-publish jobs and no CDN deployment.
 - `utils/ci/changeset-major-guard.mjs` refuses the changesets that the target branch cannot ship.
 
-Before the first v4 prerelease and again before GA, `v3` is merged into `main` through a pull request. Keep `main`'s `cd.yml` and `.changeset/config.json` in that merge: the guard fails a pull request whose config names another `baseBranch` than its target.
+Before the first v4 prerelease and again before GA, `v3` is merged into `main` through a pull request. Keep `main`'s `cd.yml` and `.changeset/config.json` in that merge: the guard fails a pull request whose config names another `baseBranch` than its target. Also keep `main`'s `utils/ci/changeset-major-guard.mjs` and its test whenever `v3`'s copy differs: the guard runs from the merged head, so `v3`'s older copy would drop the checks written for this merge.
 
 ## How a release works
 

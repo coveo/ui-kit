@@ -22,8 +22,8 @@
  * changesets of a package the target branch publishes, without releasing that package, gets a
  * warning: the next release and its changelog would leave them out.
  *
- * main and v3 carry this same file, so that merging v3 into main before the v4 GA does not
- * conflict here.
+ * main and v3 are meant to carry the same copy of this file, so that merging v3 into main before
+ * the v4 GA does not conflict here. When the copies differ, keep main's in that merge.
  *
  * Usage: node changeset-major-guard.mjs --base <sha>
  * Environment: BASE_REF (target branch, default main), UI_KIT_MAJOR_WINDOW (main only: open or closed, default closed)
@@ -361,9 +361,13 @@ export function checkBaseBranch({head, target}) {
 }
 
 export function droppedChangesets({base, head, publishes}) {
-  const kept = new Set(head.changesets.map(({file}) => file));
+  const keptFiles = new Set(head.changesets.map(({file}) => file));
+  const keptTexts = new Set(head.changesets.map(({text}) => text));
+  const removed = base.changesets.filter(
+    ({file, text}) => !keptFiles.has(file) && !keptTexts.has(text)
+  );
   const dropped = new Map();
-  for (const {file, releases} of base.changesets.filter(({file}) => !kept.has(file))) {
+  for (const {file, releases} of removed) {
     for (const {name, type} of releases) {
       const released = versionOf(head.packages, name) !== versionOf(base.packages, name);
       if (type !== 'none' && publishes(name) && !released) {

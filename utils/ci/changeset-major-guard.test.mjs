@@ -506,6 +506,15 @@ describe('droppedChangesets', () => {
     ]);
   });
 
+  it('stays quiet when the range renames a pending changeset', () => {
+    const {warnings} = droppedChangesets({
+      base: state([thermidor]),
+      head: state([{...thermidor, file: '.changeset/thermidor-renamed.md'}]),
+      publishes: publishedOnMain,
+    });
+    assert.deepEqual(warnings, []);
+  });
+
   it('stays quiet when the version pull request releases the package', () => {
     const released = PACKAGES.map((pkg) =>
       pkg.name === '@coveo/thermidor' ? {...pkg, version: '0.9.0'} : pkg
