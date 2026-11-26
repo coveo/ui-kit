@@ -150,6 +150,7 @@ jobs:
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           owner: coveo
           repositories: 'ui-kit'
+          permission-contents: write
       - name: Commit files
         if: ${{ steps.check-changes.outputs.has_changes == 'true' && github.event_name == 'pull_request' }}
         run: pnpm --filter @coveo/ci add-generated-files
