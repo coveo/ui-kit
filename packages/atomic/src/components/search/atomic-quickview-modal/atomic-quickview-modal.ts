@@ -15,9 +15,9 @@ import type {Bindings} from '@/src/components/search/atomic-search-interface/int
 import {renderQuickviewSidebar} from '@/src/components/search/result-template-components/atomic-quickview-sidebar/atomic-quickview-sidebar';
 import {renderQuickviewIframe} from '@/src/components/search/result-template-components/quickview-iframe/quickview-iframe';
 import {buildQuickviewPreviewBar} from '@/src/components/search/result-template-components/quickview-preview-bar/quickview-preview-bar';
+import {QuickviewHighlights} from '@/src/components/search/result-template-components/quickview-word-highlight/quickview-highlights';
 import {
   getWordsHighlights,
-  HIGHLIGHT_PREFIX,
   type QuickviewWordHighlight,
 } from '@/src/components/search/result-template-components/quickview-word-highlight/quickview-word-highlight';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -115,7 +115,7 @@ export class AtomicQuickviewModal extends LitElement implements InitializableCom
   private words: Record<string, QuickviewWordHighlight> = {};
 
   private iframeRef?: HTMLIFrameElement;
-  private highlightStyleSheets = new Map<string, CSSStyleSheet>();
+  private highlights = new QuickviewHighlights();
 
   /**
    * The HTML content to display in the quickview modal.
@@ -172,12 +172,12 @@ export class AtomicQuickviewModal extends LitElement implements InitializableCom
     this.content = undefined;
     this.result = undefined;
     this.interactiveResult = undefined;
-    this.highlightStyleSheets.clear();
+    this.highlights.detach();
   }
 
   willUpdate(changedProperties: Map<string, unknown>) {
     if (changedProperties.has('highlightKeywords')) {
-      this.handleHighlightsScripts();
+      this.highlights.update(this.highlightKeywords);
     }
   }
 
@@ -247,7 +247,8 @@ export class AtomicQuickviewModal extends LitElement implements InitializableCom
               onSetIframeRef: async (ref: HTMLIFrameElement) => {
                 this.iframeRef = ref;
                 this.words = getWordsHighlights(this.termsToHighlight, this.iframeRef);
-                this.handleHighlightsScripts();
+                this.highlights.attach(this.iframeRef, this.words);
+                this.highlights.update(this.highlightKeywords);
               },
             },
           })}
@@ -310,61 +311,6 @@ export class AtomicQuickviewModal extends LitElement implements InitializableCom
     return this.bindings.engine.state.resultPreview?.contentURL;
   }
 
-  private enableHighlights() {
-    this.removeDisableHighlightStyleSheet();
-  }
-
-  private enableHighlightsSpecificKeyword(identifier: string) {
-    this.removeDisableHighlightStyleSheet(identifier);
-  }
-
-  private disableHighlights() {
-    this.createDisableHighlightStyleSheet();
-  }
-
-  private disableHighlightsSpecificKeyword(identifier: string) {
-    this.createDisableHighlightStyleSheet(identifier);
-  }
-
-  private removeDisableHighlightStyleSheet(identifier?: string) {
-    const doc = this.iframeRef?.contentWindow?.document;
-    if (!doc) {
-      return;
-    }
-
-    const key = identifier ?? '';
-    const sheet = this.highlightStyleSheets.get(key);
-    if (!sheet) {
-      return;
-    }
-
-    doc.adoptedStyleSheets = doc.adoptedStyleSheets.filter((s) => s !== sheet);
-    this.highlightStyleSheets.delete(key);
-  }
-
-  private createDisableHighlightStyleSheet(identifier?: string) {
-    const doc = this.iframeRef?.contentWindow?.document;
-    if (!doc) {
-      return;
-    }
-
-    const key = identifier ?? '';
-    if (this.highlightStyleSheets.has(key)) {
-      return;
-    }
-
-    const sheet = new CSSStyleSheet();
-    sheet.replaceSync(
-      `[id^="${HIGHLIGHT_PREFIX}${identifier ? `:${identifier}` : ''}"] {
-        background-color: inherit !important;
-        color: inherit !important;
-      }`
-    );
-
-    this.highlightStyleSheets.set(key, sheet);
-    doc.adoptedStyleSheets = [...doc.adoptedStyleSheets, sheet];
-  }
-
   private get termsToHighlight() {
     const flatPhrasesToHighlight: TermsToHighlight = {};
 
@@ -393,21 +339,6 @@ export class AtomicQuickviewModal extends LitElement implements InitializableCom
       return this.requestId;
     }
     return this.result.uniqueId + this.requestId;
-  }
-
-  private handleHighlightsScripts() {
-    if (!this.highlightKeywords.highlightNone) {
-      this.enableHighlights();
-    } else {
-      this.disableHighlights();
-    }
-    Object.values(this.highlightKeywords.keywords).forEach((word) => {
-      if (word.enabled) {
-        this.enableHighlightsSpecificKeyword(word.indexIdentifier);
-      } else {
-        this.disableHighlightsSpecificKeyword(word.indexIdentifier);
-      }
-    });
   }
 
   @bindingGuard()

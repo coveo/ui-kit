@@ -112,6 +112,50 @@ export const Default: Story = {
   },
 };
 
+const highlightedKeywordsApiHarness = new MockSearchApi();
+
+highlightedKeywordsApiHarness.searchEndpoint.mock(
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock API response types are loosely defined
+  (response: any) => ({
+    ...response,
+    results: response.results.slice(0, 1).map(
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock API result types are loosely defined
+      (result: any) => ({...result, hasHtmlVersion: true, flags: 'HasHtmlVersion'})
+    ),
+    termsToHighlight: {children: ['children'], social: ['social'], media: ['media']},
+    phrasesToHighlight: {},
+    totalCount: 1,
+    totalCountFiltered: 1,
+  })
+);
+
+highlightedKeywordsApiHarness.htmlEndpoint.mock(
+  () => `<html><body style="font-family: Helvetica; padding: 20px">
+  ${Array.from(
+    {length: 12},
+    (_, paragraph) => `<p>
+    <span id="CoveoHighlight:1.${paragraph}.1" style="background-color: rgb(255, 255, 0)">Children</span>
+    under the age of 16 are no longer allowed to use
+    <span id="CoveoHighlight:2.${paragraph}.1" style="background-color: rgb(0, 255, 255)">social</span>
+    <span id="CoveoHighlight:3.${paragraph}.1" style="background-color: rgb(255, 128, 255)">media</span>.
+    Critics suggest it could isolate vulnerable teenagers and push
+    <span id="CoveoHighlight:1.${paragraph}.2" style="background-color: rgb(255, 255, 0)">children</span>
+    into unregulated corners of the internet.
+  </p>`
+  ).join('')}
+</body></html>`
+);
+
+export const WithHighlightedKeywords: Story = {
+  parameters: {
+    chromatic: {disableSnapshot: true},
+    msw: {
+      handlers: [...highlightedKeywordsApiHarness.handlers],
+    },
+  },
+  play: Default.play,
+};
+
 export const Closed: Story = {
   tags: ['!dev'],
 };

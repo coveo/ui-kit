@@ -23,12 +23,19 @@ describe('QuickviewWordHighlight', () => {
     return new QuickviewWordHighlight(id, text, baseColor, element);
   }
 
-  function expectHighlighted(element: HTMLElement) {
-    expect(element.style.color).toBe(baseColor);
-    expect(element.style.backgroundColor).toBe(focusedColor);
+  function focusedElements(highlight: QuickviewWordHighlight) {
+    return Array.from(highlight.focusedHighlight).map((range) => range.startContainer);
   }
 
-  function expectNotHighlighted(element: HTMLElement) {
+  function expectFocused(highlight: QuickviewWordHighlight, element: HTMLElement) {
+    expect(focusedElements(highlight)).toEqual([element]);
+  }
+
+  function expectNotFocused(highlight: QuickviewWordHighlight, element: HTMLElement) {
+    expect(focusedElements(highlight)).not.toContain(element);
+  }
+
+  function expectUnchangedInlineStyles(element: HTMLElement) {
     expect(element.style.color).toBe('');
     expect(element.style.backgroundColor).toBe(baseColor);
   }
@@ -54,9 +61,35 @@ describe('QuickviewWordHighlight', () => {
       expect(highlight.previewBorderColor).toBe(previewBorderColor);
     });
 
+    it('should name its highlights after the index identifier', () => {
+      expect(highlight.highlightName).toBe('coveo-quickview-keyword-1');
+      expect(highlight.focusedHighlightName).toBe('coveo-quickview-keyword-1-focused');
+    });
+
+    it('should give the focused highlight priority over the keyword highlight', () => {
+      expect(highlight.focusedHighlight.priority).toBeGreaterThan(highlight.highlight.priority);
+    });
+
+    it('should add a range covering the element to the keyword highlight', () => {
+      const [range] = Array.from(highlight.highlight) as Range[];
+      expect(highlight.highlight.size).toBe(1);
+      expect(range.startContainer).toBe(element);
+      expect(range.endContainer).toBe(element);
+    });
+
+    it('should generate ::highlight() styles with the keyword colors', () => {
+      const styles = highlight.styles.replace(/\s+/g, ' ');
+      expect(styles).toContain(
+        `::highlight(coveo-quickview-keyword-1) { background-color: ${baseColor}; }`
+      );
+      expect(styles).toContain(
+        `::highlight(coveo-quickview-keyword-1-focused) { color: ${baseColor}; background-color: ${focusedColor}; }`
+      );
+    });
+
     describe('when no navigation has occurred', () => {
-      it('should not apply any highlighting styles', () => {
-        expectNotHighlighted(element);
+      it('should not focus any occurrence', () => {
+        expect(highlight.focusedHighlight.size).toBe(0);
       });
     });
 
@@ -65,8 +98,12 @@ describe('QuickviewWordHighlight', () => {
         highlight.navigateForward();
       });
 
-      it('should apply highlighting styles to the focused element', () => {
-        expectHighlighted(element);
+      it('should focus the element', () => {
+        expectFocused(highlight, element);
+      });
+
+      it('should not change the element inline styles', () => {
+        expectUnchangedInlineStyles(element);
       });
 
       describe('when navigating forward again', () => {
@@ -74,8 +111,8 @@ describe('QuickviewWordHighlight', () => {
           highlight.navigateForward();
         });
 
-        it('should reapply highlighting styles to the focused element', () => {
-          expectHighlighted(element);
+        it('should keep the element focused', () => {
+          expectFocused(highlight, element);
         });
       });
 
@@ -84,8 +121,8 @@ describe('QuickviewWordHighlight', () => {
           highlight.navigateBackward();
         });
 
-        it('should reapply highlighting styles to the focused element', () => {
-          expectHighlighted(element);
+        it('should keep the element focused', () => {
+          expectFocused(highlight, element);
         });
       });
     });
@@ -95,9 +132,8 @@ describe('QuickviewWordHighlight', () => {
         highlight.navigateBackward();
       });
 
-      it('should apply highlighting styles to the focused element', () => {
-        expect(element.style.color).toBe(baseColor);
-        expect(element.style.backgroundColor).toBe(focusedColor);
+      it('should focus the element', () => {
+        expectFocused(highlight, element);
       });
     });
   });
@@ -119,10 +155,13 @@ describe('QuickviewWordHighlight', () => {
       expect(highlight.elements).toEqual([element1, element2]);
     });
 
+    it('should add one range per element to the keyword highlight', () => {
+      expect(highlight.highlight.size).toBe(2);
+    });
+
     describe('when no navigation has occurred', () => {
-      it('should not apply any highlighting styles to either element', () => {
-        expectNotHighlighted(element1);
-        expectNotHighlighted(element2);
+      it('should not focus any occurrence', () => {
+        expect(highlight.focusedHighlight.size).toBe(0);
       });
     });
 
@@ -131,9 +170,9 @@ describe('QuickviewWordHighlight', () => {
         highlight.navigateForward();
       });
 
-      it('should apply highlighting styles to the first element only', () => {
-        expectHighlighted(element1);
-        expectNotHighlighted(element2);
+      it('should focus the first element only', () => {
+        expectFocused(highlight, element1);
+        expectNotFocused(highlight, element2);
       });
 
       describe('when navigating forward again', () => {
@@ -141,9 +180,9 @@ describe('QuickviewWordHighlight', () => {
           highlight.navigateForward();
         });
 
-        it('should apply highlighting styles to the second element only', () => {
-          expectNotHighlighted(element1);
-          expectHighlighted(element2);
+        it('should focus the second element only', () => {
+          expectNotFocused(highlight, element1);
+          expectFocused(highlight, element2);
         });
 
         describe('when navigating forward a third time', () => {
@@ -151,9 +190,9 @@ describe('QuickviewWordHighlight', () => {
             highlight.navigateForward();
           });
 
-          it('should loop and apply highlighting to the first element again', () => {
-            expectHighlighted(element1);
-            expectNotHighlighted(element2);
+          it('should loop and focus the first element again', () => {
+            expectFocused(highlight, element1);
+            expectNotFocused(highlight, element2);
           });
         });
       });
@@ -164,9 +203,9 @@ describe('QuickviewWordHighlight', () => {
         highlight.navigateBackward();
       });
 
-      it('should apply highlighting styles to the last element (loop backward)', () => {
-        expectNotHighlighted(element1);
-        expectHighlighted(element2);
+      it('should loop backward and focus the last element', () => {
+        expectNotFocused(highlight, element1);
+        expectFocused(highlight, element2);
       });
     });
   });

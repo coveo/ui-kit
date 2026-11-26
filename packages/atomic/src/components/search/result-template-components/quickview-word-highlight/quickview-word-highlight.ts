@@ -2,11 +2,33 @@ import {ColorParser} from './color-parser';
 
 export {getWordsHighlights, HIGHLIGHT_PREFIX} from './iframe-parser';
 
+const HIGHLIGHT_NAME_PREFIX = 'coveo-quickview-keyword';
+
+type HighlightConstructor = typeof Highlight;
+
+function getHighlightConstructor(element: HTMLElement): HighlightConstructor {
+  // A highlight is only painted by the registry of its own realm, so build it
+  // with the constructor of the window that owns the element (the iframe).
+  const view = element.ownerDocument.defaultView as (Window & typeof globalThis) | null;
+  return view?.Highlight ?? Highlight;
+}
+
+function createRange(element: HTMLElement) {
+  const range = element.ownerDocument.createRange();
+  range.selectNodeContents(element);
+  return range;
+}
+
 export class QuickviewWordHighlight {
   public readonly focusedColor: string;
   public readonly previewBorderColor: string;
   public readonly elements: HTMLElement[] = [];
+  public readonly highlightName: string;
+  public readonly focusedHighlightName: string;
+  public readonly highlight: Highlight;
+  public readonly focusedHighlight: Highlight;
 
+  private readonly ranges: Range[] = [];
   private currentNavigationPosition = -1;
 
   constructor(
@@ -15,6 +37,13 @@ export class QuickviewWordHighlight {
     public readonly color: string,
     element: HTMLElement
   ) {
+    const HighlightInRealm = getHighlightConstructor(element);
+    this.highlight = new HighlightInRealm();
+    this.focusedHighlight = new HighlightInRealm();
+    this.focusedHighlight.priority = 1;
+    this.highlightName = `${HIGHLIGHT_NAME_PREFIX}-${indexIdentifier}`;
+    this.focusedHighlightName = `${this.highlightName}-focused`;
+
     this.addElement(element);
 
     const colorParser = new ColorParser(color);
@@ -23,11 +52,24 @@ export class QuickviewWordHighlight {
   }
 
   public addElement(element: HTMLElement) {
+    const range = createRange(element);
     this.elements.push(element);
+    this.ranges.push(range);
+    this.highlight.add(range);
   }
 
   public get occurrences() {
     return this.elements.length;
+  }
+
+  public get styles() {
+    return `::highlight(${this.highlightName}) {
+      background-color: ${this.color};
+    }
+    ::highlight(${this.focusedHighlightName}) {
+      color: ${this.color};
+      background-color: ${this.focusedColor};
+    }`;
   }
 
   public navigateForward() {
@@ -51,14 +93,8 @@ export class QuickviewWordHighlight {
   }
 
   private highlightNavigation() {
-    const currentElement = this.elements[this.currentNavigationPosition];
-    const otherElements = this.elements.filter((el) => el !== currentElement);
-    currentElement.style.color = this.color;
-    currentElement.style.backgroundColor = this.focusedColor;
-    otherElements.forEach((element) => {
-      element.style.color = '';
-      element.style.backgroundColor = this.color;
-    });
+    this.focusedHighlight.clear();
+    this.focusedHighlight.add(this.ranges[this.currentNavigationPosition]);
   }
 
   private putElementIntoView() {
