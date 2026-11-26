@@ -405,6 +405,22 @@ describe('c-quantic-refine-toggle', () => {
       });
     });
 
+    describe('when both buttonTooltip and the deprecated title are set', () => {
+      it('should display the buttonTooltip value on the refine button', async () => {
+        const element = createTestComponent({
+          buttonTooltip: exampleTooltip,
+          title: 'Deprecated tooltip',
+        });
+        await flushPromises();
+
+        const refineToggleButton = element.shadowRoot.querySelector(
+          selectors.refineToggleButton
+        );
+
+        expect(refineToggleButton.title).toBe(exampleTooltip);
+      });
+    });
+
     describe('when the deprecated property title is set', () => {
       it('should display the tooltip on the refine button and warn about the deprecation', async () => {
         const element = createTestComponent({title: exampleTooltip});
@@ -415,7 +431,6 @@ describe('c-quantic-refine-toggle', () => {
         );
 
         expect(refineToggleButton.title).toBe(exampleTooltip);
-        expect(element.buttonTooltip).toBe(exampleTooltip);
         expect(warnDeprecatedPropertyOnce).toHaveBeenCalledWith(
           'c-quantic-refine-toggle',
           'title',
