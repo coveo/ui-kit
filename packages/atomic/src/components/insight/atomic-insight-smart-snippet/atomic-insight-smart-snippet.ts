@@ -107,10 +107,18 @@ export class AtomicInsightSmartSnippet
     this.smartSnippet = buildInsightSmartSnippet(this.bindings.engine);
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    if (this.modalRef) {
+      this.attachModal(this.modalRef);
+    }
+  }
+
   disconnectedCallback() {
     super.disconnectedCallback();
     if (this.modalRef) {
       this.modalRef.removeEventListener('feedbackSent', this.feedbackSentHandler);
+      this.modalRef.remove();
     }
   }
 
@@ -127,9 +135,12 @@ export class AtomicInsightSmartSnippet
     if (this.modalRef) {
       return;
     }
-    const modalRef = document.createElement('atomic-insight-smart-snippet-feedback-modal');
+    this.modalRef = document.createElement('atomic-insight-smart-snippet-feedback-modal');
+    this.attachModal(this.modalRef);
+  }
+
+  private attachModal(modalRef: AtomicInsightSmartSnippetFeedbackModal) {
     modalRef.addEventListener('feedbackSent', this.feedbackSentHandler);
-    this.modalRef = modalRef;
     this.insertAdjacentElement('beforebegin', modalRef);
   }
 
