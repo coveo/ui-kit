@@ -61,8 +61,8 @@ export class AtomicInsightResultAttachToCaseIndicator
     });
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   public render() {
     if (!this.attachToCase?.isAttached()) {
       return nothing;

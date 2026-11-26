@@ -127,8 +127,8 @@ export class AtomicInsightSmartSnippetSuggestions
     this.smartSnippetQuestionsList = buildSmartSnippetQuestionsList(this.bindings.engine);
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   public render() {
     const shouldDisplay = this.smartSnippetQuestionsListState.questions.length > 0;
 

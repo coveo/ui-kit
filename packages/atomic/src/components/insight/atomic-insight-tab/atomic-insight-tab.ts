@@ -168,8 +168,8 @@ export class AtomicInsightTab
     }
   };
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     return html`<span part="tab" title=${this.label}
       >${when(this.isAppLoaded, () => this.label)}</span

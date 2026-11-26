@@ -1,7 +1,5 @@
 import {html, LitElement, type PropertyValues} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
-import {errorGuard} from '@/src/decorators/error-guard';
-import type {LitElementWithError} from '@/src/decorators/types';
+import {customElement, property} from 'lit/decorators.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 
@@ -16,8 +14,7 @@ import {LightDomMixin} from '@/src/mixins/light-dom';
  */
 @customElement('atomic-tab-button')
 @withTailwindStyles
-export class AtomicTabButton extends LightDomMixin(LitElement) implements LitElementWithError {
-  @state() public error?: Error;
+export class AtomicTabButton extends LightDomMixin(LitElement) {
   /**
    * The label to display on the tab button.
    */
@@ -91,7 +88,6 @@ export class AtomicTabButton extends LightDomMixin(LitElement) implements LitEle
     this.classList.toggle('after:rounded', this.active);
   }
 
-  @errorGuard()
   render() {
     const buttonClasses = [
       'relative',

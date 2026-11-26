@@ -66,8 +66,8 @@ export class AtomicProductNumericFieldValue
     return this.formatter(value, this.bindings.i18n.languages as string[]);
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     return html`${when(this.value !== null, () => html`${this.value}`)}`;
   }

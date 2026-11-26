@@ -56,8 +56,8 @@ export class AtomicInsightQueryError
     this.queryError = buildQueryError(this.bindings.engine);
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     const {hasError, error} = this.queryErrorState;
     const i18n = this.bindings.i18n;

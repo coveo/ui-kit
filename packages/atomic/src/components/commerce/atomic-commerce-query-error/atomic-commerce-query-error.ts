@@ -67,8 +67,8 @@ export class AtomicCommerceQueryError
     }
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     const {error} = this.searchOrListingState;
 

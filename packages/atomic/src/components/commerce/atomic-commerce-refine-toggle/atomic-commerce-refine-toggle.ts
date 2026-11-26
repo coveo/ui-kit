@@ -73,8 +73,8 @@ export class AtomicCommerceRefineToggle
     }
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     return html`${refineToggleGuard(
       {

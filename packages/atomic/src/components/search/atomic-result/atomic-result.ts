@@ -23,6 +23,7 @@ import type {
   ResultContextEvent,
 } from '@/src/components/search/result-template-component-utils/context/result-context-controller';
 import {booleanConverter} from '@/src/converters/boolean-converter';
+import {errorGuard} from '@/src/decorators/error-guard';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {parentNodeToString} from '@/src/utils/dom-utils';
@@ -270,6 +271,7 @@ export class AtomicResult extends ChildrenUpdateCompleteMixin(LitElement) {
     return parentNodeToString(this.linkContent ?? new HTMLElement());
   }
 
+  @errorGuard()
   public render() {
     if (this.renderingFunction !== undefined) {
       return html`

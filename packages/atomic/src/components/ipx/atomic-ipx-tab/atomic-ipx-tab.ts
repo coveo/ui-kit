@@ -8,6 +8,7 @@ import {dispatchTabLoaded, type TabCommon} from '@/src/components/common/tabs/ta
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 
@@ -162,6 +163,7 @@ export class AtomicIpxTab
     }
   };
 
+  @errorGuard()
   render() {
     return html`<span part="tab" title=${this.label}
       >${when(this.isAppLoaded, () => this.label)}</span

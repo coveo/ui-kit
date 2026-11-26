@@ -1,8 +1,6 @@
 import {type CSSResultGroup, css, html, LitElement, type TemplateResult} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {renderButton} from '@/src/components/common/button';
-import {errorGuard} from '@/src/decorators/error-guard';
-import type {LitElementWithError} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import type {TabCommonElement} from '../tabs/tab-common';
 import '../atomic-tab-popover/atomic-tab-popover';
@@ -21,8 +19,7 @@ interface TabPopoverElement extends HTMLElement {
  */
 @customElement('atomic-tab-bar')
 @withTailwindStyles
-export class AtomicTabBar extends LitElement implements LitElementWithError {
-  @state() public error?: Error;
+export class AtomicTabBar extends LitElement {
   static styles: CSSResultGroup = css`
     @reference '../../../utils/tailwind.global.tw.css';
 
@@ -131,7 +128,6 @@ export class AtomicTabBar extends LitElement implements LitElementWithError {
     this.updateTabsDisplay();
   }
 
-  @errorGuard()
   render() {
     return html`
       <slot></slot>

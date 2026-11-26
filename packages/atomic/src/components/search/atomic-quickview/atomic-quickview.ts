@@ -10,7 +10,9 @@ import {ValidatePropsController} from '@/src/components/common/validate-props-co
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
 import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {AriaLiveRegionController, FocusTargetController} from '@/src/utils/accessibility-utils';
@@ -156,6 +158,8 @@ export class AtomicQuickview extends LitElement implements InitializableComponen
     }
   }
 
+  @bindingGuard()
+  @errorGuard()
   render() {
     return when(
       this.quickviewState?.resultHasPreview,

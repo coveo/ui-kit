@@ -189,8 +189,8 @@ export class AtomicSmartSnippetExpandableAnswer
     );
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     return html`
       <div class=${this.isExpanded ? 'expanded' : ''}>

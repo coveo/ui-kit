@@ -61,8 +61,8 @@ export class AtomicInsightFullSearchButton
 
   public initialize() {}
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     return html`
       ${renderIconButton({

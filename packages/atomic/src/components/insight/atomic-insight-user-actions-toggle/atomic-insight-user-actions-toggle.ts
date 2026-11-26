@@ -114,8 +114,8 @@ export class AtomicInsightUserActionsToggle
     this.modalRef.excludedCustomActions = this.excludedCustomActions;
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     return html`${renderIconButton({
       props: {

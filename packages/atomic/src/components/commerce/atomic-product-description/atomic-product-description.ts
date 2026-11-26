@@ -127,8 +127,8 @@ export class AtomicProductDescription
     return this.productController.item;
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     const productDescription = this.product?.[this.field] ?? null;
 

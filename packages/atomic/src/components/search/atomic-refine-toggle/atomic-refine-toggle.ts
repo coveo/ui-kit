@@ -69,8 +69,8 @@ export class AtomicRefineToggle extends LitElement implements InitializableCompo
     }
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     return html`${refineToggleGuard(
       {

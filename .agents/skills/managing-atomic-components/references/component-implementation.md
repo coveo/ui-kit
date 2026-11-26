@@ -42,15 +42,23 @@ See SKILL.md for the decorator stack order and base class/mixin selection.
 
 ### `@bindingGuard()` and `@errorGuard()`
 
-Applied to the `render()` method. `@bindingGuard()` prevents rendering before bindings are ready. `@errorGuard()` catches render errors and displays an error state.
+Applied to the `render()` method. `@bindingGuard()` renders nothing until the bindings arrive. `@errorGuard()` renders `atomic-component-error` instead of the content while the component's `error` is set. It does not catch errors thrown in `render()`.
+
+A component can receive an error when it uses `@bindings()`, a `ValidatePropsController`, an item or product context controller, or writes `this.error`. Such a component declares `@state() public error?: Error` and puts `@errorGuard()` on `render()`. A component that cannot receive an error declares no `error` and uses no guard.
+
+Decorators apply bottom-up, so the top one runs first. Where both guards appear, `@bindingGuard()` sits directly above `@errorGuard()`, so an error displays once the bindings arrive:
 
 ```typescript
+@state() public error?: Error;
+
 @bindingGuard()
 @errorGuard()
 render() {
   return html`...`;
 }
 ```
+
+Components without bindings, and the few with `@bindings()` that render before their bindings arrive, use `@errorGuard()` alone; the latter are listed in `RENDERS_BEFORE_BINDINGS` in `packages/atomic/scripts/component-error-contract.mjs`. Its spec enforces these rules in CI. See [ADR 0002](../../../../packages/atomic/docs/adr/0002-display-component-errors-through-explicit-guards-in-one-fixed-order.md).
 
 ### `@bindStateToController('controllerFieldName')`
 

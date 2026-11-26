@@ -12,7 +12,6 @@ import i18next, {type i18n} from 'i18next';
 import {type CSSResultGroup, css, html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {createBooleanConverter} from '@/src/converters/boolean-converter.js';
-import {errorGuard} from '@/src/decorators/error-guard.js';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin.js';
@@ -69,7 +68,6 @@ export class AtomicCommerceRecommendationInterface
   @state()
   @provide({context: bindingsContext})
   public bindings: CommerceBindings = {} as CommerceBindings;
-  @state() public error?: Error;
   public context!: Context;
   private store: CommerceRecommendationStore;
 
@@ -331,7 +329,6 @@ export class AtomicCommerceRecommendationInterface
     this.removeEventListener('atomic/scrollToTop', this.scrollToTop as EventListener);
   }
 
-  @errorGuard()
   render() {
     return html`<slot></slot>`;
   }

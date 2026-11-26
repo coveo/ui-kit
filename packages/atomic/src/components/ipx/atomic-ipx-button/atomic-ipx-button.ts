@@ -5,6 +5,7 @@ import {when} from 'lit/directives/when.js';
 import {renderButton} from '@/src/components/common/button';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import CloseIcon from '../../../images/close.svg';
@@ -120,6 +121,7 @@ export class AtomicIpxButton extends LitElement implements InitializableComponen
     `);
   }
 
+  @errorGuard()
   render() {
     const [displayedIcon, hiddenIcon] = this.isModalOpen
       ? ['ipx-close-icon', 'ipx-open-icon']

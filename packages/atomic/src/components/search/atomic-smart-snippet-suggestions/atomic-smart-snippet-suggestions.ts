@@ -128,8 +128,8 @@ export class AtomicSmartSnippetSuggestions
     this.smartSnippetQuestionsList = buildSmartSnippetQuestionsList(this.bindings.engine);
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   public render() {
     return html`${when(
       this.smartSnippetQuestionsListState.questions.length > 0,

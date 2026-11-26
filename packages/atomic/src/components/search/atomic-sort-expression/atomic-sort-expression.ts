@@ -3,8 +3,8 @@ import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import {arrayConverter} from '@/src/converters/array-converter';
+import {errorGuard} from '@/src/decorators/error-guard';
 import {LightDomMixin} from '@/src/mixins/light-dom';
-import '@/src/components/common/atomic-component-error/atomic-component-error';
 
 /**
  * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
@@ -86,6 +86,8 @@ export class AtomicSortExpression extends LightDomMixin(LitElement) {
 
   @state() public error?: Error;
 
+  private missingDropdownError?: Error;
+
   constructor() {
     super();
 
@@ -102,6 +104,12 @@ export class AtomicSortExpression extends LightDomMixin(LitElement) {
     );
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    this.checkDropdownParent();
+  }
+
+  @errorGuard()
   render() {
     if (this.tabsIncluded.length > 0 && this.tabsExcluded.length > 0) {
       console.warn(
@@ -109,19 +117,26 @@ export class AtomicSortExpression extends LightDomMixin(LitElement) {
       );
     }
 
+    return html`<slot></slot>`;
+  }
+
+  private checkDropdownParent() {
     const dropdownComponent = 'atomic-sort-dropdown';
 
-    if (!this.closest(dropdownComponent)) {
-      const error = new Error(
-        `The "${this.nodeName.toLowerCase()}" component has to be used inside an ${dropdownComponent} element.`
-      );
-      return html`<atomic-component-error
-        .element=${this}
-        .error=${error}
-      ></atomic-component-error>`;
+    if (this.closest(dropdownComponent)) {
+      if (this.error === this.missingDropdownError) {
+        this.error = undefined;
+      }
+      this.missingDropdownError = undefined;
+      return;
     }
 
-    return html`<slot></slot>`;
+    if (!this.missingDropdownError) {
+      this.missingDropdownError = new Error(
+        `The "${this.nodeName.toLowerCase()}" component has to be used inside an ${dropdownComponent} element.`
+      );
+    }
+    this.error = this.missingDropdownError;
   }
 }
 

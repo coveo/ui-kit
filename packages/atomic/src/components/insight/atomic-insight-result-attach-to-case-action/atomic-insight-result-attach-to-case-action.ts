@@ -112,8 +112,8 @@ export class AtomicInsightResultAttachToCaseAction
       : this.bindings.i18n.t('attach-to-case');
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     if (!this.result || !this.attachedResults) {
       return html``;

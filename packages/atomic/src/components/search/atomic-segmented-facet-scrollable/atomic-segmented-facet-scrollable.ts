@@ -94,8 +94,8 @@ export class AtomicSegmentedFacetScrollable
     }
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     if (this.searchStatusState.hasError) {
       return nothing;

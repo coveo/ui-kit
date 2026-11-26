@@ -96,8 +96,8 @@ export class AtomicSmartSnippetFeedbackModal
     }
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     updateBreakpoints(this);
 

@@ -21,6 +21,7 @@ import type {
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {RecsStore} from '@/src/components/recommendations/atomic-recs-interface/store';
 import {booleanConverter} from '@/src/converters/boolean-converter';
+import {errorGuard} from '@/src/decorators/error-guard';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {parentNodeToString} from '@/src/utils/dom-utils';
@@ -272,6 +273,7 @@ export class AtomicRecsResult extends ChildrenUpdateCompleteMixin(LitElement) {
     return parentNodeToString(this.linkContent ?? new HTMLElement());
   }
 
+  @errorGuard()
   public render() {
     if (this.renderingFunction !== undefined) {
       return html`

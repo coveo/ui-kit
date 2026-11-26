@@ -39,7 +39,7 @@ export interface Timeframe {
 
 interface TimeframeFacetCommonOptions {
   facetId?: string;
-  host: HTMLElement;
+  host: HTMLElement & {error?: Error};
   bindings: SearchBindings | InsightBindings;
   label: string;
   field: string;
@@ -82,6 +82,7 @@ export class TimeframeFacetCommon {
     this.props.setFacetId(this.facetId);
 
     this.manualTimeframes = this.getManualTimeframes();
+    void this.surfaceInvalidTimeframe();
 
     // Initialize two facets: One that is actually used to display values for end users, which only exists
     // if we need to display something to the end user (ie: timeframes > 0)
@@ -248,6 +249,18 @@ export class TimeframeFacetCommon {
         period,
       })
     );
+  }
+
+  private async surfaceInvalidTimeframe() {
+    const timeframes = Array.from(this.props.host.querySelectorAll('atomic-timeframe'));
+    await Promise.all(timeframes.map((timeframe) => timeframe.updateComplete));
+    const error = timeframes.find((timeframe) => timeframe.error)?.error;
+    if (!error || this.props.host.error) {
+      return;
+    }
+    this.props.host.error = new Error(`An "atomic-timeframe" child is invalid: ${error.message}`, {
+      cause: error,
+    });
   }
 
   private formatFacetValue(facetValue: DateFacetValue) {

@@ -165,8 +165,8 @@ export class AtomicSmartSnippetCollapseWrapper
     this.classList.toggle('invisible', isInvisible);
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     return html`
       <div

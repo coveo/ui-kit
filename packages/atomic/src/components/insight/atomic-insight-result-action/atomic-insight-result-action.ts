@@ -164,8 +164,8 @@ export class AtomicInsightResultAction
     }
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     if (!this.result) {
       return null;

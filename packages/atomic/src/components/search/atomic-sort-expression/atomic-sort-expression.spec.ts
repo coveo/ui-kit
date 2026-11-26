@@ -181,6 +181,20 @@ describe('atomic-sort-expression', () => {
         expect.anything()
       );
     });
+
+    it('should clear its error once moved inside an atomic-sort-dropdown', async () => {
+      const {element} = await renderSortExpression({insideDropdown: false});
+      expect(element.error?.message).toMatch(/has to be used inside an atomic-sort-dropdown/);
+
+      const dropdown = document.createElement('atomic-sort-dropdown');
+      document.body.append(dropdown);
+      dropdown.append(element);
+      await element.updateComplete;
+
+      expect(element.error).toBeUndefined();
+      expect(element.querySelector('atomic-component-error')).not.toBeInTheDocument();
+      dropdown.remove();
+    });
   });
 
   describe('when inside atomic-sort-dropdown', () => {
