@@ -1,5 +1,5 @@
 import type {FoldedResult, InteractiveResult, Result} from '@coveo/headless';
-import type {LitElement} from 'lit';
+import type {LitElementWithError} from '@/src/decorators/types';
 import type {InteractiveItemContextEvent} from '@/src/components/common/item-list/context/interactive-item-context-controller';
 import {
   ItemContextController,
@@ -14,7 +14,7 @@ import {
  * @returns ItemContextController instance configured for atomic-result
  */
 export function createResultContextController(
-  host: LitElement & {error: Error | null},
+  host: LitElementWithError,
   options: {folded?: boolean} = {}
 ): ItemContextController<Result | FoldedResult> {
   return new ItemContextController<Result | FoldedResult>(host, {

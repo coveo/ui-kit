@@ -28,19 +28,12 @@ export class ValidatePropsController<
    * @param throwOnError Whether to throw an error (true) or log a warning (false) when validation fails. Defaults to true.
    */
   constructor(
-    private host: ReactiveControllerHost & HTMLElement & {error: Error},
+    private host: ReactiveControllerHost & HTMLElement & {error?: Error},
     private getProps: () => TProps,
     private schema: Schema<TProps>,
     private throwOnError: boolean = true
   ) {
     host.addController(this);
-  }
-
-  hostConnected() {
-    if (this.host.error === null) {
-      // @ts-expect-error: we need to set the error to undefined if it was null.
-      this.host.error = undefined;
-    }
   }
 
   hostUpdate() {
@@ -53,7 +46,6 @@ export class ValidatePropsController<
       return;
     }
 
-    // @ts-expect-error: we need to clear the error.
     this.host.error = undefined;
     this.validateProps();
   }

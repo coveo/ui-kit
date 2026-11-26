@@ -42,6 +42,19 @@ describe('atomic-component-error', () => {
     expect(consoleErrorSpy).toHaveBeenCalledWith(error, element);
   });
 
+  it('should log an error once when several boxes render it', async () => {
+    const element = document.createElement('div');
+    const error = new Error('Shared error');
+    await fixture(
+      html`<div>
+        <atomic-component-error .element=${element} .error=${error}></atomic-component-error>
+        <atomic-component-error .element=${element} .error=${error}></atomic-component-error>
+      </div>`
+    );
+
+    expect(consoleErrorSpy).toHaveBeenCalledExactlyOnceWith(error, element);
+  });
+
   it('should log the error to the console when the element is loaded after being attached to the DOM', async () => {
     const element = document.createElement('div');
     const error = new Error('Test error');

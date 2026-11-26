@@ -103,7 +103,7 @@ describe('atomic-product-price', () => {
 
   it('should render an empty main price when ec_price is null', async () => {
     const {element, firstPrice} = await renderProductPrice({ecPrice: null});
-    expect(element.error).toBeNull();
+    expect(element.error).toBeUndefined();
     expect(firstPrice).toBeInTheDocument();
     expect(firstPrice).toHaveTextContent('');
   });
