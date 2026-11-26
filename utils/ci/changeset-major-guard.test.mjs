@@ -7,10 +7,12 @@ import {afterEach, beforeEach, describe, it} from 'node:test';
 import {fileURLToPath} from 'node:url';
 import {
   checkMajors,
+  checkMixedChangesets,
   globToRegExp,
   parseChangeset,
-  peerForcesMajor,
   planReleases,
+  skippedPackages,
+  splitChangesets,
   workspacePatterns,
 } from './changeset-major-guard.mjs';
 
@@ -39,14 +41,28 @@ const PACKAGES = [
   {name: '@coveo/thermidor', version: '0.8.0'},
 ];
 const FIXED = [['@coveo/atomic', '@coveo/ui-kit-sample-atomic-search-vite']];
+const PAUSED = ['@coveo/headless', '@coveo/atomic', '@coveo/atomic-react', '@coveo/atomic-angular'];
 const HEADLESS_GUIDE = 'packages/headless/source_docs/upgrade-from-v3-to-v4.md';
 const ATOMIC_GUIDE = 'packages/atomic/upgrade-from-v3-to-v4.md';
 
-function state(releases = [], {packages = PACKAGES, fixedGroups = FIXED} = {}) {
+function state(
+  releases = [],
+  {packages = PACKAGES, fixedGroups = FIXED, ignore = [], privatePackages} = {}
+) {
+  const withFiles = releases.map((release) => ({file: '.changeset/a.md', ...release}));
+  const files = [...new Set(withFiles.map(({file}) => file))];
   return {
-    releases: releases.map((release) => ({file: '.changeset/a.md', ...release})),
+    changesets: files.map((file) => ({
+      file,
+      releases: withFiles
+        .filter((release) => release.file === file)
+        .map(({name, type}) => ({name, type})),
+    })),
+    releases: withFiles,
     packages,
     fixedGroups,
+    ignore,
+    privatePackages,
   };
 }
 
@@ -65,10 +81,13 @@ describe('parseChangeset', () => {
     ]);
   });
 
-  it('reads quoted bumps, comments, a byte order mark and leading blank lines', () => {
+  it('reads quoted bumps, none, comments, a byte order mark and leading blank lines', () => {
     const text =
       "\uFEFF\n---\n'@coveo/headless': 'major' # breaking\n# a comment\n'@coveo/bueno': none\n---\n";
-    assert.deepEqual(parseChangeset(text, 'a.md'), [{name: '@coveo/headless', type: 'major'}]);
+    assert.deepEqual(parseChangeset(text, 'a.md'), [
+      {name: '@coveo/headless', type: 'major'},
+      {name: '@coveo/bueno', type: 'none'},
+    ]);
   });
 
   it('returns nothing for an empty changeset', () => {
@@ -83,40 +102,10 @@ describe('parseChangeset', () => {
   });
 });
 
-describe('peerForcesMajor', () => {
-  it('never forces a major for a patch', () => {
-    assert.equal(peerForcesMajor('workspace:*', 'patch', '3.58.1'), false);
-  });
-
-  it('forces a major on a caret range only for a major', () => {
-    assert.equal(peerForcesMajor('workspace:^', 'minor', '3.58.1'), false);
-    assert.equal(peerForcesMajor('workspace:^', 'major', '3.58.1'), true);
-  });
-
-  it('forces a major on a caret range below 1.0.0 for a minor', () => {
-    assert.equal(peerForcesMajor('workspace:^', 'minor', '0.8.0'), true);
-  });
-
-  it('forces a major on a tilde range or an exact version for a minor', () => {
-    assert.equal(peerForcesMajor('workspace:~', 'minor', '3.58.1'), true);
-    assert.equal(peerForcesMajor('workspace:*', 'minor', '3.58.1'), true);
-  });
-
-  it('never forces a major on a star range', () => {
-    assert.equal(peerForcesMajor('*', 'major', '3.58.1'), false);
-  });
-});
-
 describe('planReleases', () => {
-  it('gives a major to the peer dependents of a major', () => {
-    const {bumps, causes} = planReleases(state([{name: '@coveo/headless', type: 'major'}]));
-    assert.equal(bumps.get('@coveo/atomic'), 'major');
-    assert.equal(bumps.get('@coveo/atomic-react'), 'major');
-    assert.equal(bumps.get('@coveo/atomic-angular'), 'major');
-    assert.deepEqual(causes.get('@coveo/atomic'), {
-      kind: 'peer dependency',
-      source: '@coveo/headless',
-    });
+  it('leaves the packages built on a major to the patch that Changesets gives them', () => {
+    const {bumps} = planReleases(state([{name: '@coveo/headless', type: 'major'}]));
+    assert.deepEqual([...bumps], [['@coveo/headless', 'major']]);
   });
 
   it('shares the highest bump across a fixed group', () => {
@@ -126,9 +115,105 @@ describe('planReleases', () => {
     assert.equal(bumps.get('@coveo/atomic'), 'major');
   });
 
-  it('leaves peer dependents alone on a minor', () => {
-    const {bumps} = planReleases(state([{name: '@coveo/headless', type: 'minor'}]));
-    assert.equal(bumps.has('@coveo/atomic'), false);
+  it('skips a release of type none', () => {
+    const {bumps} = planReleases(state([{name: '@coveo/headless', type: 'none'}]));
+    assert.equal(bumps.size, 0);
+  });
+});
+
+describe('skippedPackages', () => {
+  it('skips the ignored packages, globs included, the private ones and those without a version', () => {
+    const packages = [
+      {name: '@coveo/headless', version: '3.58.1'},
+      {name: '@coveo/ui-kit-sample-headless-search-vite', version: '3.58.1'},
+      {name: '@coveo/atomic-playground', version: '0.0.0', private: true},
+      {name: '@samples/without-version'},
+      {name: '@coveo/thermidor', version: '0.8.0'},
+    ];
+    const skipped = skippedPackages({
+      packages,
+      ignore: ['@coveo/headless', '@coveo/ui-kit-sample-*'],
+      privatePackages: {version: false, tag: false},
+    });
+    assert.deepEqual(
+      [...skipped],
+      [
+        '@coveo/headless',
+        '@coveo/ui-kit-sample-headless-search-vite',
+        '@coveo/atomic-playground',
+        '@samples/without-version',
+      ]
+    );
+  });
+
+  it('keeps the private packages when the config versions them', () => {
+    const packages = [{name: '@coveo/atomic-playground', version: '0.0.0', private: true}];
+    assert.equal(skippedPackages({packages, privatePackages: {version: true}}).size, 0);
+    assert.equal(skippedPackages({packages, privatePackages: true}).size, 0);
+    assert.equal(skippedPackages({packages}).size, 1);
+  });
+});
+
+describe('splitChangesets', () => {
+  it('holds the changesets that name a skipped package and versions the others', () => {
+    const {held, toVersion} = splitChangesets(
+      state(
+        [
+          {name: '@coveo/headless', type: 'major', file: '.changeset/break.md'},
+          {name: '@coveo/thermidor', type: 'minor', file: '.changeset/feature.md'},
+          {name: '@coveo/atomic', type: 'none', file: '.changeset/note.md'},
+        ],
+        {ignore: PAUSED}
+      )
+    );
+    assert.deepEqual(held, ['.changeset/break.md', '.changeset/note.md']);
+    assert.deepEqual(toVersion, ['.changeset/feature.md']);
+  });
+
+  it('versions an empty changeset', () => {
+    const {toVersion} = splitChangesets({
+      ...state(),
+      changesets: [{file: '.changeset/empty.md', releases: []}],
+    });
+    assert.deepEqual(toVersion, ['.changeset/empty.md']);
+  });
+});
+
+describe('checkMixedChangesets', () => {
+  const mixed = [
+    {name: '@coveo/headless', type: 'minor', file: '.changeset/mixed.md'},
+    {name: '@coveo/thermidor', type: 'minor', file: '.changeset/mixed.md'},
+  ];
+
+  it('refuses a changeset that names a paused package and a published one', () => {
+    const {files, errors} = checkMixedChangesets({
+      base: state([], {ignore: PAUSED}),
+      head: state(mixed, {ignore: PAUSED}),
+    });
+    assert.deepEqual(files, ['.changeset/mixed.md']);
+    assert.deepEqual(errors, [
+      '.changeset/mixed.md mixes packages that main holds back (@coveo/headless) with packages it publishes (@coveo/thermidor), and changeset version fails on such a changeset. Write one changeset for each group.',
+    ]);
+  });
+
+  it('allows the same changeset while no package is paused', () => {
+    const {errors} = checkMixedChangesets({base: state(), head: state(mixed)});
+    assert.deepEqual(errors, []);
+  });
+
+  it('refuses a changeset that the range turns into a mixed one by pausing a package', () => {
+    const {errors} = checkMixedChangesets({
+      base: state(mixed),
+      head: state(mixed, {ignore: PAUSED}),
+    });
+    assert.equal(errors.length, 1);
+  });
+
+  it('warns about a mixed changeset that main already holds instead of failing', () => {
+    const pending = state(mixed, {ignore: PAUSED});
+    const {errors, warnings} = checkMixedChangesets({base: pending, head: pending});
+    assert.deepEqual(errors, []);
+    assert.match(warnings[0], /mixes packages .* Split it before the next release\.$/);
   });
 });
 
@@ -138,7 +223,7 @@ describe('checkMajors while the window is closed', () => {
     assert.equal(errors.length, 1);
     assert.match(
       errors[0],
-      /UI-Kit major version on main: @coveo\/headless \(major in \.changeset\/a\.md\), @coveo\/atomic \(peer dependency on @coveo\/headless\)/
+      /^UI-Kit major version on main: @coveo\/headless \(major in \.changeset\/a\.md\)\. /
     );
   });
 
@@ -147,9 +232,10 @@ describe('checkMajors while the window is closed', () => {
     assert.deepEqual(errors, []);
   });
 
-  it('refuses a major that reaches UI-Kit through a peer dependency', () => {
-    const {errors} = check({head: state([{name: '@coveo/bueno', type: 'major'}])});
-    assert.match(errors[0], /@coveo\/atomic \(peer dependency on @coveo\/bueno\)/);
+  it('allows a major on a package that UI-Kit is built on', () => {
+    const {planned, errors} = check({head: state([{name: '@coveo/bueno', type: 'major'}])});
+    assert.deepEqual(planned, []);
+    assert.deepEqual(errors, []);
   });
 
   it('refuses a major that reaches UI-Kit through a fixed group', () => {
@@ -160,20 +246,6 @@ describe('checkMajors while the window is closed', () => {
       errors[0],
       /@coveo\/atomic \(fixed group with @coveo\/ui-kit-sample-atomic-search-vite\)/
     );
-  });
-
-  it('refuses a new peer dependency on a package main already bumps to major', () => {
-    const pending = [{name: '@coveo/relay', type: 'major', file: '.changeset/relay.md'}];
-    const withPeer = PACKAGES.map((pkg) =>
-      pkg.name === '@coveo/atomic'
-        ? {...pkg, peerDependencies: {...pkg.peerDependencies, '@coveo/relay': 'workspace:^'}}
-        : pkg
-    );
-    const {errors} = check({
-      base: state(pending),
-      head: state(pending, {packages: withPeer}),
-    });
-    assert.match(errors[0], /@coveo\/atomic \(peer dependency on @coveo\/relay\)/);
   });
 
   it('refuses a major version written into package.json by hand', () => {
@@ -195,12 +267,13 @@ describe('checkMajors while the window is closed', () => {
 });
 
 describe('checkMajors while the window is open', () => {
-  it('allows a UI-Kit major with its guide entry', () => {
-    const {errors} = check({
+  it('allows a UI-Kit major with its guide entry, and asks nothing of the packages built on it', () => {
+    const {planned, errors} = check({
       head: state([{name: '@coveo/headless', type: 'major'}]),
       changedFiles: [HEADLESS_GUIDE],
       windowOpen: true,
     });
+    assert.deepEqual(planned, ['@coveo/headless']);
     assert.deepEqual(errors, []);
   });
 
@@ -328,7 +401,27 @@ describe('the command line', () => {
   it('fails on a major that reaches main while the window is closed', () => {
     const result = run({BASE_REF: 'main'});
     assert.equal(result.status, 1);
-    assert.match(result.stdout, /@coveo\/atomic \(peer dependency on @coveo\/headless\)/);
+    assert.match(result.stdout, /UI-Kit major version on main: @coveo\/headless \(major in/);
+  });
+
+  it('fails on a changeset that mixes a paused package with a published one', () => {
+    write(
+      'packages/thermidor/package.json',
+      JSON.stringify({name: '@coveo/thermidor', version: '0.8.0'})
+    );
+    write('.changeset/config.json', JSON.stringify({fixed: [], ignore: ['@coveo/headless']}));
+    write(HEADLESS_GUIDE, '# Upgrade from v3 to v4\n');
+    write(
+      '.changeset/mixed.md',
+      "---\n'@coveo/headless': minor\n'@coveo/thermidor': minor\n---\n\nMixed."
+    );
+    commit('mix a paused package with a published one');
+    const result = run({UI_KIT_MAJOR_WINDOW: 'open'});
+    assert.equal(result.status, 1);
+    assert.match(
+      result.stdout,
+      /error: \.changeset\/mixed\.md mixes packages that main holds back \(@coveo\/headless\)/
+    );
   });
 
   it('skips a pull request that does not target main', () => {

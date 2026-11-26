@@ -1045,10 +1045,10 @@ jobs:
           cache: true
           cache_save: false
 
-      - name: Refuse UI-Kit majors that main cannot ship
+      - name: Refuse changesets that the target branch cannot ship
         env:
           BASE_SHA: ${{ needs.affected.outputs.base-sha }}
           BASE_REF: ${{ github.event.merge_group.base_ref || github.base_ref }}
-          # open from the freeze of main for v4 until the v4 GA (KIT-4387)
-          UI_KIT_MAJOR_WINDOW: closed
+          # open from the v3 cut until the v4 GA (KIT-6480)
+          UI_KIT_MAJOR_WINDOW: open
         run: node utils/ci/changeset-major-guard.mjs --base "$BASE_SHA"

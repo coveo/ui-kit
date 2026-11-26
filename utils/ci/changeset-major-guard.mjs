@@ -1,15 +1,19 @@
 #!/usr/bin/env node
 /**
- * Refuses a major version on a UI-Kit package unless main is open for v4 breaking changes.
+ * Refuses the changesets that main cannot ship.
  *
- * main ships UI-Kit v3 until it is frozen for v4 (KIT-4387), so a major bump would make its
- * next release publish a new major. UI_KIT_MAJOR_WINDOW is "open" from that freeze to the v4
- * GA: majors are then allowed, and a package that gets a major from a changeset or its fixed
- * group must change its upgrade guide in the same range.
+ * UI_KIT_MAJOR_WINDOW is "open" while main collects the v4 breaking changes, from the v3 cut to
+ * the v4 GA (KIT-6480): a package that gets a major from a changeset or its fixed group must then
+ * change its upgrade guide in the same range. While the window is closed, a major on a UI-Kit
+ * package would make the next release publish a new major, so the guard refuses it.
+ *
+ * Until the v4 GA, the v4 packages sit in the Changesets `ignore` list. A changeset that names
+ * both a package Changesets skips and one it publishes makes `changeset version` throw, so the
+ * guard refuses it too.
  *
  * The guard plans the release from every changeset at the base and at the head, the way
- * Changesets does (highest bump, fixed groups, majors on peer dependents), and reports the
- * UI-Kit majors that the range introduces.
+ * Changesets 3 does (highest bump, fixed groups, and only a patch for the packages built on a
+ * bumped one), and reports what the range introduces.
  *
  * Usage: node changeset-major-guard.mjs --base <sha>
  * Environment: BASE_REF (target branch, default main), UI_KIT_MAJOR_WINDOW (open or closed, default closed)
@@ -50,9 +54,7 @@ export function parseChangeset(text, file) {
       );
     }
     const [, , name, , type] = match;
-    if (type !== 'none') {
-      releases.push({name, type});
-    }
+    releases.push({name, type});
   }
   return releases;
 }
@@ -86,71 +88,33 @@ export function globToRegExp(glob) {
   return new RegExp(`^${source}$`);
 }
 
-// Mirrors shouldBumpMajor in @changesets/assemble-release-plan, which reads workspace:* as the
-// exact current version and workspace:^ or workspace:~ as a caret or tilde range on it.
-export function peerForcesMajor(range, type, version = '') {
-  if (type === 'patch') {
-    return false;
-  }
-  const isWorkspace = range.startsWith('workspace:');
-  const spec = range.replace(/^workspace:/, '');
-  if (spec === '*') {
-    return isWorkspace;
-  }
-  if (spec.startsWith('~')) {
-    return true;
-  }
-  if (spec.startsWith('^')) {
-    const base = spec.slice(1) || version;
-    return type === 'major' || (base !== '' && Number(base.split('.')[0]) === 0);
-  }
-  return /^\d/.test(spec) || type === 'major';
-}
-
-export function planReleases({releases, packages, fixedGroups}) {
+// Mirrors @changesets/assemble-release-plan 7: the packages of a fixed group share its highest
+// bump, and a package built on a bumped one only gets a patch, so a major never spreads to it.
+export function planReleases({releases, fixedGroups}) {
   const bumps = new Map();
   const causes = new Map();
   const raise = (name, type, cause) => {
     const current = bumps.get(name);
     if (current && RANK[current] >= RANK[type]) {
-      return false;
+      return;
     }
     bumps.set(name, type);
     causes.set(name, cause);
-    return true;
   };
 
   for (const {name, type, file} of releases) {
-    raise(name, type, {kind: 'changeset', source: file});
+    if (type !== 'none') {
+      raise(name, type, {kind: 'changeset', source: file});
+    }
   }
 
-  const versions = new Map(packages.map(({name, version}) => [name, version]));
-  let changed = true;
-  while (changed) {
-    changed = false;
-    for (const group of fixedGroups) {
-      const leader = group
-        .filter((name) => bumps.has(name))
-        .sort((a, b) => RANK[bumps.get(b)] - RANK[bumps.get(a)])[0];
-      if (!leader) {
-        continue;
-      }
+  for (const group of fixedGroups) {
+    const leader = group
+      .filter((name) => bumps.has(name))
+      .sort((a, b) => RANK[bumps.get(b)] - RANK[bumps.get(a)])[0];
+    if (leader) {
       for (const name of group) {
-        if (raise(name, bumps.get(leader), {kind: 'fixed group', source: leader})) {
-          changed = true;
-        }
-      }
-    }
-    for (const {name, peerDependencies = {}} of packages) {
-      for (const [dependency, range] of Object.entries(peerDependencies)) {
-        const type = bumps.get(dependency);
-        if (
-          type &&
-          peerForcesMajor(range, type, versions.get(dependency)) &&
-          raise(name, 'major', {kind: 'peer dependency', source: dependency})
-        ) {
-          changed = true;
-        }
+        raise(name, bumps.get(leader), {kind: 'fixed group', source: leader});
       }
     }
   }
@@ -158,11 +122,65 @@ export function planReleases({releases, packages, fixedGroups}) {
   return {bumps, causes};
 }
 
-function describe({kind, source}) {
-  if (kind === 'changeset') {
-    return `major in ${source}`;
+// Mirrors shouldSkipPackage in @changesets/should-skip-package, with the `ignore` globs that
+// @changesets/config expands to package names.
+export function skippedPackages({packages, ignore = [], privatePackages}) {
+  const ignored = ignore.map(globToRegExp);
+  const versionsPrivate = Boolean(
+    typeof privatePackages === 'object' ? privatePackages?.version : privatePackages
+  );
+  return new Set(
+    packages
+      .filter(
+        ({name, version, private: isPrivate}) =>
+          ignored.some((pattern) => pattern.test(name)) ||
+          (isPrivate && !versionsPrivate) ||
+          !version
+      )
+      .map(({name}) => name)
+  );
+}
+
+// `changeset version` keeps a changeset that names a skipped package and deletes the others.
+export function splitChangesets(state) {
+  const skipped = skippedPackages(state);
+  const held = [];
+  const toVersion = [];
+  for (const {file, releases} of state.changesets) {
+    (releases.some(({name}) => skipped.has(name)) ? held : toVersion).push(file);
   }
-  return kind === 'fixed group' ? `fixed group with ${source}` : `peer dependency on ${source}`;
+  return {held, toVersion};
+}
+
+export function mixedChangesets(state) {
+  const skipped = skippedPackages(state);
+  return state.changesets
+    .map(({file, releases}) => ({
+      file,
+      held: releases.filter(({name}) => skipped.has(name)).map(({name}) => name),
+      published: releases.filter(({name}) => !skipped.has(name)).map(({name}) => name),
+    }))
+    .filter(({held, published}) => held.length > 0 && published.length > 0);
+}
+
+export function checkMixedChangesets({base, head}) {
+  const before = new Set(mixedChangesets(base).map(({file}) => file));
+  const mixed = mixedChangesets(head);
+  const errors = [];
+  const warnings = [];
+  for (const {file, held, published} of mixed) {
+    const problem = `${file} mixes packages that main holds back (${held.join(', ')}) with packages it publishes (${published.join(', ')}), and changeset version fails on such a changeset.`;
+    if (before.has(file)) {
+      warnings.push(`${problem} Split it before the next release.`);
+    } else {
+      errors.push(`${problem} Write one changeset for each group.`);
+    }
+  }
+  return {files: mixed.map(({file}) => file), errors, warnings};
+}
+
+function describe({kind, source}) {
+  return kind === 'changeset' ? `major in ${source}` : `fixed group with ${source}`;
 }
 
 function majorOf(packages, name) {
@@ -206,7 +224,7 @@ export function checkMajors({base, head, changedFiles, windowOpen}) {
 
   for (const name of introduced) {
     const {guide} = UI_KIT_PACKAGES.get(name);
-    if (after.causes.get(name).kind !== 'peer dependency' && !changedFiles.includes(guide)) {
+    if (!changedFiles.includes(guide)) {
       errors.push(
         `${name} gets a major version, but ${guide} is unchanged. Add the upgrade guide entry in the same pull request.`
       );
@@ -231,17 +249,28 @@ export function readWorkspacePackages(root, ref) {
     )
     .map((dir) => JSON.parse(show(root, ref, `${dir}/package.json`)))
     .filter((manifest) => manifest.name)
-    .map(({name, version, peerDependencies}) => ({name, version, peerDependencies}));
+    .map(({name, version, private: isPrivate}) => ({name, version, private: isPrivate === true}));
 }
 
 export function readReleaseState(root, ref) {
-  const releases = lines(git(root, 'ls-tree', '--name-only', ref, '.changeset/'))
+  const changesets = lines(git(root, 'ls-tree', '--name-only', ref, '.changeset/'))
     .filter((file) => file.endsWith('.md') && !file.endsWith('/README.md'))
-    .flatMap((file) =>
-      parseChangeset(show(root, ref, file), file).map((release) => ({...release, file}))
-    );
-  const {fixed = []} = JSON.parse(show(root, ref, '.changeset/config.json'));
-  return {releases, packages: readWorkspacePackages(root, ref), fixedGroups: fixed};
+    .map((file) => ({file, releases: parseChangeset(show(root, ref, file), file)}));
+  const {
+    fixed = [],
+    ignore = [],
+    privatePackages,
+  } = JSON.parse(show(root, ref, '.changeset/config.json'));
+  return {
+    changesets,
+    releases: changesets.flatMap(({file, releases}) =>
+      releases.map((release) => ({...release, file}))
+    ),
+    packages: readWorkspacePackages(root, ref),
+    fixedGroups: fixed,
+    ignore,
+    privatePackages,
+  };
 }
 
 function main() {
@@ -263,25 +292,33 @@ function main() {
       process.env.GITHUB_ACTIONS === 'true' ? `::${level}::${message}` : `${level}: ${message}`
     );
   const windowOpen = process.env.UI_KIT_MAJOR_WINDOW === 'open';
-  let result;
+  let majors;
+  let mixed;
   try {
     const root = git(process.cwd(), 'rev-parse', '--show-toplevel');
-    result = checkMajors({
-      base: readReleaseState(root, values.base),
-      head: readReleaseState(root, 'HEAD'),
+    const base = readReleaseState(root, values.base);
+    const head = readReleaseState(root, 'HEAD');
+    majors = checkMajors({
+      base,
+      head,
       changedFiles: lines(git(root, 'diff', '--name-only', '--no-renames', values.base, 'HEAD')),
       windowOpen,
     });
+    mixed = checkMixedChangesets({base, head});
   } catch (error) {
     annotate('error', error.message);
     process.exitCode = 1;
     return;
   }
 
-  const {planned, introduced, errors, warnings} = result;
+  const errors = [...majors.errors, ...mixed.errors];
+  const warnings = [...majors.warnings, ...mixed.warnings];
   console.log(`UI-Kit major window: ${windowOpen ? 'open' : 'closed'}`);
-  console.log(`UI-Kit majors planned at the head: ${planned.join(', ') || 'none'}`);
-  console.log(`UI-Kit majors this range introduces: ${introduced.join(', ') || 'none'}`);
+  console.log(`UI-Kit majors planned at the head: ${majors.planned.join(', ') || 'none'}`);
+  console.log(`UI-Kit majors this range introduces: ${majors.introduced.join(', ') || 'none'}`);
+  console.log(
+    `Changesets that mix held and published packages: ${mixed.files.join(', ') || 'none'}`
+  );
   for (const warning of warnings) {
     annotate('warning', warning);
   }
