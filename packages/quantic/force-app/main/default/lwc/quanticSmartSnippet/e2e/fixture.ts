@@ -15,7 +15,7 @@ import smartSnippetData from './data';
 const pageUrl = 's/quantic-smart-snippet';
 
 interface SmartSnippetOptions {
-  maximumSnippetHeight: number;
+  maxCollapsedHeight: number;
 }
 
 type QuanticSmartSnippetE2ESearchFixtures = {

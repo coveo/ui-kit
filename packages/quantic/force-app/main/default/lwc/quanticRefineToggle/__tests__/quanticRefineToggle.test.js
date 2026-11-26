@@ -2,6 +2,7 @@
 // @ts-ignore
 import QuanticRefineToggle from 'c/quanticRefineToggle';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
+import {warnDeprecatedPropertyOnce} from 'c/quanticUtils';
 import {cleanup, buildCreateTestComponent, flushPromises} from 'c/testUtils';
 
 jest.mock('c/quanticHeadlessLoader');
@@ -20,6 +21,7 @@ jest.mock('c/quanticUtils', () => ({
   },
   getFirstFocusableElement: jest.fn(),
   getLastFocusableElement: jest.fn(),
+  warnDeprecatedPropertyOnce: jest.fn(),
 }));
 
 /** @type {Object} */
@@ -382,6 +384,43 @@ describe('c-quantic-refine-toggle', () => {
         expect(functionsMocks.eventHandler).toHaveBeenCalledWith({
           isOpen: true,
         });
+      });
+    });
+  });
+
+  describe('the refine toggle tooltip', () => {
+    const exampleTooltip = 'Filters';
+
+    describe('when the property buttonTooltip is set', () => {
+      it('should display the tooltip on the refine button', async () => {
+        const element = createTestComponent({buttonTooltip: exampleTooltip});
+        await flushPromises();
+
+        const refineToggleButton = element.shadowRoot.querySelector(
+          selectors.refineToggleButton
+        );
+
+        expect(refineToggleButton.title).toBe(exampleTooltip);
+        expect(warnDeprecatedPropertyOnce).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('when the deprecated property title is set', () => {
+      it('should display the tooltip on the refine button and warn about the deprecation', async () => {
+        const element = createTestComponent({title: exampleTooltip});
+        await flushPromises();
+
+        const refineToggleButton = element.shadowRoot.querySelector(
+          selectors.refineToggleButton
+        );
+
+        expect(refineToggleButton.title).toBe(exampleTooltip);
+        expect(element.buttonTooltip).toBe(exampleTooltip);
+        expect(warnDeprecatedPropertyOnce).toHaveBeenCalledWith(
+          'c-quantic-refine-toggle',
+          'title',
+          'buttonTooltip'
+        );
       });
     });
   });

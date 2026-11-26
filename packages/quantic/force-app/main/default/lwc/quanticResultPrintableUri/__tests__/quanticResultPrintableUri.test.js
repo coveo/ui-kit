@@ -285,7 +285,7 @@ describe('c-quantic-result-printable-uri', () => {
       expect(link).not.toBeNull();
       expect(link.engineId).toBe(exampleEngineId);
       expect(link.result).toEqual(exampleResult);
-      expect(link.displayedField).toBe('printableUri');
+      expect(link.field).toBe('printableUri');
       expect(link.target).toBe(customTarget);
     });
   });

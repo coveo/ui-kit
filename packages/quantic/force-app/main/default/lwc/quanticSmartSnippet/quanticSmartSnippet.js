@@ -12,7 +12,7 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import {getAbsoluteHeight} from 'c/quanticUtils';
+import {getAbsoluteHeight, warnDeprecatedPropertyOnce} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
@@ -22,6 +22,8 @@ import {LightningElement, api} from 'lwc';
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").Result} Result */
 
+const COMPONENT_NAME = 'c-quantic-smart-snippet';
+const DEFAULT_MAX_COLLAPSED_HEIGHT = 250;
 const FEEDBACK_LIKED_STATE = 'liked';
 const FEEDBACK_DISLIKED_STATE = 'disliked';
 const FEEDBACK_NEUTRAL_STATE = 'neutral';
@@ -32,7 +34,7 @@ const expandableAnswerBaseClass = 'smart-snippet__answer slds-is-relative';
  * The `QuanticSmartSnippet` component displays the excerpt of a document that would be most likely to answer a particular query.
  * @category Search
  * @example
- *  <c-quantic-smart-snippet engine-id={engineId} maximum-snippet-height="250"></c-quantic-smart-snippet>
+ *  <c-quantic-smart-snippet engine-id={engineId} max-collapsed-height="250"></c-quantic-smart-snippet>
  */
 export default class QuanticSmartSnippet extends LightningElement {
   /**
@@ -42,11 +44,40 @@ export default class QuanticSmartSnippet extends LightningElement {
    */
   @api engineId;
   /**
-   * The maximum height an answer can have in pixels. Any part of an answer exceeding this height will be hidden by default and expendable via a "show more" button.
+   * The maximum height an answer can have in pixels. Any part of an answer exceeding this height will be hidden by default and expandable via a "show more" button.
    * @api
    * @type {number}
+   * @defaultValue `250`
    */
-  @api maximumSnippetHeight = 250;
+  @api
+  get maxCollapsedHeight() {
+    return this._maxCollapsedHeight;
+  }
+  set maxCollapsedHeight(value) {
+    this._maxCollapsedHeight = value;
+  }
+  /**
+   * The maximum height an answer can have in pixels. Any part of an answer exceeding this height will be hidden by default and expandable via a "show more" button.
+   * @api
+   * @type {number}
+   * @defaultValue `250`
+   * @deprecated Use `maxCollapsedHeight` instead.
+   */
+  @api
+  get maximumSnippetHeight() {
+    return this._maxCollapsedHeight;
+  }
+  set maximumSnippetHeight(value) {
+    warnDeprecatedPropertyOnce(
+      COMPONENT_NAME,
+      'maximumSnippetHeight',
+      'maxCollapsedHeight'
+    );
+    this._maxCollapsedHeight = value;
+  }
+
+  /** @type {number} */
+  _maxCollapsedHeight = DEFAULT_MAX_COLLAPSED_HEIGHT;
 
   /** @type {SmartSnippet} */
   smartSnippet;
@@ -138,7 +169,7 @@ export default class QuanticSmartSnippet extends LightningElement {
   updateExpandableAnswerDisplay() {
     this.expandableAnswerDisplayUpdated = true;
     this.snippetHeightExceedsMaxHeight =
-      this.smartSnippetAnswerElementHeight > this.maximumSnippetHeight;
+      this.smartSnippetAnswerElementHeight > this.maxCollapsedHeight;
 
     if (this.snippetHeightExceedsMaxHeight) {
       this.updateSmartSnippetCSSVariables();
@@ -147,12 +178,12 @@ export default class QuanticSmartSnippet extends LightningElement {
   }
 
   /**
-   * Sets the the value of the CSS variable "--maxHeight" the value of the maximumSnippetHeight property.
+   * Sets the the value of the CSS variable "--maxHeight" the value of the maxCollapsedHeight property.
    * Sets the the value of the CSS variable "--fullHeight" the value of the actual height of the smart snippet answer.
    */
   updateSmartSnippetCSSVariables() {
     const styles = this.smartSnippetAnswerElement?.style;
-    styles?.setProperty('--maxHeight', `${this.maximumSnippetHeight}px`);
+    styles?.setProperty('--maxHeight', `${this.maxCollapsedHeight}px`);
     styles?.setProperty(
       '--fullHeight',
       `${this.smartSnippetAnswerElementHeight}px`

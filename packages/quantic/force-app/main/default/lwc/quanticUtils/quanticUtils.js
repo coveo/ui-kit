@@ -9,6 +9,7 @@ export * from './citationAnchoringUtils';
 export * from './timeAndDateUtils';
 export * from './accessibilityUtils';
 export * from './facetStoreUtils';
+export * from './deprecationUtils';
 
 /**
  * Utility class for debouncing function calls.

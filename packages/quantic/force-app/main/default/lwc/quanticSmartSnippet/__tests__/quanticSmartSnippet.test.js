@@ -4,6 +4,7 @@ import QuanticSmartSnippet from '../quanticSmartSnippet';
 // @ts-ignore
 import {createElement} from 'lwc';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
+import * as mockQuanticUtils from 'c/quanticUtils';
 
 let mockAnswerHeight = 300;
 
@@ -18,6 +19,7 @@ jest.mock('c/quanticUtils', () => ({
   LinkUtils: {
     bindAnalyticsToLink: jest.fn(),
   },
+  warnDeprecatedPropertyOnce: jest.fn(),
 }));
 
 jest.mock(
@@ -335,6 +337,49 @@ describe('c-quantic-smart-snippet', () => {
             expect(functionsMocks.collapse).toHaveBeenCalledTimes(1);
           });
         });
+      });
+    });
+
+    describe('when the property maxCollapsedHeight is greater than the smart snippet height', () => {
+      it('should not display the toggle button of the smart snippet component', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          maxCollapsedHeight: mockAnswerHeight + 100,
+        });
+        await flushPromises();
+
+        const smartSnippetToggleButton = element.shadowRoot.querySelector(
+          selectors.smartSnippetToggleButton
+        );
+
+        expect(smartSnippetToggleButton).toBeNull();
+        expect(
+          mockQuanticUtils.warnDeprecatedPropertyOnce
+        ).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('when the deprecated property maximumSnippetHeight is greater than the smart snippet height', () => {
+      it('should not display the toggle button and warn about the deprecation', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          maximumSnippetHeight: mockAnswerHeight + 100,
+        });
+        await flushPromises();
+
+        const smartSnippetToggleButton = element.shadowRoot.querySelector(
+          selectors.smartSnippetToggleButton
+        );
+
+        expect(smartSnippetToggleButton).toBeNull();
+        expect(element.maxCollapsedHeight).toBe(mockAnswerHeight + 100);
+        expect(
+          mockQuanticUtils.warnDeprecatedPropertyOnce
+        ).toHaveBeenCalledWith(
+          'c-quantic-smart-snippet',
+          'maximumSnippetHeight',
+          'maxCollapsedHeight'
+        );
       });
     });
   });
