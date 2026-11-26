@@ -43,7 +43,7 @@ const CATEGORY: BreadboxFacet = {
 
 function mountBreadbox(facets: BreadboxFacet[], dispatchGate?: () => Promise<void> | void) {
   return mountSurface({
-    component: {component: 'Breadbox', facets: {path: '/state/root/facets'}},
+    component: {component: 'Breadbox', facets: {'@path': '/state/root/facets'}},
     dataModel: [{path: '/state/root/facets', value: facets}],
     dispatchGate,
   });
@@ -200,8 +200,8 @@ describe('Breadbox focus', () => {
     return mountSurface({
       component: {component: 'LayoutStack', direction: 'column', children: ['breadbox', 'list']},
       children: [
-        {id: 'breadbox', component: 'Breadbox', facets: {path: '/state/breadbox/facets'}},
-        {id: 'list', component: 'ProductList', products: {path: '/state/list/products'}},
+        {id: 'breadbox', component: 'Breadbox', facets: {'@path': '/state/breadbox/facets'}},
+        {id: 'list', component: 'ProductList', products: {'@path': '/state/list/products'}},
       ],
       dataModel: [
         {path: '/state/breadbox/facets', value: facets},

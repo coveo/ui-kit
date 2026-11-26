@@ -1,6 +1,6 @@
 import {useState} from 'react';
 
-import {createComponentImplementation} from '@a2ui/react/v0_9';
+import {createComponentImplementation} from '@a2ui/react';
 import type {BundleSlot, BundleTier} from '@coveo/thermidor-schema';
 import {BundleDisplayPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {formatConfiguredPrice as formatPrice} from '../../context/format-configured-price.js';

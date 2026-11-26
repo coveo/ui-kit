@@ -5,7 +5,7 @@ import {mountSurface} from '../mount-surface.harness.js';
 /**
  * QuerySummary is a `createComponentImplementation` implementation driven by the generic binder, mounted
  * end-to-end through the real thermidor catalog: `query` / `firstIndex` / `lastIndex` /
- * `totalEntries` / `correction` are `{ path }` bindings resolved from the surface data model. Its one
+ * `totalEntries` / `correction` are `{"@path"}` bindings resolved from the surface data model. Its one
  * action, `overrideCorrection`, searches the shopper's query instead of the one that replaced it.
  *
  * Progressive-resolution cases (a field not yet arrived) are expressed by OMITTING that field's
@@ -15,11 +15,11 @@ import {mountSurface} from '../mount-surface.harness.js';
 afterEach(() => cleanup());
 
 const BINDINGS = {
-  query: {path: '/state/root/query'},
-  firstIndex: {path: '/state/root/firstIndex'},
-  lastIndex: {path: '/state/root/lastIndex'},
-  totalEntries: {path: '/state/root/totalEntries'},
-  correction: {path: '/state/root/correction'},
+  query: {'@path': '/state/root/query'},
+  firstIndex: {'@path': '/state/root/firstIndex'},
+  lastIndex: {'@path': '/state/root/lastIndex'},
+  totalEntries: {'@path': '/state/root/totalEntries'},
+  correction: {'@path': '/state/root/correction'},
 };
 
 // Only writes the provided fields; an omitted field's binding resolves undefined (progressive).
@@ -187,10 +187,10 @@ describe('QuerySummary focus', () => {
           id: 'summary',
           component: 'QuerySummary',
           ...Object.fromEntries(
-            Object.keys(BINDINGS).map((key) => [key, {path: `/state/summary/${key}`}])
+            Object.keys(BINDINGS).map((key) => [key, {'@path': `/state/summary/${key}`}])
           ),
         },
-        {id: 'list', component: 'ProductList', products: {path: '/state/list/products'}},
+        {id: 'list', component: 'ProductList', products: {'@path': '/state/list/products'}},
       ],
       dataModel: [
         {path: '/state/summary/query', value: 'Water Sports'},

@@ -1,5 +1,5 @@
 import {useOptimistic, useRef} from 'react';
-import {createComponentImplementation} from '@a2ui/react/v0_9';
+import {createComponentImplementation} from '@a2ui/react';
 import type {PaginationAction} from '@coveo/thermidor-schema';
 import {PaginationPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {useGesture} from '../session-request.js';

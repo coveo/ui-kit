@@ -1,4 +1,4 @@
-import {createComponentImplementation} from '@a2ui/react/v0_9';
+import {createComponentImplementation} from '@a2ui/react';
 import type {ActionItem, NextActionsBarAction} from '@coveo/thermidor-schema';
 import {NextActionsBarPropsSchema} from '@coveo/thermidor-schema/zod3';
 import styles from './NextActionsBar.module.css';

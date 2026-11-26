@@ -1,13 +1,11 @@
 import {useCallback, useMemo, useSyncExternalStore} from 'react';
-// `@a2ui/react/v0_9` re-exports the root module without `useA2uiSurface`; both share one surface context.
-import {useA2uiSurface} from '@a2ui/react';
-import type {ReactComponentImplementation} from '@a2ui/react/v0_9';
+import {useA2uiSurface, type ReactComponentImplementation} from '@a2ui/react';
 import {
   ComponentContext,
   type ComponentApi,
   type ComponentModel,
   type SurfaceModel,
-} from '@a2ui/web_core/v0_9';
+} from '@a2ui/web_core';
 
 /**
  * The model of the component `id` on the surface, kept current as components arrive and leave. A

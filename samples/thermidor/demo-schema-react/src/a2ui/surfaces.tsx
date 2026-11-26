@@ -1,13 +1,9 @@
 /**
  * A2-UI Surface Bridge
  *
- * Feeds the session's A2-UI message stream (`session.a2uiMessages`) to one `@a2ui/web_core` v0.9
+ * Feeds the session's A2-UI v1.0 message stream (`session.a2uiMessages`) to one `@a2ui/web_core`
  * message processor, and draws each surface it holds where the page places it, with
  * `@a2ui/react`'s `A2uiSurface`.
- *
- * The v1.0 → v0.9 downgrade the renderer needs does not happen here: it is a derived projection
- * inside `@coveo/thermidor`, read off `session.a2uiMessages`. See that package's
- * `session/a2ui-v09-projection.ts` for the conversion and the recorded interim debt.
  */
 import {
   createContext,
@@ -20,14 +16,14 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from 'react';
-import {A2uiSurface, type ReactComponentImplementation} from '@a2ui/react/v0_9';
+import {A2uiSurface, type ReactComponentImplementation} from '@a2ui/react';
 import {
   type ActionPayload,
   type Catalog,
   MessageProcessor,
   type SurfaceModel,
-} from '@a2ui/web_core/v0_9';
-import type {A2uiClientMessage, A2uiV09Message, DiscoveredSurface} from '@coveo/thermidor';
+} from '@a2ui/web_core';
+import type {A2uiMessage, DiscoveredSurface} from '@coveo/thermidor';
 import {turnSurfacesTarget} from './results-focus.js';
 import {TurnFailedContext} from './ProgressBlock/ProgressBlock.js';
 import {A2UISkeleton} from './Skeleton/Skeleton.js';
@@ -66,22 +62,11 @@ interface ThermidorA2UIStreamProps {
   /** The catalog the surfaces render with. */
   catalog: Catalog<ReactComponentImplementation>;
   /** The session's whole renderer stream (`session.a2uiMessages`). */
-  messages: readonly A2uiV09Message[];
+  messages: readonly A2uiMessage[];
   /** Receives every action a surface dispatches, such as `session.dispatchAction`. */
-  onAction: (message: A2uiClientMessage) => unknown;
+  onAction: (action: ActionPayload) => unknown;
   /** The page whose {@link TurnSurfaces} draw the stream's surfaces. */
   children?: ReactNode;
-}
-
-/** The session's `userAction` message for an action the processor dispatches. */
-function toClientMessage({
-  name,
-  surfaceId,
-  sourceComponentId,
-  context,
-  timestamp,
-}: ActionPayload): A2uiClientMessage {
-  return {userAction: {name, surfaceId, sourceComponentId, context, timestamp}};
 }
 
 /** Removes every surface the processor holds. */
@@ -95,7 +80,7 @@ function clearSurfaces(processor: ThermidorProcessor) {
  * Feeds one message to the processor. A message the processor rejects, such as one whose props
  * fail their schema, is reported and skipped, so the messages after it still apply.
  */
-function feed(processor: ThermidorProcessor, message: A2uiV09Message) {
+function feed(processor: ThermidorProcessor, message: A2uiMessage) {
   try {
     processor.processMessages([message as never]);
   } catch (error) {
@@ -119,11 +104,11 @@ export function ThermidorA2UIStream({
   const processor = useMemo(
     () =>
       new MessageProcessor<ReactComponentImplementation>([catalog], async (action) => {
-        await onActionRef.current(toClientMessage(action));
+        await onActionRef.current(action);
       }),
     [catalog]
   );
-  const fedRef = useRef<{processor: ThermidorProcessor; messages: readonly A2uiV09Message[]}>({
+  const fedRef = useRef<{processor: ThermidorProcessor; messages: readonly A2uiMessage[]}>({
     processor,
     messages: [],
   });

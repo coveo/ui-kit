@@ -1,4 +1,4 @@
-import {createComponentImplementation} from '@a2ui/react/v0_9';
+import {createComponentImplementation} from '@a2ui/react';
 
 import {FacetManagerPropsSchema} from '@coveo/thermidor-schema/zod3';
 import styles from './FacetManager.module.css';

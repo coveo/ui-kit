@@ -33,7 +33,7 @@ function answerRun(surfaceId: string): object[] {
       content: {
         messages: [
           {
-            version: 'v1.0',
+            version: '1.0',
             createSurface: {
               surfaceId,
               catalogId: 'https://schema.thermidor.coveo.com/a2-ui/catalog.json',
@@ -41,13 +41,13 @@ function answerRun(surfaceId: string): object[] {
                 {
                   id: 'root',
                   component: 'NextActionsBar',
-                  suggestedActions: {path: '/state/root/suggestedActions'},
+                  suggestedActions: {'@path': '/state/root/suggestedActions'},
                 },
               ],
             },
           },
           {
-            version: 'v1.0',
+            version: '1.0',
             updateDataModel: {
               surfaceId,
               path: '/state/root',
@@ -130,7 +130,7 @@ describe('AppShell with the session shell', () => {
         content: {
           messages: [
             {
-              version: 'v1.0',
+              version: '1.0',
               createSurface: {
                 surfaceId: 'search-1',
                 catalogId: 'https://schema.thermidor.coveo.com/a2-ui/catalog.json',
@@ -139,16 +139,16 @@ describe('AppShell with the session shell', () => {
                   {
                     id: 'pagination',
                     component: 'Pagination',
-                    page: {path: '/state/pagination/page'},
-                    pageSize: {path: '/state/pagination/pageSize'},
-                    totalEntries: {path: '/state/pagination/totalEntries'},
-                    totalPages: {path: '/state/pagination/totalPages'},
+                    page: {'@path': '/state/pagination/page'},
+                    pageSize: {'@path': '/state/pagination/pageSize'},
+                    totalEntries: {'@path': '/state/pagination/totalEntries'},
+                    totalPages: {'@path': '/state/pagination/totalPages'},
                   },
                 ],
               },
             },
             {
-              version: 'v1.0',
+              version: '1.0',
               updateDataModel: {
                 surfaceId: 'search-1',
                 path: '/state/pagination',

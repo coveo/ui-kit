@@ -48,9 +48,9 @@ async function renderSearchBox({
   const type = (value: string) => fireEvent.change(textarea, {target: {value}});
   const dispatchedQueries = () =>
     dispatchAction.mock.calls
-      .map(([message]) => ('userAction' in message ? message.userAction : undefined))
-      .filter((action) => action?.name === 'fetchInstantProducts')
-      .map((action) => action?.context?.['query']);
+      .map(([message]) => message)
+      .filter((action) => 'sourceComponentId' in action && action.name === 'fetchInstantProducts')
+      .map((action) => ('context' in action ? action.context?.['query'] : undefined));
   const queriesSent = () =>
     test.actions('fetchInstantProducts').map(({context}) => context['query'] as string);
   return {...test, onSubmit, textarea, type, dispatchedQueries, queriesSent};
@@ -274,12 +274,10 @@ describe('InstantProducts', () => {
 
     await act(() =>
       session.dispatchAction({
-        userAction: {
-          name: 'removeRecentQuery',
-          surfaceId: SHELL_SURFACE_ID,
-          sourceComponentId: 'query-suggestions',
-          context: {query: 'surf'},
-        },
+        name: 'removeRecentQuery',
+        surfaceId: SHELL_SURFACE_ID,
+        sourceComponentId: 'query_suggestions',
+        context: {query: 'surf'},
       })
     );
 

@@ -1,5 +1,5 @@
 import {useId} from 'react';
-import {createComponentImplementation} from '@a2ui/react/v0_9';
+import {createComponentImplementation} from '@a2ui/react';
 import {ProductResearchCardPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {A2UIProductCard} from '../ProductCard/ProductCard.js';
 import {A2UISkeleton} from '../Skeleton/Skeleton.js';

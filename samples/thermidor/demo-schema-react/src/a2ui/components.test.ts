@@ -56,14 +56,14 @@ describe('createThermidorCatalog (catalog build smoke)', () => {
   });
 });
 
-describe('dynamic props schemas resolve {path} bindings', () => {
-  it('accepts a { path } binding on a bindable prop', () => {
+describe('dynamic props schemas resolve {"@path"} bindings', () => {
+  it('accepts a {"@path"} binding on a bindable prop', () => {
     // The catalog feeds the DYNAMIC XxxPropsSchema, whose bindable fields admit a
-    // { path } Data_Binding object so the renderer resolves it against the data model.
+    // {'@path'} Data_Binding object so the renderer resolves it against the data model.
     expect(
       ProductCarouselPropsSchema.safeParse({
-        heading: {path: '/state/carousel/heading'},
-        products: {path: '/state/carousel/products'},
+        heading: {'@path': '/state/carousel/heading'},
+        products: {'@path': '/state/carousel/products'},
       }).success
     ).toBe(true);
   });

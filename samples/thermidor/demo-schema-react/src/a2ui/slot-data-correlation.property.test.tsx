@@ -7,7 +7,7 @@ import {mountSurface} from './mount-surface.harness.js';
  * Under the inline-state model each leaf receives its OWN resolved state on `props` (bound from the
  * A2-UI data model), with no identity join. ProductList / ProductSummary are `createComponentImplementation`
  * implementations; these property tests mount each generated slot end-to-end through the real
- * thermidor catalog (its products/summary written to the data model via a `{ path }` binding) and
+ * thermidor catalog (its products/summary written to the data model via a `{"@path"}` binding) and
  * assert the leaf renders exactly its resolved state — empty/loading otherwise.
  *
  * Each generated case is mounted independently (one leaf per surface): a slot's "own resolved
@@ -42,7 +42,7 @@ describe('product-list slot renders exactly its resolved props.products (Propert
     await fc.assert(
       fc.asyncProperty(slotArb, async (slot) => {
         const {container} = mountSurface({
-          component: {component: 'ProductList', products: {path: '/state/root/products'}},
+          component: {component: 'ProductList', products: {'@path': '/state/root/products'}},
           // Unresolved → omit the write so the binding resolves undefined (loading).
           dataModel: slot.resolved ? [{path: '/state/root/products', value: slot.products}] : [],
         });
@@ -90,8 +90,8 @@ describe('product-summary slot renders from its own resolved props (Property 5)'
         const {container} = mountSurface({
           component: {
             component: 'ProductSummary',
-            categoryLabel: {path: '/state/root/categoryLabel'},
-            product: {path: '/state/root/product'},
+            categoryLabel: {'@path': '/state/root/categoryLabel'},
+            product: {'@path': '/state/root/product'},
           },
           dataModel: slot.resolved
             ? [

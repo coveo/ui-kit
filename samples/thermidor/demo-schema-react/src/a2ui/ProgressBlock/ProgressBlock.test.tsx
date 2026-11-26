@@ -10,8 +10,8 @@ function mountProgress(steps: unknown, status: string, {turnFailed = false} = {}
   return mountSurface({
     component: {
       component: 'ProgressBlock',
-      steps: {path: '/state/root/steps'},
-      status: {path: '/state/root/status'},
+      steps: {'@path': '/state/root/steps'},
+      status: {'@path': '/state/root/status'},
     },
     dataModel: [
       {path: '/state/root/steps', value: steps},

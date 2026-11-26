@@ -1,5 +1,5 @@
 import {useContext} from 'react';
-import {createComponentImplementation} from '@a2ui/react/v0_9';
+import {createComponentImplementation} from '@a2ui/react';
 import type {ComparisonAttribute, ComparisonProduct} from '@coveo/thermidor-schema';
 import {ComparisonTablePropsSchema} from '@coveo/thermidor-schema/zod3';
 import {ProductCardActionsContext} from '../ProductCard/product-card-actions.js';
@@ -59,7 +59,7 @@ function ComparisonProductHeader({product}: {product: ComparisonProduct}) {
  * information row with each product's related documents, omitted when none has any. Each header
  * cell renders the `ProductCardActionsContext` actions for its product. No surface actions: the
  * framing, products, and attributes are owned by the backend and delivered through the component's
- * `{ path }` bindings.
+ * `{"@path"}` bindings.
  */
 const renderComparisonTable =
   (linkLimit: number): ComparisonTableRender =>

@@ -1,5 +1,5 @@
 import {useId, useOptimistic, useRef} from 'react';
-import {createComponentImplementation} from '@a2ui/react/v0_9';
+import {createComponentImplementation} from '@a2ui/react';
 import type {PageSizeAction} from '@coveo/thermidor-schema';
 import {PageSizePropsSchema} from '@coveo/thermidor-schema/zod3';
 import {useGesture} from '../session-request.js';

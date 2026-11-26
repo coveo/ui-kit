@@ -67,7 +67,7 @@ describe('QuerySuggestions', () => {
       expect.objectContaining({
         name: 'fetchSuggestions',
         surfaceId: SHELL_SURFACE_ID,
-        sourceComponentId: 'query-suggestions',
+        sourceComponentId: 'query_suggestions',
         context: {query: 'surf'},
       }),
     ]);
@@ -319,10 +319,10 @@ function recentQueriesProducer(
         return sseResponse(
           run([
             {
-              version: 'v1.0',
+              version: '1.0',
               updateDataModel: {
                 surfaceId: action.surfaceId,
-                path: '/state/query-suggestions/recentQueries',
+                path: '/state/query_suggestions/recentQueries',
                 value: [],
               },
             },
@@ -349,8 +349,8 @@ function partialSuggestionsRun(
   };
   return run(
     Object.entries(fields).map(([field, value]) => ({
-      version: 'v1.0',
-      updateDataModel: {surfaceId, path: `/state/query-suggestions/${field}`, value},
+      version: '1.0',
+      updateDataModel: {surfaceId, path: `/state/query_suggestions/${field}`, value},
     }))
   );
 }
@@ -457,7 +457,7 @@ describe('QuerySuggestions recent queries', () => {
     expect(announced()).toBe('tents removed from recent searches.');
     await waitFor(() => expect(queriesSent()).toEqual(['', '']));
     expect(actions('removeRecentQuery')).toEqual([
-      expect.objectContaining({sourceComponentId: 'query-suggestions', context: {query: 'tents'}}),
+      expect.objectContaining({sourceComponentId: 'query_suggestions', context: {query: 'tents'}}),
     ]);
     expect(options()).toEqual(['hiking boots', 'backpack']);
 
@@ -884,12 +884,11 @@ describe('QuerySuggestions when the producer announces fetchSuggestions as concu
 
     await act(() =>
       session.dispatchAction({
-        userAction: {
-          name: 'fetchInstantProducts',
-          surfaceId: SHELL_SURFACE_ID,
-          sourceComponentId: INSTANT_PRODUCTS_ID,
-          context: {query: 'hiking boots'},
-        },
+        name: 'fetchInstantProducts',
+        surfaceId: SHELL_SURFACE_ID,
+        sourceComponentId: INSTANT_PRODUCTS_ID,
+        timestamp: new Date().toISOString(),
+        context: {query: 'hiking boots'},
       })
     );
     expect(session.getSnapshot().state).not.toBe(stateBefore);

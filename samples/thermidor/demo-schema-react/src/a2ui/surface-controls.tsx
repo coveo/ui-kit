@@ -1,7 +1,5 @@
 import {createContext, useContext, useLayoutEffect, type ReactNode} from 'react';
-// `@a2ui/react/v0_9` re-exports the root module without `useA2uiSurface`; both share one surface context.
-import {useA2uiSurface} from '@a2ui/react';
-import type {ReactComponentImplementation} from '@a2ui/react/v0_9';
+import {useA2uiSurface, type ReactComponentImplementation} from '@a2ui/react';
 import {useComponentActionError} from './session-request.js';
 import styles from './surfaces.module.css';
 

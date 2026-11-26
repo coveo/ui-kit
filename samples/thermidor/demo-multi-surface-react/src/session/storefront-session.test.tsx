@@ -1,6 +1,6 @@
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import {cleanup, render} from '@testing-library/react';
-import type {A2uiClientMessage, SessionRequest} from '@coveo/thermidor';
+import type {A2uiRendererAction, SessionRequest} from '@coveo/thermidor';
 import {
   StorefrontSessionProvider,
   useStorefrontSend,
@@ -30,14 +30,12 @@ vi.mock('@coveo/thermidor', () => ({
   }),
 }));
 
-const action: A2uiClientMessage = {
-  userAction: {
-    name: 'selectSearchOption',
-    surfaceId: 'next-actions-surface',
-    sourceComponentId: 'root',
-    timestamp: '2026-11-03T00:00:00.000Z',
-    context: {optionId: 'option-1', text: 'See all kayaks'},
-  },
+const action: A2uiRendererAction = {
+  name: 'selectSearchOption',
+  surfaceId: 'next-actions-surface',
+  sourceComponentId: 'root',
+  timestamp: '2026-11-03T00:00:00.000Z',
+  context: {optionId: 'option-1', text: 'See all kayaks'},
 };
 
 function actionRequest(turnId: string): SessionRequest {

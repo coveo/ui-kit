@@ -10,7 +10,7 @@ import {mountSurface} from './mount-surface.harness.js';
 /**
  * The facet components are `createComponentImplementation` implementations driven by the generic binder,
  * mounted end-to-end through the real thermidor catalog: resolved state is written to the surface
- * data model via `{ path }` bindings, and every gesture dispatches an action that surfaces
+ * data model via `{"@path"}` bindings, and every gesture dispatches an action that surfaces
  * (unwrapped) on `lastAction()` as `{name, context}`. FacetManager mounts its ordered children by
  * id via `buildChild`; the tests assert the observable mounted DOM order.
  */
@@ -51,13 +51,13 @@ describe('RegularFacet', () => {
   };
 
   const BINDINGS = {
-    field: {path: '/state/root/field'},
-    displayName: {path: '/state/root/displayName'},
-    hasActiveValues: {path: '/state/root/hasActiveValues'},
-    canShowMoreValues: {path: '/state/root/canShowMoreValues'},
-    canShowLessValues: {path: '/state/root/canShowLessValues'},
-    values: {path: '/state/root/values'},
-    facetSearch: {path: '/state/root/facetSearch'},
+    field: {'@path': '/state/root/field'},
+    displayName: {'@path': '/state/root/displayName'},
+    hasActiveValues: {'@path': '/state/root/hasActiveValues'},
+    canShowMoreValues: {'@path': '/state/root/canShowMoreValues'},
+    canShowLessValues: {'@path': '/state/root/canShowLessValues'},
+    values: {'@path': '/state/root/values'},
+    facetSearch: {'@path': '/state/root/facetSearch'},
   };
 
   function mountFacet(state: RegularFacetProps, dispatchGate?: () => Promise<void> | void) {
@@ -378,7 +378,9 @@ describe('NumericFacet', () => {
     return mountSurface({
       component: {
         component: 'NumericFacet',
-        ...Object.fromEntries(Object.keys(state).map((key) => [key, {path: `/state/root/${key}`}])),
+        ...Object.fromEntries(
+          Object.keys(state).map((key) => [key, {'@path': `/state/root/${key}`}])
+        ),
       },
       dispatchGate,
       dataModel: (Object.keys(state) as Array<keyof NumericFacetProps>).map((key) => ({
@@ -616,7 +618,9 @@ describe('CategoryFacet', () => {
     return mountSurface({
       component: {
         component: 'CategoryFacet',
-        ...Object.fromEntries(Object.keys(state).map((key) => [key, {path: `/state/root/${key}`}])),
+        ...Object.fromEntries(
+          Object.keys(state).map((key) => [key, {'@path': `/state/root/${key}`}])
+        ),
       },
       dispatchGate,
       dataModel: (Object.keys(state) as Array<keyof CategoryFacetProps>).map((key) => ({

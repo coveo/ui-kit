@@ -151,37 +151,28 @@ describe('AppShell', () => {
     render(<AppShell />);
     act(() => {
       capturedOnAction?.({
-        version: 'v0.9',
-        userAction: {
-          name: 'toggleSelect',
-          surfaceId: SEARCH_SURFACE_ID,
-          sourceComponentId: `${SEARCH_SURFACE_ID}-facet-brand`,
-          context: {value: 'Nike'},
-        },
+        name: 'toggleSelect',
+        surfaceId: SEARCH_SURFACE_ID,
+        sourceComponentId: 'facet_brand',
+        context: {value: 'Nike'},
       });
     });
 
     expect(mockDispatchAction).toHaveBeenCalledWith({
-      version: 'v0.9',
-      userAction: {
-        name: 'toggleSelect',
-        surfaceId: SEARCH_SURFACE_ID,
-        sourceComponentId: `${SEARCH_SURFACE_ID}-facet-brand`,
-        context: {value: 'Nike'},
-      },
+      name: 'toggleSelect',
+      surfaceId: SEARCH_SURFACE_ID,
+      sourceComponentId: 'facet_brand',
+      context: {value: 'Nike'},
     });
   });
 
   describe('surface lock', () => {
     function rendererAction(name: string, context: Record<string, unknown> = {}) {
       return {
-        version: 'v0.9',
-        userAction: {
-          name,
-          surfaceId: SEARCH_SURFACE_ID,
-          sourceComponentId: `${SEARCH_SURFACE_ID}-facet-brand`,
-          context,
-        },
+        name,
+        surfaceId: SEARCH_SURFACE_ID,
+        sourceComponentId: 'facet_brand',
+        context,
       };
     }
 

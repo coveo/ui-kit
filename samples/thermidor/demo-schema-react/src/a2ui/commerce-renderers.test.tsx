@@ -10,7 +10,7 @@ import {
 
 /**
  * Pagination / Sort / ProductList are `createComponentImplementation` implementations driven by the generic
- * binder, mounted end-to-end through the real thermidor catalog: props are `{ path }` bindings
+ * binder, mounted end-to-end through the real thermidor catalog: props are `{"@path"}` bindings
  * resolved from the surface data model, and user gestures dispatch actions that surface on
  * `onAction` (flattened `{name, context, ...}`). See `./mount-surface.harness.tsx`.
  */
@@ -19,10 +19,10 @@ afterEach(() => cleanup());
 
 describe('Pagination', () => {
   const bindings = {
-    page: {path: '/state/root/page'},
-    pageSize: {path: '/state/root/pageSize'},
-    totalEntries: {path: '/state/root/totalEntries'},
-    totalPages: {path: '/state/root/totalPages'},
+    page: {'@path': '/state/root/page'},
+    pageSize: {'@path': '/state/root/pageSize'},
+    totalEntries: {'@path': '/state/root/totalEntries'},
+    totalPages: {'@path': '/state/root/totalPages'},
   };
 
   function mountPagination(state: {
@@ -134,8 +134,8 @@ describe('Pagination', () => {
 
 describe('Sort', () => {
   const bindings = {
-    appliedSort: {path: '/state/root/appliedSort'},
-    availableSorts: {path: '/state/root/availableSorts'},
+    appliedSort: {'@path': '/state/root/appliedSort'},
+    availableSorts: {'@path': '/state/root/availableSorts'},
   };
 
   // The sorts Agent Gateway sends: relevance without fields, and each field sort with the Commerce
@@ -233,9 +233,9 @@ describe('Sort', () => {
 
 describe('ProductList', () => {
   it('renders loading state when products are unresolved', async () => {
-    // No data-model write for `products` → the `{ path }` binding resolves to undefined → loading.
+    // No data-model write for `products` → the `{"@path"}` binding resolves to undefined → loading.
     mountSurface({
-      component: {component: 'ProductList', products: {path: '/state/root/products'}},
+      component: {component: 'ProductList', products: {'@path': '/state/root/products'}},
     });
 
     await waitFor(() => expect(screen.getByLabelText('Loading product list')).toBeDefined());
@@ -243,7 +243,7 @@ describe('ProductList', () => {
 
   it('renders nothing when products array is empty', async () => {
     const {container} = mountSurface({
-      component: {component: 'ProductList', products: {path: '/state/root/products'}},
+      component: {component: 'ProductList', products: {'@path': '/state/root/products'}},
       dataModel: [{path: '/state/root/products', value: []}],
     });
 
@@ -252,7 +252,7 @@ describe('ProductList', () => {
 
   it('renders a product grid with product cards', async () => {
     mountSurface({
-      component: {component: 'ProductList', products: {path: '/state/root/products'}},
+      component: {component: 'ProductList', products: {'@path': '/state/root/products'}},
       dataModel: [
         {
           path: '/state/root/products',
@@ -285,7 +285,7 @@ describe('ProductList', () => {
 
   it('renders the badges a product has on its card', async () => {
     mountSurface({
-      component: {component: 'ProductList', products: {path: '/state/root/products'}},
+      component: {component: 'ProductList', products: {'@path': '/state/root/products'}},
       dataModel: [
         {
           path: '/state/root/products',
@@ -345,7 +345,7 @@ describe('ProductList children', () => {
       {path: '/state/root/products', value: [trail, roadShoe]},
     ];
     const {pushDataModel} = mountSurface({
-      component: {component: 'ProductList', products: {path: '/state/root/products'}},
+      component: {component: 'ProductList', products: {'@path': '/state/root/products'}},
       dataModel: products(),
       wrapper: ({children}) => (
         <ProductCardActionsContext.Provider value={renderActions}>

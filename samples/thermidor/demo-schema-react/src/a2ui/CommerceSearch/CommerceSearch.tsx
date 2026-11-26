@@ -1,5 +1,5 @@
-import {createComponentImplementation} from '@a2ui/react/v0_9';
-import {componentId} from '@a2ui/web_core/v0_9';
+import {createComponentImplementation} from '@a2ui/react';
+import {componentId} from '@a2ui/web_core/v1_0';
 import {CommerceSearchPropsSchema} from '@coveo/thermidor-schema/zod3';
 import styles from './CommerceSearch.module.css';
 import {useSearchHistory} from './use-search-history.js';

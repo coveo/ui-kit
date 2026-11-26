@@ -1,5 +1,5 @@
-import type {ReactComponentImplementation} from '@a2ui/react/v0_9';
-import {Catalog} from '@a2ui/web_core/v0_9';
+import type {ReactComponentImplementation} from '@a2ui/react';
+import {Catalog} from '@a2ui/web_core';
 import {THERMIDOR_CATALOG_ID} from '@coveo/thermidor-schema/zod3';
 import {A2UI_PROTOCOL_VERSION} from '../../../demo-schema-react/src/a2ui/components.js';
 import {Breadbox} from '../../../demo-schema-react/src/a2ui/Breadbox/Breadbox.js';

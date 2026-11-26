@@ -1,5 +1,5 @@
 import {useContext} from 'react';
-import {createComponentImplementation} from '@a2ui/react/v0_9';
+import {createComponentImplementation} from '@a2ui/react';
 import type {Product} from '@coveo/thermidor-schema';
 import {ProductSummaryPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {ProductCardActionsContext} from '../ProductCard/product-card-actions.js';

@@ -1,6 +1,6 @@
 import {useCallback, useMemo, useState} from 'react';
-import {createComponentImplementation} from '@a2ui/react/v0_9';
-import {componentId} from '@a2ui/web_core/v0_9';
+import {createComponentImplementation} from '@a2ui/react';
+import {componentId} from '@a2ui/web_core/v1_0';
 import {SearchBoxPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {PromptInput} from '../../components/PromptInput/PromptInput.js';
 import type {

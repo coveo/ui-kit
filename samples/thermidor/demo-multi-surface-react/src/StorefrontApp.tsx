@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
-import type {A2uiClientMessage} from '@coveo/thermidor';
+import type {A2uiRendererAction} from '@coveo/thermidor';
 import {
   ProductCardActionsContext,
   type ProductCardProduct,
@@ -175,27 +175,23 @@ export function StorefrontApp() {
   );
 
   const handleAction = useCallback(
-    (message: A2uiClientMessage) => {
-      const userAction = message.userAction;
-      if (!userAction) {
-        return;
-      }
+    (action: A2uiRendererAction) => {
       const page = visitRef.current;
       // An action goes on the view that draws its surface: the search page's results or its chat
       // panel, which share the visit. The conversation goes on where it is shown: an action of a
       // turn asked on an earlier page of the conversation goes on this page.
-      const drawnBy = viewSurfacesRef.current.viewOfSurface(userAction.surfaceId);
+      const drawnBy = viewSurfacesRef.current.viewOfSurface(action.surfaceId);
       const inConversation = viewSurfacesRef.current
         .conversationOf(visitsOfThread(visitThreads.current, threadOf(page)))
         .some(({response}) =>
-          response.surfaces.some(({surfaceId}) => surfaceId === userAction.surfaceId)
+          response.surfaces.some(({surfaceId}) => surfaceId === action.surfaceId)
         );
       const view =
         drawnBy && !inConversation
           ? drawnBy
           : {visitId: page.id, view: drawnBy?.view ?? pageView(page)};
-      const text = userAction.context?.['text'];
-      if (userAction.name === FOLLOW_UP_ACTION && typeof text === 'string') {
+      const text = action.context?.['text'];
+      if (action.name === FOLLOW_UP_ACTION && typeof text === 'string') {
         if (inConversation) {
           sendPrompt(ASSISTANT_VIEW, text, page.id);
         } else {
@@ -203,7 +199,7 @@ export function StorefrontApp() {
         }
         return;
       }
-      return sendAction(view.view, message, view.visitId);
+      return sendAction(view.view, action, view.visitId);
     },
     [sendPrompt, sendAction, openAssistant]
   );

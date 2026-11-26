@@ -122,7 +122,7 @@ describe('LayoutStack', () => {
       const {slot} = await mountRow([
         SUMMARY,
         PAGINATION,
-        {id: 'empty', component: 'Breadbox', facets: {path: '/state/empty/facets'}},
+        {id: 'empty', component: 'Breadbox', facets: {'@path': '/state/empty/facets'}},
       ]);
 
       expect(slot(1).textContent).toBe('');
@@ -134,7 +134,7 @@ describe('LayoutStack', () => {
     it('gives a full-row child the whole row', async () => {
       const {slot} = await mountRow([
         SUMMARY,
-        {id: 'full', component: 'Breadbox', facets: {path: '/state/full/facets'}},
+        {id: 'full', component: 'Breadbox', facets: {'@path': '/state/full/facets'}},
       ]);
       await waitFor(() => expect(slot(1).querySelector('[data-layout="full-row"]')).not.toBeNull());
 

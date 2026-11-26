@@ -46,7 +46,7 @@ const SUGGESTION: SessionRequest = {
   component: 'QuerySuggestions',
   name: 'fetchSuggestions',
   surfaceId: 'shell',
-  sourceComponentId: 'query-suggestions',
+  sourceComponentId: 'query_suggestions',
 };
 
 function withSession(session: SessionRequestSource) {
@@ -71,7 +71,7 @@ describe('isBlocking', () => {
 describe('isConcurrentInFlight and hasFailed', () => {
   const suggestions = {
     surfaceId: 'shell',
-    sourceComponentId: 'query-suggestions',
+    sourceComponentId: 'query_suggestions',
     name: 'fetchSuggestions',
   };
   const listed = {component: 'QuerySuggestions', ...suggestions};
@@ -133,7 +133,7 @@ const failedSuggestion: ActionError = {
   component: 'QuerySuggestions',
   name: 'fetchSuggestions',
   surfaceId: 'shell',
-  sourceComponentId: 'query-suggestions',
+  sourceComponentId: 'query_suggestions',
 };
 
 describe('useActionError', () => {
@@ -164,7 +164,7 @@ describe('useComponentActionError', () => {
   });
 
   it('does not report a failed suggestion', () => {
-    expect(actionErrorAt('shell', 'query-suggestions', failedSuggestion)).toBeUndefined();
+    expect(actionErrorAt('shell', 'query_suggestions', failedSuggestion)).toBeUndefined();
   });
 });
 
@@ -348,7 +348,7 @@ describe('submitQuery', () => {
 describe('useDispatchOutcome', () => {
   const suggestions = {
     surfaceId: 'shell',
-    sourceComponentId: 'query-suggestions',
+    sourceComponentId: 'query_suggestions',
     name: 'fetchSuggestions',
   };
 

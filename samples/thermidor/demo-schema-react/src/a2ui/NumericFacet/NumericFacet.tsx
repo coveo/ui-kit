@@ -1,5 +1,5 @@
 import {useId} from 'react';
-import {createComponentImplementation} from '@a2ui/react/v0_9';
+import {createComponentImplementation} from '@a2ui/react';
 import {type NumericFacetAction, NumericFacetPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {formatFieldNumber} from '../../context/format-configured-price.js';
 import {useOptimisticNumericFacet} from './use-optimistic-numeric-facet.js';

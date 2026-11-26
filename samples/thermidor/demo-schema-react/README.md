@@ -94,7 +94,7 @@ The template set lives in
 The app is a single page managed by `AppShell`:
 
 ```
-AppShell (the session's renderer stream, fed to ThermidorA2UIStream)
+AppShell (the session's renderer stream, fed to one A2-UI message processor)
 ├── LandingPage        — The search box with suggestion pills, until the first prompt
 └── ConversationPage   — One feed of every turn, search and conversation alike, with the search box pinned below
 ```
@@ -118,8 +118,8 @@ ConversationPage
 │           ├── StreamingMessage (streamed text)
 │           └── TurnSurfaces (the turn's blocks; disabled unless it is the latest turn)
 │               ├── A2UISkeleton (in place of a loading surface)
-│               ├── ProductCarousel (dumb: reads resolved props from {path} bindings)
-│               ├── BundleDisplay (dumb: reads resolved tiers + slot child ids from props)
+│               ├── ProductCarousel (dumb: reads resolved props from {"@path"} bindings)
+│               ├── BundleDisplay (dumb: reads resolved tiers from props, draws the slot children they name)
 │               ├── ComparisonTable (dumb: reads resolved products, attributes + related documents from props)
 │               ├── ProductResearchCard (dumb: reads resolved product, summary, bullets + related documents from props)
 │               ├── NextActionsBar (dumb: reads resolved action items; sends a follow-up action)
@@ -129,7 +129,7 @@ ConversationPage
 
 **ConversationThread** iterates over turns and delegates rendering to the appropriate block based on turn status. The key path is through **AgentResponseBlock**, which orchestrates the streaming experience: first showing a thinking indicator, then streaming text, then the turn's blocks: a skeleton in place of each surface whose data model declares `isLoading` while the turn streams, and finally the resolved A2-UI catalog components once component state arrives via `/state/<id>` `updateDataModel` operations resolved into the renderer's data model.
 
-The catalog renderers (ProductCarousel, BundleDisplay, ComparisonTable, ProductResearchCard, NextActionsBar) are **dumb**: each reads its resolved values directly from `props` (the renderer resolves each `{ "path": ... }` binding against its A2-UI data model), with no identity join and no controller hydration. A renderer sends an action with `context.dispatchAction`; it reaches `AppShell`'s `onAction` handler, which forwards it to the session.
+The catalog renderers (ProductCarousel, BundleDisplay, ComparisonTable, ProductResearchCard, NextActionsBar) are **dumb**: each reads its resolved values directly from `props` (`@a2ui/react` resolves each `{ "@path": ... }` binding against its A2-UI data model), with no identity join and no controller hydration. A renderer sends an action with `context.dispatchAction`; the message processor hands it to `session.dispatchAction`, which `AppShell` gives `ThermidorA2UIStream` as its action handler.
 
 A `NextActionsBar` item starts a follow-up: Agent Gateway announces its actions as turn-opening with the bar, so `@coveo/thermidor` answers it in a new turn, which the page draws right below the answer it follows, with the chip text as the shopper's message.
 
@@ -160,11 +160,11 @@ commerce-search (root)
     └── search-bottom (layout-stack, row) → pagination, page-size
 ```
 
-Each mounted node is a dumb catalog component (`CommerceSearch`, `LayoutStack`, `FacetManager`, the facets, `Breadbox`, `QuerySummary`, `Sort`, `ProductList`, `Pagination`, `PageSize`) that reads its resolved component state from `props` (the renderer resolves the node's `{ "path": ... }` bindings against its A2-UI data model). Container components mount their children by name following the standard A2-UI composition convention: `CommerceSearch` mounts `buildChild(props.sidebarChild)` and `buildChild(props.mainChild)`; `LayoutStack` and `FacetManager` mount their ordered `children` list in declared order. There is no positional read of the child list. Absent components render as empty slots without error.
+Each mounted node is a dumb catalog component (`CommerceSearch`, `LayoutStack`, `FacetManager`, the facets, `Breadbox`, `QuerySummary`, `Sort`, `ProductList`, `Pagination`, `PageSize`) that reads its resolved component state from `props` (`@a2ui/react` resolves the node's `{ "@path": ... }` bindings against its A2-UI data model). Container components mount their children by name following the standard A2-UI composition convention: `CommerceSearch` mounts `buildChild(props.sidebarChild)` and `buildChild(props.mainChild)`; `LayoutStack` and `FacetManager` mount their ordered `children` list in declared order. There is no positional read of the child list. Absent components render as empty slots without error.
 
 There is no `search-box` on this surface: the query input is the session shell's search box pinned below the feed, so the composition starts at the `query-summary` row.
 
-These controls dispatch component actions: an interaction (sort, page, page size, facet selection or search, breadbox) surfaces through the renderer's `onAction` handler and is sent through the session, one request at a time. The session recovers the dispatching component from its live surfaces, validates the action payload against the component's Zod action schema, and POSTs it over the HTTP Action_Channel; the producer replies with `/state/<id>` `updateDataModel` operations. Each control shows the shopper's choice optimistically until the reply lands, and the results dim meanwhile. In-progress facet-search input is held in local React state and is never written to the shared A2-UI data model.
+These controls dispatch component actions: an interaction (sort, page, page size, facet selection or search, breadbox) surfaces through the message processor's action handler and is sent through the session, one request at a time. The session recovers the dispatching component from its live surfaces, validates the action payload against the component's Zod action schema, and POSTs it over the HTTP Action_Channel; the producer replies with `/state/<id>` `updateDataModel` operations. Each control shows the shopper's choice optimistically until the reply lands, and the results dim meanwhile. In-progress facet-search input is held in local React state and is never written to the shared A2-UI data model.
 
 ### Saved conversations
 
@@ -176,12 +176,12 @@ These controls dispatch component actions: an interaction (sort, page, page size
 | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `src/context/session.tsx`                                | Creates the `@coveo/thermidor` session of the current conversation and injects the `ComponentContractsSchema` it validates against; saves it after each turn, and swaps it for a new or saved conversation                                                                                                                                                       |
 | `src/conversations/conversation-storage.ts`              | Saves conversations in `localStorage` (at most 20, oldest dropped first, and to make room) and remembers the tab's current one in `sessionStorage`                                                                                                                                                                                                               |
-| `src/components/AppShell.tsx`                            | Reads the session through one `useSyncExternalStore(session.subscribe, session.getSnapshot)`, feeds the session's renderer stream (`session.a2uiMessages`) to `ThermidorA2UIStream`, with `session.dispatchAction` as its action handler                                                                                                                         |
+| `src/components/AppShell.tsx`                            | Reads the session through one `useSyncExternalStore(session.subscribe, session.getSnapshot)`, and feeds the session's renderer stream (`session.a2uiMessages`) to `ThermidorA2UIStream`, with `session.dispatchAction` as its action handler                                                                                                                     |
 | `src/components/ConversationDrawer/`                     | The drawer listing the saved conversations, to open, rename, delete or start one                                                                                                                                                                                                                                                                                 |
 | `src/components/SessionSearchBox/`                       | Draws the session shell's search box where the page's prompt input goes, a disabled input while the session opens, or a plain input if it opened without one                                                                                                                                                                                                     |
 | `src/a2ui/SearchBox/`, `src/a2ui/QuerySuggestions/`      | The shell's search box: the input, and the completions of its query, fetched with `fetchSuggestions`                                                                                                                                                                                                                                                             |
 | `src/a2ui/InstantProducts/`                              | The products of the search box's highlighted completion, fetched with `fetchInstantProducts` and drawn beside the completions on wide screens                                                                                                                                                                                                                    |
-| `src/a2ui/surfaces.tsx`                                  | `ThermidorA2UIStream` feeds the stream to one `@a2ui/web_core` v0.9 message processor; `TurnSurfaces` draws one turn's surfaces, or a skeleton for a loading one (thermidor owns the v1.0 → v0.9 downgrade)                                                                                                                                                      |
+| `src/a2ui/surfaces.tsx`                                  | `ThermidorA2UIStream` feeds the A2-UI v1.0 stream to one `@a2ui/web_core` message processor; `TurnSurfaces` draws one turn's surfaces with `@a2ui/react`'s `A2uiSurface`, or a skeleton for a loading one                                                                                                                                                        |
 | `src/a2ui/components.tsx`                                | `createThermidorCatalog()`: registers every catalog component (conversational: ProductCarousel, BundleDisplay, ComparisonTable, ProductResearchCard, ProductSummary, NextActionsBar; decomposed commerce: CommerceSearch, LayoutStack, FacetManager, RegularFacet, NumericFacet, CategoryFacet, Breadbox, QuerySummary, Sort, ProductList, Pagination, PageSize) |
 | `src/a2ui/CommerceSearch/`                               | `commerce-search` root — composes the sidebar and main columns and mounts them by id via `buildChild(id)`                                                                                                                                                                                                                                                        |
 | `src/a2ui/LayoutStack/`                                  | Generic layout container — stacks its declared children in a column or row (direction is a presentation node prop); reused for the sidebar, main, and top/bottom rows                                                                                                                                                                                            |
@@ -197,20 +197,20 @@ Backend (converse stream)
   ↓ SSE events (A2-UI v1.0 messages: createSurface + /state updateDataModel ops)
   ↓
 Session (thermidor, via createSession) — folds each turn's response
-  ↓ session.a2uiMessages (v1.0 → v0.9, {path} bindings byte-for-byte, only grows)
+  ↓ session.a2uiMessages (A2-UI v1.0, unchanged, only grows)
   ↓ turn.response.surfaces (rootComponentType, isLoading)
   ↓
 AppShell — one renderer stream, loading placeholders from turn.response.surfaces
   ↓
-ThermidorA2UIStream — v0.9 MessageProcessor (catalog resolution + updateDataModel ops → renderer data model)
+ThermidorA2UIStream — MessageProcessor.processMessages (catalog resolution + updateDataModel ops → renderer data model)
   ↓
 TurnSurfaces (per turn)
   ├── A2UISkeleton for each loading surface while its turn streams
-  └── A2uiSurface → catalog components (ProductCarousel, BundleDisplay, etc.)
-        ↓ read resolved values from props ({ "path": ... } bindings resolved by the renderer)
+  └── A2UISurface (A2uiSurface) → catalog components (ProductCarousel, BundleDisplay, etc.)
+        ↓ read resolved values from props ({ "@path": ... } bindings resolved by @a2ui/react)
 
 Action dispatch (consumer → producer):
-  context.dispatchAction → message processor → ThermidorA2UIStream onAction (userAction) → session
+  context.dispatchAction → MessageProcessor action handler → session.dispatchAction
     → one request at a time → validate payload (Zod) → HTTP POST (Action_Channel)
   ↓
   producer replies with /state/<id> updateDataModel ops (re-resolved into the renderer)

@@ -1,4 +1,4 @@
-import {createComponentImplementation} from '@a2ui/react/v0_9';
+import {createComponentImplementation} from '@a2ui/react';
 import {CommerceSearch} from '../../../../demo-schema-react/src/a2ui/CommerceSearch/CommerceSearch.js';
 import styles from '../../../../demo-schema-react/src/a2ui/CommerceSearch/CommerceSearch.module.css';
 import {useRestoreOnReturn} from './use-restore-on-return.js';

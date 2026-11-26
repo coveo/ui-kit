@@ -4,7 +4,7 @@ import {mountSurface} from '../mount-surface.harness.js';
 
 /**
  * PageSize is a `createComponentImplementation` implementation driven by the generic binder, mounted
- * end-to-end through the real thermidor catalog: `pageSize` is a `{ path }` binding resolved from the
+ * end-to-end through the real thermidor catalog: `pageSize` is a `{"@path"}` binding resolved from the
  * surface data model, and the change handler dispatches `setPageSize`, captured (unwrapped) on
  * `lastAction()` as `{name, context}`.
  */
@@ -13,7 +13,7 @@ afterEach(() => cleanup());
 
 function mountPageSize(pageSize: number) {
   return mountSurface({
-    component: {component: 'PageSize', pageSize: {path: '/state/root/pageSize'}},
+    component: {component: 'PageSize', pageSize: {'@path': '/state/root/pageSize'}},
     dataModel: [{path: '/state/root/pageSize', value: pageSize}],
   });
 }

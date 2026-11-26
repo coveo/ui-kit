@@ -8,7 +8,7 @@ import {
 } from 'react';
 import {
   createSession,
-  type A2uiClientMessage,
+  type A2uiRendererAction,
   type NavigatorContext,
   type Session,
   type SessionSnapshot,
@@ -46,7 +46,7 @@ interface StorefrontValue extends TurnViews {
    * Sends a component action on behalf of the view that draws it, and records the turn it opens,
    * such as a search option's.
    */
-  sendAction(view: StorefrontView, message: A2uiClientMessage, visitId: number): Promise<void>;
+  sendAction(view: StorefrontView, action: A2uiRendererAction, visitId: number): Promise<void>;
 }
 
 const StorefrontContext = createContext<StorefrontValue | null>(null);
@@ -104,10 +104,10 @@ function createStorefront(): StorefrontValue {
         turnVisits.set(request.turnId, visitId);
       }
     },
-    sendAction(view, message, visitId) {
+    sendAction(view, action, visitId) {
       const inFlight = session.request;
       currentView = view;
-      const sent = session.dispatchAction(message);
+      const sent = session.dispatchAction(action);
       const {request} = session;
       // An action that updates a turn in place keeps that turn's view and visit.
       if (

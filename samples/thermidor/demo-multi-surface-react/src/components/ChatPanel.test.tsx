@@ -23,7 +23,7 @@ function searchTurnResponse() {
       type: 'ACTIVITY_SNAPSHOT',
       messageId: 'search-surface',
       activityType: 'a2ui-surface',
-      content: {messages: [{version: 'v1.0', createSurface}]},
+      content: {messages: [{version: '1.0', createSurface}]},
     },
     {type: 'RUN_FINISHED'},
   ];

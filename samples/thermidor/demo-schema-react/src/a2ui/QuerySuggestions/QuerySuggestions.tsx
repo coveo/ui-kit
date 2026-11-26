@@ -1,5 +1,5 @@
 import {useEffect, useMemo, useState} from 'react';
-import {createComponentImplementation} from '@a2ui/react/v0_9';
+import {createComponentImplementation} from '@a2ui/react';
 import type {FetchSuggestionsPayload} from '@coveo/thermidor-schema';
 import {QuerySuggestionsPropsSchema} from '@coveo/thermidor-schema/zod3';
 import type {SuggestionSection} from '../../components/SuggestionsDropdown/index.js';

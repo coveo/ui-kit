@@ -1,5 +1,5 @@
-import type {ReactComponentImplementation} from '@a2ui/react/v0_9';
-import {Catalog} from '@a2ui/web_core/v0_9';
+import type {ReactComponentImplementation} from '@a2ui/react';
+import {Catalog} from '@a2ui/web_core';
 import {THERMIDOR_CATALOG_ID} from '@coveo/thermidor-schema/zod3';
 export {THERMIDOR_CATALOG_ID};
 import {ProductCarousel} from './ProductCarousel/ProductCarousel.js';
@@ -43,7 +43,7 @@ export interface ThermidorCatalogOptions {
  *
  * @public `demo-multi-surface-react` imports it through a relative path.
  */
-export const A2UI_PROTOCOL_VERSION = 'v0.9';
+export const A2UI_PROTOCOL_VERSION = '1.0';
 
 export function createThermidorCatalog(
   options: ThermidorCatalogOptions = {}

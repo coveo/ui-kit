@@ -19,8 +19,11 @@ export function requestSnapshot(
   };
 }
 
-interface UserActionMessage {
-  userAction?: {name?: unknown; surfaceId?: unknown; sourceComponentId?: unknown};
+/** A renderer action, as `Session.dispatchAction` receives it from the message processor. */
+interface RendererActionMessage {
+  name?: unknown;
+  surfaceId?: unknown;
+  sourceComponentId?: unknown;
 }
 
 /**
@@ -57,16 +60,16 @@ export function createFakeSessionRequests(
     if (request) {
       return;
     }
-    const userAction = (message as UserActionMessage).userAction;
+    const action = message as RendererActionMessage;
     request =
-      (message as {name?: unknown}).name === 'submitPrompt'
+      action.name === 'submitPrompt'
         ? {kind: 'prompt', turnId: 'turn'}
         : {
             kind: 'action',
-            component: componentOf(String(userAction?.sourceComponentId)),
-            name: String(userAction?.name),
-            surfaceId: String(userAction?.surfaceId),
-            sourceComponentId: String(userAction?.sourceComponentId),
+            component: componentOf(String(action.sourceComponentId)),
+            name: String(action.name),
+            surfaceId: String(action.surfaceId),
+            sourceComponentId: String(action.sourceComponentId),
             turnId: 'turn',
           };
     actionError = undefined;

@@ -1,5 +1,5 @@
 import {useId, useOptimistic} from 'react';
-import {createComponentImplementation} from '@a2ui/react/v0_9';
+import {createComponentImplementation} from '@a2ui/react';
 import {SortPropsSchema, type SortAction, type SortCriterion} from '@coveo/thermidor-schema/zod3';
 import {useGesture} from '../session-request.js';
 import styles from './Sort.module.css';

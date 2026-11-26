@@ -1,5 +1,5 @@
 import {useContext, useEffect, useMemo, useRef, useState} from 'react';
-import {createComponentImplementation} from '@a2ui/react/v0_9';
+import {createComponentImplementation} from '@a2ui/react';
 import type {FetchInstantProductsPayload, InstantProductsState} from '@coveo/thermidor-schema';
 import {InstantProductsPropsSchema} from '@coveo/thermidor-schema/zod3';
 import {

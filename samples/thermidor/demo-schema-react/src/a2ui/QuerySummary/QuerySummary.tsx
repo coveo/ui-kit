@@ -1,4 +1,4 @@
-import {createComponentImplementation} from '@a2ui/react/v0_9';
+import {createComponentImplementation} from '@a2ui/react';
 import {useRef} from 'react';
 import type {QueryCorrection, QuerySummaryAction} from '@coveo/thermidor-schema';
 import {QuerySummaryPropsSchema} from '@coveo/thermidor-schema/zod3';

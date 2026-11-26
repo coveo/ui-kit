@@ -30,7 +30,7 @@ function searchTurnResponse() {
       type: 'ACTIVITY_SNAPSHOT',
       messageId: 'search-surface',
       activityType: 'a2ui-surface',
-      content: {messages: [{version: 'v1.0', createSurface}]},
+      content: {messages: [{version: '1.0', createSurface}]},
     },
     {type: 'RUN_FINISHED'},
   ]);
@@ -46,10 +46,10 @@ function paginatedSearchResponse(surfaceId: string) {
       {
         id: 'pagination',
         component: 'Pagination',
-        page: {path: '/state/pagination/page'},
-        pageSize: {path: '/state/pagination/pageSize'},
-        totalEntries: {path: '/state/pagination/totalEntries'},
-        totalPages: {path: '/state/pagination/totalPages'},
+        page: {'@path': '/state/pagination/page'},
+        pageSize: {'@path': '/state/pagination/pageSize'},
+        totalEntries: {'@path': '/state/pagination/totalEntries'},
+        totalPages: {'@path': '/state/pagination/totalPages'},
       },
     ],
     dataModel: {state: {pagination: {page: 1, pageSize: 20, totalEntries: 82, totalPages: 5}}},
@@ -60,7 +60,7 @@ function paginatedSearchResponse(surfaceId: string) {
       type: 'ACTIVITY_SNAPSHOT',
       messageId: `search-${surfaceId}`,
       activityType: 'a2ui-surface',
-      content: {messages: [{version: 'v1.0', createSurface}]},
+      content: {messages: [{version: '1.0', createSurface}]},
     },
     {type: 'RUN_FINISHED'},
   ]);
@@ -85,16 +85,16 @@ function sortableSearchResponse(surfaceId: string) {
       {
         id: 'sort',
         component: 'Sort',
-        appliedSort: {path: '/state/sort/appliedSort'},
-        availableSorts: {path: '/state/sort/availableSorts'},
+        appliedSort: {'@path': '/state/sort/appliedSort'},
+        availableSorts: {'@path': '/state/sort/availableSorts'},
       },
       {
         id: 'pagination',
         component: 'Pagination',
-        page: {path: '/state/pagination/page'},
-        pageSize: {path: '/state/pagination/pageSize'},
-        totalEntries: {path: '/state/pagination/totalEntries'},
-        totalPages: {path: '/state/pagination/totalPages'},
+        page: {'@path': '/state/pagination/page'},
+        pageSize: {'@path': '/state/pagination/pageSize'},
+        totalEntries: {'@path': '/state/pagination/totalEntries'},
+        totalPages: {'@path': '/state/pagination/totalPages'},
       },
     ],
     dataModel: {
@@ -110,7 +110,7 @@ function sortableSearchResponse(surfaceId: string) {
       type: 'ACTIVITY_SNAPSHOT',
       messageId: `search-${surfaceId}`,
       activityType: 'a2ui-surface',
-      content: {messages: [{version: 'v1.0', createSurface}]},
+      content: {messages: [{version: '1.0', createSurface}]},
     },
     {type: 'RUN_FINISHED'},
   ]);
@@ -124,7 +124,7 @@ function stateUpdateResponse(surfaceId: string, path: string, value: unknown) {
       type: 'ACTIVITY_SNAPSHOT',
       messageId: `update-${surfaceId}-${path}`,
       activityType: 'a2ui-surface',
-      content: {messages: [{version: 'v1.0', updateDataModel: {surfaceId, path, value}}]},
+      content: {messages: [{version: '1.0', updateDataModel: {surfaceId, path, value}}]},
     },
     {type: 'RUN_FINISHED'},
   ]);
