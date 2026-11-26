@@ -132,6 +132,8 @@ Chosen option: C with N = 10.
 
 The `shared` cache group in `rsbuild.cdn.mjs` implements the decision. It sits next to the `dayjsLocales` group from #8681.
 
+Since [ADR 0002](./0002-build-the-cdn-loader-entries-as-single-files.md), `atomic.esm.js` and `index.js` contain the tag map instead of importing it as a chunk, so those two entries no longer load what they loaded when this record was written.
+
 The build was verified as follows:
 
 - Every chunk is a plain map of module factories, so loading one runs nothing. The exceptions are five wrappers that import Headless and Bueno, which are unchanged.
