@@ -22,7 +22,7 @@ Modified behaviors will be listed here.
 
 #### `error` on Atomic components <!-- KIT-6755 -->
 
-The `error` property of every Atomic component is now typed `Error | undefined`, where `undefined` means that the component has no error, and a change to it re-renders the component.
+The `error` property of every Atomic component that can receive an error is now typed `Error | undefined`, where `undefined` means that the component has no error, and a change to it re-renders the component.
 
 **Atomic Version 3**
 
