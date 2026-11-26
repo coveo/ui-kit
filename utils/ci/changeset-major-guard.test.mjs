@@ -47,17 +47,17 @@ const ATOMIC_GUIDE = 'packages/atomic/upgrade-from-v3-to-v4.md';
 
 function state(
   releases = [],
-  {packages = PACKAGES, fixedGroups = FIXED, ignore = [], privatePackages} = {}
+  {packages = PACKAGES, fixedGroups = FIXED, ignore = [], privatePackages, texts = {}} = {}
 ) {
   const withFiles = releases.map((release) => ({file: '.changeset/a.md', ...release}));
   const files = [...new Set(withFiles.map(({file}) => file))];
   return {
-    changesets: files.map((file) => ({
-      file,
-      releases: withFiles
+    changesets: files.map((file) => {
+      const fileReleases = withFiles
         .filter((release) => release.file === file)
-        .map(({name, type}) => ({name, type})),
-    })),
+        .map(({name, type}) => ({name, type}));
+      return {file, text: texts[file] ?? JSON.stringify(fileReleases), releases: fileReleases};
+    }),
     releases: withFiles,
     packages,
     fixedGroups,
@@ -258,6 +258,17 @@ describe('checkMajors while the window is closed', () => {
     ]);
   });
 
+  it('refuses a second major on a package that main already plans', () => {
+    const texts = {'.changeset/first.md': 'Remove A.', '.changeset/second.md': 'Remove B.'};
+    const first = {name: '@coveo/headless', type: 'major', file: '.changeset/first.md'};
+    const second = {name: '@coveo/headless', type: 'major', file: '.changeset/second.md'};
+    const {errors} = check({
+      base: state([first], {texts}),
+      head: state([first, second], {texts}),
+    });
+    assert.match(errors[0], /@coveo\/headless \(major in \.changeset\/second\.md\)/);
+  });
+
   it('warns about a major that main already plans instead of failing', () => {
     const pending = state([{name: '@coveo/headless', type: 'major'}]);
     const {errors, warnings} = check({base: pending, head: pending});
@@ -295,6 +306,31 @@ describe('checkMajors while the window is open', () => {
     assert.deepEqual(errors, [
       `@coveo/atomic gets a major version, but ${ATOMIC_GUIDE} is unchanged. Add the upgrade guide entry in the same pull request.`,
     ]);
+  });
+
+  it('asks for the guide entry of each breaking pull request, not only the first one', () => {
+    const texts = {'.changeset/first.md': 'Remove A.', '.changeset/second.md': 'Remove B.'};
+    const first = {name: '@coveo/headless', type: 'major', file: '.changeset/first.md'};
+    const second = {name: '@coveo/headless', type: 'major', file: '.changeset/second.md'};
+    const base = state([first], {texts});
+    const head = state([first, second], {texts});
+    assert.deepEqual(check({base, head, windowOpen: true}).errors, [
+      `@coveo/headless gets a major version, but ${HEADLESS_GUIDE} is unchanged. Add the upgrade guide entry in the same pull request.`,
+    ]);
+    assert.deepEqual(
+      check({base, head, changedFiles: [HEADLESS_GUIDE], windowOpen: true}).errors,
+      []
+    );
+  });
+
+  it('does not ask again when a held major changeset is reworded', () => {
+    const held = [{name: '@coveo/headless', type: 'major', file: '.changeset/first.md'}];
+    const {errors} = check({
+      base: state(held, {texts: {'.changeset/first.md': 'Remove A.'}}),
+      head: state(held, {texts: {'.changeset/first.md': 'Remove A, the legacy way.'}}),
+      windowOpen: true,
+    });
+    assert.deepEqual(errors, []);
   });
 
   it('does not ask again when a planned major changeset is renamed', () => {

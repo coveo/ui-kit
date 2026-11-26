@@ -188,11 +188,50 @@ function majorOf(packages, name) {
   return Number(version.split('.')[0]);
 }
 
+// The UI-Kit majors that the range's own changesets bring, directly or through a fixed group,
+// even when the base already holds a major for the package. A changeset counts when its file is
+// new, unless the base has the same text under another name (a rename), and a release in an
+// existing file counts when it was not a major at the base.
+export function addedMajors({base, head}) {
+  const baseByFile = new Map(base.changesets.map((changeset) => [changeset.file, changeset]));
+  const baseTexts = new Set(base.changesets.map(({text}) => text));
+  const added = new Map();
+  for (const {file, text, releases} of head.changesets) {
+    const old = baseByFile.get(file);
+    if (!old && baseTexts.has(text)) {
+      continue;
+    }
+    const wasMajor = new Set(
+      (old?.releases ?? []).filter(({type}) => type === 'major').map(({name}) => name)
+    );
+    for (const {name, type} of releases) {
+      if (type !== 'major' || wasMajor.has(name)) {
+        continue;
+      }
+      const group = head.fixedGroups.find((members) => members.includes(name)) ?? [name];
+      for (const member of group) {
+        if (UI_KIT_PACKAGES.has(member) && !added.has(member)) {
+          added.set(
+            member,
+            member === name
+              ? {kind: 'changeset', source: file}
+              : {kind: 'fixed group', source: name}
+          );
+        }
+      }
+    }
+  }
+  return added;
+}
+
 export function checkMajors({base, head, changedFiles, windowOpen}) {
   const before = planReleases(base);
   const after = planReleases(head);
+  const added = addedMajors({base, head});
   const planned = [...UI_KIT_PACKAGES.keys()].filter((name) => after.bumps.get(name) === 'major');
-  const introduced = planned.filter((name) => before.bumps.get(name) !== 'major');
+  const introduced = planned.filter(
+    (name) => before.bumps.get(name) !== 'major' || added.has(name)
+  );
   const raisedByHand = [...UI_KIT_PACKAGES.keys()].filter(
     (name) => majorOf(head.packages, name) > majorOf(base.packages, name)
   );
@@ -202,7 +241,7 @@ export function checkMajors({base, head, changedFiles, windowOpen}) {
   if (!windowOpen) {
     if (introduced.length > 0) {
       const list = introduced
-        .map((name) => `${name} (${describe(after.causes.get(name))})`)
+        .map((name) => `${name} (${describe(added.get(name) ?? after.causes.get(name))})`)
         .join(', ');
       errors.push(
         `UI-Kit major version on main: ${list}. main still ships UI-Kit v3, so its next release would publish a new major. Use a minor or patch bump, or keep the breaking change on a branch until main is frozen for v4.`
@@ -255,7 +294,10 @@ export function readWorkspacePackages(root, ref) {
 export function readReleaseState(root, ref) {
   const changesets = lines(git(root, 'ls-tree', '--name-only', ref, '.changeset/'))
     .filter((file) => file.endsWith('.md') && !file.endsWith('/README.md'))
-    .map((file) => ({file, releases: parseChangeset(show(root, ref, file), file)}));
+    .map((file) => {
+      const text = show(root, ref, file);
+      return {file, text, releases: parseChangeset(text, file)};
+    });
   const {
     fixed = [],
     ignore = [],
