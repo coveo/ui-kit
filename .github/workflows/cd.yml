@@ -1,7 +1,7 @@
 name: Create release
 on:
   push:
-    branches: [main]
+    branches: [main, v3]
 
 permissions:
   contents: read
@@ -13,13 +13,14 @@ jobs:
   # ⚠️  Keep this job limited to publishing and tagging.
   #
   # A failing step here fails the whole job, and anything that runs after the
-  # publish step then never happens — including the release/v3 tag. Post-release
-  # side work (source maps, docs, notifications) belongs in its own job below,
-  # so that it cannot take the release down with it.
+  # publish step then never happens. Post-release side work (source maps,
+  # notifications) belongs in its own job below, so that it cannot take the
+  # release down with it.
   #
-  # `commit-artifact-upload` is deliberately insulated from this job: see the
-  # `if:` on it. Do not add `needs: release` gating that would let a failure
-  # here skip the CDN deploy.
+  # Until the v4 GA, main publishes only the packages outside the Changesets
+  # `ignore` list. The 3.x releases, the release/v3 tag and the CDN, Quantic
+  # and docs deploys run from the copy of this workflow on the v3 branch
+  # (KIT-6480).
   release:
     concurrency:
       group: release-${{ github.ref }}
@@ -31,7 +32,6 @@ jobs:
       pull-requests: write
       id-token: write
     outputs:
-      published: ${{ steps.changesets.outputs.published }}
       publishedPackages: ${{ steps.changesets.outputs['published-packages'] }}
     steps:
       - name: Harden Runner
@@ -47,11 +47,27 @@ jobs:
           private-key: ${{ secrets.RELEASER_PRIVATE_KEY }}
           owner: coveo
           repositories: 'ui-kit'
+          permission-contents: write
+          permission-pull-requests: write
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
           token: ${{ steps.generate-token.outputs.token }}
       - uses: ./.github/actions/setup
+      - name: Hold back the changesets of the paused packages
+        # Changesets keeps the changesets of the packages in its ignore list
+        # until the v4 GA, and the changeset action publishes only when it finds
+        # no changeset file. When nothing else is left to version, remove them
+        # from this checkout so that the action publishes: publishing commits
+        # nothing, so they stay in the repository.
+        run: |
+          to_version=$(node utils/ci/changeset-files.mjs --to-version)
+          held=$(node utils/ci/changeset-files.mjs --held)
+          if [ -z "$to_version" ] && [ -n "$held" ]; then
+            echo "Nothing to version. Removed from this checkout until the v4 GA:"
+            echo "$held"
+            echo "$held" | xargs rm --
+          fi
       - name: Create release PR or publish
         id: changesets
         continue-on-error: true
@@ -60,18 +76,13 @@ jobs:
           github-token: ${{ steps.generate-token.outputs.token }}
           version-script: pnpm exec turbo run create-version
           publish-script: pnpm run release
-          pr-title: 'ci(changesets): version packages j:KIT-5605'
-          commit-message: 'ci(changesets): version packages j:KIT-5605'
+          pr-title: 'ci(changesets): version packages (${{ github.ref_name }}) j:KIT-5605'
+          commit-message: 'ci(changesets): version packages (${{ github.ref_name }}) j:KIT-5605'
       - name: Fail if publishing made no progress
         if: ${{ steps.changesets.outcome == 'failure' && steps.changesets.outputs.published != 'true' }}
         run: |
           echo "The publish command failed before any package was published." >&2
           exit 1
-      - name: Update release/v3 bookmark
-        if: ${{ steps.changesets.outputs.published == 'true' }}
-        run: |
-          git tag -f release/v3
-          git push origin refs/tags/release/v3 --force
   sentry-create-ui:
     name: Upload create-ui source maps to Sentry
     needs: release
@@ -84,8 +95,6 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          ref: 'refs/tags/release/v3'
       - uses: ./.github/actions/setup
       - name: Build create-ui
         run: pnpm exec turbo run build --filter=@coveo/create-ui
@@ -106,42 +115,8 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: coveo-platform
           SENTRY_PROJECT: create-ui
-  quantic-prod:
-    if: ${{ needs.release.outputs.published == 'true' }}
-    needs: release
-    runs-on: ubuntu-latest
-    environment: 'Quantic Production'
-    permissions:
-      contents: read
-      packages: write
-      discussions: write
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
-        with:
-          egress-policy: audit
-
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          ref: 'refs/tags/release/v3'
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/setup-sfdx
-      - name: Promote SFDX package to production
-        run: |
-          echo "${{ secrets.SFDX_AUTH_JWT_KEY }}" > ${VARS_SFDX_AUTH_JWT_KEY_FILE}
-          pnpm exec turbo run @coveo/quantic#promote:sfdx:ci
-          rm ${VARS_SFDX_AUTH_JWT_KEY_FILE}
-        env:
-          SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
-          SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
-          SFDX_AUTH_JWT_USERNAME: ${{ vars.SFDX_AUTH_JWT_USERNAME }}
-          SFDX_AUTH_JWT_KEY_FILE: ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VARS_SFDX_AUTH_JWT_KEY_FILE: ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
-        working-directory: ./packages/quantic
-  typedoc-headless:
-    if: ${{ needs.release.outputs.published == 'true' }}
-    needs: release
+  chromatic-update-baseline:
+    name: 'Update the Chromatic baseline of this branch'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -149,151 +124,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          ref: 'refs/tags/release/v3'
-
-      - name: Set up and build the project
-        uses: ./.github/actions/setup
-
-      - name: Build typedoc site
-        run: pnpm exec turbo run build:typedoc --filter=@coveo/headless
-        shell: bash
-
-      - name: Read version from package.json
-        id: read_version
-        run: |
-          VERSION=$(jq -r '.version' packages/headless/package.json)
-          echo "Extracted version: $VERSION"
-          echo "version=$VERSION" >> $GITHUB_ENV
-
-      - name: Copy the docs into the version folder
-        run: |
-          mkdir -p typedoc-headless-site/${version}/
-          cp -r packages/headless/docs/* typedoc-headless-site/${version}/
-          echo "Copied docs to: typedoc-headless-site/${version}/"
-
-      - name: Upload documentation artifact
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
-        with:
-          name: headless-docs-${{ env.version }}
-          path: typedoc-headless-site/
-  typedoc-headless-react:
-    if: ${{ needs.release.outputs.published == 'true' }}
-    needs: release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
-        with:
-          egress-policy: audit
-
-      - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          ref: 'refs/tags/release/v3'
-
-      - name: Set up and build the project
-        uses: ./.github/actions/setup
-
-      - name: Build typedoc site
-        run: pnpm exec turbo run build:typedoc --filter=@coveo/headless-react
-        shell: bash
-
-      - name: Read version from package.json
-        id: read_version
-        run: |
-          VERSION=$(jq -r '.version' packages/headless-react/package.json)
-          echo "Extracted version: $VERSION"
-          echo "version=$VERSION" >> $GITHUB_ENV
-
-      - name: Copy the docs into the version folder
-        run: |
-          mkdir -p typedoc-headless-react-site/${version}/
-          cp -r packages/headless-react/docs/* typedoc-headless-react-site/${version}/
-          echo "Copied docs to: typedoc-headless-react-site/${version}/"
-
-      - name: Upload documentation artifact
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
-        with:
-          name: headless-react-docs-${{ env.version }}
-          path: typedoc-headless-react-site/
-  docs-prod:
-    if: ${{ needs.release.outputs.published == 'true' }}
-    needs: release
-    runs-on: ubuntu-latest
-    environment: 'Docs Production'
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
-        with:
-          egress-policy: audit
-
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          ref: 'refs/tags/release/v3'
-      - uses: ./.github/actions/setup
-      - name: Create GitHub App token for docs dispatch
-        id: app-token
-        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3
-        with:
-          app-id: ${{ secrets.DOC_APP_ID }}
-          private-key: ${{ secrets.DOC_APP_PRIVATE_KEY }}
-          owner: coveo
-          repositories: doc_jekyll-public-site
-      - name: Notify Docs
-        continue-on-error: true
-        run: pnpm run notify:docs
-        env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-  build-cdn:
-    name: Build CDN
-    runs-on: ubuntu-latest
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
-        with:
-          egress-policy: audit
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: ./.github/actions/build-cdn
-        with:
-          commit-sha: ${{ github.sha }}
-  commit-artifact-upload:
-    name: Upload commit artifacts to S3
-    needs: [build-cdn, release]
-    # `release` is a soft dependency: it is only read to decide which channels to
-    # update. If npm was published, the CDN must follow, so a failure anywhere in
-    # the release job must never skip this deploy.
-    if: ${{ !cancelled() && needs.build-cdn.result == 'success' }}
-    runs-on: ubuntu-latest
-    # TODO(KIT-5712): Rename to 'CDN Deploy' once token vending machine is available
-    environment: 'Prerelease (CDN)'
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
-        with:
-          egress-policy: audit
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: ./.github/actions/setup
-      - name: Trigger commit artifact upload on ui-kit-cd
-        run: node ./scripts/deploy/trigger-commit-upload.mjs
-        env:
-          GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
-          # Comma-separated list of CDN channels to update (e.g. "private" or "private,preview").
-          # On release commits, update both private and preview pointers.
-          # On regular merges, only update private pointers.
-          CHANNELS: ${{ needs.release.outputs.published == 'true' && 'private,preview' || 'private' }}
-  chromatic-update-main:
-    name: 'Update Chromatic baseline on main'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
-        with:
-          egress-policy: audit
-
-      # Chromatic needs full history to update the main branch baseline.
+      # Chromatic needs full history to update the branch baseline.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
@@ -303,7 +134,7 @@ jobs:
         uses: chromaui/action@6efa19d4a40404313897de5a6d516e0333a2a787 # v18.14.5
         with:
           autoAcceptChanges: true
-          branchName: main
+          branchName: ${{ github.ref_name }}
           exitZeroOnChanges: true
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           workingDir: packages/atomic
