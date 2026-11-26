@@ -38,7 +38,11 @@ export interface ThermidorCatalogOptions {
   productResearchCard?: ProductResearchCardOptions;
 }
 
-/** The A2-UI protocol version of the messages the catalog renders. */
+/**
+ * The A2-UI protocol version of the messages the catalog renders.
+ *
+ * @public `demo-multi-surface-react` imports it through a relative path.
+ */
 export const A2UI_PROTOCOL_VERSION = '1.0';
 
 export function createThermidorCatalog(

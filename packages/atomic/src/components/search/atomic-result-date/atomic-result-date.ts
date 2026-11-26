@@ -1,8 +1,8 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
 import dayjs from 'dayjs';
-import calendar from 'dayjs/plugin/calendar';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
+import calendar from 'dayjs/plugin/calendar.js';
+import localizedFormat from 'dayjs/plugin/localizedFormat.js';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';

@@ -1,4 +1,4 @@
-import {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useMemo, useRef, useState} from 'react';
 import {createComponentImplementation} from '@a2ui/react';
 import type {FetchInstantProductsPayload, InstantProductsState} from '@coveo/thermidor-schema';
 import {InstantProductsPropsSchema} from '@coveo/thermidor-schema/zod3';
@@ -12,17 +12,11 @@ import {useSearchBoxQuery} from '../SearchBox/search-box-context.js';
 import {ProductChildren} from '../ProductChildren/ProductChildren.js';
 import {usePromotedProduct} from '../ProductChildren/use-promoted-product.js';
 import {InstantProductsSkeleton} from '../Skeleton/Skeleton.js';
+import {useDispatchOutcome, useIsConcurrent, type NodeAction} from '../session-request.js';
 import styles from './InstantProducts.module.css';
 
 /** The viewports wide enough to show products beside the suggestions. */
 export const PRODUCTS_PANEL_MEDIA_QUERY = '(min-width: 640px)';
-
-/**
- * How long a highlight waits for its products before the panel says there are none. A failed
- * request is only a development warning in the session, so the renderer cannot tell it apart from
- * a slow one.
- */
-export const INSTANT_PRODUCTS_TIMEOUT_MS = 5000;
 
 /**
  * How long a highlight must hold before its products are fetched, so moving quickly through the
@@ -46,61 +40,78 @@ function useShowProductsPanel(): boolean {
 /**
  * A2-UI component for `InstantProducts`: the products of its `SearchBox`'s highlighted suggestion,
  * beside the suggestions. Each highlight that settles is sent with `fetchInstantProducts`, unless
- * it is empty, the input was submitted, or the screen is too small for the panel. Whether an answer
- * is reused, and whether it waits for the session, is the session's.
+ * it is empty, the input was submitted, or the screen is too small for the panel. The panel shows
+ * only while the session sends `fetchInstantProducts` concurrently, beside the turn: a producer that
+ * doesn't announce it gets no products request. Whether an answer is reused is the session's.
  *
  * The panel holds its place from the first highlight, so the dropdown does not shift when products
  * arrive: a skeleton until the first answer, then the previous products, dimmed and inert, until
  * the highlighted query's answer. Products answering another query than the highlighted one are never
- * shown as current.
+ * shown as current. When the session reports, once its dispatch resolves, that the highlighted
+ * query's products failed, the panel says there are none until the highlight moves or the query is
+ * sent again.
  */
 export const InstantProducts = createComponentImplementation(
   {name: 'InstantProducts', schema: InstantProductsPropsSchema},
-  // TODO(a2ui-react context): `context` is deprecated in @a2ui/react 0.16. Dispatch with
-  // `useA2uiSurface()?.dispatchAction(action, componentId)` once a component can read its own id.
+  // TODO(a2ui-react context): `context` is deprecated in @a2ui/react 0.16. Build this through
+  // `view({node, buildChild})` (or a shared helper): props from `useNodeView`, and dispatch with
+  // `useA2uiSurface()?.dispatchAction(action, node.componentId)`.
   ({props, context}) => {
     const {highlightedQuery, submitted} = useSearchBoxQuery();
     const showProducts = useShowProductsPanel();
-    const active = showProducts && !submitted && highlightedQuery !== '';
+    const surfaceId = context.dataContext.surface?.id;
+    const nodeId = context.componentModel.id;
+    const fetchProducts = useMemo<NodeAction | undefined>(
+      () =>
+        surfaceId === undefined
+          ? undefined
+          : {surfaceId, sourceComponentId: nodeId, name: 'fetchInstantProducts'},
+      [surfaceId, nodeId]
+    );
+    const concurrent = useIsConcurrent(fetchProducts);
+    const active = concurrent && showProducts && !submitted && highlightedQuery !== '';
     const answered = props.query === highlightedQuery;
     const [previous, setPrevious] = useState<InstantProductsState>();
     if (answered && props.products.length > 0 && previous?.query !== props.query) {
       setPrevious({query: props.query, products: props.products});
     }
-    const [timedOutQuery, setTimedOutQuery] = useState<string>();
+    // A highlight that moves forgets its failure: back on a failed query, the panel loads until it
+    // is sent again.
+    const [failedQuery, setFailedQuery] = useState<string>();
+    if (failedQuery !== undefined && failedQuery !== highlightedQuery) {
+      setFailedQuery(undefined);
+    }
+    const dispatchOutcome = useDispatchOutcome();
+    // Bumped on each send and each highlight change: an outcome read after either is stale.
+    const outcomeEpoch = useRef(0);
 
     useEffect(() => {
-      if (!active) {
+      outcomeEpoch.current++;
+      if (!active || fetchProducts === undefined) {
         return;
       }
-      const payload: FetchInstantProductsPayload = {query: highlightedQuery};
-      const settled = setTimeout(
-        () => context.dispatchAction({event: {name: 'fetchInstantProducts', context: payload}}),
-        INSTANT_PRODUCTS_SETTLE_MS
-      );
+      const query = highlightedQuery;
+      const settled = setTimeout(() => {
+        const payload: FetchInstantProductsPayload = {query};
+        setFailedQuery(undefined);
+        const epoch = ++outcomeEpoch.current;
+        void dispatchOutcome(fetchProducts, () =>
+          context.dispatchAction({event: {name: 'fetchInstantProducts', context: payload}})
+        ).then((outcome) => {
+          if (outcome === 'failed' && epoch === outcomeEpoch.current) {
+            setFailedQuery(query);
+          }
+        });
+      }, INSTANT_PRODUCTS_SETTLE_MS);
       return () => clearTimeout(settled);
-    }, [active, context, highlightedQuery]);
-
-    useEffect(() => {
-      if (!active || answered) {
-        return;
-      }
-      const timeout = setTimeout(
-        () => setTimedOutQuery(highlightedQuery),
-        INSTANT_PRODUCTS_TIMEOUT_MS
-      );
-      return () => {
-        clearTimeout(timeout);
-        setTimedOutQuery(undefined);
-      };
-    }, [active, answered, highlightedQuery]);
+    }, [active, context, dispatchOutcome, fetchProducts, highlightedQuery]);
 
     if (!active) {
       return null;
     }
     if (
       (answered && props.products.length === 0) ||
-      (!answered && timedOutQuery === highlightedQuery)
+      (!answered && failedQuery === highlightedQuery)
     ) {
       return (
         <section className={styles.panel} aria-label={`No products for ${highlightedQuery}`}>

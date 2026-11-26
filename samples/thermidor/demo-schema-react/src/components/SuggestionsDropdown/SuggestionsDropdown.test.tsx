@@ -1,7 +1,11 @@
+import {readFileSync} from 'node:fs';
+import {join} from 'node:path';
+import {createElement} from 'react';
 import {render, screen, fireEvent} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
 import {SuggestionsDropdown} from './SuggestionsDropdown.js';
 import type {SuggestionSection} from './types.js';
+import {cssRules, declarationsFor} from '../../test/css-rules.js';
 
 const testSections: SuggestionSection[] = [
   {
@@ -83,5 +87,40 @@ describe('SuggestionsDropdown', () => {
     );
 
     expect(fireEvent.mouseDown(screen.getByText('Product'))).toBe(false);
+  });
+
+  describe('height while an aside is shown', () => {
+    const RULES = cssRules(
+      readFileSync(join(import.meta.dirname, 'SuggestionsDropdown.module.css'), 'utf8'),
+      {
+        dropdown: ':has(> [role="listbox"])',
+        listbox: '[role="listbox"]',
+      }
+    );
+
+    // A2-UI components render inside a host element that stays when the component renders nothing.
+    function dropdownWithAside(asideContent: string | null) {
+      render(
+        <SuggestionsDropdown
+          sections={testSections}
+          onSelect={vi.fn()}
+          visible={true}
+          aside={createElement(
+            'a2ui-react-instantproducts',
+            null,
+            asideContent && <section>{asideContent}</section>
+          )}
+        />
+      );
+      return screen.getByRole('listbox', {name: 'Query suggestions'}).parentElement!;
+    }
+
+    it('is fixed while the aside renders products', () => {
+      expect(declarationsFor(dropdownWithAside('Products'), RULES).height).toBe('416px');
+    });
+
+    it('follows the suggestions when the aside renders nothing, such as on a small screen', () => {
+      expect(declarationsFor(dropdownWithAside(null), RULES).height).toBeUndefined();
+    });
   });
 });

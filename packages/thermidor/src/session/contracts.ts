@@ -30,29 +30,57 @@
  * `zod-major-compat.test.ts`.
  */
 
+// Narrowed to fields read by the core so the injected schema can be built with either supported
+// Zod major.
 /**
- * The success/failure result returned by {@link ParsableSchema.safeParse}.
- * Narrowed to the fields the core reads: the parsed `data` on success and the
- * issue list on failure (used for a dev-only diagnostic).
+ * The result of {@link ParsableSchema.safeParse}: the parsed `data` on success, or the validation
+ * issues on failure.
+ *
+ * @group Contracts
  */
 export type SafeParseResult =
-  | {readonly success: true; readonly data: unknown}
-  | {readonly success: false; readonly error: {readonly issues: readonly ParseIssue[]}};
+  | {
+      /** `true` when the value is valid. */
+      readonly success: true;
+      /** The parsed value. */
+      readonly data: unknown;
+    }
+  | {
+      /** `false` when the value is invalid. */
+      readonly success: false;
+      /** The validation error. */
+      readonly error: {
+        /** The validation issues. */
+        readonly issues: readonly ParseIssue[];
+      };
+    };
 
-/** A single Zod issue, narrowed to the fields the dev-only diagnostic reads. */
+// Only the fields used by the dev-only validation diagnostic are represented here.
+/**
+ * A single validation issue, such as a Zod issue.
+ *
+ * @group Contracts
+ */
 export interface ParseIssue {
+  /** The path to the value that failed validation. */
   readonly path: ReadonlyArray<string | number | symbol>;
+  /** Why the value failed validation. */
   readonly message: string;
 }
 
+// Declared structurally instead of importing Zod types to avoid cross-package version identity.
 /**
- * The minimal structural shape the core needs from any Zod schema: a
- * `safeParse` returning a discriminated success/failure result. Declared
- * locally (rather than importing `z.ZodType`) to sidestep the cross-package Zod
- * version-identity mismatch — the injected schema may even come from a
- * different Zod major, and `safeParse` is structurally compatible across both.
+ * A schema that validates a value without throwing, such as any Zod 3 or Zod 4 schema.
+ *
+ * @group Contracts
  */
 export interface ParsableSchema {
+  /**
+   * Validates `value` without throwing.
+   *
+   * @param value - The value to validate.
+   * @returns The parsed value on success, or the validation issues on failure.
+   */
   safeParse(value: unknown): SafeParseResult;
 }
 
@@ -66,32 +94,73 @@ export interface ObjectSchema extends ParsableSchema {
 }
 
 /**
- * A single component-contract member: a Zod object schema whose `shape`
- * exposes the PascalCase `component` discriminant literal (`{ value }`) and the
- * component's optional `state` and `actions` sub-schemas.
+ * The contract of one component: a Zod object schema whose `shape` holds the component's
+ * PascalCase `component` literal and its optional `state` and `actions` schemas.
+ *
+ * @group Contracts
  */
 export interface ComponentContractSchema {
+  /** The member's field schemas. */
   readonly shape: {
-    readonly component: {readonly value: string};
+    /** The literal schema of the component's `component` discriminant. */
+    readonly component: {
+      /** The PascalCase component name, such as `'CommerceSearch'`. */
+      readonly value: string;
+    };
+    /**
+     * The object schema of the component's state, optionally wrapped in `.optional()`. Without an
+     * object schema, every `updateDataModel` operation addressed to the component is dropped from
+     * `Session.state`; `Session.a2uiMessages` still carries it to the renderer.
+     */
     readonly state?: ParsableSchema;
+    /**
+     * The object schema of the component's actions, optionally wrapped in `.optional()`: keyed by
+     * action name, each value an object schema whose `payload` field validates the dispatched
+     * payload, such as `{ fetchSuggestions: z.strictObject({ payload: FetchSuggestionsPayloadSchema }) }`.
+     * A dispatch whose action isn't declared, or whose payload doesn't match, is withheld.
+     */
     readonly actions?: ParsableSchema;
   };
 }
 
 /**
- * The injected contracts schema: a Zod discriminated union on `component`
- * exposing its member list through `.options`. The concrete
- * `ComponentContractsSchema` of any A2-UI contract package is assignable to it.
+ * The component contracts a session validates against: a Zod discriminated union on `component`,
+ * whose `options` list one {@link ComponentContractSchema} per component.
+ *
+ * @remarks
+ * The `ComponentContractsSchema` of an A2-UI contract package, such as `@coveo/thermidor-schema`,
+ * is assignable to it, whether it was built with Zod 3 or Zod 4.
+ *
+ * @group Contracts
  */
 export interface ContractsSchema {
+  /** The union's members, one per component. */
   readonly options: readonly ComponentContractSchema[];
 }
 
 /**
- * Action names by component, keyed by the `component` discriminant of a member of `TComponents`,
- * such as the actions a consumer keeps in a list of its own. A member's action names are read from
- * its `actions` object schema, unwrapped when optional; they are `string` when its type does not
- * expose them, as for the structural {@link ContractsSchema} default.
+ * Lists of action names by component, keyed by the `component` literal of each member of
+ * `TComponents`, such as the actions a consumer keeps in a list of its own.
+ *
+ * @remarks
+ * A member's action names are read from its `actions` object schema, unwrapped when optional.
+ * They are `string` when its type doesn't expose them, as for the structural
+ * {@link ContractsSchema} default.
+ *
+ * @example
+ * ```ts
+ * const contracts = z.discriminatedUnion('component', [
+ *   z.strictObject({
+ *     component: z.literal('RegularFacet'),
+ *     actions: z.strictObject({search: z.strictObject({payload: z.strictObject({})})}).optional(),
+ *   }),
+ * ]);
+ *
+ * type FacetActions = ComponentActionNames<typeof contracts>;
+ * // {readonly RegularFacet?: readonly 'search'[]}
+ * ```
+ *
+ * @group Actions
  */
 export type ComponentActionNames<TComponents extends ContractsSchema = ContractsSchema> = {
   readonly [

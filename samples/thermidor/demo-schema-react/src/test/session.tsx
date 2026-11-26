@@ -110,7 +110,7 @@ export const INSTANT_PRODUCTS_ID = 'instant_products';
  */
 function instantProductsShellRun(
   surfaceId = SHELL_SURFACE_ID,
-  announced: Record<string, unknown> = {}
+  announced: Record<string, unknown> | null = {}
 ): object[] {
   return run(
     [
@@ -150,11 +150,13 @@ function instantProductsShellRun(
         },
       },
     ],
-    {
-      concurrentActions: {
-        [surfaceId]: {fetchInstantProducts: {cache: {ttlMs: 60_000}}, ...announced},
-      },
-    }
+    announced === null
+      ? undefined
+      : {
+          concurrentActions: {
+            [surfaceId]: {fetchInstantProducts: {cache: {ttlMs: 60_000}}, ...announced},
+          },
+        }
   );
 }
 
@@ -310,6 +312,17 @@ export const answerInstantProductsShell: ConverseHandler = (request) => {
     return sseResponse(instantProductsRun(request.action.surfaceId!, query, [`${query} product`]));
   }
   return answerShell(request);
+};
+
+/**
+ * Answers as {@link answerInstantProductsShell}, with the shell announcing nothing as concurrent,
+ * so it shows no products.
+ */
+export const answerUnannouncedInstantProductsShell: ConverseHandler = (request, signal) => {
+  if (request.action?.name === 'initialize') {
+    return sseResponse(instantProductsShellRun(SHELL_SURFACE_ID, null));
+  }
+  return answerInstantProductsShell(request, signal);
 };
 
 /**

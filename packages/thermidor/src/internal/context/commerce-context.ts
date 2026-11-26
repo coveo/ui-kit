@@ -6,34 +6,60 @@
  */
 
 /**
- * A single cart line item carried by the app-owned commerce context.
+ * A single cart line of the {@link CommerceContext}.
+ *
+ * @group Context
  */
 export interface CommerceCartItem {
+  /** The unique identifier of the product. */
   productId: string;
+  /** The human-readable name of the product. */
   name: string;
+  /** The price per unit of the product. */
   price: number;
+  /** The number of units of the product in the cart. */
   quantity: number;
 }
 
 /**
- * The app-owned commerce context a consumer supplies through
- * `commerceContextProvider`. The request builder reads it fresh per request and
- * maps it onto the wire request. `cart` is required (an empty cart
- * is a meaningful "present-but-empty" signal); the remaining fields are
- * optional and, when supplied, are carried on the wire as the "present"
- * encoding — distinguishable from the "absent" encoding sent when no provider
- * is configured.
+ * The app's commerce context, returned by the {@link SessionConfig.commerceContextProvider} the
+ * consumer supplies.
+ *
+ * @remarks
+ * - The session reads it before every request and sends it with the request. It never keeps it
+ *   and never serializes it.
+ * - `cart` is required: an empty cart still tells the endpoint the shopper has none, which a
+ *   session without a provider can't.
+ *
+ * @group Context
  */
 export interface CommerceContext {
+  /** The shopper's current cart. An empty array is sent as an empty cart. */
   cart: CommerceCartItem[];
+  /**
+   * The ids of the products to send as the request's pinned products.
+   *
+   * @defaultValue `[]`
+   */
   pinnedProducts?: string[];
+  /**
+   * The sources to send in the request's context.
+   *
+   * @defaultValue `[]`
+   */
   source?: string[];
+  /**
+   * Custom context values to send with the request.
+   *
+   * @defaultValue `{}`
+   */
   custom?: Record<string, unknown>;
 }
 
 /**
- * The pull-based provider a consumer supplies for app-owned
- * {@link CommerceContext}. Synchronous by design: the request builder calls it
- * fresh per request.
+ * A synchronous function that returns the current {@link CommerceContext}. The session calls it
+ * before every request.
+ *
+ * @group Context
  */
 export type CommerceContextProvider = () => CommerceContext;

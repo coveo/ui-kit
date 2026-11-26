@@ -128,3 +128,31 @@ describe('BundleDisplay cart controls', () => {
     expect(screen.queryByRole('button', {name: /Add to cart/})).toBeNull();
   });
 });
+
+describe('BundleDisplay slots', () => {
+  it('draws the new component when a slot changes type', async () => {
+    const {pushComponents} = mountSurface({
+      component: {component: 'BundleDisplay', heading: 'Surf kit', tiers: TIERS},
+      children: [
+        {id: 'starter_board', component: 'ProductSummary', categoryLabel: 'Board', product: BOARD},
+        {id: 'starter_wax', component: 'ProductSummary', categoryLabel: 'Wax', product: WAX},
+        {id: 'pro_board', component: 'ProductSummary', categoryLabel: 'Board', product: PRO_BOARD},
+      ],
+    });
+    await screen.findByText('Surfboard');
+
+    pushComponents([
+      {
+        id: 'starter_board',
+        component: 'QuerySummary',
+        query: 'boards',
+        firstIndex: 1,
+        lastIndex: 12,
+        totalEntries: 43,
+      },
+    ]);
+
+    expect(await screen.findByText('boards')).toBeDefined();
+    expect(screen.queryByText('Surfboard')).toBeNull();
+  });
+});

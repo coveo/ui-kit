@@ -13,8 +13,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@a2ui/react": "0.16.0",
-    "@a2ui/web_core": "0.16.0",
+    "@a2ui/react": "0.16.1",
+    "@a2ui/web_core": "0.16.1",
     "@coveo/thermidor": "workspace:*",
     "@coveo/thermidor-schema": "catalog:",
     "react": "catalog:",

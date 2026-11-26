@@ -309,6 +309,19 @@ describe('atomic-commerce-interface', () => {
       expect(updateLanguageSpy).toHaveBeenCalledOnce();
     });
 
+    // TODO - (v4) KIT-4365: Remove this test.
+    it('should set the context language and call InterfaceController.onLanguageChange once with the language prop when it is specified', async () => {
+      const onLanguageChangeSpy = vi.spyOn(InterfaceController.prototype, 'onLanguageChange');
+      const fakeContext = buildFakeContext({state: {language: 'es'}});
+      vi.mocked(buildContext).mockReturnValue(fakeContext);
+      const element = await setupElement({language: 'fr'});
+
+      await callTestedInitMethod(element);
+
+      expect(fakeContext.setLanguage).toHaveBeenCalledExactlyOnceWith('fr');
+      expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith('fr');
+    });
+
     // TODO - (v4) KIT-4365: Eliminate the describe wrapper; we'll always set the language from the context state in v4.
     describe('when the language prop is not specified', () => {
       it('should set the language from the context state', async () => {
@@ -1261,7 +1274,22 @@ describe('atomic-commerce-interface', () => {
         await element.updateComplete;
 
         expect(engine.logger.warn).toHaveBeenCalledExactlyOnceWith(
-          'The `language` property will be removed in the next major version of Atomic (v4). Rather than using this property, set the initial language through the engine configuration when calling `initialize` or `initializeWithEngine`, and update the language as needed using the `updateLocale` method.'
+          '[Deprecated] The `language` property of `atomic-commerce-interface` is deprecated and will be removed in Atomic v4. Set the initial language in the `context` of the engine configuration, then call `updateLocale({language})` to change it.'
+        );
+      });
+
+      it('should log the deprecation warning only once per engine', async () => {
+        const element = await setupElement({language: 'en'});
+        const engine = buildFakeCommerceEngine();
+        await element.initializeWithEngine(engine);
+
+        element.language = 'fr';
+        await element.updateComplete;
+        element.language = 'de';
+        await element.updateComplete;
+
+        expect(engine.logger.warn).toHaveBeenCalledExactlyOnceWith(
+          '[Deprecated] The `language` property of `atomic-commerce-interface` is deprecated and will be removed in Atomic v4. Set the initial language in the `context` of the engine configuration, then call `updateLocale({language})` to change it.'
         );
       });
 

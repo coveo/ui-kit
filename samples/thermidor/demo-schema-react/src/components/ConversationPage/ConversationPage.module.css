@@ -4,7 +4,10 @@
   height: 100%;
 }
 
+/* Positioned so absolutely positioned descendants, such as visually hidden text, stay inside the
+   scroll area instead of stretching the page. */
 .scrollContainer {
+  position: relative;
   flex: 1;
   min-height: 0;
   overflow-y: auto;

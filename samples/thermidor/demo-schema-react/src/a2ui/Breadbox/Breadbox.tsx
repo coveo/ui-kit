@@ -18,8 +18,9 @@ export const Breadbox = createComponentImplementation(
     name: 'Breadbox',
     schema: BreadboxPropsSchema,
   },
-  // TODO(a2ui-react context): `context` is deprecated in @a2ui/react 0.16. Dispatch with
-  // `useA2uiSurface()?.dispatchAction(action, componentId)` once a component can read its own id.
+  // TODO(a2ui-react context): `context` is deprecated in @a2ui/react 0.16. Build this through
+  // `view({node, buildChild})` (or a shared helper): props from `useNodeView`, and dispatch with
+  // `useA2uiSurface()?.dispatchAction(action, node.componentId)`.
   ({props, context}) => {
     const dispatch = (action: BreadboxAction) => context.dispatchAction(action);
     const {facets, deselect, clearAll} = useOptimisticBreadbox(props, dispatch);

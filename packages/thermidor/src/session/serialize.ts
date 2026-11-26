@@ -69,68 +69,106 @@ const STREAM_INTERRUPTED = {
 } as const satisfies Pick<Turn, 'status' | 'error' | 'reason'>;
 
 /**
- * The agent facet of a {@link SerializedTurn}'s response. Present only for
- * turns whose runtime `response.agent` was present.
+ * The persisted {@link TurnAgent} of a {@link SerializedTurn}'s response. Present only for turns
+ * whose `response.agent` was present.
+ *
+ * @group Serialization
  */
 export interface SerializedTurnAgent {
+  /** The agent's text messages, as in {@link TurnAgent.messages}. */
   messages: AgentMessage[];
+  /** The agent's tool calls, as in {@link TurnAgent.toolCalls}. */
   toolCalls: ToolCall[];
 }
 
 /**
- * The persisted response of a {@link SerializedTurn}. `surfaces` is
- * intentionally absent: it is re-derived from `activities` on restore.
+ * The persisted response of a {@link SerializedTurn}. It has no `surfaces`: they are derived again
+ * from `activities` on restore.
+ *
+ * @group Serialization
  */
 export interface SerializedTurnResponse {
-  /** Persisted for ALL turns; the transcript source. */
+  /** The turn's activities, from which the transcript and its surfaces are restored. */
   activities: Activity[];
 
-  /** Persisted for ALL turns that had a runtime `response.agent`. */
+  /** The turn's agent messages and tool calls, for a turn that had a `response.agent`. */
   agent?: SerializedTurnAgent;
 }
 
+// Kept distinct so persistence and runtime domain shapes can evolve independently.
 /**
- * A single persisted turn. Distinct from the runtime {@link Turn} shape so
- * persistence and runtime evolve independently.
+ * A single persisted {@link Turn}.
+ *
+ * @group Serialization
  */
 export interface SerializedTurn {
+  /** The turn's {@link Turn.id}. */
   id: string;
+  /** The prompt or the component action the turn answers. */
   input: TurnInput;
+  /**
+   * The turn's status when it was serialized. A `'streaming'` turn is restored as `'error'`, with
+   * the response it had streamed.
+   */
   status: TurnStatus;
+  /** Why the turn failed. Present when `status === 'error'`, absent otherwise. */
   error?: string;
+  /** Why it ended in `'error'`. Present when `status === 'error'`, absent otherwise. */
   reason?: TurnErrorReason;
+  /** The gateway's `RUN_ERROR` code, when it sent one. */
   errorCode?: string;
+  /** What the endpoint streamed for the turn, without the surfaces, which are derived again. */
   response: SerializedTurnResponse;
 }
 
-/** The persisted run of the session's `initialize` action. */
+/**
+ * The persisted {@link SessionInitialization}: the run of the session's `initialize` action.
+ *
+ * @group Serialization
+ */
 export interface SerializedInitialization {
   /** The run's activities, which hold the surfaces it created. */
   activities: Activity[];
+  /**
+   * The run's status when it was serialized. A `'streaming'` run is restored as `'error'`, with
+   * the activities it had streamed.
+   */
   status: TurnStatus;
-  /** Present when `status === 'error'`, absent otherwise. */
+  /** Why `initialize` failed. Present when `status === 'error'`, absent otherwise. */
   error?: string;
-  /** Present when `status === 'error'`, absent otherwise. */
+  /** Why it ended in `'error'`. Present when `status === 'error'`, absent otherwise. */
   reason?: TurnErrorReason;
   /** The gateway's `RUN_ERROR` code, when it sent one. */
   errorCode?: string;
 }
 
+// Kept distinct from the runtime store shape to avoid implicit coupling across serialization
+// version changes.
 /**
- * A versioned, persistable snapshot of a session. Distinct from the runtime
- * store state so the persisted shape never silently couples to the runtime
- * domain model.
+ * A versioned, persistable snapshot of a session, returned by {@link Session.serialize} and
+ * accepted as {@link SessionConfig.sessionToRestore}.
+ *
+ * @group Serialization
  */
 export interface SerializedSession {
-  /** Integer `>= 1`; identifies the persisted shape. */
+  /**
+   * The version of the persisted shape, an integer from 1. A session restores only the version
+   * the client writes.
+   */
   version: number;
-  /** Continuity key — lets a restored session continue the same conversation. */
+  /** The conversation session id, so a restored session continues the same conversation. */
   sessionId?: string;
-  /** Continuity key for request-authentication continuity. */
+  /** The session token the restored session's requests carry with `sessionId`. */
   sessionToken?: string;
+  /**
+   * The id of the session's active turn: the last turn opened or retried. Activity snapshots from
+   * component actions that open no turn and are not concurrent are recorded with this turn; their
+   * text and tool calls are not.
+   */
   activeTurnId?: string;
   /** The run of the `initialize` action that opened the session, when it sent one. */
   initialization?: SerializedInitialization;
+  /** The session's turns, oldest first. */
   turns: SerializedTurn[];
   /** The session's validated data model, keyed by surface id. */
   state?: Record<string, unknown>;

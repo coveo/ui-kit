@@ -486,6 +486,52 @@ describe('QuerySuggestions recent queries', () => {
     expect(options()).toEqual(['hiking boots', 'backpack']);
   });
 
+  it('shows a removed recent query again once a concurrent refresh lists it, after an ordinary one failed', async () => {
+    const recent = ['tents', 'hiking boots'];
+    const producer = recentQueriesProducer(recent);
+    let failAndAnnounce = false;
+    const {textarea, session, queriesSent} = await renderSearchBox((request, signal) => {
+      if (failAndAnnounce && request.action?.name === 'fetchSuggestions') {
+        failAndAnnounce = false;
+        // Fails, after announcing `fetchSuggestions` as concurrent from then on.
+        const events = run(
+          [
+            {
+              version: 'v1.0',
+              updateDataModel: {
+                surfaceId: SHELL_SURFACE_ID,
+                path: '/state/query-suggestions/query',
+                value: '',
+              },
+            },
+          ],
+          {concurrentActions: {[SHELL_SURFACE_ID]: {fetchSuggestions: {}}}}
+        );
+        return sseResponse([...events.slice(0, -1), {type: 'RUN_ERROR', message: 'Boom'}]);
+      }
+      return producer(request, signal);
+    });
+    await waitFor(() => expect(options()).toEqual(['tents', 'hiking boots', 'backpack']));
+    failAndAnnounce = true;
+
+    fireEvent.click(screen.getByRole('button', {name: 'Remove tents from recent searches'}));
+    await waitFor(() => expect(queriesSent()).toEqual(['', '']));
+    await waitFor(() =>
+      expect(session.getSnapshot().actionError).toMatchObject({name: 'fetchSuggestions'})
+    );
+    expect(session.isConcurrent({surfaceId: SHELL_SURFACE_ID, name: 'fetchSuggestions'})).toBe(
+      true
+    );
+    expect(options()).toEqual(['hiking boots', 'backpack']);
+
+    recent.unshift('tents');
+    act(() => textarea.blur());
+    act(() => textarea.focus());
+
+    await waitFor(() => expect(options()).toEqual(['tents', 'hiking boots', 'backpack']));
+    expect(session.getSnapshot().actionError).toMatchObject({name: 'fetchSuggestions'});
+  });
+
   it('clears the recent queries at once, keeps the text, and fetches its suggestions once answered', async () => {
     const recent = ['tents', 'trail shoes'];
     const {type, textarea, actions, queriesSent} = await renderSearchBox(

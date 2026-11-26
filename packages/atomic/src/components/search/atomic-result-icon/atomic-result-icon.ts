@@ -1,6 +1,6 @@
 import type {Result} from '@coveo/headless';
 import {ResultTemplatesHelpers} from '@coveo/headless';
-import bgIcons from '@salesforce-ux/design-system/design-tokens/dist/bg-standard.common';
+import bgIcons from '@salesforce-ux/design-system/design-tokens/dist/bg-standard.common.js';
 import {css, html, LitElement, nothing} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';

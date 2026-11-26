@@ -6,7 +6,7 @@ This design implements ADR-006 for the Thermidor package: collapsing the current
 
 This is a purely structural refactor — no behavioral, runtime, or public API changes. The goal is to reduce cognitive overhead for contributors (one canonical location per concept), eliminate ~30 mechanical indirection files (mutators and re-exported selectors), and strengthen the import boundary through tooling.
 
-**Source of truth**: [ADR-006](../../../packages/thermidor/docs/internal/adr/ADR-006-simplified-folder-structure.md), [Annex A](../../../packages/thermidor/docs/internal/adr/ADR-006-annex-a-proposed-structure.md), [Annex B](../../../packages/thermidor/docs/internal/adr/ADR-006-annex-b-removed-indirection.md).
+**Source of truth**: [ADR-006](../../../packages/thermidor/contributors/adr/ADR-006-simplified-folder-structure.md), [Annex A](../../../packages/thermidor/contributors/adr/ADR-006-annex-a-proposed-structure.md), [Annex B](../../../packages/thermidor/contributors/adr/ADR-006-annex-b-removed-indirection.md).
 
 ## Architecture
 

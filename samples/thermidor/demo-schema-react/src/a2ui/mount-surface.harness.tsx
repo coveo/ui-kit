@@ -51,6 +51,8 @@ export interface MountSurfaceResult extends RenderResult {
   /** The most recent dispatched action, or undefined if none. */
   lastAction: () => ActionPayload | undefined;
   pushDataModel: (updates: Array<{path: string; value: unknown}>) => void;
+  /** Streams an `updateComponents` with these nodes, such as one that changes a node's type. */
+  pushComponents: (nodes: Array<Record<string, unknown>>) => void;
 }
 
 function updateDataModel(path: string, value: unknown): A2uiMessage {
@@ -132,6 +134,13 @@ export function mountSurface(config: MountSurfaceConfig): MountSurfaceResult {
     pushDataModel: (updates) => {
       act(() => {
         pushRef.current?.(updates.map(({path, value}) => updateDataModel(path, value)));
+      });
+    },
+    pushComponents: (components) => {
+      act(() => {
+        pushRef.current?.([
+          {version: '1.0', updateComponents: {surfaceId: SURFACE_ID, components}},
+        ] as unknown as A2uiMessage[]);
       });
     },
   };
