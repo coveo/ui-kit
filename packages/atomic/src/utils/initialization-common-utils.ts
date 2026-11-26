@@ -3,12 +3,13 @@ import type {AnyBindings} from '../components/common/interface/bindings';
 // oxlint-disable-next-line @typescript-eslint/ban-ts-comment -- Import from a generated file that might be missing before build.
 //@ts-ignore - Import from a generated file, _might_ be missing if the build hasn't been run yet, but this file is only used at runtime, so it should be fine.
 import {ATOMIC_CUSTOM_ELEMENT_TAGS} from './custom-element-tags.js';
-import {closest} from './dom-utils';
 import {buildCustomEvent} from './event-utils';
 import {enqueueOrDispatchInitializationEvent} from './init-queue';
 
 /**
  * Retrieves `Bindings` or `CommerceBindings` on a configured parent interface.
+ * When no parent interface is found, the lookup runs again one task later, so that a wrapper can render the slot that
+ * places the element in an interface.
  * @param event - The element on which to dispatch the event, which must be the child of a configured Atomic container element.
  * @returns A promise that resolves upon initialization of the parent container element, and rejects otherwise.
  */
@@ -18,14 +19,50 @@ export function fetchBindings<SpecificBindings extends AnyBindings>(element: Ele
       initializeEventName,
       (bindings: unknown) => resolve(bindings as SpecificBindings)
     );
-    const parent = closest(element, initializableElements.join(', '));
-    if (!parent) {
-      reject(new MissingInterfaceParentError(element.nodeName.toLowerCase()));
+    const parent = findInterfaceParent(element);
+    if (parent) {
+      enqueueOrDispatchInitializationEvent(parent, event, element);
       return;
     }
-    enqueueOrDispatchInitializationEvent(parent, event, element);
+    setTimeout(() => {
+      const lateParent = findInterfaceParent(element);
+      if (!lateParent) {
+        reject(new MissingInterfaceParentError(element.nodeName.toLowerCase()));
+        return;
+      }
+      enqueueOrDispatchInitializationEvent(lateParent, event, element);
+    });
   });
 }
+/**
+ * Finds the closest Atomic interface element, starting with the element itself and walking up the composed tree.
+ * A slotted node's parent is its assigned slot, and a shadow root's parent is its host.
+ *
+ * @param element The element to start from.
+ * @returns The interface element, or `null` when there is none.
+ */
+export function findInterfaceParent(element: Element): Element | null {
+  const selector = initializableElements.join(', ');
+  let node: Node | null = element;
+  while (node) {
+    if (node instanceof Element && node.matches(selector)) {
+      return node;
+    }
+    node = getComposedParent(node);
+  }
+  return null;
+}
+
+function getComposedParent(node: Node): Node | null {
+  if (node instanceof Element && node.assignedSlot) {
+    return node.assignedSlot;
+  }
+  if (node instanceof ShadowRoot) {
+    return node.host;
+  }
+  return node.parentNode;
+}
+
 export type InitializeEventHandler = (bindings: AnyBindings) => void;
 export class MissingInterfaceParentError extends Error {
   constructor(elementName: string) {

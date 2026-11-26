@@ -1,5 +1,6 @@
 import type {LitElement, ReactiveController, ReactiveControllerHost, ReactiveElement} from 'lit';
 import type {AnyBindings} from '../components/common/interface/bindings';
+import {logComponentError} from '../decorators/component-error';
 import type {InitializableComponent} from '../decorators/types';
 import {fetchBindings} from '../utils/initialization-common-utils';
 import type {Constructor} from './mixin-common';
@@ -7,23 +8,30 @@ import type {Constructor} from './mixin-common';
 function initializeBindings<
   SpecificBindings extends AnyBindings,
   InstanceType extends ReactiveElement & InitializableComponent<SpecificBindings>,
->(instance: InstanceType): Promise<() => void> {
+>(instance: InstanceType, isCurrentConnection: () => boolean): Promise<() => void> {
   return new Promise((resolve, reject) => {
     instance.initialized = true;
     fetchBindings<SpecificBindings>(instance)
       .then((bindings) => {
+        if (!isCurrentConnection()) {
+          return;
+        }
         instance.bindings = bindings;
 
+        const i18n = instance.bindings?.i18n;
         const updateLanguage = () => instance.requestUpdate();
-        instance.bindings?.i18n?.on('languageChanged', updateLanguage);
-        const unsubscribeLanguage = () =>
-          instance.bindings?.i18n?.off('languageChanged', updateLanguage);
+        i18n?.on('languageChanged', updateLanguage);
+        const unsubscribeLanguage = () => i18n?.off('languageChanged', updateLanguage);
         resolve(unsubscribeLanguage);
 
         instance.initialize?.();
       })
       .catch((error) => {
+        if (!isCurrentConnection()) {
+          return;
+        }
         instance.error = error;
+        logComponentError(error, instance);
         reject(error);
       });
   });
@@ -50,6 +58,8 @@ class BindingController implements ReactiveController {
   host: ReactiveControllerHost;
 
   private unsubscribeLanguage = () => {};
+  private fetchError?: Error;
+  private connection = 0;
 
   constructor(host: ReactiveControllerHost) {
     this.host = host;
@@ -57,16 +67,24 @@ class BindingController implements ReactiveController {
   }
 
   hostConnected() {
-    initializeBindings(this.host as ReactiveElement & InitializableComponent<AnyBindings>)
+    const host = this.host as ReactiveElement & InitializableComponent<AnyBindings>;
+    const connection = ++this.connection;
+    initializeBindings(host, () => connection === this.connection)
       .then((unsubscribeLanguage) => {
         this.unsubscribeLanguage = unsubscribeLanguage;
+        if (this.fetchError && host.error === this.fetchError) {
+          host.error = undefined;
+          host.requestUpdate();
+        }
+        this.fetchError = undefined;
       })
-      .catch((error) => {
-        this.host = error;
+      .catch((error: Error) => {
+        this.fetchError = error;
       });
   }
 
   hostDisconnected() {
+    this.connection++;
     this.unsubscribeLanguage();
   }
 }

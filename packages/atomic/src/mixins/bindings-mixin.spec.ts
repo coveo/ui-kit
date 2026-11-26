@@ -4,7 +4,8 @@ import {customElement, state} from 'lit/decorators.js';
 import {afterEach, beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {fetchBindings} from '@/src/utils/initialization-common-utils';
+import {fetchBindings, MissingInterfaceParentError} from '@/src/utils/initialization-common-utils';
+import {markParentAsReady} from '@/src/utils/init-queue';
 import {InitializeBindingsMixin} from './bindings-mixin';
 
 vi.mock('@/src/utils/initialization-common-utils', {spy: true});
@@ -72,11 +73,16 @@ describe('InitializeBindingsMixin', () => {
     expect(element.bindings?.i18n.on).toHaveBeenCalled();
   });
 
-  it('should unsubscribe to language changes when the host is disconnected from the component tree', async () => {
-    vi.spyOn(bindings.i18n, 'off');
+  it('should unsubscribe from the subscribed language when the host is disconnected, even after its bindings change', async () => {
     await setupElement();
+    await new Promise((resolve) => setTimeout(resolve));
+    element.bindings = mockBindings();
     await teardownElement();
-    expect(element.bindings?.i18n.off).toHaveBeenCalled();
+    const requestUpdateSpy = vi.spyOn(element, 'requestUpdate');
+
+    await bindings.i18n.changeLanguage('fr');
+
+    expect(requestUpdateSpy).not.toHaveBeenCalled();
   });
 
   it('should request a component update when the language changes', async () => {
@@ -89,6 +95,68 @@ describe('InitializeBindingsMixin', () => {
   it('should call the initialize method when bindings are present', async () => {
     await setupElement();
     expect(element.initialize).toHaveBeenCalled();
+  });
+
+  it('should set and log the error once when the bindings fetch fails', async () => {
+    const error = new MissingInterfaceParentError('test-element');
+    mockedFetchBindings.mockRejectedValueOnce(error);
+
+    await setupElement();
+    await new Promise((resolve) => setTimeout(resolve));
+
+    expect(element.error).toBe(error);
+    expect(consoleErrorSpy).toHaveBeenCalledExactlyOnceWith(error, element);
+  });
+
+  it('should fetch the bindings for the host again and clear its fetch error after a failed fetch and a reconnection', async () => {
+    mockedFetchBindings.mockRejectedValueOnce(new Error('Failed to fetch bindings'));
+    await setupElement();
+    await new Promise((resolve) => setTimeout(resolve));
+
+    document.body.removeChild(element);
+    document.body.appendChild(element);
+    await new Promise((resolve) => setTimeout(resolve));
+
+    expect(mockedFetchBindings).toHaveBeenLastCalledWith(element);
+    expect(element.bindings).toBe(bindings);
+    expect(element.error).toBeUndefined();
+  });
+
+  it('should initialize once when the host moves into an interface before its first lookup is retried', async () => {
+    mockedFetchBindings.mockRestore();
+    const interfaceElement = document.createElement('atomic-external');
+    interfaceElement.addEventListener('atomic/initializeComponent', (event) =>
+      (event as CustomEvent).detail(bindings)
+    );
+    document.body.appendChild(interfaceElement);
+    markParentAsReady(interfaceElement);
+    element = document.createElement('test-element') as TestElement;
+    document.body.appendChild(element);
+    interfaceElement.appendChild(element);
+    await new Promise((resolve) => setTimeout(resolve));
+    await new Promise((resolve) => setTimeout(resolve));
+    element.remove();
+    const requestUpdateSpy = vi.spyOn(element, 'requestUpdate');
+
+    await bindings.i18n.changeLanguage('fr');
+
+    expect(element.initialize).toHaveBeenCalledOnce();
+    expect(requestUpdateSpy).not.toHaveBeenCalled();
+    interfaceElement.remove();
+  });
+
+  it('should keep an error set by another writer after a successful retry', async () => {
+    mockedFetchBindings.mockRejectedValueOnce(new Error('Failed to fetch bindings'));
+    await setupElement();
+    await new Promise((resolve) => setTimeout(resolve));
+    const otherError = new Error('Invalid prop');
+    element.error = otherError;
+
+    document.body.removeChild(element);
+    document.body.appendChild(element);
+    await new Promise((resolve) => setTimeout(resolve));
+
+    expect(element.error).toBe(otherError);
   });
 
   it('should handle fetchBindings rejection gracefully', async () => {
