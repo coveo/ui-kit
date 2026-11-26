@@ -5,6 +5,7 @@ import {afterEach, beforeEach, describe, expect, it, type Mock, vi} from 'vitest
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {fetchBindings, MissingInterfaceParentError} from '@/src/utils/initialization-common-utils';
+import {markParentAsReady} from '@/src/utils/init-queue';
 import {InitializeBindingsMixin} from './bindings-mixin';
 
 vi.mock('@/src/utils/initialization-common-utils', {spy: true});
@@ -119,6 +120,29 @@ describe('InitializeBindingsMixin', () => {
     expect(mockedFetchBindings).toHaveBeenLastCalledWith(element);
     expect(element.bindings).toBe(bindings);
     expect(element.error).toBeUndefined();
+  });
+
+  it('should initialize once when the host moves into an interface before its first lookup is retried', async () => {
+    mockedFetchBindings.mockRestore();
+    const interfaceElement = document.createElement('atomic-external');
+    interfaceElement.addEventListener('atomic/initializeComponent', (event) =>
+      (event as CustomEvent).detail(bindings)
+    );
+    document.body.appendChild(interfaceElement);
+    markParentAsReady(interfaceElement);
+    element = document.createElement('test-element') as TestElement;
+    document.body.appendChild(element);
+    interfaceElement.appendChild(element);
+    await new Promise((resolve) => setTimeout(resolve));
+    await new Promise((resolve) => setTimeout(resolve));
+    element.remove();
+    const requestUpdateSpy = vi.spyOn(element, 'requestUpdate');
+
+    await bindings.i18n.changeLanguage('fr');
+
+    expect(element.initialize).toHaveBeenCalledOnce();
+    expect(requestUpdateSpy).not.toHaveBeenCalled();
+    interfaceElement.remove();
   });
 
   it('should keep an error set by another writer after a successful retry', async () => {

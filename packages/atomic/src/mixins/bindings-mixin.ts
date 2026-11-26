@@ -8,11 +8,14 @@ import type {Constructor} from './mixin-common';
 function initializeBindings<
   SpecificBindings extends AnyBindings,
   InstanceType extends ReactiveElement & InitializableComponent<SpecificBindings>,
->(instance: InstanceType): Promise<() => void> {
+>(instance: InstanceType, isCurrentConnection: () => boolean): Promise<() => void> {
   return new Promise((resolve, reject) => {
     instance.initialized = true;
     fetchBindings<SpecificBindings>(instance)
       .then((bindings) => {
+        if (!isCurrentConnection()) {
+          return;
+        }
         instance.bindings = bindings;
 
         const i18n = instance.bindings?.i18n;
@@ -24,6 +27,9 @@ function initializeBindings<
         instance.initialize?.();
       })
       .catch((error) => {
+        if (!isCurrentConnection()) {
+          return;
+        }
         instance.error = error;
         logComponentError(error, instance);
         reject(error);
@@ -53,6 +59,7 @@ class BindingController implements ReactiveController {
 
   private unsubscribeLanguage = () => {};
   private fetchError?: Error;
+  private connection = 0;
 
   constructor(host: ReactiveControllerHost) {
     this.host = host;
@@ -61,7 +68,8 @@ class BindingController implements ReactiveController {
 
   hostConnected() {
     const host = this.host as ReactiveElement & InitializableComponent<AnyBindings>;
-    initializeBindings(host)
+    const connection = ++this.connection;
+    initializeBindings(host, () => connection === this.connection)
       .then((unsubscribeLanguage) => {
         this.unsubscribeLanguage = unsubscribeLanguage;
         if (this.fetchError && host.error === this.fetchError) {
@@ -76,6 +84,7 @@ class BindingController implements ReactiveController {
   }
 
   hostDisconnected() {
+    this.connection++;
     this.unsubscribeLanguage();
   }
 }

@@ -49,7 +49,9 @@ describe('fetchBindings', () => {
     document.body.appendChild(host);
 
     const onRejected = vi.fn();
+
     fetchBindings(element).catch(onRejected);
+    await new Promise((resolve) => setTimeout(resolve));
     await Promise.resolve();
 
     expect(onRejected).not.toHaveBeenCalled();
