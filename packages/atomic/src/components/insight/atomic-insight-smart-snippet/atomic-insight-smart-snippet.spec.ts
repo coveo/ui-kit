@@ -393,6 +393,22 @@ describe('atomic-insight-smart-snippet', () => {
       expect(modal?.source).toBe(explainWhyButton);
     });
 
+    it('should insert and open the modal on explain why when the component renders already disliked', async () => {
+      const {element} = await renderComponent({
+        controllerState: {answerFound: true, disliked: true},
+      });
+      const explainWhyButton = getExplainWhyButton(element);
+
+      explainWhyButton?.click();
+      await element.updateComplete;
+
+      const modal = document.querySelector('atomic-insight-smart-snippet-feedback-modal');
+      expect(modal).not.toBeNull();
+      expect(element.previousElementSibling).toBe(modal);
+      expect(modal?.isOpen).toBe(true);
+      expect(modal?.source).toBe(explainWhyButton);
+    });
+
     it('should only close the feedback on Escape while the modal is open', async () => {
       const result = await dislike();
       const closeFeedbackModal = vi.fn();

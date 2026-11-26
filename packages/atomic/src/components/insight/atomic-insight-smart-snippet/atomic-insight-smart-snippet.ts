@@ -65,6 +65,7 @@ export class AtomicInsightSmartSnippet
 
   private smartSnippetId!: string;
   private modalRef?: AtomicInsightSmartSnippetFeedbackModal;
+  private explainWhyButton?: HTMLElement;
   private feedbackSentHandler = () => {
     this.feedbackSent = true;
   };
@@ -136,11 +137,11 @@ export class AtomicInsightSmartSnippet
   }
 
   private loadModal() {
-    if (this.modalRef) {
-      return;
+    if (!this.modalRef) {
+      this.modalRef = document.createElement('atomic-insight-smart-snippet-feedback-modal');
+      this.attachModal(this.modalRef);
     }
-    this.modalRef = document.createElement('atomic-insight-smart-snippet-feedback-modal');
-    this.attachModal(this.modalRef);
+    return this.modalRef;
   }
 
   private attachModal(modalRef: AtomicInsightSmartSnippetFeedbackModal) {
@@ -165,9 +166,7 @@ export class AtomicInsightSmartSnippet
 
   private renderFeedbackBanner() {
     const explainWhyRef: RefOrCallback = (button) => {
-      if (this.modalRef && button) {
-        this.modalRef.source = button as HTMLElement;
-      }
+      this.explainWhyButton = button as HTMLElement | undefined;
     };
 
     return renderSmartSnippetFeedbackBanner({
@@ -184,9 +183,9 @@ export class AtomicInsightSmartSnippet
         },
         onLike: () => this.smartSnippet.like(),
         onPressExplainWhy: () => {
-          if (this.modalRef) {
-            this.modalRef.isOpen = true;
-          }
+          const modal = this.loadModal();
+          modal.source = this.explainWhyButton;
+          modal.isOpen = true;
         },
       },
     });
