@@ -118,6 +118,16 @@ describe('facet', () => {
     expect(() => initFacet()).toThrow('Check the options of buildFacet');
   });
 
+  it('registering a facet with 50 #allowedValues does not throw', () => {
+    options.allowedValues = Array.from({length: 50}, (_, i) => `value${i}`);
+    expect(() => initFacet()).not.toThrow();
+  });
+
+  it('registering a facet with more than 50 #allowedValues throws', () => {
+    options.allowedValues = Array.from({length: 51}, (_, i) => `value${i}`);
+    expect(() => initFacet()).toThrow('Check the options of buildFacet');
+  });
+
   it('registering a facet with a space in the id throws', () => {
     options.facetId = 'bad id';
     expect(() => initFacet()).toThrow('Check the options of buildFacet');
