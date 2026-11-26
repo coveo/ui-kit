@@ -23,7 +23,7 @@ import {randomID} from '@/src/utils/utils';
 import type {Bindings} from '../atomic-search-interface/interfaces';
 import styles from './atomic-smart-snippet-feedback-modal.tw.css';
 /**
- * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
+ * The `atomic-smart-snippet-feedback-modal` is automatically inserted right before the `atomic-smart-snippet` the first time a user dislikes the snippet or clicks its "Explain why" button, and is removed along with the snippet.
  *
  * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
  *
