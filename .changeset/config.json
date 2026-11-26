@@ -48,7 +48,11 @@
     "@coveo/create-atomic-component-project",
     "@coveo/create-atomic-result-component",
     "@coveo/create-atomic-rollup-plugin",
-    "@coveo/ui-kit-sample-*"
+    "@coveo/ui-kit-sample-*",
+    "@coveo/auth",
+    "@coveo/bueno",
+    "@coveo/relay",
+    "coveo.analytics"
   ],
   "privatePackages": {
     "version": false,
