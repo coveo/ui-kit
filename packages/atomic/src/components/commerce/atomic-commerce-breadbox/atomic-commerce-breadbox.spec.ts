@@ -50,6 +50,7 @@ describe('atomic-commerce-breadbox', () => {
     state?: Partial<BreadcrumbManagerState>;
     subscribe?: BreadcrumbManager['subscribe'];
     store?: Partial<CommerceStore>;
+    currencyFields?: string[];
   }
 
   const renderBreadbox = async ({
@@ -59,6 +60,7 @@ describe('atomic-commerce-breadbox', () => {
     state = {},
     subscribe,
     store,
+    currencyFields = [],
   }: RenderBreadboxOptions = {}) => {
     mockedBreadcrumbManager = buildFakeBreadcrumbManager({
       state,
@@ -93,6 +95,7 @@ describe('atomic-commerce-breadbox', () => {
       selector: 'atomic-commerce-breadbox',
       bindings: (bindings) => {
         bindings.interfaceElement.type = interfaceElementType;
+        bindings.interfaceElement.currencyFields = currencyFields;
         bindings.engine = mockedEngine;
         return store ? {...bindings, store: {...bindings.store, ...store}} : bindings;
       },
@@ -329,6 +332,24 @@ describe('atomic-commerce-breadbox', () => {
       });
 
       await expect.element(page.getByTitle('Promo price')).toHaveTextContent('$0.00 to $100.00');
+    });
+
+    it('should format a custom field listed in currency-fields in the context currency', async () => {
+      await renderBreadbox({
+        state: {facetBreadcrumbs: [numericalRangeBreadcrumb('my_price', 'My price')]},
+        currencyFields: ['my_price'],
+      });
+
+      await expect.element(page.getByTitle('My price')).toHaveTextContent('$0.00 to $100.00');
+    });
+
+    it('should format a custom field that is not listed as a plain number', async () => {
+      await renderBreadbox({
+        state: {facetBreadcrumbs: [numericalRangeBreadcrumb('my_price', 'My price')]},
+      });
+
+      await expect.element(page.getByTitle('My price')).toHaveTextContent('0 to 100');
+      await expect.element(page.getByTitle('My price')).not.toHaveTextContent('$');
     });
 
     it('should format other numerical ranges as plain numbers', async () => {

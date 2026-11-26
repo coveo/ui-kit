@@ -9,3 +9,15 @@ This component is not meant to be used directly in the layout. You should use th
   </atomic-layout-section>
 </atomic-commerce-interface>
 ```
+
+## Currency formatting
+
+Facet values, breadcrumbs, and the minimum of the custom range input treat the `ec_price` and `ec_promo_price` fields as prices. They are formatted in the currency of the commerce context.
+
+To treat other numeric fields the same way, list them in the `currency-fields` attribute of `atomic-commerce-interface`:
+
+```html
+<atomic-commerce-interface currency-fields='["my_price_field"]'>
+  ...
+</atomic-commerce-interface>
+```

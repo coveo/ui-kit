@@ -43,19 +43,24 @@ describe('atomic-commerce-numeric-facet', () => {
     mockedConsoleError.mockRestore();
   });
 
-  const setupElement = async ({isCollapsed} = {isCollapsed: false}) => {
+  const setupElement = async ({
+    isCollapsed = false,
+    field = 'ec_price',
+    currencyFields = [],
+  }: {isCollapsed?: boolean; field?: string; currencyFields?: string[]} = {}) => {
     vi.mocked(buildContext).mockReturnValue(mockedContext);
     const {element} = await renderInAtomicCommerceInterface<AtomicCommerceNumericFacet>({
       template: html`<atomic-commerce-numeric-facet
         .facet=${mockedFacet}
         .summary=${mockedSummary}
         ?is-collapsed=${isCollapsed}
-        field="ec_price"
+        field=${field}
       ></atomic-commerce-numeric-facet>`,
       selector: 'atomic-commerce-numeric-facet',
       bindings: (bindings) => {
         bindings.store.getUniqueIDFromEngine = vi.fn().mockReturnValue('123');
         bindings.engine = buildFakeCommerceEngine({});
+        bindings.interfaceElement.currencyFields = currencyFields;
         return bindings;
       },
     });
@@ -168,6 +173,26 @@ describe('atomic-commerce-numeric-facet', () => {
     const {getFacetValueByPosition} = await setupElement();
     const facetValue = getFacetValueByPosition(0);
     await expect.element(facetValue).toHaveTextContent('$1.00 to $9.00 (15)');
+  });
+
+  describe('currency formatting', () => {
+    it('should format a custom field listed in currency-fields as a currency', async () => {
+      const {getFacetValueByPosition} = await setupElement({
+        field: 'my_price',
+        currencyFields: ['my_price'],
+      });
+      await expect.element(getFacetValueByPosition(0)).toHaveTextContent('$1.00 to $9.00 (15)');
+    });
+
+    it('should format a custom field that is not listed as a plain number', async () => {
+      const {getFacetValueByPosition} = await setupElement({field: 'my_price'});
+      await expect.element(getFacetValueByPosition(0)).toHaveTextContent('1 to 9 (15)');
+    });
+
+    it('should format ec_promo_price as a currency when currency-fields is empty', async () => {
+      const {getFacetValueByPosition} = await setupElement({field: 'ec_promo_price'});
+      await expect.element(getFacetValueByPosition(0)).toHaveTextContent('$1.00 to $9.00 (15)');
+    });
   });
 
   it('should render the first facet value count', async () => {

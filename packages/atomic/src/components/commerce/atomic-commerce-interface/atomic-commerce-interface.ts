@@ -37,6 +37,7 @@ import {
   InterfaceController,
 } from '@/src/components/common/interface/interface-controller';
 import {MobileBreakpointController} from '@/src/components/common/layout/mobile-breakpoint-controller';
+import {arrayConverter} from '@/src/converters/array-converter';
 import {createBooleanConverter} from '@/src/converters/boolean-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
@@ -221,6 +222,24 @@ export class AtomicCommerceInterface
     reflect: true,
   })
   disableStateReflectionInUrl = false;
+
+  /**
+   * Additional numeric fields to format as prices, using the currency of the commerce context.
+   *
+   * The `ec_price` and `ec_promo_price` fields are always formatted as prices, whether or not they are listed here.
+   * The currency itself comes from the commerce context; this property only identifies which fields hold prices.
+   *
+   * Specify the property as an array using a JSON string representation:
+   * ```html
+   * <atomic-commerce-interface currency-fields='["my_price_field"]'></atomic-commerce-interface>
+   * ```
+   */
+  @property({
+    type: Array,
+    attribute: 'currency-fields',
+    converter: arrayConverter,
+  })
+  public currencyFields: string[] = [];
 
   /**
    * The CSS selector for the container where the interface will scroll back to.

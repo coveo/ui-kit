@@ -24,6 +24,7 @@ import {renderFacetContainer} from '../../common/facets/facet-container/facet-co
 import {renderFacetHeader} from '../../common/facets/facet-header/facet-header';
 import {renderNumericFacetValue} from '../../common/facets/numeric-facet/value-link';
 import {defaultCurrencyFormatter, defaultNumberFormatter} from '../../common/formats/format-common';
+import {isCurrencyField} from '../currency-fields/currency-fields';
 import type {Range} from '../atomic-commerce-facet-number-input/atomic-commerce-facet-number-input';
 import '../atomic-commerce-facet-number-input/atomic-commerce-facet-number-input';
 import {bindings} from '@/src/decorators/bindings';
@@ -124,7 +125,7 @@ export class AtomicCommerceNumericFacet
   }
 
   private get formatter() {
-    if (this.field === 'ec_price' || this.field === 'ec_promo_price') {
+    if (isCurrencyField(this.field, this.bindings.interfaceElement.currencyFields)) {
       return defaultCurrencyFormatter(this.contextState.currency);
     }
     return defaultNumberFormatter;

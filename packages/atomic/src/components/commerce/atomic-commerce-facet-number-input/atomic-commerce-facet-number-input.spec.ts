@@ -14,12 +14,14 @@ describe('atomic-commerce-facet-number-input', () => {
       label: string;
       range: Range;
       facet: NumericFacet;
+      field: string;
+      currencyFields: string[];
     }> = {}
   ) => {
     facet =
       props.facet ||
       ({
-        state: {field: 'ec_price', facetId: 'test-facet'},
+        state: {field: props.field ?? 'ec_price', facetId: 'test-facet'},
       } as NumericFacet);
     const {element} = await renderInAtomicCommerceInterface<AtomicCommerceFacetNumberInput>({
       template: html`<atomic-commerce-facet-number-input
@@ -28,6 +30,10 @@ describe('atomic-commerce-facet-number-input', () => {
         .facet=${facet}
       ></atomic-commerce-facet-number-input>`,
       selector: 'atomic-commerce-facet-number-input',
+      bindings: (bindings) => {
+        bindings.interfaceElement.currencyFields = props.currencyFields ?? [];
+        return bindings;
+      },
     });
 
     return {
@@ -71,6 +77,23 @@ describe('atomic-commerce-facet-number-input', () => {
     const {startInput, endInput} = await setupElement({range: undefined});
     await expect.element(startInput).toHaveValue(null);
     await expect.element(endInput).toHaveValue(null);
+  });
+
+  describe('minimum value', () => {
+    it('should be 0 for a custom field listed in currency-fields', async () => {
+      const {startInput} = await setupElement({field: 'my_price', currencyFields: ['my_price']});
+      await expect.element(startInput).toHaveAttribute('min', '0');
+    });
+
+    it('should be 0 for ec_price when currency-fields is empty', async () => {
+      const {startInput} = await setupElement({field: 'ec_price'});
+      await expect.element(startInput).toHaveAttribute('min', '0');
+    });
+
+    it('should be Number.MIN_SAFE_INTEGER for a custom field that is not listed', async () => {
+      const {startInput} = await setupElement({field: 'my_price'});
+      await expect.element(startInput).toHaveAttribute('min', String(Number.MIN_SAFE_INTEGER));
+    });
   });
 
   it('should render the form with part="input-form"', async () => {
