@@ -7,6 +7,7 @@ import {afterEach, beforeEach, describe, it} from 'node:test';
 import {fileURLToPath} from 'node:url';
 import {
   checkMajors,
+  checkV3,
   globToRegExp,
   parseChangeset,
   peerForcesMajor,
@@ -37,6 +38,7 @@ const PACKAGES = [
     peerDependencies: {'@coveo/headless': 'workspace:^'},
   },
   {name: '@coveo/thermidor', version: '0.8.0'},
+  {name: '@coveo/quantic', version: '3.40.0'},
 ];
 const FIXED = [['@coveo/atomic', '@coveo/ui-kit-sample-atomic-search-vite']];
 const HEADLESS_GUIDE = 'packages/headless/source_docs/upgrade-from-v3-to-v4.md';
@@ -242,6 +244,101 @@ describe('checkMajors while the window is open', () => {
   });
 });
 
+describe('checkV3', () => {
+  it('allows a minor or a patch on the packages that v3 publishes', () => {
+    const {errors, warnings} = checkV3({
+      base: state(),
+      head: state([
+        {name: '@coveo/headless', type: 'minor'},
+        {name: '@coveo/quantic', type: 'patch', file: '.changeset/b.md'},
+      ]),
+    });
+    assert.deepEqual(errors, []);
+    assert.deepEqual(warnings, []);
+  });
+
+  it('refuses a major on any package', () => {
+    const {errors} = checkV3({
+      base: state(),
+      head: state([{name: '@coveo/quantic', type: 'major'}]),
+    });
+    assert.deepEqual(errors, [
+      'Major version on v3: @coveo/quantic (major in .changeset/a.md). v3 publishes 3.x only: use a minor or patch bump, or open the breaking change against main.',
+    ]);
+  });
+
+  it('names the packages that a major reaches through peer dependencies', () => {
+    const {errors} = checkV3({
+      base: state(),
+      head: state([{name: '@coveo/headless', type: 'major'}]),
+    });
+    assert.match(
+      errors[0],
+      /@coveo\/headless \(major in \.changeset\/a\.md\), @coveo\/atomic \(peer dependency on @coveo\/headless\)/
+    );
+  });
+
+  it('refuses a major version written into package.json by hand', () => {
+    const raised = PACKAGES.map((pkg) =>
+      pkg.name === '@coveo/quantic' ? {...pkg, version: '4.0.0'} : pkg
+    );
+    const {errors} = checkV3({base: state(), head: state([], {packages: raised})});
+    assert.deepEqual(errors, [
+      'The major version in package.json changed for @coveo/quantic. v3 publishes 3.x only.',
+    ]);
+  });
+
+  it('refuses a release of a package that publishes from main', () => {
+    const {errors} = checkV3({
+      base: state(),
+      head: state([{name: '@coveo/thermidor', type: 'minor'}]),
+    });
+    assert.deepEqual(errors, [
+      'Release on v3 of packages that publish from main only: @coveo/thermidor (minor in .changeset/a.md). Open this change against main, so that the two lines never publish the same version.',
+    ]);
+  });
+
+  it('reports a major of a package that publishes from main once', () => {
+    const {errors} = checkV3({
+      base: state(),
+      head: state([{name: '@coveo/thermidor', type: 'major'}]),
+    });
+    assert.deepEqual(errors, [
+      'Release on v3 of packages that publish from main only: @coveo/thermidor (major in .changeset/a.md). Open this change against main, so that the two lines never publish the same version.',
+    ]);
+  });
+
+  it('allows picking up by hand a version that main published', () => {
+    const pickedUp = PACKAGES.map((pkg) =>
+      pkg.name === '@coveo/relay' ? {...pkg, version: '3.0.0'} : pkg
+    );
+    const {errors} = checkV3({base: state(), head: state([], {packages: pickedUp})});
+    assert.deepEqual(errors, []);
+  });
+
+  it('allows a range that removes the changesets of a package that publishes from main', () => {
+    const {errors, warnings} = checkV3({
+      base: state([{name: '@coveo/thermidor', type: 'minor'}]),
+      head: state(),
+    });
+    assert.deepEqual(errors, []);
+    assert.deepEqual(warnings, []);
+  });
+
+  it('warns about what v3 already plans instead of failing', () => {
+    const pending = state([
+      {name: '@coveo/quantic', type: 'major'},
+      {name: '@coveo/thermidor', type: 'patch', file: '.changeset/b.md'},
+    ]);
+    const {errors, warnings} = checkV3({base: pending, head: pending});
+    assert.deepEqual(errors, []);
+    assert.deepEqual(warnings, [
+      'v3 already plans a major version for @coveo/quantic. Remove those changesets: the version pull request fails on them.',
+      'v3 already plans a release of packages that publish from main only: @coveo/thermidor. Remove those changesets before the next release from v3.',
+    ]);
+  });
+});
+
 describe('workspacePatterns', () => {
   it('reads the package globs and stops at the next key', () => {
     const yaml =
@@ -331,7 +428,17 @@ describe('the command line', () => {
     assert.match(result.stdout, /@coveo\/atomic \(peer dependency on @coveo\/headless\)/);
   });
 
-  it('skips a pull request that does not target main', () => {
+  it('fails on a major that targets v3, whatever the window', () => {
+    const result = run({BASE_REF: 'refs/heads/v3'});
+    assert.equal(result.status, 1);
+    assert.match(
+      result.stdout,
+      /error: Major version on v3: @coveo\/headless \(major in \.changeset\/break\.md\), @coveo\/atomic \(peer dependency on @coveo\/headless\)/
+    );
+    assert.equal(run({BASE_REF: 'v3', UI_KIT_MAJOR_WINDOW: 'open'}).status, 1);
+  });
+
+  it('skips a pull request that targets neither main nor v3', () => {
     const result = run({BASE_REF: 'refs/heads/feature'});
     assert.equal(result.status, 0);
     assert.match(result.stdout, /nothing to check/);
