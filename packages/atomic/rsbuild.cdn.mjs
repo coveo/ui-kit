@@ -150,7 +150,7 @@ const rsbuild = await rsbuildApi.createRsbuild({
         strategy: 'split-by-module',
         override: {
           // Nothing is split out of the loader entries, so a page starts the loader after one request.
-          // Why: docs/adr/0002-build-the-cdn-loader-entries-as-single-files.md
+          // Why: docs/adr/0003-build-the-cdn-loader-entries-as-single-files.md
           chunks: (chunk) => !loaderEntries.has(chunk.name),
           cacheGroups: {
             // One chunk for the code most components share, instead of hundreds of tiny ones.
