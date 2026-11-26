@@ -50,7 +50,7 @@ A component can receive an error when it uses any of these:
 - a `ValidatePropsController`;
 - an item, folded item list or product context controller (`ItemContextController`, `FoldedItemListContextController`, `createProductContextController`, `createResultContextController` and their interactive variants);
 - a template controller (`ResultTemplateController`, `RecsResultTemplateController`, `ProductTemplateController`);
-- `TimeframeFacetCommon`;
+- `TimeframeFacetCommon` or `displayChildErrors`;
 - a write to `this.error`, with `=` or any other assignment operator.
 
 Such a component declares `@state() public error?: Error` and puts `@errorGuard()` on `render()`. A component that cannot receive an error declares no `error` and uses no guard.
@@ -67,7 +67,7 @@ render() {
 }
 ```
 
-Components without bindings, and the few with `@bindings()` that render before their bindings arrive, use `@errorGuard()` alone; the latter are listed in `RENDERS_BEFORE_BINDINGS` in `packages/atomic/scripts/component-error-contract.mjs`. A light DOM component whose parent renders no `<slot>`, such as `atomic-timeframe`, declares `error` without `@errorGuard()`, and its parent displays the error; these are listed in `DISPLAYED_BY_PARENT` in the same file. Its spec enforces these rules in CI. See [ADR 0002](../../../../packages/atomic/docs/adr/0002-display-component-errors-through-explicit-guards-in-one-fixed-order.md).
+Components without bindings, and the few with `@bindings()` that render before their bindings arrive, use `@errorGuard()` alone; the latter are listed in `RENDERS_BEFORE_BINDINGS` in `packages/atomic/scripts/component-error-contract.mjs`. A light DOM component whose parent renders no `<slot>`, such as `atomic-tab` or `atomic-timeframe`, declares `error` without `@errorGuard()`, and its parent displays the error with `displayChildErrors` from `src/utils/child-error-utils.ts`; these are listed in `DISPLAYED_BY_PARENT` in the same file. Its spec enforces these rules in CI. See [ADR 0002](../../../../packages/atomic/docs/adr/0002-display-component-errors-through-explicit-guards-in-one-fixed-order.md).
 
 ### `@bindStateToController('controllerFieldName')`
 

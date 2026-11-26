@@ -127,6 +127,31 @@ describe('atomic-tab-manager', () => {
     });
   });
 
+  describe('when an atomic-tab child is invalid', () => {
+    it('should show its error in a visible box, and clear it once the tab is valid', async () => {
+      const {element} = await renderTabManager({
+        slottedContent: html`<atomic-tab label="" name="all"></atomic-tab>`,
+      });
+      const tab = element.querySelector('atomic-tab')!;
+      await tab.updateComplete;
+      await element.updateComplete;
+
+      expect(tab.error).toBeDefined();
+      expect(element.error?.message).toMatch(/^An "atomic-tab" child is invalid: /);
+      expect(element.error?.cause).toBe(tab.error);
+      const errorBox = element.shadowRoot!.querySelector('atomic-component-error');
+      expect(errorBox?.checkVisibility()).toBe(true);
+
+      tab.label = 'All';
+      await tab.updateComplete;
+      await element.updateComplete;
+
+      expect(tab.error).toBeUndefined();
+      expect(element.error).toBeUndefined();
+      expect(element.shadowRoot!.querySelector('atomic-component-error')).toBeNull();
+    });
+  });
+
   describe('when clicking tabs', () => {
     it('should render atomic-tab elements in the component', async () => {
       const {element} = await renderTabManager();

@@ -44,7 +44,7 @@ Check that `error` is defined before you read it, and compare it with `undefined
 
 #### Component errors that used to be swallowed <!-- KIT-6756 -->
 
-These components received errors without displaying them, so an invalid configuration went unnoticed. They now replace their content with the error box and log the error, like the other Atomic components: `atomic-insight-result`, `atomic-insight-result-quickview-action`, `atomic-insight-user-actions-session`, `atomic-insight-user-actions-timeline`, `atomic-ipx-tab`, `atomic-quickview`, `atomic-recs-result`, `atomic-result` and `atomic-tab`. An `atomic-sort-expression` outside an `atomic-sort-dropdown` now holds its error in `error`. The timeframe facets are ready to display the error of an invalid `atomic-timeframe` child, which shows once `atomic-timeframe` validation becomes fatal.
+These components received errors without displaying them, so an invalid configuration went unnoticed. They now replace their content with the error box and log the error, like the other Atomic components: `atomic-insight-result`, `atomic-insight-result-quickview-action`, `atomic-insight-user-actions-session`, `atomic-insight-user-actions-timeline`, `atomic-ipx-tab`, `atomic-quickview`, `atomic-recs-result` and `atomic-result`. `atomic-tab-manager` now shows the error of an invalid `atomic-tab` child, and an `atomic-sort-expression` outside an `atomic-sort-dropdown` now holds its error in `error`. The timeframe facets are ready to display the error of an invalid `atomic-timeframe` child, which shows once `atomic-timeframe` validation becomes fatal.
 
 **Atomic Version 3**
 

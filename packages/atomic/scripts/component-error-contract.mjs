@@ -32,7 +32,10 @@ export const RENDERS_BEFORE_BINDINGS = new Set([
  * Light DOM components whose parent renders no `<slot>`, so an error box on them would never show. Their parent
  * displays their error instead, so they declare `error` without `@errorGuard()`. See ADR 0002, step 6.
  */
-export const DISPLAYED_BY_PARENT = new Map([['atomic-timeframe', 'TimeframeFacetCommon']]);
+export const DISPLAYED_BY_PARENT = new Map([
+  ['atomic-tab', 'atomic-tab-manager'],
+  ['atomic-timeframe', 'TimeframeFacetCommon'],
+]);
 
 const ERROR_WRITING_CONTROLLERS = new Set([
   'ValidatePropsController',
@@ -46,6 +49,7 @@ const ERROR_WRITING_CONTROLLERS = new Set([
   'createResultContextController',
   'createInteractiveResultContextController',
   'TimeframeFacetCommon',
+  'displayChildErrors',
 ]);
 
 const ERROR_WRITING_MIXINS = new Set(['InitializeBindingsMixin']);
