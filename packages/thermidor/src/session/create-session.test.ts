@@ -47,7 +47,7 @@ import {z} from 'zod/v4';
 import type {ContractsSchema} from './contracts.js';
 import type {NavigatorContext} from '@/src/internal/context/index.js';
 import {createSession, type A2uiRendererAction, type SessionConfig} from './create-session.js';
-import type {SerializedSession} from './serialize.js';
+import {type SerializedSession, UnsupportedSerializedSessionVersionError} from './serialize.js';
 
 /**
  * A locally-built A2-UI contract, INJECTED as test data exactly as a real
@@ -3387,14 +3387,27 @@ describe('createSession lifecycle', () => {
       ]);
     });
 
-    it('round-trips the initialization, the turns and the session state through serialized format 6', async () => {
+    it('refuses to restore a session serialized in format 6, and sends nothing', async () => {
+      const session = await initializedSession();
+      await completePrompt(session, 'first', [shellPageUpdate('shell-page')]);
+      const v6 = {...session.serialize(), version: 6} as unknown as SerializedSession;
+      callMock.mockClear();
+
+      expect(() => createSession({...shellConfig, sessionToRestore: v6})).toThrow(
+        UnsupportedSerializedSessionVersionError
+      );
+      await Promise.resolve();
+      expect(callMock).not.toHaveBeenCalled();
+    });
+
+    it('round-trips the initialization, the turns and the session state through serialized format 7', async () => {
       const session = await initializedSession();
       await completePrompt(session, 'first', [shellPageUpdate('shell-page')]);
 
       const serialized = session.serialize();
       const restored = createSession({...shellConfig, sessionToRestore: serialized});
 
-      expect(serialized.version).toBe(6);
+      expect(serialized.version).toBe(7);
       expect(serialized.initialization).toEqual({
         activities: session.initialization?.activities,
         status: 'complete',

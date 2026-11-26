@@ -35,7 +35,8 @@ describe('restoreSession unsupported version', () => {
   const unsupportedVersions: Array<{label: string; version: unknown}> = [
     {label: 'zero', version: 0},
     {label: 'a past integer', version: 5},
-    {label: 'a future integer', version: 7},
+    {label: 'the previous integer', version: 6},
+    {label: 'a future integer', version: 8},
     {label: 'a far-future integer', version: 999},
     {label: 'a non-integer', version: 1.5},
   ];

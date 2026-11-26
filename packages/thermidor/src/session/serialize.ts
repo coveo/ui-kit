@@ -54,8 +54,14 @@ import type {
 /**
  * The current serialized-session shape version. Bumped whenever the persisted
  * shape changes. Restoration rejects any `version` that is not this value.
+ *
+ * Version 7 persists A2-UI messages of the final 1.0 protocol: `version: '1.0'` envelopes,
+ * `{"@path": ...}` bindings and snake_case component ids. Version 6 sessions hold candidate
+ * `v1.0` messages, which the renderer stream drops and the endpoint no longer recognizes, and
+ * telling their bindings from literal values takes the component catalog, so they are rejected
+ * rather than migrated.
  */
-export const SERIALIZED_SESSION_VERSION = 6;
+export const SERIALIZED_SESSION_VERSION = 7;
 
 /**
  * The error message used when a mid-stream turn is restored.

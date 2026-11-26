@@ -125,6 +125,57 @@ describe('restoreSession', () => {
     expect(() => restoreSession(bad)).toThrow(UnsupportedSerializedSessionVersionError);
   });
 
+  it('rejects a version 6 session holding candidate v1.0 surface messages', () => {
+    const v6 = {
+      version: 6,
+      sessionId: 'sid',
+      sessionToken: 'tok',
+      turns: [
+        {
+          id: 't1',
+          input: {prompt: 'shoes'},
+          status: 'complete',
+          response: {
+            activities: [
+              {
+                id: 'a1',
+                kind: 'a2ui-surface',
+                replace: false,
+                payload: {
+                  messages: [
+                    {
+                      version: 'v1.0',
+                      createSurface: {
+                        surfaceId: 'search-surface',
+                        catalogId: 'c',
+                        components: [
+                          {id: 'search-root', component: 'Text', text: {path: '/title'}},
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
+      state: {'search-surface': {title: 'Shoes'}},
+    } as unknown as SerializedSession;
+    let produced: unknown;
+    let caught: unknown;
+
+    try {
+      produced = restoreSession(v6);
+    } catch (error) {
+      caught = error;
+    }
+
+    expect(caught).toBeInstanceOf(UnsupportedSerializedSessionVersionError);
+    expect((caught as UnsupportedSerializedSessionVersionError).version).toBe(6);
+    expect(produced).toBeUndefined();
+  });
+
   it('round-trips the session state and continuity keys', () => {
     const original = state({
       turns: [turn({id: 'active'})],
