@@ -19,7 +19,7 @@ export interface CustomRenderOptions {
  */
 export class CustomRenderController implements ReactiveController {
   private options: Required<CustomRenderOptions>;
-  private hasExecutedRenderFunction = false;
+  private renderedRoot?: HTMLElement;
 
   constructor(host: CustomRenderHost & LitElement, options: CustomRenderOptions) {
     this.options = {
@@ -39,14 +39,19 @@ export class CustomRenderController implements ReactiveController {
   }
 
   private resetRenderState(): void {
-    this.hasExecutedRenderFunction = false;
+    this.renderedRoot = undefined;
   }
 
   private executeRenderFunction(): void {
     const renderingFunction = this.options.renderingFunction();
     const itemData = this.options.itemData();
     const rootElementRef = this.options.rootElementRef();
-    if (!renderingFunction || !itemData || !rootElementRef || this.hasExecutedRenderFunction) {
+    if (
+      !renderingFunction ||
+      !itemData ||
+      !rootElementRef ||
+      rootElementRef === this.renderedRoot
+    ) {
       return;
     }
     const customRenderOutput = renderingFunction(
@@ -55,6 +60,6 @@ export class CustomRenderController implements ReactiveController {
       this.options.linkContainerRef()
     );
     this.options.onRenderComplete(rootElementRef, customRenderOutput);
-    this.hasExecutedRenderFunction = true;
+    this.renderedRoot = rootElementRef;
   }
 }
