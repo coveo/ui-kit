@@ -308,7 +308,11 @@ export class AtomicCommerceBreadbox
         facetId: breadcrumb.facetId,
         label: breadcrumb.facetDisplayName ?? this.bindings.i18n.t('no-label'),
         deselect: value.deselect,
-        formattedValue: this.valueForFacetType(breadcrumb.type, breadcrumb.facetId, value),
+        formattedValue: this.valueForFacetType(
+          breadcrumb.type,
+          breadcrumb.type === 'numericalRange' ? breadcrumb.field : breadcrumb.facetId,
+          value
+        ),
       };
     });
   }

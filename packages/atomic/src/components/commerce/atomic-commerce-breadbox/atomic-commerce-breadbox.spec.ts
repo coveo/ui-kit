@@ -296,10 +296,14 @@ describe('atomic-commerce-breadbox', () => {
   });
 
   describe('when formatting numerical range values', () => {
-    const numericalRangeBreadcrumb = (facetId: string, facetDisplayName: string) => ({
+    const numericalRangeBreadcrumb = (
+      facetId: string,
+      facetDisplayName: string,
+      field: string = facetId
+    ) => ({
       facetId,
       facetDisplayName,
-      field: facetId,
+      field,
       type: 'numericalRange' as const,
       values: [
         {
@@ -337,6 +341,17 @@ describe('atomic-commerce-breadbox', () => {
     it('should format a custom field listed in currency-fields in the context currency', async () => {
       await renderBreadbox({
         state: {facetBreadcrumbs: [numericalRangeBreadcrumb('my_price', 'My price')]},
+        currencyFields: ['my_price'],
+      });
+
+      await expect.element(page.getByTitle('My price')).toHaveTextContent('$0.00 to $100.00');
+    });
+
+    it('should format by field rather than facet ID when they differ', async () => {
+      await renderBreadbox({
+        state: {
+          facetBreadcrumbs: [numericalRangeBreadcrumb('custom_facet_id', 'My price', 'my_price')],
+        },
         currencyFields: ['my_price'],
       });
 
