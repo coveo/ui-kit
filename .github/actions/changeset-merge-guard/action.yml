@@ -2,6 +2,8 @@ name: 'Changeset merge guard'
 description: >
   Detects stale version PRs in a merge queue group by checking whether
   unprocessed changeset files still exist after the version-packages commit.
+  Changesets keeps the files that name a package it skips, such as the paused
+  v4 packages on main until the v4 GA, so those do not count.
   Requires enough checkout history to resolve the supplied base-to-head range.
 inputs:
   base-sha:
@@ -37,7 +39,7 @@ runs:
 
         echo "Version PR detected in merge group. Checking for unprocessed changesets..."
 
-        CHANGESET_FILES=$(find .changeset -name '*.md' ! -name 'README.md' 2>/dev/null)
+        CHANGESET_FILES=$(node utils/ci/changeset-files.mjs --to-version)
 
         if [ -n "$CHANGESET_FILES" ]; then
           echo "::error::Stale version PR detected! The following changeset files are unprocessed:"
