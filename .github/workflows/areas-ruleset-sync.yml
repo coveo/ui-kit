@@ -37,14 +37,32 @@ jobs:
 
       # The areas action targets the default branch only, and v3 pull requests need the same area reviewers.
       - name: Apply the area rulesets to v3
-        shell: bash
-        env:
-          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
-          REPO: ${{ github.repository }}
-        run: |
-          ids=$(gh api "repos/$REPO/rulesets" --paginate --jq '.[] | select(.source_type == "Repository" and (.name | startswith("area:"))) | .id')
-          for id in $ids; do
-            gh api "repos/$REPO/rulesets/$id" \
-              --jq '{name, target, enforcement, bypass_actors, rules, conditions: (.conditions | .ref_name.include = ((.ref_name.include + ["refs/heads/v3"]) | unique))}' \
-              | gh api --method PUT "repos/$REPO/rulesets/$id" --input - --jq '"\(.name): \(.conditions.ref_name.include | join(", "))"'
-          done
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        with:
+          github-token: ${{ steps.generate-token.outputs.token }}
+          script: |
+            const rulesets = await github.paginate(github.rest.repos.getRepoRulesets, {
+              ...context.repo,
+              includes_parents: false,
+            });
+            const areaRulesets = rulesets.filter(({name}) => name.startsWith('area:'));
+
+            for (const {id} of areaRulesets) {
+              const {data: ruleset} = await github.rest.repos.getRepoRuleset({
+                ...context.repo,
+                ruleset_id: id,
+              });
+              const branches = new Set([...ruleset.conditions.ref_name.include, 'refs/heads/v3']);
+
+              await github.rest.repos.updateRepoRuleset({
+                ...context.repo,
+                ruleset_id: id,
+                name: ruleset.name,
+                target: ruleset.target,
+                enforcement: ruleset.enforcement,
+                bypass_actors: ruleset.bypass_actors,
+                rules: ruleset.rules,
+                conditions: {ref_name: {...ruleset.conditions.ref_name, include: [...branches]}},
+              });
+              core.info(`${ruleset.name}: ${[...branches].join(', ')}`);
+            }
