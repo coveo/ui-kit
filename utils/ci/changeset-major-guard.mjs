@@ -33,7 +33,7 @@ export const UI_KIT_PACKAGES = new Map([
   ['@coveo/atomic-angular', {guide: 'packages/atomic/upgrade-from-v3-to-v4.md'}],
 ]);
 
-export const MAIN_ONLY_PACKAGES = ['@coveo/create-ui', '@coveo/thermidor'];
+export const MAIN_ONLY_PACKAGES = ['@coveo/thermidor'];
 
 const RANK = {patch: 1, minor: 2, major: 3};
 const RELEASE_LINE = /^(['"]?)([^'"\s:]+)\1\s*:\s*(['"]?)(major|minor|patch|none)\3\s*(?:#.*)?$/;
