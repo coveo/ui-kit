@@ -6,9 +6,11 @@ import {dirname, join} from 'node:path';
 import {afterEach, beforeEach, describe, it} from 'node:test';
 import {fileURLToPath} from 'node:url';
 import {
+  checkBaseBranch,
   checkMajors,
   checkMixedChangesets,
   checkV3,
+  droppedChangesets,
   globToRegExp,
   parseChangeset,
   planReleases,
@@ -459,6 +461,82 @@ describe('checkV3', () => {
   });
 });
 
+describe('checkBaseBranch', () => {
+  it('accepts a config that names the target branch', () => {
+    assert.deepEqual(
+      checkBaseBranch({head: {...state(), baseBranch: 'main'}, target: 'main'}).errors,
+      []
+    );
+    assert.deepEqual(
+      checkBaseBranch({head: {...state(), baseBranch: 'v3'}, target: 'v3'}).errors,
+      []
+    );
+  });
+
+  it('refuses the base branch of the other line, which a merge of v3 into main brings silently', () => {
+    assert.deepEqual(
+      checkBaseBranch({head: {...state(), baseBranch: 'v3'}, target: 'main'}).errors,
+      [
+        '.changeset/config.json sets "baseBranch" to "v3", but this pull request targets main. Each line keeps its own value: when merging v3 into main, keep main\'s .changeset/config.json.',
+      ]
+    );
+  });
+
+  it('refuses a config without a base branch', () => {
+    assert.match(
+      checkBaseBranch({head: state(), target: 'v3'}).errors[0],
+      /^\.changeset\/config\.json sets no "baseBranch", but this pull request targets v3\./
+    );
+  });
+});
+
+describe('droppedChangesets', () => {
+  const publishedOnMain = (name) => !PAUSED.includes(name);
+  const thermidor = {name: '@coveo/thermidor', type: 'minor', file: '.changeset/thermidor.md'};
+
+  it('warns about a pending changeset that the range removes without releasing its package', () => {
+    const {packages, warnings} = droppedChangesets({
+      base: state([thermidor]),
+      head: state(),
+      publishes: publishedOnMain,
+    });
+    assert.deepEqual(packages, ['@coveo/thermidor']);
+    assert.deepEqual(warnings, [
+      'This range removes pending changesets of @coveo/thermidor without releasing it (.changeset/thermidor.md), so its next release and changelog would leave them out. Restore them unless that is intended.',
+    ]);
+  });
+
+  it('stays quiet when the range renames a pending changeset', () => {
+    const {warnings} = droppedChangesets({
+      base: state([thermidor]),
+      head: state([{...thermidor, file: '.changeset/thermidor-renamed.md'}]),
+      publishes: publishedOnMain,
+    });
+    assert.deepEqual(warnings, []);
+  });
+
+  it('stays quiet when the version pull request releases the package', () => {
+    const released = PACKAGES.map((pkg) =>
+      pkg.name === '@coveo/thermidor' ? {...pkg, version: '0.9.0'} : pkg
+    );
+    const {warnings} = droppedChangesets({
+      base: state([thermidor]),
+      head: state([], {packages: released}),
+      publishes: publishedOnMain,
+    });
+    assert.deepEqual(warnings, []);
+  });
+
+  it('leaves out the packages that the target branch does not publish', () => {
+    const {warnings} = droppedChangesets({
+      base: state([{name: '@coveo/headless', type: 'minor'}, thermidor]),
+      head: state(),
+      publishes: (name) => publishedOnMain(name) && name !== '@coveo/thermidor',
+    });
+    assert.deepEqual(warnings, []);
+  });
+});
+
 describe('workspacePatterns', () => {
   it('reads the package globs and stops at the next key', () => {
     const yaml =
@@ -529,7 +607,7 @@ describe('the command line', () => {
         peerDependencies: {'@coveo/headless': 'workspace:^'},
       })
     );
-    write('.changeset/config.json', JSON.stringify({fixed: []}));
+    write('.changeset/config.json', JSON.stringify({baseBranch: 'main', fixed: []}));
     write('.changeset/README.md', 'Changesets.');
     commit('base');
     base = git('rev-parse', 'HEAD');
@@ -553,7 +631,10 @@ describe('the command line', () => {
       'packages/thermidor/package.json',
       JSON.stringify({name: '@coveo/thermidor', version: '0.8.0'})
     );
-    write('.changeset/config.json', JSON.stringify({fixed: [], ignore: ['@coveo/headless']}));
+    write(
+      '.changeset/config.json',
+      JSON.stringify({baseBranch: 'main', fixed: [], ignore: ['@coveo/headless']})
+    );
     write(HEADLESS_GUIDE, '# Upgrade from v3 to v4\n');
     write(
       '.changeset/mixed.md',
@@ -576,6 +657,37 @@ describe('the command line', () => {
       /error: Major version on v3: @coveo\/headless \(major in \.changeset\/break\.md\)\./
     );
     assert.equal(run({BASE_REF: 'v3', UI_KIT_MAJOR_WINDOW: 'open'}).status, 1);
+  });
+
+  it('fails when the Changesets config names the other line', () => {
+    write(HEADLESS_GUIDE, '# Upgrade from v3 to v4\n');
+    write('.changeset/config.json', JSON.stringify({baseBranch: 'v3', fixed: []}));
+    commit('merge v3 into main');
+    const result = run({UI_KIT_MAJOR_WINDOW: 'open'});
+    assert.equal(result.status, 1);
+    assert.match(
+      result.stdout,
+      /error: \.changeset\/config\.json sets "baseBranch" to "v3", but this pull request targets main\./
+    );
+  });
+
+  it('warns when the range removes a pending changeset of a package that main publishes', () => {
+    write(
+      'packages/thermidor/package.json',
+      JSON.stringify({name: '@coveo/thermidor', version: '0.8.0'})
+    );
+    write('.changeset/thermidor.md', "---\n'@coveo/thermidor': minor\n---\n\nThermidor.");
+    write(HEADLESS_GUIDE, '# Upgrade from v3 to v4\n');
+    commit('add a Thermidor changeset');
+    base = git('rev-parse', 'HEAD');
+    git('rm', '--quiet', '.changeset/thermidor.md');
+    commit('merge v3 into main');
+    const result = run({UI_KIT_MAJOR_WINDOW: 'open'});
+    assert.equal(result.status, 0);
+    assert.match(
+      result.stdout,
+      /warning: This range removes pending changesets of @coveo\/thermidor without releasing it \(\.changeset\/thermidor\.md\)/
+    );
   });
 
   it('skips a pull request that targets neither main nor v3', () => {
