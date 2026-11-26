@@ -1,5 +1,5 @@
 // The CDN's `index.esm.js`: the helpers of the npm main entry, plus the loader, which the npm main entry only gets in
-// v4. Why it is built this way: docs/adr/0003-export-the-cdn-loader-from-index-esm-js.md
+// v4. Why it is built this way: docs/adr/0004-export-the-cdn-loader-from-index-esm-js.md
 export * from './index.js';
 // On the CDN this helper loads Headless when it is called, so that this file doesn't wait for Headless before it runs.
 // An explicit export takes precedence over the one that `export *` brings in.

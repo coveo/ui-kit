@@ -10,7 +10,7 @@ related:
   - https://github.com/coveo/ui-kit/pull/7416
   - https://github.com/coveo/ui-kit/issues/9040
   - packages/atomic/docs/adr/0001-group-shared-modules-in-one-cdn-chunk.md
-  - packages/atomic/docs/adr/0002-build-the-cdn-loader-entries-as-single-files.md
+  - packages/atomic/docs/adr/0003-build-the-cdn-loader-entries-as-single-files.md
 ---
 
 # Export the CDN loader from `index.esm.js`
@@ -46,7 +46,7 @@ The decision is how the CDN main entry exposes the loader so that it is a usable
 
 ## Considered Options
 
-Every option builds on #9093 and on the single-file loader entries of [ADR 0002](./0002-build-the-cdn-loader-entries-as-single-files.md). In options A to C, `index.esm.js` no longer imports Headless: the helper that needs it loads it when it is called. The Measurements section has the numbers and the method.
+Every option builds on #9093 and on the single-file loader entries of [ADR 0003](./0003-build-the-cdn-loader-entries-as-single-files.md). In options A to C, `index.esm.js` no longer imports Headless: the helper that needs it loads it when it is called. The Measurements section has the numbers and the method.
 
 ### Option A: Bundle the loader into `index.esm.js`
 
@@ -74,9 +74,9 @@ Every option builds on #9093 and on the single-file loader entries of [ADR 0002]
 
 ### Measurements
 
-Median of 7 loads in ms, on Lighthouse's mobile profile and then on a fast connection. Each column is the build of one pull request: #9093, then #9099 (ADR 0002) on top of it, then #9043 (option C) on top of both.
+Median of 7 loads in ms, on Lighthouse's mobile profile and then on a fast connection. Each column is the build of one pull request: #9093, then #9099 (ADR 0003) on top of it, then #9043 (option C) on top of both.
 
-| Kind of page                                                     | #9093                          | With ADR 0002         | With option C |
+| Kind of page                                                     | #9093                          | With ADR 0003         | With option C |
 | ---------------------------------------------------------------- | ------------------------------ | --------------------- | ------------- |
 | Script tag only, page ready                                      | 3,706 / 824                    | 3,541 / 778           | 3,562 / 777   |
 | Script tag and a custom component, first result                  | 3,671 / 814                    | 3,563 / 776           | 3,604 / 779   |
@@ -87,8 +87,8 @@ Median of 7 loads in ms, on Lighthouse's mobile profile and then on a fast conne
 | The same script, from `index.esm.js`                             | Not exported                   | Not exported          | 3,865 / 866   |
 | `index.esm.js` startup files, gzipped                            | 2.5 kB, then Headless (187 kB) | 2.5 kB, then Headless | 13.0 kB       |
 
-- **Pages with a custom component.** The first result comes 67 ms sooner than with #9093 on mobile, and 41 ms later than with ADR 0002 alone. `index.esm.js` used to ask for Headless as soon as the browser read its imports. Now the first component file asks for it, 64 ms later. The custom component itself is defined about 1.1 s sooner, because the helpers no longer wait for Headless.
-- **The loader through `index.esm.js`** is as fast as through `index.js` with #9093 (+1 ms), and one request slower than through `index.js` with ADR 0002 (+162 ms). A create-atomic style module is as fast through either file, because it waits for its own Headless import.
+- **Pages with a custom component.** The first result comes 67 ms sooner than with #9093 on mobile, and 41 ms later than with ADR 0003 alone. `index.esm.js` used to ask for Headless as soon as the browser read its imports. Now the first component file asks for it, 64 ms later. The custom component itself is defined about 1.1 s sooner, because the helpers no longer wait for Headless.
+- **The loader through `index.esm.js`** is as fast as through `index.js` with #9093 (+1 ms), and one request slower than through `index.js` with ADR 0003 (+162 ms). A create-atomic style module is as fast through either file, because it waits for its own Headless import.
 - **Script tag only.** The page loads the same files with and without option C. Its 21 ms difference shows this run's noise.
 
 Options B and C were compared in an earlier run, on prototypes with single-file entries. Change against #9093, mobile then fast:
@@ -100,7 +100,7 @@ Options B and C were compared in an earlier run, on prototypes with single-file 
 | Script that only calls the loader, from `index.esm.js` | +3 / −9        | +52 / −3  |
 | `index.esm.js` startup files, gzipped                  | 2.9 kB         | 13.2 kB   |
 
-Option A was measured before ADR 0002, next to an equivalent of option C. On mobile it was 38 ms slower than that equivalent on the page with a custom component, and 16 ms slower for a script that only calls the loader. A create-atomic style module that keeps `index.js` downloaded the loader twice and was 40 ms slower than with #9093. `index.esm.js` loaded 14.8 kB at startup. Option A wasn't measured again on top of ADR 0002.
+Option A was measured before ADR 0003, next to an equivalent of option C. On mobile it was 38 ms slower than that equivalent on the page with a custom component, and 16 ms slower for a script that only calls the loader. A create-atomic style module that keeps `index.js` downloaded the loader twice and was 40 ms slower than with #9093. `index.esm.js` loaded 14.8 kB at startup. Option A wasn't measured again on top of ADR 0003.
 
 Method: ADR 0001's harness, with a local HTTP/2 server, gzip, production's pointer files, recorded API answers and an empty cache for every load. The builds were interleaved over 7 rounds. Mobile is Lighthouse's throttling: 150 ms latency, 1.6 Mbps and a 4× slower CPU. The fast connection is 40 ms and 10 Mbps. A "create-atomic style module" imports the loader, a helper and Headless as the template does; it isn't a scaffolded project.
 
@@ -112,7 +112,7 @@ What these measurements don't show:
 
 ## Decision Outcome
 
-Chosen option: C, on top of #9093 and ADR 0002. `index.esm.js` re-exports the loader from `index.js` and no longer imports Headless.
+Chosen option: C, on top of #9093 and ADR 0003. `index.esm.js` re-exports the loader from `index.js` and no longer imports Headless.
 
 ### Rationale
 
@@ -131,14 +131,14 @@ Chosen option: C, on top of #9093 and ADR 0002. `index.esm.js` re-exports the lo
   - Custom components that import helpers are defined about 1.1 s sooner on mobile: 1,025 ms instead of 2,086.
   - v4 can retire `index.js` as a public address without touching `index.esm.js`.
 - **Negative:**
-  - A page that imports a helper downloads `index.js` without calling it: `index.esm.js` loads 13.0 kB at startup instead of 2.5 kB. Its first result comes 41 ms later on mobile than with ADR 0002 alone.
+  - A page that imports a helper downloads `index.js` without calling it: `index.esm.js` loads 13.0 kB at startup instead of 2.5 kB. Its first result comes 41 ms later on mobile than with ADR 0003 alone.
   - Through `index.esm.js`, the loader starts one request later than through `index.js`: 162 ms on mobile for a script that does nothing else. No known page does only that.
   - The CDN has its own `bindLogDocumentOpenOnResult`. Its event wiring must be kept in step with the npm helper's, and an event that fires before Headless has loaded is handled once it has.
   - `index.esm.js` imports `./index.js` by name. The two files ship together, and `index.js` can't be renamed or removed alone.
 - **Neutral:**
   - The npm entry points don't change. The npm package gains the two CDN-only modules, which no entry point imports, as it already has `cdn.js`.
   - ui-kit-cd's pointer files don't change.
-  - `atomic.esm.js` and `index.js` are the same as with ADR 0002, module ids aside.
+  - `atomic.esm.js` and `index.js` are the same as with ADR 0003, module ids aside.
 
 ## Implementation and Follow-up
 

@@ -50,7 +50,7 @@ const rsbuild = await rsbuildApi.createRsbuild({
         ({request, contextInfo}, callback) => {
           if (!request) return callback();
           // `index.esm.js` takes the loader from the CDN's `index.js` instead of bundling a second copy.
-          // Why: docs/adr/0003-export-the-cdn-loader-from-index-esm-js.md
+          // Why: docs/adr/0004-export-the-cdn-loader-from-index-esm-js.md
           if (request === './loader.js' && contextInfo?.issuer === cdnIndexEsmSource) {
             return callback(null, './index.js');
           }
