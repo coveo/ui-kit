@@ -95,6 +95,11 @@
       matchPackageNames: ['@msw/playwright'],
       allowedVersions: '<0.7.0',
     },
+    {
+      description: 'Hold @coveo/thermidor-schema updates for Dependency Dashboard approval during the A2-UI 1.0 rollout: its release with {"@path"} bindings rejects the {"path"} bindings the Thermidor samples still render through the v0.9 projection. Remove this rule once the samples render A2-UI 1.0 natively',
+      matchPackageNames: ['@coveo/thermidor-schema'],
+      dependencyDashboardApproval: true,
+    },
   ],
   customManagers: [
     {
