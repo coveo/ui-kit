@@ -44,7 +44,19 @@ Check that `error` is defined before you read it, and compare it with `undefined
 
 #### Component errors that used to be swallowed <!-- KIT-6756 -->
 
-These components received errors without displaying them, so an invalid configuration went unnoticed. They now replace their content with the error box and log the error, like the other Atomic components: `atomic-insight-result`, `atomic-insight-result-quickview-action`, `atomic-insight-user-actions-session`, `atomic-insight-user-actions-timeline`, `atomic-ipx-tab`, `atomic-quickview`, `atomic-recs-result`, `atomic-result` and `atomic-tab`. An `atomic-sort-expression` outside an `atomic-sort-dropdown` now holds its error in `error`. The timeframe facets are ready to display the error of an invalid `atomic-timeframe` child, which shows once `atomic-timeframe` validation becomes fatal.
+These components received errors without displaying them, so an invalid configuration went unnoticed. They now replace their content with the error box and log the error, like the other Atomic components:
+
+- `atomic-insight-result`
+- `atomic-insight-result-quickview-action`
+- `atomic-insight-user-actions-session`
+- `atomic-insight-user-actions-timeline`
+- `atomic-ipx-tab`
+- `atomic-quickview`
+- `atomic-recs-result`
+- `atomic-result`
+- `atomic-tab`
+
+An `atomic-sort-expression` outside an `atomic-sort-dropdown` now holds its error in `error`. The timeframe facets are ready to display the error of an invalid `atomic-timeframe` child, which shows once `atomic-timeframe` validation becomes fatal.
 
 **Atomic Version 3**
 
@@ -64,7 +76,43 @@ Fix the configuration that the error in the console names.
 
 #### Component errors shown once the interface initializes <!-- KIT-6756 -->
 
-These components displayed their error as soon as they received it, even before their interface initialized. Like the other Atomic components, they now display it once the interface initializes, and render nothing before that: `atomic-commerce-query-error`, `atomic-commerce-refine-toggle`, `atomic-commerce-sort-dropdown`, `atomic-generated-answer-feedback-modal`, `atomic-insight-full-search-button`, `atomic-insight-generate-answer-button`, `atomic-insight-query-error`, `atomic-insight-refine-toggle`, `atomic-insight-result-action`, `atomic-insight-result-attach-to-case-action`, `atomic-insight-result-attach-to-case-indicator`, `atomic-insight-result-children`, `atomic-insight-search-box`, `atomic-insight-smart-snippet`, `atomic-insight-smart-snippet-feedback-modal`, `atomic-insight-smart-snippet-suggestions`, `atomic-insight-tab`, `atomic-insight-user-actions-modal`, `atomic-insight-user-actions-toggle`, `atomic-ipx-refine-toggle`, `atomic-product-description`, `atomic-product-numeric-field-value`, `atomic-product-price`, `atomic-query-error`, `atomic-recs-error`, `atomic-refine-toggle`, `atomic-result-badge`, `atomic-result-children`, `atomic-segmented-facet-scrollable`, `atomic-smart-snippet-collapse-wrapper`, `atomic-smart-snippet-expandable-answer`, `atomic-smart-snippet-feedback-modal`, `atomic-smart-snippet-source`, `atomic-smart-snippet-suggestions` and `atomic-sort-dropdown`.
+These components displayed their error as soon as they received it, even before their interface initialized. Like the other Atomic components, they now display it once the interface initializes, and render nothing before that:
+
+- `atomic-commerce-query-error`
+- `atomic-commerce-refine-toggle`
+- `atomic-commerce-sort-dropdown`
+- `atomic-generated-answer-feedback-modal`
+- `atomic-insight-full-search-button`
+- `atomic-insight-generate-answer-button`
+- `atomic-insight-query-error`
+- `atomic-insight-refine-toggle`
+- `atomic-insight-result-action`
+- `atomic-insight-result-attach-to-case-action`
+- `atomic-insight-result-attach-to-case-indicator`
+- `atomic-insight-result-children`
+- `atomic-insight-search-box`
+- `atomic-insight-smart-snippet`
+- `atomic-insight-smart-snippet-feedback-modal`
+- `atomic-insight-smart-snippet-suggestions`
+- `atomic-insight-tab`
+- `atomic-insight-user-actions-modal`
+- `atomic-insight-user-actions-toggle`
+- `atomic-ipx-refine-toggle`
+- `atomic-product-description`
+- `atomic-product-numeric-field-value`
+- `atomic-product-price`
+- `atomic-query-error`
+- `atomic-recs-error`
+- `atomic-refine-toggle`
+- `atomic-result-badge`
+- `atomic-result-children`
+- `atomic-segmented-facet-scrollable`
+- `atomic-smart-snippet-collapse-wrapper`
+- `atomic-smart-snippet-expandable-answer`
+- `atomic-smart-snippet-feedback-modal`
+- `atomic-smart-snippet-source`
+- `atomic-smart-snippet-suggestions`
+- `atomic-sort-dropdown`
 
 If a test waits for the error box of one of these components, initialize the interface first.
 
