@@ -18,7 +18,7 @@ import type {InitializableComponent} from './types';
  * export class TestElement extends LitElement implements InitializableComponent<Bindings> {
  *
  *    @state() public bindings: Bindings = {} as Bindings;
- *    @state() public error!: Error;
+ *    @state() public error?: Error;
  *
  *    public initialized = false;
  *
