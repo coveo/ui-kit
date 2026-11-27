@@ -31,9 +31,11 @@ export interface NavigatorContext {
    */
   clientId: string;
   /**
-   * Whether to capture analytics events.
+   * Whether to capture analytics events. Defaults to `true` when the request carries a client ID.
    *
-   * Must be left undefined or set to `false` if the `clientId` is an empty string, otherwise requests will fail.
+   * A request captures only when it carries a client ID. When `clientId` is empty or blank, or,
+   * for a commerce request, when analytics are disabled, Headless sends `capture: false` whatever
+   * this value is. The Commerce API rejects a request that enables capture without a client ID.
    */
   capture?: boolean;
 }

@@ -9,6 +9,7 @@ export const fromAnalyticsStateToAnalyticsParams = (
   navigatorContext: NavigatorContext,
   eventDescription?: EventDescription
 ): AnalyticsParam => {
+  const hasClientId = Boolean(navigatorContext.clientId?.trim());
   return {
     analytics: {
       clientId: navigatorContext.clientId,
@@ -26,7 +27,7 @@ export const fromAnalyticsStateToAnalyticsParams = (
       ...(s.deviceId && {deviceId: s.deviceId}),
       ...(s.trackingId && {trackingId: s.trackingId}),
       ...{
-        capture: navigatorContext.capture ?? navigatorContext.clientId !== '',
+        capture: hasClientId && (navigatorContext.capture ?? true),
       },
       ...{source: getAnalyticsSource(s)},
     },

@@ -20,6 +20,9 @@ export const buildBaseCommerceAPIRequest = (
   navigatorContext: NavigatorContext
 ): BaseCommerceAPIRequest => {
   const {view, location, custom, ...restOfContext} = state.commerceContext;
+  // The Commerce API rejects a request that enables capture without a client ID.
+  const hasClientId =
+    state.configuration.analytics.enabled && Boolean(navigatorContext.clientId?.trim());
   return {
     accessToken: state.configuration.accessToken,
     url:
@@ -38,9 +41,7 @@ export const buildBaseCommerceAPIRequest = (
         ...view,
         ...(navigatorContext.referrer ? {referrer: navigatorContext.referrer} : {}),
       },
-      capture:
-        navigatorContext.capture ??
-        (state.configuration.analytics.enabled && navigatorContext.clientId !== ''),
+      capture: hasClientId && (navigatorContext.capture ?? true),
       cart: getProductsFromCartState(state.cart),
       source: getAnalyticsSource(state.configuration.analytics),
       ...(custom ? {custom} : {}),

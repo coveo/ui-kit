@@ -174,14 +174,41 @@ describe('#buildBaseCommerceAPIRequest', () => {
       expect(request.context.capture).toBe(false);
     });
 
-    it('when #navigatorContext.capture is defined, sets #context.capture to its specified value', () => {
+    it('when #navigatorContext.capture is false, sets #context.capture to false', () => {
       setNavigatorContext({
+        clientId: 'some-client-id',
         capture: false,
       });
       request = buildBaseCommerceAPIRequest(state, navigatorContext);
 
       expect(request.context.capture).toBe(false);
     });
+
+    it('when #navigatorContext.capture is true and #navigatorContext.clientId is not empty, sets #context.capture to true', () => {
+      setNavigatorContext({
+        clientId: 'some-client-id',
+        capture: true,
+      });
+      request = buildBaseCommerceAPIRequest(state, navigatorContext);
+
+      expect(request.context.capture).toBe(true);
+    });
+
+    it.each([
+      {title: 'empty', clientId: ''},
+      {title: 'blank', clientId: '  '},
+    ])(
+      'when #navigatorContext.capture is true and #navigatorContext.clientId is $title, sets #context.capture to false',
+      ({clientId}) => {
+        setNavigatorContext({
+          clientId,
+          capture: true,
+        });
+        request = buildBaseCommerceAPIRequest(state, navigatorContext);
+
+        expect(request.context.capture).toBe(false);
+      }
+    );
   });
 
   describe('when #state.configuration.analytics.enabled is false', () => {
@@ -209,13 +236,14 @@ describe('#buildBaseCommerceAPIRequest', () => {
       expect(request.context.capture).toBe(false);
     });
 
-    it('when #navigatorContext.capture is defined, sets #context.capture to its specified value', () => {
+    it('when #navigatorContext.capture is true, sets #context.capture to false', () => {
       setNavigatorContext({
+        clientId: 'some-client-id',
         capture: true,
       });
       request = buildBaseCommerceAPIRequest(state, navigatorContext);
 
-      expect(request.context.capture).toBe(true);
+      expect(request.context.capture).toBe(false);
     });
   });
 

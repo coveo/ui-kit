@@ -176,12 +176,37 @@ describe('#fromAnalyticsStateToAnalyticsParams', () => {
     expect(analyticsParam.analytics?.trackingId).toBeUndefined();
   });
 
-  it('when #navigatorContext.capture is defined, sets #capture to its value', () => {
-    setNavigatorContext({capture: true});
+  it('when #navigatorContext.capture is true and #navigatorContext.clientId is not empty, sets #capture to true', () => {
+    setNavigatorContext({clientId: 'mock-client-id', capture: true});
     analyticsParam = fromAnalyticsStateToAnalyticsParams(state, navigatorContext, eventDescription);
 
     expect(analyticsParam.analytics?.capture).toBe(true);
   });
+
+  it('when #navigatorContext.capture is false, sets #capture to false', () => {
+    setNavigatorContext({clientId: 'mock-client-id', capture: false});
+    analyticsParam = fromAnalyticsStateToAnalyticsParams(state, navigatorContext, eventDescription);
+
+    expect(analyticsParam.analytics?.capture).toBe(false);
+  });
+
+  it.each([
+    {title: 'empty', clientId: ''},
+    {title: 'blank', clientId: '  '},
+  ])(
+    'when #navigatorContext.capture is true and #navigatorContext.clientId is $title, sets #capture to false',
+    ({clientId}) => {
+      setNavigatorContext({clientId, capture: true});
+      analyticsParam = fromAnalyticsStateToAnalyticsParams(
+        state,
+        navigatorContext,
+        eventDescription
+      );
+
+      expect(analyticsParam.analytics?.capture).toBe(false);
+    }
+  );
+
   describe('when #navigatorContext.capture is undefined', () => {
     beforeEach(() => {
       setNavigatorContext({capture: undefined});
