@@ -1,5 +1,6 @@
 import {html, type LitElement} from 'lit';
 import {afterEach, beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import '@/src/components/common/atomic-icon/atomic-icon';
 import '@/src/components/common/atomic-modal/atomic-modal';
 import '@/src/components/common/atomic-smart-snippet-collapse-wrapper/atomic-smart-snippet-collapse-wrapper';
 import '@/src/components/insight/atomic-insight-query-summary/atomic-insight-query-summary';
@@ -39,6 +40,7 @@ const components: {tag: string; inResult?: boolean}[] = [
   {tag: 'atomic-modal'},
   {tag: 'atomic-ipx-modal'},
   {tag: 'atomic-smart-snippet-collapse-wrapper'},
+  {tag: 'atomic-icon'},
 ];
 
 const nextTask = () => new Promise((resolve) => setTimeout(resolve));
@@ -112,6 +114,16 @@ describe('bindings-components', () => {
 
       root.remove();
       await moveTo(atomicInterface, root, element);
+      expectRenderedWithBindings(element);
+    });
+
+    it('should initialize inside the shadow root of another element in the interface', async () => {
+      const {element, root} = createElement();
+      const shadowHost = document.createElement('div');
+      shadowHost.attachShadow({mode: 'open'}).append(root);
+
+      atomicInterface.append(shadowHost);
+      await element.updateComplete;
       expectRenderedWithBindings(element);
     });
 

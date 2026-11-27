@@ -16,16 +16,6 @@ import {mockConsole} from '@/vitest-utils/testing-helpers/testing-utils/mock-con
 import type {AtomicInsightFacet} from './atomic-insight-facet';
 
 vi.mock('@coveo/headless/insight', {spy: true});
-vi.mock('@/src/mixins/bindings-mixin', () => ({
-  InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
-    return class extends superClass {
-      // oxlint-disable-next-line no-useless-constructor -- <mocking the mixin for testing>
-      constructor(...args: unknown[]) {
-        super(...args);
-      }
-    };
-  }),
-}));
 
 describe('atomic-insight-facet', () => {
   let mockedRegisterFacet: Mock;
