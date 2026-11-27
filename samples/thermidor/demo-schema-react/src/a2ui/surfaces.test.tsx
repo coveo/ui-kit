@@ -1,7 +1,7 @@
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import type {ActionPayload} from '@a2ui/web_core';
-import type {A2uiMessage, ActionError} from '@coveo/thermidor';
+import type {A2uiMessage, ActionError} from '@coveo/converse';
 import {createThermidorCatalog, THERMIDOR_CATALOG_ID} from './components.js';
 import {ThermidorA2UIStream, TurnSurfaces} from './surfaces.js';
 import {SessionRequestProvider, type SessionRequestSource} from './session-request.js';

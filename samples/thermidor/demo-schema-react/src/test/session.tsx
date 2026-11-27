@@ -1,7 +1,7 @@
 import {useSyncExternalStore, type ReactElement, type ReactNode} from 'react';
 import {render, screen, waitFor} from '@testing-library/react';
 import {expect, vi} from 'vitest';
-import {createSession, type SerializedSession} from '@coveo/thermidor';
+import {createSession, type SerializedSession} from '@coveo/converse';
 import {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
 import {SessionProvider, useSession, type DemoSession} from '../context/session.js';
 import {createThermidorCatalog} from '../a2ui/components.js';

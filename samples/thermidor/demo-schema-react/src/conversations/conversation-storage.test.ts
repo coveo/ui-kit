@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import type {SerializedSession} from '@coveo/thermidor';
+import type {SerializedSession} from '@coveo/converse';
 import {memoryStorage} from '../test/memory-storage.js';
 import {createConversationStorage} from './conversation-storage.js';
 

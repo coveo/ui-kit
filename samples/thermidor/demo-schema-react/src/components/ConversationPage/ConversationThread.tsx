@@ -1,4 +1,4 @@
-import type {Turn} from '@coveo/thermidor';
+import type {Turn} from '@coveo/converse';
 import {AgentResponseBlock} from './AgentResponseBlock.js';
 import {ErrorTurnBlock} from './ErrorTurnBlock.js';
 import {UserPromptBubble} from './UserPromptBubble.js';

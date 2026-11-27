@@ -1,6 +1,6 @@
 import {render, screen} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
-import type {ToolCall, TurnResponse} from '@coveo/thermidor';
+import type {ToolCall, TurnResponse} from '@coveo/converse';
 import {AgentResponseBlock} from './AgentResponseBlock.js';
 import {makeResponse} from '../../test/turn-fixtures.js';
 

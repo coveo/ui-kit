@@ -12,7 +12,7 @@ import {
   type NavigatorContext,
   type Session,
   type SessionSnapshot,
-} from '@coveo/thermidor';
+} from '@coveo/converse';
 import {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
 import {SessionRequestProvider} from '../../../demo-schema-react/src/a2ui/session-request.js';
 import {buildViewSurfaces, type ViewSurfaces} from '../views/view-surfaces.js';

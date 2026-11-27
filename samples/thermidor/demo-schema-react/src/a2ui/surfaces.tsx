@@ -23,7 +23,7 @@ import {
   MessageProcessor,
   type SurfaceModel,
 } from '@a2ui/web_core';
-import type {A2uiMessage, DiscoveredSurface} from '@coveo/thermidor';
+import type {A2uiMessage, DiscoveredSurface} from '@coveo/converse';
 import {turnSurfacesTarget} from './results-focus.js';
 import {TurnFailedContext} from './ProgressBlock/ProgressBlock.js';
 import {A2UISkeleton} from './Skeleton/Skeleton.js';

@@ -1,4 +1,4 @@
-import type {DiscoveredSurface} from '@coveo/thermidor';
+import type {DiscoveredSurface} from '@coveo/converse';
 import {TurnSurfaces} from '../../../demo-schema-react/src/a2ui/surfaces.js';
 
 interface ViewSurfacesProps {

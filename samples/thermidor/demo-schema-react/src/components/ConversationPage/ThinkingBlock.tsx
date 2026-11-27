@@ -1,4 +1,4 @@
-import type {ToolCall} from '@coveo/thermidor';
+import type {ToolCall} from '@coveo/converse';
 import styles from './ThinkingBlock.module.css';
 
 export interface ThinkingBlockProps {

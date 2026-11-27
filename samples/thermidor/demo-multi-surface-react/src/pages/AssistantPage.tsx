@@ -1,5 +1,5 @@
 import {useEffect, useRef} from 'react';
-import type {Turn} from '@coveo/thermidor';
+import type {Turn} from '@coveo/converse';
 import {AgentResponseBlock} from '../../../demo-schema-react/src/components/ConversationPage/AgentResponseBlock.js';
 import {ErrorTurnBlock} from '../../../demo-schema-react/src/components/ConversationPage/ErrorTurnBlock.js';
 import {TurnSeparator} from '../../../demo-schema-react/src/components/ConversationPage/TurnSeparator.js';

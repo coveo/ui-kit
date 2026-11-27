@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: converse
+  title: '@coveo/converse'
+  description: Converse SDK, an experimental, framework-agnostic headless engine for search and conversational experiences
+spec:
+  type: library
+  lifecycle: experimental
+  owner: group:default/dxui
+  system: ui-kit

@@ -3792,7 +3792,7 @@ describe('createSession session keys', () => {
 
 describe('createSession with the final A2-UI 1.0 stream (stand-in Breadbox contract)', () => {
   /**
-   * `@coveo/thermidor` does not depend on `@coveo/thermidor-schema`, so this Breadbox contract is a
+   * `@coveo/converse` does not depend on `@coveo/thermidor-schema`, so this Breadbox contract is a
    * hand-written stand-in. It uses the facet and component id pattern of the schema release that
    * accepts snake_case ids, so snake_case and hyphenated ids both pass.
    */

@@ -1,6 +1,6 @@
-description: Thermidor package
+description: Converse SDK package
 file_patterns:
-  - packages/thermidor/**
+  - packages/converse/**
 
 reviewers:
   dxui: ~

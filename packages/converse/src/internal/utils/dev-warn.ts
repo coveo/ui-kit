@@ -9,6 +9,6 @@
  */
 export function devWarn(message: string): void {
   if (process.env.NODE_ENV !== 'production') {
-    console.warn(`[thermidor] ${message}`);
+    console.warn(`[converse] ${message}`);
   }
 }

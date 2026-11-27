@@ -1,6 +1,6 @@
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import {cleanup, render} from '@testing-library/react';
-import type {A2uiRendererAction, SessionRequest} from '@coveo/thermidor';
+import type {A2uiRendererAction, SessionRequest} from '@coveo/converse';
 import {
   StorefrontSessionProvider,
   useStorefrontSend,
@@ -14,7 +14,7 @@ const fakeSession = vi.hoisted(() => ({
   request: undefined as SessionRequest | undefined,
 }));
 
-vi.mock('@coveo/thermidor', () => ({
+vi.mock('@coveo/converse', () => ({
   createSession: () => ({
     get request() {
       return fakeSession.request;

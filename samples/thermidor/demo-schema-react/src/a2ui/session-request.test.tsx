@@ -1,7 +1,7 @@
 import {act, render, renderHook} from '@testing-library/react';
 import type {ReactNode} from 'react';
 import {describe, expect, it, vi} from 'vitest';
-import type {ActionError, SessionRequest} from '@coveo/thermidor';
+import type {ActionError, SessionRequest} from '@coveo/converse';
 import {
   hasFailed,
   isBlocking,

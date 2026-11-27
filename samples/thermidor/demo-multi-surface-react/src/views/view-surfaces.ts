@@ -1,4 +1,4 @@
-import type {DiscoveredSurface, Turn} from '@coveo/thermidor';
+import type {DiscoveredSurface, Turn} from '@coveo/converse';
 import type {StorefrontView, TurnViews} from '../session/storefront-session.js';
 
 /** The view of the assistant's conversation: the assistant layout and the chat panel send on it. */

@@ -1,4 +1,4 @@
-import type {SerializedSession} from '@coveo/thermidor';
+import type {SerializedSession} from '@coveo/converse';
 
 /** A saved conversation, as the drawer lists it. */
 export interface ConversationSummary {

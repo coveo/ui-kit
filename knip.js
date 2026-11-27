@@ -240,7 +240,7 @@ export default {
     'packages/create-atomic-result-component': {
       ignore: ['template/**/*'],
     },
-    'packages/thermidor': {
+    'packages/converse': {
       entry: ['src/**/*.test-d.ts'],
       ignoreExportsUsedInFile: false,
     },

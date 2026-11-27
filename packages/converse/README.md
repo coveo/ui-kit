@@ -1,6 +1,8 @@
-# Coveo Thermidor
+# Coveo Converse SDK
 
-`@coveo/thermidor` is an experimental, framework-agnostic client for a single, stateful, intent-routing **unified converse endpoint**. It exposes one factory — `createSession(config)` — that returns a `Session`: a plain observable list of `Turn`s folded from a server-sent-event (SSE) stream, plus a single action-dispatch entry point wired straight to the renderer.
+Formerly published as `@coveo/thermidor`.
+
+`@coveo/converse` is an experimental, framework-agnostic client for a single, stateful, intent-routing **unified converse endpoint**. It exposes one factory — `createSession(config)` — that returns a `Session`: a plain observable list of `Turn`s folded from a server-sent-event (SSE) stream, plus a single action-dispatch entry point wired straight to the renderer.
 
 The package is experimental: its API can change in any release.
 
@@ -8,14 +10,14 @@ The package is experimental: its API can change in any release.
 
 ## The idea
 
-The server streams schema-defined [A2UI](https://github.com/google/A2UI) components; the client renders what the server sends. Thermidor's job is to transmit consumer input to the endpoint and fold the streamed result into an observable list of turns — it derives no use-case behavior beyond that fold. The contracts schema, the endpoint URL, and the ambient context are all consumer-injected, so a single package build serves public, internal (private-registry schema), and proxied deployments.
+The server streams schema-defined [A2UI](https://github.com/google/A2UI) components; the client renders what the server sends. The Converse SDK's job is to transmit consumer input to the endpoint and fold the streamed result into an observable list of turns — it derives no use-case behavior beyond that fold. The contracts schema, the endpoint URL, and the ambient context are all consumer-injected, so a single package build serves public, internal (private-registry schema), and proxied deployments.
 
 Component state travels **inline** through the A2-UI data model: the server sends `updateDataModel` operations under `/state/<id>`, and the renderer resolves each prop through an A2-UI Data_Binding (`{ "@path": <JSON Pointer> }`) against that data model. Renderers are "dumb": they receive resolved state in their `props` and never hydrate a controller or join a snapshot themselves. A2-UI is the only supported state source. This inline model superseded the earlier remote-controller / AG-UI `StateSnapshot` design.
 
 ## Public surface
 
 ```typescript
-import {createSession} from '@coveo/thermidor';
+import {createSession} from '@coveo/converse';
 import {ComponentContractsSchema} from '@coveo/thermidor-schema';
 
 const session = createSession({
@@ -99,7 +101,7 @@ It is **fire-and-forget**: the returned Promise always resolves and never reject
 
 ### One request at a time
 
-Thermidor sends one request at a time per session, `initialize`, prompts, component actions and retries alike, except the [concurrent actions](#concurrent-and-cached-actions) the producer announces. The Gateway runs one turn per session and refuses a request that arrives meanwhile (see [Concurrency conflicts](#concurrency-conflicts)). A dispatch made while a request is in flight is withheld: nothing is sent, nothing is queued, and its promise resolves at once with a dev-only warning. To send it, dispatch it again once the session is free. Each `dispatchAction` promise resolves once its own request ends.
+The Converse SDK sends one request at a time per session, `initialize`, prompts, component actions and retries alike, except the [concurrent actions](#concurrent-and-cached-actions) the producer announces. The Gateway runs one turn per session and refuses a request that arrives meanwhile (see [Concurrency conflicts](#concurrency-conflicts)). A dispatch made while a request is in flight is withheld: nothing is sent, nothing is queued, and its promise resolves at once with a dev-only warning. To send it, dispatch it again once the session is free. Each `dispatchAction` promise resolves once its own request ends.
 
 - `session.request` is the request being sent (`{kind: 'initialize'}`, `{kind: 'prompt', turnId}` or `{kind: 'action', component, name, surfaceId, sourceComponentId, turnId?}`, with no `turnId` before the first turn), or `undefined` when idle. An action's run counts, a follow-up included. Read it synchronously, or through `subscribe`, to know when a dispatch would be withheld: disable or dim the controls that would send one, or keep the shopper's latest intent and dispatch it once `request` is `undefined`. Concurrent actions are never withheld for it. `component` is the dispatching node's discriminant, so a consumer can key its own action lists, such as the actions that keep its surfaces usable, by component and action name, typed by the contracts with `ComponentActionNames`.
 - `cancel()` stops the request in flight, but `session.request` stays set until it has unwound, a few microtasks later, so a dispatch made right after `cancel()` is withheld. Wait for `request` to become `undefined`, through `subscribe`, before sending the next one. A cancelled action sets no `session.actionError`.
@@ -130,7 +132,7 @@ Each concurrent action can carry a `cache` policy, the lifetime of its answers; 
 
 ### Optimistic values
 
-To show a gesture's expected value until the session has answered it, show that value from the moment the gesture is sent until its dispatch promise resolves, then give way to the producer's value. A renderer that returns its action handler's promise from its own dispatch, as `@a2ui/web_core`'s surfaces do, hands back the `session.dispatchAction` promise, so awaiting the renderer's dispatch is enough. Thermidor doesn't depend on a UI framework, so any state mechanism works. With React's `useOptimistic`, for example, a transition that awaits the dispatch lasts exactly that long:
+To show a gesture's expected value until the session has answered it, show that value from the moment the gesture is sent until its dispatch promise resolves, then give way to the producer's value. A renderer that returns its action handler's promise from its own dispatch, as `@a2ui/web_core`'s surfaces do, hands back the `session.dispatchAction` promise, so awaiting the renderer's dispatch is enough. Converse doesn't depend on a UI framework, so any state mechanism works. With React's `useOptimistic`, for example, a transition that awaits the dispatch lasts exactly that long:
 
 ```tsx
 const [values, addOptimisticValues] = useOptimistic(producerValues);
@@ -141,11 +143,11 @@ startTransition(async () => {
 });
 ```
 
-The optimistic value gives way to the producer's once the gesture is over, whatever the outcome, so a failed or withheld gesture needs no rollback. A withheld gesture's promise resolves at once, so its optimistic value disappears as soon as it shows: while `session.request` is set, disable the controls whose action would be withheld, or hold their latest value back until the session is free (see [One request at a time](#one-request-at-a-time)). Thermidor never computes the expected value: the integrator does.
+The optimistic value gives way to the producer's once the gesture is over, whatever the outcome, so a failed or withheld gesture needs no rollback. A withheld gesture's promise resolves at once, so its optimistic value disappears as soon as it shows: while `session.request` is set, disable the controls whose action would be withheld, or hold their latest value back until the session is free (see [One request at a time](#one-request-at-a-time)). Converse never computes the expected value: the integrator does.
 
 ### Concurrency conflicts
 
-When the Gateway is still busy with another request for the session, it rejects the new one (`409`, `AGENT:ACTION_IN_FLIGHT`); a `409` with another `errorCode` is an ordinary failure. Thermidor sends the request again, rebuilt so the context providers are read again, after a backoff that starts at 250 ms and doubles up to 4 seconds, with jitter, while less than 30 seconds have passed since the first attempt, the attempts included. That budget only decides whether to try again: the last attempt, sent just before it runs out, can still succeed after it. `session.request` stays set meanwhile, and a conflict that recovers shows nothing. `cancel()` stops the retries. [Concurrent actions](#concurrent-and-cached-actions) are never retried. Other rejections, such as a `429` or a `503`, aren't retried either, except for the `initialize` the session sends itself (see [Opening the session](#opening-the-session)).
+When the Gateway is still busy with another request for the session, it rejects the new one (`409`, `AGENT:ACTION_IN_FLIGHT`); a `409` with another `errorCode` is an ordinary failure. The Converse SDK sends the request again, rebuilt so the context providers are read again, after a backoff that starts at 250 ms and doubles up to 4 seconds, with jitter, while less than 30 seconds have passed since the first attempt, the attempts included. That budget only decides whether to try again: the last attempt, sent just before it runs out, can still succeed after it. `session.request` stays set meanwhile, and a conflict that recovers shows nothing. `cancel()` stops the retries. [Concurrent actions](#concurrent-and-cached-actions) are never retried. Other rejections, such as a `429` or a `503`, aren't retried either, except for the `initialize` the session sends itself (see [Opening the session](#opening-the-session)).
 
 If it gives up:
 
@@ -218,11 +220,11 @@ Each `DiscoveredSurface` carries `surfaceId`, `rootComponentType`, and `isLoadin
 ## Validation and displayed values
 
 - **Client-side validation is retained, transparently.** The injected `contracts` schema stays the sole validation source, but the consumer never runs Zod and writes no adapter glue. Inbound `updateDataModel` ops are validated before they are applied to `session.state`, against the components of every live surface; outbound action payloads are validated in the private dispatch path before the POST. Both boundaries live inside the core. `session.a2uiMessages` is derived from the raw stream, so the renderer still receives an op that validation drops from `session.state`, and the component state seeded by `createSurface.dataModel`, which is never validated.
-- **Displayed-value formatting is agent-produced.** The renderer shows the state it receives through its `{ "@path" }` bindings; Thermidor does not reformat displayed values.
+- **Displayed-value formatting is agent-produced.** The renderer shows the state it receives through its `{ "@path" }` bindings; the Converse SDK does not reformat displayed values.
 
 ## Injected schema, endpoint, and context
 
-- **Contracts schema** — a consumer-injected Zod discriminated union (`contracts`) is the sole source for component-state and action-payload validation. Thermidor accepts it through a structural typing seam (`ContractsSchema` / `ComponentContractSchema` / `ParsableSchema`) that reads only public Zod API, so it declares no dependency on any specific schema package. It declares `zod` as a peer dependency spanning both majors (`3.25.76 || ^4`), so validation runs through the single shared `zod` instance resolved by the injected schema. A consumer whose renderer is built on Zod 3 injects a Zod 3 schema, such as `@coveo/thermidor-schema/zod3`.
+- **Contracts schema** — a consumer-injected Zod discriminated union (`contracts`) is the sole source for component-state and action-payload validation. The Converse SDK accepts it through a structural typing seam (`ContractsSchema` / `ComponentContractSchema` / `ParsableSchema`) that reads only public Zod API, so it declares no dependency on any specific schema package. It declares `zod` as a peer dependency spanning both majors (`3.25.76 || ^4`), so validation runs through the single shared `zod` instance resolved by the injected schema. A consumer whose renderer is built on Zod 3 injects a Zod 3 schema, such as `@coveo/thermidor-schema/zod3`.
 - **Endpoint** — when `endpoint` is provided, the client POSTs to it verbatim. When absent, it resolves `https://{orgId}.org.coveo.com` and appends the fixed converse path `/api/preview/organizations/{orgId}/agents/commerce/agui/converse`.
 - **Context providers** — `navigatorContextProvider` (required) and `commerceContextProvider` are synchronous functions read fresh per request. The navigator context carries the request's `language`, `country` and `currency`. Context is never stored on the session and never serialized.
 
@@ -239,17 +241,16 @@ The following are intentionally **not yet implemented** and are recorded as debt
 - **Interim surface derivation** — `surfaces` is a typed projection derived from `activities`, annotated as interim; the core interprets no `rootComponentType`; consumers read it. It is retired once the server sends typed routing.
 - **Renderer stream bypasses validation** — inbound ops that in-transit validation drops from `session.state` still reach the renderer through `session.a2uiMessages`, and so does the component state seeded by `createSurface.dataModel`, which is never validated. A fix must cover both paths.
 - **Enforced action-payload typing at the renderer boundary** — the renderer hands `dispatchAction` a loosely typed action message, so per-component action typing is applied by convention (the consumer opts into the generated `XxxAction` types) rather than enforced at the boundary. Recoverable later if the package owns binding resolution.
-- **Package rename** — deferred as low-stakes; the package remains `@coveo/thermidor`.
 
 ## Development
 
 ```bash
-pnpm --filter @coveo/thermidor build      # build project
-pnpm --filter @coveo/thermidor test       # run unit + property tests
-pnpm --filter @coveo/thermidor test:dts   # validate public API surface (incl. DX type test)
+pnpm --filter @coveo/converse build      # build project
+pnpm --filter @coveo/converse test       # run unit + property tests
+pnpm --filter @coveo/converse test:dts   # validate public API surface (incl. DX type test)
 ```
 
-The API report lives in `api-report/`. When the public API changes, run `pnpm turbo run test:dts --filter=@coveo/thermidor` and commit the updated reports; CI fails otherwise.
+The API report lives in `api-report/`. When the public API changes, run `pnpm turbo run test:dts --filter=@coveo/converse` and commit the updated reports; CI fails otherwise.
 
 ## Architecture
 

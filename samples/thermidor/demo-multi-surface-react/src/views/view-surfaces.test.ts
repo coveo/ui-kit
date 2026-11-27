@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import type {Turn} from '@coveo/thermidor';
+import type {Turn} from '@coveo/converse';
 import {makeSurfaces, makeTurn} from '../../../demo-schema-react/src/test/turn-fixtures.js';
 import type {StorefrontView} from '../session/storefront-session.js';
 import {buildViewSurfaces} from './view-surfaces.js';

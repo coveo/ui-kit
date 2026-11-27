@@ -2,7 +2,7 @@ import {readdirSync, readFileSync, statSync} from 'node:fs';
 import {join, resolve} from 'node:path';
 import {describe, expect, it} from 'vitest';
 import * as thermidorSchema from '@coveo/thermidor-schema/zod3';
-import * as thermidor from '@coveo/thermidor';
+import * as thermidor from '@coveo/converse';
 
 const srcRoot = resolve(process.cwd(), 'src');
 
@@ -50,7 +50,7 @@ describe('import boundary', () => {
     expect('ProductListControllerContractSchema' in thermidorSchema).toBe(false);
   });
 
-  it('does not export removed controller symbols from @coveo/thermidor', () => {
+  it('does not export removed controller symbols from @coveo/converse', () => {
     expect('AdvertisedRemoteController' in thermidor).toBe(false);
     expect('RemoteControllerSchemaId' in thermidor).toBe(false);
     // The RemoteController public API is removed under the inline-state model.

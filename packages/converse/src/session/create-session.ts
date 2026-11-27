@@ -100,7 +100,7 @@ import type {
  * This is the `ActionPayload` that `@a2ui/web_core`'s `MessageProcessor` passes to the action
  * handler given to its constructor, which is how `@a2ui/react` surfaces deliver their actions.
  * {@link Session.dispatchAction} accepts this shape, so it can be that handler as is, with no
- * adapter. It is declared structurally, so `@coveo/thermidor` depends on no renderer package.
+ * adapter. It is declared structurally, so `@coveo/converse` depends on no renderer package.
  *
  * @group Actions
  */

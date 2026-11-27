@@ -1,6 +1,6 @@
 import {render, screen, act} from '@testing-library/react';
 import {describe, it, expect, vi, beforeEach} from 'vitest';
-import type {Session, Turn} from '@coveo/thermidor';
+import type {Session, Turn} from '@coveo/converse';
 import {AppShell} from './AppShell.js';
 import {makeSurfaces, makeTurn} from '../test/turn-fixtures.js';
 

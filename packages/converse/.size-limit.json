@@ -1,11 +1,11 @@
 [
   {
-    "name": "@coveo/thermidor - main",
+    "name": "@coveo/converse - main",
     "path": "dist/index.js",
     "limit": "14.5 kB"
   },
   {
-    "name": "@coveo/thermidor - private",
+    "name": "@coveo/converse - private",
     "path": "dist/private.js",
     "limit": "14.5 kB"
   }

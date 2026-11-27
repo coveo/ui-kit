@@ -1,7 +1,7 @@
 import {useEffect, useId, useRef, useState} from 'react';
 import {AgentResponseBlock} from '../../../demo-schema-react/src/components/ConversationPage/AgentResponseBlock.js';
 import {UserPromptBubble} from '../../../demo-schema-react/src/components/ConversationPage/UserPromptBubble.js';
-import type {Turn} from '@coveo/thermidor';
+import type {Turn} from '@coveo/converse';
 import {PageTurnStatus} from '../pages/PageTurnStatus.js';
 import {
   useSessionSnapshot,

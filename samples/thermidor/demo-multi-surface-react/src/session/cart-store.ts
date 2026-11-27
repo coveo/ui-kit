@@ -1,4 +1,4 @@
-import type {CommerceCartItem} from '@coveo/thermidor';
+import type {CommerceCartItem} from '@coveo/converse';
 import type {UpdateCartPayload} from '@coveo/thermidor-schema';
 
 export interface CartStore {

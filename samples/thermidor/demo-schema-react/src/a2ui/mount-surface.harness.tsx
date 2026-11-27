@@ -2,7 +2,7 @@ import {useMemo, useState, type JSXElementConstructor, type PropsWithChildren} f
 import {vi} from 'vitest';
 import {render, act, type RenderResult} from '@testing-library/react';
 import type {ActionPayload} from '@a2ui/web_core';
-import type {A2uiMessage} from '@coveo/thermidor';
+import type {A2uiMessage} from '@coveo/converse';
 import {
   createThermidorCatalog,
   THERMIDOR_CATALOG_ID,

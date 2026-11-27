@@ -1,12 +1,12 @@
 {
-  "name": "@coveo/thermidor",
+  "name": "@coveo/converse",
   "version": "0.10.0",
-  "description": "Experimental package for a unified, framework-agnostic headless engine for search and conversational experiences",
+  "description": "Converse SDK, an experimental, framework-agnostic headless engine for search and conversational experiences",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coveo/ui-kit.git",
-    "directory": "packages/thermidor"
+    "directory": "packages/converse"
   },
   "files": [
     "dist"

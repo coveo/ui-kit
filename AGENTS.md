@@ -33,6 +33,7 @@
 - [`@coveo/atomic-react`](packages/atomic-react/): React specific wrapper for the Atomic component library
 - [`@coveo/auth`](packages/auth/): Functions to help authenticate with the Coveo platform.
 - [`@coveo/bueno`](packages/bueno/): A simple validator
+- [`@coveo/converse`](packages/converse/): Converse SDK, an experimental, framework-agnostic headless engine for search and conversational experiences
 - [`coveo.analytics`](packages/coveo-analytics/): 📈 Coveo analytics client (node and browser compatible) 
 - [`@coveo/create-atomic`](packages/create-atomic/): Coveo Atomic Generator
 - [`@coveo/create-atomic-component`](packages/create-atomic-component/): Initialize a Coveo Atomic Component
@@ -45,7 +46,6 @@
 - [`@coveo/quantic`](packages/quantic/): A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform
 - [`@coveo/relay`](packages/relay/): A library for sending analytics events using Coveo's Event protocol.
 - [`@coveo/shopify`](packages/shopify/): Utilities to integrate Shopify with Coveo's commerce engine
-- [`@coveo/thermidor`](packages/thermidor/): Experimental package for a unified, framework-agnostic headless engine for search and conversational experiences
 
 ### Private
 

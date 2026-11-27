@@ -1,4 +1,4 @@
-import type {DiscoveredSurface, Turn, TurnResponse} from '@coveo/thermidor';
+import type {DiscoveredSurface, Turn, TurnResponse} from '@coveo/converse';
 
 /**
  * Shared builders for the reshaped {@link Turn} model (ADR-010). Tests construct
