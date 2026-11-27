@@ -1438,7 +1438,7 @@ describe('c-quantic-generated-answer', () => {
           selectors.generatedAnswerBodyComponent
         );
         generatedAnswerBody.dispatchEvent(
-          new CustomEvent('quantic__citationhover', {
+          new CustomEvent('quantic__generatedanswercitationhover', {
             detail: {
               citationId: exampleCitationId,
               citationHoverTimeMs: exampleCitationHoverTimeMs,
@@ -1483,7 +1483,7 @@ describe('c-quantic-generated-answer', () => {
           selectors.generatedAnswerThread
         );
         thread.dispatchEvent(
-          new CustomEvent('quantic__citationhover', {
+          new CustomEvent('quantic__generatedanswercitationhover', {
             detail: {
               citationId: exampleCitationId,
               citationHoverTimeMs: exampleCitationHoverTimeMs,

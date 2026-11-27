@@ -27,8 +27,8 @@ module.exports = {
       '<rootDir>/force-app/test/jest-mocks/lightning/navigation/navigation',
     '^c/quanticResultActionStyles$':
       '<rootDir>/force-app/main/default/lwc/quanticResultActionStyles/quanticResultActionStyles',
-    '^c/searchBoxStyle$':
-      '<rootDir>/force-app/main/default/lwc/searchBoxStyle/searchBoxStyle',
+    '^c/quanticSearchBoxStyles$':
+      '<rootDir>/force-app/main/default/lwc/quanticSearchBoxStyles/quanticSearchBoxStyles',
     '^c/quanticFacetStyles$':
       '<rootDir>/force-app/main/default/lwc/quanticFacetStyles/quanticFacetStyles',
     '^c/(.*)$': [

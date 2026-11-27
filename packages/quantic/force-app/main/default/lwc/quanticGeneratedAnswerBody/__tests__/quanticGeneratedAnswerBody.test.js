@@ -164,7 +164,7 @@ describe('c-quantic-generated-answer-body', () => {
     expect(copy.answerId).toBe('answer-1');
   });
 
-  it('should send the answerId within event details when dispatching the #quantic__citationhover event', async () => {
+  it('should send the answerId within event details when dispatching the #quantic__generatedanswercitationhover event', async () => {
     const element = createTestComponent({
       ...defaultOptions,
       generatedAnswer: {
@@ -174,7 +174,7 @@ describe('c-quantic-generated-answer-body', () => {
       },
     });
     const handler = jest.fn();
-    element.addEventListener('quantic__citationhover', handler);
+    element.addEventListener('quantic__generatedanswercitationhover', handler);
     await flushPromises();
 
     const citations = element.shadowRoot.querySelector(

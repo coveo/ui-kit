@@ -281,8 +281,40 @@ describe('c-quantic-result-link', () => {
     });
   });
 
-  describe('with a custom value for the displayed field property', () => {
+  describe('with a custom value for the field property', () => {
     it('should display the correct field as the link text', async () => {
+      const customFieldToDisplay = 'exampleField';
+
+      const element = createTestComponent({
+        result: {
+          ...exampleResult,
+          raw: {[customFieldToDisplay]: 'exampleValue'},
+        },
+        field: customFieldToDisplay,
+      });
+      await flushPromises();
+
+      const quanticTextFieldComponent = element.shadowRoot.querySelector(
+        selectors.quanticTextField
+      );
+
+      expect(quanticTextFieldComponent).not.toBeNull();
+      expect(quanticTextFieldComponent.field).toBe(customFieldToDisplay);
+    });
+  });
+
+  describe('with a custom value for the deprecated displayedField property', () => {
+    let warnSpy;
+
+    beforeEach(() => {
+      warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      warnSpy.mockRestore();
+    });
+
+    it('should display the correct field as the link text and warn about the deprecation', async () => {
       const customFieldToDisplay = 'exampleField';
 
       const element = createTestComponent({
@@ -298,12 +330,17 @@ describe('c-quantic-result-link', () => {
         selectors.quanticTextField
       );
 
-      expect(quanticTextFieldComponent).not.toBeNull();
       expect(quanticTextFieldComponent.field).toBe(customFieldToDisplay);
+      expect(element.field).toBe(customFieldToDisplay);
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'The "displayedField" property of c-quantic-result-link is deprecated'
+        )
+      );
     });
   });
 
-  describe('with the default value for the displayed field property', () => {
+  describe('with the default value for the field property', () => {
     describe('when the title field exists on the result', () => {
       it('should display the title field as the link text', async () => {
         const defaultFieldToDisplay = 'title';

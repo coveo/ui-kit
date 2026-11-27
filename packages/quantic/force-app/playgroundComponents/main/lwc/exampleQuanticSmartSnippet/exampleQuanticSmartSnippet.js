@@ -17,10 +17,10 @@ export default class ExampleQuanticSmartSnippet extends LightningElement {
       defaultValue: 'search',
     },
     {
-      attribute: 'maximumSnippetHeight',
-      label: 'Maximum snippet height',
+      attribute: 'maxCollapsedHeight',
+      label: 'Max collapsed height',
       description:
-        'The maximum height an answer can have in pixels. Any part of an answer exceeding this height will be hidden by default and expendable via a "show more" button.',
+        'The maximum height an answer can have in pixels. Any part of an answer exceeding this height will be hidden by default and expandable via a "show more" button.',
       defaultValue: 250,
     },
   ];

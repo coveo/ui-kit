@@ -23,7 +23,7 @@ const FEEDBACK_DISLIKED_STATE = 'disliked';
  * @fires CustomEvent#quantic__generatedanswerlike
  * @fires CustomEvent#quantic__generatedanswerdislike
  * @fires CustomEvent#quantic__generatedanswercopy
- * @fires CustomEvent#quantic__citationhover
+ * @fires CustomEvent#quantic__generatedanswercitationhover
  */
 export default class QuanticGeneratedAnswerBody extends LightningElement {
   /**
@@ -124,10 +124,13 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
   }
 
   handleCitationHover = (citationId, citationHoverTimeMs) => {
-    this.dispatchAnswerInteractionEvent('quantic__citationhover', {
-      citationId,
-      citationHoverTimeMs,
-    });
+    this.dispatchAnswerInteractionEvent(
+      'quantic__generatedanswercitationhover',
+      {
+        citationId,
+        citationHoverTimeMs,
+      }
+    );
   };
 
   dispatchAnswerInteractionEvent(eventName, payload = {}) {

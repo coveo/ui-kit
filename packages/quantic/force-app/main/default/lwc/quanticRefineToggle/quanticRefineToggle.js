@@ -9,7 +9,10 @@ import {
   registerComponentForInit,
   getAllFacetsFromStore,
 } from 'c/quanticHeadlessLoader';
+import {warnDeprecatedPropertyOnce} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
+
+const COMPONENT_NAME = 'c-quantic-refine-toggle';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").QuerySummary} QuerySummary */
@@ -32,7 +35,7 @@ import {LightningElement, api} from 'lwc';
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-refine-toggle engine-id={engineId} hide-sort full-screen title="Filters" disable-dynamic-navigation>
+ * <c-quantic-refine-toggle engine-id={engineId} hide-sort full-screen button-tooltip="Filters" disable-dynamic-navigation>
  *   <div slot="refine-title">Custom Title</div>
  *   <div slot="button-content">
  *     Custom Label
@@ -70,11 +73,20 @@ export default class QuanticRefineToggle extends LightningElement {
    */
   @api fullScreen = false;
   /**
-   * The title of the toggle button.
+   * The tooltip displayed when hovering the toggle button.
    * @api
    * @type {string}
+   * @defaultValue `'Sort & Filters'`
    */
-  @api title = this.labels.sortAndFilters;
+  @api buttonTooltip;
+  /**
+   * The tooltip displayed when hovering the toggle button.
+   * @api
+   * @type {string}
+   * @defaultValue `'Sort & Filters'`
+   * @deprecated Use `buttonTooltip` instead.
+   */
+  @api title;
   /**
    * Indicates whether to disable the dynamic navigation feature according to [the Dynamic Navigation Experience](https://docs.coveo.com/en/3383/leverage-machine-learning/about-dynamic-navigation-experience-dne).
    * @api
@@ -105,6 +117,9 @@ export default class QuanticRefineToggle extends LightningElement {
   renderedFacets = {};
 
   connectedCallback() {
+    if (this.title !== undefined) {
+      warnDeprecatedPropertyOnce(COMPONENT_NAME, 'title', 'buttonTooltip');
+    }
     registerComponentForInit(this, this.engineId);
     this.addEventListener('quantic__renderfacet', this.handleRenderFacetEvent);
   }
@@ -311,7 +326,7 @@ export default class QuanticRefineToggle extends LightningElement {
   get buttonTitle() {
     return this.refineButtonDisabled
       ? this.labels.noFiltersAvailableForThisQuery
-      : this.title;
+      : (this.buttonTooltip ?? this.title ?? this.labels.sortAndFilters);
   }
 
   /**

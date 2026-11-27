@@ -2,7 +2,7 @@ import {testSearch, testInsight, expect} from './fixture';
 import {useCaseTestCases} from '../../../../../../playwright/utils/useCase';
 import smartSnippetData from './data';
 
-const maximumSnippetHeight = 250;
+const maxCollapsedHeight = 250;
 
 const fixtures = {
   search: testSearch,
@@ -14,7 +14,7 @@ useCaseTestCases.forEach((useCase) => {
 
   test.describe(`quantic smart snippet ${useCase.label}`, () => {
     test.use({
-      options: {maximumSnippetHeight},
+      options: {maxCollapsedHeight},
     });
 
     test.describe('when the smart snippet is expanded', () => {

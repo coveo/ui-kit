@@ -4,7 +4,11 @@ import {
   getHeadlessBundle,
   getHeadlessEnginePromise,
 } from 'c/quanticHeadlessLoader';
-import {ResultUtils, unwrapLockerProxiedObject} from 'c/quanticUtils';
+import {
+  ResultUtils,
+  unwrapLockerProxiedObject,
+  warnDeprecatedPropertyOnce,
+} from 'c/quanticUtils';
 import {NavigationMixin} from 'lightning/navigation';
 import {LightningElement, api} from 'lwc';
 
@@ -12,6 +16,8 @@ import {LightningElement, api} from 'lwc';
  * Some document types cannot be opened directly in Salesforce, so we navigate to their parent record (e.g., CaseComment and FeedComment).
  */
 const documentTypesRequiringParentRecord = ['CaseComment', 'FeedComment'];
+
+const COMPONENT_NAME = 'c-quantic-result-link';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
@@ -70,13 +76,36 @@ export default class QuanticResultLink extends NavigationMixin(
     }
   }
   /**
-   * Indicates the result field to display as the link text.
+   * The result field to display as the link text.
    * @api
    * @type {string}
    * @defaultValue `'title'`
    */
-  @api displayedField = 'title';
+  @api
+  get field() {
+    return this._field;
+  }
+  set field(value) {
+    this._field = value;
+  }
+  /**
+   * The result field to display as the link text.
+   * @api
+   * @type {string}
+   * @defaultValue `'title'`
+   * @deprecated Use `field` instead.
+   */
+  @api
+  get displayedField() {
+    return this._field;
+  }
+  set displayedField(value) {
+    warnDeprecatedPropertyOnce(COMPONENT_NAME, 'displayedField', 'field');
+    this._field = value;
+  }
 
+  /** @type {string} */
+  _field = 'title';
   /** @type {SearchEngine} */
   engine;
   /** @type {AnyHeadless} */
@@ -176,9 +205,8 @@ export default class QuanticResultLink extends NavigationMixin(
    * Returns the result field to display as the link title.
    */
   get fieldToDisplay() {
-    return this.result[this.displayedField] ||
-      this.result.raw?.[this.displayedField]
-      ? this.displayedField
+    return this.result[this.field] || this.result.raw?.[this.field]
+      ? this.field
       : 'clickUri';
   }
 
