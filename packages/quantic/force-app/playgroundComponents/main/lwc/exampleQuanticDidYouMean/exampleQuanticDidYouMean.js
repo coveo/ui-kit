@@ -28,7 +28,7 @@ export default class ExampleQuanticPager extends LightningElement {
       label: 'Query Correction Mode',
       description:
         'Defines which query correction system to use. Possible values are: legacy, next',
-      defaultValue: 'legacy',
+      defaultValue: 'next',
     },
   ];
 

@@ -54,9 +54,9 @@ export default class QuanticDidYouMean extends LightningElement {
    * The `legacy` system will send two requests to the API to get the suggestions, while the `next` system will send one request.
    * @api
    * @type {string}
-   * @defaultValue 'legacy'
+   * @defaultValue 'next'
    */
-  @api queryCorrectionMode = 'legacy';
+  @api queryCorrectionMode = 'next';
 
   /** @type {boolean}*/
   @track hasQueryCorrection;

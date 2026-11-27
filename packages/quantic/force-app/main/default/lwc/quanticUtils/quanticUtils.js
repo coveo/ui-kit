@@ -2,7 +2,6 @@ import LOCALE from '@salesforce/i18n/locale';
 
 /** @typedef {import("coveo").Result} Result */
 
-export * from './recentQueriesUtils';
 export * from './markdownUtils';
 export * from './facetDependenciesUtils';
 export * from './citationAnchoringUtils';

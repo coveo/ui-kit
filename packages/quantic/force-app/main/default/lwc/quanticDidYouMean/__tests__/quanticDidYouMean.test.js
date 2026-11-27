@@ -39,7 +39,7 @@ const exampleEngine = {
   id: 'exampleEngineId',
 };
 
-const defaultQueryCorrectionMode = 'legacy';
+const defaultQueryCorrectionMode = 'next';
 const defaultDisableQueryAutoCorrection = false;
 
 const defaultOptions = {
