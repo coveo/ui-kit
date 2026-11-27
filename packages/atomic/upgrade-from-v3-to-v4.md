@@ -55,7 +55,7 @@ These components received errors without displaying them, so an invalid configur
 - `atomic-recs-result`
 - `atomic-result`
 
-`atomic-tab-manager` now shows the error of an invalid `atomic-tab` child, and an `atomic-sort-expression` placed outside an `atomic-sort-dropdown` now sets its `error` property. The timeframe facets are ready to display the error of an invalid `atomic-timeframe` child, which will show once `atomic-timeframe` validation becomes fatal.
+`atomic-tab-manager` now replaces its tab bar with the error box when an `atomic-tab` child is invalid, for example when its `label` is missing or empty, and an `atomic-sort-expression` placed outside an `atomic-sort-dropdown` now sets its `error` property. The timeframe facets are ready to display the error of an invalid `atomic-timeframe` child, which will show once `atomic-timeframe` validation becomes fatal.
 
 **Atomic Version 3**
 
