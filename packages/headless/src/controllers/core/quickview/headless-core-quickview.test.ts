@@ -92,6 +92,27 @@ describe('QuickviewCore', () => {
         });
       });
     });
+
+    describe('when #highlightTerms is false', () => {
+      beforeEach(() => {
+        defaultOptions.result = buildMockResult({uniqueId});
+        initQuickview({...defaultOptions, highlightTerms: false});
+
+        quickview.fetchResultContent();
+      });
+
+      it('passes #highlightTerms to the #fetchResultContent action', () => {
+        expect(fetchResultContent).toHaveBeenCalledWith(
+          expect.objectContaining({uniqueId, highlightTerms: false})
+        );
+      });
+
+      it('passes #highlightTerms to the #updateContentURL action', () => {
+        expect(updateContentURL).toHaveBeenCalledWith(
+          expect.objectContaining({uniqueId, highlightTerms: false})
+        );
+      });
+    });
   });
 
   it(`when configured result uniqueId matches the uniqueId in state,

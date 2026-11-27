@@ -86,6 +86,7 @@ export const updateContentURL = createAsyncThunk<
     await options.buildResultPreviewRequest(state, {
       uniqueId: options.uniqueId,
       requestedOutputSize: options.requestedOutputSize,
+      highlightTerms: options.highlightTerms,
     }),
     options.path
   );

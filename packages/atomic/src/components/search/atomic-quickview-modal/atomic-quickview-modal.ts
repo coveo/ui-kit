@@ -1,10 +1,5 @@
 import '@/src/components/common/atomic-modal/atomic-modal';
-import {
-  buildInteractiveResult,
-  type InteractiveResult,
-  type Result,
-  type TermsToHighlight,
-} from '@coveo/headless';
+import {buildInteractiveResult, type InteractiveResult, type Result} from '@coveo/headless';
 import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '@/src/components/common/atomic-modal/export-parts';
@@ -15,11 +10,12 @@ import type {Bindings} from '@/src/components/search/atomic-search-interface/int
 import {renderQuickviewSidebar} from '@/src/components/search/result-template-components/atomic-quickview-sidebar/atomic-quickview-sidebar';
 import {renderQuickviewIframe} from '@/src/components/search/result-template-components/quickview-iframe/quickview-iframe';
 import {buildQuickviewPreviewBar} from '@/src/components/search/result-template-components/quickview-preview-bar/quickview-preview-bar';
+import {QuickviewHighlights} from '@/src/components/search/result-template-components/quickview-word-highlight/quickview-highlights';
+import type {QuickviewWordHighlight} from '@/src/components/search/result-template-components/quickview-word-highlight/quickview-word-highlight';
 import {
+  getQuickviewKeywords,
   getWordsHighlights,
-  HIGHLIGHT_PREFIX,
-  type QuickviewWordHighlight,
-} from '@/src/components/search/result-template-components/quickview-word-highlight/quickview-word-highlight';
+} from '@/src/components/search/result-template-components/quickview-word-highlight/term-matcher';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -115,7 +111,7 @@ export class AtomicQuickviewModal extends LitElement implements InitializableCom
   private words: Record<string, QuickviewWordHighlight> = {};
 
   private iframeRef?: HTMLIFrameElement;
-  private highlightStyleSheets = new Map<string, CSSStyleSheet>();
+  private highlights = new QuickviewHighlights();
 
   /**
    * The HTML content to display in the quickview modal.
@@ -172,12 +168,12 @@ export class AtomicQuickviewModal extends LitElement implements InitializableCom
     this.content = undefined;
     this.result = undefined;
     this.interactiveResult = undefined;
-    this.highlightStyleSheets.clear();
+    this.highlights.detach();
   }
 
   willUpdate(changedProperties: Map<string, unknown>) {
     if (changedProperties.has('highlightKeywords')) {
-      this.handleHighlightsScripts();
+      this.highlights.update(this.highlightKeywords);
     }
   }
 
@@ -246,8 +242,9 @@ export class AtomicQuickviewModal extends LitElement implements InitializableCom
               content: this.content,
               onSetIframeRef: async (ref: HTMLIFrameElement) => {
                 this.iframeRef = ref;
-                this.words = getWordsHighlights(this.termsToHighlight, this.iframeRef);
-                this.handleHighlightsScripts();
+                this.words = getWordsHighlights(this.keywords, this.iframeRef);
+                this.highlights.attach(this.iframeRef, this.words);
+                this.highlights.update(this.highlightKeywords);
               },
             },
           })}
@@ -310,78 +307,9 @@ export class AtomicQuickviewModal extends LitElement implements InitializableCom
     return this.bindings.engine.state.resultPreview?.contentURL;
   }
 
-  private enableHighlights() {
-    this.removeDisableHighlightStyleSheet();
-  }
-
-  private enableHighlightsSpecificKeyword(identifier: string) {
-    this.removeDisableHighlightStyleSheet(identifier);
-  }
-
-  private disableHighlights() {
-    this.createDisableHighlightStyleSheet();
-  }
-
-  private disableHighlightsSpecificKeyword(identifier: string) {
-    this.createDisableHighlightStyleSheet(identifier);
-  }
-
-  private removeDisableHighlightStyleSheet(identifier?: string) {
-    const doc = this.iframeRef?.contentWindow?.document;
-    if (!doc) {
-      return;
-    }
-
-    const key = identifier ?? '';
-    const sheet = this.highlightStyleSheets.get(key);
-    if (!sheet) {
-      return;
-    }
-
-    doc.adoptedStyleSheets = doc.adoptedStyleSheets.filter((s) => s !== sheet);
-    this.highlightStyleSheets.delete(key);
-  }
-
-  private createDisableHighlightStyleSheet(identifier?: string) {
-    const doc = this.iframeRef?.contentWindow?.document;
-    if (!doc) {
-      return;
-    }
-
-    const key = identifier ?? '';
-    if (this.highlightStyleSheets.has(key)) {
-      return;
-    }
-
-    const sheet = new CSSStyleSheet();
-    sheet.replaceSync(
-      `[id^="${HIGHLIGHT_PREFIX}${identifier ? `:${identifier}` : ''}"] {
-        background-color: inherit !important;
-        color: inherit !important;
-      }`
-    );
-
-    this.highlightStyleSheets.set(key, sheet);
-    doc.adoptedStyleSheets = [...doc.adoptedStyleSheets, sheet];
-  }
-
-  private get termsToHighlight() {
-    const flatPhrasesToHighlight: TermsToHighlight = {};
-
-    const phrasesToHighlight = this.bindings.engine.state.search.response.phrasesToHighlight;
-
-    Object.entries(phrasesToHighlight).forEach(([phrase, keywords]) => {
-      flatPhrasesToHighlight[phrase] = Object.entries(keywords).flatMap(
-        ([keywordEntry, keywordStemming]) => {
-          return [keywordEntry, ...keywordStemming];
-        }
-      );
-    });
-
-    return {
-      ...this.bindings.engine.state.search.response.termsToHighlight,
-      ...flatPhrasesToHighlight,
-    };
+  private get keywords() {
+    const {termsToHighlight, phrasesToHighlight} = this.bindings.engine.state.search.response;
+    return getQuickviewKeywords(termsToHighlight, phrasesToHighlight);
   }
 
   private get requestId() {
@@ -393,21 +321,6 @@ export class AtomicQuickviewModal extends LitElement implements InitializableCom
       return this.requestId;
     }
     return this.result.uniqueId + this.requestId;
-  }
-
-  private handleHighlightsScripts() {
-    if (!this.highlightKeywords.highlightNone) {
-      this.enableHighlights();
-    } else {
-      this.disableHighlights();
-    }
-    Object.values(this.highlightKeywords.keywords).forEach((word) => {
-      if (word.enabled) {
-        this.enableHighlightsSpecificKeyword(word.indexIdentifier);
-      } else {
-        this.disableHighlightsSpecificKeyword(word.indexIdentifier);
-      }
-    });
   }
 
   @bindingGuard()

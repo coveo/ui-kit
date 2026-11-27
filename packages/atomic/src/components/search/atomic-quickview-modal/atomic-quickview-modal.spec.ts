@@ -5,6 +5,8 @@ import {page} from 'vitest/browser';
 import {renderQuickviewSidebar} from '@/src/components/search/result-template-components/atomic-quickview-sidebar/atomic-quickview-sidebar';
 import {renderQuickviewIframe} from '@/src/components/search/result-template-components/quickview-iframe/quickview-iframe';
 import {buildQuickviewPreviewBar} from '@/src/components/search/result-template-components/quickview-preview-bar/quickview-preview-bar';
+import {QuickviewHighlights} from '@/src/components/search/result-template-components/quickview-word-highlight/quickview-highlights';
+import {getWordsHighlights} from '@/src/components/search/result-template-components/quickview-word-highlight/term-matcher';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import type {AtomicQuickviewModal} from './atomic-quickview-modal';
@@ -30,10 +32,22 @@ vi.mock(
   })
 );
 vi.mock(
-  '@/src/components/search/result-template-components/quickview-word-highlight/quickview-word-highlight',
-  () => ({
+  '@/src/components/search/result-template-components/quickview-word-highlight/term-matcher',
+  async (importOriginal) => ({
+    ...(await importOriginal()),
     getWordsHighlights: vi.fn(() => ({})),
-    HIGHLIGHT_PREFIX: 'coveo-highlight',
+  })
+);
+vi.mock(
+  '@/src/components/search/result-template-components/quickview-word-highlight/quickview-highlights',
+  () => ({
+    QuickviewHighlights: vi.fn(
+      class {
+        attach = vi.fn();
+        update = vi.fn();
+        detach = vi.fn();
+      }
+    ),
   })
 );
 
@@ -87,7 +101,7 @@ describe('atomic-quickview-modal', () => {
           response: {
             ...bindings.engine.state.search.response,
             termsToHighlight: {term1: ['highlight1']},
-            phrasesToHighlight: {},
+            phrasesToHighlight: {'some phrase': {some: [], phrase: ['phrases']}},
           },
         };
         bindings.store = {
@@ -442,6 +456,74 @@ describe('atomic-quickview-modal', () => {
       await prevButton.click();
 
       await expect(eventPromise).resolves.toBeUndefined();
+    });
+  });
+
+  describe('when painting keyword highlights', () => {
+    const getHighlights = (element: AtomicQuickviewModal) =>
+      (element as unknown as {highlights: QuickviewHighlights}).highlights;
+
+    it('should create its QuickviewHighlights instance', async () => {
+      await renderQuickviewModal({props: {content: mockContent, result: mockResult}});
+
+      expect(vi.mocked(QuickviewHighlights)).toHaveBeenCalled();
+    });
+
+    it('should attach the highlights to the iframe once its content is written', async () => {
+      const {element} = await renderQuickviewModal({
+        props: {content: mockContent, result: mockResult},
+      });
+      const words = {};
+      vi.mocked(getWordsHighlights).mockReturnValueOnce(words);
+      const iframe = document.createElement('iframe');
+
+      const onSetIframeRef = vi.mocked(renderQuickviewIframe).mock.calls[0][0].props.onSetIframeRef;
+      await onSetIframeRef(iframe);
+
+      const highlights = getHighlights(element);
+      expect(highlights.attach).toHaveBeenCalledWith(iframe, words);
+      expect(highlights.update).toHaveBeenCalledWith({highlightNone: false, keywords: {}});
+    });
+
+    it('should look for the terms and phrases of the search response in the iframe', async () => {
+      await renderQuickviewModal({props: {content: mockContent, result: mockResult}});
+      const iframe = document.createElement('iframe');
+
+      const onSetIframeRef = vi.mocked(renderQuickviewIframe).mock.calls[0][0].props.onSetIframeRef;
+      await onSetIframeRef(iframe);
+
+      expect(getWordsHighlights).toHaveBeenCalledWith(
+        [
+          {text: 'term1', words: [['term1', 'highlight1']]},
+          {text: 'some phrase', words: [['some'], ['phrase', 'phrases']]},
+        ],
+        iframe
+      );
+    });
+
+    it('should update the highlights when the highlighted keywords change', async () => {
+      const {element} = await renderQuickviewModal({
+        props: {content: mockContent, result: mockResult},
+      });
+      const highlights = getHighlights(element);
+      vi.mocked(highlights.update).mockClear();
+
+      const onHighlightKeywords =
+        vi.mocked(renderQuickviewSidebar).mock.calls[0][0].props.onHighlightKeywords;
+      onHighlightKeywords({highlightNone: true, keywords: {}});
+      await element.updateComplete;
+
+      expect(highlights.update).toHaveBeenCalledWith({highlightNone: true, keywords: {}});
+    });
+
+    it('should detach the highlights on reset', async () => {
+      const {element} = await renderQuickviewModal({
+        props: {content: mockContent, result: mockResult},
+      });
+
+      await element.reset();
+
+      expect(getHighlights(element).detach).toHaveBeenCalled();
     });
   });
 

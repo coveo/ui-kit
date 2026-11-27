@@ -8,7 +8,7 @@ describe('#buildQuickviewPreviewBar', () => {
   let mockDocument: Document;
   let mockBody: HTMLElement;
   let mockWordHighlight: QuickviewWordHighlight;
-  let mockElement: HTMLElement;
+  let mockRange: Range;
   let highlightKeywords: HighlightKeywords;
 
   beforeEach(() => {
@@ -31,8 +31,8 @@ describe('#buildQuickviewPreviewBar', () => {
       writable: true,
     });
 
-    mockElement = mockDocument.createElement('span');
-    mockElement.getBoundingClientRect = vi.fn().mockReturnValue({
+    mockRange = mockDocument.createRange();
+    mockRange.getBoundingClientRect = vi.fn().mockReturnValue({
       top: 100,
       left: 0,
       right: 100,
@@ -45,7 +45,7 @@ describe('#buildQuickviewPreviewBar', () => {
       text: 'test',
       color: '#ff0000',
       previewBorderColor: '#ff0000',
-      elements: [mockElement],
+      ranges: [mockRange],
     } as QuickviewWordHighlight;
 
     highlightKeywords = {
@@ -166,9 +166,9 @@ describe('#buildQuickviewPreviewBar', () => {
       expect(previewUnit?.style.backgroundColor).toBe('rgb(255, 0, 0)');
     });
 
-    it('should create multiple preview units for multiple elements', () => {
-      const secondElement = mockDocument.createElement('span');
-      secondElement.getBoundingClientRect = vi.fn().mockReturnValue({
+    it('should create multiple preview units for multiple ranges', () => {
+      const secondRange = mockDocument.createRange();
+      secondRange.getBoundingClientRect = vi.fn().mockReturnValue({
         top: 200,
         left: 0,
         right: 100,
@@ -177,7 +177,7 @@ describe('#buildQuickviewPreviewBar', () => {
         height: 20,
       });
 
-      mockWordHighlight.elements = [mockElement, secondElement];
+      mockWordHighlight.ranges = [mockRange, secondRange];
       const words = {test: mockWordHighlight};
 
       buildQuickviewPreviewBar(words, highlightKeywords, mockIframe);
@@ -193,8 +193,8 @@ describe('#buildQuickviewPreviewBar', () => {
     });
 
     it('should handle multiple word highlights', () => {
-      const secondWordElement = mockDocument.createElement('span');
-      secondWordElement.getBoundingClientRect = vi.fn().mockReturnValue({
+      const secondWordRange = mockDocument.createRange();
+      secondWordRange.getBoundingClientRect = vi.fn().mockReturnValue({
         top: 300,
         left: 0,
         right: 100,
@@ -207,7 +207,7 @@ describe('#buildQuickviewPreviewBar', () => {
         text: 'another',
         color: '#00ff00',
         previewBorderColor: '#00ff00',
-        elements: [secondWordElement],
+        ranges: [secondWordRange],
       } as QuickviewWordHighlight;
 
       highlightKeywords.keywords.another = {
@@ -238,7 +238,7 @@ describe('#buildQuickviewPreviewBar', () => {
       text: 'unknown',
       color: '#0000ff',
       previewBorderColor: '#0000ff',
-      elements: [mockElement],
+      ranges: [mockRange],
     } as QuickviewWordHighlight;
 
     const words = {unknown: unknownWordHighlight};

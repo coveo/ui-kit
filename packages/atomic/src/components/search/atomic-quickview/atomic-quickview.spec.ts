@@ -97,7 +97,7 @@ describe('atomic-quickview', () => {
     const {element} = await renderComponent();
 
     expect(buildQuickview).toHaveBeenCalledWith(element.bindings.engine, {
-      options: {result: mockResult},
+      options: {result: mockResult, highlightTerms: false},
     });
     expect(element.quickview).toBeDefined();
   });

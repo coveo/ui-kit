@@ -1,4 +1,4 @@
-import {beforeEach, describe, expect, it} from 'vitest';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {QuickviewWordHighlight} from './quickview-word-highlight';
 
 describe('QuickviewWordHighlight', () => {
@@ -6,40 +6,36 @@ describe('QuickviewWordHighlight', () => {
   const focusedColor = 'rgb(245, 235, 225)';
   const previewBorderColor = 'rgb(0, 15, 30)';
 
-  let testDoc: Document;
+  let iframe: HTMLIFrameElement;
+  let iframeDocument: Document;
 
   beforeEach(() => {
-    testDoc = document.implementation.createHTMLDocument();
+    iframe?.remove();
+    iframe = document.createElement('iframe');
+    document.body.appendChild(iframe);
+    iframeDocument = iframe.contentDocument!;
+    iframeDocument.body.innerHTML = '<p>keyword one</p><p>keyword two</p>';
   });
 
-  function createElement(): HTMLElement {
-    const element = testDoc.createElement('div');
-    element.style.backgroundColor = baseColor;
-    return element;
+  function createRange(index: number) {
+    const text = iframeDocument.querySelectorAll('p')[index].firstChild!;
+    const range = iframeDocument.createRange();
+    range.setStart(text, 0);
+    range.setEnd(text, 'keyword'.length);
+    return range;
   }
 
-  function createHighlight(id: string, text: string, el?: HTMLElement): QuickviewWordHighlight {
-    const element = el ?? createElement();
-    return new QuickviewWordHighlight(id, text, baseColor, element);
+  function focusedRanges(highlight: QuickviewWordHighlight) {
+    return Array.from(highlight.focusedHighlight) as Range[];
   }
 
-  function expectHighlighted(element: HTMLElement) {
-    expect(element.style.color).toBe(baseColor);
-    expect(element.style.backgroundColor).toBe(focusedColor);
-  }
-
-  function expectNotHighlighted(element: HTMLElement) {
-    expect(element.style.color).toBe('');
-    expect(element.style.backgroundColor).toBe(baseColor);
-  }
-
-  describe('with one element', () => {
-    let element: HTMLElement;
+  describe('with one range', () => {
+    let range: Range;
     let highlight: QuickviewWordHighlight;
 
     beforeEach(() => {
-      highlight = createHighlight('1', 'keyword');
-      element = highlight.elements[0];
+      range = createRange(0);
+      highlight = new QuickviewWordHighlight('1', 'keyword', baseColor, [range]);
     });
 
     it('should initialize properties correctly', () => {
@@ -47,6 +43,7 @@ describe('QuickviewWordHighlight', () => {
       expect(highlight.indexIdentifier).toBe('1');
       expect(highlight.text).toBe('keyword');
       expect(highlight.color).toBe(baseColor);
+      expect(highlight.ranges).toEqual([range]);
     });
 
     it('should compute color properties correctly', () => {
@@ -54,120 +51,106 @@ describe('QuickviewWordHighlight', () => {
       expect(highlight.previewBorderColor).toBe(previewBorderColor);
     });
 
-    describe('when no navigation has occurred', () => {
-      it('should not apply any highlighting styles', () => {
-        expectNotHighlighted(element);
-      });
+    it('should build its highlights in the realm of the ranges', () => {
+      const IframeHighlight = (iframe.contentWindow as Window & typeof globalThis).Highlight;
+      expect(highlight.highlight).toBeInstanceOf(IframeHighlight);
+      expect(highlight.focusedHighlight).toBeInstanceOf(IframeHighlight);
+    });
+
+    it('should name its highlights after the index identifier', () => {
+      expect(highlight.highlightName).toBe('coveo-quickview-keyword-1');
+      expect(highlight.focusedHighlightName).toBe('coveo-quickview-keyword-1-focused');
+    });
+
+    it('should give the focused highlight priority over the keyword highlight', () => {
+      expect(highlight.focusedHighlight.priority).toBeGreaterThan(highlight.highlight.priority);
+    });
+
+    it('should add the range to the keyword highlight', () => {
+      expect(Array.from(highlight.highlight)).toEqual([range]);
+    });
+
+    it('should generate ::highlight() styles with the keyword colors', () => {
+      const styles = highlight.styles.replace(/\s+/g, ' ');
+      expect(styles).toContain(
+        `::highlight(coveo-quickview-keyword-1) { background-color: ${baseColor}; }`
+      );
+      expect(styles).toContain(
+        `::highlight(coveo-quickview-keyword-1-focused) { color: ${baseColor}; background-color: ${focusedColor}; }`
+      );
+    });
+
+    it('should not focus any occurrence before navigating', () => {
+      expect(highlight.focusedHighlight.size).toBe(0);
     });
 
     describe('when navigating forward', () => {
-      beforeEach(() => {
+      it('should focus and return the range', () => {
+        expect(highlight.navigateForward()).toBe(range);
+        expect(focusedRanges(highlight)).toEqual([range]);
+      });
+
+      it('should scroll the element containing the range into view', () => {
+        const paragraph = iframeDocument.querySelector('p')!;
+        const scrollIntoView = vi.spyOn(paragraph, 'scrollIntoView');
+
         highlight.navigateForward();
+
+        expect(scrollIntoView).toHaveBeenCalledWith({block: 'nearest'});
       });
 
-      it('should apply highlighting styles to the focused element', () => {
-        expectHighlighted(element);
-      });
-
-      describe('when navigating forward again', () => {
-        beforeEach(() => {
-          highlight.navigateForward();
-        });
-
-        it('should reapply highlighting styles to the focused element', () => {
-          expectHighlighted(element);
-        });
-      });
-
-      describe('when navigating backward', () => {
-        beforeEach(() => {
-          highlight.navigateBackward();
-        });
-
-        it('should reapply highlighting styles to the focused element', () => {
-          expectHighlighted(element);
-        });
+      it('should keep the range focused when navigating again', () => {
+        highlight.navigateForward();
+        highlight.navigateForward();
+        expect(focusedRanges(highlight)).toEqual([range]);
       });
     });
 
     describe('when navigating backward from initial state', () => {
-      beforeEach(() => {
+      it('should focus the range', () => {
         highlight.navigateBackward();
-      });
-
-      it('should apply highlighting styles to the focused element', () => {
-        expect(element.style.color).toBe(baseColor);
-        expect(element.style.backgroundColor).toBe(focusedColor);
+        expect(focusedRanges(highlight)).toEqual([range]);
       });
     });
   });
 
-  describe('with two elements', () => {
-    let element1: HTMLElement;
-    let element2: HTMLElement;
+  describe('with two ranges', () => {
+    let range1: Range;
+    let range2: Range;
     let highlight: QuickviewWordHighlight;
 
     beforeEach(() => {
-      element1 = createElement();
-      element2 = createElement();
-      highlight = createHighlight('1', 'keyword', element1);
-      highlight.addElement(element2);
+      range1 = createRange(0);
+      range2 = createRange(1);
+      highlight = new QuickviewWordHighlight('1', 'keyword', baseColor, [range1, range2]);
     });
 
-    it('should track elements and occurrences', () => {
+    it('should count both occurrences', () => {
       expect(highlight.occurrences).toBe(2);
-      expect(highlight.elements).toEqual([element1, element2]);
+      expect(highlight.highlight.size).toBe(2);
     });
 
-    describe('when no navigation has occurred', () => {
-      it('should not apply any highlighting styles to either element', () => {
-        expectNotHighlighted(element1);
-        expectNotHighlighted(element2);
-      });
+    it('should focus the first range only when navigating forward', () => {
+      highlight.navigateForward();
+      expect(focusedRanges(highlight)).toEqual([range1]);
     });
 
-    describe('when navigating forward', () => {
-      beforeEach(() => {
-        highlight.navigateForward();
-      });
-
-      it('should apply highlighting styles to the first element only', () => {
-        expectHighlighted(element1);
-        expectNotHighlighted(element2);
-      });
-
-      describe('when navigating forward again', () => {
-        beforeEach(() => {
-          highlight.navigateForward();
-        });
-
-        it('should apply highlighting styles to the second element only', () => {
-          expectNotHighlighted(element1);
-          expectHighlighted(element2);
-        });
-
-        describe('when navigating forward a third time', () => {
-          beforeEach(() => {
-            highlight.navigateForward();
-          });
-
-          it('should loop and apply highlighting to the first element again', () => {
-            expectHighlighted(element1);
-            expectNotHighlighted(element2);
-          });
-        });
-      });
+    it('should focus the second range only when navigating forward twice', () => {
+      highlight.navigateForward();
+      highlight.navigateForward();
+      expect(focusedRanges(highlight)).toEqual([range2]);
     });
 
-    describe('when navigating backward from initial state', () => {
-      beforeEach(() => {
-        highlight.navigateBackward();
-      });
+    it('should loop back to the first range when navigating forward three times', () => {
+      highlight.navigateForward();
+      highlight.navigateForward();
+      highlight.navigateForward();
+      expect(focusedRanges(highlight)).toEqual([range1]);
+    });
 
-      it('should apply highlighting styles to the last element (loop backward)', () => {
-        expectNotHighlighted(element1);
-        expectHighlighted(element2);
-      });
+    it('should loop to the last range when navigating backward from initial state', () => {
+      highlight.navigateBackward();
+      expect(focusedRanges(highlight)).toEqual([range2]);
     });
   });
 });

@@ -23,11 +23,11 @@ export const buildQuickviewPreviewBar = (
 
   const docHeight = documentWriter.body.scrollHeight;
   Object.values(words).forEach((word) => {
-    word.elements.forEach((wordElement) => {
+    word.ranges.forEach((range) => {
       const previewUnit = buildPreviewUnit(
         documentWriter,
         word,
-        wordElement,
+        range,
         docHeight,
         highlightKeywords
       );
@@ -57,7 +57,7 @@ const buildPreviewBar = (documentWriter: Document) => {
 const buildPreviewUnit = (
   documentWriter: Document,
   word: QuickviewWordHighlight,
-  wordElement: HTMLElement,
+  range: Range,
   docHeight: number,
   highlightKeywords: HighlightKeywords
 ) => {
@@ -67,7 +67,7 @@ const buildPreviewUnit = (
     return previewUnit;
   }
 
-  const elementPosition = wordElement.getBoundingClientRect().top;
+  const elementPosition = range.getBoundingClientRect().top;
 
   previewUnit.style.position = 'absolute';
   previewUnit.style.top = `${(elementPosition / docHeight) * 100}%`;

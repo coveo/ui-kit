@@ -112,6 +112,46 @@ export const Default: Story = {
   },
 };
 
+const highlightedKeywordsApiHarness = new MockSearchApi();
+
+highlightedKeywordsApiHarness.searchEndpoint.mock(
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock API response types are loosely defined
+  (response: any) => ({
+    ...response,
+    results: response.results.slice(0, 1).map(
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock API result types are loosely defined
+      (result: any) => ({...result, hasHtmlVersion: true, flags: 'HasHtmlVersion'})
+    ),
+    termsToHighlight: {children: ['child'], internet: []},
+    phrasesToHighlight: {'social media': {social: [], media: []}},
+    totalCount: 1,
+    totalCountFiltered: 1,
+  })
+);
+
+highlightedKeywordsApiHarness.htmlEndpoint.mock(
+  () => `<html><body style="font-family: Helvetica; padding: 20px">
+  ${Array.from(
+    {length: 12},
+    () => `<p>
+    Chil<em>dren</em> under the age of 16 are no longer allowed to use social
+    media. Critics suggest it could isolate a vulnerable child and push
+    teenagers into unregulated corners of the <a href="#">internet</a>.
+  </p>`
+  ).join('')}
+</body></html>`
+);
+
+export const WithHighlightedKeywords: Story = {
+  parameters: {
+    chromatic: {disableSnapshot: true},
+    msw: {
+      handlers: [...highlightedKeywordsApiHarness.handlers],
+    },
+  },
+  play: Default.play,
+};
+
 export const Closed: Story = {
   tags: ['!dev'],
 };

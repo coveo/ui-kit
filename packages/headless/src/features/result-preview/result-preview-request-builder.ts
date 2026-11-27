@@ -15,7 +15,8 @@ export async function buildResultPreviewRequest(
   options: HtmlRequestOptions
 ): Promise<HtmlRequest> {
   const {search, accessToken, organizationId} = state.configuration;
-  const q = state.query?.q || '';
+  const {highlightTerms = true, ...requestOptions} = options;
+  const q = highlightTerms ? state.query?.q || '' : '';
 
   return {
     url:
@@ -25,8 +26,8 @@ export async function buildResultPreviewRequest(
     organizationId,
     enableNavigation: false,
     q,
-    ...options,
-    requestedOutputSize: options.requestedOutputSize || 0,
+    ...requestOptions,
+    requestedOutputSize: requestOptions.requestedOutputSize || 0,
     ...(search.authenticationProviders.length && {
       authentication: search.authenticationProviders.join(','),
     }),

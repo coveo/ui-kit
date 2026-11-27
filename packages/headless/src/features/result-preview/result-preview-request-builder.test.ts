@@ -36,4 +36,31 @@ describe('ResultPreviewRequestBuilder', () => {
       url: getSearchApiBaseUrl(''),
     });
   });
+
+  describe('when the query has terms', () => {
+    beforeEach(() => {
+      state.query = {...getQueryInitialState(), q: 'some terms'};
+    });
+
+    it('sends the query by default', async () => {
+      const request = await buildResultPreviewRequest(state, options);
+      expect(request.q).toBe('some terms');
+    });
+
+    it('does not send the query when #options.highlightTerms is false', async () => {
+      const request = await buildResultPreviewRequest(state, {
+        ...options,
+        highlightTerms: false,
+      });
+      expect(request.q).toBe('');
+    });
+
+    it('does not include #highlightTerms in the request', async () => {
+      const request = await buildResultPreviewRequest(state, {
+        ...options,
+        highlightTerms: false,
+      });
+      expect(request).not.toHaveProperty('highlightTerms');
+    });
+  });
 });

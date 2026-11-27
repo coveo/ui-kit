@@ -39,6 +39,15 @@ export interface QuickviewOptions {
    * Use this if you are using an iframe with `state.contentURL` as the source url.
    */
   onlyContentURL?: boolean;
+
+  /**
+   * Whether the Search API wraps the query terms in highlight tags in the preview content.
+   *
+   * Set this to `false` to retrieve the document as indexed, for example to highlight the terms on the client side.
+   *
+   * @defaultValue `true`
+   */
+  highlightTerms?: boolean;
 }
 
 export interface Quickview extends Controller {
@@ -129,7 +138,7 @@ export function buildCoreQuickview(
   const {dispatch} = engine;
   const getState = () => engine.state;
   const controller = buildController(engine);
-  const {result, maximumPreviewSize} = props.options;
+  const {result, maximumPreviewSize, highlightTerms} = props.options;
 
   const getUniqueIdFromPosition = () => {
     const {resultsWithPreview, position} = getState().resultPreview;
@@ -141,6 +150,7 @@ export function buildCoreQuickview(
       updateContentURL({
         uniqueId,
         requestedOutputSize: maximumPreviewSize,
+        highlightTerms,
         buildResultPreviewRequest,
         path,
       })
@@ -151,6 +161,7 @@ export function buildCoreQuickview(
         fetchResultContent({
           uniqueId,
           requestedOutputSize: maximumPreviewSize,
+          highlightTerms,
         })
       );
     }
