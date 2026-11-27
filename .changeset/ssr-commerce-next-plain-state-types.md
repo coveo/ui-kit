@@ -1,6 +1,0 @@
----
-'@coveo/headless': minor
-'@coveo/headless-react': patch
----
-
-In the experimental commerce SSR sub-package, the new `CommerceStaticState` and `CommerceHydratedState` types take the controllers of the definition and its solution type, so editor tooltips and compiler errors list the controllers of the page by name, the baked-in ones included. The `HydratedState`, `FetchStaticState`, `HydrateStaticState`, `HydrateStaticStateOptions` and `CommerceEngineDefinitionBuildResult` types are removed: use `InferStaticState<typeof definition>` and `InferHydratedState<typeof definition>` instead. In the React wrapper, the `StateProvider` is typed with the controllers of its page, and `buildProviderWithDefinition()` infers its type parameters from the definition, so remove explicit type arguments. Both experimental SSR sub-packages now export `ControllerStaticState`, the type of each controller snapshot, so code that emits declarations can name it. The React wrapper exports `StateProviderProps`, and its controller hooks keep their subscription and their `methods` object for as long as the controller is the same, so a re-render of the provider no longer subscribes again or creates new `methods`.

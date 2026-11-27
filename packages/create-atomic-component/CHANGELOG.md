@@ -1,3 +1,10 @@
+## 1.5.17
+
+### Patch Changes
+
+- Updated dependencies [[`3601ebd`](https://github.com/coveo/ui-kit/commit/3601ebd0d08691524da0cfac3d6256103a1e2384)]:
+  - @coveo/create-atomic-component-project@1.5.17
+
 ## 1.5.16
 
 ### Patch Changes
