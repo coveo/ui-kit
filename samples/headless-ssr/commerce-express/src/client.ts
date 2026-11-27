@@ -21,8 +21,28 @@ import {hydrateProductGrid} from './components/ProductGrid.js';
 import {hydrateSummary} from './components/QuerySummary.js';
 import {hydrateSearch} from './components/Search.js';
 import {hydrateSort} from './components/Sort.js';
+import type {NavigatorContext} from '@coveo/headless/ssr-commerce';
 import {listingEngineDefinition, searchEngineDefinition} from './lib/engine-definition.js';
 import type {AppControllers, SsrState} from './common/types.js';
+
+const VISITOR_ID_COOKIE = 'coveo_visitorId';
+
+function readCookie(name: string): string | undefined {
+  const prefix = `${name}=`;
+  const entry = document.cookie.split('; ').find((cookie) => cookie.startsWith(prefix));
+  return entry ? decodeURIComponent(entry.slice(prefix.length)) : undefined;
+}
+
+// Mirrors storefronts that read the visitor ID from a cookie on every request
+// and only capture once it exists. The cookie can appear after hydration (set
+// by another engine or after a consent choice), so Headless must call this
+// provider per request rather than keep its first result.
+function buildCookieNavigatorContextProvider(serverContext: NavigatorContext) {
+  return (): NavigatorContext => {
+    const clientId = readCookie(VISITOR_ID_COOKIE) ?? '';
+    return {...serverContext, clientId, capture: clientId !== ''};
+  };
+}
 
 function wireControllers(controllers: AppControllers) {
   const currency = controllers.context.state.currency ?? 'USD';
@@ -65,7 +85,9 @@ async function initApp() {
     // before hydrating, so client-side requests carry the same context.
     if (ssr.type === 'listing') {
       const {staticState} = ssr;
-      listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
+      listingEngineDefinition.setNavigatorContextProvider(
+        buildCookieNavigatorContextProvider(navigatorContext)
+      );
       ({controllers} = await listingEngineDefinition.hydrateStaticState({
         searchActions: staticState.searchActions,
         controllers: {
