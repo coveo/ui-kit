@@ -22,6 +22,9 @@ import {buildSearchLayout} from './search-layout';
 export class AtomicSearchLayout extends LightDomMixin(ChildrenUpdateCompleteMixin(LitElement)) {
   static styles = [styles];
 
+  /**
+   * @deprecated Nothing sets this property. It will be removed in v4.
+   */
   @state() error!: Error;
 
   /**

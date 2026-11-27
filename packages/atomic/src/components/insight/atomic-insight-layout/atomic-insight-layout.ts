@@ -13,6 +13,9 @@ import {buildInsightLayout} from './insight-layout';
  */
 @customElement('atomic-insight-layout')
 export class AtomicInsightLayout extends LightDomMixin(ChildrenUpdateCompleteMixin(LitElement)) {
+  /**
+   * @deprecated Nothing sets this property. It will be removed in v4.
+   */
   @state() error!: Error;
 
   /**
