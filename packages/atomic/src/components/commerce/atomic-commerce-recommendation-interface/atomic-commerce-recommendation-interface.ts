@@ -69,6 +69,9 @@ export class AtomicCommerceRecommendationInterface
   @state()
   @provide({context: bindingsContext})
   public bindings: CommerceBindings = {} as CommerceBindings;
+  /**
+   * @deprecated Nothing sets this property. It will be removed in v4.
+   */
   @state() public error!: Error;
   public context!: Context;
   private store: CommerceRecommendationStore;

@@ -20,6 +20,9 @@ import {buildCommerceLayout} from './commerce-layout';
 export class AtomicCommerceLayout extends LightDomMixin(ChildrenUpdateCompleteMixin(LitElement)) {
   static styles = [styles];
 
+  /**
+   * @deprecated Nothing sets this property. It will be removed in v4.
+   */
   @state() error!: Error;
 
   /**
