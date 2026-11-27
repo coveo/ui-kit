@@ -67,10 +67,6 @@ export class GeneratedAnswerObject {
     return this.page.getByRole('button', {name: 'Copy'});
   }
 
-  get toggleButton(): Locator {
-    return this.page.getByTestId('generated-answer__toggle-button');
-  }
-
   get firstTimeframeFacet(): Locator {
     return this.page
       .locator(facetElementsSelectors.timeframeFacet.component)
@@ -209,10 +205,6 @@ export class GeneratedAnswerObject {
     await this.copyToClipboardButton.click();
   }
 
-  async clickToggleButton(): Promise<void> {
-    await this.toggleButton.click();
-  }
-
   async clickShowPreviousAnswersButton(): Promise<void> {
     await this.showPreviousAnswersButton.click();
   }
@@ -312,40 +304,6 @@ export class GeneratedAnswerObject {
     return this.analytics.waitForEventProtocolAnalytics(
       'Rga.AnswerAction',
       (event) => event.action === 'copyToClipboard'
-    );
-  }
-
-  async waitForShowAnswersAnalytics(): Promise<Request> {
-    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
-      return this.analytics.waitForCustomUaAnalytics(
-        {
-          eventType: 'generatedAnswer',
-          eventValue: 'generatedAnswerShowAnswers',
-        },
-        (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
-      );
-    }
-    return this.analytics.waitForEventProtocolAnalytics(
-      'Rga.AnswerAction',
-      (event) => event.action === 'show'
-    );
-  }
-
-  async waitForHideAnswersAnalytics(): Promise<Request> {
-    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
-      return this.analytics.waitForCustomUaAnalytics(
-        {
-          eventType: 'generatedAnswer',
-          eventValue: 'generatedAnswerHideAnswers',
-        },
-        (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
-      );
-    }
-    return this.analytics.waitForEventProtocolAnalytics(
-      'Rga.AnswerAction',
-      (event) => event.action === 'hide'
     );
   }
 

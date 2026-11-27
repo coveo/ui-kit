@@ -18,11 +18,6 @@
             >{labels.generatedAnswerForYou}</span
           >
         </div>
-        <template lwc:if={withToggle}>
-          <c-quantic-generated-answer-toggle
-            is-generated-answer-visible={isVisible}
-          ></c-quantic-generated-answer-toggle>
-        </template>
       </header>
       <template lwc:if={isVisible}>
         <section

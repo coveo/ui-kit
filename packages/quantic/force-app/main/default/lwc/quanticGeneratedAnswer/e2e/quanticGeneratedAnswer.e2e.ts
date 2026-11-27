@@ -199,30 +199,6 @@ useCaseTestCases.forEach((useCase) => {
               });
             });
 
-            test.describe('when the property withToggle is set to true', () => {
-              test.use({
-                options: {
-                  ...config.options,
-                  withToggle: true,
-                },
-              });
-
-              test('should allow toggling the generated OFF and ON and log analytics', async ({
-                generatedAnswer,
-              }) => {
-                await generatedAnswer.streamEndAnalyticRequestPromise;
-                const hideAnswerAnalyticRequestPromise =
-                  generatedAnswer.waitForHideAnswersAnalytics();
-                await generatedAnswer.clickToggleButton();
-                await hideAnswerAnalyticRequestPromise;
-
-                const showAnswerAnalyticRequestPromise =
-                  generatedAnswer.waitForShowAnswersAnalytics();
-                await generatedAnswer.clickToggleButton();
-                await showAnswerAnalyticRequestPromise;
-              });
-            });
-
             test.describe('when interacting with citations', () => {
               test.describe('when hovering over a citation', () => {
                 test('should log citation hover analytics', async ({

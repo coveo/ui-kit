@@ -13,7 +13,6 @@ const pageUrl = 's/quantic-generated-answer';
 
 interface AgentOptions {
   agentId: string;
-  withToggle: boolean;
 }
 
 type QuanticGeneratedAnswerAgentE2EFixtures = {

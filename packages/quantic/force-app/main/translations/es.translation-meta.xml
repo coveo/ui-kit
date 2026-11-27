@@ -725,10 +725,6 @@
     <name>quantic_SearchInsteadFor</name>
   </customLabels>
   <customLabels>
-    <label>Mostrar respuesta generada</label>
-    <name>quantic_ShowGeneratedAnswer</name>
-  </customLabels>
-  <customLabels>
     <label>Irrelevante</label>
     <name>quantic_Irrelevant</name>
   </customLabels>
@@ -763,14 +759,6 @@
   <customLabels>
     <label>Generando respuesta</label>
     <name>quantic_GeneratingAnswer</name>
-  </customLabels>
-  <customLabels>
-    <label>Respuesta generada ACTIVADA</label>
-    <name>quantic_GeneratedAnswerOn</name>
-  </customLabels>
-  <customLabels>
-    <label>Respuesta generada DESACTIVADA</label>
-    <name>quantic_GeneratedAnswerOff</name>
   </customLabels>
   <customLabels>
     <label>El contenido generado por IA puede contener errores. Verifique la información importante.</label>
