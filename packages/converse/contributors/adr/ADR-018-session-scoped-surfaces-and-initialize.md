@@ -14,6 +14,8 @@ related:
 
 # Session-scoped surfaces and automatic initialization
 
+> This record predates the rename of Thermidor (`@coveo/thermidor`) to the Converse SDK (`@coveo/converse`), and keeps the names of its time.
+
 This ADR amends [ADR-015](./ADR-015-surface-and-route-derivation.md) (a surface lives in the
 session, not in the turn that created it),
 [ADR-016](./ADR-016-inline-state-consumption-remove-remote-controller.md) (dispatch resolves a

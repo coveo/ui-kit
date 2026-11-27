@@ -1,3 +1,5 @@
+> This record predates the rename of Thermidor (`@coveo/thermidor`) to the Converse SDK (`@coveo/converse`), and keeps the names of its time.
+
 ## 1. Purpose
 
 This charter defines the criteria used to evaluate architecture and design decisions for thermidor.

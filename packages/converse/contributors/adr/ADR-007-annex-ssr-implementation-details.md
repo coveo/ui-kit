@@ -1,5 +1,7 @@
 # ADR-007 Annex: SSR Implementation Details
 
+> This record predates the rename of Thermidor (`@coveo/thermidor`) to the Converse SDK (`@coveo/converse`), and keeps the names of its time.
+
 **Parent**: [ADR-007 Engine Snapshot API for SSR](./ADR-007-ssr-snapshot-api.md)
 
 ## 1. Proposed Public Types

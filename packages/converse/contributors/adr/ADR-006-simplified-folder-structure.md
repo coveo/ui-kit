@@ -1,5 +1,7 @@
 # ADR-006: Simplified Internal Folder Structure
 
+> This record predates the rename of Thermidor (`@coveo/thermidor`) to the Converse SDK (`@coveo/converse`), and keeps the names of its time.
+
 **Status**: `🟡 Proposed`  
 **Related docs**: [ADR-000 Architecture Decision Charter](./ADR-000-architecture-decision-charter.md), [ADR-001 Anti-Corruption Layer](./ADR-001-anti-corruption-layer.md), [ADR-005 Public-Facing Abstractions](./ADR-005-public-facing-abstractions.md)
 

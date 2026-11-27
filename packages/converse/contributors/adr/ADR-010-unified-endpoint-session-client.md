@@ -20,6 +20,8 @@ related:
 
 # Collapse thermidor to a lean unified-endpoint session client
 
+> This record predates the rename of Thermidor (`@coveo/thermidor`) to the Converse SDK (`@coveo/converse`), and keeps the names of its time.
+
 > This is the **core** decision of the unified-endpoint session-client family,
 > governed by the charter [ADR-009](./ADR-009-architecture-decision-charter-v2.md).
 > Four concerns that follow from it are recorded in focused sibling ADRs so each

@@ -5,6 +5,8 @@ related:
 
 # ADR-018 annex: the session shell in code
 
+> This record predates the rename of Thermidor (`@coveo/thermidor`) to the Converse SDK (`@coveo/converse`), and keeps the names of its time.
+
 This annex shows the effect of
 [ADR-018](./ADR-018-session-scoped-surfaces-and-initialize.md) on an application, with
 demo-schema-react as the example. The snippets are trimmed for reading and show the intended API,

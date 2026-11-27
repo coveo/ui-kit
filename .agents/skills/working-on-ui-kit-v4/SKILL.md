@@ -1,6 +1,6 @@
 ---
 name: working-on-ui-kit-v4
-description: Guides the delivery of a UI-Kit v4 story end to end, including its track (v3, v4, experimental or no-release), which branch to target, the changeset bump, the v3 to v4 upgrade guide entry, sample and test updates, and the pull request. Use when a Jira issue belongs to the UI-KIT v4 epics (KIT-3377, KIT-4387, KIT-4621, KIT-5934) or its summary starts with a "v3:" or "v4:" prefix, when removing or renaming a public API of Headless, Headless React, Atomic, Atomic React or Atomic Angular, when adding a deprecation to one of them, or when the user mentions v4, the v3 to v4 upgrade guide or a breaking change in one of them. Does not apply to Thermidor, which is outside v4 and keeps its own breaking changes.
+description: Guides the delivery of a UI-Kit v4 story end to end, including its track (v3, v4, experimental or no-release), which branch to target, the changeset bump, the v3 to v4 upgrade guide entry, sample and test updates, and the pull request. Use when a Jira issue belongs to the UI-KIT v4 epics (KIT-3377, KIT-4387, KIT-4621, KIT-5934) or its summary starts with a "v3:" or "v4:" prefix, when removing or renaming a public API of Headless, Headless React, Atomic, Atomic React or Atomic Angular, when adding a deprecation to one of them, or when the user mentions v4, the v3 to v4 upgrade guide or a breaking change in one of them. Does not apply to the Converse SDK (`@coveo/converse`), which is outside v4 and keeps its own breaking changes.
 license: Apache-2.0
 metadata:
   author: coveo
@@ -9,7 +9,7 @@ metadata:
 
 # Working on UI-Kit v4
 
-Thermidor is out of scope: its breaking changes follow its own process, not this skill.
+The Converse SDK (`@coveo/converse`, formerly Thermidor) is out of scope: its breaking changes follow its own process, not this skill.
 
 One rule holds the whole process together: **a change that breaks a customer ships with the text that migrates that customer, in the same pull request.** Everything below exists to make that automatic.
 
@@ -46,7 +46,7 @@ Rules that follow from the track:
 - One root cause per pull request, at most five PRs in a stack. A story that removes six members is six small PRs or one PR per package, not one large PR.
 - **v3 track:** add `@deprecated` with "Use `<replacement>` instead" on every member, where the replacement exists on v3. Keep the old behaviour intact. Also emit a runtime warning through the existing helpers: `warnDeprecatedOnce` in Headless (`src/utils/deprecation.ts`), and `warnDeprecatedOnce` or `DeprecatedPropertyWarnings` in Atomic (`src/utils/deprecation-utils.ts`). They log through the engine logger once per engine (once per engine definition for SSR), not once per call, component or process.
 - **v4 track:** delete the member, its tests, its stories, its docs and its sample usage in the same PR. Do not leave a shim unless the story asks for one.
-- **Inferred public types:** when a change touches generics that customers rely on for IntelliSense (engine definitions, hooks, static and hydrated state), add `expectTypeOf` assertions in a `*.test-d.ts` file next to the code so the inference cannot regress silently. Vitest runs these files only when the package's Vitest config has a `typecheck` block, as `packages/thermidor/vitest.config.js` does; add one when the package lacks it.
+- **Inferred public types:** when a change touches generics that customers rely on for IntelliSense (engine definitions, hooks, static and hydrated state), add `expectTypeOf` assertions in a `*.test-d.ts` file next to the code so the inference cannot regress silently. Vitest runs these files only when the package's Vitest config has a `typecheck` block, as `packages/converse/vitest.config.js` does; add one when the package lacks it.
 - **Samples:** `samples/**` folders without a suffix are the v3 reference and the "before" of the guide; never port them to the new API. A v4 sample lives in a `<sample>-v4` folder until GA, when it replaces the original. Keep samples minimal: the integration point only.
 - **Docs in code:** update the module docs of the entry points you touch so the first example a customer reads matches the API.
 

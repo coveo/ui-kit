@@ -1,12 +1,12 @@
 # Architecture Guide
 
-This document explains how the `@coveo/thermidor` library is structured, why each part exists, and how they connect. It is written for Coveo engineers; Coveo context (org IDs, access tokens, the unified converse endpoint) is assumed.
+This document explains how the `@coveo/converse` library is structured, why each part exists, and how they connect. It is written for Coveo engineers; Coveo context (org IDs, access tokens, the unified converse endpoint) is assumed.
 
 The decisions of record are the accepted ADRs [ADR-009](./adr/ADR-009-architecture-decision-charter-v2.md) (charter v2) through [ADR-016](./adr/ADR-016-inline-state-consumption-remove-remote-controller.md). This guide describes the **shipped** architecture; it supersedes the earlier engine/interface/Redux/facade description.
 
 ## The core idea
 
-`@coveo/thermidor` is a lean client for a single, stateful, intent-routing **unified converse endpoint**. The server streams its response over AG-UI SSE — conversational messages and tool calls, alongside schema-defined A2UI components — and the client renders what the server sends. Thermidor transmits consumer input, folds the streamed result into an observable list of `Turn`s, and validates component state and actions against a consumer-injected contract — nothing more. Component state travels inline through the A2-UI data model (`/state/<id>` `updateDataModel` operations); renderers read it through `{ "@path" }` bindings, and every action goes through the single `session.dispatchAction` entry point ([ADR-016](./adr/ADR-016-inline-state-consumption-remove-remote-controller.md)).
+`@coveo/converse` is a lean client for a single, stateful, intent-routing **unified converse endpoint**. The server streams its response over AG-UI SSE — conversational messages and tool calls, alongside schema-defined A2UI components — and the client renders what the server sends. The Converse SDK transmits consumer input, folds the streamed result into an observable list of `Turn`s, and validates component state and actions against a consumer-injected contract — nothing more. Component state travels inline through the A2-UI data model (`/state/<id>` `updateDataModel` operations); renderers read it through `{ "@path" }` bindings, and every action goes through the single `session.dispatchAction` entry point ([ADR-016](./adr/ADR-016-inline-state-consumption-remove-remote-controller.md)).
 
 Everything the previous revision described (an `Engine` class, a library-agnostic `interface/` layer, Redux Toolkit slices, per-endpoint facades) has been **removed wholesale** ([ADR-010](./adr/ADR-010-unified-endpoint-session-client.md)). The current package has no engine, no interface layer, no Redux/RTK, and no facades.
 
@@ -14,7 +14,7 @@ Everything the previous revision described (an `Engine` class, a library-agnosti
 
 The package entry (`src/index.ts`) exports the session-client surface — `createSession`, the `Session` handle, the `Turn` / `TurnResponse` domain model (including `A2uiMessage` and `DiscoveredSurface`), the renderer action `A2uiRendererAction`, `SessionConfig`, the injected-contract types (`ContractsSchema`, `ComponentContractSchema`, `ParsableSchema`), the client-owned context types, and the versioned `SerializedSession` shape. It also exports the request types (`SessionRequest`, `InitializeRequest`, `PromptRequest`, `ActionRequest`) and the initialization (`SessionInitialization`, `SerializedInitialization`). It is intentionally free of state-library concepts (no store, slice, selector, thunk, or reducer types) and free of raw transport DTO shapes; `src/index.test-d.ts` fails the typecheck if one leaks into the entry.
 
-A second entry point, `@coveo/thermidor/private` (`src/private.ts`), is **for internal Coveo use only**: not supported for customers, and it may change without notice. It exports `createPrivateSession`, `PrivateSessionConfig` and `PrivateSession`, and re-exports the root entry. The root entry never exports them, and `SessionConfig` keeps its required ids; `src/index.test-d.ts` checks both.
+A second entry point, `@coveo/converse/private` (`src/private.ts`), is **for internal Coveo use only**: not supported for customers, and it may change without notice. It exports `createPrivateSession`, `PrivateSessionConfig` and `PrivateSession`, and re-exports the root entry. The root entry never exports them, and `SessionConfig` keeps its required ids; `src/index.test-d.ts` checks both.
 
 ```mermaid
 graph TB
@@ -57,7 +57,7 @@ graph TB
 ```
 src/
 ├── index.ts                       # Public surface (ADR-010 / ADR-014 / ADR-016)
-├── private.ts                     # @coveo/thermidor/private, for internal Coveo use only
+├── private.ts                     # @coveo/converse/private, for internal Coveo use only
 ├── session/
 │   ├── create-session.ts          # createSession factory + shared runtime (dispatch/cancel/retry)
 │   ├── create-private-session.ts  # createPrivateSession: optional ids
@@ -227,7 +227,6 @@ These are intentionally **not yet implemented**:
 - **Interim surface derivation** from raw activities (ADR-015 interim) — see above.
 - **Renderer stream bypasses validation** — `session.a2uiMessages` is built from raw activities, so inbound ops that in-transit validation drops from `session.state` still reach the renderer, and so does the component state seeded by `createSurface.dataModel`, which is never validated. A fix must cover both: filtering only the streamed `updateDataModel` ops still lets the seed through without validation.
 - **Enforced action-payload typing at the renderer boundary** — per-component action typing is applied by convention rather than at the `dispatchAction` boundary ([ADR-016](./adr/ADR-016-inline-state-consumption-remove-remote-controller.md)).
-- **The package rename** — deferred as low-stakes; the package remains `@coveo/thermidor`.
 
 ## How a turn flows end-to-end
 

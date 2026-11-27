@@ -13,6 +13,8 @@ related:
 
 # Actions the producer announces as cached or concurrent skip the session's single request
 
+> This record predates the rename of Thermidor (`@coveo/thermidor`) to the Converse SDK (`@coveo/converse`), and keeps the names of its time.
+
 This ADR amends [ADR-018](./ADR-018-session-scoped-surfaces-and-initialize.md) (one request at a
 time, and no request lane of the session's own) for the actions a producer announces, using the
 announcement mechanism of [ADR-019](./ADR-019-turn-opening-actions.md).

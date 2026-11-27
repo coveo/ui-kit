@@ -1,5 +1,7 @@
 # Unified Sort Controller with Domain-Level Criterion Types
 
+> This record predates the rename of Thermidor (`@coveo/thermidor`) to the Converse SDK (`@coveo/converse`), and keeps the names of its time.
+
 **Status**: `🟡 Proposed`  
 **Related docs**: [ADR-000](./ADR-000-architecture-decision-charter.md), [ADR-001](./ADR-001-anti-corruption-layer.md), [ADR-005](./ADR-005-public-facing-abstractions.md)
 

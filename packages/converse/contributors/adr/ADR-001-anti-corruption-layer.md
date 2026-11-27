@@ -1,5 +1,7 @@
 # ADR-001: Anti-Corruption Layer
 
+> This record predates the rename of Thermidor (`@coveo/thermidor`) to the Converse SDK (`@coveo/converse`), and keeps the names of its time.
+
 **Status**: `🟡 Proposed`  
 **Related docs**: -
 
