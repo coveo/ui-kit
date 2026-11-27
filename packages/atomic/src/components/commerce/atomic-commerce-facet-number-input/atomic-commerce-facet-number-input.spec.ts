@@ -103,6 +103,17 @@ describe('atomic-commerce-facet-number-input', () => {
     await expect(applyButton).toHaveAttribute('part', 'input-apply-button');
   });
 
+  it('should render the apply button with the outline-primary button style', async () => {
+    const {applyButton} = await setupElement({range: {start: 10, end: 100}});
+    await expect(applyButton).toHaveClass(/btn-outline-primary/);
+  });
+
+  it('should render the apply button as a submit button with its text', async () => {
+    const {applyButton} = await setupElement({range: {start: 10, end: 100}});
+    await expect(applyButton).toHaveAttribute('type', 'submit');
+    await expect(applyButton).toHaveTextContent('Apply');
+  });
+
   describe('when the apply button is clicked', () => {
     it('should emit atomic-number-input-apply event with correct detail', async () => {
       const {element, applyButton} = await setupElement({

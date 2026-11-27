@@ -3,6 +3,7 @@ import type {NumericFacet} from '@coveo/headless/commerce';
 import {css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
+import {renderButton} from '@/src/components/common/button';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -179,15 +180,16 @@ export class AtomicCommerceFacetNumberInput
             this.endRef = ref as HTMLInputElement;
           })}
         />
-        <button
-          style="outline-primary"
-          type="submit"
-          part="input-apply-button"
-          class="flex-none truncate p-2.5"
-          aria-label=${applyAria}
-        >
-          ${apply}
-        </button>
+        ${renderButton({
+          props: {
+            style: 'outline-primary',
+            type: 'submit',
+            part: 'input-apply-button',
+            class: 'flex-none truncate p-2.5',
+            ariaLabel: applyAria,
+            text: apply,
+          },
+        })(html``)}
       </form>
     `;
   }
