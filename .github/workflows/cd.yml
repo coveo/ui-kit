@@ -74,7 +74,7 @@ jobs:
         uses: step-security/changeset-action@facd91fb9caf5c417d1a2b13e5e1d740899722da # v2.1.2
         with:
           github-token: ${{ steps.generate-token.outputs.token }}
-          version-script: pnpm changeset version
+          version-script: pnpm exec turbo run create-version
           publish-script: pnpm run release
           pr-title: 'ci(changesets): version packages (${{ github.ref_name }}) j:KIT-5605'
           commit-message: 'ci(changesets): version packages (${{ github.ref_name }}) j:KIT-5605'

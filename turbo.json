@@ -259,6 +259,14 @@
       "dependsOn": ["//#lint:fix:all"],
       "outputs": []
     },
+    "//#version-packages": {
+      "cache": false
+    },
+    "create-version": {
+      "dependsOn": ["//#version-packages"],
+      "cache": false,
+      "outputs": []
+    },
     "clean": {
       "cache": false
     }

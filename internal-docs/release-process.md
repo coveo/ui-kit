@@ -46,13 +46,15 @@ See [`.changeset/README.md`](../.changeset/README.md) for more details.
 
 ## Versioning
 
-When the version PR is created (or updated), `changesets/action` runs `pnpm changeset version`, which:
+When the version PR is created (or updated), `changesets/action` runs `pnpm exec turbo run create-version`. That task depends on the root `version-packages` script, which runs `changeset version`. It:
 
 1. Reads all pending changeset files in `.changeset/`.
 2. Determines the appropriate semver bump for each affected package.
 3. Updates `package.json` versions and inter-package dependency ranges.
 4. Generates or prepends to each package's `CHANGELOG.md`.
 5. Deletes the consumed changeset files. On `main`, it keeps the changesets of the packages in the `ignore` list.
+
+`@coveo/atomic`'s `create-version` task also depends on `@coveo/atomic-a11y#create-version`, which runs after `changeset version` and sets `product.version` in `packages/atomic-a11y/reports/openacr.yaml` to the new `@coveo/atomic` version, so the accessibility conformance report names the version being released.
 
 All these changes are committed into the version PR for the team to review before merging.
 

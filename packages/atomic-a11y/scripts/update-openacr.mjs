@@ -4,7 +4,7 @@
  * Downloads the a11y-report.json from a CI run and regenerates openacr.yaml.
  */
 import {execFileSync} from 'node:child_process';
-import {rmSync} from 'node:fs';
+import {readFileSync, rmSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {transformJsonToOpenAcr} from '../dist/index.js';
 import {formatWithOxfmt} from './format-with-oxfmt.mjs';
@@ -31,9 +31,13 @@ execFileSync(
 
 console.log('[update-openacr] Regenerating openacr.yaml...');
 const OPENACR_PATH = resolve(PKG_ROOT, 'reports/openacr.yaml');
+const {version: atomicVersion} = JSON.parse(
+  readFileSync(resolve(REPO_ROOT, 'packages/atomic/package.json'), 'utf8')
+);
 await transformJsonToOpenAcr({
   inputFile: REPORT_PATH,
   outputFile: OPENACR_PATH,
+  expectedVersion: atomicVersion,
 });
 formatWithOxfmt(OPENACR_PATH);
 

@@ -1,12 +1,13 @@
 import {mkdir, readFile, writeFile} from 'node:fs/promises';
 import path from 'node:path';
-import {stringify} from 'yaml';
+import {parse, stringify} from 'yaml';
 import {DEFAULT_A11Y_REPORT_FILENAME, DEFAULT_A11Y_REPORT_OUTPUT_DIR} from '../shared/constants.js';
 import {isA11yReport} from '../shared/guards.js';
 import type {A11yReport} from '../shared/types.js';
 import {loadManualAuditData} from './manual-audit.js';
 import {loadOverrides} from './overrides.js';
 import {buildOpenAcrReport} from './report-builder.js';
+import {reconcileReportDates} from './report-dates.js';
 import type {OpenAcrReport} from './types.js';
 
 const LOG_PREFIX = '[json-to-openacr]';
@@ -52,6 +53,64 @@ export interface JsonToOpenAcrOptions {
   /** Directory containing `manual-audit-*.json` baseline files.
    * @default 'a11y/reports' */
   manualAuditDir?: string;
+  /** Previously committed OpenACR YAML whose dates are kept when the evaluation
+   * did not change (see {@link reconcileReportDates}). Ignored if missing.
+   * @default outputFile */
+  baselineFile?: string;
+  /** The `@coveo/atomic` version the report must have been generated for. When
+   * set, a report for any other version is rejected, so regenerating from an
+   * older CI run cannot revert `product.version`. */
+  expectedVersion?: string;
+}
+
+/**
+ * Serializes an OpenACR report the way the committed `openacr.yaml` is written.
+ *
+ * `singleQuote: true` keeps the output consistent with the committed baseline
+ * (single-quoted scalars), so regenerating produces a minimal diff limited to
+ * real changes rather than quote churn. Run oxfmt on the written file afterwards.
+ */
+export function serializeOpenAcr(report: OpenAcrReport): string {
+  return stringify(report, {
+    version: '1.1',
+    singleQuote: true,
+  });
+}
+
+/**
+ * Reads an OpenACR YAML file. Returns `undefined` when the file does not exist,
+ * and throws when it cannot be parsed or has no `report_date` or
+ * `last_modified_date`, so a broken file is never mistaken for a missing one.
+ *
+ * Only the dates are checked: the rest of the document is trusted to match
+ * {@link OpenAcrReport}, since this package generates it.
+ */
+export async function readOpenAcr(file: string): Promise<OpenAcrReport | undefined> {
+  let contents: string;
+  try {
+    contents = await readFile(file, 'utf8');
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      return undefined;
+    }
+    throw error;
+  }
+
+  let report: OpenAcrReport | null;
+  try {
+    report = parse(contents, {version: '1.1'}) as OpenAcrReport | null;
+  } catch (error) {
+    throw new Error(
+      `${LOG_PREFIX} Could not parse the OpenACR report at ${file}: ${
+        error instanceof Error ? error.message : String(error)
+      }`
+    );
+  }
+
+  if (!report?.report_date || !report.last_modified_date) {
+    throw new Error(`${LOG_PREFIX} ${file} has no report_date or last_modified_date`);
+  }
+  return report;
 }
 
 /**
@@ -90,6 +149,12 @@ export async function transformJsonToOpenAcr(
 
   const report = await readInputReport(inputFile);
 
+  if (options.expectedVersion && report.report.version !== options.expectedVersion) {
+    throw new Error(
+      `${LOG_PREFIX} ${inputFile} was generated for Atomic ${report.report.version}, but @coveo/atomic is ${options.expectedVersion}. If your branch is behind its target branch, merge the target branch in first; otherwise, use an a11y report from a run on the current version.`
+    );
+  }
+
   if (!report) {
     console.warn(LOG_PREFIX, 'No valid a11y report available. Skipping OpenACR generation.');
     throw new Error('Cannot generate OpenACR report: a11y-report.json is missing or invalid');
@@ -107,17 +172,14 @@ export async function transformJsonToOpenAcr(
   const manualAuditDir = path.resolve(options.manualAuditDir ?? DEFAULT_MANUAL_AUDIT_DIR);
   const manualAggregates = await loadManualAuditData(manualAuditDir);
 
-  const openAcrReport = buildOpenAcrReport(report, overrides, manualAggregates);
-  // `singleQuote: true` keeps the output consistent with the committed
-  // openacr.yaml baseline (single-quoted scalars), so regenerating produces a
-  // minimal diff limited to real conformance changes rather than quote churn.
-  const serialized = stringify(openAcrReport, {
-    version: '1.1',
-    singleQuote: true,
-  });
+  const baselineFile = path.resolve(options.baselineFile ?? outputFile);
+  const openAcrReport = reconcileReportDates(
+    await readOpenAcr(baselineFile),
+    buildOpenAcrReport(report, overrides, manualAggregates)
+  );
 
   await mkdir(path.dirname(outputFile), {recursive: true});
-  await writeFile(outputFile, serialized, 'utf8');
+  await writeFile(outputFile, serializeOpenAcr(openAcrReport), 'utf8');
 
   return openAcrReport;
 }
