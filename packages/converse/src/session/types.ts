@@ -88,7 +88,7 @@ export interface DiscoveredSurface {
   readOnly?: true;
 }
 
-// Keep the operation shapes untyped here: they belong to the renderer protocol, not Thermidor's
+// Keep the operation shapes untyped here: they belong to the renderer protocol, not the Converse SDK's
 // domain model.
 /**
  * A single A2-UI v1.0 message, as Agent Gateway streamed it, listed in

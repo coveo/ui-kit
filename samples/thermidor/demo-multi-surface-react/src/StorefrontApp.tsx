@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
-import type {A2uiRendererAction} from '@coveo/thermidor';
+import type {A2uiRendererAction} from '@coveo/converse';
 import {
   ProductCardActionsContext,
   type ProductCardProduct,

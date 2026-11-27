@@ -1,4 +1,6 @@
-# @coveo/thermidor
+# @coveo/converse
+
+Formerly published as `@coveo/thermidor`; the entries below the first `@coveo/converse` release were published under that name.
 
 ## 0.10.0
 

@@ -1,6 +1,6 @@
 import {render} from '@testing-library/react';
 import {describe, it, expect} from 'vitest';
-import type {ToolCall} from '@coveo/thermidor';
+import type {ToolCall} from '@coveo/converse';
 import {ThinkingBlock} from './ThinkingBlock.js';
 
 function toolCall(overrides: Partial<ToolCall> = {}): ToolCall {

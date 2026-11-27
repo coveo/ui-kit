@@ -1,5 +1,5 @@
 /**
- * Public-surface type test for the `@coveo/thermidor` package entry.
+ * Public-surface type test for the `@coveo/converse` package entry.
  *
  * Guards public API independence: the public exports stay free of state-library
  * concepts and form the compile-time surface acceptance gate.
@@ -290,7 +290,7 @@ import type {GenerativeThunk} from '@/src/index.js';
 
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
-// The private entry point (`@coveo/thermidor/private`, for internal Coveo use only) stays out of the root entry.
+// The private entry point (`@coveo/converse/private`, for internal Coveo use only) stays out of the root entry.
 // @ts-expect-error `createPrivateSession` must not be exported from the root entry.
 import {createPrivateSession} from '@/src/index.js';
 // @ts-expect-error `PrivateSessionConfig` must not be exported from the root entry.

@@ -1,5 +1,5 @@
 /**
- * Type test for the `@coveo/thermidor/private` entry (for internal Coveo use only).
+ * Type test for the `@coveo/converse/private` entry (for internal Coveo use only).
  */
 import {expectTypeOf, test} from 'vitest';
 import type {

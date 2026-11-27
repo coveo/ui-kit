@@ -1,6 +1,6 @@
 import {render, screen} from '@testing-library/react';
 import {describe, it, expect, vi} from 'vitest';
-import type {Turn} from '@coveo/thermidor';
+import type {Turn} from '@coveo/converse';
 import {ConversationThread} from './ConversationThread.js';
 import {makeFollowUpTurn, makeSurfaces, makeTurn} from '../../test/turn-fixtures.js';
 import {createThermidorCatalog} from '../../a2ui/components.js';

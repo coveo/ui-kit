@@ -4,7 +4,7 @@
  * This module resolves and applies the ACTION schema for a dispatching
  * component FROM THE INJECTED `contracts`, so the core can gate an outbound
  * action on payload conformance BEFORE the HTTP POST without importing any
- * concrete contract package. It is entirely internal to `Thermidor_Core`: the
+ * concrete contract package. It is entirely internal to the Converse core: the
  * Consumer never invokes, imports, or becomes aware of it.
  *
  * Resolution walks the injected contract member for the dispatching component:

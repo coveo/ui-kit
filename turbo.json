@@ -92,7 +92,7 @@
         "!**/*.tw.css",
         "!**/*.mdx",
         "!**/CHANGELOG.md",
-        "!**/packages/thermidor/api-report/**/*",
+        "!**/packages/converse/api-report/**/*",
         "!.changeset/*.md",
         ".changeset/README.md"
       ],
@@ -157,7 +157,7 @@
         "!**/*.tw.css",
         "!**/*.mdx",
         "!**/CHANGELOG.md",
-        "!**/packages/thermidor/api-report/**/*",
+        "!**/packages/converse/api-report/**/*",
         "!.changeset/*.md",
         ".changeset/README.md"
       ]

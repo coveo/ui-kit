@@ -43,7 +43,7 @@ const REQUEST_SCOPE_KEYS = [
  *
  * @example
  * ```ts
- * import {createPrivateSession} from '@coveo/thermidor/private';
+ * import {createPrivateSession} from '@coveo/converse/private';
  *
  * const session = createPrivateSession({
  *   contracts,

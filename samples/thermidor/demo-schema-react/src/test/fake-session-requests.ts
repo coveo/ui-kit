@@ -1,4 +1,4 @@
-import type {ActionError, SessionRequest, SessionSnapshot} from '@coveo/thermidor';
+import type {ActionError, SessionRequest, SessionSnapshot} from '@coveo/converse';
 import type {SessionRequestSource} from '../a2ui/session-request.js';
 
 /** A session snapshot holding only `request` and `actionError`, the fields the surfaces read. */

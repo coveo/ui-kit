@@ -377,7 +377,7 @@ jobs:
   validate-dts:
     name: 'Validate DTS API surface'
     needs: [affected, build]
-    if: ${{ contains(needs.affected.outputs.tasks, '"@coveo/thermidor#test:dts:ci"') }}
+    if: ${{ contains(needs.affected.outputs.tasks, '"@coveo/converse#test:dts:ci"') }}
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -390,7 +390,7 @@ jobs:
           fetch-depth: 1
           filter: blob:none
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo run test:dts:ci --filter=@coveo/thermidor
+      - run: pnpm exec turbo run test:dts:ci --filter=@coveo/converse
   package-compatibility:
     name: 'Verify compatibility of packages'
     needs: [affected, build]

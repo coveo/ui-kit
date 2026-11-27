@@ -12,7 +12,7 @@ import {
   type NavigatorContext,
   type SerializedSession,
   type Session,
-} from '@coveo/thermidor';
+} from '@coveo/converse';
 import {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
 import {getSampleConfiguration} from '../env.js';
 import {CartStoreContext} from '../cart/CartProvider.js';

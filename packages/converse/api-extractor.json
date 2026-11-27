@@ -12,7 +12,7 @@
   "apiReport": {
     "enabled": true,
     "reportFolder": "<projectFolder>/api-report/",
-    "reportFileName": "thermidor.api.md"
+    "reportFileName": "converse.api.md"
   },
 
   "docModel": {

@@ -5,6 +5,6 @@
   "apiReport": {
     "enabled": true,
     "reportFolder": "<projectFolder>/api-report/",
-    "reportFileName": "thermidor-private.api.md"
+    "reportFileName": "converse-private.api.md"
   }
 }

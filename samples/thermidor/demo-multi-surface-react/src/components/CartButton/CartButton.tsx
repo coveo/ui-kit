@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import type {CommerceCartItem} from '@coveo/thermidor';
+import type {CommerceCartItem} from '@coveo/converse';
 import {formatPrice} from '../../../../demo-schema-react/src/utils.js';
 import {getSampleConfiguration} from '../../env.js';
 import {useCart} from '../../session/storefront-session.js';

@@ -1,5 +1,5 @@
 ---
-'@coveo/thermidor': minor
+'@coveo/converse': minor
 ---
 
 Carry the A2-UI v1.0 messages of Agent Gateway to the renderer unchanged, for renderers built on the `@a2ui/web_core` v1.0 message processor, such as `@a2ui/react`.

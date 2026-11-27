@@ -1,6 +1,6 @@
 import {fireEvent, screen} from '@testing-library/react';
 import {afterEach, describe, it, expect, vi} from 'vitest';
-import type {Turn} from '@coveo/thermidor';
+import type {Turn} from '@coveo/converse';
 import {ConversationPage} from './ConversationPage.js';
 import {makeFollowUpTurn, makeSurfaces, makeTurn} from '../../test/turn-fixtures.js';
 import {findSearchBox, renderWithSession} from '../../test/session.js';

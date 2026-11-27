@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useRef} from 'react';
-import type {Turn} from '@coveo/thermidor';
+import type {Turn} from '@coveo/converse';
 
 const MARGIN_TOP = 20;
 

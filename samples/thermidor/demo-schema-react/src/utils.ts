@@ -1,8 +1,8 @@
-import type {AgentMessage} from '@coveo/thermidor';
+import type {AgentMessage} from '@coveo/converse';
 import {marked} from 'marked';
 import DOMPurify from 'dompurify';
 
-export type {AgentMessage} from '@coveo/thermidor';
+export type {AgentMessage} from '@coveo/converse';
 
 /** Concatenate message contents in arrival order, separating distinct messages with newlines */
 export function assembleMessages(messages: AgentMessage[]): string {

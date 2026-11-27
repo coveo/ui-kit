@@ -1,5 +1,5 @@
 /**
- * `@coveo/thermidor` is an experimental, framework-agnostic client for the Coveo unified converse
+ * `@coveo/converse` is an experimental, framework-agnostic client for the Coveo unified converse
  * endpoint. The endpoint streams conversational messages, tool calls and schema-defined A2-UI
  * components; the client sends the consumer's input and turns what streams back into an
  * observable {@link Session}: its turns, its initialization and its A2-UI surfaces and state.
@@ -15,7 +15,7 @@
  * A2-UI contract package, such as `@coveo/thermidor-schema`.
  *
  * ```ts
- * import {createSession} from '@coveo/thermidor';
+ * import {createSession} from '@coveo/converse';
  * import {ComponentContractsSchema} from '@coveo/thermidor-schema';
  *
  * const session = createSession({

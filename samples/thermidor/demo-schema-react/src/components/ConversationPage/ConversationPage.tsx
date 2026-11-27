@@ -1,4 +1,4 @@
-import type {Turn} from '@coveo/thermidor';
+import type {Turn} from '@coveo/converse';
 import {useRef, useState} from 'react';
 import {useAutoScroll} from '../../hooks/use-auto-scroll.js';
 import {SessionSearchBox} from '../SessionSearchBox/SessionSearchBox.js';

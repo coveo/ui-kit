@@ -1,5 +1,5 @@
 import type {ReactNode} from 'react';
-import type {TurnResponse} from '@coveo/thermidor';
+import type {TurnResponse} from '@coveo/converse';
 import {ThinkingBlock} from './ThinkingBlock.js';
 import {StreamingMessage} from './StreamingMessage.js';
 import styles from './AgentResponseBlock.module.css';

@@ -1,6 +1,6 @@
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import {cleanup, fireEvent, render, screen, within} from '@testing-library/react';
-import type {DiscoveredSurface, Turn} from '@coveo/thermidor';
+import type {DiscoveredSurface, Turn} from '@coveo/converse';
 import {
   makeFollowUpTurn,
   makeResponse,

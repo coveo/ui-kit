@@ -14,7 +14,7 @@ import type {
   Session,
   SessionRequest,
   SessionSnapshot,
-} from '@coveo/thermidor';
+} from '@coveo/converse';
 import type {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
 
 /**

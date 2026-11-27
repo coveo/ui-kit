@@ -1,4 +1,4 @@
-import type {Turn} from '@coveo/thermidor';
+import type {Turn} from '@coveo/converse';
 import styles from './pages.module.css';
 
 /** The page turn's error, when it stopped early. */

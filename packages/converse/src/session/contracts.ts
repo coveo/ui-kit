@@ -1,7 +1,7 @@
 /**
  * The injected component-contracts type — the runtime's decoupling seam.
  *
- * `@coveo/thermidor` validates every session against a contract that is
+ * `@coveo/converse` validates every session against a contract that is
  * INJECTED through {@link SessionConfig.contracts}, never imported from a
  * concrete schema package. {@link ContractsSchema} is the STRUCTURAL type that
  * seam accepts: a Zod discriminated union on the `component` field whose every
