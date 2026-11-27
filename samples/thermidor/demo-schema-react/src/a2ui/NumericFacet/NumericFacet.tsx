@@ -49,25 +49,27 @@ export const NumericFacet = createComponentImplementation(
         </div>
 
         <ul className={styles.values}>
-          {optimisticFacet.values.map((value) => {
-            const isSelected = value.state === 'selected';
-            return (
-              <li key={`${value.start}-${value.end}`}>
-                <button
-                  className={`${styles.value} ${isSelected ? styles.selected : ''}`}
-                  type="button"
-                  aria-pressed={isSelected}
-                  onClick={() => optimisticFacet.toggleSingleSelect(value.start, value.end)}
-                >
-                  <span className={styles.valueLabel}>
-                    {formatFieldNumber(props.field, value.start)} -{' '}
-                    {formatFieldNumber(props.field, value.end)}
-                  </span>
-                  <span className={styles.count}>({value.numberOfResults})</span>
-                </button>
-              </li>
-            );
-          })}
+          {optimisticFacet.values
+            .filter((value) => value.numberOfResults > 0 || value.state !== 'idle')
+            .map((value) => {
+              const isSelected = value.state === 'selected';
+              return (
+                <li key={`${value.start}-${value.end}`}>
+                  <button
+                    className={`${styles.value} ${isSelected ? styles.selected : ''}`}
+                    type="button"
+                    aria-pressed={isSelected}
+                    onClick={() => optimisticFacet.toggleSingleSelect(value.start, value.end)}
+                  >
+                    <span className={styles.valueLabel}>
+                      {formatFieldNumber(props.field, value.start)} -{' '}
+                      {formatFieldNumber(props.field, value.end)}
+                    </span>
+                    <span className={styles.count}>({value.numberOfResults})</span>
+                  </button>
+                </li>
+              );
+            })}
         </ul>
 
         <form
