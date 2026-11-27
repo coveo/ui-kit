@@ -2,9 +2,24 @@
 
 Thank you for contributing to coveo/ui-kit. This guide describes the conventions we use in this monorepo. The goal is a clean, consistent commit history — you're welcome to achieve that however works for you, as long as the end result meets the quality bar described below.
 
+## Where does my PR go?
+
+`v3` was cut from `main` on November 25, 2026. Until the v4 GA, `v3` releases every package except Thermidor: the 3.x versions of Headless, Atomic, Quantic and the packages built on them, and Auth, Bueno, coveo.analytics, create-ui and Relay. `main` takes the v4 breaking changes and publishes only Thermidor.
+
+| Your change                                                                              | Base branch | What happens next                                                                                                                            |
+| ---------------------------------------------------------------------------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| A fix, a feature, a deprecation or a warning in a published package other than Thermidor | `v3`        | Ships in the next release from `v3` and reaches `main` with the next merge of `v3` into `main`.                                              |
+| A fix that v3 customers need, found while working on `main`                              | `v3`        | The same: make it on `v3`, and the next merge brings it to `main`.                                                                           |
+| A breaking change: a removal, a rename, a new default, a raised Node.js or peer floor    | `main`      | Needs a `major` changeset, the upgrade guide entry and `!` in the title. The v3 deprecation it relies on must already be released from `v3`. |
+| Thermidor                                                                                | `main`      | Nothing changes.                                                                                                                             |
+| The experimental SSR entry points                                                        | `main`      | Ships with v4. Their v3 version stays as released; a fix goes to `v3` only when a customer is blocked.                                       |
+| Docs, tooling or CI that ships nothing                                                   | `main`      | When `v3` needs it too, open a second PR there with the same change.                                                                         |
+
+`v3` is merged into `main` before the first v4 prerelease and again just before GA. Each merge brings the 3.x fixes, versions and changelog entries to `main`, so a change made on `v3` needs no second PR. When your `v3` fix touches code that changed on `main` since the cut, add the `forwardport` label, so whoever runs the merge knows where to look.
+
 ## PR title
 
-We follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/). Because we use **squash merge**, the PR title becomes the final commit message in `main`.
+We follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/). Because we use **squash merge**, the PR title becomes the final commit message on the base branch.
 
 Your PR title **should** follow this pattern:
 
@@ -60,11 +75,11 @@ If you determine that a changeset is required, run `pnpm changeset` and follow t
 
 ## Contribution Workflow
 
-1. **Create a branch** — no naming convention enforced.
+1. **Create a branch** from the base branch of your change (see [Where does my PR go?](#where-does-my-pr-go)) — no naming convention enforced.
 2. **Make your changes** in the relevant package(s).
 3. **Add a changeset** when applicable (see [above](#changeset)).
 4. **Commit** A [Husky](https://typicode.github.io/husky/) pre-commit hook runs `pnpm run pre-commit` to catch lint and formatting issues.
-5. **Open a pull request** — pick a [PR template](#pr-description) and write a title that follows [Conventional Commits](#pr-title).
+5. **Open a pull request** against that base branch — pick a [PR template](#pr-description) and write a title that follows [Conventional Commits](#pr-title).
 6. **Address review feedback** — push additional commits; they'll be squashed on merge.
 
 ## Additional References
