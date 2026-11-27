@@ -11,6 +11,8 @@ related:
 
 # ADR-010 — Annex: package structure (current → target)
 
+> This record predates the rename of Thermidor (`@coveo/thermidor`) to the Converse SDK (`@coveo/converse`), and keeps the names of its time.
+
 Supporting, **illustrative** detail for
 [ADR-010](./ADR-010-unified-endpoint-session-client.md). It maps the _current_
 `packages/thermidor/src` tree to what survives, transforms, or is removed under the

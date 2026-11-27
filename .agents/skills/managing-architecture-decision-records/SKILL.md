@@ -13,7 +13,7 @@ All conventions (scope, numbering, filenames, statuses, deletion policy) are def
 
 ## Creating an ADR
 
-1. Determine the target directory per ADR 0002 (monorepo: `docs/adr/`, package: `packages/<pkg>/docs/adr/`, or `packages/<pkg>/contributors/adr/` when the package's `docs/` is generated, such as `@coveo/thermidor`). Ask if unclear.
+1. Determine the target directory per ADR 0002 (monorepo: `docs/adr/`, package: `packages/<pkg>/docs/adr/`, or `packages/<pkg>/contributors/adr/` when the package's `docs/` is generated, such as `@coveo/converse`). Ask if unclear.
 2. Compute the next number:
    ```bash
    node .agents/skills/managing-architecture-decision-records/scripts/next-adr-number.mjs <adr-directory>

@@ -1,5 +1,7 @@
 # Public-Facing Abstractions
 
+> This record predates the rename of Thermidor (`@coveo/thermidor`) to the Converse SDK (`@coveo/converse`), and keeps the names of its time.
+
 **Status**: `🟡 Proposed`  
 **Related docs**: [ADR-000 Architecture Decision Charter](./ADR-000-architecture-decision-charter.md), [ADR-001 Anti-Corruption Layer](./ADR-001-anti-corruption-layer.md), [ADR-002 Multi-Interface Engine](./ADR-002-multi-interface-engine.md), [ADR-004 Lazy Facade Resolvers](./ADR-004-lazy-facade-resolvers.md)
 

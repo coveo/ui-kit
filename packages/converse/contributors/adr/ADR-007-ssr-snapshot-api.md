@@ -1,5 +1,7 @@
 # ADR-007: Engine Snapshot API for Server-Side Rendering
 
+> This record predates the rename of Thermidor (`@coveo/thermidor`) to the Converse SDK (`@coveo/converse`), and keeps the names of its time.
+
 **Status**: `🟡 Proposed`  
 **Related docs**: [ADR-000](./ADR-000-architecture-decision-charter.md), [ADR-002](./ADR-002-multi-interface-engine.md), [ADR-003](./ADR-003-facade-request-response.md)  
 **Annex**: [Implementation Details](./ADR-007-annex-ssr-implementation-details.md)

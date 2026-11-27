@@ -15,6 +15,8 @@ related:
 
 # A component action the producer announces as opening a turn opens one
 
+> This record predates the rename of Thermidor (`@coveo/thermidor`) to the Converse SDK (`@coveo/converse`), and keeps the names of its time.
+
 This ADR complements [ADR-018](./ADR-018-session-scoped-surfaces-and-initialize.md) on a case it
 leaves open (which dispatches open a turn), amends its failure rule for that case, and amends the
 [model annex](./ADR-010-annex-model.md) of [ADR-010](./ADR-010-unified-endpoint-session-client.md)

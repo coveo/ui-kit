@@ -60,7 +60,7 @@ Each ADR records one primary decision. When a topic involves multiple decisions,
 
 - When a decision concerns the monorepo as a whole or establishes a convention across packages, the ADR lives under `docs/adr/`.
 - When a decision concerns one package, the ADR lives under `packages/<package>/docs/adr/`.
-- When a package's `docs/` folder is generated (for example, a TypeDoc build that empties it, as in `@coveo/thermidor`), its ADRs live under `packages/<package>/contributors/adr/` instead.
+- When a package's `docs/` folder is generated (for example, a TypeDoc build that empties it, as in `@coveo/converse`), its ADRs live under `packages/<package>/contributors/adr/` instead.
 - When scope is ambiguous, the author chooses between monorepo and package scope explicitly.
 
 Existing ADRs remain in their current locations.

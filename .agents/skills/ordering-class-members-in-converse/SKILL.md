@@ -1,25 +1,25 @@
 ---
-name: ordering-class-members-in-thermidor
-description: Orders class members in TypeScript classes within the thermidor package following the established convention. Use when creating new classes, refactoring existing ones, or reviewing class structure in packages/thermidor/src/.
+name: ordering-class-members-in-converse
+description: Orders class members in TypeScript classes within the converse package following the established convention. Use when creating new classes, refactoring existing ones, or reviewing class structure in packages/converse/src/.
 license: Apache-2.0
 metadata:
   author: coveo
   version: '1.0'
 ---
 
-# Ordering Class Members in Thermidor
+# Ordering Class Members in Converse
 
 ## When to Apply
 
 Apply this ordering convention when:
 
-- Creating a new TypeScript class in `packages/thermidor/src/`
-- Refactoring or reviewing an existing class in the thermidor package
+- Creating a new TypeScript class in `packages/converse/src/`
+- Refactoring or reviewing an existing class in the converse package
 - Adding new members to an existing class
 
 ## Convention
 
-All TypeScript classes in the thermidor package must follow this member ordering:
+All TypeScript classes in the converse package must follow this member ordering:
 
 ### 1. Static Members
 

@@ -1,5 +1,7 @@
 # ADR-005: Build Process (ESM-Only) for Thermidor
 
+> This record predates the rename of Thermidor (`@coveo/thermidor`) to the Converse SDK (`@coveo/converse`), and keeps the names of its time.
+
 **Status**: `🟢 Accepted`  
 **Related docs**: [Node.js require(esm) Documentation](https://nodejs.org/api/modules.html#loading-ecmascript-modules-using-require)
 

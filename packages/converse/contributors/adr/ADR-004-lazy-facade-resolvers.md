@@ -1,5 +1,7 @@
 # ADR-004: Lazy Facade Resolvers on Interface Objects
 
+> This record predates the rename of Thermidor (`@coveo/thermidor`) to the Converse SDK (`@coveo/converse`), and keeps the names of its time.
+
 **Status**: `🟡 Proposed`  
 **Related docs**: [ADR-002 Multi-Interface Engine](./ADR-002-multi-interface-engine.md), [ADR-003 Facade Request Response](./ADR-003-facade-request-response.md)
 

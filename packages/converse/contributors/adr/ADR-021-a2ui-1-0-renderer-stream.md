@@ -13,6 +13,8 @@ related:
 
 # Stream A2-UI 1.0 to the renderer unchanged
 
+> This record predates the rename of Thermidor (`@coveo/thermidor`) to the Converse SDK (`@coveo/converse`), and keeps the names of its time.
+
 > Part of the unified-endpoint session-client family (core:
 > [ADR-010](./ADR-010-unified-endpoint-session-client.md)), governed by the charter
 > [ADR-009](./ADR-009-architecture-decision-charter-v2.md). Retires the
