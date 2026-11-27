@@ -1,5 +1,52 @@
 # @coveo/thermidor
 
+## 0.11.0
+
+### Minor Changes
+
+- [#9069](https://github.com/coveo/ui-kit/pull/9069) [`fbe9567`](https://github.com/coveo/ui-kit/commit/fbe95672b7dc8b6db3ffb80c9712c821761fdf56) - `createSession` now throws when the contracts don't declare `SessionShell`'s `initialize` action with a payload that accepts `{}`, unless `initialize` is `false`, and `retryInitialization()` throws in that case too. Before, the session sent `initialize` without checking it against the contracts.
+
+- [#9064](https://github.com/coveo/ui-kit/pull/9064) [`479fc26`](https://github.com/coveo/ui-kit/commit/479fc2634e981f41ce02b717bf6b0c077f3f35f0) - Report the concurrent actions in flight and their failures (ADR-020). `session.concurrentRequests`, also in `getSnapshot()`, lists the concurrent actions whose latest dispatch from their node awaits its answer, by surface, node and action name. `session.concurrentFailures`, also in `getSnapshot()`, lists those whose latest dispatch from their node failed, with the message and error code, until the node dispatches that action again. `session.actionError` is unchanged: concurrent actions neither set nor clear it. Once a concurrent dispatch resolves, these two lists tell whether its node's latest dispatch failed, is still awaited, or was applied.
+
+- [#9009](https://github.com/coveo/ui-kit/pull/9009) [`74c8e21`](https://github.com/coveo/ui-kit/commit/74c8e21528ee2afb0927264dcbe998c5354402f1) - Drop the model's reasoning text from the session. `TurnAgent.reasoningSteps` becomes `toolCalls`, a `ToolCall[]` with no `type` discriminant, and `ReasoningStep`, `ReasoningMessageStep` and `ToolCallStep` are removed. `REASONING_MESSAGE_*` events are now ignored. The serialized session version moves to 6, so sessions saved by earlier versions are rejected on restore.
+
+- [#9019](https://github.com/coveo/ui-kit/pull/9019) [`8d629c1`](https://github.com/coveo/ui-kit/commit/8d629c17e04510e202742e01ddc078660bd074db) - `session.isConcurrent({surfaceId, name})` tells whether a dispatch of an action from a surface would now be sent at once, beside any request in flight: the producer announces it as concurrent on that surface, and the session has its token. A search box can read it to send each `fetchSuggestions` at once instead of waiting for the session to be free.
+
+- [`c496ad1`](https://github.com/coveo/ui-kit/commit/c496ad184080375ddb3311ec6ce238b9456ece96) - A session restored with a token now resumes through `initialize`, so it sends a request when the page loads: it sends its keys, and the endpoint answers with a new, live shell. The surfaces of the earlier restored turns are read-only snapshots: `DiscoveredSurface.readOnly` is `true` on them, and `dispatchAction` refuses their actions without a request, except `productClick`. The surfaces of the last restored turn that created any stay live. When the endpoint answers with another session instead, the session adopts its keys and drops the restored turns.
+
+- [#8973](https://github.com/coveo/ui-kit/pull/8973) [`7ccf8ad`](https://github.com/coveo/ui-kit/commit/7ccf8ad39a1e7b5f8b18a81516d5ffad269750b5) - The session now retries its automatic `initialize`, up to 3 attempts within 5 seconds, when the endpoint quickly rejects it with a network error, a `429`, `502`, `503` or `504`. A dispatch made during the retries is withheld, as during any request. The new `session.retryInitialization()` re-sends a failed `initialize`, a restored session's included.
+
+- [#8974](https://github.com/coveo/ui-kit/pull/8974) [`9270719`](https://github.com/coveo/ui-kit/commit/9270719cab391529e0d7a0d313b6060bf58ece2b) - An application can continue a session from its keys. `createSession` takes an optional `sessionId` (a UUID) and `sessionToken`, sent from the session's first request, `initialize` included, and `Session` exposes both as `sessionId` and `sessionToken`, including the new keys the endpoint answers with when an `initialize` finds the session expired. A `sessionId` alone opens a new session under that id. `createPrivateSession`'s `sessionId` is now part of `createSession`.
+  
+  A session restored with a `sessionId` but no `sessionToken` now drops that id when its first request ends before the endpoint sends a token, so the endpoint assigns a new one. Only `createPrivateSession` did this before.
+  
+  The automatic `initialize` of a session created with its keys is retried like any other, carrying them, and `session.retryInitialization()` now also re-sends a failed `initialize` once the session has a token, so the endpoint resumes that session.
+
+- [#8959](https://github.com/coveo/ui-kit/pull/8959) [`8ec1395`](https://github.com/coveo/ui-kit/commit/8ec13957f906cdb66c9d072ccf7b444cb29c7a74) - Tell a stopped turn from a failed one without reading its error message.
+  
+  - An errored `Turn` and `SessionInitialization` carry `reason`: `'cancelled'` when `session.cancel()` stopped it, `'failed'` otherwise, including a run restored while it was streaming. The new `TurnErrorReason` type names it.
+  - A `RUN_ERROR` keeps the gateway's `code` as `errorCode` on the turn or initialization it fails, and on `ActionError` when it fails an action.
+  - `error` keeps its values, `retry` clears `reason` and `errorCode` with it, and both survive `serialize()` and `sessionToRestore`.
+  - A connection that drops after the stream's `RUN_FINISHED` or `RUN_ERROR` no longer overwrites the turn's outcome with a network error.
+  
+  **Breaking:** the serialized session is now version 5, so a session serialized by an earlier version is rejected on restore.
+
+- [#9024](https://github.com/coveo/ui-kit/pull/9024) [`713dc17`](https://github.com/coveo/ui-kit/commit/713dc175cdde09047b1b88c117d17babb05afb43) - The A2-UI v0.9 renderer projection (`session.a2uiMessages`) now also reads the final A2-UI v1.0 that Agent Gateway is switching to, so a v0.9 renderer keeps working across the switch.
+  
+  - Messages with the final `version: "1.0"` envelope get the same conversion and surface lifecycle as today's `version: "v1.0"` ones.
+  - In a `"1.0"` message, final data bindings, `{"@path": x}`, become v0.9 bindings, `{"path": x}`, in component nodes at any depth. A `"v1.0"` message is converted exactly as before. Other `path` keys, such as `updateDataModel.path` or a ChildList template's `path`, are left as they are.
+  - Component ids are forwarded unchanged, whether snake_case or hyphenated.
+  
+  The public API is unchanged. Reading both inputs is transitional: the projection goes away once a v1.0 renderer is available.
+
+### Patch Changes
+
+- [#9016](https://github.com/coveo/ui-kit/pull/9016) [`5e87176`](https://github.com/coveo/ui-kit/commit/5e871768c188c88e677326774aa97f0d0fabebb5) - A converse request the agent gateway rejects now reports the gateway's own status, such as 412, instead of 406 Not Acceptable. Converse requests now accept a JSON answer as well as the event stream.
+
+- [#8951](https://github.com/coveo/ui-kit/pull/8951) [`f2014bc`](https://github.com/coveo/ui-kit/commit/f2014bc61ed69cd09e7e705338320dfa6ace18aa) - A concurrent action's answer taken from the cache, or applied again, now reaches the renderer stream as new objects instead of the ones it first delivered. A renderer that resets local state, such as a picked product child, when a value's identity changes now resets on every write.
+
+- [#9061](https://github.com/coveo/ui-kit/pull/9061) [`36c7b1d`](https://github.com/coveo/ui-kit/commit/36c7b1db7b1409d2a9c2f81bbd2223ad35c27155) - Every public export and member of `@coveo/thermidor` now has TSDoc, including `AgentMessage`, the `Turn`, `TurnAgent` and `Activity` fields, the serialized session shapes, the commerce context and `SessionConfig.organizationId` and `accessToken`, so your editor shows a description for each one and docs.coveo.com can generate the package's reference.
+
 ## 0.10.0
 
 ### Minor Changes
