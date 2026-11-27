@@ -139,8 +139,8 @@ export class AtomicResultBadge extends LitElement implements InitializableCompon
     }
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     return this.renderBadge();
   }

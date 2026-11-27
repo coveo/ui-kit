@@ -316,8 +316,8 @@ export class AtomicInsightResultChildren
     return this.renderChildren(this.result.children);
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     return html`${when(this.bindings && (this.displayConfig || this.inheritTemplates), () =>
       renderResultChildrenGuard({

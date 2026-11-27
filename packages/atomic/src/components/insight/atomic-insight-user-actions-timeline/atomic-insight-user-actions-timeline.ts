@@ -16,6 +16,7 @@ import type {InsightBindings} from '@/src/components/insight/atomic-insight-inte
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import ArrowDownIcon from '../../../images/big-arrow-down.svg';
@@ -286,6 +287,7 @@ export class AtomicInsightUserActionsTimeline
   }
 
   @bindingGuard()
+  @errorGuard()
   render() {
     const areUserActionsAvailable = this.userActionsState?.timeline?.session;
     const hasError = this.userActionsState?.error;

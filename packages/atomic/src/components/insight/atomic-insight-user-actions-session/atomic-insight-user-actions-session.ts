@@ -7,6 +7,7 @@ import {renderButton} from '@/src/components/common/button';
 import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import Flag from '../../../images/flag.svg';
@@ -177,6 +178,7 @@ export class AtomicInsightUserActionsSession
   }
 
   @bindingGuard()
+  @errorGuard()
   public render() {
     const isShowMoreActionsButtonVisible =
       !this.areActionsAfterCaseCreationVisible && !!this.userActionsAfterCaseCreation.length;

@@ -322,6 +322,20 @@ describe('atomic-result', () => {
       const resultRoot = element.shadowRoot!.querySelector('.result-root');
       expect(resultRoot?.classList).toContain('with-sections');
     });
+
+    it('should render the custom content again after an error clears', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+      const element = await renderResult({renderingFunction});
+
+      element.density = 'invalid' as ItemDisplayDensity;
+      await element.updateComplete;
+      expect(element.shadowRoot!.querySelector('atomic-component-error')).not.toBeNull();
+
+      element.density = 'normal';
+      await element.updateComplete;
+      const resultRoot = element.shadowRoot!.querySelector('.result-root');
+      expect(resultRoot?.textContent).toContain('Custom Result:');
+    });
   });
 
   describe('when content is undefined', () => {

@@ -80,8 +80,8 @@ export class AtomicProductPrice
     );
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     const hasPromo = this.hasPromotionalPrice;
 

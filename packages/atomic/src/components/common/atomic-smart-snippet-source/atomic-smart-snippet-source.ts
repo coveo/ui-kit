@@ -104,8 +104,8 @@ export class AtomicSmartSnippetSource
     }
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     return html`${when(
       this.source,

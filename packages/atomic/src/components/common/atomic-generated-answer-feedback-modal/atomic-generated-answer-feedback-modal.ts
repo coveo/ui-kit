@@ -506,8 +506,8 @@ export class AtomicGeneratedAnswerFeedbackModal
     return this.renderSuccessFormFooter();
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     this.updateBreakpoints();
 

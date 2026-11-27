@@ -117,8 +117,8 @@ export class AtomicIpxRefineToggle extends LitElement implements InitializableCo
     });
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     return renderIconButton({
       props: {

@@ -53,8 +53,8 @@ export class AtomicRecsError extends LitElement implements InitializableComponen
     this.recommendationList = buildRecommendationList(this.bindings.engine);
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     const {error} = this.recommendationListState;
     const hasError = error !== null && error !== undefined;

@@ -181,6 +181,20 @@ describe('atomic-sort-expression', () => {
         expect.anything()
       );
     });
+
+    it('should clear its error once moved inside an atomic-sort-dropdown', async () => {
+      const {element} = await renderSortExpression({insideDropdown: false});
+      expect(element.error?.message).toMatch(/has to be used inside an atomic-sort-dropdown/);
+
+      const dropdown = document.createElement('atomic-sort-dropdown');
+      document.body.append(dropdown);
+      dropdown.append(element);
+      await element.updateComplete;
+
+      expect(element.error).toBeUndefined();
+      expect(element.querySelector('atomic-component-error')).not.toBeInTheDocument();
+      dropdown.remove();
+    });
   });
 
   describe('when inside atomic-sort-dropdown', () => {
@@ -195,6 +209,24 @@ describe('atomic-sort-expression', () => {
 
       const errorComponent = element.querySelector('atomic-component-error');
       expect(errorComponent).not.toBeInTheDocument();
+    });
+
+    it('should restore an error it displaced once moved out of the dropdown and back in', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+      const {element} = await renderSortExpression({insideDropdown: true});
+      const dropdown = element.parentElement!;
+      const otherError = new Error('other error');
+      element.error = otherError;
+      await element.updateComplete;
+
+      document.body.append(element);
+      await element.updateComplete;
+      expect(element.error?.message).toMatch(/has to be used inside an atomic-sort-dropdown/);
+
+      dropdown.append(element);
+      await element.updateComplete;
+      expect(element.error).toBe(otherError);
+      element.remove();
     });
   });
 

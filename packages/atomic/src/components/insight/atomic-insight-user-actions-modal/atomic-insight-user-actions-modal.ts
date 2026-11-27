@@ -112,8 +112,8 @@ export class AtomicInsightUserActionsModal
     }
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     return html`
       ${when(

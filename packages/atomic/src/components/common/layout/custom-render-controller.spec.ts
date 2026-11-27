@@ -105,6 +105,21 @@ describe('CustomRenderController', () => {
       expect(mockOnRenderComplete).toHaveBeenCalledTimes(1);
     });
 
+    it('should execute render function again when the root element is replaced', () => {
+      controller.hostUpdated();
+      const newRootElement = document.createElement('div');
+      vi.mocked(mockOptions.rootElementRef).mockReturnValue(newRootElement);
+
+      controller.hostUpdated();
+
+      expect(mockRenderingFunction).toHaveBeenCalledTimes(2);
+      expect(mockRenderingFunction).toHaveBeenLastCalledWith(
+        mockItemData,
+        newRootElement,
+        mockLinkContainer
+      );
+    });
+
     it('should not execute when rendering function is undefined', () => {
       mockOptions.renderingFunction = vi.fn().mockReturnValue(undefined);
       controller = new CustomRenderController(mockElement, mockOptions);

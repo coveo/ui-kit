@@ -350,8 +350,8 @@ export class AtomicInsightSearchBox
       : this.bindings.i18n.t('query-suggestions-unavailable');
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     return html`${renderSearchBoxWrapper({
       props: {

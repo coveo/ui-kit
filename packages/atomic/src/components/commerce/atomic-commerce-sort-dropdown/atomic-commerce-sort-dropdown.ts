@@ -107,8 +107,8 @@ export class AtomicCommerceSortDropdown
     );
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     const {responseId, error, products, isLoading} = this.searchOrListingState!;
     return html`${sortGuard(

@@ -1,5 +1,5 @@
 import {LitElement} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
+import {customElement, property} from 'lit/decorators.js';
 import {LayoutStylesController} from '@/src/components/common/layout/layout-styles-controller';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {watch} from '@/src/decorators/watch';
@@ -13,8 +13,6 @@ import {buildInsightLayout} from './insight-layout';
  */
 @customElement('atomic-insight-layout')
 export class AtomicInsightLayout extends LightDomMixin(ChildrenUpdateCompleteMixin(LitElement)) {
-  @state() public error?: Error;
-
   /**
    * Whether the interface should be shown in widget format.
    */

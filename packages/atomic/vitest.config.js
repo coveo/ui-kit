@@ -180,6 +180,7 @@ const atomicNode = defineConfig({
     name: 'atomic-node',
     include: [
       'scripts/element-dependencies.spec.mjs',
+      'scripts/component-error-contract.spec.mjs',
       'scripts/fully-specified-imports.spec.mjs',
       'scripts/npm-build.spec.mjs',
     ],

@@ -199,8 +199,8 @@ export class AtomicSortDropdown extends LitElement implements InitializableCompo
     );
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     if (!this.options.length) {
       return html`<slot></slot>`;

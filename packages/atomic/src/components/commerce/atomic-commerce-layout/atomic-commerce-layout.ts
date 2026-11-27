@@ -1,5 +1,5 @@
 import {LitElement} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
+import {customElement, property} from 'lit/decorators.js';
 import {LayoutStylesController} from '@/src/components/common/layout/layout-styles-controller';
 import {watch} from '@/src/decorators/watch';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
@@ -19,8 +19,6 @@ import {buildCommerceLayout} from './commerce-layout';
 @customElement('atomic-commerce-layout')
 export class AtomicCommerceLayout extends LightDomMixin(ChildrenUpdateCompleteMixin(LitElement)) {
   static styles = [styles];
-
-  @state() public error?: Error;
 
   /**
    * The viewport width at which the layout goes from desktop to mobile.

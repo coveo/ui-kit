@@ -18,6 +18,7 @@ import type {
 } from '@/src/components/common/layout/item-layout-utils';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import {booleanConverter} from '@/src/converters/boolean-converter';
+import {errorGuard} from '@/src/decorators/error-guard';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {parentNodeToString} from '@/src/utils/dom-utils';
@@ -338,6 +339,7 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(LitElement)
     return parentNodeToString(this.content);
   }
 
+  @errorGuard()
   public render() {
     if (this.renderingFunction !== undefined) {
       return html` <div class="result-root" ${ref(this.resultRootRef)}></div> `;

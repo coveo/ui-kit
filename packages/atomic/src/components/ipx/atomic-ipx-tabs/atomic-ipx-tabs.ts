@@ -2,6 +2,7 @@ import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import {SlotsForNoShadowDOMMixin} from '../../../mixins/slots-for-no-shadow-dom-mixin';
@@ -24,6 +25,7 @@ export class AtomicIpxTabs
 
   public initialize() {}
 
+  @errorGuard()
   render() {
     return html`<atomic-tab-bar
       ><div role="tablist" style="display:flex;flex-direction:row;width:100%">

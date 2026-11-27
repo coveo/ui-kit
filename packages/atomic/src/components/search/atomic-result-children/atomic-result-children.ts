@@ -299,8 +299,8 @@ export class AtomicResultChildren extends LitElement implements InitializableCom
     return this.renderChildren(this.result.children);
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     return html`${when(this.bindings && (this.displayConfig || this.inheritTemplates), () =>
       renderResultChildrenGuard({

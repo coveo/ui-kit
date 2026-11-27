@@ -89,8 +89,8 @@ export class AtomicInsightRefineToggle
     }
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     return html`${refineToggleGuard(
       {

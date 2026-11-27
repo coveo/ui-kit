@@ -39,8 +39,8 @@ export class AtomicInsightGenerateAnswerButton
     this.querySummary = buildQuerySummary(this.bindings.engine);
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   render() {
     const {hasQuery, total} = this.querySummaryState;
 
