@@ -61,9 +61,5 @@ export const getNavigatorContext = (
   const {referrer, userAgent, location, clientId} = relay.getMeta('');
   const customContext = customProvider ? customProvider() : {};
 
-  // BUG: `capture` comes from this new provider call, but `clientId` comes from the relay, which
-  // can hold an old value (see `getEnvironment` in `src/api/analytics/analytics-relay-client.ts`).
-  // The result can be `clientId: ""` with `capture: true`, which the Commerce API rejects with
-  // 412 CLIENT_ID_REQUIRED. See `src/app/commerce-engine/commerce-engine-navigator-context.test.ts`.
   return {...customContext, referrer, userAgent, location, clientId};
 };

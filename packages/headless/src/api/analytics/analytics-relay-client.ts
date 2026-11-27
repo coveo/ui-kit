@@ -74,19 +74,16 @@ const getEnvironment = (
     return undefined;
   }
 
-  // BUG: the provider is called once here and its values are kept. This function runs inside the
-  // memoized `getRelayInstanceFromState` selector, keyed on the provider function, so the relay
-  // returns this first `clientId` for the life of the engine. If the provider later returns a new
-  // `clientId` (for example, the visitor cookie is written after the engine starts),
-  // `getNavigatorContext` still uses this old value. See
-  // `src/app/commerce-engine/commerce-engine-navigator-context.test.ts`.
-  const customContext = customProvider();
+  // Call the provider on each read. This function runs inside the memoized
+  // `getRelayInstanceFromState` selector, so values read here once would stay in the relay after
+  // the provider starts to return new ones (for example, a `clientId` from a visitor cookie that
+  // is written after the engine starts).
   const baseEnvironment = isBrowser() ? buildBrowserEnvironment() : noopRelayEnvironment;
   return {
     ...baseEnvironment,
-    getClientId: () => customContext.clientId,
-    getLocation: () => customContext.location,
-    getReferrer: () => customContext.referrer,
-    getUserAgent: () => customContext.userAgent,
+    getClientId: () => customProvider().clientId,
+    getLocation: () => customProvider().location,
+    getReferrer: () => customProvider().referrer,
+    getUserAgent: () => customProvider().userAgent,
   };
 };
