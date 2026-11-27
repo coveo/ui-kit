@@ -8,6 +8,7 @@ import {playwright} from '@vitest/browser-playwright';
 import {defineConfig, mergeConfig} from 'vitest/config';
 import packageJsonHeadless from '../headless/package.json' with {type: 'json'};
 import packageJson from './package.json' with {type: 'json'};
+import {processInlineCssImports} from './scripts/vite-source-plugins.ts';
 
 const port = 63315;
 const isVitestVscodeExt = process.env.VITEST_VSCODE === 'true';
@@ -108,6 +109,7 @@ const atomicDefault = defineConfig({
   },
   plugins: [
     replace(),
+    processInlineCssImports(),
     {
       name: 'force-inline-css-imports',
       enforce: 'pre',

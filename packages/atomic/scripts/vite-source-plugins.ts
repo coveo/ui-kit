@@ -105,7 +105,7 @@ const forceInlineCssImports = (): Plugin => ({
  * same work has to happen before the CSS reaches the browser, since constructable
  * stylesheets do not understand the directives.
  */
-const processInlineCssImports = (): Plugin => {
+export const processInlineCssImports = (): Plugin => {
   let postcssPlugins: AcceptedPlugin[];
   let initialized = false;
 
