@@ -169,7 +169,7 @@ const ActivitySnapshot = (options: {
 });
 
 // A single A2-UI v1.0 `updateDataModel` operation message: writes `value` to the JSON Pointer
-// `path` of surface `surfaceId`'s data model. This is the exact shape Thermidor_Core reads from an
+// `path` of surface `surfaceId`'s data model. This is the exact shape the Converse SDK core reads from an
 // `a2ui-surface` activity's `content.messages[]`, replacing the removed component STATE_SNAPSHOT.
 interface UpdateDataModelOp {
   surfaceId: string;

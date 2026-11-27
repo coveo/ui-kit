@@ -1,0 +1,370 @@
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type PropsWithChildren,
+} from 'react';
+import {
+  createSession,
+  type NavigatorContext,
+  type SerializedSession,
+  type Session,
+} from '@coveo/converse';
+import {ComponentContractsSchema} from '@coveo/thermidor-schema/zod3';
+import {getSampleConfiguration} from '../env.js';
+import {CartStoreContext} from '../cart/CartProvider.js';
+import type {CartStore} from '../cart/cart-store.js';
+import {isBlocking, retire} from '../a2ui/session-request.js';
+import {
+  createConversationStorage,
+  type ConversationStorage,
+  type ConversationSummary,
+} from '../conversations/conversation-storage.js';
+
+/**
+ * The concrete contract this sample injects into the runtime. `@coveo/converse`
+ * is decoupled from any specific contract package; the sample supplies the Coveo
+ * `ComponentContractsSchema` so the session validates against it.
+ */
+export type DemoSession = Session<typeof ComponentContractsSchema>;
+
+/**
+ * Creates a session, restoring `saved` when given. With `initialize: false`, it sends no request
+ * until it is given a prompt or an action.
+ */
+export type SessionFactory = (
+  saved?: SerializedSession,
+  options?: {initialize?: boolean}
+) => DemoSession;
+
+export interface Conversations {
+  /** The saved conversations, newest first. */
+  list: readonly ConversationSummary[];
+  /** The conversation the page shows. Saved once its first turn completes. */
+  currentId: string;
+  /**
+   * Whether the current conversation expired: the endpoint no longer knows its session. It shows
+   * its saved transcript, and sends nothing.
+   */
+  expired: boolean;
+  start(): void;
+  open(id: string): void;
+  remove(id: string): void;
+  rename(id: string, title: string): void;
+}
+
+interface Current {
+  id: string;
+  session: DemoSession;
+  expired?: boolean;
+}
+
+const SessionContext = createContext<DemoSession | null>(null);
+const ConversationsContext = createContext<Conversations | null>(null);
+
+interface SessionProviderProps {
+  /** The session to start with. Defaults to the current conversation, or a new one. */
+  session?: DemoSession;
+  /** Creates the sessions of new and restored conversations. Defaults to the sample configuration. */
+  createSession?: SessionFactory;
+  /** Where conversations are saved. Defaults to the browser's storage. */
+  storage?: ConversationStorage;
+}
+
+/**
+ * Provides the session of the current conversation, and the saved conversations to switch to.
+ * The session is saved after each turn and each action that updates its results. A reload resumes
+ * the current conversation; a new tab starts a new one.
+ */
+export function SessionProvider({
+  session: initialSession,
+  createSession: givenFactory,
+  storage: givenStorage,
+  children,
+}: PropsWithChildren<SessionProviderProps>) {
+  const cart = useContext(CartStoreContext);
+  const [storage] = useState(
+    () => givenStorage ?? createConversationStorage({scope: storageScope()})
+  );
+  const [create] = useState(() => givenFactory ?? defaultFactory(cart));
+  // Expired conversations, even when storage could not mark them.
+  const [expiredIds] = useState(() => new Set<string>());
+  const [current, setCurrent] = useState<Current>(() =>
+    initialSession ? startWith(storage, initialSession) : openCurrent(storage, create, expiredIds)
+  );
+  const [list, setList] = useState(storage.list);
+  // A conversation removed while its request runs is not saved again when the request ends.
+  const [removed] = useState(() => new Set<string>());
+
+  const currentRef = useRef(current);
+  currentRef.current = current;
+  useEffect(
+    () =>
+      persist(
+        storage,
+        current.session,
+        currentRef.current.id,
+        removed,
+        () => {
+          const {id, session} = currentRef.current;
+          expiredIds.add(id);
+          storage.expire(id);
+          retire(session);
+          session.cancel();
+          setCurrent(openCurrent(storage, create, expiredIds));
+          setList(storage.list());
+        },
+        () => setList(storage.list())
+      ),
+    [storage, create, removed, expiredIds, current.session]
+  );
+
+  const conversations = useMemo<Conversations>(() => {
+    const swap = (next: () => Current) => {
+      retire(current.session);
+      current.session.cancel();
+      setCurrent(next());
+      setList(storage.list());
+    };
+    return {
+      list,
+      currentId: current.id,
+      expired: current.expired === true,
+      start: () => swap(() => startWith(storage, create())),
+      open: (id) => {
+        if (id !== current.id) {
+          storage.setCurrentId(id);
+          swap(() => openCurrent(storage, create, expiredIds, id));
+        }
+      },
+      remove: (id) => {
+        removed.add(id);
+        storage.remove(id);
+        if (id === current.id) {
+          swap(() => startWith(storage, create()));
+        } else {
+          setList(storage.list());
+        }
+      },
+      rename: (id, title) => {
+        storage.rename(id, title);
+        setList(storage.list());
+      },
+    };
+  }, [list, current, storage, create, removed, expiredIds]);
+
+  return (
+    <ConversationsContext.Provider value={conversations}>
+      <SessionContext.Provider value={current.session}>{children}</SessionContext.Provider>
+    </ConversationsContext.Provider>
+  );
+}
+
+export function useSession(): DemoSession {
+  const session = useContext(SessionContext);
+  if (!session) {
+    throw new Error('useSession must be used within a SessionProvider');
+  }
+  return session;
+}
+
+export function useConversations(): Conversations {
+  const conversations = useContext(ConversationsContext);
+  if (!conversations) {
+    throw new Error('useConversations must be used within a SessionProvider');
+  }
+  return conversations;
+}
+
+function defaultFactory(cart: CartStore | null): SessionFactory {
+  return (saved, options) => {
+    if (!cart) {
+      throw new Error('SessionProvider must be used within a CartProvider, or be given a session');
+    }
+    return createConverseSession(cart, saved, options?.initialize);
+  };
+}
+
+function startWith(storage: ConversationStorage, session: DemoSession): Current {
+  const id = crypto.randomUUID();
+  storage.setCurrentId(id);
+  return {id, session};
+}
+
+/**
+ * The conversation `id`, by default the one the tab last showed, or a new one when it is gone or
+ * cannot be restored. An expired conversation is restored without resuming its session, so it
+ * sends nothing.
+ */
+function openCurrent(
+  storage: ConversationStorage,
+  create: SessionFactory,
+  expiredIds: ReadonlySet<string>,
+  id = storage.currentId()
+): Current {
+  const saved = id === undefined ? undefined : storage.load(id);
+  if (id !== undefined && saved) {
+    const expired =
+      expiredIds.has(id) || storage.list().find((entry) => entry.id === id)?.expired === true;
+    try {
+      return {id, session: create(saved, {initialize: !expired}), expired};
+    } catch {
+      // Dropped below.
+    }
+  }
+  if (id !== undefined) {
+    storage.remove(id);
+  }
+  return startWith(storage, create());
+}
+
+/**
+ * Saves the conversation once the session is idle after a request that updates it. When the
+ * session drops the transcript it resumed, because the endpoint answered with another session, the
+ * conversation expired: `onExpired` swaps the session out, and the saved one keeps its transcript.
+ * Once the session is swapped out, it is still saved when the request it was sending ends. A new
+ * conversation is listed from its first turn, before it is saved; if the page reloads before that,
+ * it has nothing to restore and is dropped.
+ */
+function persist(
+  storage: ConversationStorage,
+  session: DemoSession,
+  id: string,
+  removed: ReadonlySet<string>,
+  onExpired: () => void,
+  onSaved: () => void
+) {
+  let boundSessionId = session.sessionId;
+  let saving = savesAfter(session.getSnapshot().request);
+  let swappedOut = false;
+  // Once listed, a conversation gone from the list was deleted, maybe in another tab.
+  let listed = session.turns.length > 0;
+  const unsubscribe = session.subscribe(() => {
+    const {request, turns} = session.getSnapshot();
+    if (session.sessionId !== boundSessionId) {
+      if (boundSessionId !== undefined && turns.length === 0 && !swappedOut) {
+        swappedOut = true;
+        onExpired();
+        return;
+      }
+      boundSessionId = session.sessionId;
+    }
+    const deleted = removed.has(id) || (listed && !isListed(storage, id));
+    // Listed from its first prompt, so the drawer shows it while the answer streams.
+    if (!listed && turns.length > 0) {
+      storage.start(id, titleOf(turns[0].input));
+      listed = isListed(storage, id);
+      onSaved();
+    }
+    if (saving && !request && turns.length > 0 && !deleted) {
+      storage.save(id, titleOf(turns[0].input), session.serialize());
+      listed = isListed(storage, id);
+      onSaved();
+    }
+    // A request another listener started as this one ended keeps the save pending until idle.
+    saving = savesAfter(request) || (saving && request !== undefined);
+    if (swappedOut && !request) {
+      unsubscribe();
+    }
+  });
+  return () => {
+    if (session.getSnapshot().request) {
+      swappedOut = true;
+    } else {
+      unsubscribe();
+    }
+  };
+}
+
+function isListed(storage: ConversationStorage, id: string) {
+  return storage.list().some((entry) => entry.id === id);
+}
+
+function savesAfter(request: DemoSession['request']) {
+  return isBlocking(request) && request?.kind !== 'initialize';
+}
+
+function titleOf({prompt, action}: DemoSession['turns'][number]['input']): string {
+  const text = (action?.context as {text?: unknown} | undefined)?.text;
+  return prompt ?? (typeof text === 'string' ? text : 'New conversation');
+}
+
+/** Read fresh for each request. */
+function getCartCommerceContext(cart: CartStore) {
+  return {
+    cart: cart.getSnapshot().cart.items.map(({productId, name, unitPrice, quantity}) => ({
+      productId,
+      name,
+      price: unitPrice,
+      quantity,
+    })),
+  };
+}
+
+function createConverseSession(
+  cart: CartStore,
+  sessionToRestore?: SerializedSession,
+  initialize?: boolean
+): DemoSession {
+  const {
+    organizationId,
+    accessToken,
+    endpoint,
+    agentConfigurationId,
+    trackingId,
+    language,
+    country,
+    currency,
+  } = getSampleConfiguration();
+
+  return createSession({
+    contracts: ComponentContractsSchema,
+    organizationId,
+    accessToken,
+    endpoint,
+    agentConfigurationId,
+    trackingId,
+    navigatorContextProvider: () => ({...getNavigatorContext(), language, country, currency}),
+    commerceContextProvider: () => getCartCommerceContext(cart),
+    sessionToRestore,
+    initialize,
+  });
+}
+
+function storageScope() {
+  const {organizationId, agentConfigurationId} = getSampleConfiguration();
+  return `${organizationId}:${agentConfigurationId}`;
+}
+
+// The tab keeps its client id in sessionStorage; when it can't, the page keeps it in memory.
+let pageClientId: string | undefined;
+
+export function getClientId() {
+  try {
+    const stored = sessionStorage.getItem('demo-client-id');
+    if (stored) {
+      return stored;
+    }
+  } catch {
+    // Unavailable storage: fall back to the page's id.
+  }
+  pageClientId ??= crypto.randomUUID();
+  try {
+    sessionStorage.setItem('demo-client-id', pageClientId);
+  } catch {
+    // The page's id still identifies this page.
+  }
+  return pageClientId;
+}
+
+function getNavigatorContext(): Omit<NavigatorContext, 'language' | 'country' | 'currency'> {
+  return {
+    clientId: getClientId(),
+    location: window.location.href,
+    referrer: document.referrer || null,
+    userAgent: window.navigator.userAgent || null,
+  };
+}
