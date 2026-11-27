@@ -1,6 +1,6 @@
 {
   "name": "@coveo/create-atomic-component",
-  "version": "1.5.16",
+  "version": "1.5.17",
   "description": "Initialize a Coveo Atomic Component",
   "keywords": [
     "atomic",
