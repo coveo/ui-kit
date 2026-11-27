@@ -42,6 +42,7 @@ const PACKAGES = [
     peerDependencies: {'@coveo/headless': 'workspace:^'},
   },
   {name: '@coveo/thermidor', version: '0.8.0'},
+  {name: '@coveo/converse', version: '0.10.0'},
   {name: '@coveo/quantic', version: '3.40.0'},
 ];
 const FIXED = [['@coveo/atomic', '@coveo/ui-kit-sample-atomic-search-vite']];
@@ -405,6 +406,16 @@ describe('checkV3', () => {
     });
     assert.deepEqual(errors, [
       'Release on v3 of packages that publish from main only: @coveo/thermidor (minor in .changeset/a.md). Open this change against main, so that the two lines never publish the same version.',
+    ]);
+  });
+
+  it('refuses a release of @coveo/converse, the renamed @coveo/thermidor', () => {
+    const {errors} = checkV3({
+      base: state(),
+      head: state([{name: '@coveo/converse', type: 'minor'}]),
+    });
+    assert.deepEqual(errors, [
+      'Release on v3 of packages that publish from main only: @coveo/converse (minor in .changeset/a.md). Open this change against main, so that the two lines never publish the same version.',
     ]);
   });
 
