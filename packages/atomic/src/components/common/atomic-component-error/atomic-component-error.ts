@@ -1,4 +1,4 @@
-import {html, LitElement} from 'lit';
+import {html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {logComponentError} from '@/src/decorators/component-error';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
@@ -12,8 +12,10 @@ export class AtomicComponentError extends LitElement {
   @property({type: Object}) element!: HTMLElement;
   @property({type: Object}) error!: Error;
 
-  firstUpdated() {
-    logComponentError(this.error, this.element);
+  updated(changedProperties: PropertyValues<this>) {
+    if (changedProperties.has('error')) {
+      logComponentError(this.error, this.element);
+    }
   }
 
   render() {
