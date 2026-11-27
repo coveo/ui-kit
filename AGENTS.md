@@ -75,6 +75,7 @@
 
 - Discover available Agent Skills under `.agents/skills` when beginning a new session
 - Add a changeset file when modifying source code of any public package
+- Pick each PR's base branch from [Where does my PR go?](CONTRIBUTING.md#where-does-my-pr-go): until the v4 GA, a fix, feature or deprecation in any published package except Thermidor goes to `v3`
 - Run `pnpm run lint:fix` before committing work
 
 ---
