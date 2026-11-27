@@ -136,7 +136,7 @@ export class AtomicTabBar extends LitElement implements LitElementWithError {
     return html`
       <slot></slot>
       <atomic-tab-popover
-        exportparts="popover-button, value-label, arrow-icon, backdrop overflow-tabs"
+        exportparts="popover-button, value-label, arrow-icon, backdrop, overflow-tabs"
       >
         ${this.popoverTabs}
       </atomic-tab-popover>
