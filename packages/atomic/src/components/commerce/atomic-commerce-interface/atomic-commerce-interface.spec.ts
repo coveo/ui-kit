@@ -89,6 +89,7 @@ describe('atomic-commerce-interface', () => {
       mobileBreakpoint?: string;
       reflectStateInUrl?: boolean; // TODO - (v4) KIT-4823: Remove.
       scrollContainer?: string;
+      currencyFields?: string;
     } = {}
   ) => {
     const element = (await fixture<AtomicCommerceInterface>(
@@ -103,6 +104,7 @@ describe('atomic-commerce-interface', () => {
         log-level=${ifDefined(props.logLevel)}
         reflect-state-in-url=${ifDefined(props.reflectStateInUrl)}
         scroll-container=${ifDefined(props.scrollContainer)}
+        currency-fields=${ifDefined(props.currencyFields)}
         type=${ifDefined(props.type)}
         >${when(props.mobileBreakpoint, () => html`<atomic-commerce-layout mobile-breakpoint=${ifDefined(props.mobileBreakpoint)}></atomic-commerce-layout>`)}<div>Interface content</div></atomic-commerce-layout></atomic-commerce-interface
       >`
@@ -190,6 +192,18 @@ describe('atomic-commerce-interface', () => {
 
   afterEach(() => {
     vi.clearAllMocks();
+  });
+
+  describe('#currencyFields', () => {
+    it('should default to an empty array', async () => {
+      const element = await setupElement();
+      expect(element.currencyFields).toEqual([]);
+    });
+
+    it('should parse the currency-fields attribute as a JSON array', async () => {
+      const element = await setupElement({currencyFields: '["a","b"]'});
+      expect(element.currencyFields).toEqual(['a', 'b']);
+    });
   });
 
   describe('#constructor (when created)', () => {

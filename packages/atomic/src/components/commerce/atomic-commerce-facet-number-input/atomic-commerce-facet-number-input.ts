@@ -3,6 +3,7 @@ import type {NumericFacet} from '@coveo/headless/commerce';
 import {css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
+import {isCurrencyField} from '@/src/components/commerce/currency-fields/currency-fields';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -97,7 +98,7 @@ export class AtomicCommerceFacetNumberInput
 
   private get absoluteMinimum(): number {
     const {field} = this.facet.state;
-    const isPriceField = ['ec_price', 'ec_promo_price'].includes(field);
+    const isPriceField = isCurrencyField(field, this.bindings.interfaceElement.currencyFields);
     return isPriceField ? 0 : Number.MIN_SAFE_INTEGER;
   }
 

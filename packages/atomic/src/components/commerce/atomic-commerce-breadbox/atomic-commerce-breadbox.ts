@@ -18,6 +18,7 @@ import {
 } from '@coveo/headless/commerce';
 import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {isCurrencyField} from '@/src/components/commerce/currency-fields/currency-fields';
 import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
 import {renderBreadcrumbButton} from '@/src/components/common/breadbox/breadcrumb-button';
 import {renderBreadcrumbClearAll} from '@/src/components/common/breadbox/breadcrumb-clear-all';
@@ -256,7 +257,7 @@ export class AtomicCommerceBreadbox
   }
 
   private getNumberFormatter(field: string) {
-    if (field === 'ec_price' || field === 'ec_promo_price') {
+    if (isCurrencyField(field, this.bindings.interfaceElement.currencyFields)) {
       return defaultCurrencyFormatter(this.contextState.currency);
     }
     return defaultNumberFormatter;
@@ -307,7 +308,11 @@ export class AtomicCommerceBreadbox
         facetId: breadcrumb.facetId,
         label: breadcrumb.facetDisplayName ?? this.bindings.i18n.t('no-label'),
         deselect: value.deselect,
-        formattedValue: this.valueForFacetType(breadcrumb.type, breadcrumb.facetId, value),
+        formattedValue: this.valueForFacetType(
+          breadcrumb.type,
+          breadcrumb.type === 'numericalRange' ? breadcrumb.field : breadcrumb.facetId,
+          value
+        ),
       };
     });
   }
