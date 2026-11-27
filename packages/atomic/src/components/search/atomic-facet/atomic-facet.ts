@@ -194,7 +194,7 @@ export class AtomicFacet extends LitElement implements InitializableComponent<Bi
   @bindStateToController('tabManager')
   @state()
   public tabManagerState!: TabManagerState;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   /**
    * A unique identifier for the facet.

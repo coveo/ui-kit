@@ -63,7 +63,7 @@ export class AtomicResultImage
 
   @state() public bindings!: Bindings;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   @state() private result!: Result;
 

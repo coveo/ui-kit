@@ -22,7 +22,7 @@ interface TabPopoverElement extends HTMLElement {
 @customElement('atomic-tab-bar')
 @withTailwindStyles
 export class AtomicTabBar extends LitElement implements LitElementWithError {
-  error!: Error;
+  @state() public error?: Error;
   static styles: CSSResultGroup = css`
     @reference '../../../utils/tailwind.global.tw.css';
 

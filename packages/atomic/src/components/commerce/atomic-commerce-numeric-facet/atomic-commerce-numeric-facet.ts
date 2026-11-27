@@ -97,7 +97,7 @@ export class AtomicCommerceNumericFacet
   @state()
   public contextState!: ContextState;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   private headerFocus!: FocusTargetController;
   private unsubscribeFacetController?: () => void;

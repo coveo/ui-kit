@@ -31,7 +31,7 @@ export class AtomicSearchBoxQuerySuggestions
 {
   public bindings!: SearchBoxSuggestionsBindings<SearchBox, Bindings>;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   /**
    * The SVG icon to display.

@@ -18,7 +18,7 @@ export interface BaseAtomicInterface<EngineType extends AnyEngineType> {
   iconAssetsPath: string;
   bindings: AnyBindings;
   updateIconAssetsPath(): void;
-  error: Error;
+  error?: Error;
   engine?: EngineType;
   logLevel?: LogLevel;
   language?: string;

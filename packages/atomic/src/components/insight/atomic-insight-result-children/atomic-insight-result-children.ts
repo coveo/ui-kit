@@ -100,7 +100,7 @@ export class AtomicInsightResultChildren
   noResultText = 'no-documents-related';
 
   @state() public bindings!: InsightBindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
   @state() private resultTemplateRegistered = false;
   @state() private templateHasError = false;
   @state() private showInitialChildren = true;

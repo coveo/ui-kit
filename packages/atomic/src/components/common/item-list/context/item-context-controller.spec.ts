@@ -1,13 +1,37 @@
-import {LitElement} from 'lit';
-import {customElement, state} from 'lit/decorators.js';
+import {Schema, StringValue} from '@coveo/bueno';
+import {html, LitElement} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
+import {errorGuard} from '@/src/decorators/error-guard';
 import {ItemContextController, MissingParentError} from './item-context-controller';
 
 @customElement('test-element')
 class TestElement extends LitElement {
-  @state() error: Error | null = null;
+  @state() error?: Error;
 
   requestUpdate = vi.fn();
+}
+
+@customElement('test-validated-item-element')
+class TestValidatedItemElement extends LitElement {
+  @state() error?: Error;
+  @property() name = 'invalid';
+  private itemContext = new ItemContextController<{title: string}>(this);
+
+  constructor() {
+    super();
+    new ValidatePropsController(
+      this,
+      () => ({name: this.name}),
+      new Schema({name: new StringValue({constrainTo: ['valid']})})
+    );
+  }
+
+  @errorGuard()
+  render() {
+    return html`<p>${this.itemContext.item?.title}</p>`;
+  }
 }
 
 describe('item-context', () => {
@@ -93,8 +117,17 @@ describe('item-context', () => {
           expect(controller.item).toEqual({title: 'Test Item'});
           expect(controller.error).toBeNull();
           expect(controller.hasError).toBe(false);
-          expect(mockElement.error).toBeNull();
+          expect(mockElement.error).toBeUndefined();
           expect(mockElement.requestUpdate).toHaveBeenCalled();
+        });
+
+        it('should keep an error set by another writer', () => {
+          const foreignError = new Error('foreign');
+          mockElement.error = foreignError;
+
+          controller.hostConnected();
+
+          expect(mockElement.error).toBe(foreignError);
         });
 
         it('should extract folded data when #folded is true', () => {
@@ -156,6 +189,33 @@ describe('item-context', () => {
           expect(mockElement.error).toBe(controller.error);
           expect(mockElement.requestUpdate).toHaveBeenCalled();
         });
+
+        it('should restore an error set by another writer once the item resolves', () => {
+          const foreignError = new Error('foreign');
+          mockElement.error = foreignError;
+          controller.hostConnected();
+          vi.spyOn(mockElement, 'dispatchEvent').mockImplementation((event) => {
+            (event as CustomEvent).detail({title: 'Test Item'});
+            return false;
+          });
+
+          controller.hostConnected();
+
+          expect(mockElement.error).toBe(foreignError);
+        });
+
+        it('should clear its own error once the item resolves', () => {
+          controller.hostConnected();
+          vi.spyOn(mockElement, 'dispatchEvent').mockImplementation((event) => {
+            (event as CustomEvent).detail({title: 'Test Item'});
+            return false;
+          });
+
+          controller.hostConnected();
+
+          expect(mockElement.error).toBeUndefined();
+          expect(controller.hasError).toBe(false);
+        });
       });
     });
 
@@ -191,5 +251,36 @@ describe('item-context', () => {
         expect(controller.item).toEqual({title: 'Test Item'});
       });
     });
+  });
+
+  it('should show its missing-parent error once another writer clears its error', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    const parent = document.createElement('div');
+    parent.addEventListener('atomic/resolveResult', (event) => {
+      event.preventDefault();
+      (event as CustomEvent).detail({title: 'Test Item'});
+    });
+    document.body.appendChild(parent);
+    const element = new TestValidatedItemElement();
+    parent.appendChild(element);
+    await element.updateComplete;
+
+    document.body.appendChild(element);
+    await element.updateComplete;
+    element.name = 'valid';
+    await element.updateComplete;
+    await element.updateComplete;
+
+    expect(element.error).toBeInstanceOf(MissingParentError);
+    expect(element.shadowRoot?.querySelector('atomic-component-error')).not.toBeNull();
+    expect(element.shadowRoot?.querySelector('p')).toBeNull();
+
+    parent.appendChild(element);
+    await element.updateComplete;
+
+    expect(element.error).toBeUndefined();
+    expect(element.shadowRoot?.querySelector('p')?.textContent).toBe('Test Item');
+    element.remove();
+    parent.remove();
   });
 });

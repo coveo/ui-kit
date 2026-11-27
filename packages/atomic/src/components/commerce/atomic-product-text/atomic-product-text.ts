@@ -67,7 +67,7 @@ export class AtomicProductText
 
   @state() public bindings!: CommerceBindings;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   private deprecatedPropertyWarnings = new DeprecatedPropertyWarnings(this, [
     {

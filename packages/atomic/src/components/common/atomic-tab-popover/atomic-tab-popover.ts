@@ -53,7 +53,7 @@ export class AtomicTabPopover extends LitElement implements InitializableCompone
   `;
 
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
   @state() public show = false;
   @state() private isOpen = false;
 

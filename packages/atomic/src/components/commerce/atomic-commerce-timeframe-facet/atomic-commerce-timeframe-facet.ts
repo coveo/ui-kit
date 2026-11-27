@@ -87,7 +87,7 @@ export class AtomicCommerceTimeframeFacet
   @property({reflect: true}) field?: string;
 
   @state() bindings!: CommerceBindings;
-  @state() error!: Error;
+  @state() public error?: Error;
 
   @bindStateToController('summary')
   @state()

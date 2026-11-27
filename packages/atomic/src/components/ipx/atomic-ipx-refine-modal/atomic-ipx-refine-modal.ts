@@ -80,8 +80,7 @@ export class AtomicIpxRefineModal extends LitElement implements InitializableCom
   @state()
   bindings!: Bindings;
 
-  @state()
-  error!: Error;
+  @state() public error?: Error;
 
   /**
    * The element that opens the modal when clicked.

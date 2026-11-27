@@ -41,8 +41,7 @@ export class AtomicInsightUserActionsToggle
   @state()
   bindings!: InsightBindings;
 
-  @state()
-  error!: Error;
+  @state() public error?: Error;
 
   public userActions!: InsightUserActions;
 

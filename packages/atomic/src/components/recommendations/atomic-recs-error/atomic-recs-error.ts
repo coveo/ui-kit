@@ -46,7 +46,7 @@ export class AtomicRecsError extends LitElement implements InitializableComponen
 
   @state() public bindings!: RecsBindings;
   public recommendationList!: RecommendationList;
-  @state() public error!: Error;
+  @state() public error?: Error;
   @state() public showMoreInfo = false;
 
   public initialize() {

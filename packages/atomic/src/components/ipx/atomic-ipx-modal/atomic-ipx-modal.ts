@@ -86,8 +86,7 @@ export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
   @state()
   bindings!: AnyBindings;
 
-  @state()
-  error!: Error;
+  @state() public error?: Error;
 
   public initialize() {
     if (this.isOpen) {

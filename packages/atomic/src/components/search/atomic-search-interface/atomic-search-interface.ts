@@ -74,7 +74,7 @@ export class AtomicSearchInterface
   @state()
   @provide({context: bindingsContext})
   public bindings: Bindings = {} as Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   public urlManager!: UrlManager;
   public searchStatus!: SearchStatus;

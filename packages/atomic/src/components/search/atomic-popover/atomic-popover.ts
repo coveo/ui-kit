@@ -37,8 +37,7 @@ export class AtomicPopover extends LitElement implements InitializableComponent<
   @state()
   bindings!: Bindings;
 
-  @state()
-  error!: Error;
+  @state() public error?: Error;
 
   @bindStateToController('searchStatus')
   @state()

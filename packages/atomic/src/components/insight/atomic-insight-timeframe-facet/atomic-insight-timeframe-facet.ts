@@ -192,7 +192,7 @@ export class AtomicInsightTimeframeFacet
   @property({reflect: true, attribute: 'facet-id'}) facetId?: string;
 
   @state() bindings!: InsightBindings;
-  @state() error!: Error;
+  @state() public error?: Error;
 
   @bindStateToController('searchStatus')
   @state()

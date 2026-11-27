@@ -18,6 +18,30 @@ The minimum versions that Atomic v4 requires will be listed here.
 
 Modified behaviors will be listed here.
 
+### Components
+
+#### `error` on Atomic components <!-- KIT-6755 -->
+
+The `error` property of every Atomic component that can receive an error is now typed `Error | undefined`, where `undefined` means that the component has no error, and a change to it re-renders the component.
+
+**Atomic Version 3**
+
+```ts
+const facet = document.querySelector('atomic-facet')!;
+console.error(facet.error.message);
+```
+
+**Atomic Version 4**
+
+```ts
+const facet = document.querySelector('atomic-facet')!;
+if (facet.error) {
+  console.error(facet.error.message);
+}
+```
+
+Check that `error` is defined before you read it, and compare it with `undefined` rather than `null`.
+
 ## Removals
 
 ### Interface components

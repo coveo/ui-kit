@@ -37,8 +37,7 @@ export class AtomicCommerceRefineToggle
   @state()
   bindings!: CommerceBindings;
 
-  @state()
-  error!: Error;
+  @state() public error?: Error;
 
   public summary!: Summary;
 

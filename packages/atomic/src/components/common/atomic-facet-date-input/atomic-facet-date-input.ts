@@ -38,7 +38,7 @@ export class AtomicFacetDateInput extends LightDomMixin(LitElement) implements L
   @property() public min?: string;
   @property() public max?: string = '9999-12-31';
 
-  @state() error!: Error;
+  @state() public error?: Error;
 
   @state() bindings!: AnyBindings;
 

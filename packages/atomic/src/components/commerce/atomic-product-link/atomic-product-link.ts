@@ -57,7 +57,7 @@ export class AtomicProductLink
   public interactiveProductController = createInteractiveProductContextController(this);
 
   @state() public bindings!: CommerceBindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   @state() private linkAttributes?: Attr[];
   private stopPropagation?: boolean;

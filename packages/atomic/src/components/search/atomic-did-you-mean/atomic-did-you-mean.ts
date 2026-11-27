@@ -81,8 +81,7 @@ export class AtomicDidYouMean extends LitElement implements InitializableCompone
   @state()
   private queryTriggerState!: QueryTriggerState;
 
-  @state()
-  public error!: Error;
+  @state() public error?: Error;
 
   /**
    * Whether to automatically apply corrections for queries that would otherwise return no results.

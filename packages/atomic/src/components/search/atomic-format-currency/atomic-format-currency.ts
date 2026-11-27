@@ -21,7 +21,7 @@ export class AtomicFormatCurrency extends LitElement implements LitElementWithEr
    */
   @property({reflect: true}) currency!: string;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   private format!: NumberFormatter;
 

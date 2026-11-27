@@ -99,8 +99,7 @@ export class AtomicQuickviewModal extends LitElement implements InitializableCom
   @state()
   public bindings!: Bindings;
 
-  @state()
-  public error!: Error;
+  @state() public error?: Error;
 
   @state()
   private highlightKeywords: HighlightKeywords = {

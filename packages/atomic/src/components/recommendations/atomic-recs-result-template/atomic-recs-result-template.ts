@@ -30,7 +30,7 @@ import '../atomic-recs-result/atomic-recs-result';
 export class AtomicRecsResultTemplate extends LitElement implements LitElementWithError {
   private recsResultTemplateController: RecsResultTemplateController;
 
-  @state() error!: Error;
+  @state() public error?: Error;
 
   /**
    * A function that must return true on results for the result template to apply.

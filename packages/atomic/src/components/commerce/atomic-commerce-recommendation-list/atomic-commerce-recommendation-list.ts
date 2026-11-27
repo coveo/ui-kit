@@ -121,8 +121,7 @@ export class AtomicCommerceRecommendationList
 
   @state()
   bindings!: CommerceBindings;
-  @state()
-  error!: Error;
+  @state() public error?: Error;
   @state()
   private isAppLoaded = false;
   @state()

@@ -31,7 +31,7 @@ export class AtomicCommerceSearchBoxQuerySuggestions
 {
   public bindings!: SearchBoxSuggestionsBindings<SearchBox, CommerceBindings>;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   /**
    * The SVG icon to display.

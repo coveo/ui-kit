@@ -78,7 +78,7 @@ export class AtomicResultHtml
 
   @state() private result?: Result;
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   private resultController = createResultContextController(this);
 

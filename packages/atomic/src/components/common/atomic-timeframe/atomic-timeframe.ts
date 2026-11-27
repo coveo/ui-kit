@@ -51,7 +51,7 @@ export class AtomicTimeframe
    */
   @property({type: String, reflect: true}) public label?: string;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   constructor() {
     super();

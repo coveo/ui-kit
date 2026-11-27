@@ -13,7 +13,7 @@ import {buildInsightLayout} from './insight-layout';
  */
 @customElement('atomic-insight-layout')
 export class AtomicInsightLayout extends LightDomMixin(ChildrenUpdateCompleteMixin(LitElement)) {
-  @state() error!: Error;
+  @state() public error?: Error;
 
   /**
    * Whether the interface should be shown in widget format.

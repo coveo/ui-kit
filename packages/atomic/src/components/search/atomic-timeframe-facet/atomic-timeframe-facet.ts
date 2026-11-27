@@ -251,7 +251,7 @@ export class AtomicTimeframeFacet extends LitElement implements InitializableCom
   @property({reflect: true, attribute: 'facet-id'}) facetId?: string;
 
   @state() bindings!: Bindings;
-  @state() error!: Error;
+  @state() public error?: Error;
 
   @bindStateToController('searchStatus')
   @state()

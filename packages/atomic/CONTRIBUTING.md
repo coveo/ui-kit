@@ -87,7 +87,7 @@ export class AtomicMyComponent
   ];
 
   @state() bindings!: CommerceBindings;
-  @state() error!: Error;
+  @state() public error?: Error;
 
   @bindStateToController('myController')
   @state()

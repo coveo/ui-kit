@@ -155,8 +155,7 @@ export class AtomicGeneratedAnswerFeedbackModal
   @state()
   bindings!: AnyBindings;
 
-  @state()
-  error!: Error;
+  @state() public error?: Error;
 
   @state()
   private currentAnswer: Partial<GeneratedAnswerFeedback> = this.getInitialAnswerState();

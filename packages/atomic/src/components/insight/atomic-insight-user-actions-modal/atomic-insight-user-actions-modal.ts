@@ -53,8 +53,7 @@ export class AtomicInsightUserActionsModal
   @state()
   public bindings!: InsightBindings;
 
-  @state()
-  public error!: Error;
+  @state() public error?: Error;
 
   @state()
   private interfaceDimensions?: DOMRect;

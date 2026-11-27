@@ -57,7 +57,7 @@ export class AtomicInsightResultQuickviewAction
   public sandbox = 'allow-popups allow-top-navigation allow-same-origin';
 
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
   @state() private result!: Result;
 
   @bindStateToController('quickview')

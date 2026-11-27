@@ -247,7 +247,7 @@ export class AtomicInsightNumericFacet
   @state()
   public searchStatusState!: SearchStatusState;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   @state()
   public facetForInputState?: NumericFacetState;

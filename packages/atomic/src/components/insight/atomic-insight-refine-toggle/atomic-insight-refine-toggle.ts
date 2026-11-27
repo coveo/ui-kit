@@ -42,8 +42,7 @@ export class AtomicInsightRefineToggle
   @state()
   bindings!: InsightBindings;
 
-  @state()
-  error!: Error;
+  @state() public error?: Error;
 
   public searchStatus!: SearchStatus;
   public breadcrumbManager!: BreadcrumbManager;

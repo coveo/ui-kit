@@ -20,7 +20,7 @@ import {buildCommerceLayout} from './commerce-layout';
 export class AtomicCommerceLayout extends LightDomMixin(ChildrenUpdateCompleteMixin(LitElement)) {
   static styles = [styles];
 
-  @state() error!: Error;
+  @state() public error?: Error;
 
   /**
    * The viewport width at which the layout goes from desktop to mobile.

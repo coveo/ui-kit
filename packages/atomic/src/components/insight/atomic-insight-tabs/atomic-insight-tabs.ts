@@ -22,7 +22,7 @@ export class AtomicInsightTabs
   implements InitializableComponent<InsightBindings>
 {
   @state() public bindings!: InsightBindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   public initialize() {}
 

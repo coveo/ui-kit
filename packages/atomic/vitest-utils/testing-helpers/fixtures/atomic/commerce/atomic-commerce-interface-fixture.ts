@@ -31,7 +31,7 @@ export class FixtureAtomicCommerceInterface
   template!: TemplateResult;
   @provide({context: bindingsContext})
   bindings: CommerceBindings = {} as CommerceBindings;
-  error!: Error;
+  error?: Error;
   updateIconAssetsPath = () => {};
   registerFieldsToInclude?: (() => void) | undefined;
 

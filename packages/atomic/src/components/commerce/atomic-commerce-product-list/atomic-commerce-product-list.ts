@@ -156,8 +156,7 @@ export class AtomicCommerceProductList
 
   @state()
   bindings!: CommerceBindings;
-  @state()
-  error!: Error;
+  @state() public error?: Error;
   @state()
   private isAppLoaded = false;
   @state()

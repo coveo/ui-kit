@@ -172,7 +172,7 @@ export class AtomicCategoryFacet extends LitElement implements InitializableComp
   ];
 
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   public facet!: CategoryFacet;
   public searchStatus!: SearchStatus;

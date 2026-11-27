@@ -32,7 +32,7 @@ export class AtomicTab extends LightDomMixin(LitElement) {
    */
   @property({type: String, reflect: true}) public expression: string = '';
 
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   constructor() {
     super();

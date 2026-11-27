@@ -73,7 +73,7 @@ export class AtomicResultRating
   @property({reflect: true}) public icon = Star;
 
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
   @state() private result!: Result;
   @state() private numberOfStars: number | null = null;
 

@@ -121,8 +121,7 @@ export class AtomicResultList
 
   @state()
   bindings!: Bindings;
-  @state()
-  error!: Error;
+  @state() public error?: Error;
   @state()
   private isAppLoaded = false;
   @state()

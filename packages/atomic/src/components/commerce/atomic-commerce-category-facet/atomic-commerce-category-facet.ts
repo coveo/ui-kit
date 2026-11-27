@@ -159,7 +159,7 @@ export class AtomicCommerceCategoryFacet
   @state()
   public summaryState!: SearchSummaryState | ProductListingSummaryState;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   private resultIndexToFocusOnShowMore = 0;
   private showLessFocus?: FocusTargetController;

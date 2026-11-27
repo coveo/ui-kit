@@ -50,7 +50,7 @@ export class AtomicSegmentedFacetScrollable
   `;
 
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   public searchStatus!: SearchStatus;
   @bindStateToController('searchStatus')

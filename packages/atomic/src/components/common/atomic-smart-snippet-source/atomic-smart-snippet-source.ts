@@ -61,7 +61,7 @@ export class AtomicSmartSnippetSource
   public onCancelPendingSelectSource?: () => void;
 
   @state() public bindings!: AnyBindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   public initialize() {
     this.addEventListener('atomic/resolveResult', this.handleResolveResult as EventListener);

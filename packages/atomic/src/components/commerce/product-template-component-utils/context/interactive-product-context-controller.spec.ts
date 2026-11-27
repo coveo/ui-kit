@@ -9,7 +9,7 @@ vi.mock('@/src/components/common/item-list/context/interactive-item-context-cont
 });
 
 describe('product-template-controllers', () => {
-  let mockHost: LitElement & {error: Error | null};
+  let mockHost: LitElement & {error?: Error};
 
   beforeEach(() => {
     vi.mocked(InteractiveItemContextController).mockImplementation(function (this: unknown) {
@@ -19,8 +19,8 @@ describe('product-template-controllers', () => {
       addController: vi.fn(),
       requestUpdate: vi.fn(),
       dispatchEvent: vi.fn(),
-      error: null,
-    } as unknown as LitElement & {error: Error | null};
+      error: undefined,
+    } as unknown as LitElement & {error?: Error};
   });
 
   describe('#createInteractiveProductContextController', () => {

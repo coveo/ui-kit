@@ -24,7 +24,7 @@ export class AtomicFieldCondition
   implements InitializableComponent<Bindings>
 {
   @state() bindings!: Bindings;
-  @state() error!: Error;
+  @state() public error?: Error;
 
   private resultController = createResultContextController(this);
 

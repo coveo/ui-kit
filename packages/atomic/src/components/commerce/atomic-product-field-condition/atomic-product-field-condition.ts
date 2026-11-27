@@ -24,7 +24,7 @@ export class AtomicProductFieldCondition
   implements InitializableComponent<CommerceBindings>
 {
   @state() bindings!: CommerceBindings;
-  @state() error!: Error;
+  @state() public error?: Error;
 
   private productController = createProductContextController(this);
 

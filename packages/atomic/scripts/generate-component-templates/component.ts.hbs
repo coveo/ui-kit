@@ -56,7 +56,7 @@ export class {{namePascalCase}}
   @property({type: Boolean, attribute: 'is-vulcan'}) isVulcan: boolean = false;
 
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
   @bindStateToController('querySummary')
   @state()
   public querySummaryState!: QuerySummaryState;

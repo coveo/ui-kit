@@ -71,8 +71,7 @@ export class AtomicNoResults extends LitElement implements InitializableComponen
   @state()
   bindings!: Bindings;
 
-  @state()
-  public error!: Error;
+  @state() public error?: Error;
 
   @bindStateToController('searchStatus')
   @state()

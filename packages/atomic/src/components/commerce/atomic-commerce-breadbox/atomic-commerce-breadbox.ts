@@ -112,7 +112,7 @@ export class AtomicCommerceBreadbox
   @state()
   public breadcrumbManagerState!: BreadcrumbManagerState;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
   @state() private isCollapsed = true;
   @state() private showMoreText = '';
 

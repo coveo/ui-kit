@@ -23,7 +23,7 @@ export class AtomicRelevanceInspector
   implements InitializableComponent<Bindings>
 {
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
   @state() public open = false;
 
   initialize = () => {

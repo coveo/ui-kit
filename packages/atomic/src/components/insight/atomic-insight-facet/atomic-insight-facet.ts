@@ -196,7 +196,7 @@ export class AtomicInsightFacet
   facetId?: string;
 
   @state() public bindings!: InsightBindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   @bindStateToController('facet')
   @state()

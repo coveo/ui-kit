@@ -54,8 +54,7 @@ export class AtomicRecsResult extends ChildrenUpdateCompleteMixin(LitElement) {
     }
   `;
 
-  @state()
-  error!: Error;
+  @state() public error?: Error;
 
   /**
    * Whether `atomic-result-link` components nested in the `atomic-recs-result` should stop click event propagation.

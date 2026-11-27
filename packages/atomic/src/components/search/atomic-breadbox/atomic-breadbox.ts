@@ -92,7 +92,7 @@ export class AtomicBreadbox extends LitElement implements InitializableComponent
   @state()
   public facetManagerState!: FacetManagerState;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
   @state() private isCollapsed = true;
   @state() private showMoreText = '';
 

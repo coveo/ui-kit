@@ -46,7 +46,7 @@ export class AtomicQueryError extends LitElement implements InitializableCompone
 
   @state() public bindings!: Bindings;
   public queryError!: QueryError;
-  @state() public error!: Error;
+  @state() public error?: Error;
   @state() public showMoreInfo = false;
 
   public initialize() {

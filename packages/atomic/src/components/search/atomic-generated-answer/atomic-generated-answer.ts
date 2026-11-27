@@ -264,8 +264,7 @@ export class AtomicGeneratedAnswer extends LitElement implements InitializableCo
   @state()
   bindings!: Bindings;
 
-  @state()
-  public error!: Error;
+  @state() public error?: Error;
 
   @bindStateToController('generatedAnswer', {
     onUpdateCallbackMethod: 'onGeneratedAnswerStateUpdate',

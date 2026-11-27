@@ -40,7 +40,7 @@ export class AtomicProductImage extends LitElement implements InitializableCompo
 
   @state() private product!: Product;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
   @state() private useFallback = false;
   @state() private currentImage = 0;
 

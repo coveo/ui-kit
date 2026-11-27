@@ -97,7 +97,7 @@ export class AtomicSegmentedFacet extends LitElement implements InitializableCom
   @state()
   facetState!: FacetState;
 
-  @state() error!: Error;
+  @state() public error?: Error;
 
   /**
    * Specifies a unique identifier for the facet.

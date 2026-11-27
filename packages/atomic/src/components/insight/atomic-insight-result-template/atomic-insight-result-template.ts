@@ -24,7 +24,7 @@ import {mapProperty} from '@/src/utils/props-utils';
 @withTailwindStyles
 export class AtomicInsightResultTemplate extends LitElement implements LitElementWithError {
   private resultTemplateController: ResultTemplateController;
-  @state() error!: Error;
+  @state() public error?: Error;
 
   /**
    * A function that must return true on results for the result template to apply.

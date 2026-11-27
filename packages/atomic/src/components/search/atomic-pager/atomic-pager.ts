@@ -61,7 +61,7 @@ export class AtomicPager
   });
 
   @state() public bindings!: Bindings;
-  @state() public error!: Error;
+  @state() public error?: Error;
   @state() private isAppLoaded = false;
 
   public pager!: Pager;

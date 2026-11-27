@@ -29,7 +29,7 @@ export class FixtureAtomicSearchInterface
   template!: TemplateResult;
   @provide({context: bindingsContext})
   bindings: Bindings = {} as Bindings;
-  error!: Error;
+  error?: Error;
   updateIconAssetsPath = () => {};
   registerFieldsToInclude?: (() => void) | undefined;
 

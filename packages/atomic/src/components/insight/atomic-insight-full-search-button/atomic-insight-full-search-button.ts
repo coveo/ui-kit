@@ -52,7 +52,7 @@ export class AtomicInsightFullSearchButton
   `;
 
   @state() bindings!: InsightBindings;
-  @state() error!: Error;
+  @state() public error?: Error;
 
   /**
    * The tooltip text for the full search button.

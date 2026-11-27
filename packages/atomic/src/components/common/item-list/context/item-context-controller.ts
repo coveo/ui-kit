@@ -1,11 +1,6 @@
-import type {LitElement, ReactiveController, ReactiveControllerHost} from 'lit';
-import type {InitializableComponent} from '@/src/decorators/types.js';
+import type {ReactiveController, ReactiveControllerHost} from 'lit';
+import type {LitElementWithError} from '@/src/decorators/types.js';
 import {buildCustomEvent} from '@/src/utils/event-utils';
-
-type LitElementWithError = Omit<Pick<InitializableComponent, 'error'>, 'error'> &
-  LitElement & {
-    error: Error | null;
-  };
 
 const itemContextEventName = 'atomic/resolveResult';
 
@@ -43,6 +38,7 @@ export class ItemContextController<T = Record<string, unknown>> implements React
   private folded: boolean;
   private _item: T | null = null;
   private _error: MissingParentError | null = null;
+  private displacedError?: Error;
 
   constructor(
     host: ReactiveControllerHost & LitElementWithError,
@@ -73,14 +69,20 @@ export class ItemContextController<T = Record<string, unknown>> implements React
   private _resolveItemContext(): void {
     const event = buildCustomEvent(itemContextEventName, (item: Record<string, unknown>) => {
       this._item = extractFolded<T>(item, this.folded);
+      if (this.host.error === this._error) {
+        this.host.error = this.displacedError;
+      }
+      this.displacedError = undefined;
       this._error = null;
-      this.host.error = null;
       this.host.requestUpdate();
     });
 
     const canceled = this.host.dispatchEvent(event);
     if (canceled) {
       const elementName = (this.host as Element).nodeName.toLowerCase();
+      if (this.host.error !== this._error) {
+        this.displacedError = this.host.error;
+      }
       this._error = new MissingParentError(elementName, this.parentName);
       this._item = null;
       this.host.error = this._error;

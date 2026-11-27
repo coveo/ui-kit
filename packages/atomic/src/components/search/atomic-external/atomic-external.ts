@@ -35,7 +35,7 @@ export class AtomicExternal extends ChildrenUpdateCompleteMixin(LitElement) {
   @provide({context: bindingsContext})
   public bindings: AnyBindings = {} as AnyBindings;
 
-  @state() public error!: Error;
+  @state() public error?: Error;
 
   public async connectedCallback() {
     super.connectedCallback();

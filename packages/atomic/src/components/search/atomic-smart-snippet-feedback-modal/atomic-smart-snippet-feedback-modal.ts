@@ -59,8 +59,7 @@ export class AtomicSmartSnippetFeedbackModal
   @state()
   bindings!: Bindings;
 
-  @state()
-  error!: Error;
+  @state() public error?: Error;
 
   /**
    * The element that triggers the feedback modal.

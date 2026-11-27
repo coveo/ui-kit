@@ -1,5 +1,5 @@
 import type {InteractiveProduct} from '@coveo/headless/commerce';
-import type {LitElement} from 'lit';
+import type {LitElementWithError} from '@/src/decorators/types';
 import {InteractiveItemContextController} from '@/src/components/common/item-list/context/interactive-item-context-controller';
 
 /**
@@ -24,7 +24,7 @@ import {InteractiveItemContextController} from '@/src/components/common/item-lis
  * ```
  */
 export function createInteractiveProductContextController(
-  host: LitElement & {error: Error}
+  host: LitElementWithError
 ): InteractiveItemContextController<InteractiveProduct> {
   return new InteractiveItemContextController<InteractiveProduct>(host);
 }

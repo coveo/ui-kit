@@ -22,7 +22,7 @@ export class AtomicInsightGenerateAnswerButton
   implements InitializableComponent<InsightBindings>
 {
   @state() bindings!: InsightBindings;
-  @state() error!: Error;
+  @state() public error?: Error;
 
   public querySummary!: QuerySummary;
 

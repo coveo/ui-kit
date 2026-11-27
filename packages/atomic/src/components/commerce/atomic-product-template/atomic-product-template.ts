@@ -22,7 +22,7 @@ import {arrayConverter} from '@/src/converters/array-converter';
 export class AtomicProductTemplate extends LitElement implements LitElementWithError {
   private productTemplateController: ProductTemplateController;
 
-  @state() error!: Error;
+  @state() public error?: Error;
 
   /**
    * A function that must return true on products for the product template to apply.

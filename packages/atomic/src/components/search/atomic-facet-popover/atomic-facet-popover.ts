@@ -33,8 +33,7 @@ export class AtomicFacetPopover extends LitElement implements InitializableCompo
   @state()
   bindings!: Bindings;
 
-  @state()
-  error!: Error;
+  @state() public error?: Error;
 
   @bindStateToController('searchStatus')
   @state()
