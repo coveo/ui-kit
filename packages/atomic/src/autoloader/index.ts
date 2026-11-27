@@ -1,14 +1,35 @@
 import elementMap from '@/src/components/lazy-index.js';
 
-export function registerAutoloader(
-  roots?: (Element | ShadowRoot | DocumentFragment)[] | Element | ShadowRoot | DocumentFragment
-) {
+type AutoloaderRoot = Element | ShadowRoot | DocumentFragment;
+
+interface PageAutoloader {
+  addRoots(roots: AutoloaderRoot[]): void;
+}
+
+/**
+ * A page can run several copies of this module: the CDN `atomic.esm.js` and `index.js` files each bundle one.
+ * Two copies that both register components each import their own copy of every component module, so
+ * `customElements.define` throws for the second copy, and a component can end up never defined. The first copy to
+ * run stores its autoloader under this key, and later copies hand it their roots instead of registering components.
+ */
+const pageAutoloaderKey: unique symbol = Symbol.for('@coveo/atomic/autoloader');
+
+type WindowWithAutoloader = Window & {[pageAutoloaderKey]?: PageAutoloader};
+
+export function registerAutoloader(roots?: AutoloaderRoot[] | AutoloaderRoot) {
   if (typeof window === 'undefined') {
     return;
   }
 
   roots ??= [document.documentElement];
   roots = Array.isArray(roots) ? roots : [roots];
+
+  const page: WindowWithAutoloader = window;
+  const pageAutoloader = page[pageAutoloaderKey];
+  if (pageAutoloader) {
+    pageAutoloader.addRoots(roots);
+    return;
+  }
 
   // Track visited nodes to prevent infinite recursion
   const visitedNodes = new WeakSet<Element | ShadowRoot | DocumentFragment>();
@@ -150,8 +171,8 @@ export function registerAutoloader(
     }
   });
 
-  const initializeDiscovery = () => {
-    for (const root of roots) {
+  const initializeDiscovery = (rootsToDiscover: AutoloaderRoot[]) => {
+    for (const root of rootsToDiscover) {
       discover(root).catch((error) => {
         const tagName = root instanceof Element ? root.tagName.toLowerCase() : 'root';
         reportRegistrationError(tagName, error);
@@ -163,10 +184,17 @@ export function registerAutoloader(
     }
   };
 
-  // https://developer.mozilla.org/en-US/docs/Web/API/Document/DOMContentLoaded_event#checking_whether_loading_is_already_complete
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeDiscovery);
-  } else {
-    initializeDiscovery();
-  }
+  const whenDocumentIsParsed = (callback: () => void) => {
+    // https://developer.mozilla.org/en-US/docs/Web/API/Document/DOMContentLoaded_event#checking_whether_loading_is_already_complete
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', callback, {once: true});
+    } else {
+      callback();
+    }
+  };
+
+  page[pageAutoloaderKey] = {
+    addRoots: (handedOverRoots) => whenDocumentIsParsed(() => initializeDiscovery(handedOverRoots)),
+  };
+  whenDocumentIsParsed(() => initializeDiscovery(roots));
 }
