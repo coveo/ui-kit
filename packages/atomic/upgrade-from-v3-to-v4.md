@@ -55,7 +55,7 @@ These components received errors without displaying them, so an invalid configur
 - `atomic-recs-result`
 - `atomic-result`
 
-`atomic-tab-manager` now shows the error of an invalid `atomic-tab` child, and an `atomic-sort-expression` outside an `atomic-sort-dropdown` now holds its error in `error`. The timeframe facets are ready to display the error of an invalid `atomic-timeframe` child, which shows once `atomic-timeframe` validation becomes fatal.
+`atomic-tab-manager` now shows the error of an invalid `atomic-tab` child, and an `atomic-sort-expression` placed outside an `atomic-sort-dropdown` now sets its `error` property. The timeframe facets are ready to display the error of an invalid `atomic-timeframe` child, which will show once `atomic-timeframe` validation becomes fatal.
 
 **Atomic Version 3**
 
@@ -71,7 +71,7 @@ These components received errors without displaying them, so an invalid configur
 <atomic-quickview sandbox="allow-scripts allow-same-origin"></atomic-quickview>
 ```
 
-Fix the configuration that the error in the console names.
+The error logged to the console tells you what to fix.
 
 #### Component errors shown once the interface initializes <!-- KIT-6756 -->
 
