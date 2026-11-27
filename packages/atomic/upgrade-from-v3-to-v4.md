@@ -118,12 +118,6 @@ If a test waits for the error box of one of these components, initialize the int
 
 ## Removals
 
-### Components
-
-| Removed                                                                                                                                            | Replacement                                                    |
-| -------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| `error` on `atomic-commerce-recommendation-interface`, `atomic-commerce-layout`, `atomic-insight-layout`, `atomic-search-layout` <!-- KIT-6756 --> | None: nothing sets it, so these components never hold an error |
-
 ### Interface components
 
 | Removed                                                                                                                            | Replacement                                                                                                                                                                                     |
@@ -132,6 +126,8 @@ If a test waits for the error box of one of these components, initialize the int
 | `store` and `registerFieldsToInclude()` on `atomic-insight-interface`                                                              | The `store` of the bindings that `initializeBindings` returns, and `loadFieldActions(engine).registerFieldsToInclude` from `@coveo/headless/insight` <!-- decided 2026-10-31, not yet built --> |
 | The `updateLocale(language, country, currency)` form on `atomic-commerce-interface` and `atomic-commerce-recommendation-interface` | `updateLocale({language, country, currency})`, where each property is optional <!-- decided 2026-10-31, not yet built -->                                                                       |
 | The `language` property and attribute on `atomic-commerce-interface` and `atomic-commerce-recommendation-interface`                | The `language` of the `context` in the engine configuration, then `updateLocale({language})` to change it <!-- decided 2026-11-24, not yet built -->                                            |
+| `error` on `atomic-commerce-recommendation-interface` <!-- KIT-6756 -->                                                            | None: nothing sets it, so it never holds an error                                                                                                                                               |
+| `error` on `atomic-search-layout`, `atomic-insight-layout` and `atomic-commerce-layout` <!-- KIT-6756 -->                          | None: nothing sets it, so it never holds an error                                                                                                                                               |
 
 ### Facets
 
