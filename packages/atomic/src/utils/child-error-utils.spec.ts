@@ -8,13 +8,28 @@ class TestChild extends LitElement {
 }
 customElements.define('test-child-error', TestChild);
 
+class TestParent extends LitElement {
+  static properties = {error: {state: true}};
+  declare error?: Error;
+}
+customElements.define('test-parent-error', TestParent);
+
 describe('#displayChildErrors', () => {
-  const children: TestChild[] = [];
+  const elements: LitElement[] = [];
+
+  const appendParent = async (error?: Error) => {
+    const parent = document.createElement('test-parent-error') as TestParent;
+    parent.error = error;
+    document.body.append(parent);
+    elements.push(parent);
+    await parent.updateComplete;
+    return parent;
+  };
 
   const appendChild = async () => {
     const child = document.createElement('test-child-error') as TestChild;
     document.body.append(child);
-    children.push(child);
+    elements.push(child);
     await child.updateComplete;
     return child;
   };
@@ -31,11 +46,11 @@ describe('#displayChildErrors', () => {
     });
 
   afterEach(() => {
-    children.splice(0).forEach((child) => child.remove());
+    elements.splice(0).forEach((element) => element.remove());
   });
 
   it('should display the error of the first invalid child, with that error as cause', async () => {
-    const parent: {error?: Error} = {};
+    const parent = await appendParent();
     const [valid, invalid] = [await appendChild(), await appendChild()];
     const childError = new Error('invalid');
     invalid.error = childError;
@@ -46,7 +61,7 @@ describe('#displayChildErrors', () => {
   });
 
   it('should clear the error it set once the child becomes valid', async () => {
-    const parent: {error?: Error} = {};
+    const parent = await appendParent();
     const child = await appendChild();
     displayChildErrors(parent, [child], 'test-child-error');
 
@@ -60,7 +75,7 @@ describe('#displayChildErrors', () => {
 
   it('should never replace or clear an error it did not set', async () => {
     const otherError = new Error('other');
-    const parent: {error?: Error} = {error: otherError};
+    const parent = await appendParent(otherError);
     const child = await appendChild();
     displayChildErrors(parent, [child], 'test-child-error');
 
@@ -72,7 +87,7 @@ describe('#displayChildErrors', () => {
   });
 
   it('should display the child error again after another writer replaced and cleared it', async () => {
-    const parent: {error?: Error} = {};
+    const parent = await appendParent();
     const child = await appendChild();
     const childError = new Error('invalid');
     displayChildErrors(parent, [child], 'test-child-error');
@@ -82,6 +97,21 @@ describe('#displayChildErrors', () => {
     parent.error = undefined;
     child.requestUpdate();
     await child.updateComplete;
+
+    expect(parent.error).toEqual(displayed(childError));
+  });
+
+  it('should display a static child error again once another writer clears its own parent error', async () => {
+    const parent = await appendParent();
+    const child = await appendChild();
+    const childError = new Error('invalid');
+    await setChildError(child, childError);
+    displayChildErrors(parent, [child], 'test-child-error');
+
+    parent.error = new Error('other');
+    await parent.updateComplete;
+    parent.error = undefined;
+    await parent.updateComplete;
 
     expect(parent.error).toEqual(displayed(childError));
   });

@@ -5,7 +5,7 @@ import type {
   DateRangeRequest,
   SearchStatusState,
 } from '@coveo/headless';
-import {html, nothing} from 'lit';
+import {html, nothing, type ReactiveControllerHost} from 'lit';
 import {afterEach, beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import type {FocusTargetController} from '@/src/utils/accessibility-utils';
@@ -48,7 +48,15 @@ const buildFakeDateFilter = (overrides?: Partial<DateFilter>): DateFilter => {
 };
 
 describe('TimeframeFacetCommon', () => {
-  let mockHost: HTMLElement & {error?: Error};
+  type MockHost = HTMLElement & ReactiveControllerHost & {error?: Error};
+  let mockHost: MockHost;
+  const buildMockHost = (): MockHost =>
+    Object.assign(document.createElement('div'), {
+      addController: vi.fn(),
+      removeController: vi.fn(),
+      requestUpdate: vi.fn(),
+      updateComplete: Promise.resolve(true),
+    });
   let mockBindings: Partial<Bindings>;
   let setFacetIdSpy: Mock<(id: string) => string>;
   let getSearchStatusStateSpy: Mock<() => SearchStatusState>;
@@ -61,7 +69,7 @@ describe('TimeframeFacetCommon', () => {
   let initializeFilterSpy: Mock<() => DateFilter>;
 
   beforeEach(async () => {
-    mockHost = document.createElement('div');
+    mockHost = buildMockHost();
     mockHost.querySelectorAll = vi.fn(() => []) as unknown as typeof mockHost.querySelectorAll;
 
     mockBindings = {
@@ -516,7 +524,7 @@ describe('TimeframeFacetCommon', () => {
       });
 
     beforeEach(() => {
-      mockHost = document.createElement('div');
+      mockHost = buildMockHost();
       document.body.append(mockHost);
     });
 

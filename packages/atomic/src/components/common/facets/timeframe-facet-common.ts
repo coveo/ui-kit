@@ -11,7 +11,7 @@ import type {
   RelativeDateUnit,
   SearchStatusState,
 } from '@coveo/headless';
-import {html, nothing, type TemplateResult} from 'lit';
+import {html, nothing, type ReactiveControllerHost, type TemplateResult} from 'lit';
 import {AtomicTimeframe} from '@/src/components/common/atomic-timeframe/atomic-timeframe';
 import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
 import type {Bindings as SearchBindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
@@ -40,7 +40,7 @@ export interface Timeframe {
 
 interface TimeframeFacetCommonOptions {
   facetId?: string;
-  host: HTMLElement & {error?: Error};
+  host: HTMLElement & ReactiveControllerHost & {error?: Error};
   bindings: SearchBindings | InsightBindings;
   label: string;
   field: string;

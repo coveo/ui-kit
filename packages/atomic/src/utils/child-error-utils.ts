@@ -8,16 +8,18 @@ interface ErrorHolder {
  * Displays the error of the first invalid child on its parent. Use it for light DOM children that the parent reads
  * but does not slot, so a box on the child would never show.
  *
- * It re-checks after each child update, keeps the child's error as `cause`, never replaces an error the parent already
- * holds, and clears only the error it set. Setting the parent's error does not update the children, so it cannot loop.
- * The children are a fixed snapshot: a child added later is not watched, and the watchers stay on the children.
+ * It re-checks before each parent update and after each child update, so a child's error shows again once another
+ * writer clears the parent's own error, in the same render. It keeps the child's error as `cause`, never replaces an
+ * error the parent already holds, and clears only the error it set. Setting the parent's error does not update the
+ * children, so it cannot loop.
+ * The children are a fixed snapshot: a child added later is not watched, and the watchers stay on the parent and the children.
  *
  * @param parent - The component that displays the error.
  * @param children - The children to watch. Only upgraded elements can be watched.
  * @param childName - The tag name of the children, used in the error message.
  */
 export function displayChildErrors(
-  parent: ErrorHolder,
+  parent: ReactiveControllerHost & ErrorHolder,
   children: (ReactiveControllerHost & ErrorHolder)[],
   childName: string
 ) {
@@ -37,6 +39,7 @@ export function displayChildErrors(
     parent.error = displayedError;
   };
 
+  parent.addController({hostUpdate: sync});
   for (const child of children) {
     child.addController({hostUpdated: sync});
   }
