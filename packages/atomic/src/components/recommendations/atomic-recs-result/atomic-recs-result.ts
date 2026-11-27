@@ -20,6 +20,7 @@ import type {
 } from '@/src/components/common/layout/item-layout-utils';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {RecsStore} from '@/src/components/recommendations/atomic-recs-interface/store';
+import type {AtomicResultLink} from '@/src/components/search/atomic-result-link/atomic-result-link';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
@@ -184,8 +185,8 @@ export class AtomicRecsResult extends ChildrenUpdateCompleteMixin(LitElement) {
 
   public clickLinkContainer = () => {
     this.shadowRoot
-      ?.querySelector<HTMLAnchorElement>('.link-container > atomic-result-link a:not([slot])')
-      ?.click();
+      ?.querySelector<AtomicResultLink>('.link-container > atomic-result-link')
+      ?.clickLink?.();
   };
 
   public handleClick = (event: MouseEvent) => {

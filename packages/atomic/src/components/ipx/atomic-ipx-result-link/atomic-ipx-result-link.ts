@@ -3,9 +3,13 @@ import type {InteractiveResult, IPXActionsHistoryActionCreators} from '@coveo/he
 import {loadIPXActionsHistoryActions} from '@coveo/headless';
 import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {createRef} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
 import {getAttributesFromLinkSlotContent} from '@/src/components/common/item-link/attributes-slot';
-import {renderLinkWithItemAnalytics} from '@/src/components/common/item-link/item-link';
+import {
+  clickItemLink,
+  renderLinkWithItemAnalytics,
+} from '@/src/components/common/item-link/item-link';
 import type {AnyUnfoldedItem} from '@/src/components/common/item-list/unfolded-item';
 import type {RecsBindings} from '@/src/components/recommendations/atomic-recs-interface/atomic-recs-interface';
 import {createInteractiveResultContextController} from '@/src/components/search/result-template-component-utils/context/interactive-result-context-controller';
@@ -63,6 +67,7 @@ export class AtomicIpxResultLink
   @state() private interactiveResult!: InteractiveResult;
   @state() private actionsHistoryActions?: IPXActionsHistoryActionCreators;
   private removeLinkEventHandlers?: () => void;
+  private anchorRef = createRef<HTMLAnchorElement>();
 
   private resultContext = createResultContextController(this);
   private interactiveResultContext = createInteractiveResultContextController(this);
@@ -88,6 +93,20 @@ export class AtomicIpxResultLink
     );
 
     this.actionsHistoryActions = loadIPXActionsHistoryActions(this.bindings.engine);
+  }
+
+  /**
+   * Clicks the rendered link, the same way a user would. This logs the result click and opens the link's `href`.
+   *
+   * Use this method rather than querying the `a` element rendered by the component, whose markup may change.
+   *
+   * Does nothing if the link isn't rendered yet.
+   *
+   * @param options - The click options.
+   * @param options.newTab - Whether to open the link in a new tab, as with a Ctrl or Cmd click. The link's `target` is set to `_blank` for this click only.
+   */
+  public clickLink(options?: {newTab?: boolean}): void {
+    clickItemLink(this.anchorRef.value, options);
   }
 
   disconnectedCallback() {
@@ -126,6 +145,7 @@ export class AtomicIpxResultLink
       return renderLinkWithItemAnalytics({
         props: {
           href,
+          ref: this.anchorRef,
           onSelect: () => this.onSelect(),
           onBeginDelayedSelect: () => interactiveResult.beginDelayedSelect(),
           onCancelPendingSelect: () => interactiveResult.cancelPendingSelect(),

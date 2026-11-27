@@ -94,3 +94,30 @@ export const renderLinkWithItemAnalytics: FunctionalComponentWithChildren<ItemLi
       </a>
     `;
   };
+
+export interface ItemLinkClickOptions {
+  newTab?: boolean;
+}
+
+export const clickItemLink = (
+  anchor: HTMLAnchorElement | undefined,
+  {newTab = false}: ItemLinkClickOptions = {}
+) => {
+  if (!anchor) {
+    return;
+  }
+
+  if (!newTab) {
+    anchor.click();
+    return;
+  }
+
+  const previousTarget = anchor.getAttribute('target');
+  anchor.setAttribute('target', '_blank');
+  anchor.click();
+  if (previousTarget === null) {
+    anchor.removeAttribute('target');
+  } else {
+    anchor.setAttribute('target', previousTarget);
+  }
+};

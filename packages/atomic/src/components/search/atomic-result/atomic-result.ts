@@ -18,6 +18,7 @@ import type {
 } from '@/src/components/common/layout/item-layout-utils';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {SearchStore} from '@/src/components/search/atomic-search-interface/store';
+import type {AtomicResultLink} from '@/src/components/search/atomic-result-link/atomic-result-link';
 import type {
   InteractiveResultContextEvent,
   ResultContextEvent,
@@ -192,8 +193,8 @@ export class AtomicResult extends ChildrenUpdateCompleteMixin(LitElement) {
 
   public clickLinkContainer = () => {
     this.shadowRoot
-      ?.querySelector<HTMLAnchorElement>('.link-container > atomic-result-link a:not([slot])')
-      ?.click();
+      ?.querySelector<AtomicResultLink>('.link-container > atomic-result-link')
+      ?.clickLink?.();
   };
 
   public async connectedCallback() {

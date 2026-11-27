@@ -7,6 +7,7 @@ import {
 import {html, LitElement, nothing, render} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
+import type {AtomicProductLink} from '@/src/components/commerce/atomic-product-link/atomic-product-link';
 import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
 import type {
   ItemDisplayDensity,
@@ -106,20 +107,13 @@ export class AtomicCommerceSearchBoxInstantProducts
     }
   }
 
-  private getLink(el: HTMLElement): HTMLElement | null {
+  private getLink(el: HTMLElement): AtomicProductLink | null {
     const atomicProduct =
       el.tagName === 'ATOMIC-PRODUCT' ? el : el?.querySelector('atomic-product');
 
-    return atomicProduct?.shadowRoot?.querySelector('atomic-product-link a:not([slot])') || null;
-  }
-
-  private handleLinkClick(el: HTMLElement, hasModifier: boolean) {
-    const setTarget = (value: string) => el.setAttribute('target', value);
-    const initialTarget = el.getAttribute('target');
-
-    hasModifier && setTarget('_blank');
-    el.click();
-    hasModifier && setTarget(initialTarget || '');
+    return (
+      atomicProduct?.shadowRoot?.querySelector<AtomicProductLink>('atomic-product-link') || null
+    );
   }
 
   private renderItems(): SearchBoxSuggestionElement[] {
@@ -169,7 +163,7 @@ export class AtomicCommerceSearchBoxInstantProducts
           if (!link) {
             return;
           }
-          this.handleLinkClick(link, e.ctrlKey || e.metaKey);
+          link.clickLink?.({newTab: e.ctrlKey || e.metaKey});
         },
       };
     });
