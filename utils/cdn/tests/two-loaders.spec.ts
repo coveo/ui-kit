@@ -70,6 +70,18 @@ describe('CDN pages that run two loaders', () => {
   it.each([
     ['the script tag, then a loader call from index.js', [scriptTag, loaderCallFrom('index.js')]],
     ['a loader call from index.js, then the script tag', [loaderCallFrom('index.js'), scriptTag]],
+    [
+      'the script tag, then a loader call from index.esm.js',
+      [scriptTag, loaderCallFrom('index.esm.js')],
+    ],
+    [
+      'a loader call from index.esm.js, then the script tag',
+      [loaderCallFrom('index.esm.js'), scriptTag],
+    ],
+    [
+      'loader calls from index.js and index.esm.js',
+      [loaderCallFrom('index.js'), loaderCallFrom('index.esm.js')],
+    ],
   ])(
     'should register each component once with %s',
     async (_, scripts) => {

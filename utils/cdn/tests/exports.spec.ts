@@ -18,4 +18,10 @@ describe('CDN exports checks', () => {
     const module = await import(`../dist/proda/StaticCDN/atomic/v3/${file}.js`);
     expect(replaceVersions(module)).toMatchSnapshot();
   });
+
+  it('does index.esm export everything index exports?', async () => {
+    const index = await import('../dist/proda/StaticCDN/atomic/v3/index.js');
+    const indexEsm = await import('../dist/proda/StaticCDN/atomic/v3/index.esm.js');
+    expect(Object.keys(indexEsm)).toEqual(expect.arrayContaining(Object.keys(index)));
+  });
 });
