@@ -40,12 +40,12 @@ const PAGINATION_SURFACE = {
   content: {
     messages: [
       {
-        version: 'v1.0',
+        version: '1.0',
         createSurface: {
           surfaceId: 'commerce-search-surface',
           components: [
             {id: 'root', component: 'CommerceSearch'},
-            {id: 'pagination-1', component: 'Pagination'},
+            {id: 'pagination_1', component: 'Pagination'},
           ],
         },
       },
@@ -54,12 +54,10 @@ const PAGINATION_SURFACE = {
 };
 
 const SELECT_PAGE = {
-  userAction: {
-    name: 'selectPage',
-    surfaceId: 'commerce-search-surface',
-    sourceComponentId: 'pagination-1',
-    context: {page: 2},
-  },
+  name: 'selectPage',
+  surfaceId: 'commerce-search-surface',
+  sourceComponentId: 'pagination_1',
+  context: {page: 2},
 };
 
 const encoder = new TextEncoder();

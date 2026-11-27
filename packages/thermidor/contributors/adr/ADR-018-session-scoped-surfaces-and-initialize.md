@@ -134,7 +134,8 @@ is the order in which the operations arrived.
 
 An application finds the shell in `session.surfaces` by its root component type, `SessionShell`, as
 ADR-015's interim projection already allows, and renders it with
-`<A2UIRenderer surfaceId={shell.surfaceId} />`.
+`<A2UIRenderer surfaceId={shell.surfaceId} />` (with `@a2ui/react` since
+[ADR-021](./ADR-021-a2ui-1-0-renderer-stream.md), `<A2uiSurface surface={processor.model.getSurface(shell.surfaceId)} />`).
 
 ### Query suggestions in the renderer
 

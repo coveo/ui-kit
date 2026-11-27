@@ -48,14 +48,13 @@ import {
   NO_CONCURRENT_REQUESTS,
   createConcurrentActions,
 } from './concurrent-actions.js';
-import {callWithRetry, type RetryOptions} from './request-retry.js';
 import {
   EMPTY_RENDERER_STREAM,
   RENDERER_PROTOCOL_VERSION,
   appendToRendererStream,
-  convertA2uiMessages,
   type RendererStream,
-} from './a2ui-v09-projection.js';
+} from './renderer-stream.js';
+import {callWithRetry, type RetryOptions} from './request-retry.js';
 import {createTurn, foldActivity, foldInitialization, SURFACE_ACTIVITY_KIND} from './fold.js';
 import {deriveNodeIdentityRegistry} from './in-transit-validation.js';
 import {restoreSession, serializeSession, type SerializedSession} from './serialize.js';
@@ -79,7 +78,7 @@ import {
 } from './session-surfaces.js';
 import type {
   A2uiState,
-  A2uiV09Message,
+  A2uiMessage,
   ActionError,
   Activity,
   ConcurrentFailure,
@@ -95,36 +94,27 @@ import type {
 // Kept structural so the renderer callback stays assignable without coupling this package to React
 // or the renderer package.
 /**
- * The standard A2-UI client-to-server message an A2-UI renderer passes to its `onAction` handler.
+ * A user action as an A2-UI v1.0 renderer reports it.
  *
  * @remarks
- * {@link Session.dispatchAction} accepts this shape, so it can be passed to the renderer's
- * `onAction` as is, with no adapter.
+ * This is the `ActionPayload` that `@a2ui/web_core`'s `MessageProcessor` passes to the action
+ * handler given to its constructor, which is how `@a2ui/react` surfaces deliver their actions.
+ * {@link Session.dispatchAction} accepts this shape, so it can be that handler as is, with no
+ * adapter. It is declared structurally, so `@coveo/thermidor` depends on no renderer package.
  *
  * @group Actions
  */
-export interface A2uiClientMessage {
-  /**
-   * The user interaction, when the message carries one. A message with no `userAction` is dropped,
-   * and nothing is sent.
-   */
-  userAction?: {
-    /** The action name declared by the dispatching component's contract. */
-    name: string;
-    /** The A2-UI surface the interaction originated on. */
-    surfaceId: string;
-    /** The id of the node that dispatched the action. A message without one is dropped. */
-    sourceComponentId?: string;
-    /** The action payload, validated against the action's contract before it is sent. */
-    context?: Record<string, unknown>;
-    /** A timestamp set by the renderer. The session ignores it. */
-    timestamp?: string;
-    // The core dispatch path ignores this renderer extension field.
-    /**
-     * A data-context path set by the renderer. The session ignores it.
-     */
-    dataContextPath?: string;
-  };
+export interface A2uiRendererAction {
+  /** The action name declared by the dispatching component's contract. */
+  name: string;
+  /** The A2-UI surface the interaction originated on. */
+  surfaceId: string;
+  /** The id of the node that dispatched the action. */
+  sourceComponentId: string;
+  /** The action payload, validated against the action's contract before it is sent. */
+  context?: Record<string, unknown>;
+  /** A timestamp set by the renderer. The session ignores it. */
+  timestamp?: string;
 }
 
 /**
@@ -278,7 +268,7 @@ export interface SessionSnapshot {
   /** Every live surface, as {@link Session.surfaces}. */
   readonly surfaces: readonly DiscoveredSurface[];
   /** The whole session's renderer stream, as {@link Session.a2uiMessages}. */
-  readonly a2uiMessages: readonly A2uiV09Message[];
+  readonly a2uiMessages: readonly A2uiMessage[];
   /** The validated data model of every live surface, as {@link Session.state}. */
   readonly state: A2uiState;
   /** The request in flight, as {@link Session.request}. */
@@ -340,12 +330,13 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    */
   readonly surfaces: readonly DiscoveredSurface[];
   /**
-   * The session's whole renderer stream, in the A2-UI v0.9 shape, in arrival order. It only
-   * grows: feed each new message to a single renderer once. It follows the surface lifecycle
-   * across runs: a `deleteSurface` precedes a `createSurface` that replaces a live surface, and an
-   * operation on a surface that is not live is left out.
+   * The session's whole renderer stream: the A2-UI v1.0 messages of every run, unchanged, in
+   * arrival order. It only grows: feed each new message to a single renderer once. It follows the
+   * surface lifecycle across runs, so one renderer can process it: a `deleteSurface` precedes a
+   * `createSurface` that replaces a live surface, and an `updateComponents` or `updateDataModel` for
+   * a surface that is not live is left out. A message whose `version` is not `"1.0"` is left out.
    */
-  readonly a2uiMessages: readonly A2uiV09Message[];
+  readonly a2uiMessages: readonly A2uiMessage[];
   /**
    * The validated data model of every live surface, keyed by surface id, whichever turn wrote it.
    *
@@ -453,7 +444,7 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    */
   getSnapshot(): SessionSnapshot;
   /**
-   * Sends a prompt or a component action, and is the renderer's `onAction` handler.
+   * Sends a prompt or a component action, and is the renderer's action handler.
    *
    * @remarks
    * - The returned Promise always resolves once the dispatch's own request ends, and never
@@ -462,7 +453,7 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    *   is withheld, a prompt included, and nothing is sent.
    * - A {@link SubmitPromptAction} opens a new streaming turn for its prompt, and resolves once
    *   that turn's stream ends.
-   * - An {@link A2uiClientMessage} is unwrapped to its `userAction`. The session finds the
+   * - For an {@link A2uiRendererAction}, the session finds the
    *   dispatching component among its live surfaces, whichever turn created them, validates the
    *   payload against that component's contract and, when it is valid, sends the action.
    * - An action the producer announces as opening a turn, such as a follow-up chip, opens a new
@@ -481,25 +472,23 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
    *   {@link Session.concurrentRequests} when it still awaits its answer, and neither when its
    *   answer was applied. So a dispatch a later one superseded reads that one's outcome, a failure
    *   included.
-   * - A message that can't be sent, such as one with no `userAction` or no `sourceComponentId`,
-   *   one from a node that matches no component, or one whose payload is invalid, is dropped with
+   * - A message that can't be sent, such as one with no `sourceComponentId`, one from a node that matches no component, or one whose payload is invalid, is dropped with
    *   a warning in development, and nothing is sent.
    *
-   * @param message - A {@link SubmitPromptAction}, or the {@link A2uiClientMessage} the renderer
-   * passes to `onAction`.
+   * @param message - A {@link SubmitPromptAction}, or the {@link A2uiRendererAction} the renderer
+   * passes to its action handler.
    * @returns A Promise that resolves once the dispatch's request ends, or at once when nothing is
    * sent.
    *
    * @example
-   * Pass it as is to an A2-UI renderer, such as the `A2UIProvider` of `@copilotkit/a2ui-renderer`:
+   * Pass it as is as the action handler of `@a2ui/web_core`'s `MessageProcessor`, which
+   * `@a2ui/react` renders from:
    *
-   * ```tsx
-   * <A2UIProvider catalog={catalog} onAction={session.dispatchAction}>
-   *   {children}
-   * </A2UIProvider>
+   * ```ts
+   * const processor = new MessageProcessor(catalogs, session.dispatchAction, {version: '1.0'});
    * ```
    */
-  dispatchAction: (message: A2uiClientMessage | SubmitPromptAction) => Promise<void>;
+  dispatchAction: (message: A2uiRendererAction | SubmitPromptAction) => Promise<void>;
   /**
    * Whether a dispatch of an action would now be sent at once, whatever request is in flight,
    * without setting {@link Session.request}.
@@ -557,9 +546,9 @@ export interface Session<TContracts extends ContractsSchema = ContractsSchema> {
 }
 
 function isSubmitPromptAction(
-  message: A2uiClientMessage | SubmitPromptAction
+  message: A2uiRendererAction | SubmitPromptAction
 ): message is SubmitPromptAction {
-  return 'name' in message && message.name === 'submitPrompt';
+  return !('surfaceId' in message) && message.name === 'submitPrompt';
 }
 
 /** The action a request sends, which its failures are reported against. */
@@ -1060,7 +1049,7 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
         }
         next.rendererStream = appendToRendererStream(
           current.rendererStream ?? EMPTY_RENDERER_STREAM,
-          convertA2uiMessages(messages)
+          messages
         );
       }
       return next;
@@ -1656,16 +1645,10 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
   }
 
   /** Every refusal settles at once, so no caller is left waiting. */
-  function issue(message: A2uiClientMessage): Promise<void> {
-    const userAction = message.userAction;
-    if (!userAction) {
-      devWarn('dispatchAction: message carries no userAction; nothing sent.');
-      return withhold();
-    }
-
-    const {name, surfaceId, sourceComponentId, context} = userAction;
+  function issue(action: A2uiRendererAction): Promise<void> {
+    const {name, surfaceId, sourceComponentId, context} = action;
     if (!sourceComponentId) {
-      devWarn('dispatchAction: userAction has no sourceComponentId; nothing sent.');
+      devWarn('dispatchAction: action has no sourceComponentId; nothing sent.');
       return withhold();
     }
 
@@ -1688,13 +1671,15 @@ export function createSessionRuntime<TContracts extends ContractsSchema>(
 
   /**
    * The single consumer-facing action-dispatch entry point. See
-   * {@link Session.dispatchAction}. Pre-bound arrow field so
-   * `onAction={session.dispatchAction}` works when passed by reference.
+   * {@link Session.dispatchAction}. Pre-bound arrow field so it works when passed by reference as a
+   * renderer's action handler.
    *
    * FIRE-AND-FORGET: every refusal is swallowed into a dev-only warning; the
    * returned Promise always resolves.
    */
-  const dispatchAction = async (message: A2uiClientMessage | SubmitPromptAction): Promise<void> => {
+  const dispatchAction = async (
+    message: A2uiRendererAction | SubmitPromptAction
+  ): Promise<void> => {
     if (isSubmitPromptAction(message)) {
       try {
         await startPromptTurn(message.payload.prompt);

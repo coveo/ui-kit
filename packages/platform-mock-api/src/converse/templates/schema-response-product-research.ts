@@ -31,7 +31,7 @@ const NEXT_ACTIONS_ROOT_ID = RENDERER_ROOT_ID;
 
 // The research surface is a single read-only leaf node: the product-research-card owns its product,
 // research summary, product-education bullets and related documents as Component_State, bound to
-// `{ path }` objects at `/state/root/<field>`.
+// `{ "@path" }` objects at `/state/root/<field>`.
 const RESEARCH_SURFACE_NODES: A2uiComponentNode[] = [
   {
     id: RESEARCH_ROOT_ID,
@@ -48,7 +48,7 @@ const researchSurfaceActivity: ConverseEvent = ActivitySnapshot({
     messages: [
       deleteSurfaceMessage(PLACEHOLDER_RESEARCH_SURFACE_ID),
       {
-        version: 'v1.0',
+        version: '1.0',
         createSurface: buildValidatedSurface({
           templateName: 'Mock_Product_Research_Template',
           surfaceId: RESEARCH_SURFACE_ID,
@@ -67,7 +67,7 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
     messages: [
       deleteSurfaceMessage(PLACEHOLDER_NEXT_ACTIONS_SURFACE_ID),
       {
-        version: 'v1.0',
+        version: '1.0',
         createSurface: {
           surfaceId: NEXT_ACTIONS_SURFACE_ID,
           catalogId: CATALOG_ID,

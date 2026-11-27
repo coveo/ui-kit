@@ -48,7 +48,7 @@ async function fetchSuggestions(query: string) {
       {
         name: 'fetchSuggestions',
         surfaceId: await openShell(),
-        sourceComponentId: 'query-suggestions',
+        sourceComponentId: 'query_suggestions',
         context: {query},
       },
       session
@@ -109,36 +109,36 @@ describe('initialize', () => {
     const [message] = surfaceMessages(await initialize());
 
     expect(message).toEqual({
-      version: 'v1.0',
+      version: '1.0',
       createSurface: {
         surfaceId: expect.stringMatching(/^session-shell-\d+$/),
         catalogId: 'https://schema.thermidor.coveo.com/a2-ui/catalog.json',
         components: [
-          {id: 'root', component: 'SessionShell', children: ['search-box']},
+          {id: 'root', component: 'SessionShell', children: ['search_box']},
           {
-            id: 'search-box',
+            id: 'search_box',
             component: 'SearchBox',
-            suggestionsChild: 'query-suggestions',
-            instantProductsChild: 'instant-products',
+            suggestionsChild: 'query_suggestions',
+            instantProductsChild: 'instant_products',
           },
           {
-            id: 'query-suggestions',
+            id: 'query_suggestions',
             component: 'QuerySuggestions',
-            query: {path: '/state/query-suggestions/query'},
-            recentQueries: {path: '/state/query-suggestions/recentQueries'},
-            completions: {path: '/state/query-suggestions/completions'},
+            query: {'@path': '/state/query_suggestions/query'},
+            recentQueries: {'@path': '/state/query_suggestions/recentQueries'},
+            completions: {'@path': '/state/query_suggestions/completions'},
           },
           {
-            id: 'instant-products',
+            id: 'instant_products',
             component: 'InstantProducts',
-            query: {path: '/state/instant-products/query'},
-            products: {path: '/state/instant-products/products'},
+            query: {'@path': '/state/instant_products/query'},
+            products: {'@path': '/state/instant_products/products'},
           },
         ],
         dataModel: {
           state: {
-            'query-suggestions': {query: '', recentQueries: [], completions: []},
-            'instant-products': {query: '', products: []},
+            query_suggestions: {query: '', recentQueries: [], completions: []},
+            instant_products: {query: '', products: []},
           },
         },
       },
@@ -168,7 +168,7 @@ describe('fetchSuggestions', () => {
   it("writes the completions at the source component's state on the action's surface", async () => {
     expect(await completions('surf')).toEqual({
       surfaceId: expect.stringMatching(/^session-shell-/),
-      path: '/state/query-suggestions',
+      path: '/state/query_suggestions',
       value: {
         query: 'surf',
         recentQueries: [],
@@ -228,7 +228,7 @@ describe('fetchSuggestions', () => {
       converseSchemaResponses.isConcurrentAction({
         name: 'fetchSuggestions',
         surfaceId: 'session-shell-1',
-        sourceComponentId: 'query-suggestions',
+        sourceComponentId: 'query_suggestions',
         context: {query: 'surf'},
       })
     ).toBe(true);
@@ -244,7 +244,7 @@ describe('fetchInstantProducts', () => {
       {
         name: 'fetchInstantProducts',
         surfaceId: action.surfaceId,
-        sourceComponentId: action.sourceComponentId ?? 'instant-products',
+        sourceComponentId: action.sourceComponentId ?? 'instant_products',
         context: {query: action.query},
       },
       keys
@@ -264,14 +264,14 @@ describe('fetchInstantProducts', () => {
     };
   }
 
-  it("writes the whole instant-products slice of the session's shell", async () => {
+  it("writes the whole instant_products slice of the session's shell", async () => {
     const shellId = await openShell();
 
     const write = await instantProducts(shellId, 'wetsuits');
 
     expect(write).toMatchObject({
       surfaceId: shellId,
-      path: '/state/instant-products',
+      path: '/state/instant_products',
       value: {query: 'wetsuits'},
     });
     expect(Object.keys(write.value)).toEqual(['query', 'products']);
@@ -362,7 +362,7 @@ describe('fetchInstantProducts', () => {
       await refusal(
         fetchInstantProducts({
           surfaceId: shellId,
-          sourceComponentId: 'query-suggestions',
+          sourceComponentId: 'query_suggestions',
           query: 'surf',
         })
       )
@@ -395,7 +395,7 @@ describe('recent queries', () => {
       name: string,
       context: Record<string, unknown>,
       surfaceId: string | undefined = shellId,
-      sourceComponentId = 'query-suggestions'
+      sourceComponentId = 'query_suggestions'
     ) =>
       converseSchemaResponses.buildSchemaActionResponse(
         {name, surfaceId, sourceComponentId, context},
@@ -459,7 +459,7 @@ describe('recent queries', () => {
 
     expect(
       (message.createSurface as {dataModel: {state: Record<string, unknown>}}).dataModel.state[
-        'query-suggestions'
+        'query_suggestions'
       ]
     ).toEqual({query: '', recentQueries: ['water sports', 'life jackets'], completions: []});
   });
@@ -479,7 +479,7 @@ describe('recent queries', () => {
     await session.restore(surfaceId, 'kayaks');
 
     await readEvents(
-      session.act('selectSort', {sort: {sortCriteria: 'relevance'}}, surfaceId, 'sort-2')
+      session.act('selectSort', {sort: {sortCriteria: 'relevance'}}, surfaceId, 'sort_2')
     );
 
     expect(await session.recentQueries()).toEqual(['kayaks', 'water sports']);
@@ -494,14 +494,14 @@ describe('recent queries', () => {
       [
         converseSchemaResponses.schemaBaseResponse({message: 'boating safety'}, session.keys),
         converseSchemaResponses.schemaBaseResponse({message: 'hello'}, session.keys),
-        session.act('search', {query: 'aqua'}, surfaceId, 'facet-brand-2'),
-        session.act('applyCustomRange', {start: 100000, end: 200000}, surfaceId, 'facet-price-2'),
+        session.act('search', {query: 'aqua'}, surfaceId, 'facet_brand_2'),
+        session.act('applyCustomRange', {start: 100000, end: 200000}, surfaceId, 'facet_price_2'),
       ].map(readEvents)
     );
 
     const querySummary = surfaceMessages(emptyRange)
       .map(({updateDataModel}) => updateDataModel as {path: string; value: unknown})
-      .find(({path}) => path === '/state/query-summary-2');
+      .find(({path}) => path === '/state/query_summary_2');
     expect(querySummary?.value).toMatchObject({totalEntries: 0});
     expect(await session.recentQueries()).toEqual([]);
   }, 15_000);
@@ -513,7 +513,7 @@ describe('recent queries', () => {
 
     await Promise.all(
       [
-        session.act('overrideCorrection', {}, corrected, 'query-summary-2'),
+        session.act('overrideCorrection', {}, corrected, 'query_summary_2'),
         session.act('selectSearchOption', {text: 'kayaks'}, corrected, 'root'),
       ].map(readEvents)
     );
@@ -602,10 +602,10 @@ describe('recent queries', () => {
       expect(events[0].data).toEqual(session.keys);
       expect(surfaceMessages(events)).toEqual([
         {
-          version: 'v1.0',
+          version: '1.0',
           updateDataModel: {
             surfaceId: session.shellId,
-            path: '/state/query-suggestions/recentQueries',
+            path: '/state/query_suggestions/recentQueries',
             value: [],
           },
         },
@@ -619,7 +619,7 @@ describe('recent queries', () => {
 
       const refusals = [
         session.act('clearRecentQueries', {}, surfaceId),
-        session.act('clearRecentQueries', {}, session.shellId, 'instant-products'),
+        session.act('clearRecentQueries', {}, session.shellId, 'instant_products'),
       ];
 
       for (const refusal of refusals) {

@@ -125,6 +125,13 @@ successor) is populated from the server's typed data instead of derived from
 
 ## Addendum (2026-09-24): the A2-UI v0.9 renderer projection
 
+> **Retired (2026-11-19)** by [ADR-021](./ADR-021-a2ui-1-0-renderer-stream.md): its retirement
+> condition holds, the projection is deleted, and `session.a2uiMessages` carries Agent Gateway's
+> v1.0 messages unchanged. Kept for the record. Before the retirement, an interim release let the
+> projection read both the v1.0 candidate and the final v1.0
+> ([coveo/ui-kit#9024](https://github.com/coveo/ui-kit/pull/9024)), so v0.9 renderers kept working
+> while Agent Gateway switched; see "Dual input while Agent Gateway moves to the final v1.0" below.
+
 A second derived projection of the same class now lives beside `response.surfaces`:
 **`response.a2uiMessages`**, the turn's A2-UI message stream downgraded to the v0.9
 shape a renderer consumes. It is recorded here rather than in its own ADR because it
@@ -268,7 +275,9 @@ Surface derivation follows the stream in order rather than collecting every `cre
   duplicate `createSurface` without a delete (a spec error) is collapsed into its
   latest creation at the end of `surfaces`, while the v0.9 projection forwards both. Both errors
   log a development-only warning (`devWarn`) once, when the snapshot carrying them is folded, not
-  on every re-derivation;
+  on every re-derivation. Since [ADR-021](./ADR-021-a2ui-1-0-renderer-stream.md), a
+  `createSurface` without a `catalogId` is valid A2-UI v1.0 and is a surface like any other, and
+  only the duplicate creation is warned about;
 - `isLoading` reads the effective data model: `createSurface.dataModel`, then any
   `updateDataModel` written at `/` (or with no or an empty path) or at `/isLoading`. Today the
   agent ends a placeholder with `deleteSurface` and creates the content as a new surface. Reading
@@ -280,7 +289,9 @@ A `replace` snapshot is merged onto the activity it supersedes, carrying forward
 data-model slices and topology it does not rewrite, except for a surface it creates or deletes:
 that surface's earlier slices and components end with it.
 
-The v0.9 projection follows the same lifecycle:
+The v0.9 projection followed the same lifecycle (retired by
+[ADR-021](./ADR-021-a2ui-1-0-renderer-stream.md), whose session-wide stream forwards a
+`deleteSurface` for a surface that is not live):
 
 - a plain inline data-model key seeds its root JSON Pointer (`isLoading` → `/isLoading`), since
   the spec's inline data model is the surface's root object; keys already written as pointers

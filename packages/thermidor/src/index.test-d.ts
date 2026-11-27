@@ -16,7 +16,8 @@ import {z} from 'zod/v4';
 import {createSession} from '@/src/index.js';
 import type {
   A2uiState,
-  A2uiV09Message,
+  A2uiMessage,
+  A2uiRendererAction,
   ActionError,
   DiscoveredSurface,
   ComponentContractSchema,
@@ -72,7 +73,7 @@ test('takes optional session keys and exposes them on Session', () => {
 // ── POSITIVE: the session exposes its surfaces, renderer stream and state ──
 test('exposes session-scoped surfaces, renderer stream and state on Session', () => {
   expectTypeOf<Session['surfaces']>().toEqualTypeOf<readonly DiscoveredSurface[]>();
-  expectTypeOf<Session['a2uiMessages']>().toEqualTypeOf<readonly A2uiV09Message[]>();
+  expectTypeOf<Session['a2uiMessages']>().toEqualTypeOf<readonly A2uiMessage[]>();
   expectTypeOf<Session['state']>().toEqualTypeOf<A2uiState>();
   expectTypeOf<TurnResponse>().not.toHaveProperty('a2uiMessages');
   expectTypeOf<TurnResponse>().not.toHaveProperty('state');
@@ -115,7 +116,7 @@ test('exposes a snapshot of the session state for framework stores', () => {
   expectTypeOf<SessionSnapshot['turns']>().toEqualTypeOf<readonly Turn[]>();
   expectTypeOf<SessionSnapshot['surfaces']>().toEqualTypeOf<readonly DiscoveredSurface[]>();
   expectTypeOf<SessionSnapshot['state']>().toEqualTypeOf<A2uiState>();
-  expectTypeOf<SessionSnapshot['a2uiMessages']>().toEqualTypeOf<readonly A2uiV09Message[]>();
+  expectTypeOf<SessionSnapshot['a2uiMessages']>().toEqualTypeOf<readonly A2uiMessage[]>();
   expectTypeOf<SessionSnapshot['request']>().toEqualTypeOf<SessionRequest | undefined>();
   expectTypeOf<SessionSnapshot['actionError']>().toEqualTypeOf<ActionError | undefined>();
   expectTypeOf<Turn['input']['action']>().toEqualTypeOf<TurnAction | undefined>();
@@ -156,25 +157,36 @@ test('names the dispatching component, and types action lists by the contracts',
 });
 
 // ── POSITIVE: `dispatchAction` is the single action-dispatch entry point ─────
-test('exposes Session.dispatchAction assignable to the renderer onAction shape', () => {
-  // `dispatchAction` exists on `Session` as a function accepting the standard
-  // A2-UI client message.
+test('exposes Session.dispatchAction assignable to the renderer action handler', () => {
   expectTypeOf<Session>().toHaveProperty('dispatchAction');
 
-  // It is assignable to the renderer's `OnActionCallback` shape with no
-  // adapter: `(message: A2UIClientEventMessage) => void | Promise<void>`.
-  type OnActionCallback = (message: {
-    userAction?: {
-      name: string;
-      surfaceId: string;
-      sourceComponentId?: string;
-      context?: Record<string, unknown>;
-      timestamp?: string;
-      dataContextPath?: string;
-    };
+  // `@a2ui/web_core`'s `ActionListener`, which `new MessageProcessor(catalogs, actionHandler)`
+  // takes and `@a2ui/react` surfaces deliver their actions to.
+  type ActionListener = (action: {
+    name: string;
+    surfaceId: string;
+    sourceComponentId: string;
+    timestamp: string;
+    context: Record<string, unknown>;
+    catalogId?: string;
+    userMessage?: string;
+    metadata?: Record<string, unknown>;
+    [key: string]: unknown;
   }) => void | Promise<void>;
 
-  expectTypeOf<Session['dispatchAction']>().toMatchTypeOf<OnActionCallback>();
+  expectTypeOf<Session['dispatchAction']>().toMatchTypeOf<ActionListener>();
+  expectTypeOf<A2uiRendererAction>().toEqualTypeOf<{
+    name: string;
+    surfaceId: string;
+    sourceComponentId: string;
+    context?: Record<string, unknown>;
+    timestamp?: string;
+  }>();
+});
+
+test('exposes the renderer stream as A2-UI v1.0 messages', () => {
+  expectTypeOf<A2uiMessage['version']>().toEqualTypeOf<'1.0'>();
+  expectTypeOf<{version: '1.0'; createSurface: {surfaceId: string}}>().toMatchTypeOf<A2uiMessage>();
 });
 
 // ── POSITIVE: prompts are submitted through `dispatchAction` ────────────────

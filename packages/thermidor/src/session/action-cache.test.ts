@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'vitest';
 import {actionCacheKey, createActionCache} from './action-cache.js';
 
-const origin = {surfaceId: 'shell', sourceComponentId: 'instant-products', name: 'fetch'};
+const origin = {surfaceId: 'shell', sourceComponentId: 'instant_products', name: 'fetch'};
 const locale = {language: 'en', country: 'US', currency: 'USD'};
 const keyOf = (o: typeof origin, payload: unknown) => actionCacheKey(o, payload, locale);
 

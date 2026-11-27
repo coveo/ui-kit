@@ -35,7 +35,7 @@ const carousel1SurfaceActivity: ConverseEvent = ActivitySnapshot({
     messages: [
       deleteSurfaceMessage(PLACEHOLDER_LIFE_JACKETS_SURFACE_ID),
       {
-        version: 'v1.0',
+        version: '1.0',
         createSurface: {
           surfaceId: LIFE_JACKETS_SURFACE_ID,
           catalogId: CATALOG_ID,
@@ -60,7 +60,7 @@ const carousel2SurfaceActivity: ConverseEvent = ActivitySnapshot({
     messages: [
       deleteSurfaceMessage(PLACEHOLDER_SAFETY_GEAR_SURFACE_ID),
       {
-        version: 'v1.0',
+        version: '1.0',
         createSurface: {
           surfaceId: SAFETY_GEAR_SURFACE_ID,
           catalogId: CATALOG_ID,
@@ -85,7 +85,7 @@ const nextActionsSurfaceActivity: ConverseEvent = ActivitySnapshot({
     messages: [
       deleteSurfaceMessage(PLACEHOLDER_NEXT_ACTIONS_SURFACE_ID),
       {
-        version: 'v1.0',
+        version: '1.0',
         createSurface: {
           surfaceId: NEXT_ACTIONS_SURFACE_ID,
           catalogId: CATALOG_ID,

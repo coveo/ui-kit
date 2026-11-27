@@ -53,7 +53,7 @@ const contracts = z.discriminatedUnion('component', [
 ]) as unknown as ContractsSchema;
 
 const SHELL_ID = 'ui-shell';
-const PRODUCTS_ID = 'instant-products';
+const PRODUCTS_ID = 'instant_products';
 const CACHED = 'fetchInstantProducts';
 const UNCACHED = 'previewInstantProducts';
 const TRACKED = 'trackInstantProducts';
@@ -72,7 +72,7 @@ function shellActivity(metadata?: Record<string, unknown>): Activity {
     payload: {
       messages: [
         {
-          version: 'v1.0',
+          version: '1.0',
           createSurface: {
             surfaceId: SHELL_ID,
             catalogId: 'commerce',
@@ -169,7 +169,7 @@ function productsUpdate(query: string, extra: Record<string, unknown> = {}) {
 
 function productsWrite(query: string) {
   return {
-    version: 'v1.0',
+    version: '1.0',
     updateDataModel: {
       surfaceId: SHELL_ID,
       path: `/state/${PRODUCTS_ID}`,
@@ -186,7 +186,10 @@ function answer(call: Call, query: string): void {
 
 function dispatch(session: ReturnType<typeof createSession>, query: string, name = CACHED) {
   return session.dispatchAction({
-    userAction: {name, surfaceId: SHELL_ID, sourceComponentId: PRODUCTS_ID, context: {query}},
+    name,
+    surfaceId: SHELL_ID,
+    sourceComponentId: PRODUCTS_ID,
+    context: {query},
   });
 }
 
@@ -240,7 +243,7 @@ describe('concurrent and cached actions (ADR-020)', () => {
     await sent;
     expect(shownQuery(session)).toBe('boots');
     expect(session.a2uiMessages.at(-1)).toEqual({
-      version: 'v0.9',
+      version: '1.0',
       updateDataModel: productsWrite('boots').updateDataModel,
     });
     expect(session.initialization?.activities).toHaveLength(1);
@@ -265,7 +268,8 @@ describe('concurrent and cached actions (ADR-020)', () => {
   it('delivers each cache hit as new objects, so a renderer can tell it from a render', async () => {
     const session = shellSession();
     const lastWrite = () =>
-      (session.a2uiMessages.at(-1) as {updateDataModel: {value: unknown}}).updateDataModel.value;
+      (session.a2uiMessages.at(-1) as unknown as {updateDataModel: {value: unknown}})
+        .updateDataModel.value;
     const boots = dispatch(session, 'boots');
     answer(calls[0], 'boots');
     await boots;
@@ -563,25 +567,25 @@ describe('concurrent and cached actions (ADR-020)', () => {
       content: {
         messages: [
           {
-            version: 'v1.0',
+            version: '1.0',
             createSurface: {
               surfaceId: 'new-surface',
               components: [{id: 'root', component: 'CommerceSearch'}],
             },
           },
           {
-            version: 'v1.0',
+            version: '1.0',
             updateComponents: {
               surfaceId: SHELL_ID,
               components: [{id: 'ghost', component: 'InstantProducts'}],
             },
           },
           {
-            version: 'v1.0',
+            version: '1.0',
             updateDataModel: {surfaceId: SHELL_ID, path: '/state/ghost', value: {}},
           },
           {
-            version: 'v1.0',
+            version: '1.0',
             updateDataModel: {surfaceId: SHELL_ID, path: `/state/${PRODUCTS_ID}`, value: 'bad'},
           },
           productsWrite('boots'),
@@ -595,7 +599,7 @@ describe('concurrent and cached actions (ADR-020)', () => {
 
     expect(shownQuery(session)).toBe('boots');
     expect(session.a2uiMessages.slice(messageCount)).toEqual([
-      {version: 'v0.9', updateDataModel: productsWrite('boots').updateDataModel},
+      {version: '1.0', updateDataModel: productsWrite('boots').updateDataModel},
     ]);
     expect(session.surfaces).toBe(surfaces);
     expect(warned('known nodes')).toBe(true);
@@ -616,7 +620,7 @@ describe('concurrent and cached actions (ADR-020)', () => {
       content: {
         messages: [
           {
-            version: 'v1.0',
+            version: '1.0',
             updateDataModel: {surfaceId: SHELL_ID, path: '/state/ghost', value: {}},
           },
           productsWrite('boots'),
@@ -637,7 +641,7 @@ describe('concurrent and cached actions (ADR-020)', () => {
     expect(calls).toHaveLength(2);
     expect(shownQuery(session)).toBe('boots');
     expect(session.a2uiMessages.slice(messageCount)).toEqual([
-      {version: 'v0.9', updateDataModel: productsWrite('boots').updateDataModel},
+      {version: '1.0', updateDataModel: productsWrite('boots').updateDataModel},
     ]);
     expect(warned('known nodes')).toBe(false);
   });
@@ -674,7 +678,7 @@ describe('concurrent and cached actions (ADR-020)', () => {
         content: {
           messages: [
             {
-              version: 'v1.0',
+              version: '1.0',
               updateDataModel: {surfaceId: SHELL_ID, path: '/state/root', value: {}},
             },
           ],
@@ -726,12 +730,10 @@ describe('concurrent and cached actions (ADR-020)', () => {
     const ONLY_CACHED = {concurrentActions: {[SHELL_ID]: {[CACHED]: {cache: {ttlMs: 60_000}}}}};
     const track = (session: ReturnType<typeof createSession>) =>
       session.dispatchAction({
-        userAction: {
-          name: TRACKED,
-          surfaceId: SHELL_ID,
-          sourceComponentId: PRODUCTS_ID,
-          context: {detail: 'boots'},
-        },
+        name: TRACKED,
+        surfaceId: SHELL_ID,
+        sourceComponentId: PRODUCTS_ID,
+        context: {detail: 'boots'},
       });
 
     it("leaves an ordinary action's failure in actionError", async () => {
@@ -1415,12 +1417,10 @@ describe('concurrent and cached actions (ADR-020)', () => {
 
     await expect(
       session.dispatchAction({
-        userAction: {
-          name: TRACKED,
-          surfaceId: SHELL_ID,
-          sourceComponentId: PRODUCTS_ID,
-          context: {detail},
-        },
+        name: TRACKED,
+        surfaceId: SHELL_ID,
+        sourceComponentId: PRODUCTS_ID,
+        context: {detail},
       })
     ).resolves.toBeUndefined();
 

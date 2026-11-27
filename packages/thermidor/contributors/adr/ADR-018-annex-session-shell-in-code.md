@@ -55,6 +55,11 @@ const messages = useSyncExternalStore(subscribe, () => session.a2uiMessages);
 <ThermidorA2UIStream messages={messages} onAction={session.dispatchAction} />;
 ```
 
+Since [ADR-021](./ADR-021-a2ui-1-0-renderer-stream.md), the stream carries A2-UI v1.0 messages for
+`@a2ui/react`, which takes the action handler on its message processor rather than as a prop:
+`new MessageProcessor(catalogs, session.dispatchAction)`, fed each new message of
+`session.a2uiMessages` once.
+
 A turn still says which surfaces it created, so the transcript knows where to draw them:
 
 ```tsx
@@ -158,7 +163,7 @@ prompt's `409` is absorbed by the conflict retry.
   initialization: {activities: [/* createSurface of the shell */], status: 'complete'},
   turns: [/* as in version 1, without `response.state` */],
   state: {
-    'ui-7f3c': {state: {'query-suggestions': {query: 'hik', completions: [/* ... */]}}},
+    'ui-7f3c': {state: {query_suggestions: {query: 'hik', completions: [/* ... */]}}},
     'ui-91ab': {/* a search surface's state */},
   },
 }

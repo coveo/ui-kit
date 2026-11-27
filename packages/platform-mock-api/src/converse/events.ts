@@ -194,7 +194,7 @@ const UpdateDataModelActivity = (options: {
     activityType: 'a2ui-surface',
     ...(options.replace !== undefined && {replace: options.replace}),
     content: {
-      messages: options.ops.map((op) => ({version: 'v1.0', ...updateDataModelOp(op)})),
+      messages: options.ops.map((op) => ({version: '1.0', ...updateDataModelOp(op)})),
     },
   });
 

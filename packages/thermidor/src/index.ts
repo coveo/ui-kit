@@ -7,7 +7,7 @@
  * Start with {@link createSession}, which returns the {@link Session} handle. Read the session
  * through {@link Session.subscribe} and {@link Session.getSnapshot}, and send prompts and
  * component actions through {@link Session.dispatchAction}, which is also the renderer's
- * `onAction` handler. The session validates action payloads against the injected contracts
+ * action handler. The session validates action payloads against the injected contracts
  * itself, so the consumer never runs Zod and writes no adapter code.
  *
  * @example
@@ -81,7 +81,7 @@ export type {
   Session,
   SessionConfig,
   SessionSnapshot,
-  A2uiClientMessage,
+  A2uiRendererAction,
   SubmitPromptAction,
 } from '@/src/session/create-session.js';
 
@@ -114,7 +114,7 @@ export type {
   TurnStatus,
   TurnAgent,
   A2uiState,
-  A2uiV09Message,
+  A2uiMessage,
   Activity,
   AgentMessage,
   ToolCall,

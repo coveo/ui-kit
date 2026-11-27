@@ -5,7 +5,7 @@
  * subscriber exactly once per change.
  */
 
-import type {RendererStream} from './a2ui-v09-projection.js';
+import type {RendererStream} from './renderer-stream.js';
 import type {UnrecordedState} from './session-state.js';
 import type {
   A2uiState,

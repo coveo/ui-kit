@@ -31,12 +31,12 @@ describe('jsonPointerEscape', () => {
   });
 
   it('is the identity for kebab-case node ids', () => {
-    expect(jsonPointerEscape('pagination-2')).toBe('pagination-2');
+    expect(jsonPointerEscape('pagination_2')).toBe('pagination_2');
   });
 });
 
 describe('statePath', () => {
-  const ids = ['pagination-2', 'facet-manager', 'commerce-search', 'a', 'query-summary'];
+  const ids = ['pagination_2', 'facet_manager', 'commerce-search', 'a', 'query-summary'];
 
   it('is total: produces a /state-rooted path for each id', () => {
     for (const id of ids) {
@@ -61,46 +61,46 @@ describe('statePath', () => {
 });
 
 describe('resolveOperation', () => {
-  const present = ['pagination-2', 'facet-manager'];
+  const present = ['pagination_2', 'facet_manager'];
 
   it('resolves a whole-component op at statePath(id)', () => {
-    const result = resolveOperation({path: statePath('pagination-2')}, present);
-    expect(result).toEqual({resolved: true, nodeId: 'pagination-2', wholeComponent: true});
+    const result = resolveOperation({path: statePath('pagination_2')}, present);
+    expect(result).toEqual({resolved: true, nodeId: 'pagination_2', wholeComponent: true});
   });
 
   it('resolves a partial op at a sub-path beneath statePath(id)', () => {
-    const result = resolveOperation({path: `${statePath('pagination-2')}/page`}, present);
-    expect(result).toEqual({resolved: true, nodeId: 'pagination-2', wholeComponent: false});
+    const result = resolveOperation({path: `${statePath('pagination_2')}/page`}, present);
+    expect(result).toEqual({resolved: true, nodeId: 'pagination_2', wholeComponent: false});
   });
 
   it('accepts a Set of present ids', () => {
-    const result = resolveOperation({path: statePath('facet-manager')}, new Set(present));
-    expect(result).toEqual({resolved: true, nodeId: 'facet-manager', wholeComponent: true});
+    const result = resolveOperation({path: statePath('facet_manager')}, new Set(present));
+    expect(result).toEqual({resolved: true, nodeId: 'facet_manager', wholeComponent: true});
   });
 
   it('rejects a path outside the /state namespace', () => {
-    const result = resolveOperation({path: '/other/pagination-2'}, present);
+    const result = resolveOperation({path: '/other/pagination_2'}, present);
     expect(result).toEqual({
       resolved: false,
-      unresolvedPath: '/other/pagination-2',
+      unresolvedPath: '/other/pagination_2',
       reason: 'outside-state-namespace',
     });
   });
 
   it('rejects a /state/<id> path whose id is not present', () => {
-    const result = resolveOperation({path: '/state/absent-node'}, present);
+    const result = resolveOperation({path: '/state/absent_node'}, present);
     expect(result).toEqual({
       resolved: false,
-      unresolvedPath: '/state/absent-node',
+      unresolvedPath: '/state/absent_node',
       reason: 'unknown-node-id',
     });
   });
 
   it('rejects a sub-path under an unknown node id', () => {
-    const result = resolveOperation({path: '/state/absent-node/page'}, present);
+    const result = resolveOperation({path: '/state/absent_node/page'}, present);
     expect(result).toEqual({
       resolved: false,
-      unresolvedPath: '/state/absent-node/page',
+      unresolvedPath: '/state/absent_node/page',
       reason: 'unknown-node-id',
     });
   });
@@ -115,7 +115,7 @@ describe('resolveOperation', () => {
   });
 
   it('rejects a path whose id is a prefix of a present id but not a state root or sub-path', () => {
-    // "/state/pagination" is neither statePath("pagination-2") nor beneath it.
+    // "/state/pagination" is neither statePath("pagination_2") nor beneath it.
     const result = resolveOperation({path: '/state/pagination'}, present);
     expect(result).toEqual({
       resolved: false,

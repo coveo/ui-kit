@@ -46,7 +46,7 @@ const WidgetSchema = z.strictObject({
 const contracts = z.discriminatedUnion('component', [WidgetSchema]) as unknown as ContractsSchema;
 
 const SURFACE_ID = 'ui-1';
-const NODE_ID = 'widget-1';
+const NODE_ID = 'widget_1';
 
 const registry = deriveNodeIdentityRegistry([
   {

@@ -3,15 +3,12 @@
  * compiles. Each test holds one example verbatim, minus its imports, with the names the example
  * takes from the reader's app declared around it. `tsdoc-examples.test.ts` fails when an example
  * in the TSDoc no longer matches its copy here.
- *
- * The ```tsx example of `Session.dispatchAction` is covered by the `onAction` assignability test
- * in `index.test-d.ts`.
  */
 import {expectTypeOf, test} from 'vitest';
 import {z} from 'zod/v4';
 import {createSession} from '@/src/index.js';
 import type {
-  A2uiV09Message,
+  A2uiMessage,
   ComponentActionNames,
   ContractsSchema,
   NavigatorContextProvider,
@@ -32,7 +29,7 @@ declare function useSyncExternalStore<T>(
 test('@packageDocumentation example', async () => {
   function render(
     _turns: readonly Turn[],
-    _a2uiMessages: readonly A2uiV09Message[],
+    _a2uiMessages: readonly A2uiMessage[],
     _request: SessionRequest | undefined
   ): void {}
 
@@ -106,6 +103,29 @@ test('createSession examples', () => {
 
 test('SubmitPromptAction example', async () => {
   await session.dispatchAction({name: 'submitPrompt', payload: {prompt: 'show me running shoes'}});
+});
+
+test('Session.dispatchAction example', () => {
+  // `@a2ui/web_core`'s `MessageProcessor`, as far as the example uses it.
+  type ActionListener = (action: {
+    name: string;
+    surfaceId: string;
+    sourceComponentId: string;
+    timestamp: string;
+    context: Record<string, unknown>;
+    [key: string]: unknown;
+  }) => void | Promise<void>;
+  class MessageProcessor {
+    constructor(
+      readonly catalogs: readonly unknown[],
+      readonly actionHandler: ActionListener,
+      readonly options: {version: '1.0'}
+    ) {}
+  }
+  const catalogs: unknown[] = [];
+
+  const processor = new MessageProcessor(catalogs, session.dispatchAction, {version: '1.0'});
+  expectTypeOf(processor).toEqualTypeOf<MessageProcessor>();
 });
 
 test('Session.subscribe example', () => {

@@ -32,13 +32,12 @@
  *     session.
  */
 
+import {deriveSurfaces, runOutcome, SURFACE_ACTIVITY_KIND} from './fold.js';
 import {
   EMPTY_RENDERER_STREAM,
   appendToRendererStream,
-  convertA2uiMessages,
   type RendererStream,
-} from './a2ui-v09-projection.js';
-import {deriveSurfaces, runOutcome, SURFACE_ACTIVITY_KIND} from './fold.js';
+} from './renderer-stream.js';
 import {sessionActivities, type SessionRuns} from './session-surfaces.js';
 import type {SessionStoreState} from './store.js';
 import type {
@@ -55,8 +54,14 @@ import type {
 /**
  * The current serialized-session shape version. Bumped whenever the persisted
  * shape changes. Restoration rejects any `version` that is not this value.
+ *
+ * Version 7 persists A2-UI messages of the final 1.0 protocol: `version: '1.0'` envelopes,
+ * `{"@path": ...}` bindings and snake_case component ids. Version 6 sessions hold candidate
+ * `v1.0` messages, which the renderer stream drops and the endpoint no longer recognizes, and
+ * telling their bindings from literal values takes the component catalog, so they are rejected
+ * rather than migrated.
  */
-export const SERIALIZED_SESSION_VERSION = 6;
+export const SERIALIZED_SESSION_VERSION = 7;
 
 /**
  * The error message used when a mid-stream turn is restored.
@@ -327,7 +332,7 @@ function deriveRendererStream(runs: SessionRuns): RendererStream {
   for (const activity of sessionActivities(runs)) {
     const messages = activity.kind === SURFACE_ACTIVITY_KIND ? activity.payload['messages'] : null;
     if (Array.isArray(messages)) {
-      stream = appendToRendererStream(stream, convertA2uiMessages(messages));
+      stream = appendToRendererStream(stream, messages);
     }
   }
   return stream;
