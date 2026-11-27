@@ -74,13 +74,15 @@ const getEnvironment = (
     return undefined;
   }
 
-  const customContext = customProvider();
   const baseEnvironment = isBrowser() ? buildBrowserEnvironment() : noopRelayEnvironment;
+  // The relay instance is memoized for the engine's lifetime, while the provider's values can change
+  // between requests (e.g. a visitor ID cookie written after hydration). Reading the provider on
+  // every call keeps the clientId consistent with the `capture` flag the provider returns.
   return {
     ...baseEnvironment,
-    getClientId: () => customContext.clientId,
-    getLocation: () => customContext.location,
-    getReferrer: () => customContext.referrer,
-    getUserAgent: () => customContext.userAgent,
+    getClientId: () => customProvider().clientId,
+    getLocation: () => customProvider().location,
+    getReferrer: () => customProvider().referrer,
+    getUserAgent: () => customProvider().userAgent,
   };
 };

@@ -73,6 +73,22 @@ describe('#getRelayInstanceFromState', () => {
     expect(mockedCreateRelay).toHaveBeenCalledWith(expect.objectContaining({mode: 'disabled'}));
   });
 
+  it('reads the clientId from the navigator context provider on every call', () => {
+    let clientId = '';
+    const navigatorContextProvider = () => ({
+      clientId,
+      location: null,
+      referrer: null,
+      userAgent: null,
+    });
+    getRelayInstanceFromState(createMockState(), navigatorContextProvider);
+    const environment = mockedCreateRelay.mock.calls[0][0].environment;
+
+    clientId = 'visitor-id-set-after-creation';
+
+    expect(environment?.getClientId()).toBe('visitor-id-set-after-creation');
+  });
+
   it('memoizes the relay instance for identical inputs', () => {
     const state = createMockState();
 
