@@ -2,7 +2,6 @@ import {Schema, StringValue} from '@coveo/bueno';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
-import {errorGuard} from '@/src/decorators/error-guard';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 
 /**
@@ -48,7 +47,6 @@ export class AtomicTab extends LightDomMixin(LitElement) {
     );
   }
 
-  @errorGuard()
   render() {
     return html`<slot></slot>`;
   }

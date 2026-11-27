@@ -11,12 +11,13 @@ import type {
   RelativeDateUnit,
   SearchStatusState,
 } from '@coveo/headless';
-import {html, nothing, type TemplateResult} from 'lit';
+import {html, nothing, type ReactiveControllerHost, type TemplateResult} from 'lit';
 import {AtomicTimeframe} from '@/src/components/common/atomic-timeframe/atomic-timeframe';
 import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
 import type {Bindings as SearchBindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import type {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {parseDate} from '@/src/utils/date-utils';
+import {displayChildErrors} from '@/src/utils/child-error-utils';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
 import {randomID} from '@/src/utils/utils';
 import {shouldDisplayInputForFacetRange} from './facet-common';
@@ -39,7 +40,7 @@ export interface Timeframe {
 
 interface TimeframeFacetCommonOptions {
   facetId?: string;
-  host: HTMLElement & {error?: Error};
+  host: HTMLElement & ReactiveControllerHost & {error?: Error};
   bindings: SearchBindings | InsightBindings;
   label: string;
   field: string;
@@ -73,8 +74,6 @@ export class TimeframeFacetCommon {
   private facetForDateRange?: DateFacet;
   private filter?: DateFilter;
   private manualTimeframes: Timeframe[] = [];
-  private timeframeElements: AtomicTimeframe[] = [];
-  private surfacedError?: Error;
   private facetForDateRangeDependenciesManager?: FacetConditionsManager;
   private facetForDatePickerDependenciesManager?: FacetConditionsManager;
   private filterDependenciesManager?: FacetConditionsManager;
@@ -84,7 +83,13 @@ export class TimeframeFacetCommon {
     this.props.setFacetId(this.facetId);
 
     this.manualTimeframes = this.getManualTimeframes();
-    this.watchTimeframeErrors();
+    displayChildErrors(
+      this.props.host,
+      Array.from(this.props.host.querySelectorAll('atomic-timeframe')).filter(
+        (timeframe) => timeframe instanceof AtomicTimeframe
+      ),
+      'atomic-timeframe'
+    );
 
     // Initialize two facets: One that is actually used to display values for end users, which only exists
     // if we need to display something to the end user (ie: timeframes > 0)
@@ -251,33 +256,6 @@ export class TimeframeFacetCommon {
         period,
       })
     );
-  }
-
-  private watchTimeframeErrors() {
-    this.timeframeElements = Array.from(
-      this.props.host.querySelectorAll('atomic-timeframe')
-    ).filter((timeframe) => timeframe instanceof AtomicTimeframe);
-    for (const timeframe of this.timeframeElements) {
-      timeframe.addController({hostUpdated: () => this.syncTimeframeError()});
-    }
-    this.syncTimeframeError();
-  }
-
-  private syncTimeframeError() {
-    const childError = this.timeframeElements.find((timeframe) => timeframe.error)?.error;
-    const {host} = this.props;
-    if (this.surfacedError?.cause === childError) {
-      return;
-    }
-    if (host.error && host.error !== this.surfacedError) {
-      return;
-    }
-    this.surfacedError = childError
-      ? new Error(`An "atomic-timeframe" child is invalid: ${childError.message}`, {
-          cause: childError,
-        })
-      : undefined;
-    host.error = this.surfacedError;
   }
 
   private formatFacetValue(facetValue: DateFacetValue) {

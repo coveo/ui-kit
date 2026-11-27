@@ -9,6 +9,7 @@ import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import '@/src/components/common/atomic-tab-button/atomic-tab-button';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
+import {AtomicTab} from '@/src/components/search/atomic-tab/atomic-tab';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -16,6 +17,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {displayChildErrors} from '@/src/utils/child-error-utils';
 import styles from './atomic-tab-manager.tw.css';
 import '@/src/components/common/atomic-tab-bar/atomic-tab-bar';
 
@@ -109,6 +111,12 @@ export class AtomicTabManager extends LitElement implements InitializableCompone
         tabController,
       });
     });
+
+    displayChildErrors(
+      this,
+      tabElements.filter((tabElement) => tabElement instanceof AtomicTab),
+      'atomic-tab'
+    );
   }
 
   @bindingGuard()
