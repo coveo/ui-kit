@@ -39,7 +39,7 @@ const buildRoutedResponse = ({routedEvent}: {routedEvent: ConverseEvent}): Conve
   TurnComplete(),
 ];
 
-const CATALOG_ID = 'https://schema.thermidor.coveo.com/a2-ui/catalog.json';
+const CATALOG_ID = 'https://schema.converse.coveo.com/a2-ui/catalog.json';
 
 // The server-owned root prefix under which all Component_State lives in the A2-UI data model.
 // Mirrors @coveo/thermidor-schema's STATE_NAMESPACE. This package intentionally has NO dependency
@@ -230,7 +230,7 @@ function progressBlockState(done: ProgressStep[], active: ProgressStep[]) {
   };
 }
 
-// The agent's progress (Thermidor ADR-028): a ProgressBlock created once, right after RUN_STARTED,
+// The agent's progress (Converse ADR-028): a ProgressBlock created once, right after RUN_STARTED,
 // with the steps it started.
 function createProgressBlock(active: ProgressStep[]): ConverseEvent {
   return ActivitySnapshot({

@@ -34,7 +34,7 @@ packages:
   - packages/create-atomic-result-component/template/src/components/sample-result-component
   - samples/atomic/*
   - samples/headless/*
-  - samples/thermidor/*
+  - samples/converse/*
   - samples/headless-ssr/*
   - packages/pkg-new-template
   - utils/cdn

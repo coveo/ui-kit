@@ -112,7 +112,7 @@ describe('initialize', () => {
       version: '1.0',
       createSurface: {
         surfaceId: expect.stringMatching(/^session-shell-\d+$/),
-        catalogId: 'https://schema.thermidor.coveo.com/a2-ui/catalog.json',
+        catalogId: 'https://schema.converse.coveo.com/a2-ui/catalog.json',
         components: [
           {id: 'root', component: 'SessionShell', children: ['search_box']},
           {

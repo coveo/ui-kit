@@ -1,0 +1,192 @@
+# Implementation Details
+
+Technical decisions, workarounds, and known limitations for `demo-schema-react`.
+
+## State and validation model
+
+This sample implements the inline component-state model recorded in [ADR-012](https://github.com/coveo-platform/thermidor-schema/blob/beta/docs/ADR-012-inline-component-state-a2-ui-data-model.md) of `@coveo/thermidor-schema` (which supersedes ADR-002's AG-UI state transport). Component state travels inline through the A2-UI data model via `/state/<id>` `updateDataModel` operations, and node props resolve from it through A2-UI v1.0 Data_Binding objects `{ "@path": <JSON Pointer> }`. Four points define the model:
+
+- **Validation runs inside `@coveo/converse`.** The sample injects the contract once (`ComponentContractsSchema`, passed as `contracts` to `createSession` in `src/context/session.tsx`) and never calls a validator itself. The session validates outbound action payloads before it sends them, and inbound `updateDataModel` ops before it applies them to `session.state`. The renderer is fed from `session.a2uiMessages` instead, which is not filtered; see [Known limitations](#inbound-component-state-reaches-the-renderer-without-validation).
+- **Display text comes from the agent; prices and counts are formatted locally.** Labels, headings, and summaries are rendered as the agent wrote them. Prices are formatted with `Intl.NumberFormat` through `formatPrice` and `useFormatPrice`, using the configured language, country and currency (`$12.34` for `en`/`US`/`USD`) and result counts by `toLocaleString()`.
+- **A2-UI is the only supported source of component state.** The sample obtains component state solely through A2-UI (the `/state` data-model bindings); component state obtained through any non-A2-UI source is unsupported.
+- **Intentional divergence from A2-UI bidirectional input binding.** The sample deliberately does not use A2-UI standard bidirectional input components. In-progress user input (for example a facet search box being typed) is held in the sample's local React state and is never written to the shared A2-UI data model, and component actions are dispatched over the non-bidirectional HTTP Action_Channel.
+
+## A2-UI v1.0 renderer
+
+Agent Gateway emits A2-UI **v1.0**, and the sample renders it as is with `@a2ui/react`, on
+`@a2ui/web_core`'s v1.0 message processor. `@coveo/converse` exposes the whole session's stream
+as `session.a2uiMessages`, unchanged; `ConverseA2UIStream` (`src/a2ui/surfaces.tsx`) owns one
+`MessageProcessor`, feeds it the new tail of that stream, and passes the processor's actions to
+`session.dispatchAction`. `A2UISurface` draws one of its surfaces with `@a2ui/react`'s
+`A2uiSurface` (see [Rendering every turn on one page](#rendering-every-turn-on-one-page)).
+
+Three rules of the v1.0 renderer shape what the producer and the catalog must do:
+
+- **Component ids are UAX #31 identifiers.** A v1.0 catalog makes the processor reject a component
+  whose `id` is not one, such as `facet-brand-2`, and with it the whole message. Ids are
+  `facet_brand_2` or `facetBrand2`. The `/state/<id>` data paths are JSON Pointers and are not
+  affected.
+- **Child references are marked in the schema.** `@a2ui/react` builds a child node only for a prop
+  its schema marks as a component id (`componentId()` from `@a2ui/web_core/v1_0`) or a child list;
+  a `children` string array counts as one. `CommerceSearch` and `SearchBox` extend their
+  `*PropsSchema` to mark their named slots.
+- **A child id carried in bound data is not a child reference.** `BundleDisplay`'s tier slots
+  name their `ProductSummary` children inside the bound `tiers`, so it draws them with `DataChild`
+  (`src/a2ui/data-child.tsx`), which renders the child's implementation against the surface's data
+  model.
+
+## Flat component nodes (`id`/`component`)
+
+Every emitted A2-UI node follows the A2-UI v1.0 flat adjacency-list shape
+([ADR-013](https://github.com/coveo-platform/thermidor-schema/blob/beta/docs/ADR-013-flat-adjacency-list-node-conformance.md)):
+a single identity pair, with presentation props, Data_Binding objects, and composition links at
+the top level. There is no `props` wrapper.
+
+```jsonc
+{
+  "id": "facet_brand_2", // A2-UI node id (adjacency-list / mount key), a UAX #31 identifier
+  "component": "RegularFacet", // A2-UI component type (catalog renderer key + contract discriminant)
+  "values": {"@path": "/state/facet_brand_2/values"}, // Data_Binding into the surface's data model
+}
+```
+
+`id` drives the adjacency-list tree (the renderer mounts by id) and `component` (PascalCase) selects the catalog renderer. `@coveo/converse` resolves the contract from the `component` discriminant directly, so no second identity is needed. The earlier `props.componentId` / `props.componentType` pair, which existed only to join an AG-UI state slice to its node, was removed with the AG-UI state transport, and the base component contract now rejects a node carrying either.
+
+Renderers read resolved values from `props` (the renderer resolves each `{ "@path": ... }` binding against the surface's data model) and never hydrate by identity.
+
+## Catalog and Zod version
+
+`@a2ui/react` and `@a2ui/web_core` are built against **Zod 3**. The sample therefore pins `zod@3` and imports every runtime schema from the Zod 3 projection, `@coveo/thermidor-schema/zod3`: the per-component `*PropsSchema`, `ComponentContractsSchema`, and `THERMIDOR_CATALOG_ID` (the Thermidor catalog id the samples still accept). Types come from either entry point: some files import them from the package root (`Product`, `SortAction`), while the facets and the breadbox import theirs (`RegularFacetAction`, `RegularFacetProps`, `BreadboxFacet`, …) from `@coveo/thermidor-schema/zod3`.
+
+Each catalog component is declared with `@a2ui/react`'s `createComponentImplementation({name, schema}, render)`, where `name` is the node's `component` and `schema` its `*PropsSchema`. `createConverseCatalog()` (`src/a2ui/components.tsx`) registers them as `new Catalog(CONVERSE_CATALOG_ID, '1.0', components)`, a catalog of protocol version 1.0. During the rollout of the Converse catalog id, `ConverseA2UIStream` also registers the catalog under `THERMIDOR_CATALOG_ID`, the id Agent Gateway still sends.
+
+When the renderer moves to Zod 4, switch every `@coveo/thermidor-schema/zod3` import, schemas and types alike, to the package root and drop the `zod@3` pin.
+
+## Rendering every turn on one page
+
+The conversation is a single feed: every turn keeps its blocks on the page, and a search, a facet selection, and a question to the agent all stay in place.
+
+- **One renderer stream for the session.** Surfaces live in the session (`@coveo/converse` ADR-018): a surface lives from its `createSurface` until its `deleteSurface`, whichever turn carries them. `AppShell` feeds `session.a2uiMessages`, which only grows, to one renderer; `ConverseA2UIStream` feeds it only the messages it has not seen. Each turn's `response.surfaces` lists the live surfaces it created, so the page draws them under that turn. A producer mints a new surface id for each surface it creates; the mock does so for every prompt.
+- **Only the latest turn is interactive.** The session resolves an action's component across every live surface, so earlier blocks could take actions. The sample still keeps them read-only: `TurnSurfaces` wraps every turn but the latest in a disabled `fieldset`, so earlier blocks stay readable, selected facets included, but cannot be used. The surfaces of a restored conversation's earlier turns are `readOnly` (`@coveo/converse` refuses their actions), so `TurnSurfaces` draws them the same way with a "Restored results" note, and a read-only search keeps no browser history: its entries from before the reload stay in the tab, and Back over them leaves the page as it is. The last restored turn that created blocks stays live, like the latest turn of any conversation. In an expired conversation nothing stays live: the page disables every turn and keeps their searches out of the browser history, and swaps the shell's search box for a plain `PromptInput`, since the box would send suggestion requests to the expired session.
+- **Follow-ups are turns.** Agent Gateway announces the `NextActionsBar` actions (`selectAction`, `selectSearchOption`) as turn-opening with the bar, so `@coveo/converse` answers each one in a new turn whose `input.action` records it, and the sample declares nothing. A turn here is a gesture of the shopper in the conversation, whoever answers it: the gateway answers a search option itself, without the agent, and does not count it as a turn. `ConversationThread` draws the chip's text as the shopper's message, and no separator before such a turn, so it reads as a continuation of the answer it follows. The follow-up's turn becomes the latest one, so the blocks it was sent from become read-only, as after a prompt.
+
+## Loading placeholders (✅ data-model driven)
+
+While a turn streams, a skeleton marks each block that is still loading. A2-UI defines no skeleton: a loading placeholder is an ordinary surface whose **data model** declares `isLoading: true`, and it follows the A2-UI surface lifecycle. The sample infers nothing from `surfaceId`s, which the spec treats as opaque, nor from tool calls.
+
+| Question                   | Answer                                                                                         |
+| -------------------------- | ---------------------------------------------------------------------------------------------- |
+| **Whether** to show one    | The surface's data model has `isLoading: true`                                                 |
+| **Which** skeleton to show | The root node's `component` (`ProductCarousel`, `NextActionsBar`, …), mapped by `A2UISkeleton` |
+| **When** it ends           | The agent deletes the surface (`deleteSurface`), or writes `isLoading: false`                  |
+| **While** it is drawn      | Its turn streams                                                                               |
+
+### What the agent emits
+
+In Thermidor mode, the agent announces a block with a placeholder (a bare root with no bindings), then streams the content in a snapshot that **replaces the placeholder's activity in place** (same `messageId`, `replace: true`), so the block keeps its position:
+
+```
+// placeholder
+createSurface: {
+  surfaceId: "<opaque>",
+  components: [{ id: "root", component: "ProductCarousel" }],
+  dataModel: { isLoading: true }
+}
+
+// content, in the same activity
+deleteSurface: { surfaceId: "<placeholder id>" }
+createSurface: { surfaceId: "<content id>", components: [...] }
+```
+
+A placeholder the agent abandons is deleted the same way. The mock templates emit this shape, with placeholder ids derived from each template's `runId`. Each one announces its main block (`ProductCarousel`, `BundleDisplay`, `ComparisonTable`, `ProductResearchCard`) right after routing, before the content streams; the `NextActionsBar` placeholder comes only after the main block's content and state, shortly before the actions themselves.
+
+### How the sample draws it
+
+- `@coveo/converse` derives `response.surfaces` from the stream: each `DiscoveredSurface` carries `rootComponentType` and `isLoading`, and a deleted surface leaves the list. A loading placeholder is listed only while its turn streams: one the agent never deletes (a cancelled run, an error, a restored session) leaves the list once the turn ends.
+- `TurnSurfaces` takes the turn's `response.surfaces` and draws `A2UISkeleton` for a loading surface in the place its content takes, and `A2UISurface` otherwise. The sample holds no placeholder rule of its own.
+
+## Action dispatch and inline state transport
+
+A catalog component sends an action with the renderer's `context.dispatchAction(action)`. The message processor surfaces it as an action payload (`name`, `surfaceId`, `sourceComponentId`, `context`) through the action handler `ConverseA2UIStream` gives it, which `AppShell` wires to `session.dispatchAction`:
+
+- The session sends one request at a time, withholds a dispatch made while another request is in flight, and exposes the one in flight (`request` in `session.getSnapshot()`), with the component and the action it sends. `src/a2ui/session-request.tsx` turns it into the sample's lock rule (`isBlocking`): every request locks the active surface except the facet search actions (`search`, `clearSearch`, `showMoreSearchResults` of `RegularFacet` and `CategoryFacet`) and the search box's `fetchSuggestions` (`QuerySuggestions`), which it lists in `NON_BLOCKING_ACTIONS`, typed by `ComponentActionNames`. Typing in a facet search or in the search box keeps the surface usable. The lock is the sample's choice, next to what it does with a gesture made while the session is busy. `useGesture` drops a gesture while any request is in flight, a facet search included, and reads `request` synchronously, so a double click never sends twice, even before the lock renders. A facet search that fires during a request waits until the session is free, sending the latest query.
+- `InstantProducts` shows no panel and sends nothing unless the producer announces `fetchInstantProducts` as concurrent, so a products preview never holds the session's single request.
+- A failed action that does not open a turn never fails one: `actionError` in `session.getSnapshot()` names it, and the sample shows its message in an alert next to the component that sent it, until the next action or prompt. Every component marked with `actsOnSurface` (`src/a2ui/surface-controls.tsx`) draws that alert right after itself when `actionError` matches its surface and node (`surfaceId` and `sourceComponentId`, with `useComponentActionError`). `TurnSurfaces` shows the alert under the whole block only when no drawn component of the block shows it: a component the answer removed, or one not marked with `actsOnSurface`, such as `CommerceSearch` restoring a search from the browser history. The other components stay usable. A failed `fetchSuggestions`, listed in `SILENT_FAILURES`, is not shown: the search box just shows no completions. To see it with the mock (`pnpm dev:mock`), ask `water sports` and search a facet for `fail` (a `RUN_ERROR` in the action's stream) or `reject` (a rejected request); see the [mock's README](../../../packages/mock-converse-api/README.md#making-an-action-fail).
+- While the surface is locked, `TurnSurfaces` disables the active turn's `fieldset` and sets `aria-busy`. The whole surface dims and ignores the pointer, only after 150 ms so a fast reply never flashes it; the turn that streams is disabled without dimming, so its content arrives at full strength. Focus returns to the control the shopper used once the surface unlocks, without scrolling. The prompt input is disabled by the same rule.
+- `NextActionsBar` actions (`selectAction`, `selectSearchOption`) open a [turn of their own](#rendering-every-turn-on-one-page): Agent Gateway announces them as turn-opening with the bar, so the sample declares nothing.
+
+A prompt is sent with `session.dispatchAction({name: 'submitPrompt', payload: {prompt}})`, which opens a new turn.
+
+For a component action, `@coveo/converse`:
+
+- recovers the dispatching component from the session's live surfaces, validates the action payload against the component's generated Zod action schema, and POSTs it over the non-bidirectional HTTP Action_Channel. It is a plain request, not A2-UI bidirectional data binding;
+- never rejects: an action with no `sourceComponentId`, an unresolved component, or a payload that fails validation is withheld with a dev-only warning and nothing is sent.
+
+The producer replies by writing updated component state inline through the A2-UI data model as `/state/<id>` `updateDataModel` operations:
+
+- A whole-component op targets the component's state root (`/state/<id>`); a partial op targets a sub-path beneath it and updates only the addressed fields (the incremental semantics of the A2-UI data model). The renderer owns the data model and re-resolves the affected `{ "@path": ... }` bindings.
+- `@coveo/converse` validates each inbound op in transit (a whole-component op against the `*State` schema, a partial op against the sub-schema at its path) before applying it to `session.state`. The renderer stream is not filtered by that validation; see [Known limitations](#inbound-component-state-reaches-the-renderer-without-validation).
+
+## Optimistic updates
+
+Search controls show the shopper's choice right away instead of waiting for the producer's reply:
+
+- Each control shows the value its gesture expects with React's `useOptimistic`. `useGesture` (`src/a2ui/session-request.tsx`) runs the gesture in a transition that applies the optimistic value and awaits the renderer's dispatch. The processor returns the promise of its action handler, `session.dispatchAction`, which settles once the session has answered the gesture, whatever the outcome, and at once for a withheld one, so the optimistic value shows until then and gives way to the producer's. Sort, pagination and page size do it in their component; the facets and the breadbox go through a `use-optimistic-*.ts` hook next to their component, which computes the expected value. A gesture sent while the surface is locked is dropped before it changes anything.
+- The surface lock dims the results while a gesture is in flight, so the product list and the query summary never read as current while a control already shows the new choice.
+- Facet search keeps the typed text in local state (`use-optimistic-facet-search.ts`) rather than as an optimistic hold, and sends one search once typing pauses (200 ms). A keystroke that never reaches the producer leaves the field untouched, and the field is never written to the shared data model.
+- The Breadbox moves focus after a removal once the surface unlocks: a locked surface's buttons are disabled and can't take focus.
+
+## Related decisions
+
+`@coveo/thermidor-schema` ([repository](https://github.com/coveo-platform/thermidor-schema/tree/beta/docs)):
+
+- **ADR-012** — Inline component state through the A2-UI data model; supersedes ADR-002 (AG-UI controller state transport).
+- **ADR-013** — Flat A2-UI v1.0 adjacency-list node.
+- **ADR-007** — A2-UI adjacency-list composition.
+
+`@coveo/converse` (`packages/converse/contributors/adr/`):
+
+- **ADR-015** — Surface derivation (`response.surfaces`), with an addendum for loading placeholders.
+- **ADR-016** — Inline-state consumption: renderers read resolved props, and `session.dispatchAction` is the single dispatch entry point (the remote controller was removed).
+
+How the sample follows them:
+
+| Principle                                                          | Implementation                                                                                            |
+| ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| Server-owned component state, not mutated locally by the renderer  | Server writes `/state/<id>` `updateDataModel` ops; the renderer owns the data model and resolves bindings |
+| Component state is transported inline through the A2-UI data model | `/state/<id>` `updateDataModel` ops resolved into the renderer's data model (no AG-UI `StateSnapshot`)    |
+| A node carries a single identity (`id` + `component`)              | Flat nodes in `createSurface.components[]`, with `{ "@path": ... }` bindings at the top level             |
+| Renderers read resolved state from `props` (no identity join)      | Each `createComponentImplementation` renderer reads `props`; there is no `componentId` correlation        |
+| Containers mount their children by name or ordered list            | `CommerceSearch` mounts `sidebarChild` / `mainChild`; `LayoutStack` and `FacetManager` mount `children`   |
+| Actions go through the session's single dispatch path              | `context.dispatchAction` → processor action → session → validated payload → HTTP Action_Channel           |
+
+## Known limitations / Next steps
+
+### Inbound component state reaches the renderer without validation
+
+`@coveo/converse` validates inbound `updateDataModel` ops only on their way into `session.state`, and the sample never reads `session.state`. `session.a2uiMessages` is derived from the raw activities, so the renderer receives:
+
+- every `updateDataModel` op, conforming or not;
+- the state seeded inline by `createSurface.dataModel` (keys such as `/state/<nodeId>`), which `session.state` never reads at all.
+
+Non-conforming component state from the producer therefore still changes what the sample renders. Closing this gap belongs in `@coveo/converse`, not in the sample, and must cover both paths: filtering only the `updateDataModel` ops would still let the `createSurface.dataModel` seed through.
+
+### Dynamic composition updates not exercised (facet reorder / add / remove)
+
+Composition is emitted **once** in the initial `createSurface` and never changed afterwards. Action responses only re-emit `/state/<id>` `updateDataModel` ops (per-component data), so the set and order of facets are fixed for the surface's lifetime: the facet-manager node's `children` (for example `['facet_brand_2', 'facet_price_2', 'facet_category_2']`) is a static constant. No mock scenario reorders facets, adds one, or removes one.
+
+A real backend can reorder facets (relevance-driven) or add/remove them dynamically. Before that is supported, note the following:
+
+- **`updateComponents` is untested here.** `session.a2uiMessages` forwards an inbound `updateComponents` as is, and the v1.0 processor applies it. That has never been exercised by a real dynamic composition update, so treat it as unverified rather than known-good.
+- **Reorder / add are supported by the protocol; remove is not, directly.** A2UI defines `updateComponents` as _adding to or updating_ components in a surface (adjacency list via `children`); reordering the facet-manager `children` and adding a new facet node fit that contract, and `FacetManager` already re-renders from its resolved `children` list. There is no component-removal primitive: dropping a facet means emitting a `children` list without its id (the orphaned node lingers in the surface) or recreating the surface via `deleteSurface` + `createSurface`.
+
+Capture this before wiring dynamic facet composition.
+
+### Temporary workarounds (to remove when upstream dependencies evolve)
+
+| Item                                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                              | Remove when                                                      |
+| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| **Zod 3 projection**                    | The sample pins `zod@3` and imports runtime schemas from `@coveo/thermidor-schema/zod3` to match the renderer.                                                                                                                                                                                                                                                                                                                                           | `@a2ui/react` and `@a2ui/web_core` move to Zod 4                 |
+| **Slot schema marks**                   | `CommerceSearch` and `SearchBox` mark their named slots with `componentId()` themselves. `@coveo/thermidor-schema` stays renderer-neutral, so it will not mark them.                                                                                                                                                                                                                                                                                     | `@a2ui/react` resolves child ids without schema marks            |
+| **`DataChild`**                         | `BundleDisplay` draws the slot children named in its bound `tiers` itself.                                                                                                                                                                                                                                                                                                                                                                               | The bundle's slots become child references the renderer resolves |
+| **Suggestions wait for a free session** | `useLatestWhenFree` holds a query while a request is in flight, and `submitQuery` cancels a suggestion in flight and waits for the session to be free, for a producer that doesn't announce `fetchSuggestions` as concurrent. Its outcome is best effort: a refresh counts as failed only when `actionError` names it as it resolves, so a failure another action cleared, or a refresh cancelled for a prompt, counts as applied until the next answer. | Every producer announces `fetchSuggestions` as concurrent        |

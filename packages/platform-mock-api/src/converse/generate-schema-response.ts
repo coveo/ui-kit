@@ -106,7 +106,7 @@ const SCHEMA_PROMPT_TEMPLATE_MAP: ReadonlyArray<SchemaPromptMapping> = [
   },
 ];
 
-// A surface lives for the whole session, from its creation to its deletion (Thermidor ADR-018), so
+// A surface lives for the whole session, from its creation to its deletion (Converse ADR-018), so
 // a producer mints a new surface id for each surface it creates. Each prompt answer suffixes its
 // template's surface ids with the prompt's sequence number, so asking twice draws two blocks.
 let promptSequence = 0;
@@ -141,7 +141,7 @@ function withSurfaceIds(
 
 const PROGRESS_BLOCK_ACTIVITY_IDS = [PROGRESS_BLOCK_ACTIVITY_ID, PROGRESS_BLOCK_STATE_ACTIVITY_ID];
 
-// The progress block's two activity ids are per turn, like its surface id (Thermidor ADR-028), so
+// The progress block's two activity ids are per turn, like its surface id (Converse ADR-028), so
 // each prompt answer suffixes them the same way.
 function withProgressBlockActivityIds(
   events: ConverseEvent[],
@@ -158,7 +158,7 @@ function withProgressBlockActivityIds(
 }
 
 // Agent Gateway announces, in the AG-UI metadata of a surface snapshot, the actions whose answer it
-// gives as a new turn of the conversation (Thermidor ADR-019): those of a NextActionsBar.
+// gives as a new turn of the conversation (Converse ADR-019): those of a NextActionsBar.
 const NEXT_ACTIONS_BAR_TURN_OPENING_ACTIONS = ['selectAction', 'selectSearchOption'];
 
 function nextActionsBarSurfaceIds(messages: unknown): string[] {
@@ -194,10 +194,10 @@ function withTurnOpeningAnnouncements(events: ConverseEvent[]): ConverseEvent[] 
   });
 }
 
-// Agent Gateway answers these beside the turn (Thermidor ADR-022): they take no turn slot and save
+// Agent Gateway answers these beside the turn (Converse ADR-022): they take no turn slot and save
 // nothing, so it announces them as concurrent on the shell, with how long their answers are cached.
 // Suggestions read the session's recent queries, which change with every search, so they are not
-// cached (Thermidor ADR-024).
+// cached (Converse ADR-024).
 const SHELL_CONCURRENT_ACTIONS: Record<string, {cache?: {ttlMs: number}}> = {
   fetchInstantProducts: {cache: {ttlMs: 60_000}},
   fetchSuggestions: {},
@@ -265,7 +265,7 @@ function failingFacetSearch(action: SchemaAction) {
 
 const MAX_RECENT_QUERIES = 10;
 
-// The session's recent queries (Thermidor ADR-024), newest first, by session id.
+// The session's recent queries (Converse ADR-024), newest first, by session id.
 const recentQueriesBySession = new Map<string, string[]>();
 
 function recordRecentQuery(sessionId: string, query: string | null) {

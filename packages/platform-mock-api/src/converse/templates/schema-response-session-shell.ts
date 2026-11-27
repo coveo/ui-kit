@@ -116,7 +116,7 @@ function completionsFor(query: string): {expression: string; score: number}[] {
     .map((expression, index) => ({expression, score: 100 - index * 5}));
 }
 
-// Thermidor ADR-024: the session's recent queries that start with the typed text come first, at
+// Converse ADR-024: the session's recent queries that start with the typed text come first, at
 // most 3 while typing, then the completions they do not repeat, at most 8 in all.
 function querySuggestionsFor(query: string, sessionRecentQueries: readonly string[]) {
   const typed = query.trim().toLowerCase();
